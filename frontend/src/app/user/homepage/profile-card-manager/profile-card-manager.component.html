@@ -1,0 +1,114 @@
+<div class="card">
+  <div class="card card-coin card-plain maxheight">
+    <div class="card-header">
+      <!-- <img src="../../../../assets/img/mike.jpg" class="img-center img-fluid rounded-circle"> -->
+      <img [src]="this.avatarService.userAvatarImageToShow"
+           alt="Avatar"
+           class="img-center img-fluid rounded-circle"
+           id="avatar">
+
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h4 class="text-uppercase">{{globals.localStorageItem('firstName')}} {{globals.localStorageItem('lastName')}}</h4>
+          <span>{{globals.localStorageItem('departmentName')}}</span>
+          <hr class="line-success">
+        </div>
+      </div>
+      <div class="row text-center mt-4">
+        <div class="col p-2">
+          <h3 class="mb-1 line-height-5 font-weight-bold">Point Pool</h3>
+          <h4 class="mb-0">{{this.pointItemService.remainingPointPool}} / 5000</h4>
+        </div>
+        <div class="col p-2">
+          <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
+          <h4 class="mb-0">23/120</h4>
+        </div>
+      </div>
+      <div class="card-footer text-center">
+        <!-----Button----->
+
+        <button class="btn-lg btn-primary btn-success" data-toggle="modal" data-target="#myModal">
+          Customize
+        </button>
+        <button type="button" class="btn btn-danger" (click)="showGallery()">Change Avatar</button>
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Settings</h4>
+              </div>
+              <!---modal body---->
+              <div class="modal-body">
+                <div class="row">
+                  <!---- Form 1 ------>
+                  <div class="col-lg-12">
+                    <div class="form-group has-success">
+                      <div class="file-field">
+                        <div class="btn btn-warning btn-rounded btn-sm float-right">
+                          <span><i class="fas fa-upload mr-3" aria-hidden="true"></i>Select Picture</span>
+                          <input type="file">
+                        </div>
+                        <div class="file-path-wrapper">
+                          <input class="file-path validate" type="text" placeholder="Upload your Profile Picture">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!---- Form 2 ------>
+                  <div class="col-lg-12">
+                    <div class="form-group has-success">
+                      <input type="text" value="Success" class="form-control form-control-success">
+                    </div>
+                  </div>
+                  <!---- Form 3 ------>
+                  <div class="col-lg-12">
+                    <div class="form-group has-success">
+                      <input type="text" value="Success" class="form-control form-control-success">
+                    </div>
+                  </div>
+                  <!---- Form 4 ------>
+                  <div class="col-lg-12">
+                    <div class="form-group has-success">
+                      <input type="text" value="Suc" class="form-control form-control-success">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!----End Mod Bod---->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-sm" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Choose Your Avatar</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!---modal body---->
+      <div class="modal-body">
+        <app-image-gallery></app-image-gallery>
+      </div>
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+</div>

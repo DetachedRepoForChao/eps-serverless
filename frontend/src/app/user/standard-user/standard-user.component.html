@@ -1,0 +1,36 @@
+<div class="header">
+  <div id="header-text">
+    <h3 mat-subheader>Standard User Dashboard</h3>
+  </div>
+
+</div>
+
+<div id="user-profile">
+  <mat-divider></mat-divider>
+  <div id="profile-card">
+    <mat-card class="profile-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{globals.localStorageItem('firstName')}} {{globals.localStorageItem('lastName')}}</mat-card-title>
+        <mat-card-subtitle>{{globals.localStorageItem('email')}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-list>
+        <mat-list-item>
+          <h4 mat-line>Department</h4>
+          <p mat-line> {{globals.localStorageItem('departmentName')}}</p>
+        </mat-list-item>
+        <mat-list-item>
+          <h4 mat-line>Points</h4>
+          <p mat-line> {{globals.localStorageItem('points')}}</p>
+        </mat-list-item>
+      </mat-list>
+    </mat-card>
+  </div>
+  <div id="achievement-card">
+    <app-achievement></app-achievement>
+  </div>
+
+</div>
+
+
+

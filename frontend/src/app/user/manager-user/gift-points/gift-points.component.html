@@ -1,0 +1,206 @@
+<div class="card">
+  <div class="card card-coin card-plain">
+    <div class="card-body">
+      <div class="col-md-12">
+        <h4 class="text-uppercase">Award Employee Points</h4>
+        <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)" class="form">
+          <div class="form-row">
+            <div class="form-group col-8">
+              <label for="selectedPointItem">Point Item</label>
+              <select #selectedPointItem="ngModel" class="form-control" id="selectedPointItem" name="selectedPointItem" [(ngModel)]="selectedPointItem.item">
+                <option *ngFor="let pointItem of pointItemList" [ngValue]="pointItem">
+                  {{pointItem.amount}} pts - {{pointItem.name}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="gift-points-container">
+            <button type="submit" class="btn btn-info btn-round btn-lg" > Gift Points </button>
+          </div>
+        </form>
+
+        <table class="table">
+          <thead>
+          <tr>
+            <th *ngFor="let col of displayedColumns">
+              {{col}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of departmentEmployees">
+            <td *ngFor="let col of displayedColumns">
+              <div *ngIf="col === 'select'">
+                <!--<mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(user) : null"
+                              [checked]="selection.isSelected(user)"
+                              [aria-label]="checkboxLabel(user)">
+                </mat-checkbox> -->
+
+
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox"
+                           (click)="$event.stopPropagation()"
+                           (change)="$event ? selection.toggle(user) : null"
+                           [checked]="selection.isSelected(user)">
+                      <span class="form-check-sign">
+                          <span class="check"></span>
+                      </span>
+                  </label>
+                </div>
+              </div>
+              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>
+              <!-- <ng-template #templateImgRow>
+                <img src="{{char[col]}}" class="img-row" >
+              </ng-template> -->
+              <!-- <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div> -->
+              <div *ngIf="col === 'name'">{{user[col]}}</div>
+              <div *ngIf="col === 'points'">{{user[col]}}</div>
+              <div *ngIf="col === 'username'">{{user[col]}}</div>
+              <div *ngIf="col === 'email'">{{user[col]}}</div>
+
+
+
+              <!-- <ng-template #templateRow>
+                {{char[col]}}
+              </ng-template> -->
+            </td>
+          </tr>
+          </tbody>
+
+        </table>
+
+        <!--
+        <div *ngIf="departmentEmployees">
+          <table mat-table [dataSource]="dataSource.data" class="mat-elevation-z8"> -->
+            <!-- Checkbox Column -->
+
+            <!-- <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                              [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)"
+                              [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+              <th mat-header-cell *matHeaderCellDef> First Name </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.firstName}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="lastName">
+              <th mat-header-cell *matHeaderCellDef> Last Name </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.lastName}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef> Email </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.email}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef> Position </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.position}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="points">
+              <th mat-header-cell *matHeaderCellDef> Points </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.points}}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--
+<div id="departmentEmployees">
+
+  <div>
+      <mat-card class="departmentEmployees-card">
+        <mat-card-header>
+          <mat-card-title>{{globals.localStorageItem('departmentName')}}</mat-card-title>
+          <mat-card-subtitle>Employees</mat-card-subtitle>
+        </mat-card-header>
+        <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)">
+          <div>
+            <mat-form-field class="point-item">
+              <mat-select #selectedPointItem="ngModel" placeholder="Point Item" name="selectedPointItem" [(ngModel)]="selectedPointItem.item">
+                <mat-option *ngFor="let pointItem of pointItemList" [value]="pointItem">
+                  {{pointItem.amount}} pts - {{pointItem.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="gift-points-container">
+            <button mat-raised-button color="primary" type="submit" class="gift-points-button" > Gift Points </button>
+          </div>
+        </form>
+
+        <div *ngIf="departmentEmployees">
+          <table mat-table [dataSource]="dataSource.data" class="mat-elevation-z8">
+            Checkbox Column -->
+            <!--
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                              [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)"
+                              [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+              <th mat-header-cell *matHeaderCellDef> First Name </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.firstName}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="lastName">
+              <th mat-header-cell *matHeaderCellDef> Last Name </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.lastName}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef> Email </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.email}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef> Position </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.position}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="points">
+              <th mat-header-cell *matHeaderCellDef> Points </th>
+              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.points}}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </mat-card>
+    </div>
+
+</div>
+-->

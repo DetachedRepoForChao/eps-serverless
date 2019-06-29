@@ -1,0 +1,19 @@
+<div *ngIf="images.length > 0">
+  <div fxLayout="row"
+       fxLayout.lt-md="column"
+       fxLayoutAlign="center">
+
+    <ngx-image-gallery
+      #ngxImageGallery
+      [images]="images"
+      [conf]="conf"
+      (onOpen)="galleryOpened($event)"
+      (onClose)="galleryClosed()"
+      (onImageClicked)="galleryImageClicked($event)"
+      (onImageChange)="galleryImageChanged($event)"
+      (onDelete)="deleteImage($event)">
+    </ngx-image-gallery>
+  </div>
+</div>
+
+

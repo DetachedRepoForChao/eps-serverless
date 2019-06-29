@@ -1,0 +1,86 @@
+<div class="register-user">
+  <mat-card class="register-user-card">
+    <mat-card-header>
+      <mat-card-title>Register New User</mat-card-title>
+      <!-- <mat-card-subtitle>Employees</mat-card-subtitle>-->
+    </mat-card-header>
+
+    <div class="register-user-form">
+      <form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)">
+        <div class="form-field-container">
+          <mat-form-field >
+            <mat-select #role="ngModel" placeholder="Role" name="securityRoleId" [(ngModel)]="userService.selectedUser.securityRole" required>
+              <mat-option *ngFor="let role of securityRoles" [value]="role.id">
+                {{role.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="text" #username="ngModel" [(ngModel)]="userService.selectedUser.username" name="username" placeholder="Username"
+                   required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !username.valid }">
+            <div *ngIf="signUpForm.submitted && !username.valid">
+              <label class="validation-message">This field is required.</label>
+            </div>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="text" #firstName="ngModel" [(ngModel)]="userService.selectedUser.firstName" name="firstName" placeholder="First Name"
+                   required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !firstName.valid }">
+            <div *ngIf="signUpForm.submitted && !firstName.valid">
+              <label class="validation-message">This field is required.</label>
+            </div>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="text" #lastName="ngModel" [(ngModel)]="userService.selectedUser.lastName" name="lastName" placeholder="Last Name"
+                   required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !lastName.valid }">
+            <div *ngIf="signUpForm.submitted && !lastName.valid">
+              <label class="validation-message">This field is required.</label>
+            </div>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="text" #email="ngModel" [(ngModel)]="userService.selectedUser.email" name="email" placeholder="Email"
+                   required [pattern]="emailRegex"  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !email.valid }">
+            <div *ngIf="signUpForm.submitted && email.errors">
+              <label *ngIf="email.errors.required" class="validation-message">This field is required.</label>
+              <label *ngIf="email.errors.pattern" class="validation-message">Invalid email address.</label>
+            </div>
+          </mat-form-field>
+
+          <mat-form-field >
+            <mat-select #department="ngModel" placeholder="Department" name="departmentId" [(ngModel)]="userService.selectedUser.department" required>
+              <mat-option *ngFor="let department of departments" [value]="department.id">
+                {{department.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput [type]="hide ? 'password' : 'text'" name="password" #password="ngModel" [(ngModel)]="userService.selectedUser.password" name="password" placeholder="Password"
+                   minlength="4" required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !password.valid }">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <div *ngIf="signUpForm.submitted && password.errors">
+              <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
+              <label *ngIf="password.errors.minlength" class="validation-message">Enter atleast 4 characters.</label>
+            </div>
+          </mat-form-field>
+
+        </div>
+        <button mat-raised-button color="primary" type="submit" class="register-user-button">Register User</button>
+      </form>
+
+
+      <!-- Success message -->
+      <div class="success" *ngIf="showSuccessMessage">
+        Saved successfully
+      </div>
+
+      <!-- Error message -->
+      <div class="alert" *ngIf="serverErrorMessages">
+        {{serverErrorMessages}}
+      </div>
+
+    </div>
+
+  </mat-card>
+</div>
+
+
+

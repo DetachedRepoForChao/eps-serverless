@@ -1,0 +1,45 @@
+<div id="achievements">
+  <div id="achievement-card">
+    <mat-card class="achievement-card">
+      <mat-card-header>
+        <mat-card-title>Achievement</mat-card-title>
+        <mat-card-subtitle>Progress</mat-card-subtitle>
+      </mat-card-header>
+      <div *ngIf="dataSource.data">
+        <table mat-table [dataSource]="dataSource.data">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Achievement Name </th>
+            <td mat-cell *matCellDef="let achievement"> {{achievement.name}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="progress">
+            <th mat-header-cell *matHeaderCellDef> Current Progress </th>
+            <td mat-cell *matCellDef="let achievement"> {{achievement.progress}} / {{achievement.goal}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="goal">
+            <th mat-header-cell *matHeaderCellDef> Goal </th>
+            <td mat-cell *matCellDef="let achievement"> {{achievement.goal}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="completed">
+            <th mat-header-cell *matHeaderCellDef> Goal </th>
+            <td mat-cell *matCellDef="let achievement"> Goal Reached! <!--{{achievement.completed}}-->
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;" ></tr>
+          <tr mat-row
+              *matRowDef="let row; columns: displayedColumns;"
+              [ngClass]="{'highlight': row.progress > 0 && row.progress < 100, 'hidden': row.progress === 0}"
+          ></tr>
+          <tr mat-row
+              *matRowDef="let row; columns: displayedCompletedColumns; when: isCompletedRow" class="completed-row"
+          ></tr>
+
+        </table>
+      </div>
+    </mat-card>
+  </div>
+
+  </div>

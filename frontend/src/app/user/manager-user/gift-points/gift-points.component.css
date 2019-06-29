@@ -1,0 +1,38 @@
+/*
+table {
+  width: 100%;
+}
+
+.point-item {
+  width: 100%;
+}
+
+.gift-points-container {
+  padding-bottom: 20px;
+
+}
+
+.departmentEmployees-card {
+  background-color: darkcyan;
+}
+
+.gift-points-button {
+  width: 50%;
+  left: 25%;
+}
+*/
+.card {
+  background: #8656d22e;
+}
+
+.card-coin {
+  margin-bottom: 0;
+  border: 0;
+  min-height: 600px;
+}
+
+
+.form-control {
+  color: #ba54f5;
+}
+

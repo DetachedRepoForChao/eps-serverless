@@ -1,0 +1,53 @@
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+#user-profile-container {
+  width:700px;
+  overflow: auto;
+  clear: both;
+
+  padding-bottom: 20px;
+}
+
+#profile-card-container {
+  padding-top: 20px;
+}
+
+#user-profile-card {
+  width:700px;
+  clear: both;
+}
+
+.profile-card {
+  width: 300px;
+  float: left;
+
+
+  margin-bottom: 10px;
+
+  background-color: floralwhite;
+}
+
+#achievement-container {
+  width: 300px;
+  float: right;
+
+}
+
+/*
+#gift-points {
+  width: 600px;
+  position: absolute;
+  top: 500px;
+  padding: 20px;
+}
+*/
+
+#register-user-container {
+  width: 94%;
+  clear: both;
+  padding-left: 3%;
+  padding-right: 3%;
+}

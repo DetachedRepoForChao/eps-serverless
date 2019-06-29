@@ -1,0 +1,103 @@
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+
+.register-page {
+  background-color: #171941;
+}
+
+.register-page .link {
+  font-size: 10px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.register-page .register-bg {
+  height: 700px;
+  background: linear-gradient(to bottom, transparent 0%, #1f2251 100%);
+  width: 700px;
+  position: relative;
+  right: -600px;
+  top: -750px;
+  border-radius: 20%;
+  transform: rotate(-15deg);
+}
+
+.register-page .square {
+  position: absolute;
+  transition: 0.5s ease-out;
+  border-radius: 2px;
+  background-size: 100%;
+  border-radius: 20%;
+}
+
+.register-page .square-1 {
+  height: 300px;
+  width: 300px;
+  background-image: url("../../../assets/img/square1.png");
+  top: 175px;
+  right: 150px;
+  opacity: 0.8;
+}
+
+.register-page .square-2 {
+  height: 120px;
+  width: 120px;
+  background-image: url("../../../assets/img/square2.png");
+  opacity: 0.9;
+  top: 310px;
+  right: 390px;
+}
+
+.register-page .square-3 {
+  width: 200px;
+  height: 200px;
+  background-image: url("../../../assets/img/square3.png");
+  opacity: 0.3;
+  top: -50px;
+  right: 400px;
+}
+
+.register-page .square-4 {
+  height: 200px;
+  width: 200px;
+  background-image: url("../../../assets/img/square4.png");
+  right: -50px;
+  top: 525px;
+}
+
+.register-page .square-5 {
+  height: 150px;
+  width: 150px;
+  background-image: url("../../../assets/img/square5.png");
+  opacity: 0.5;
+  top: 500px;
+  right: 470px;
+}
+
+.register-page .square-6 {
+  height: 70px;
+  width: 70px;
+  background-image: url("../../../assets/img/square5.png");
+  opacity: 0.9;
+  top: 105px;
+  right: 20px;
+}
+
+.register-page .square-7 {
+  height: 200px;
+  width: 200px;
+  background-image: url("../../../assets/img/square5.png");
+  left: -100px;
+  top: 100px;
+  opacity: .4;
+}
+
+.register-page .square-8 {
+  height: 100px;
+  width: 100px;
+  background-image: url("../../../assets/img/square1.png");
+  left: 300px;
+  top: 400px;
+  opacity: .4;
+}

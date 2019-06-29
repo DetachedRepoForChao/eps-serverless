@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css?family=Allerta+Stencil');
+
+body{
+  overflow-x: hidden;
+  font-family: 'Allerta Stencil', sans-serif;
+  background-color: #efefe3;
+}
+
+/* Naviagtion .    */
+
+.navbar{
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: .9rem;
+  letter-spacing: .1rem;
+  background:rgb(255, 255, 255) !important;
+}
+.navbar-brand img {
+  height: 2rem;
+}
+
+.navbar-nav li {
+  padding-right: .7rem;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #000000;
+  padding-top: .8rem;
+}
+
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link:hover{
+  color: #ff9000;
+}
+
+.caption {
+  width: 100%;
+  max-width: 100%;
+  position: absolute;
+  top: 60%;
+  z-index: 1;
+  color: white;
+  text-transform: uppercase;
+}
+
+.caption h1{
+  font-size: 2.0rem;
+  font-weight: 700;
+  letter-spacing: .3rem;
+  text-shadow: .1rem .1rem .8rem black;
+}
+
+.caption h3{
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: .3rem;
+  text-shadow: .1rem .1rem .5rem black;
+  padding-bottom: 1.6rem;
+}
+
+.btn-lg {
+  border-width: medium;
+  border-radius: 0rem;
+  padding: .6rem 1.3rem;
+  font-size: 1.1rem;
+}
+
+.footer{
+  position: relative;
+  margin-bottom: 0;
+}
+.pblue{
+  color: #79c1ff
+}
+
+.top-cards{
+  max-height: 500px;
+  min-height: 500px;
+}
+
+.bottom-cards{
+  min-height: 400px;
+  max-height: 400px;
+}
+
+.twitter-card{
+  max-height: 900px;
+  min-height: 900px;
+  max-width: 100%;
+}
+
+.progress-bar{
+  background-color: aqua;
+}
+.twits{
+  background-color: 2bc4ff;
+}
+
+.full{
+  width: 100%;
+  margin-left: 0;
+}
+
+.no-gutter {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.no-gutter > [class*="col-"] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+check if needed
+.user-box {
+  width: 110px;
+  margin: auto;
+  margin-bottom: 20px;
+
+}
+
+.user-box img {
+  width: 100%;
+  border-radius: 50%;
+  padding: 3px;
+  background: #fff;
+  -webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+  -ms-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+}
+
+.pro{
+  max-height: 500px;
+  min-height: 500px;
+}
+
+.profile-card-4 .user-box {
+  width: 110px;
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 15px;
+
+}
+
+.profile-card-4 .list-icon {
+  display: table-cell;
+  font-size: 30px;
+  padding-right: 10px;
+  vertical-align: middle;
+  color: #223035;
+}
+
+.profile-card-4 .list-details {
+  display: table-cell;
+  vertical-align: middle;
+  font-weight: 800;
+  color: #223035;
+  font-size: 17px;
+  line-height: 15px;
+
+}
+
+.profile-card-4 .list-details small{
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 12px;
+  font-weight: 300;
+  color: #808080;
+}
+
+
+

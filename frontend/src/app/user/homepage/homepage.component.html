@@ -1,0 +1,74 @@
+<div class="index-page">
+  <app-navigation></app-navigation>
+  <div class="wrapper">
+
+    <section class="section section-lg section-coins">
+
+      <img src="../../../assets/img/path3.png" class="path">
+      <div class="container align-items-center">
+        <!-- <div class="row">
+        <div class="content-center brand">
+          <hr class="line-info">
+          <h1>Remove the temptation to settle for anything short of what you deserve.
+            <br><span class="text-info">Lorii Myers</span>
+          </h1>
+        </div>
+        </div> -->
+
+        <div class="row">
+          <!-- Profile Card -->
+          <div class="col-lg-4 col-md-6 col-sm-12 ml-auto mr-auto" id="profile-card">
+            <div *ngIf="globals.localStorageItem('securityRoleId') === '1'">
+              <app-profile-card></app-profile-card>
+            </div>
+            <div *ngIf="globals.localStorageItem('securityRoleId') === '2'">
+              <app-profile-card-manager></app-profile-card-manager>
+            </div>
+          </div>
+          <div class="col-lg-4 ml-auto mr-auto" id="progress-card">
+            <app-progress-card></app-progress-card>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 ml-auto mr-auto" id="leaderboard-card">
+            <app-leaderboard-card></app-leaderboard-card>
+          </div>
+          <!-- END Profile Card -->
+
+          <div *ngIf="globals.localStorageItem('securityRoleId') === '2'"
+               class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto">
+            <app-gift-points></app-gift-points>
+          </div>
+          <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto">
+            <app-feed></app-feed>
+          </div>
+
+          <!-- Leaderboard Card -->
+
+
+          <!-- END Leaderboard Card -->
+          <!-- Progress Card -->
+
+
+
+
+
+          <!-- END Progress Card -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Feed Card -->
+    <!--
+    <section class="feed-card">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <app-leaderboard-card></app-leaderboard-card>
+          </div>
+        </div>
+      </div>
+    </section>
+    -->
+    <!-- END Feed Card -->
+    <app-footer></app-footer>
+  </div>
+</div>

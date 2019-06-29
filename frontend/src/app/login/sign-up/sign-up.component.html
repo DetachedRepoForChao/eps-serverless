@@ -1,0 +1,163 @@
+<div class="row">
+  <div class="col-lg-5 col-md-6 offset-lg-0 offset-md-3">
+    <div id="square7" class="square square-7"></div>
+    <div id="square8" class="square square-8"></div>
+    <div class="card card-register">
+      <div class="card-header">
+        <img class="card-img" src="../assets/img/square1.png" alt="Card image">
+        <h4 class="card-title">Register</h4>
+      </div>
+      <div class="card-body">
+
+        <form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)" class="form">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="securityRoleId">Role</label>
+              <select #role="ngModel" class="form-control" id="securityRoleId" name="securityRoleId" [(ngModel)]="selectedUser.securityRole"
+                      required>
+                <option *ngFor="let role of securityRoles" [ngValue]="role.id">
+                  {{role.name}}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="departmentId">Department</label>
+              <select #department="ngModel" class="form-control" id="departmentId" name="departmentId" [(ngModel)]="selectedUser.department" required>
+                <option *ngFor="let department of departments" [ngValue]="department.id">
+                  {{department.name}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="firstName">First Name</label>
+              <input type="text" class="form-control" id="firstName" #firstName="ngModel" [(ngModel)]="selectedUser.firstName" name="firstName"
+                     required>
+              <div *ngIf="signUpForm.submitted && !firstName.valid">
+                <label class="validation-message">This field is required.</label>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="lastName">Last Name</label>
+              <input type="text" class="form-control" id="lastName" #lastName="ngModel" [(ngModel)]="selectedUser.lastName" name="lastName"
+                     required>
+              <div *ngIf="signUpForm.submitted && !lastName.valid">
+                <label class="validation-message">This field is required.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="username">Username</label>
+              <input type="text" name="username" #username="ngModel" [(ngModel)]="selectedUser.username" class="form-control" id="username"
+                     required [ngClass]="{'invalid-textbox' :signUpForm.submitted}">
+              <div *ngIf="signUpForm.submitted && !username.valid">
+                <label class="validation-message">This field is required.</label>
+              </div>
+            </div>
+            <div class="form-group col-md-4" >
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" #email="ngModel" [(ngModel)]="selectedUser.email" name="email"
+                     required [pattern]="emailRegex">
+              <div *ngIf="signUpForm.submitted && email.errors">
+                <label *ngIf="email.errors.required" class="validation-message">This field is required.</label>
+                <label *ngIf="email.errors.pattern" class="validation-message">Invalid email address.</label>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="password">Password</label>
+              <input [type]="hide ? 'password' : 'text'" #password="ngModel" [(ngModel)]="selectedUser.password" class="form-control" name="password" id="password"
+                     minlength="4" required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !password.valid }">
+              <div *ngIf="signUpForm.submitted && password.errors">
+                <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
+                <label *ngIf="password.errors.minlength" class="validation-message">Enter at least 4 characters.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
+            <button type="submit" class="btn btn-info btn-round btn-lg">Sign Up</button>
+            <!-- Success message -->
+            <span class="success" *ngIf="showSuccessMessage">
+              Saved successfully
+            </span>
+
+            <!-- Error message -->
+            <span class="alert" *ngIf="serverErrorMessages">
+              {{serverErrorMessages}}
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--
+<div>
+  <img src="/assets/img/users.png" id="icon" alt="User Icon" />
+</div>
+<form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)">
+  <div class="form-field-container">
+    <mat-form-field >
+      <mat-select #role="ngModel" placeholder="Role" name="securityRoleId" [(ngModel)]="userService.selectedUser.securityRole" required>
+        <mat-option *ngFor="let role of securityRoles" [value]="role.id">
+          {{role.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" #username="ngModel" [(ngModel)]="userService.selectedUser.username" name="username" placeholder="Username"
+             required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !username.valid }">
+      <div *ngIf="signUpForm.submitted && !username.valid">
+        <label class="validation-message">This field is required.</label>
+      </div>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" #firstName="ngModel" [(ngModel)]="userService.selectedUser.firstName" name="firstName" placeholder="First Name"
+             required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !firstName.valid }">
+      <div *ngIf="signUpForm.submitted && !firstName.valid">
+        <label class="validation-message">This field is required.</label>
+      </div>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" #lastName="ngModel" [(ngModel)]="userService.selectedUser.lastName" name="lastName" placeholder="Last Name"
+             required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !lastName.valid }">
+      <div *ngIf="signUpForm.submitted && !lastName.valid">
+        <label class="validation-message">This field is required.</label>
+      </div>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="text" #email="ngModel" [(ngModel)]="userService.selectedUser.email" name="email" placeholder="Email"
+             required [pattern]="emailRegex"  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !email.valid }">
+      <div *ngIf="signUpForm.submitted && email.errors">
+        <label *ngIf="email.errors.required" class="validation-message">This field is required.</label>
+        <label *ngIf="email.errors.pattern" class="validation-message">Invalid email address.</label>
+      </div>
+    </mat-form-field>
+
+    <mat-form-field >
+      <mat-select #department="ngModel" placeholder="Department" name="departmentId" [(ngModel)]="userService.selectedUser.department" required>
+        <mat-option *ngFor="let department of departments" [value]="department.id">
+          {{department.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [type]="hide ? 'password' : 'text'" name="password" #password="ngModel" [(ngModel)]="userService.selectedUser.password" name="password" placeholder="Password"
+             minlength="4" required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !password.valid }">
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <div *ngIf="signUpForm.submitted && password.errors">
+        <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
+        <label *ngIf="password.errors.minlength" class="validation-message">Enter atleast 4 characters.</label>
+      </div>
+    </mat-form-field>
+  </div>
+  <button mat-raised-button color="primary" type="submit">Sign Up</button>
+</form>
+-->
