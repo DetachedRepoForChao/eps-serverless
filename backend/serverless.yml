@@ -67,3 +67,38 @@ functions:
          path: departments/{id}
          method: delete
          cors: true
+  listDepartments:
+    handler: handler.listDepartments
+    events:
+      - http:
+          path: api/listDepartments
+          method: get
+          cors: true
+  getDepartment:
+    handler: handler.getDepartment
+    events:
+      - http:
+          path: api/getDepartment
+          method: post
+          cors: true
+  getEmployeesByDepartmentId:
+    handler: handler.getEmployeesByDepartmentId
+    events:
+      - http:
+          path: api/getEmployeesByDepartmentId
+          method: post
+          cors: true
+  listSecurityRoles:
+    handler: handler.listSecurityRoles
+    events:
+      - http:
+          path: api/listSecurityRoles
+          method: get
+          cors: true
+  getSecurityRole:
+    handler: handler.getSecurityRole
+    events:
+      - http:
+          path: api/getSecurityRole
+          method: post
+          cors: true

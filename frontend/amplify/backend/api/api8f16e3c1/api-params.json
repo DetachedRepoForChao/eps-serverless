@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/api",
+            "lambdaFunction": "departments",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "api8f16e3c1",
+    "apiName": "api8f16e3c1",
+    "functionArns": [
+        {
+            "lambdaFunction": "departments"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "eps-serverless-dev-20190630120450-authRole",
+        "unAuthRoleName": "eps-serverless-dev-20190630120450-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "departments",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

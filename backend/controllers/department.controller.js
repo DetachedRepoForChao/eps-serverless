@@ -1,7 +1,7 @@
-import SqlModel from '../sequelize';
+const SqlModel = require('./db');
 const _ = require('lodash');
-const sqlDepartmentModel = SqlModel.Department;
-const sqlUserModel = SqlModel.User;
+const sqlDepartmentModel = SqlModel.Models.Department;
+const sqlUserModel = SqlModel.Models.User;
 
 module.exports.getDepartments = (req, res, next) =>{
     //console.log('req.id:' + req.id);

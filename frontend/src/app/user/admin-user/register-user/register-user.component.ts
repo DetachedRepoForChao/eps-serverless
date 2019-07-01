@@ -30,7 +30,15 @@ export class RegisterUserComponent implements OnInit {
   ngOnInit() {
     //console.log(this.role);
     //console.log(this.keys());
-    this.getDepartments().subscribe(deps => {
+    // this.getDepartments().subscribe(deps => {
+    //     this.departments = deps;
+    //     for (let i = 0; i < deps.length; i++) {
+    //       console.log(deps[i]);
+    //     }
+    //   }
+    // );
+
+    this.departmentService.getDepartments().then(deps => {
         this.departments = deps;
         for (let i = 0; i < deps.length; i++) {
           console.log(deps[i]);
@@ -57,14 +65,14 @@ export class RegisterUserComponent implements OnInit {
   }
 
 
-  getDepartments() {
-    console.log('getDepartments');
-    return this.departmentService.getDepartments()
-      .pipe(
-        map(data => {
-          return data['departments'];
-        }));
-  }
+  // getDepartments() {
+  //   console.log('getDepartments');
+  //   return this.departmentService.getDepartments()
+  //     .pipe(
+  //       map(data => {
+  //         return data['departments'];
+  //       }));
+  // }
 
 
   onSubmit(form: NgForm) {

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const UserModel = require('/models/user');
+const UserModel = require('./models/user');
 const DepartmentModel = require('./models/department');
 const NodeModel = require('./models/node');
 const SecurityRoleModel = require('./models/securityrole');

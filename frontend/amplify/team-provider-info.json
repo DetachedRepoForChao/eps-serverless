@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "eps-serverless-dev-20190630120450-authRole",
+            "UnauthRoleArn": "arn:aws:iam::644955040906:role/eps-serverless-dev-20190630120450-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::644955040906:role/eps-serverless-dev-20190630120450-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "eps-serverless-dev-20190630120450-deployment",
+            "UnauthRoleName": "eps-serverless-dev-20190630120450-unauthRole",
+            "StackName": "eps-serverless-dev-20190630120450",
+            "StackId": "arn:aws:cloudformation:us-east-1:644955040906:stack/eps-serverless-dev-20190630120450/c96b6b60-9b50-11e9-a3e4-126514929126"
+        },
+        "categories": {
+            "auth": {
+                "epsserverlessc2b21a63": {}
+            }
+        }
+    }
+}

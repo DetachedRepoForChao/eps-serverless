@@ -7,6 +7,20 @@ function HTTPError (statusCode, message) {
   return error
 }
 
+const ctrlUser = require('./controllers/user.controller');
+const ctrlDepartment = require('./controllers/department.controller');
+const ctrlSecurityRole = require('./controllers/securityrole.controller');
+const ctrlAchievement = require('./controllers/achievement.controller');
+const ctrlNamedAchievement = require('./controllers/named_achievement.controller');
+const ctrlPoints = require('./controllers/points.controller');
+const ctrlPointPool = require('./controllers/point_pool.controller');
+const ctrLike = require('./controllers/like.controller');
+const ctrPointsTransaction = require('./controllers/point_transaction.controller');
+const jwtHelper = require('./config/jwtHelper');
+const ctrlSession = require('./controllers/session.controller');
+const ctrlAvatar = require('./controllers/avatar.controller');
+const ctrlLeaderboard = require('./controllers/leaderboard.controller');
+
 module.exports.healthCheck = async () => {
   await connectToDatabase()
   console.log('Connection successful.')
@@ -15,6 +29,31 @@ module.exports.healthCheck = async () => {
     body: JSON.stringify({ message: 'Connection successful.' })
   }
 }
+
+module.exports.authenticateUser = async (event) => {
+  return ctrlUser.authenticateUser(event);
+};
+
+module.exports.listDepartments = async (event) => {
+  return ctrlDepartment.getDepartments(event);
+};
+
+module.exports.getDepartment = async (event) => {
+  return ctrlDepartment.getDepartmentById(event);
+};
+
+module.exports.getEmployeesByDepartmentId = async (event) => {
+  return ctrlDepartment.getEmployeesByDepartmentId(event);
+};
+
+module.exports.listSecurityRoles = async (event) => {
+  return ctrlSecurityRole.getSecurityRoles(event);
+};
+
+module.exports.getSecurityRole = async (event) => {
+  return ctrlSecurityRole.getSecurityRoleById(event);
+};
+
 
 module.exports.create = async (event) => {
   try {

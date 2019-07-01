@@ -1,7 +1,7 @@
 // built-in
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -55,6 +55,9 @@ import { ProfileCardManagerComponent } from './user/homepage/profile-card-manage
 import { TrophyComponent } from './shared/trophy/trophy.component';
 // import {SocketService} from './shared/socket.service';
 
+import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
+import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
+
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
 
@@ -86,6 +89,7 @@ import { TrophyComponent } from './shared/trophy/trophy.component';
     KeysPipe,
     ProfileCardManagerComponent,
     TrophyComponent,
+    ConfirmCodeComponent,
 
   ],
   imports: [
@@ -110,13 +114,21 @@ import { TrophyComponent } from './shared/trophy/trophy.component';
     MatCardModule,
     MatButtonModule,
     MatInputModule,
-    MatListModule
+    MatListModule,
+    AmplifyAngularModule,
+    ReactiveFormsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  }, AuthGuard, RoleGuardService, UserService, Globals],
+  },
+    AuthGuard,
+    RoleGuardService,
+    UserService,
+    Globals,
+    AmplifyService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

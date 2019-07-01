@@ -13,7 +13,10 @@ import {SecurityRoleService} from '../../shared/securityRole.service';
 import {DepartmentService} from '../../shared/department.service';
 import {GlobalVariableService} from '../../shared/global-variable.service';
 import {SessionService} from '../../shared/session.service';
-
+import {AmplifyService} from 'aws-amplify-angular';
+import { CognitoUser } from 'amazon-cognito-identity-js';
+import { AuthService } from "../auth.service";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sign-in',
@@ -33,7 +36,9 @@ export class SignInComponent implements OnInit {
               private achievementComponent: AchievementComponent,
               private securityRoleService: SecurityRoleService,
               private departmentService: DepartmentService,
-              private sessionService: SessionService) { }
+              private sessionService: SessionService,
+              private amplifyService: AmplifyService,
+              public auth: AuthService) { }
 
   model = {
     username : '',
@@ -47,9 +52,11 @@ export class SignInComponent implements OnInit {
     if (this.userService.isLoggedIn()) {
       this.router.navigateByUrl('/user');
     }
+
   }
 
 
+  /*
   onSubmit(form: NgForm) {
     console.log(form.value);
     this.userService.login(form.value).subscribe(
@@ -103,6 +110,7 @@ export class SignInComponent implements OnInit {
               });
             */
 
+            /*
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
             this.sessionService.SetSessionLoggedIn();
             this.router.navigate(['/user']);
@@ -113,6 +121,36 @@ export class SignInComponent implements OnInit {
         this.serverErrorMessages = err.error.message;
       }
     );
+  }
+  */
+
+  onSubmit(form: NgForm) {
+    console.log(form.value);
+    this.auth.signIn(form.value.username, form.value.password)
+      .then((user: CognitoUser|any) => {
+        console.log('Success!');
+        console.log(user);
+        // this.router.navigateByUrl('/user');
+        // this._loader.hide();
+        // this._router.navigate(['']);
+      })
+      .catch((error: any) => {
+        // this._loader.hide();
+        // this._notification.show(error.message);
+        this.notifierService.notify('Error', error.message);
+        switch (error.code) {
+          case 'UserNotConfirmedException':
+            console.log('UserNotConfirmedException');
+            environment.confirm.email = form.value.username;
+            environment.confirm.password = form.value.password;
+            this.router.navigateByUrl('/confirm');
+            break;
+          case 'UsernameExistsException':
+            console.log('UsernameExistsException');
+            this.router.navigateByUrl('/signin');
+            break;
+        }
+      });
   }
 
   storeUserDetails() {
@@ -149,10 +187,7 @@ export class SignInComponent implements OnInit {
   getUserDetails() {
     console.log('getUserDetails');
     return this.userService.getUserProfile();
-
   }
-
-
 
   navigateToHome() {
     console.log('sign-in navigateToHome:');
@@ -160,5 +195,4 @@ export class SignInComponent implements OnInit {
     console.log('userRole: ' + userRole);
     console.log(userRole);
   }
-
 }
