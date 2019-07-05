@@ -1,18 +1,18 @@
 {
     "paths": [
         {
-            "name": "/api",
-            "lambdaFunction": "departments",
+            "name": "/items",
+            "lambdaFunction": "epsserverlesse3f718f3",
             "privacy": {
                 "open": true
             }
         }
     ],
-    "resourceName": "api8f16e3c1",
-    "apiName": "api8f16e3c1",
+    "resourceName": "api9819f38d",
+    "apiName": "api9819f38d",
     "functionArns": [
         {
-            "lambdaFunction": "departments"
+            "lambdaFunction": "epsserverlesse3f718f3"
         }
     ],
     "privacy": {
@@ -24,7 +24,7 @@
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "departments",
+            "resourceName": "epsserverlesse3f718f3",
             "attributes": [
                 "Name",
                 "Arn"

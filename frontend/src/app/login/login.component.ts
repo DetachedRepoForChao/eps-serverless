@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {SocketService} from '../shared/socket.service';
+// import {SocketService} from '../shared/socket.service';
 import {AvatarService} from '../shared/avatar.service';
 import {Router} from '@angular/router';
 // import {SocketService} from '../shared/socket.service';
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
     ]
   };
 
-  constructor(private socketService: SocketService,
+  constructor(// private socketService: SocketService,
               private avatarService: AvatarService,
               private router: Router) { }
 
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit {
   onSocketTestClick2() {
     // this.socketService.socketTest2();
     // debugger;
-    console.log(this.socketService.socket);
+    // console.log(this.socketService.socket);
   }
 
   onSignUpClick() {

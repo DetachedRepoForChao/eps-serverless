@@ -13,7 +13,7 @@ const PointPoolModel = require('./models/point_pool');
 const SessionModel = require('./models/session');
 const LikeModel = require('./models/like');
 
-console.log('starting db.js');
+// console.log('starting db.js');
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -28,11 +28,14 @@ const sequelize = new Sequelize(
       idle: 10000
     },
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT
+    port: process.env.DB_PORT,
+    logging: false
   }
 )
 
-console.log('created sequelize');
+// console.log(sequelize);
+
+// console.log('created sequelize');
 
 const User = UserModel(sequelize, Sequelize);
 const Department = DepartmentModel(sequelize, Sequelize);
@@ -47,7 +50,7 @@ const Metrics = MetricsModel(sequelize, Sequelize);
 const PointPool = PointPoolModel(sequelize, Sequelize);
 const Session = SessionModel(sequelize, Sequelize);
 const Like=LikeModel(sequelize,Sequelize)
-const Models = {
+/*const Models = {
   User,
   Department,
   Node,
@@ -61,10 +64,14 @@ const Models = {
   PointPool,
   Session,
   Like
+};*/
+const Models = {
+  User,
+  Department
 };
-
 const connection = {}
 
+/*
 module.exports = async () => {
   if (connection.isConnected) {
     console.log('=> Using existing connection.')
@@ -73,6 +80,20 @@ module.exports = async () => {
 
   await sequelize.sync()
   await sequelize.authenticate()
+  connection.isConnected = true
+  console.log('=> Created a new connection.')
+  return Models
+}
+*/
+
+module.exports = () => {
+  if (connection.isConnected) {
+    console.log('=> Using existing connection.')
+    return Models
+  }
+
+  sequelize.sync()
+  sequelize.authenticate()
   connection.isConnected = true
   console.log('=> Created a new connection.')
   return Models

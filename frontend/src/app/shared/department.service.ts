@@ -40,10 +40,10 @@ export class DepartmentService {
   getDepartments() {
     console.log('getDepartments');
 
-    return API.get('api8f16e3c1', '/api/getDepartments', {}).then(data => {
+    return API.get('api9819f38d', '/items', {}).then(data => {
       console.log('serverless departments api');
       console.log(data);
-      return data;
+      return data.data;
     });
     // API.get('sampleCloudApi', '/items', {}).then(data => {
     //   this.loading = false;

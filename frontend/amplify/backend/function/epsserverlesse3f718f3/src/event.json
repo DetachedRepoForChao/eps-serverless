@@ -1,0 +1,42 @@
+{
+  "resource": "/items",
+  "path": "/items",
+  "httpMethod": "GET",
+  "headers": null,
+  "multiValueHeaders": null,
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "path": "/items",
+    "accountId": "644955040906",
+    "resourceId": "hb7pz4",
+    "stage": "test-invoke-stage",
+    "domainPrefix": "testPrefix",
+    "requestId": "a8d47ed4-9f4c-11e9-8f14-772fe80ab380",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "cognitoIdentityId": null,
+      "apiKey": "test-invoke-api-key",
+      "principalOrgId": null,
+      "cognitoAuthenticationType": null,
+      "userArn": "arn:aws:iam::644955040906:root",
+      "apiKeyId": "test-invoke-api-key-id",
+      "userAgent": "aws-internal/3 aws-sdk-java/1.11.563 Linux/4.9.137-0.1.ac.218.74.329.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.212-b03 java/1.8.0_212 vendor/Oracle_Corporation",
+      "accountId": "644955040906",
+      "caller": "644955040906",
+      "sourceIp": "test-invoke-source-ip",
+      "accessKey": "ASIAZMKSQ5SFFYKQXI7K",
+      "cognitoAuthenticationProvider": null,
+      "user": "644955040906"
+    },
+    "domainName": "testPrefix.testDomainName",
+    "resourcePath": "/items",
+    "httpMethod": "GET",
+    "extendedRequestId": "cXLrqF5roAMFbJw=",
+    "apiId": "ku6y30qtm8"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}

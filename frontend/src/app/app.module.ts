@@ -41,7 +41,7 @@ import { TwitterCardComponent } from './user/homepage/twitter-card/twitter-card.
 import { NotesCardComponent } from './user/homepage/notes-card/notes-card.component';
 import { FooterComponent } from './user/homepage/footer/footer.component';
 import { FeedComponent } from './user/homepage/feed/feed.component';
-import { WebsocketComponent } from './websocket/websocket.component';
+// import { WebsocketComponent } from './websocket/websocket.component';
 import { UserIdleModule } from 'angular-user-idle';
 import { NgxImageGalleryModule} from 'ngx-image-gallery';
 import { ImageGalleryComponent } from './shared/image-gallery/image-gallery.component';
@@ -84,7 +84,7 @@ import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.componen
     NotesCardComponent,
     FooterComponent,
     FeedComponent,
-    WebsocketComponent,
+    // WebsocketComponent,
     ImageGalleryComponent,
     KeysPipe,
     ProfileCardManagerComponent,

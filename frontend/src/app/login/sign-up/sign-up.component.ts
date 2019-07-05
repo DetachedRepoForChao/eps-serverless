@@ -54,23 +54,23 @@ export class SignUpComponent implements OnInit {
     //   }
     // );
 
-    this.getSecurityRoles().subscribe(secRoles => {
+/*    this.getSecurityRoles().subscribe(secRoles => {
         this.securityRoles = secRoles;
         for (let i = 0; i < secRoles.length; i++) {
           console.log(secRoles[i]);
         }
       }
-    );
+    );*/
   }
 
-  getSecurityRoles() {
+/*  getSecurityRoles() {
     console.log('getSecurityRoles');
     return this.securityRoleService.getSecurityRoles()
       .pipe(
         map(data => {
           return data['securityRoles'];
         }));
-  }
+  }*/
 
 
   getDepartments() {

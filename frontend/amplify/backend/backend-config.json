@@ -6,7 +6,7 @@
 		}
 	},
 	"function": {
-		"departments": {
+		"epsserverlesse3f718f3": {
 			"service": "Lambda",
 			"providerPlugin": "awscloudformation",
 			"build": true,
@@ -14,13 +14,13 @@
 		}
 	},
 	"api": {
-		"api8f16e3c1": {
+		"api9819f38d": {
 			"service": "API Gateway",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [
 				{
 					"category": "function",
-					"resourceName": "departments",
+					"resourceName": "epsserverlesse3f718f3",
 					"attributes": [
 						"Name",
 						"Arn"

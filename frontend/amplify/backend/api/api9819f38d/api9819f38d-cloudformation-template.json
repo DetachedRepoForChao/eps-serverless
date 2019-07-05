@@ -14,15 +14,15 @@
         },
     
     
-          "functiondepartmentsName": {
+          "functionepsserverlesse3f718f3Name": {
             "Type": "String",
-            "Default": "functiondepartmentsName"
+            "Default": "functionepsserverlesse3f718f3Name"
           },
         
           
-          "functiondepartmentsArn": {
+          "functionepsserverlesse3f718f3Arn": {
             "Type": "String",
-            "Default": "functiondepartmentsArn"
+            "Default": "functionepsserverlesse3f718f3Arn"
           }
         
           
@@ -42,16 +42,16 @@
     "Resources": {
         
         
-      "api8f16e3c1": {
+      "api9819f38d": {
         "Type": "AWS::ApiGateway::RestApi",
         "Properties": {
           "Description": "",
-          "Name": "api8f16e3c1",
+          "Name": "api9819f38d",
           "Body": {
             "swagger": "2.0",
             "info": {
               "version": "2018-05-24T17:52:00Z",
-              "title": "api8f16e3c1"
+              "title": "api9819f38d"
             },
             "host": {
                 "Fn::Join": [
@@ -87,7 +87,7 @@
             ],
             "paths": {
               
-              "/api": {
+              "/items": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -173,7 +173,7 @@
                             
                             {
                                 
-                                "Ref": "functiondepartmentsArn"
+                                "Ref": "functionepsserverlesse3f718f3Arn"
                             },
                             
                             "/invocations"
@@ -186,7 +186,7 @@
                   }
                 }
               },
-              "/api/{proxy+}": {
+              "/items/{proxy+}": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -272,7 +272,7 @@
                           
                           {
                             
-                            "Ref": "functiondepartmentsArn"
+                            "Ref": "functionepsserverlesse3f718f3Arn"
                           },
                           
                           "/invocations"
@@ -329,12 +329,12 @@
                   
         
         
-        "functiondepartmentsPermissionapi8f16e3c1": {
+        "functionepsserverlesse3f718f3Permissionapi9819f38d": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "FunctionName": 
                     {
-                        "Ref":  "functiondepartmentsName"
+                        "Ref":  "functionepsserverlesse3f718f3Name"
                     },
                     
                     "Action": "lambda:InvokeFunction",
@@ -353,7 +353,7 @@
                             },
                             ":",
                             {
-                                "Ref": "api8f16e3c1"
+                                "Ref": "api9819f38d"
                             },
                             "/*/*/*"
                         ]
@@ -364,7 +364,7 @@
         
         
         
-      "DeploymentAPIGWapi8f16e3c1": {
+      "DeploymentAPIGWapi9819f38d": {
         "Type": "AWS::ApiGateway::Deployment",
         "Properties": {
           "Description": "The Development stage deployment of your API.",
@@ -378,7 +378,7 @@
             ]
           },
           "RestApiId": {
-            "Ref": "api8f16e3c1"
+            "Ref": "api9819f38d"
           }
         }
       }
@@ -386,11 +386,11 @@
     "Outputs": {
         "RootUrl": {
             "Description": "Root URL of the API gateway",
-            "Value": {"Fn::Join": ["", ["https://", {"Ref": "api8f16e3c1"}, ".execute-api.", {"Ref": "AWS::Region"}, ".amazonaws.com/", {"Fn::If": ["ShouldNotCreateEnvResources","Prod", {"Ref": "env"} ]}]]}
+            "Value": {"Fn::Join": ["", ["https://", {"Ref": "api9819f38d"}, ".execute-api.", {"Ref": "AWS::Region"}, ".amazonaws.com/", {"Fn::If": ["ShouldNotCreateEnvResources","Prod", {"Ref": "env"} ]}]]}
         },
         "ApiName": {
           "Description": "API Friendly name",
-          "Value": "api8f16e3c1"
+          "Value": "api9819f38d"
         }
     }
   }

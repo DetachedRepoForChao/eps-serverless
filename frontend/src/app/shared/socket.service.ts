@@ -16,10 +16,10 @@ export class SocketService {
   // When the service is injected it checks if socket.io and our
   // events objects are initialised
   constructor() {
-    if (!this.socket) {
+/*    if (!this.socket) {
       this.socket = io('http://localhost:3000');
       this.events = {};
-    }
+    }*/
   }
 
   reinitialize() {

@@ -6,6 +6,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
+const AWS = require('aws-sdk');
 var express = require('express')
 var bodyParser = require('body-parser')
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
@@ -22,42 +23,33 @@ app.use(function(req, res, next) {
   next()
 });
 
-// const ctrlUser = require('./controllers/user.controller');
+const SqlModel = require('./db');
+const Models = SqlModel();
 const ctrlDepartment = require('./controllers/department.controller');
-// const ctrlSecurityRole = require('./controllers/securityrole.controller');
-// const ctrlAchievement = require('./controllers/achievement.controller');
-// const ctrlNamedAchievement = require('./controllers/named_achievement.controller');
-// const ctrlPoints = require('./controllers/points.controller');
-// const ctrlPointPool = require('./controllers/point_pool.controller');
-// const ctrLike = require('./controllers/like.controller');
-// const ctrPointsTransaction = require('./controllers/point_transaction.controller');
-// const jwtHelper = require('./config/jwtHelper');
-// const ctrlSession = require('./controllers/session.controller');
-// const ctrlAvatar = require('./controllers/avatar.controller');
-// const ctrlLeaderboard = require('./controllers/leaderboard.controller');
+
 /**********************
  * Example get method *
  **********************/
 
-app.get('/api/getDepartments', function(req, res) {
+/*
+app.get('/items', function(req, res) {
+  // Add your code here
+  res.json({success: 'get call succeed!', url: req.url});
+});
+*/
+app.get('/items', function(req, res) {
   // Add your code here
   console.log('starting getDepartments');
-  ctrlDepartment.getDepartments()
+  ctrlDepartment.getDepartments(Models)
     .then(departments => {
-      res.json({status: 'get call succeed!', data: departments});
+      res.json({status: 'get call succeed!', data: departments.departments});
     })
     .catch(err => {
       res.json({status: 'get call failed!', error: err});
     });
-
 });
 
-app.get('/api', function(req, res) {
-  // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
-});
-
-app.get('/api/*', function(req, res) {
+app.get('/items/*', function(req, res) {
   // Add your code here
   res.json({success: 'get call succeed!', url: req.url});
 });
@@ -66,12 +58,12 @@ app.get('/api/*', function(req, res) {
 * Example post method *
 ****************************/
 
-app.post('/api', function(req, res) {
+app.post('/items', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
 
-app.post('/api/*', function(req, res) {
+app.post('/items/*', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
@@ -80,12 +72,12 @@ app.post('/api/*', function(req, res) {
 * Example post method *
 ****************************/
 
-app.put('/api', function(req, res) {
+app.put('/items', function(req, res) {
   // Add your code here
   res.json({success: 'put call succeed!', url: req.url, body: req.body})
 });
 
-app.put('/api/*', function(req, res) {
+app.put('/items/*', function(req, res) {
   // Add your code here
   res.json({success: 'put call succeed!', url: req.url, body: req.body})
 });
@@ -94,12 +86,12 @@ app.put('/api/*', function(req, res) {
 * Example delete method *
 ****************************/
 
-app.delete('/api', function(req, res) {
+app.delete('/items', function(req, res) {
   // Add your code here
   res.json({success: 'delete call succeed!', url: req.url});
 });
 
-app.delete('/api/*', function(req, res) {
+app.delete('/items/*', function(req, res) {
   // Add your code here
   res.json({success: 'delete call succeed!', url: req.url});
 });
