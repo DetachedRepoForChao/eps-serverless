@@ -1,3 +1,7 @@
+const SqlModel = require('../db');
+const Models = SqlModel();
+const sqlUserModel = Models.User;
+
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const _ = require('lodash');
@@ -7,8 +11,9 @@ const BCRYPT_SALT_ROUNDS = 12;
 const ctrlAchievement = require('./achievement.controller');
 const ctrlPointPool = require('./point_pool.controller');
 
-const registerUser = function (req, Models) {
-  const User = Models.User;
+
+
+const registerUser = function (req) {
   console.log("body: " + req.body);
   // console.log(req.path);
   // console.log(req.body["username"]);
@@ -32,7 +37,7 @@ const registerUser = function (req, Models) {
   var password;
   var saltSecret;
 
-  return User.findOne({
+  return sqlUserModel.findOne({
     where: {
       username: data.username
     },
@@ -47,7 +52,7 @@ const registerUser = function (req, Models) {
             password = hash;
             saltSecret = salt;
             //next();
-            User.create({
+            sqlUserModel.create({
               username: data.username,
               firstName: data.firstName,
               lastName: data.lastName,

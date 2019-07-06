@@ -4,11 +4,22 @@ import { SecurityRole } from './securityrole.model';
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
 import { Department } from './department.model';
+import Amplify, {API} from 'aws-amplify';
+import awsconfig from '../../aws-exports';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+
+  apiName = awsconfig._options.aws_cloud_logic_custom[0].name;
+  apiPath = '/items';
+  myInit = {
+    headers: {
+      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      'Content-Type': "application/json;charset=UTF-8"
+    }
+  };
 
   departments: Department[];
   securityRoles: SecurityRole[];
@@ -30,24 +41,19 @@ export class UserService {
     // this.departments = this.getDepartments();
   }
 
-
-
   // HttpMethods
-
-/*  getDepartments() {
-    // console.log(this.http.get(environment.apiBaseUrl + '/getDepartments'));
-    console.log('getDepartments');
-    return this.http.get(environment.apiBaseUrl + '/getDepartments');
-  }*/
-
-/*  getSecurityRoles() {
-    return this.http.get(environment.apiBaseUrl + '/getSecurityRoles', this.noAuthHeader);
-  }*/
 
   postUser(user: User) {
     // return this.http.post(environment.apiBaseUrl+'/register',login,this.noAuthHeader);
     console.log(user);
-    return this.http.post(environment.apiBaseUrl + '/registerUser', user, this.noAuthHeader);
+
+    return API.post(this.apiName, this.apiPath + '/registerUser', this.myInit).then(data => {
+      console.log('serverless user api');
+      console.log(data);
+      return data.data;
+    });
+
+    // return this.http.post(environment.apiBaseUrl + '/registerUser', user, this.noAuthHeader);
   }
 
   login(authCredentials) {

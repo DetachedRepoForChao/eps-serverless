@@ -1,38 +1,12 @@
+const SqlModel = require('../db');
+const Models = SqlModel();
 
-/*
-module.exports.getSecurityRoles = (req, res, next) =>{
-    //console.log('req.id:' + req.id);
-    //console.log(req);
+const sqlSecurityRoleModel = Models.SecurityRole;
 
-    sqlSecurityRoleModel.findAll({
-        attributes: ['id', 'name', 'description'],
-    })
-        .then(securityRoles => {
-            return res.status(200).json({ status: true, securityRoles : securityRoles });
-        })
-        .catch(err => {
-            console.log('Database error');
-            console.log(err);
-            return res.status(500).json({ status: false, message : err });
-        });
-
-};
-*/
-
-const getSecurityRoles = function (Models) {
+const getSecurityRoles = function () {
   console.log('start function getSecurityRoles');
   try {
-    // const Models = SqlModel();
-
-    // console.log('Models');
-    // console.log(Models);
-
-    const SecurityRole = Models.SecurityRole;
-
-    // console.log('Department:');
-    // console.log(Department);
-
-    return SecurityRole.findAll({
+    return sqlSecurityRoleModel.findAll({
       attributes: ['id', 'name', 'description'],
     }).then(securityRoles => {
       // console.log('departments;');

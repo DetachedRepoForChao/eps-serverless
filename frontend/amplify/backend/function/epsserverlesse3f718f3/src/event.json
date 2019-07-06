@@ -40,6 +40,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"username\": \"mbado\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": \"1\", \"departmentId\": \"2\", \"password\": \"password123\"}",
+  "body": "{\"username\": \"mbado\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": 2, \"departmentId\": 2, \"password\": \"password123\"}",
   "isBase64Encoded": false
 }

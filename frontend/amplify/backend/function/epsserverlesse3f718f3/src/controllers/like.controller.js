@@ -1,8 +1,7 @@
 
-import SqlModel from '../sequelize';
-
-
-const sqlLikeModel=SqlModel.Like;
+const SqlModel = require('../db');
+const Models = SqlModel();
+const sqlLikeModel = Models.Like;
 
 
 /**

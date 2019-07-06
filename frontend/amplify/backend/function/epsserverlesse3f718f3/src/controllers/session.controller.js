@@ -1,13 +1,10 @@
-import SqlModel from '../sequelize';
-//import sequelize from 'sequelize';
-import server from '../server';
-// import sessionHash from '../server';
-import bcrypt from "bcrypt";
+const SqlModel = require('../db');
+const Models = SqlModel();
 
-const sqlUserModel = SqlModel.User;
-const sqlAchievementModel = SqlModel.Achievement;
-const sqlAchievementTransactionModel = SqlModel.AchievementTransaction;
-const sqlSessionModel = SqlModel.Session;
+const sqlUserModel = Models.User;
+const sqlAchievementModel = Models.Achievement;
+const sqlAchievementTransactionModel = Models.AchievementTransaction;
+const sqlSessionModel = Models.Session;
 const _ = require('underscore');
 // const serverIo = server.io;
 // const sessionHash = server.sessionHash;

@@ -1,6 +1,7 @@
-import SqlModel from '../sequelize';
-const sqlUserModel = SqlModel.User;
-const sqlDepartmentModel = SqlModel.Department;
+const SqlModel = require('../db');
+const Models = SqlModel();
+const sqlUserModel = Models.User;
+const sqlDepartmentModel = Models.Department;
 
 var generatePointsLeaderboard = function() {
     console.log('generatePointsLeaderboard');

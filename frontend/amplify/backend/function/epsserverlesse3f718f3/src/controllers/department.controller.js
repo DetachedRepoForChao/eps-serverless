@@ -1,16 +1,13 @@
+const SqlModel = require('../db');
+const Models = SqlModel();
 
-console.log('starting department controller');
+const sqlDepartmentModel = Models.Department;
 
-
-const getDepartments = function (Models) {
+const getDepartments = function () {
   console.log('start function getDepartments');
   try {
-    const Department = Models.Department;
 
-    // console.log('Department:');
-    // console.log(Department);
-
-    return Department.findAll({
+    return sqlDepartmentModel.findAll({
       attributes: ['id', 'name'],
     }).then(departments => {
       // console.log('departments;');

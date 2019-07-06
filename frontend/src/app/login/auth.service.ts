@@ -5,6 +5,7 @@ import { Subject, Observable } from 'rxjs';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 
 export interface NewUser {
+  username: string;
   email: string;
   password: string;
   firstName: string;
@@ -36,7 +37,7 @@ export class AuthService {
 
   signUp(user: NewUser): Promise<CognitoUser|any> {
     return Auth.signUp({
-      'username': user.email,
+      'username': user.username,
       'password': user.password,
       'attributes': {
         'email': user.email,

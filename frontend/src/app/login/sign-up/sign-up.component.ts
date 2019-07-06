@@ -97,40 +97,39 @@ export class SignUpComponent implements OnInit {
   }
 */
 
-  
+
   onSubmit(form: NgForm) {
     console.log('onSubmit');
     console.log(form.value);
 
-    this._authService.signUp({
-      'email': form.value.email,
-      'password': form.value.password,
-      'firstName': form.value.firstName,
-      'lastName': form.value.lastName
-    })
-      .then((data) => {
-        environment.confirm.email = form.value.email;
-        environment.confirm.password = form.value.password;
-        this._router.navigateByUrl('/confirm');
-      })
-      .catch((error) => console.log(error));
+    this.userService.postUser(form.value)
+      .then(res => {
+          this.showSuccessMessage = true;
+          setTimeout(() => this.showSuccessMessage = false, 4000);
+          this.resetForm(form);
 
-    /*
-    this.userService.postUser(form.value).subscribe(
-      res => {
-        this.showSuccessMessage = true;
-        setTimeout(() => this.showSuccessMessage = false, 4000);
-        this.resetForm(form);
-      },
-      err => {
-        if (err.status === 422) {
-          this.serverErrorMessages = err.error.join('<br/>');
-        } else {
-          this.serverErrorMessages = 'Something went wrong. Please contact admin.';
+          this._authService.signUp({
+            'username': form.value.username,
+            'email': form.value.email,
+            'password': form.value.password,
+            'firstName': form.value.firstName,
+            'lastName': form.value.lastName
+          })
+            .then((data) => {
+              environment.confirm.email = form.value.email;
+              environment.confirm.password = form.value.password;
+              this._router.navigateByUrl('/confirm');
+            })
+            .catch((error) => console.log(error));
+        },
+        err => {
+          if (err.status === 422) {
+            this.serverErrorMessages = err.error.join('<br/>');
+          } else {
+            this.serverErrorMessages = 'Something went wrong. Please contact admin.';
+          }
         }
-      }
-    );
-    */
+      );
   }
 
   /*

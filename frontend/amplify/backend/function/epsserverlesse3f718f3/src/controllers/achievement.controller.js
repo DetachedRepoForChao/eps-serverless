@@ -1,8 +1,6 @@
 const SqlModel = require('../db');
 const Models = SqlModel();
 
-// const _ = require('lodash');
-
 const sqlAchievementModel = Models.Achievement;
 const sqlAchievementTransactionModel = Models.AchievementTransaction;
 const sqlUserAchievementProgressModel = Models.UserAchievementProgress;
@@ -481,48 +479,6 @@ var getAchievementByIdLocal = function (id) {
     })
 };
 
-/*
-var newUserAchievementProgress = function (req, res, next) {
-    console.log('newUserAchievementProgress:');
-    console.log(req.body);
-    console.log('newUserAchievementProgress res: ');
-    const data = {
-        userId: req.body.userId,
-        achievementId: req.body.achievementId,
-    };
-
-    sqlUserAchievementProgressModel.findOne({
-        where: {
-            userId: data.userId,
-            achievementId: data.achievementId
-        },
-    })
-        .then(userAchievementProgress => {
-            if (userAchievementProgress != null) {
-                console.log('This User/Achievement relationship already exists');
-                if(res) {
-                    res.status(404).json({status: false, message: 'This User/Achievement relationship already exists'});
-                }
-            } else {
-                sqlUserAchievementProgressModel.create({
-                    userId: data.userId,
-                    achievementId: data.achievementId
-                }).then(() => {
-                    console.log('User/Achievement relationship created in db');
-                    if(res) {
-                        res.status(200).send({status: false, message: 'User/Achievement relationship created' });
-                    }
-                });
-            }
-        })
-        .catch(err => {
-            console.log('problem communicating with db');
-            res.status(500).json({status: false, message: err});
-        });
-}
-
-module.exports.newUserAchievementProgress = newUserAchievementProgress;
-*/
 
 var newUserAchievementProgressLocal = function (userId, achievementId) {
   console.log('newUserAchievementProgressLocal:');

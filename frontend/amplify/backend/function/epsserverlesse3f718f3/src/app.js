@@ -7,24 +7,24 @@ See the License for the specific language governing permissions and limitations 
 */
 
 const AWS = require('aws-sdk');
-var express = require('express')
-var bodyParser = require('body-parser')
-var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+var express = require('express');
+var bodyParser = require('body-parser');
+var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
 
 // declare a new express app
-var app = express()
-app.use(bodyParser.json())
-app.use(awsServerlessExpressMiddleware.eventContext())
+var app = express();
+app.use(bodyParser.json());
+app.use(awsServerlessExpressMiddleware.eventContext());
 
 // Enable CORS for all methods
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next()
 });
 
-const SqlModel = require('./db');
-const Models = SqlModel();
+// const SqlModel = require('./db');
+// const Models = SqlModel();
 const ctrlDepartment = require('./controllers/department.controller');
 const ctrlSecurityRole = require('./controllers/securityrole.controller');
 const ctrlUser = require('./controllers/user.controller');
@@ -38,10 +38,30 @@ app.get('/items', function(req, res) {
   res.json({success: 'get call succeed!', url: req.url});
 });
 */
+
+// User Routes
+app.post('/items/registerUser', function(req, res) {
+  console.log('starting registerUser');
+  //console.log(req.body);
+  //res.json({body: req.body});
+  // console.log(req);
+  ctrlUser.registerUser(req)
+    .then(result => {
+      res.json({status: 'post call succeed!', data: result});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });
+});
+
+app.post('/items/authenticateUser', function(req, res) {
+
+});
+
 app.get('/items/getDepartments', function(req, res) {
   // Add your code here
   console.log('starting getDepartments');
-  ctrlDepartment.getDepartments(Models)
+  ctrlDepartment.getDepartments()
     .then(departments => {
       res.json({status: 'get call succeed!', data: departments.departments});
     })
@@ -53,7 +73,7 @@ app.get('/items/getDepartments', function(req, res) {
 app.get('/items/getSecurityRoles', function(req, res) {
   // Add your code here
   console.log('starting getSecurityRoles');
-  ctrlSecurityRole.getSecurityRoles(Models)
+  ctrlSecurityRole.getSecurityRoles()
     .then(securityRoles => {
       res.json({status: 'get call succeed!', data: securityRoles.securityRoles});
     })
@@ -62,19 +82,7 @@ app.get('/items/getSecurityRoles', function(req, res) {
     });
 });
 
-app.post('/items/registerUser', function(req, res) {
-  console.log('starting registerUser');
-  //console.log(req.body);
-  //res.json({body: req.body});
-  // console.log(req);
-  ctrlUser.registerUser(req, Models)
-    .then(result => {
-      res.json({status: 'post call succeed!', data: result});
-    })
-    .catch(err => {
-      res.json({status: 'post call failed!', error: err});
-    });
-});
+
 
 app.get('/items/*', function(req, res) {
   // Add your code here

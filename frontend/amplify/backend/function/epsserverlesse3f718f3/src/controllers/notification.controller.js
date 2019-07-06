@@ -1,11 +1,10 @@
-import SqlModel from '../sequelize';
-//import sequelize from 'sequelize';
-import bcrypt from "bcrypt";
-const _ = require('lodash');
-const sqlUserModel = SqlModel.User;
-const sqlAchievementModel = SqlModel.Achievement;
-const sqlAchievementTransactionModel = SqlModel.AchievementTransaction;
-const sqlUserAchievementProgressModel = SqlModel.UserAchievementProgress;
+const SqlModel = require('../db');
+const Models = SqlModel();
+
+const sqlUserModel = Models.User;
+const sqlAchievementModel = Models.Achievement;
+const sqlAchievementTransactionModel = Models.AchievementTransaction;
+const sqlUserAchievementProgressModel = Models.UserAchievementProgress;
 const ctrlAchievement = require('./achievement.controller');
 
 

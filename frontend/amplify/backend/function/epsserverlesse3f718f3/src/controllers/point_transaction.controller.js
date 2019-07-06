@@ -1,9 +1,8 @@
+const SqlModel = require('../db');
+const Models = SqlModel();
 
-import SqlModel from '../sequelize';
-
-
-const sqlpointTransactionModel=SqlModel.PointTransaction;
-const sqlUserModel = SqlModel.User;
+const sqlPointTransactionModel = Models.PointTransaction;
+const sqlUserModel = Models.User;
 
 
 
@@ -36,8 +35,8 @@ var getUserName=function (userid) {
  */
 
 module.exports.getPointTransaction = (req, res, next) =>{
-    console.log("getPointTransaction")
-    sqlpointTransactionModel.sequelize.query("select * from point_transaction order by id desc LIMIT 25")
+  console.log("getPointTransaction");
+  sqlPointTransactionModel.sequelize.query("select * from point_transaction order by id desc LIMIT 25")
         .then(
             PointTransactionResult => {
                 let PointTransactionDeatilResult=PointTransactionResult[0]

@@ -7,6 +7,7 @@ import {Department} from './department.model';
 import {GlobalVariableService} from './global-variable.service';
 import {forEach} from '@angular/router/src/utils/collection';
 import Amplify, {API} from 'aws-amplify';
+import awsconfig from '../../aws-exports';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,14 @@ import Amplify, {API} from 'aws-amplify';
 export class DepartmentService {
 
   //departments: Department[];
+  apiName = awsconfig._options.aws_cloud_logic_custom[0].name;
+  apiPath = '/items';
+  myInit = {
+    headers: {
+      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      'Content-Type': "application/json;charset=UTF-8"
+    }
+  };
 
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
 
@@ -25,38 +34,14 @@ export class DepartmentService {
 
   // HttpMethods
 
-/*  getDepartments() {
-    console.log('getDepartments');
-    //console.log(this.http.get(environment.apiBaseUrl + '/getDepartments'));
-    return this.http.get(environment.apiBaseUrl + '/getDepartments');
-    //  .subscribe(departments => {
-     //   console.log('getDepartments()');
-      //  console.log(departments);
-      //  return departments;
-     // });
-    // return this.http.get(environment.apiBaseUrl + '/getDepartments', this.noAuthHeader);
-  }*/
-
   getDepartments() {
     console.log('getDepartments');
 
-    return API.get('api9819f38d', '/items/getDepartments', {}).then(data => {
+    return API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
       console.log('serverless departments api');
       console.log(data);
       return data.data;
     });
-    // API.get('sampleCloudApi', '/items', {}).then(data => {
-    //   this.loading = false;
-    //   this.todos = data;
-    // });
-    //console.log(this.http.get(environment.apiBaseUrl + '/getDepartments'));
-    // return this.http.get(environment.apiBaseUrl + '/getDepartments');
-    //  .subscribe(departments => {
-    //   console.log('getDepartments()');
-    //  console.log(departments);
-    //  return departments;
-    // });
-    // return this.http.get(environment.apiBaseUrl + '/getDepartments', this.noAuthHeader);
   }
 
   storeDepartments() {

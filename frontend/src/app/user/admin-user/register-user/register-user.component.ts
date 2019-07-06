@@ -55,32 +55,12 @@ export class RegisterUserComponent implements OnInit {
     );
   }
 
-/*
-  getSecurityRoles() {
-    console.log('getSecurityRoles');
-    return this.securityRoleService.getSecurityRoles()
-      .pipe(
-        map(data => {
-          return data['securityRoles'];
-        }));
-  }
-*/
-
-
-  // getDepartments() {
-  //   console.log('getDepartments');
-  //   return this.departmentService.getDepartments()
-  //     .pipe(
-  //       map(data => {
-  //         return data['departments'];
-  //       }));
-  // }
 
 
   onSubmit(form: NgForm) {
     console.log('onSubmit');
-    this.userService.postUser(form.value).subscribe(
-      res => {
+    this.userService.postUser(form.value)
+      .then(res => {
         this.showSuccessMessage = true;
         setTimeout(() => this.showSuccessMessage = false, 4000);
         this.resetForm(form);

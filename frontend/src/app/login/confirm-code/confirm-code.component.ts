@@ -21,7 +21,8 @@ export class ConfirmCodeComponent implements OnInit {
 
   get codeInput() { return this.confirmForm.get('code'); }
 
-  constructor( private _router: Router, private _notification: NotifierService ) { }
+  constructor( private _router: Router,
+               private _notification: NotifierService ) { }
 
   ngOnInit() {
     if (!this.email) {

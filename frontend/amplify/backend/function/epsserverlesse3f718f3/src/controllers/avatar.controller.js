@@ -1,6 +1,6 @@
-import SqlModel from '../sequelize';
-const sqlUserModel = SqlModel.User;
-const _ = require('lodash');
+const SqlModel = require('../db');
+const Models = SqlModel();
+const sqlUserModel = Models.User;
 var fs = require('fs');
 
 

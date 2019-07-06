@@ -1,6 +1,6 @@
-import SqlModel from '../sequelize';
-const _ = require('lodash');
-const sqlPointPoolModel = SqlModel.PointPool;
+const SqlModel = require('../db');
+const Models = SqlModel();
+const sqlPointPoolModel = Models.PointPool;
 
 
 var getRemainingPointPool = function (req, res, next) {

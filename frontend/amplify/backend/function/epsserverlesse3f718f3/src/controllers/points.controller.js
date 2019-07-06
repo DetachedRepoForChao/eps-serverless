@@ -1,7 +1,7 @@
-import SqlModel from '../sequelize';
-const _ = require('lodash');
-const sqlPointItemModel = SqlModel.PointItem;
-const sqlPointPoolModel = SqlModel.PointPool;
+const SqlModel = require('../db');
+const Models = SqlModel();
+const sqlPointItemModel = Models.PointItem;
+const sqlPointPoolModel = Models.PointPool;
 const ctrlPointPool = require('./point_pool.controller');
 
 var getPointItems = function (req, res, next) {

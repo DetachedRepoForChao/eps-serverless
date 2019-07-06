@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { User } from './user.model';
 import {Department} from './department.model';
 import Amplify, {API} from 'aws-amplify';
+import awsconfig from '../../aws-exports';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,14 @@ import Amplify, {API} from 'aws-amplify';
 export class SecurityRoleService {
 
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
+  apiName = awsconfig._options.aws_cloud_logic_custom[0].name;
+  apiPath = '/items';
+  myInit = {
+    headers: {
+      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      'Content-Type': "application/json;charset=UTF-8"
+    }
+  };
 
   constructor(private http: HttpClient) {
 
@@ -28,7 +37,7 @@ export class SecurityRoleService {
   getSecurityRoles() {
     console.log('getSecurityRoles');
 
-    return API.get('api9819f38d', '/items/getSecurityRoles', {}).then(data => {
+    return API.get(this.apiName, this.apiPath + '/getSecurityRoles', {}).then(data => {
       console.log('serverless security roles api');
       console.log(data);
       return data.data;
