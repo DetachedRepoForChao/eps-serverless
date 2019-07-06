@@ -34,15 +34,15 @@ export class UserService {
 
   // HttpMethods
 
-  getDepartments() {
+/*  getDepartments() {
     // console.log(this.http.get(environment.apiBaseUrl + '/getDepartments'));
     console.log('getDepartments');
     return this.http.get(environment.apiBaseUrl + '/getDepartments');
-  }
+  }*/
 
-  getSecurityRoles() {
+/*  getSecurityRoles() {
     return this.http.get(environment.apiBaseUrl + '/getSecurityRoles', this.noAuthHeader);
-  }
+  }*/
 
   postUser(user: User) {
     // return this.http.post(environment.apiBaseUrl+'/register',login,this.noAuthHeader);

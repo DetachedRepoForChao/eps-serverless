@@ -40,7 +40,7 @@ export class DepartmentService {
   getDepartments() {
     console.log('getDepartments');
 
-    return API.get('api9819f38d', '/items', {}).then(data => {
+    return API.get('api9819f38d', '/items/getDepartments', {}).then(data => {
       console.log('serverless departments api');
       console.log(data);
       return data.data;

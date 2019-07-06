@@ -1,8 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items",
-  "httpMethod": "GET",
-  "headers": null,
+  "path": "/items/registerUser",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Content-Type": "application/json;charset=UTF-8"
+  },
   "multiValueHeaders": null,
   "queryStringParameters": null,
   "multiValueQueryStringParameters": null,
@@ -14,7 +17,7 @@
     "resourceId": "hb7pz4",
     "stage": "test-invoke-stage",
     "domainPrefix": "testPrefix",
-    "requestId": "a8d47ed4-9f4c-11e9-8f14-772fe80ab380",
+    "requestId": "99116065-9f7a-11e9-9db0-a752edc9496c",
     "identity": {
       "cognitoIdentityPoolId": null,
       "cognitoIdentityId": null,
@@ -27,16 +30,16 @@
       "accountId": "644955040906",
       "caller": "644955040906",
       "sourceIp": "test-invoke-source-ip",
-      "accessKey": "ASIAZMKSQ5SFFYKQXI7K",
+      "accessKey": "ASIAZMKSQ5SFALGAF47S",
       "cognitoAuthenticationProvider": null,
       "user": "644955040906"
     },
     "domainName": "testPrefix.testDomainName",
     "resourcePath": "/items",
-    "httpMethod": "GET",
-    "extendedRequestId": "cXLrqF5roAMFbJw=",
+    "httpMethod": "POST",
+    "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": null,
+  "body": "{\"username\": \"mbado\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": \"1\", \"departmentId\": \"2\", \"password\": \"password123\"}",
   "isBase64Encoded": false
 }

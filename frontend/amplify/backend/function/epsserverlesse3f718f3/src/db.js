@@ -31,7 +31,7 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
     logging: false
   }
-)
+);
 
 // console.log(sequelize);
 
@@ -49,8 +49,8 @@ const UserAchievementProgress = UserAchievementProgressModel(sequelize, Sequeliz
 const Metrics = MetricsModel(sequelize, Sequelize);
 const PointPool = PointPoolModel(sequelize, Sequelize);
 const Session = SessionModel(sequelize, Sequelize);
-const Like=LikeModel(sequelize,Sequelize)
-/*const Models = {
+const Like = LikeModel(sequelize,Sequelize);
+const Models = {
   User,
   Department,
   Node,
@@ -64,12 +64,8 @@ const Like=LikeModel(sequelize,Sequelize)
   PointPool,
   Session,
   Like
-};*/
-const Models = {
-  User,
-  Department
 };
-const connection = {}
+const connection = {};
 
 /*
 module.exports = async () => {
@@ -88,13 +84,13 @@ module.exports = async () => {
 
 module.exports = () => {
   if (connection.isConnected) {
-    console.log('=> Using existing connection.')
-    return Models
+    console.log('=> Using existing connection.');
+    return Models;
   }
 
-  sequelize.sync()
-  sequelize.authenticate()
-  connection.isConnected = true
-  console.log('=> Created a new connection.')
-  return Models
-}
+  sequelize.sync();
+  sequelize.authenticate();
+  connection.isConnected = true;
+  console.log('=> Created a new connection.');
+  return Models;
+};

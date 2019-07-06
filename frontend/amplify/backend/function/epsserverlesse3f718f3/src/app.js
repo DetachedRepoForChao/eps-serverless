@@ -26,7 +26,8 @@ app.use(function(req, res, next) {
 const SqlModel = require('./db');
 const Models = SqlModel();
 const ctrlDepartment = require('./controllers/department.controller');
-
+const ctrlSecurityRole = require('./controllers/securityrole.controller');
+const ctrlUser = require('./controllers/user.controller');
 /**********************
  * Example get method *
  **********************/
@@ -37,7 +38,7 @@ app.get('/items', function(req, res) {
   res.json({success: 'get call succeed!', url: req.url});
 });
 */
-app.get('/items', function(req, res) {
+app.get('/items/getDepartments', function(req, res) {
   // Add your code here
   console.log('starting getDepartments');
   ctrlDepartment.getDepartments(Models)
@@ -46,6 +47,32 @@ app.get('/items', function(req, res) {
     })
     .catch(err => {
       res.json({status: 'get call failed!', error: err});
+    });
+});
+
+app.get('/items/getSecurityRoles', function(req, res) {
+  // Add your code here
+  console.log('starting getSecurityRoles');
+  ctrlSecurityRole.getSecurityRoles(Models)
+    .then(securityRoles => {
+      res.json({status: 'get call succeed!', data: securityRoles.securityRoles});
+    })
+    .catch(err => {
+      res.json({status: 'get call failed!', error: err});
+    });
+});
+
+app.post('/items/registerUser', function(req, res) {
+  console.log('starting registerUser');
+  //console.log(req.body);
+  //res.json({body: req.body});
+  // console.log(req);
+  ctrlUser.registerUser(req, Models)
+    .then(result => {
+      res.json({status: 'post call succeed!', data: result});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
     });
 });
 
@@ -59,8 +86,16 @@ app.get('/items/*', function(req, res) {
 ****************************/
 
 app.post('/items', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
+  console.log('starting registerUser');
+  console.log(req.body);
+  // console.log(req);
+/*  ctrlUser.registerUser(req, Models)
+    .then(result => {
+      res.json({status: 'post call succeed!', data: result});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });*/
 });
 
 app.post('/items/*', function(req, res) {

@@ -1,100 +1,37 @@
-// const SqlModel = require('../db');
-
-// const sqlDepartmentModel = SqlModel.Department;
-// const sqlUserModel = SqlModel.User;
 
 console.log('starting department controller');
-/*
-module.exports.getDepartments = (req, res, next) =>{
-    //console.log('req.id:' + req.id);
-    //console.log(req);
-    sqlDepartmentModel.findAll({
-        attributes: ['id', 'name'],
-    })
-        .then(departments => {
-            // return res.status(200).json({ status: true, departments : departments });
-            return res.status(200).json({ status: true, departments : departments });
-        })
-        .catch(err => {
-            console.log('Database error');
-            console.log(err);
-            return res.status(500).json({status: false, message: err});
-        });
 
-};
-*/
 
-/*
-let getDepartments = async function () {
+const getDepartments = function (Models) {
   console.log('start function getDepartments');
-  try{
-    await SqlModel()
-      .then(Models => async function () {
-        console.log('Models');
-        console.log(Models);
+  try {
+    const Department = Models.Department;
 
-        const Department = Models.Department;
-        const User = Models.User;
+    // console.log('Department:');
+    // console.log(Department);
 
-        console.log('Department:');
-        console.log(Department);
-        console.log('User:');
-        console.log(User);
-
-        const departments = await Department.findAll({
-          attributes: ['id', 'name'],
-        });
-
-        console.log('departments;');
-        console.log(departments);
-        return {
-          status: 200,
-          departments: departments
-        };
-      });
+    return Department.findAll({
+      attributes: ['id', 'name'],
+    }).then(departments => {
+      // console.log('departments;');
+      // console.log(departments);
+      return {
+        status: 200,
+        departments: departments
+      };
+    }).catch(err => {
+      console.log("Error retrieving departments");
+      return {
+        status: err.statusCode || 500,
+        error: err || "Error retrieving departments"
+      }
+    });
   } catch (err) {
     return {
       status: err.statusCode || 500,
       error: err || "Error getting departments"
     }
   }
-*/
-
-  let getDepartments = function (Models) {
-    console.log('start function getDepartments');
-    try {
-      // const Models = SqlModel();
-
-      // console.log('Models');
-      // console.log(Models);
-
-      const Department = Models.Department;
-
-      // console.log('Department:');
-      // console.log(Department);
-
-      return Department.findAll({
-        attributes: ['id', 'name'],
-      }).then(departments => {
-        // console.log('departments;');
-        // console.log(departments);
-        return {
-          status: 200,
-          departments: departments
-        };
-      }).catch(err => {
-        console.log("Error retrieving departments");
-        return {
-          status: err.statusCode || 500,
-          error: err || "Error retrieving departments"
-        }
-      });
-    } catch (err) {
-      return {
-        status: err.statusCode || 500,
-        error: err || "Error getting departments"
-      }
-    }
 };
 
 module.exports.getDepartments = getDepartments;

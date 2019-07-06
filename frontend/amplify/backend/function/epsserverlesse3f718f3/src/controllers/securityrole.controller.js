@@ -1,7 +1,5 @@
-const SqlModel = require('./db');
-const _ = require('lodash');
-const sqlSecurityRoleModel = SqlModel.Models.SecurityRole;
 
+/*
 module.exports.getSecurityRoles = (req, res, next) =>{
     //console.log('req.id:' + req.id);
     //console.log(req);
@@ -19,6 +17,46 @@ module.exports.getSecurityRoles = (req, res, next) =>{
         });
 
 };
+*/
+
+const getSecurityRoles = function (Models) {
+  console.log('start function getSecurityRoles');
+  try {
+    // const Models = SqlModel();
+
+    // console.log('Models');
+    // console.log(Models);
+
+    const SecurityRole = Models.SecurityRole;
+
+    // console.log('Department:');
+    // console.log(Department);
+
+    return SecurityRole.findAll({
+      attributes: ['id', 'name', 'description'],
+    }).then(securityRoles => {
+      // console.log('departments;');
+      // console.log(departments);
+      return {
+        status: 200,
+        securityRoles: securityRoles
+      };
+    }).catch(err => {
+      console.log("Error retrieving security roles");
+      return {
+        status: err.statusCode || 500,
+        error: err || "Error retrieving security roles"
+      }
+    });
+  } catch (err) {
+    return {
+      status: err.statusCode || 500,
+      error: err || "Error getting security roles"
+    }
+  }
+};
+
+module.exports.getSecurityRoles = getSecurityRoles;
 
 module.exports.getSecurityRoleById = (req, res, next) =>{
 

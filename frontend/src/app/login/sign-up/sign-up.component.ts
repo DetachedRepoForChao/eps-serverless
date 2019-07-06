@@ -46,40 +46,29 @@ export class SignUpComponent implements OnInit {
           console.log(deps[i]);
         }
       });
-    // this.getDepartments().subscribe(deps => {
-    //     this.departments = deps;
-    //     for (let i = 0; i < deps.length; i++) {
-    //       console.log(deps[i]);
-    //     }
-    //   }
-    // );
 
-/*    this.getSecurityRoles().subscribe(secRoles => {
+    this.getSecurityRoles()
+      .then(secRoles => {
         this.securityRoles = secRoles;
         for (let i = 0; i < secRoles.length; i++) {
           console.log(secRoles[i]);
         }
       }
-    );*/
+    );
   }
 
-/*  getSecurityRoles() {
+  getSecurityRoles() {
     console.log('getSecurityRoles');
     return this.securityRoleService.getSecurityRoles()
-      .pipe(
-        map(data => {
-          return data['securityRoles'];
-        }));
-  }*/
+      .then(data => {
+        return data;
+      });
+  }
 
 
   getDepartments() {
     console.log('getDepartments');
-    // return this.departmentService.getDepartments()
-    //   .pipe(
-    //     map(data => {
-    //       return data['departments'];
-    //     }));
+
     return this.departmentService.getDepartments()
       .then(data => {
         return data;

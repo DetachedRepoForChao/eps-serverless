@@ -46,7 +46,7 @@ export class RegisterUserComponent implements OnInit {
       }
     );
 
-    this.getSecurityRoles().subscribe(secRoles => {
+    this.securityRoleService.getSecurityRoles().then(secRoles => {
         this.securityRoles = secRoles;
         for (let i = 0; i < secRoles.length; i++) {
           console.log(secRoles[i]);
@@ -55,6 +55,7 @@ export class RegisterUserComponent implements OnInit {
     );
   }
 
+/*
   getSecurityRoles() {
     console.log('getSecurityRoles');
     return this.securityRoleService.getSecurityRoles()
@@ -63,6 +64,7 @@ export class RegisterUserComponent implements OnInit {
           return data['securityRoles'];
         }));
   }
+*/
 
 
   // getDepartments() {
