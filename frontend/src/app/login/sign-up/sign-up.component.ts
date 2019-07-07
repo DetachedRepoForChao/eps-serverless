@@ -104,9 +104,9 @@ export class SignUpComponent implements OnInit {
 
     this.userService.postUser(form.value)
       .then(res => {
-          this.showSuccessMessage = true;
-          setTimeout(() => this.showSuccessMessage = false, 4000);
-          this.resetForm(form);
+          // this.showSuccessMessage = true;
+          // setTimeout(() => this.showSuccessMessage = false, 4000);
+
 
           this._authService.signUp({
             'username': form.value.username,
@@ -118,6 +118,8 @@ export class SignUpComponent implements OnInit {
             .then((data) => {
               environment.confirm.email = form.value.email;
               environment.confirm.password = form.value.password;
+              environment.confirm.username = form.value.username;
+              this.resetForm(form);
               this._router.navigateByUrl('/confirm');
             })
             .catch((error) => console.log(error));

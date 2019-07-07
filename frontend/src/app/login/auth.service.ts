@@ -10,6 +10,7 @@ export interface NewUser {
   password: string;
   firstName: string;
   lastName: string;
+
 }
 
 @Injectable({
@@ -60,6 +61,10 @@ export class AuthService {
   signOut(): Promise<any> {
     return Auth.signOut()
       .then(() => this.loggedIn = false);
+  }
+
+  currentAuthenticatedUser(): Promise<any> {
+    return Auth.currentAuthenticatedUser();
   }
 
 }

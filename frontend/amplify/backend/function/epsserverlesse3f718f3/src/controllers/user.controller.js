@@ -11,6 +11,7 @@ const BCRYPT_SALT_ROUNDS = 12;
 const ctrlAchievement = require('./achievement.controller');
 const ctrlPointPool = require('./point_pool.controller');
 
+const jwtVerify = require('../config/decode-verify-jwt');
 
 
 const registerUser = function (req) {
@@ -132,12 +133,27 @@ module.exports.authenticateUser = (req, res, next) => {
 
 
 
-module.exports.getUserProfile = (req, res, next) =>{
+const getUserProfile = function (username) {
   console.log('getUserProfile');
-  console.log('getUserProfile req');
+  console.log('username: ' + username);
+  // console.log(req.headers.authorization);
+
+  return sqlUserModel.findOne({
+    attributes: ['id','username','firstName','lastName','points','email', 'securityRoleId','departmentId'],
+    where: {
+      username: username,
+    },
+  })
+    .then(user => {
+      if (!user)
+        return { status: 404, message: 'User record not found.' };
+      else
+        return  {status: 200, user: user};
+    });
+  // console.log('getUserProfile req');
   // console.log(req);
-  console.log('req.id:' + req.id);
-  console.log('getUserProfile res');
+  // console.log('req.id:' + req.id);
+  // console.log('getUserProfile res');
   // console.log(res);
 
   /*
@@ -147,18 +163,10 @@ module.exports.getUserProfile = (req, res, next) =>{
       return res.status(200).json({ status: true, user : _.pick(req,['id','username','firstName','lastName','points','email', 'securityRoleId','departmentId']) });
   */
 
-  sqlUserModel.findOne({
-    where: {
-      id: req.id,
-    },
-  })
-    .then(user => {
-      if (!user)
-        return res.status(404).json({ status: false, message: 'User record not found.' });
-      else
-        return res.status(200).json({ status: true, user : _.pick(user,['id','username','firstName','lastName','points','email', 'securityRoleId','departmentId']) });
-    });
+
 };
+
+module.exports.getUserProfile = getUserProfile;
 
 module.exports.setUserProfile = (req, res, next) => {
   console.log('setUserProfile');

@@ -1,3 +1,4 @@
+<!--
 <form [formGroup]="confirmForm">
   <h2>Confirm your email address</h2>
   <mat-form-field>
@@ -10,3 +11,40 @@
   <button mat-raised-button color="primary" (click)="confirmCode()">Confirm</button>
   <p>Didn't receive a code? <a href="javascript:void(null)" (click)="sendAgain()">Send again</a></p>
 </form>
+-->
+
+<div class="row">
+  <div class="col-lg-5 col-md-6 offset-lg-0 offset-md-3">
+    <div id="square7" class="square square-7"></div>
+    <div id="square8" class="square square-8"></div>
+    <div class="card card-register">
+      <div class="card-header">
+        <img class="card-img" src="../assets/img/square1.png" alt="Card image">
+        <h4 class="card-title">Confirm</h4>
+      </div>
+      <div class="card-body">
+
+        <form #codeForm="ngForm" (ngSubmit)="confirmCode(codeForm)" class="form">
+          <div class="form-group">
+
+            <label for="code">Confirmation code</label>
+            <input type="text" id="code" name="code" #code="ngModel" class="form-control" [(ngModel)]="confirmForm.code" required>
+            <div *ngIf="codeForm.submitted && !code.valid">
+              <label class="validation-message">This field is required.</label>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
+            <button type="submit" class="btn btn-info btn-round btn-lg">Confirm</button>
+            <p>Didn't receive a code? <a href="javascript:void(null)" (click)="sendAgain()">Send again</a></p>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,11 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items/registerUser",
-  "httpMethod": "POST",
+  "path": "/items/userProfile",
+  "httpMethod": "GET",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Content-Type": "application/json;charset=UTF-8"
-  },
+    "Content-Type": "application/json;charset=UTF-8",
+    "Authorization": "eyJraWQiOiJUblFrWUNsS1NRRUEzVTNYZ2ZLekhOd296UVVLemI3emZLSXkzZ2dGcng0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJlODU0Y2E2YS04NmMxLTQ3YzItYWM2OC03Y2I3YzgwMDBiMjUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZ2J6Q2tXVGpJIiwiY29nbml0bzp1c2VybmFtZSI6Im1iYWRvIiwiZ2l2ZW5fbmFtZSI6Ik1heCIsImF1ZCI6IjVjdWpnZHA5aWNwdHNzczR2dXVkdjJrdDhoIiwiZXZlbnRfaWQiOiIwMGIzNGM2ZC0wY2RmLTQ0MmEtYjM0Ny1kNDg4OTcwOGYyOTEiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU2MjUxMjk3OCwiZXhwIjoxNTYyNTE2NTc4LCJpYXQiOjE1NjI1MTI5NzgsImZhbWlseV9uYW1lIjoiQmFkbyIsImVtYWlsIjoibWF4LmJhZG9AZ21haWwuY29tIn0.AkpghhY2YZ8sKGLd2aQqKLTdTDVJmkSL5miv0EOAx1TRtSXRSufDK9FyPPf5ZKoLHHDCBnXiROkekWaOCB3jnnQ7cdjTJv_hAeIm3Nqh6Iuk68HfV0QbEOo0x3MgXIc8Hb1qzoSQHzwvhsiUDxX2QibqO7bSOWVTHsVSKMi8b1IW5cMC9UMgAGo_J0CnyuczTPvmUPzf5tuUnxKsG4qMc3k3xPU2MsOpebnqoNdEIMLXzALsW5wqzXQjimSXbvb_juCzqXL50Mwln9PBGXW-7674wSDAo3QID7Re9wcWwgYAmV20M44EtGdYGbalY0j-zaGKDeokEnNfOkqkcjSwNw"  },
   "multiValueHeaders": null,
   "queryStringParameters": null,
   "multiValueQueryStringParameters": null,
@@ -36,7 +36,7 @@
     },
     "domainName": "testPrefix.testDomainName",
     "resourcePath": "/items",
-    "httpMethod": "POST",
+    "httpMethod": "GET",
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },

@@ -6,19 +6,22 @@ import { User } from './user.model';
 import { Department } from './department.model';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
+import {AuthService} from "../login/auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  apiName = awsconfig._options.aws_cloud_logic_custom[0].name;
+  apiName = awsconfig.aws_cloud_logic_custom[0].name;
+  // apiName = "api9819f38d";
   apiPath = '/items';
   myInit = {
     headers: {
       'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
       'Content-Type': "application/json;charset=UTF-8"
-    }
+    },
+    body: null
   };
 
   departments: Department[];
@@ -37,7 +40,7 @@ export class UserService {
 
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private authService: AuthService) {
     // this.departments = this.getDepartments();
   }
 
@@ -46,7 +49,8 @@ export class UserService {
   postUser(user: User) {
     // return this.http.post(environment.apiBaseUrl+'/register',login,this.noAuthHeader);
     console.log(user);
-
+    this.myInit.body = user;
+    console.log(this.myInit);
     return API.post(this.apiName, this.apiPath + '/registerUser', this.myInit).then(data => {
       console.log('serverless user api');
       console.log(data);
@@ -63,11 +67,25 @@ export class UserService {
     return this.http.post(environment.apiBaseUrl + '/authenticateUser', authCredentials, this.noAuthHeader);
   }
 
-  getUserProfile() {
+  async getUserProfile() {
     // return this.http.get(environment.apiBaseUrl + '/userProfile');
     console.log('userProfile');
     // console.log(this.http.get(environment.apiBaseUrl + '/userProfileGet'));
-    return this.http.get(environment.apiBaseUrl + '/userProfile');
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    this.myInit.headers['Authorization'] = token;
+    console.log(this.myInit);
+
+    return this.authService.currentAuthenticatedUser().then(data => {
+      // console.log(data);
+      return API.get(this.apiName, this.apiPath + '/userProfile', this.myInit).then(data => {
+        console.log('serverless get userProfile');
+        console.log(data);
+        return data.data;
+      });
+    });
+
+    // return this.http.get(environment.apiBaseUrl + '/userProfile');
   }
 
   setUserProfile() {

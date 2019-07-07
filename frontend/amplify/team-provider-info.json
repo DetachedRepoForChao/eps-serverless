@@ -12,7 +12,9 @@
         },
         "categories": {
             "auth": {
-                "epsserverlessc2b21a63": {}
+                "epsserverlessauth0001": {
+                    "hostedUIProviderCreds": "[]"
+                }
             }
         }
     }

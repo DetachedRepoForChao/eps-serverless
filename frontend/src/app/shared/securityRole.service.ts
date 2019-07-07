@@ -13,7 +13,8 @@ import awsconfig from '../../aws-exports';
 export class SecurityRoleService {
 
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
-  apiName = awsconfig._options.aws_cloud_logic_custom[0].name;
+  apiName = awsconfig.aws_cloud_logic_custom[0].name;
+  // apiName = "api9819f38d";
   apiPath = '/items';
   myInit = {
     headers: {

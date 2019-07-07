@@ -31,7 +31,10 @@ export const appRoutes: Routes = [
   },
   {
     path: 'confirm',
-    component: ConfirmCodeComponent,
+    component: LoginComponent,
+    children: [
+      { path: '', component: ConfirmCodeComponent },
+    ]
   },
   {
       path: 'login',

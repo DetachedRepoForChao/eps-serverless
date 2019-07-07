@@ -56,8 +56,8 @@ export class SignInComponent implements OnInit {
   }
 
 
-  /*
-  onSubmit(form: NgForm) {
+
+  /*onSubmit2(form: NgForm) {
     console.log(form.value);
     this.userService.login(form.value).subscribe(
       res => {
@@ -89,7 +89,7 @@ export class SignInComponent implements OnInit {
                 localStorage.setItem('departmentName', departmentData['department'].name);
               });
 
-            /*
+
             //this.achievementService.incrementAchievementSignIn(userDetails.id)
             this.achievementService.incrementAchievement('SignIn', userDetails.id)
               .subscribe((result: any) => {
@@ -108,9 +108,9 @@ export class SignInComponent implements OnInit {
                   }
                 }
               });
-            */
 
-            /*
+
+
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
             this.sessionService.SetSessionLoggedIn();
             this.router.navigate(['/user']);
@@ -121,8 +121,8 @@ export class SignInComponent implements OnInit {
         this.serverErrorMessages = err.error.message;
       }
     );
-  }
-  */
+  }*/
+
 
   onSubmit(form: NgForm) {
     console.log(form.value);
@@ -130,9 +130,57 @@ export class SignInComponent implements OnInit {
       .then((user: CognitoUser|any) => {
         console.log('Success!');
         console.log(user);
-        // this.router.navigateByUrl('/user');
-        // this._loader.hide();
-        // this._router.navigate(['']);
+        console.log('storeUserDetails');
+        this.userService.getUserProfile()
+          .then(userData => {
+            console.log(userData['user']);
+            const userDetails = userData['user'];
+            localStorage.setItem('userId', userDetails.id);
+            localStorage.setItem('username', userDetails.username);
+            localStorage.setItem('firstName', userDetails.firstName);
+            localStorage.setItem('lastName', userDetails.lastName);
+            localStorage.setItem('points', userDetails.points);
+            localStorage.setItem('email', userDetails.email);
+            localStorage.setItem('securityRoleId', userDetails.securityRoleId);
+            localStorage.setItem('departmentId', userDetails.departmentId);
+
+            this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)
+              .subscribe(securityData => {
+                console.log(securityData['securityRole']);
+                localStorage.setItem('securityRoleName', securityData['securityRole'].name);
+                localStorage.setItem('securityRoleDescription', securityData['securityRole'].description);
+              });
+
+            this.departmentService.getDepartmentById(userDetails.departmentId)
+              .subscribe(departmentData => {
+                console.log(departmentData['department']);
+                localStorage.setItem('departmentName', departmentData['department'].name);
+              });
+
+            //this.achievementService.incrementAchievementSignIn(userDetails.id)
+            this.achievementService.incrementAchievement('SignIn', userDetails.id)
+              .subscribe((result: any) => {
+                console.log('incrementAchievementSignIn result:');
+                console.log(result);
+                if ( !result ) {
+                  console.log('Did not receive response from incrementAchievementSignIn');
+                } else {
+                  if ( result.status !== true) {
+                    console.log('Something went wrong...');
+                    console.log(result.message);
+                  } else {
+                    console.log('Success');
+                    console.log(result.message);
+                    this.achievementComponent.getUserAchievements();
+                  }
+                }
+              });
+
+            // this.router.navigate(['/user/' + userDetails.securityRoleId]);
+            // this.sessionService.SetSessionLoggedIn();
+            this.router.navigate(['/user']);
+            // this.router.navigate(['/user/' + userDetails.securityRoleId]);
+          });
       })
       .catch((error: any) => {
         // this._loader.hide();
@@ -153,7 +201,7 @@ export class SignInComponent implements OnInit {
       });
   }
 
-  storeUserDetails() {
+  /*storeUserDetails() {
     console.log('storeUserDetails');
     this.userService.getUserProfile()
       .subscribe(userData => {
@@ -182,7 +230,7 @@ export class SignInComponent implements OnInit {
           });
 
       });
-  }
+  }*/
 
   getUserDetails() {
     console.log('getUserDetails');

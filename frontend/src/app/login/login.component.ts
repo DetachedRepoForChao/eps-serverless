@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import {AvatarService} from '../shared/avatar.service';
 import {Router} from '@angular/router';
 // import {SocketService} from '../shared/socket.service';
+import { environment } from 'src/environments/environment';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -94,5 +95,13 @@ export class LoginComponent implements OnInit {
     // this.socketService.socketTest2();
     // debugger;
     this.router.navigateByUrl('signup');
+  }
+
+  onConfirmClick() {
+    // this.socketService.socketTest2();
+    // debugger;
+    environment.confirm.email = 'max.bado@gmail.com';
+    environment.confirm.password = 'D@RTHtest911';
+    this.router.navigateByUrl('confirm');
   }
 }

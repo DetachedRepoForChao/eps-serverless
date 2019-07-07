@@ -7,7 +7,8 @@ export const environment = {
   apiBaseUrl: 'http://localhost:3000/api',
   confirm: {
     email: '',
-    password: ''
+    password: '',
+    username: ''
   }
 };
 

@@ -15,7 +15,8 @@ import awsconfig from '../../aws-exports';
 export class DepartmentService {
 
   //departments: Department[];
-  apiName = awsconfig._options.aws_cloud_logic_custom[0].name;
+  apiName = awsconfig.aws_cloud_logic_custom[0].name;
+  // apiName = "api9819f38d";
   apiPath = '/items';
   myInit = {
     headers: {
@@ -36,7 +37,7 @@ export class DepartmentService {
 
   getDepartments() {
     console.log('getDepartments');
-
+    console.log(awsconfig);
     return API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
       console.log('serverless departments api');
       console.log(data);

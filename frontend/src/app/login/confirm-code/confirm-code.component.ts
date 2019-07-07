@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormControl } from '@angular/forms';
+import {FormGroup, Validators, FormControl, NgForm} from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import Auth from '@aws-amplify/auth';
 import {NotificationService} from '../../shared/notifications/notification.service';
 import {NotifierService} from 'angular-notifier';
+
 
 @Component({
   selector: 'app-confirm-code',
@@ -14,6 +15,8 @@ import {NotifierService} from 'angular-notifier';
 export class ConfirmCodeComponent implements OnInit {
 
   email = environment.confirm.email;
+  username = environment.confirm.username;
+
   confirmForm: FormGroup = new FormGroup({
     email: new FormControl({value: this.email, disabled: true}),
     code: new FormControl('', [ Validators.required, Validators.min(3) ])
@@ -38,8 +41,9 @@ export class ConfirmCodeComponent implements OnInit {
       .catch(() => this._notification.notify('Error', 'An error occurred'));
   }
 
-  confirmCode() {
-    Auth.confirmSignUp(this.email, this.codeInput.value)
+  confirmCode(form: NgForm) {
+    console.log(form.value);
+    Auth.confirmSignUp(this.username, form.value.code)
       .then((data: any) => {
         console.log(data);
         if (data === 'SUCCESS' &&

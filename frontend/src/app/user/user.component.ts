@@ -74,7 +74,7 @@ export class UserComponent implements OnInit {
 
     if (!this.securityRoleId) {
       this.userService.getUserProfile()
-        .subscribe(userData => {
+        .then(userData => {
           this.securityRoleId = userData['user'].securityRoleId;
           localStorage.setItem('securityRoleId', userData['user'].securityRoleId);
         });
