@@ -20,8 +20,7 @@ export class UserService {
     headers: {
       'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
       'Content-Type': "application/json;charset=UTF-8"
-    },
-    body: null
+    }
   };
 
   departments: Department[];
@@ -49,7 +48,7 @@ export class UserService {
   postUser(user: User) {
     // return this.http.post(environment.apiBaseUrl+'/register',login,this.noAuthHeader);
     console.log(user);
-    this.myInit.body = user;
+    this.myInit['body'] = user;
     console.log(this.myInit);
     return API.post(this.apiName, this.apiPath + '/registerUser', this.myInit).then(data => {
       console.log('serverless user api');
@@ -68,22 +67,20 @@ export class UserService {
   }
 
   async getUserProfile() {
-    // return this.http.get(environment.apiBaseUrl + '/userProfile');
-    console.log('userProfile');
-    // console.log(this.http.get(environment.apiBaseUrl + '/userProfileGet'));
+    console.log('getUserProfile');
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
     this.myInit.headers['Authorization'] = token;
     console.log(this.myInit);
 
-    return this.authService.currentAuthenticatedUser().then(data => {
+    // return this.authService.currentAuthenticatedUser().then(data => {
       // console.log(data);
       return API.get(this.apiName, this.apiPath + '/userProfile', this.myInit).then(data => {
-        console.log('serverless get userProfile');
+        console.log('serverless getUserProfile');
         console.log(data);
         return data.data;
       });
-    });
+    // });
 
     // return this.http.get(environment.apiBaseUrl + '/userProfile');
   }
@@ -101,9 +98,19 @@ export class UserService {
     return this.http.get(environment.apiBaseUrl + '/userRoleGet');
   }
 
-  getUserPoints() {
+  async getUserPoints() {
     console.log('getUserPoints');
-    return this.http.get(environment.apiBaseUrl + '/getUserPoints');
+    // return this.http.get(environment.apiBaseUrl + '/getUserPoints');
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    this.myInit.headers['Authorization'] = token;
+
+    return API.get(this.apiName, this.apiPath + '/getUserPoints', this.myInit).then(data => {
+      console.log('serverless getUserPoints');
+      console.log(data);
+      return data.data;
+    });
+
   }
 
   // Helper Methods

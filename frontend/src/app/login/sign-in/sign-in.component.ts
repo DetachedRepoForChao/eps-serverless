@@ -55,75 +55,6 @@ export class SignInComponent implements OnInit {
 
   }
 
-
-
-  /*onSubmit2(form: NgForm) {
-    console.log(form.value);
-    this.userService.login(form.value).subscribe(
-      res => {
-        this.userService.setToken(res['token']);
-        console.log('storeUserDetails');
-        this.userService.getUserProfile()
-          .subscribe(userData => {
-            console.log(userData['user']);
-            const userDetails = userData['user'];
-            localStorage.setItem('userId', userDetails.id);
-            localStorage.setItem('username', userDetails.username);
-            localStorage.setItem('firstName', userDetails.firstName);
-            localStorage.setItem('lastName', userDetails.lastName);
-            localStorage.setItem('points', userDetails.points);
-            localStorage.setItem('email', userDetails.email);
-            localStorage.setItem('securityRoleId', userDetails.securityRoleId);
-            localStorage.setItem('departmentId', userDetails.departmentId);
-
-            this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)
-              .subscribe(securityData => {
-                console.log(securityData['securityRole']);
-                localStorage.setItem('securityRoleName', securityData['securityRole'].name);
-                localStorage.setItem('securityRoleDescription', securityData['securityRole'].description);
-              });
-
-            this.departmentService.getDepartmentById(userDetails.departmentId)
-              .subscribe(departmentData => {
-                console.log(departmentData['department']);
-                localStorage.setItem('departmentName', departmentData['department'].name);
-              });
-
-
-            //this.achievementService.incrementAchievementSignIn(userDetails.id)
-            this.achievementService.incrementAchievement('SignIn', userDetails.id)
-              .subscribe((result: any) => {
-                console.log('incrementAchievementSignIn result:');
-                console.log(result);
-                if ( !result ) {
-                  console.log('Did not receive response from incrementAchievementSignIn');
-                } else {
-                  if ( result.status !== true) {
-                    console.log('Something went wrong...');
-                    console.log(result.message);
-                  } else {
-                    console.log('Success');
-                    console.log(result.message);
-                    this.achievementComponent.getUserAchievements();
-                  }
-                }
-              });
-
-
-
-            // this.router.navigate(['/user/' + userDetails.securityRoleId]);
-            this.sessionService.SetSessionLoggedIn();
-            this.router.navigate(['/user']);
-            // this.router.navigate(['/user/' + userDetails.securityRoleId]);
-          });
-      },
-      err => {
-        this.serverErrorMessages = err.error.message;
-      }
-    );
-  }*/
-
-
   onSubmit(form: NgForm) {
     console.log(form.value);
     this.auth.signIn(form.value.username, form.value.password)
@@ -133,8 +64,8 @@ export class SignInComponent implements OnInit {
         console.log('storeUserDetails');
         this.userService.getUserProfile()
           .then(userData => {
-            console.log(userData['user']);
-            const userDetails = userData['user'];
+            console.log(userData);
+            const userDetails = userData;
             localStorage.setItem('userId', userDetails.id);
             localStorage.setItem('username', userDetails.username);
             localStorage.setItem('firstName', userDetails.firstName);
@@ -145,20 +76,22 @@ export class SignInComponent implements OnInit {
             localStorage.setItem('departmentId', userDetails.departmentId);
 
             this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)
-              .subscribe(securityData => {
-                console.log(securityData['securityRole']);
-                localStorage.setItem('securityRoleName', securityData['securityRole'].name);
-                localStorage.setItem('securityRoleDescription', securityData['securityRole'].description);
+              .then(securityData => {
+                console.log('this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)');
+                console.log(securityData);
+                localStorage.setItem('securityRoleName', securityData.name);
+                localStorage.setItem('securityRoleDescription', securityData.description);
               });
 
             this.departmentService.getDepartmentById(userDetails.departmentId)
-              .subscribe(departmentData => {
-                console.log(departmentData['department']);
-                localStorage.setItem('departmentName', departmentData['department'].name);
+              .then(departmentData => {
+                console.log('this.departmentService.getDepartmentById(userDetails.departmentId)');
+                console.log(departmentData);
+                localStorage.setItem('departmentName', departmentData.name);
               });
 
             //this.achievementService.incrementAchievementSignIn(userDetails.id)
-            this.achievementService.incrementAchievement('SignIn', userDetails.id)
+/*            this.achievementService.incrementAchievement('SignIn', userDetails.id)
               .subscribe((result: any) => {
                 console.log('incrementAchievementSignIn result:');
                 console.log(result);
@@ -174,7 +107,7 @@ export class SignInComponent implements OnInit {
                     this.achievementComponent.getUserAchievements();
                   }
                 }
-              });
+              });*/
 
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
             // this.sessionService.SetSessionLoggedIn();
@@ -232,10 +165,10 @@ export class SignInComponent implements OnInit {
       });
   }*/
 
-  getUserDetails() {
+/*  getUserDetails() {
     console.log('getUserDetails');
     return this.userService.getUserProfile();
-  }
+  }*/
 
   navigateToHome() {
     console.log('sign-in navigateToHome:');

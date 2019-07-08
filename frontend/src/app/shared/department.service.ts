@@ -30,14 +30,13 @@ export class DepartmentService {
   constructor(private http: HttpClient,
               private globalVariableService: GlobalVariableService,
               ) {
-
   }
 
   // HttpMethods
 
   getDepartments() {
     console.log('getDepartments');
-    console.log(awsconfig);
+    // console.log(awsconfig);
     return API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
       console.log('serverless departments api');
       console.log(data);
@@ -46,25 +45,13 @@ export class DepartmentService {
   }
 
   storeDepartments() {
-    // this.getDepartments()
-    //   .subscribe((result: any) => {
-    //     const departmentObjList: Department[] = [];
-    //     result.departments.forEach(department => {
-    //       const departmentObj: Department = {
-    //         Id: department.id,
-    //         Name: department.name
-    //       };
-    //
-    //       departmentObjList.push(departmentObj);
-    //     });
-    //
-    //     this.globalVariableService.setDepartmentList(departmentObjList);
-    //     });
-
+    console.log('storeDepartments');
     this.getDepartments()
       .then((result: any) => {
+        console.log('departments:');
+        console.log(result);
         const departmentObjList: Department[] = [];
-        result.departments.forEach(department => {
+        result.forEach(department => {
           const departmentObj: Department = {
             Id: department.id,
             Name: department.name
@@ -79,7 +66,13 @@ export class DepartmentService {
   
   getDepartmentById(departmentId: number) {
     console.log('departmentService.getDepartmentById: ' + departmentId);
-    return this.http.post(environment.apiBaseUrl + '/getDepartments', {departmentId: departmentId});
+    // return this.http.post(environment.apiBaseUrl + '/getDepartments', {departmentId: departmentId});
+    this.myInit['body'] = {departmentId: departmentId};
+    return API.post(this.apiName, this.apiPath + '/getDepartments', this.myInit).then(data => {
+      console.log('serverless departments api');
+      console.log(data);
+      return data.data;
+    });
   }
 
   getEmployeesByDepartmentId(departmentId: number) {

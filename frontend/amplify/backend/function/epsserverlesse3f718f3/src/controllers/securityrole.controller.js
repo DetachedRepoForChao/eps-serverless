@@ -32,13 +32,14 @@ const getSecurityRoles = function () {
 
 module.exports.getSecurityRoles = getSecurityRoles;
 
-module.exports.getSecurityRoleById = (req, res, next) =>{
+
+const getSecurityRoleById = function(req) {
 
     console.log('securityRoleById req.securityRoleId:');
     console.log(req.body.securityRoleId);
-    console.log(req.body);
+    // console.log(req.body);
 
-    sqlSecurityRoleModel.findOne({
+    return sqlSecurityRoleModel.findOne({
         attributes: ['id', 'name', 'description'],
         where: {
             id: req.body.securityRoleId,
@@ -46,15 +47,16 @@ module.exports.getSecurityRoleById = (req, res, next) =>{
     })
         .then(securityRole => {
             if(!securityRole) {
-                return res.status(404).json({ status: false, message: 'Security Role record not found.' });
+                return {status: 404, message: 'Security Role record not found.'};
             } else {
-                return res.status(200).json({ status: true, securityRole : securityRole });
+                return {status: 200, securityRole: securityRole };
             }
         })
         .catch(err => {
             console.log('Database error');
             console.log(err);
-            return res.status(500).json({ status: false, message: err });
+            return {status: 500, message: err };
         });
-
 };
+
+module.exports.getSecurityRoleById = getSecurityRoleById;

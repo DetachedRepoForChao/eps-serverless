@@ -48,6 +48,12 @@ export class SecurityRoleService {
   getSecurityRoleById(securityRoleId: number) {
     console.log('getSecurityRoleById');
     console.log('securityRoleService.getSecurityRoleById: ' + securityRoleId);
-    return this.http.post(environment.apiBaseUrl + '/getSecurityRoles', {securityRoleId: securityRoleId}, this.noAuthHeader);
+    this.myInit['body'] = {securityRoleId: securityRoleId};
+    return API.post(this.apiName, this.apiPath + '/getSecurityRoles', this.myInit).then(data => {
+      console.log('serverless getSecurityRoleById');
+      console.log(data);
+      return data.data;
+    });
+    // return this.http.post(environment.apiBaseUrl + '/getSecurityRoles', {securityRoleId: securityRoleId}, this.noAuthHeader);
   }
 }

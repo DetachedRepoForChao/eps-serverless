@@ -33,34 +33,37 @@ const getDepartments = function () {
 
 module.exports.getDepartments = getDepartments;
 
-module.exports.getDepartmentById = (req, res, next) =>{
+const getDepartmentById = function(req) {
 
     console.log('getDepartmentById req.body.departmentId:');
-    console.log('req.id ' + req.id);
-    console.log('req.username ' + req.username);
+    // console.log('req.id ' + req.id);
+    // console.log('req.username ' + req.username);
     //console.log(req);
-    console.log(req.body.departmentId);
-    console.log(req.body);
+  const departmentId = req.body.departmentId;
+    console.log(departmentId);
+    // console.log(req.body);
 
-    sqlDepartmentModel.findOne({
+    return sqlDepartmentModel.findOne({
         attributes: ['id', 'name'],
         where: {
-            id: req.body.departmentId,
+            id: departmentId,
         }
     })
         .then(department => {
             if(!department) {
-                return res.status(404).json({ status: false, message: 'Department record not found.' });
+                return {status: 404, message: 'Department record not found.' };
             } else {
-                return res.status(200).json({ status: true, department : department });
+                return {status: 200, department: department};
             }
         })
         .catch(err => {
             console.log('Database error');
             console.log(err);
-            return res.status(500).json({status: false, message: err});
+            return {status: 500, message: err};
         });
 };
+
+module.exports.getDepartmentById = getDepartmentById;
 
 var getEmployeesByDepartmentId = function (req, res, next) {
     console.log('getEmployeesByDepartmentId');

@@ -8,6 +8,9 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material';
 import {Observable} from 'rxjs';
 import {GlobalVariableService} from './global-variable.service';
+import Amplify, {API} from 'aws-amplify';
+import awsconfig from '../../aws-exports';
+import {AuthService} from "../login/auth.service";
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -29,6 +32,15 @@ export interface LeaderboardUser {
 })
 export class LeaderboardService {
 
+  apiName = awsconfig.aws_cloud_logic_custom[0].name;
+  apiPath = '/items';
+  myInit = {
+    headers: {
+      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      'Content-Type': "application/json;charset=UTF-8"
+    }
+  };
+
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
   public leaderboardUsers = [];
@@ -36,28 +48,30 @@ export class LeaderboardService {
   selection = new SelectionModel<LeaderboardUser>(true, []);
   dataSource = new MatTableDataSource<LeaderboardUser>();
   public currentUserLeaderboardRecord;
+
   constructor(private http: HttpClient,
-              private globalVariableService: GlobalVariableService) { }
+              private globalVariableService: GlobalVariableService,
+              private authService: AuthService) { }
 
   populateLeaderboardDataSource() {
     console.log('populateLeaderboardDataSource');
     return this.getPointsLeaderboard()
-      .subscribe(res => {
+      .then((res:any) => {
         if (res) {
           console.log(res);
           this.leaderboardUsers = [];
-          for ( let i = 0; i < res['result'].length; i++) {
+          for ( let i = 0; i < res.length; i++) {
             const userData = {
               rank: i + 1,
-              id: res['result'][i].id,
-              username: res['result'][i].username,
-              firstName: res['result'][i].firstName,
-              lastName: res['result'][i].lastName,
-              email: res['result'][i].email,
-              position: res['result'][i].position,
-              departmentId: res['result'][i].departmentId,
-              points: res['result'][i].points,
-              avatarUrl: res['result'][i].avatarUrl
+              id: res[i].id,
+              username: res[i].username,
+              firstName: res[i].firstName,
+              lastName: res[i].lastName,
+              email: res[i].email,
+              position: res[i].position,
+              departmentId: res[i].departmentId,
+              points: res[i].points,
+              avatarUrl: res[i].avatarUrl
             };
 
             this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
@@ -83,8 +97,6 @@ export class LeaderboardService {
                 this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
               }
             );
-
-
           }
         }
 
@@ -98,30 +110,39 @@ export class LeaderboardService {
 
   }
 
-  getPointsLeaderboard() {
+  async getPointsLeaderboard() {
     console.log('getPointsLeaderboard');
-    return this.http.get(environment.apiBaseUrl + '/getPointsLeaderboard');
+    // return this.http.get(environment.apiBaseUrl + '/getPointsLeaderboard');
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    this.myInit.headers['Authorization'] = token;
+
+    return API.get(this.apiName, this.apiPath + '/getPointsLeaderboard', this.myInit).then(data => {
+      console.log('serverless getPointsLeaderboard');
+      console.log(data);
+      return data.data;
+    });
   }
 
   getUserPointsLeaderboardRecord(userId: number) {
     console.log('getUserPointsLeaderboardRank');
     return this.getPointsLeaderboard()
-      .subscribe(res => {
+      .then((res:any)=> {
           if (res) {
             console.log(res);
             let leaderboardUsers = [];
-            for ( let i = 0; i < res['result'].length; i++) {
+            for ( let i = 0; i < res.length; i++) {
               const userData = {
                 rank: i + 1,
-                id: res['result'][i].id,
-                username: res['result'][i].username,
-                firstName: res['result'][i].firstName,
-                lastName: res['result'][i].lastName,
-                email: res['result'][i].email,
-                position: res['result'][i].position,
-                departmentId: res['result'][i].departmentId,
-                points: res['result'][i].points,
-                avatarUrl: res['result'][i].avatarUrl
+                id: res[i].id,
+                username: res[i].username,
+                firstName: res[i].firstName,
+                lastName: res[i].lastName,
+                email: res[i].email,
+                position: res[i].position,
+                departmentId: res[i].departmentId,
+                points: res[i].points,
+                avatarUrl: res[i].avatarUrl
               };
 
               this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {

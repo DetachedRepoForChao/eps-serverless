@@ -150,20 +150,6 @@ const getUserProfile = function (username) {
       else
         return  {status: 200, user: user};
     });
-  // console.log('getUserProfile req');
-  // console.log(req);
-  // console.log('req.id:' + req.id);
-  // console.log('getUserProfile res');
-  // console.log(res);
-
-  /*
-  if (!req)
-      return res.status(404).json({ status: false, message: 'User record not found.' });
-  else
-      return res.status(200).json({ status: true, user : _.pick(req,['id','username','firstName','lastName','points','email', 'securityRoleId','departmentId']) });
-  */
-
-
 };
 
 module.exports.getUserProfile = getUserProfile;
@@ -188,26 +174,28 @@ var getUserName=function (userid) {
 };
 
 
-var getUserPoints = function (req, res, next) {
+const getUserPoints = function (username) {
   console.log('getUserPoints');
-  //console.log(req);
+  console.log('username: ' + username);
 
-  sqlUserModel.findOne({
+  return sqlUserModel.findOne({
+    attributes: ['points'],
     where: {
-      id: req.id
+      username: username
     }
   })
-    .then(data => {
-      if(!data) {
-        return res.status(404).json({ status: false, message: 'Something went wrong.' });
+    .then(points => {
+      if(!points) {
+        return {status: 404, message: 'getUserPoints: Something went wrong.' };
       } else {
-        return res.status(200).json({ status: true, points : _.pick(data,['points']) });
+        return {status: 200, points: points};
       }
+    })
+    .catch(err => {
+      console.log('getUserPoints: Problem with the database/');
+      console.log(err);
+      return {status: 500, error: 'getUserPoints: Problem with the database: ' + err};
     });
-}
-
-
-
-
+};
 
 module.exports.getUserPoints = getUserPoints;

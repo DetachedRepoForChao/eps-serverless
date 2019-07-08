@@ -3,30 +3,53 @@ import {HttpClient} from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
 import {ImageService} from './image.service';
+import Amplify, {API} from 'aws-amplify';
+import awsconfig from '../../aws-exports';
+import {AuthService} from "../login/auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AvatarService implements OnInit {
 
-  // public images: GALLERY_IMAGE[] = [];
+  apiName = awsconfig.aws_cloud_logic_custom[0].name;
+  apiPath = '/items';
+  myInit = {
+    headers: {
+      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      'Content-Type': "application/json;charset=UTF-8"
+    }
+  };
 
   public userAvatarUrl;
   public userAvatarImageToShow;
   public isUserAvatarImageLoading;
 
-  constructor(private http: HttpClient, private imageService: ImageService) { }
+  constructor(private http: HttpClient,
+              private imageService: ImageService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
 
   }
 
-  getUserAvatar(userId: string) {
+  async getUserAvatar(userId: string) {
     console.log('getUserAvatar');
-    return this.http.post(environment.apiBaseUrl + '/getUserAvatar', {userId: userId});
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    this.myInit.headers['Authorization'] = token;
+    this.myInit['body'] = {userId: userId};
+
+    return API.post(this.apiName, this.apiPath + '/getUserAvatar', this.myInit).then(data => {
+      console.log('serverless getUserAvatar');
+      console.log(data);
+      return data.data;
+    });
+
+    // return this.http.post(environment.apiBaseUrl + '/getUserAvatar', {userId: userId});
   }
 
-  getUserAvatar2(userId: string) {
+/*  getUserAvatar2(userId: string) {
     console.log('getUserAvatar');
     this.http.post(environment.apiBaseUrl + '/getUserAvatar', {userId: userId})
       .subscribe((res: any) => {
@@ -34,14 +57,14 @@ export class AvatarService implements OnInit {
           this.userAvatarUrl = res.avatarUrl.avatarUrl;
         }
       });
-  }
+  }*/
 
   refreshUserAvatar(userId: string) {
     console.log('refreshUserAvatar');
     this.getUserAvatar(userId)
-      .subscribe((res: any) => {
+      .then((res: any) => {
         if (res.status !== false) {
-          this.userAvatarUrl = res.avatarUrl.avatarUrl;
+          this.userAvatarUrl = res.avatarUrl;
           this.getImageFromService();
         }
       });
@@ -75,8 +98,19 @@ export class AvatarService implements OnInit {
     return this.http.post(environment.apiBaseUrl + '/setUserAvatar', {userId: userId, avatarUrl: avatarUrl});
   }
 
-  getAvatars() {
+  async getAvatars() {
     console.log('getAvatars');
-    return this.http.get(environment.apiBaseUrl + '/getAvatars');
+
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    this.myInit.headers['Authorization'] = token;
+
+    return API.get(this.apiName, this.apiPath + '/getAvatars', this.myInit).then(data => {
+      console.log('serverless getAvatars');
+      console.log(data);
+      return data.data;
+    });
+
+    // return this.http.get(environment.apiBaseUrl + '/getAvatars');
   }
 }

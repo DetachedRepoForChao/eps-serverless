@@ -1,6 +1,6 @@
 {
     "identityPoolName": "eps_serverless2f109825_identitypool_2f109825",
-    "allowUnauthenticatedIdentities": true,
+    "allowUnauthenticatedIdentities": false,
     "lambdaLogPolicy": "epsser_2f109825_lambda_log_policy",
     "openIdLambdaRoleName": "epsser_2f109825_openid_lambda_role",
     "openIdRolePolicy": "epsser_2f109825_openid_pass_role_policy",

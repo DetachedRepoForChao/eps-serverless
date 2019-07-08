@@ -73,9 +73,10 @@ function parseToken(token, callback) {
           console.log('Success');
           return callback({message: 'Success', claims: claims});
         })
-        .catch(function() {
-          console.log('Signature verification failed');
-          return callback({message: 'Signature verification failed'});
+        .catch(err => {
+          console.log('TEST Signature verification failed TEST');
+          console.log(err);
+          return callback({message: 'TEST Signature verification failed TEST'});
           // return {message: 'Signature verification failed'}
         });
     });

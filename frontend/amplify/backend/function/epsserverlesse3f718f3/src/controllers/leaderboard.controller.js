@@ -3,7 +3,7 @@ const Models = SqlModel();
 const sqlUserModel = Models.User;
 const sqlDepartmentModel = Models.Department;
 
-var generatePointsLeaderboard = function() {
+const generatePointsLeaderboard = function() {
     console.log('generatePointsLeaderboard');
 
     return sqlUserModel.findAll({
@@ -35,19 +35,19 @@ var generatePointsLeaderboard = function() {
         });
 };
 
-var getPointsLeaderboard = function(req, res) {
+const getPointsLeaderboard = function() {
     console.log('getPointsLeaderboard');
     return generatePointsLeaderboard()
         .then(result => {
             if(result.status !== false) {
-                return res.status(200).json({status: true, result: result.users});
+                return {status: 200, result: result.users};
             } else {
-                return res.status(404).json(result);
+                return {status: 404, result: result};
             }
         })
         .catch(err => {
             console.log('getPointsLeaderboard: Error: ' + err);
-            return res.status(500).json({status: false, error: err});
+            return {status: 500, error: err};
         })
 };
 

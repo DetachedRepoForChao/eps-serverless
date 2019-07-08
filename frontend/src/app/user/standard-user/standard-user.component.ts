@@ -43,7 +43,7 @@ export class StandardUserComponent implements OnInit {
 
   storeDepartmentName() {
     this.getDepartment()
-      .subscribe(data => {
+      .then(data => {
         localStorage.setItem('departmentName', data['department'].name);
       });
   }
@@ -52,11 +52,12 @@ export class StandardUserComponent implements OnInit {
     console.log('getUserPoints');
     const oldPoints = +localStorage.getItem('points');
     this.userService.getUserPoints()
-      .subscribe(data => {
-        const newPoints = data['points'].points;
+      .then((data:any) => {
+        const newPoints = data.points;
         console.log('points: ' + newPoints);
         if (newPoints !== 0) {
           //this.achievementService.incrementAchievementReceiveFirstPointItem(+localStorage.getItem('userId'))
+/*
           this.achievementService.incrementAchievement('ReceiveFirstPointItem', +localStorage.getItem('userId'))
             .subscribe((achievementResult: any) => {
               if (achievementResult.status === true) {
@@ -64,6 +65,7 @@ export class StandardUserComponent implements OnInit {
                 this.notifierService.notify('success', 'Congratulations! You just received your first points!');
               }
             });
+*/
 
         }
 

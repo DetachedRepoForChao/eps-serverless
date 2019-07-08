@@ -5,9 +5,9 @@ import { DepartmentService } from '../shared/department.service';
 import { SecurityRoleService} from '../shared/securityRole.service';
 import {map} from 'rxjs/operators';
 import { Globals } from '../globals';
-import {SocketService} from '../shared/socket.service';
+// import {SocketService} from '../shared/socket.service';
 import {GlobalVariableService} from '../shared/global-variable.service';
-import {SessionService} from '../shared/session.service';
+// import {SessionService} from '../shared/session.service';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -41,14 +41,14 @@ export class UserComponent implements OnInit {
               private router: Router,
               private securityRoleService: SecurityRoleService,
               private route: ActivatedRoute,
-              private socketService: SocketService,
+              // private socketService: SocketService,
               private globalVariableService: GlobalVariableService,
-              private sessionService: SessionService,
+              // private sessionService: SessionService,
               private userIdle: UserIdleService,
               private departmentService: DepartmentService) { }
 
   ngOnInit() {
-    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
+/*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
       this.socketService.reinitialize();
 
       this.sessionService.CreateSessionCreatedListener();
@@ -66,7 +66,7 @@ export class UserComponent implements OnInit {
     // Initialize session if it has not been initialized yet
     if (!(this.sessionService.GetSessionProperty('initialized'))) {
       this.sessionService.CreateSession();
-    }
+    }*/
 
     this.departmentService.storeDepartments();
     // this.securityRoleId = +this.route.snapshot.paramMap.get('id');
@@ -81,8 +81,8 @@ export class UserComponent implements OnInit {
     }
 
     this.securityRoleService.getSecurityRoleById(this.securityRoleId)
-      .subscribe(securityRole => {
-        this.securityRole = securityRole['securityRole'];
+      .then(securityRole => {
+        this.securityRole = securityRole;
 
         switch (this.securityRole.name) {
           case 'employee': {
@@ -166,15 +166,15 @@ export class UserComponent implements OnInit {
   storeSecurityRole() {
     const securityRoleId = +localStorage.getItem('securityRoleId');
     return this.securityRoleService.getSecurityRoleById(securityRoleId)
-      .subscribe(data => {
+      .then(data => {
         if ( !data) {
           console.log('Did not receive valid security role data');
           return false;
         } else {
           console.log('Received valid security role data');
           debugger;
-          localStorage.setItem('securityRoleName', data['securityRole'].name);
-          localStorage.setItem('securityRoleDescription', data['securityRole'].description);
+          localStorage.setItem('securityRoleName', data.name);
+          localStorage.setItem('securityRoleDescription', data.description);
           return data;
         }
 
@@ -188,7 +188,7 @@ export class UserComponent implements OnInit {
     // this.socketService.removeAlListeners();
     // this.socketService.destroySession(sessionId);
     // this.socketService.logoutSession();
-    this.sessionService.LogoutSession();
+    // this.sessionService.LogoutSession();
     localStorage.clear();
     this.router.navigate(['/login']);
   }
@@ -199,7 +199,7 @@ export class UserComponent implements OnInit {
 
   onSocketTestClick1() {
     // this.socketService.socketTest1();
-    this.socketService.emit('Test1');
+    // this.socketService.emit('Test1');
   }
 
   onSocketTestClick2() {
@@ -207,7 +207,7 @@ export class UserComponent implements OnInit {
     // debugger;
     //console.log(this.socketService.sessionHash);
     // console.log(this.socketService.socket);
-    this.sessionService.getServerIo().subscribe(() => {});
+    // this.sessionService.getServerIo().subscribe(() => {});
   }
 
 }

@@ -33,14 +33,16 @@ export class ImageGalleryComponent implements OnInit{
 
   ngOnInit(): void {
     this.avatarService.getAvatars()
-      .subscribe((result: any) => {
-        result.avatarList.forEach(image => {
+      .then((result: any) => {
+        result.forEach(image => {
           console.log(image);
           const imageObj = {
-            url: 'http://localhost:3000/public/avatars/' + image,
+            // url: 'http://localhost:3000/public/avatars/' + image,
+            url: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image,
             altText: '',
             title: image,
-            thumbnailUrl: 'http://localhost:3000/public/avatars/' + image + '?w=60',
+            // thumbnailUrl: 'http://localhost:3000/public/avatars/' + image + '?w=60',
+            thumbnailUrl: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image + '?w=60',
           };
           console.log(imageObj);
           this.images.push(imageObj);
