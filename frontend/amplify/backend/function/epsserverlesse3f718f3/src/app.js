@@ -222,6 +222,23 @@ app.post('/items/getUserAvatar', function(req, res) {
 
 app.post('/items/setUserAvatar', function(req, res) {
   console.log('starting post setUserAvatar');
+
+  const avatarUrl = req.body.avatarUrl;
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlAvatar.setUserAvatar(username, avatarUrl)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.points});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 app.get('/items/getAvatars', function(req, res) {

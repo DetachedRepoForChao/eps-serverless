@@ -65,7 +65,8 @@ export class AvatarService implements OnInit {
       .then((res: any) => {
         if (res.status !== false) {
           this.userAvatarUrl = res.avatarUrl;
-          this.getImageFromService();
+          this.userAvatarImageToShow = res.avatarUrl;
+          // this.getImageFromService();
         }
       });
   }
@@ -93,9 +94,20 @@ export class AvatarService implements OnInit {
     });
   }
 
-  setUserAvatar(userId: string, avatarUrl: string) {
+  async setUserAvatar(avatarUrl: string) {
     console.log('setUserAvatar');
-    return this.http.post(environment.apiBaseUrl + '/setUserAvatar', {userId: userId, avatarUrl: avatarUrl});
+
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    this.myInit.headers['Authorization'] = token;
+    this.myInit['body'] = {avatarUrl: avatarUrl};
+
+    return API.post(this.apiName, this.apiPath + '/setUserAvatar', this.myInit).then(data => {
+      console.log('serverless setUserAvatar');
+      console.log(data);
+      return data.data;
+    });
+    // return this.http.post(environment.apiBaseUrl + '/setUserAvatar', {userId: userId, avatarUrl: avatarUrl});
   }
 
   async getAvatars() {

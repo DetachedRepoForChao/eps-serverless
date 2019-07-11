@@ -96,23 +96,23 @@ const getUserAvatar = function(userId) {
 
 module.exports.getUserAvatar = getUserAvatar;
 
-var setUserAvatar = function(req, res) {
+const setUserAvatar = function(username, avatarUrl) {
     console.log('setUserAvatar');
 
-    sqlUserModel.update({
-        avatarUrl: req.body.avatarUrl
+    return sqlUserModel.update({
+        avatarUrl: avatarUrl
     }, {
         where: {
-            id: req.body.userId
+            username: username
         }
     })
         .then(() => {
             console.log('setUserAvatar: Success');
-            return res.status(200).json({status: true, avatarUrl: req.body.avatarUrl});
+            return {status: 200, avatarUrl: avatarUrl};
         })
         .catch(err => {
             console.log('setUserAvatar: Error: err');
-            return res.status(500).json({status: false, error: err});
+            return {status: 500, error: err};
         });
 };
 

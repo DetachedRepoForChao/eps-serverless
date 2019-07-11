@@ -83,19 +83,20 @@ export class ImageGalleryComponent implements OnInit{
   // EVENTS
   // callback on gallery opened
   galleryOpened(index) {
-    console.info('Gallery opened at index ', index);
+    console.log('Gallery opened at index ', index);
   }
 
   // callback on gallery closed
   galleryClosed() {
-    console.info('Gallery closed.');
+    console.log('Gallery closed.');
   }
 
   // callback on gallery image clicked
   galleryImageClicked(index) {
-    console.info('Gallery image clicked with index ', index);
-    this.avatarService.setUserAvatar(localStorage.getItem('userId'), this.images[index].url)
-      .subscribe(res => {
+    console.log('Gallery image clicked with index ', index);
+    // this.avatarService.setUserAvatar(localStorage.getItem('userId'), this.images[index].url)
+    this.avatarService.setUserAvatar(this.images[index].url)
+      .then(res => {
         console.log('galleryImageClicked: response:');
         console.log(res);
         this.avatarService.refreshUserAvatar(localStorage.getItem('userId'));

@@ -56,7 +56,7 @@ export class LeaderboardService {
   populateLeaderboardDataSource() {
     console.log('populateLeaderboardDataSource');
     return this.getPointsLeaderboard()
-      .then((res:any) => {
+      .then((res: any) => {
         if (res) {
           console.log(res);
           this.leaderboardUsers = [];
