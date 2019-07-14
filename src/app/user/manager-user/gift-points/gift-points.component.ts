@@ -57,7 +57,7 @@ export class GiftPointsComponent implements OnInit {
     this.populateEmployeeDataSource();
 
     this.pointItemService.getPointItems()
-      .subscribe(res => {
+      .then(res => {
         const pointItems = res['pointItems'];
         for ( let i = 0; i < pointItems.length; i++) {
           const data = {
@@ -156,13 +156,19 @@ export class GiftPointsComponent implements OnInit {
         amount: form.value['selectedPointItem'].amount,
       };
 
-      const observables: Observable<any>[] = [];
+/*      const observables: Observable<any>[] = [];
       for ( let i = 0; i < this.selection.selected.length; i++) {
         console.log('gifting points to: ' + this.selection.selected[i].email);
         observables.push(this.pointItemService.giftPointsToEmployee(data.sourceUserId, this.selection.selected[i].id, data.pointItemId, 'Test'));
+      }*/
+
+      const pointItems: any[] = [];
+      for ( let i = 0; i < this.selection.selected.length; i++) {
+        console.log('gifting points to: ' + this.selection.selected[i].email);
+        pointItems.push(this.pointItemService.giftPointsToEmployee(data.sourceUserId, this.selection.selected[i].id, data.pointItemId, 'Test'));
       }
 
-      forkJoin(observables)
+      forkJoin(pointItems)
         .subscribe(dataArray => {
           console.log('forkJoin');
           console.log(dataArray);
@@ -171,7 +177,7 @@ export class GiftPointsComponent implements OnInit {
           this.leaderboardService.populateLeaderboardDataSource();
           this.resetForm(form);
           const userId: number = +localStorage.getItem('userId');
-          //this.achievementService.incrementAchievementGiftFirstPointItem(userId)
+          // this.achievementService.incrementAchievementGiftFirstPointItem(userId)
           this.achievementService.incrementAchievement('GiftFirstPointItem', userId)
             .subscribe((achievementResponse: any) => {
               if (achievementResponse.status === true) {

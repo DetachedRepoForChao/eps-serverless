@@ -2,28 +2,29 @@ const SqlModel = require('../db');
 const Models = SqlModel();
 const sqlPointItemModel = Models.PointItem;
 const sqlPointPoolModel = Models.PointPool;
+const sqlUserModel = Models.User;
+const sqlPointTransactionModel = Models.PointTransaction;
 const ctrlPointPool = require('./point_pool.controller');
 
-var getPointItems = function (req, res, next) {
+const getPointItems = function () {
     console.log('getPointItems');
 
     return sqlPointItemModel.findAll({
         attributes: ['id', 'name', 'description', 'amount']
     })
         .then(pointItems => {
-            return res.status(200).json({ status: true, pointItems : pointItems });
+            return {status: 200, pointItems: pointItems };
         })
         .catch(err => {
             console.log('Database error');
             console.log(err);
-            return res.status(500).json({status: false, message: err});
+            return {status: 500, message: err};
         });
-
 };
 
 module.exports.getPointItems = getPointItems;
 
-var getPointItemLocal = function (pointItemId) {
+const getPointItem = function (pointItemId) {
     console.log('getPointItem: ' + pointItemId);
 
     return sqlPointItemModel.findOne({
@@ -46,43 +47,41 @@ var getPointItemLocal = function (pointItemId) {
             console.log(err);
             return {status: false, message: err};
         });
-}
+};
 
-var addPointsToEmployee = function (req, res, next) {
-    console.log('addPointToEmployee');
+const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, amount, description) {
+  console.log('addPointToEmployee');
 
-    const data = {
-        sourceUserId: req.body.sourceUserId,
-        targetUserId: req.body.targetUserId,
-        pointItemId: req.body.pointItemId,
-        amount: req.body.amount,
-        description: req.body.description
-    };
+  // Create New Points Transaction
+  newPointsTransaction('Add', sourceUserId, targetUserId, pointItemId, amount, description);
 
-    // Create New Points Transaction
-    newPointsTransaction('Add', data.sourceUserId, data.targetUserId, data.pointItemId, data.amount, data.description);
-
-    // Add Points To Employee
-    SqlModel.sequelize.query('UPDATE `user` SET `points` = `points` + ' + data.amount + ' WHERE `user`.`id` = ' + data.targetUserId + ';', { type: SqlModel.sequelize.QueryTypes.UPDATE})
-        .then(result => {
-            if(!result) {
-                console.log('Something went wrong');
-                return res.status(404).json({ status: false, message: 'Something went wrong'});
-            } else {
-                console.log('User points updated successfully');
-                return res.status(200).json({ status: true, message: 'Success' });
-            }
-        })
-        .catch(err => {
-            console.log('Database error');
-            console.log(err);
-            return res.status(500).json({ status: false, message: err});
+  // Add Points To Employee
+  return sqlUserModel.update({
+    points: amount,
+  }, {
+    where: {
+      id: targetUserId,
+    }
+  })
+    .then(result => {
+      if(!result) {
+        console.log('Something went wrong');
+        return {status: 404, message: 'Something went wrong'};
+      } else {
+        console.log('User points updated successfully');
+        return {status: 200, message: 'Success' };
+      }
+    })
+    .catch(err => {
+      console.log('Database error');
+      console.log(err);
+      return {status: 500, message: err};
     });
 };
 
 module.exports.addPointsToEmployee = addPointsToEmployee;
 
-var addPointsToEmployeeLocal = function(sourceUserId, targetUserId, pointItemId, amount, description) {
+/*var addPointsToEmployeeLocal = function(sourceUserId, targetUserId, pointItemId, amount, description) {
     console.log('addPointToEmployeeLocal');
 
     const data = {
@@ -111,40 +110,32 @@ var addPointsToEmployeeLocal = function(sourceUserId, targetUserId, pointItemId,
             console.log('Error with the database');
             return {status: false, message: err};
         });
-};
+};*/
 
-var giftPointsToEmployee = function (req, res, next) {
+const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, description) {
     console.log('giftPointsToEmployee');
 
-    const data = {
-        sourceUserId: req.body.sourceUserId,
-        targetUserId: req.body.targetUserId,
-        pointItemId: req.body.pointItemId,
-        amount: 0,
-        description: req.body.description
-    };
-
     // Look up point item value
-    return getPointItemLocal(data.pointItemId)
+    return getPointItem(pointItemId)
         .then(result => {
             if(!result) {
                console.log('GetPointItemLocal did not return a result. Something went very wrong');
-               return res.status(500).json({status: false, message: 'Error. Something went very wrong'});
+               return {status: 500, message: 'Error. Something went very wrong'};
             } else {
                 if(result.status !== true) {
                     console.log('GetPointItemLocal returned an error: ' + result.message);
-                    return res.status(400).json({status: false, message: result.status});
+                    return {status: 400, message: result.status};
                 } else {
                     console.log('Success');
-                    data.amount = result.pointItem.amount;
+                    const amount = result.pointItem.amount;
 
                     // Remove points from the point pool
-                    return ctrlPointPool.removePointsFromPointPoolLocal(data.sourceUserId, data.amount)
+                    return ctrlPointPool.removePointsFromPointPool(sourceUserId, amount)
                         .then(result => {
                             if ( result.status === false) {
                                 console.log('Something went wrong with removing points from the point pool');
                                 console.log(result.message);
-                                return res.status(400).json({status: false, message: 'Error removing points from the points pool: ' + result.message});
+                                return {status: 400, message: 'Error removing points from the points pool: ' + result.message};
                             } else {
                                 console.log('Successfully removed points from the point pool');
                                 console.log(result.message);
@@ -153,29 +144,29 @@ var giftPointsToEmployee = function (req, res, next) {
                                 //newPointsTransaction('Remove', data.sourceUserId, data.targetUserId, data.pointItemId, data.amount, data.description);
 
                                 // Add points to employee
-                                return addPointsToEmployeeLocal(data.sourceUserId, data.targetUserId, data.pointItemId, data.amount, data.description)
+                                return addPointsToEmployee(sourceUserId, targetUserId, pointItemId, amount, description)
                                     .then( result => {
-                                        if ( result.status !== true) {
+                                        if ( result.status !== 200) {
                                             console.log('Something went wrong with adding points to the employee');
                                             console.log(result.message);
-                                            return res.status(400).json({ status: false, message: 'Something went wrong with adding points to the employee: ' + result.message });
+                                            return {status: 400, message: 'Something went wrong with adding points to the employee: ' + result.message };
                                         } else {
                                             console.log('Successfully added points to the employee');
                                             console.log(result.message);
-                                            return res.status(200).json({status: true, message: 'Success: ' + result.message});
+                                            return {status: 200, message: 'Success: ' + result.message};
                                         }
                                     })
                                     .catch(err => {
-                                        console.log('addPointsToEmployeeLocal Error');
+                                        console.log('addPointsToEmployee Error');
                                         console.log(err);
-                                        return res.status(500).json({status: false, message: err});
+                                        return {status: 500, message: err};
                                     });
                             }
                         })
                         .catch(err => {
-                            console.log('removePointsFromPointPoolLocal Error');
+                            console.log('removePointsFromPointPool Error');
                             console.log(err);
-                            return res.status(500).json({status: false, message: err});
+                            return {status: 500, message: err};
                         });
                 }
             }
@@ -183,7 +174,7 @@ var giftPointsToEmployee = function (req, res, next) {
         .catch(err => {
             console.log('Error');
             console.log(err);
-            return res.status(500).json({status: false, message: err});
+            return {status: 500, message: err};
         });
 
 };
@@ -200,10 +191,18 @@ var newPointsTransaction = function (type, sourceUserId, targetUserId, pointItem
     console.log('amount: ' + amount);
     console.log('description: ' + description);
 
-    SqlModel.sequelize.query(
+/*    SqlModel.sequelize.query(
         "INSERT INTO `point_transaction` (`type`, `amount`, `sourceUserId`, `targetUserId`, `description`, `point_item_id`) " +
-        "VALUES ('" + type + "', " + amount + ", " + sourceUserId + ", " + targetUserId + ", '" + description + "', " + pointItemId + ")", { type: SqlModel.sequelize.QueryTypes.INSERT})
-        .then(res => {
+        "VALUES ('" + type + "', " + amount + ", " + sourceUserId + ", " + targetUserId + ", '" + description + "', " + pointItemId + ")", { type: SqlModel.sequelize.QueryTypes.INSERT})*/
+  sqlPointTransactionModel.create({
+    type: type,
+    amount: amount,
+    sourceUserId: sourceUserId,
+    targetUserId: targetUserId,
+    pointItemId: pointItemId,
+    description: description
+  })
+      .then(res => {
             if(!res) {
                 console.log('Something went wrong');
                 return false;

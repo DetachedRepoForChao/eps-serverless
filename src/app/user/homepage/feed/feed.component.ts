@@ -15,10 +15,12 @@ export class FeedComponent implements OnInit {
   constructor(public feedcardService: FeedcardService ) { }
 
   ngOnInit() {
-    this.feedcardService.getPointTransaction().subscribe(
-      point_transactions => {
-        this.PointTransactions = point_transactions['PointTransactionResult'];
-        console.log('PointTransactionResult:' + point_transactions['PointTransactionResult']);
+    this.feedcardService.getPointTransaction()
+      .then(point_transactions => {
+        // this.PointTransactions = point_transactions['PointTransactionResult'];
+        // console.log('PointTransactionResult:' + point_transactions['PointTransactionResult']);
+        this.PointTransactions = point_transactions['pointTransactions'];
+        console.log('PointTransactionResult:' + point_transactions['pointTransactions']);
       });
   }
 

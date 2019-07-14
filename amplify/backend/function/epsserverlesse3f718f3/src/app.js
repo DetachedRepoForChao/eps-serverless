@@ -33,7 +33,7 @@ const ctrlNamedAchievement = require('./controllers/named_achievement.controller
 const ctrlPoints = require('./controllers/points.controller');
 const ctrlPointPool = require('./controllers/point_pool.controller');
 const ctrLike = require('./controllers/like.controller');
-const ctrPointsTransaction = require('./controllers/point_transaction.controller');
+const ctrlPointsTransaction = require('./controllers/point_transaction.controller');
 const jwtHelper = require('./config/jwtHelper');
 const ctrlSession = require('./controllers/session.controller');
 const ctrlAvatar = require('./controllers/avatar.controller');
@@ -73,7 +73,8 @@ app.get('/items/userProfile', function(req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      ctrlUser.getUserProfile(tokenResult.claims['cognito:username'])
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
         .then(data => {
           res.json({status: 'post call succeed!', data: data.user});
         })
@@ -177,23 +178,80 @@ app.post('/items/incrementAchievement/:achievementName', function(req, res) {
 });
 
 // Point Routes
-
 app.get('/items/getPointItems', function(req, res) {
   console.log('starting get getPointItems');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlPoints.getPointItems()
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointItems});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 app.post('/items/giftPointsToEmployee', function(req, res) {
   console.log('starting post giftPointsToEmployee');
+
+  //const sourceUserId = req.body.userId;
+  //sourceUserId, targetUserId, pointItemId, description
+
+  const token = req.headers.authorization;
+
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      // const username = tokenResult.claims['cognito:username'];
+      const sourceUserId = req.body.sourceUserId;
+      const targetUserId = req.body.targetUserId;
+      const pointItemId = req.body.pointItemId;
+      const description = req.body.description;
+      ctrlPoints.giftPointsToEmployee(sourceUserId, targetUserId, pointItemId, description)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+
 });
 
 // Point Pool Routes
-
-app.post('/items/getRemainingPointPool', function(req, res) {
+app.get('/items/getRemainingPointPool', function(req, res) {
   console.log('starting post getRemainingPointPool');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(result => {
+          const managerId = result.user.id;
+          ctrlPointPool.getRemainingPointPool(managerId)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data.pointsRemaining});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 // Like Routes
-
 app.post('/items/likeManage', function(req, res) {
   console.log('starting post likeManage');
 });
@@ -295,10 +353,27 @@ app.get('/items/getPointsLeaderboard', function(req, res) {
   });
 });
 
-/*// Point Transaction Routes
+// Point Transaction Routes
 app.get('/items/getPointTransaction', function(req, res) {
   console.log('starting post getPointTransaction');
-});*/
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      // const username = tokenResult.claims['cognito:username'];
+      ctrlPointsTransaction.getPointTransaction()
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointTransactions});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+
+});
 
 app.get('/items/*', function(req, res) {
   // Add your code here

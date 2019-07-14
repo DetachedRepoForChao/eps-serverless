@@ -6,8 +6,28 @@ const sqlUserModel = Models.User;
 
 
 
-var getUserName=function (userid) {
-    return sqlUserModel.sequelize.query("select lastName,firstName,avatarUrl,departmentId from `user` WHERE id="+userid)
+const getUserName = function (userId) {
+
+  return sqlUserModel.findOne({
+    attributes: ['id','username','firstName','lastName','points','email', 'securityRoleId','departmentId'],
+    where: {
+      id: userId,
+    },
+  })
+    .then(userInfo => {
+        console.log('userInfo');
+        console.log(userInfo);
+        return userInfo
+      }
+    )
+    .catch(err => {
+        console.log('Database error');
+        console.log(err);
+        return err;
+      }
+    );
+
+    /*return sqlUserModel.sequelize.query("select lastName,firstName,avatarUrl,departmentId from `user` WHERE id="+userId)
         .then(
             userInfo=>{
                 console.log('userInfo')
@@ -20,7 +40,7 @@ var getUserName=function (userid) {
             console.log(err);
             return err;
         }
-    )
+    )*/
 };
 
 /**
@@ -34,7 +54,51 @@ var getUserName=function (userid) {
  * @param next
  */
 
-module.exports.getPointTransaction = (req, res, next) =>{
+const getPointTransaction = function () {
+  console.log("getPointTransaction");
+
+  return sqlPointTransactionModel.findAll({
+    limit: 25,
+    order: [
+      ['id', 'DESC']
+    ]
+  })
+    .then(pointTransactionResult => {
+        //let pointTransactionResult=PointTransactionResult[0];
+
+        const resultLength = pointTransactionResult.length;
+        console.log('resultLength: ' + resultLength);
+        let pointTransactionResultList = new Array;
+        for (let i = 0; i < resultLength; i++){
+          getUserName(pointTransactionResult[i].sourceUserId)
+            .then(result => {
+              pointTransactionResult[i].sourceUserId = {lastName:result.lastName, firstName:result.firstName,avatarUrl:result.avatarUrl};
+            });
+          getUserName(pointTransactionResult[i].targetUserId)
+            .then( result => {
+              pointTransactionResult[i].targetUserId={lastName:result.lastName, firstName:result.firstName,avatarUrl:result.avatarUrl};
+              pointTransactionResultList.push(pointTransactionResult[i]);
+              if (i === resultLength - 1) {
+                console.log('console.log(PointTransactionResult)');
+                console.log(pointTransactionResultList);
+                // return PointTransactionResultList;
+                return {status: 200, pointTransactions: pointTransactionResultList[0]};
+              }
+            });
+        }
+      }
+    )
+    .catch(err => {
+        console.log('Database error');
+        console.log(err);
+        return {status: 500, message: err};
+      }
+    )
+};
+
+module.exports.getPointTransaction = getPointTransaction;
+
+/*module.exports.getPointTransaction = (req, res, next) =>{
   console.log("getPointTransaction");
   sqlPointTransactionModel.sequelize.query("select * from point_transaction order by id desc LIMIT 25")
         .then(
@@ -70,7 +134,7 @@ module.exports.getPointTransaction = (req, res, next) =>{
             return res.status(500).json({status: false, message: err});
         }
     )
-}
+}*/
 
 var SetUserNameforTransaction=function(result) {
 

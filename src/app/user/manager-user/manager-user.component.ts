@@ -38,8 +38,8 @@ export class ManagerUserComponent implements OnInit {
 
   storeRemainingPointPool() {
     console.log('storeRemainingPointPool');
-    return this.pointItemService.getRemainingPointPool(+localStorage.getItem('userId'))
-      .subscribe(data => {
+    return this.pointItemService.getRemainingPointPool()
+      .then(data => {
         console.log(data);
         localStorage.setItem('remainingPointPool', data['pointsRemaining']);
         this.remainingPointPool = data['pointsRemaining'];
