@@ -50,6 +50,7 @@ const Metrics = MetricsModel(sequelize, Sequelize);
 const PointPool = PointPoolModel(sequelize, Sequelize);
 const Session = SessionModel(sequelize, Sequelize);
 const Like = LikeModel(sequelize,Sequelize);
+
 const Models = {
   User,
   Department,
@@ -85,12 +86,19 @@ module.exports = async () => {
 module.exports = () => {
   if (connection.isConnected) {
     console.log('=> Using existing connection.');
-    return Models;
+    return {
+      Models: Models,
+      sequelize: sequelize
+    };
   }
 
   sequelize.sync();
   sequelize.authenticate();
   connection.isConnected = true;
   console.log('=> Created a new connection.');
-  return Models;
+
+  return {
+    Models: Models,
+    sequelize: sequelize
+  };
 };

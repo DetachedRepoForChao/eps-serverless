@@ -1,5 +1,5 @@
 const SqlModel = require('../db');
-const Models = SqlModel();
+const Models = SqlModel().Models;
 const sqlPointPoolModel = Models.PointPool;
 const ctrlUser = require('./user.controller');
 

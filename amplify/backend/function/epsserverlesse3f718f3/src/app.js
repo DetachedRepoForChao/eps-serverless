@@ -357,7 +357,15 @@ app.get('/items/getPointsLeaderboard', function(req, res) {
 app.get('/items/getPointTransaction', function(req, res) {
   console.log('starting post getPointTransaction');
 
-  const token = req.headers.authorization;
+  ctrlPointsTransaction.getPointTransaction()
+    .then(data => {
+      res.json({status: 'post call succeed!', data: data.pointTransactions});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });
+
+  /*const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
       // const username = tokenResult.claims['cognito:username'];
@@ -371,7 +379,7 @@ app.get('/items/getPointTransaction', function(req, res) {
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
-  });
+  });*/
 
 });
 

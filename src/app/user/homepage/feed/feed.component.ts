@@ -24,7 +24,7 @@ export class FeedComponent implements OnInit {
       });
   }
 
-  // LikeButton(PointTransaction: Pointtransaction) {
+  // LikeButton(PointTransaction: PointTransaction) {
   //
   // }
 

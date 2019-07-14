@@ -1,5 +1,5 @@
 const SqlModel = require('../db');
-const Models = SqlModel();
+const Models = SqlModel().Models;
 const sqlUserModel = Models.User;
 // var fs = require('fs');
 const AWS = require('aws-sdk');

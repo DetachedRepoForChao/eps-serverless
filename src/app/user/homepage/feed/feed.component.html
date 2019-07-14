@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div *ngFor="let Pointtransaction of PointTransactions"><!-- /////// post -->
+  <div *ngFor="let PointTransaction of PointTransactions"><!-- /////// post -->
     <div class="card gedf-card">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
@@ -54,8 +54,8 @@
             <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
           </div>
           <div class="ml-2">
-            <div class="h5 m-0">@{{Pointtransaction.sourceUserId.firstName}}&nbsp;{{Pointtransaction.sourceUserId.lastName}}</div>
-            <div class="h7 text-muted">{{Pointtransaction.targetUserId.firstName}}&nbsp;{{Pointtransaction.targetUserId.lastName}}</div>
+            <div class="h5 m-0">@{{PointTransaction.sourceUserFirstName}}&nbsp;{{PointTransaction.sourceUserLastName}}</div>
+            <div class="h7 text-muted">{{PointTransaction.targetUserFirstName}}&nbsp;{{PointTransaction.targetUserLastName}}</div>
           </div>
         </div>
         <div>
@@ -74,13 +74,13 @@
       </div>
     </div>
     <div class="card-body">
-      <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{Pointtransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+      <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{PointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
       <a class="card-link" href="#">
         <h5 class="card-title">ECOWAS Team</h5>
       </a>
 
       <p class="card-text">
-        {{Pointtransaction.description}}
+        {{PointTransaction.description}}
       </p>
     </div>
     <div class="card-footer">

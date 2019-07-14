@@ -1,5 +1,6 @@
 const SqlModel = require('../db');
-const Models = SqlModel();
+const Models = SqlModel().Models;
+// console.log(SqlModel());
 
 const sqlSecurityRoleModel = Models.SecurityRole;
 

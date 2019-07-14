@@ -1,5 +1,5 @@
 const SqlModel = require('../db');
-const Models = SqlModel();
+const Models = SqlModel().Models;
 
 const sqlUserModel = Models.User;
 const sqlAchievementModel = Models.Achievement;

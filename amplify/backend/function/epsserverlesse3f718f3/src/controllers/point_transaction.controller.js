@@ -1,5 +1,6 @@
+const Sequelize = require('sequelize');
 const SqlModel = require('../db');
-const Models = SqlModel();
+const Models = SqlModel().Models;
 
 const sqlPointTransactionModel = Models.PointTransaction;
 const sqlUserModel = Models.User;
@@ -57,18 +58,46 @@ const getUserName = function (userId) {
 const getPointTransaction = function () {
   console.log("getPointTransaction");
 
+/*  sqlUserModel.hasMany(sqlPointTransactionModel, {foreignKey: 'sourceUserId'});
+  sqlUserModel.hasMany(sqlPointTransactionModel, {foreignKey: 'targetUserId'});
+  sqlPointTransactionModel.belongsTo(sqlUserModel, {foreignKey: 'id'});
   return sqlPointTransactionModel.findAll({
+    include: [{
+      model: sqlUserModel,
+      where: {
+        sourceUserId: Sequelize.col('user.id'),
+        targetUserId: Sequelize.col('user.id'),
+      }
+    }],
     limit: 25,
     order: [
       ['id', 'DESC']
     ]
-  })
+  })*/
+  const sequelize = SqlModel().sequelize;
+  return sequelize.query("SELECT `point_transaction`.`id`, `point_transaction`.`type`, `point_transaction`.`amount`, " +
+    "`point_transaction`.`sourceUserId`, " +
+    "`sourceUser`.`username` AS `sourceUserName`, `sourceUser`.`firstName` AS `sourceUserFirstName`, " +
+    "`sourceUser`.`lastName` AS `sourceUserLastName`, `sourceUser`.`email` AS `sourceUserEmail`, " +
+    "`sourceUser`.`avatarUrl` AS `sourceUserAvatarUrl`, `sourceUser`.`points` AS `sourceUserPoints`, " +
+    "`point_transaction`.`targetUserId`, " +
+    "`targetUser`.`username` AS `targetUserName`, `targetUser`.`firstName` AS `targetUserFirstName`, " +
+    "`targetUser`.`lastName` AS `targetUserLastName`, `targetUser`.`email` AS `targetUserEmail`, " +
+    "`targetUser`.`avatarUrl` AS `targetUserAvatarUrl`, `targetUser`.`points` AS `targetUserPoints` " +
+    "FROM `point_transaction` " +
+    "JOIN `user` AS `sourceUser` ON `point_transaction`.`sourceUserId` = `sourceUser`.`id` " +
+    "JOIN `user` AS `targetUser` ON `point_transaction`.`targetUserId` = `targetUser`.`id` " +
+    "ORDER BY `id` DESC LIMIT 25", {type: sequelize.QueryTypes.SELECT})
     .then(pointTransactionResult => {
+      console.log('pointTransactionResult:');
+      console.log(pointTransactionResult);
         //let pointTransactionResult=PointTransactionResult[0];
 
         const resultLength = pointTransactionResult.length;
         console.log('resultLength: ' + resultLength);
-        let pointTransactionResultList = new Array;
+        return {status: 200, pointTransactions: pointTransactionResult};
+
+/*        let pointTransactionResultList = new Array;
         for (let i = 0; i < resultLength; i++){
           getUserName(pointTransactionResult[i].sourceUserId)
             .then(result => {
@@ -85,7 +114,7 @@ const getPointTransaction = function () {
                 return {status: 200, pointTransactions: pointTransactionResultList[0]};
               }
             });
-        }
+        }*/
       }
     )
     .catch(err => {
