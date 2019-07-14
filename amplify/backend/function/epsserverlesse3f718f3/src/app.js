@@ -137,6 +137,22 @@ app.post('/items/getDepartments', function(req, res) {
 
 app.post('/items/getEmployeesByDepartmentId', function(req, res) {
   console.log('starting post getEmployeesByDepartmentId');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const departmentId = req.body.departmentId;
+      ctrlDepartment.getEmployeesByDepartmentId(departmentId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.users});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 // Security Role Routes
@@ -357,18 +373,9 @@ app.get('/items/getPointsLeaderboard', function(req, res) {
 app.get('/items/getPointTransaction', function(req, res) {
   console.log('starting post getPointTransaction');
 
-  ctrlPointsTransaction.getPointTransaction()
-    .then(data => {
-      res.json({status: 'post call succeed!', data: data.pointTransactions});
-    })
-    .catch(err => {
-      res.json({status: 'post call failed!', error: err});
-    });
-
-  /*const token = req.headers.authorization;
+  const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      // const username = tokenResult.claims['cognito:username'];
       ctrlPointsTransaction.getPointTransaction()
         .then(data => {
           res.json({status: 'post call succeed!', data: data.pointTransactions});
@@ -379,7 +386,7 @@ app.get('/items/getPointTransaction', function(req, res) {
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
-  });*/
+  });
 
 });
 

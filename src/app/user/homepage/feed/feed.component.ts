@@ -19,8 +19,8 @@ export class FeedComponent implements OnInit {
       .then(point_transactions => {
         // this.PointTransactions = point_transactions['PointTransactionResult'];
         // console.log('PointTransactionResult:' + point_transactions['PointTransactionResult']);
-        this.PointTransactions = point_transactions['pointTransactions'];
-        console.log('PointTransactionResult:' + point_transactions['pointTransactions']);
+        this.PointTransactions = point_transactions;
+        console.log('PointTransactionResult:' + point_transactions);
       });
   }
 

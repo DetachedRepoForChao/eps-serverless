@@ -76,7 +76,7 @@ export class GiftPointsComponent implements OnInit {
   populateEmployeeDataSource() {
     if (localStorage.getItem('departmentId')) {
       this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
-        .subscribe(res => {
+        .then(res => {
           if (res) {
             console.log('gift-points OnInit');
             console.log(res);

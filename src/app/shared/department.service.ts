@@ -8,6 +8,7 @@ import {GlobalVariableService} from './global-variable.service';
 import {forEach} from '@angular/router/src/utils/collection';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
+import {AuthService} from '../login/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class DepartmentService {
 
   constructor(private http: HttpClient,
               private globalVariableService: GlobalVariableService,
-              ) {
+              private authService: AuthService) {
   }
 
   // HttpMethods
@@ -75,9 +76,21 @@ export class DepartmentService {
     });
   }
 
-  getEmployeesByDepartmentId(departmentId: number) {
+  async getEmployeesByDepartmentId(departmentId: number) {
     console.log('getEmployeesByDepartmentId');
-    return this.http.post(environment.apiBaseUrl + '/getEmployeesByDepartmentId', {departmentId: departmentId});
+
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+    this.myInit.headers['Authorization'] = token;
+    this.myInit['body'] = {departmentId: departmentId};
+
+    return API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', this.myInit).then(data => {
+      console.log('serverless getEmployeesByDepartmentId');
+      console.log(data);
+      return data.data;
+    });
+
+    // return this.http.post(environment.apiBaseUrl + '/getEmployeesByDepartmentId', {departmentId: departmentId});
   }
 
 }

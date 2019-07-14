@@ -1,11 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items/getPointTransaction",
-  "httpMethod": "GET",
+  "path": "/items/getEmployeesByDepartmentId",
+  "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiJUblFrWUNsS1NRRUEzVTNYZ2ZLekhOd296UVVLemI3emZLSXkzZ2dGcng0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3MDNhNzQ1Ny0zYjJlLTQxY2YtOTIxNy02ZDIwMGM5MjI4ZDMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZ2J6Q2tXVGpJIiwiY29nbml0bzp1c2VybmFtZSI6Imlyb25tYW4iLCJnaXZlbl9uYW1lIjoiVG9ueSIsImF1ZCI6IjVjdWpnZHA5aWNwdHNzczR2dXVkdjJrdDhoIiwiZXZlbnRfaWQiOiIxNjA3YjQ2MC0wNGUyLTRmNzYtYWYxNC03MjhlYWY5OTczMmQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU2MzEyOTAyNCwiZXhwIjoxNTYzMTMyNjI0LCJpYXQiOjE1NjMxMjkwMjQsImZhbWlseV9uYW1lIjoiU3RhcmsiLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.bOOjnWQZYPaAwGqs8kBUSsVYjBYRhyLIIfjfaDweqnJ1zgc2yJL-JciSvV2HqGeXHd07G11yFmGwG0WBYb_aT_Ndo8YF-uqZoaCR0cuMDMI_H1HqGXMY4F0sEq6dVIWELJf0sgtRIHzqVn4WODp7BffAS6D5RB3_kzaRFnEbk8eK1sL5_5qeQAI5Pb8rFo59f79XP396ja1EHrEiqJ0KApXTe41eEET2ZdgxgX3icILUSs_v0nTvmzoGkm1WKL5d-BHrdX-3EPwVvoDupAZebUoQQsSogmCrnJRY14sk6tFFpp3XwSRUMq-oFHIpxYfvd8oS0FDQA4pKwJ2ntMyJyw"
+    "Authorization": "eyJraWQiOiJUblFrWUNsS1NRRUEzVTNYZ2ZLekhOd296UVVLemI3emZLSXkzZ2dGcng0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3MDNhNzQ1Ny0zYjJlLTQxY2YtOTIxNy02ZDIwMGM5MjI4ZDMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZ2J6Q2tXVGpJIiwiY29nbml0bzp1c2VybmFtZSI6Imlyb25tYW4iLCJnaXZlbl9uYW1lIjoiVG9ueSIsImF1ZCI6IjVjdWpnZHA5aWNwdHNzczR2dXVkdjJrdDhoIiwiZXZlbnRfaWQiOiIxNmU2YzIzOS04ZjczLTQ2N2MtOWI2Ny1kZmVhZGQ2MzI3ZDUiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU2MzEzNTE0NywiZXhwIjoxNTYzMTM4NzQ3LCJpYXQiOjE1NjMxMzUxNDcsImZhbWlseV9uYW1lIjoiU3RhcmsiLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.Q-B6EhscBPjmCGmTPL0ulTSR4gh9JWNUmbPbiwamaQQpxPeMCklDBE08reIKWvNU5QNOMVXf28rMo7lSEzcApbfUdstvAMk2O20U-2Qar9Pnl5vLvHdYGnK7rRLXNABrNtMe4CH14FbkQ3xpOn7pFFAN4m3HiE6gkZqEP3Ju9xBOh6bBVjZU3e98igh2hW-xSW5JRbO57tNl2hRm7NCPUota4lYmEko0NDIpzbIMK5FqPs_TFMjemFai8lpSQNhAafZWjtsZeBZpslte8KmEX3Q4N1UVejLXagysxTV2tsWY9tJPcuib3wfdva25ARflZWBlg6OJnrGrUdZhvOs-pQ"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -37,7 +37,7 @@
     },
     "domainName": "testPrefix.testDomainName",
     "resourcePath": "/items",
-    "httpMethod": "GET",
+    "httpMethod": "POST",
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
