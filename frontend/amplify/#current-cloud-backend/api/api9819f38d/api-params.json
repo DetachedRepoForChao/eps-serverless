@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/items",
+            "lambdaFunction": "epsserverlesse3f718f3",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "api9819f38d",
+    "apiName": "api9819f38d",
+    "functionArns": [
+        {
+            "lambdaFunction": "epsserverlesse3f718f3"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "eps-serverless-dev-20190630120450-authRole",
+        "unAuthRoleName": "eps-serverless-dev-20190630120450-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "epsserverlesse3f718f3",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
