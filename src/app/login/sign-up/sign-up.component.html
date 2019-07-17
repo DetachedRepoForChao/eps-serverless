@@ -23,8 +23,8 @@
             <div class="form-group col-md-6">
               <label for="departmentId">Department</label>
               <select #department="ngModel" class="form-control" id="departmentId" name="departmentId" [(ngModel)]="selectedUser.department" required>
-                <option *ngFor="let department of departments" [ngValue]="department.id">
-                  {{department.name}}
+                <option *ngFor="let department of departments" [ngValue]="department.Id">
+                  {{department.Name}}
                 </option>
               </select>
             </div>

@@ -57,6 +57,8 @@ import { TrophyComponent } from './shared/trophy/trophy.component';
 
 import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
 import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
+import { RequestCacheService} from './shared/request-cache.service';
+import { CachingInterceptorService} from './shared/caching-interceptor.service';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -123,6 +125,12 @@ import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.componen
     useClass: AuthInterceptor,
     multi: true
   },
+    RequestCacheService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CachingInterceptorService,
+      multi: true
+    },
     AuthGuard,
     RoleGuardService,
     UserService,

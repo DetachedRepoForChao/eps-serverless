@@ -58,7 +58,7 @@ export class GiftPointsComponent implements OnInit {
 
     this.pointItemService.getPointItems()
       .then(res => {
-        const pointItems = res['pointItems'];
+        const pointItems = res;
         for ( let i = 0; i < pointItems.length; i++) {
           const data = {
             id: pointItems[i].id,
@@ -81,17 +81,17 @@ export class GiftPointsComponent implements OnInit {
             console.log('gift-points OnInit');
             console.log(res);
             this.departmentEmployees = [];
-            for ( let i = 0; i < res['users'].length; i++) {
+            for ( let i = 0; i < res.length; i++) {
               const userData = {
-                id: res['users'][i].id,
-                username: res['users'][i].username,
-                firstName: res['users'][i].firstName,
-                lastName: res['users'][i].lastName,
-                email: res['users'][i].email,
-                position: res['users'][i].position,
-                securityRoleId: res['users'][i].securityRoleId,
-                points: res['users'][i].points,
-                avatarUrl: res['users'][i].avatarUrl,
+                id: res[i].id,
+                username: res[i].username,
+                firstName: res[i].firstName,
+                lastName: res[i].lastName,
+                email: res[i].email,
+                position: res[i].position,
+                securityRoleId: res[i].securityRoleId,
+                points: res[i].points,
+                avatarUrl: res[i].avatarUrl,
               };
 
               const departmentEmployee: DepartmentEmployee = {

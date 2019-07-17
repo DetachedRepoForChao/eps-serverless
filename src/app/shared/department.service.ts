@@ -9,15 +9,16 @@ import {forEach} from '@angular/router/src/utils/collection';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
+import {Globals} from '../globals';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepartmentService {
 
-  //departments: Department[];
+  // departments: Department[];
+
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
-  // apiName = "api9819f38d";
   apiPath = '/items';
   myInit = {
     headers: {
@@ -26,26 +27,94 @@ export class DepartmentService {
     }
   };
 
-  noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
+  // private departmentList;
 
   constructor(private http: HttpClient,
               private globalVariableService: GlobalVariableService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private globals: Globals) {
   }
 
   // HttpMethods
 
-  getDepartments() {
-    console.log('getDepartments');
+  getDepartments(): Promise<Department[]> {
+    console.log('Starting department.service getDepartments');
+
+    const departments: Department[] = this.globals.departments;
+    console.log('department.service getDepartments: check if departments have been cached');
+    if (departments) {
+      console.log('department.service getDepartments: departments cache exists');
+      console.log(departments);
+
+      return new Promise(resolve => {
+        console.log('department.service getDepartments: returning departments from cache');
+        resolve(departments);
+      });
+    } else {
+      console.log('department.service getDepartments: departments cache does not exist');
+      return new Promise( resolve => {
+        console.log('department.service getDepartments: retrieve departments from API');
+        API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
+          console.log('department.service getDepartments: successfully retrieved data from API');
+          console.log(data);
+          console.log('department.service getDepartments: caching departments');
+          const departmentObjList: Department[] = [];
+          data.data.forEach((department: any) => {
+            const departmentObj: Department = {
+              Id: department.id,
+              Name: department.name
+            };
+
+            departmentObjList.push(departmentObj);
+          });
+
+          this.globals.departments = departmentObjList;
+
+          console.log('department.service getDepartments: returning departments from API');
+          resolve(departmentObjList);
+        });
+      });
+
+    }
+
+/*    const cachedDepartments = this.globalVariableService.departmentList;
+    return cachedDepartments.subscribe(departments => {
+      if (departments.length > 0) {
+        console.log('cached departments exists');
+        console.log(departments);
+        // return departments;
+      } else {
+        console.log('cached list of departments does not exists. retrieving via API call');
+        API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
+          console.log('serverless departments api');
+          console.log(data);
+          console.log('caching list of departments');
+          const departmentObjList: Department[] = [];
+          data.data.forEach(department => {
+            const departmentObj: Department = {
+              Id: department.id,
+              Name: department.name
+            };
+
+            departmentObjList.push(departmentObj);
+          });
+          console.log('settings global variable: departmentList');
+          this.globalVariableService.setDepartmentList(departmentObjList);
+          // return departmentObjList;
+        });
+      }
+    });*/
+
+
     // console.log(awsconfig);
-    return API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
+/*    return API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
       console.log('serverless departments api');
       console.log(data);
       return data.data;
-    });
+    });*/
   }
 
-  storeDepartments() {
+/*  storeDepartments() {
     console.log('storeDepartments');
     this.getDepartments()
       .then((result: any) => {
@@ -63,7 +132,7 @@ export class DepartmentService {
 
         this.globalVariableService.setDepartmentList(departmentObjList);
       });
-  }
+  }*/
   
   getDepartmentById(departmentId: number) {
     console.log('departmentService.getDepartmentById: ' + departmentId);

@@ -10,6 +10,7 @@ import {AmplifyService} from 'aws-amplify-angular';
 import {AuthService} from '../auth.service';
 import { environment } from 'src/environments/environment';
 import {Router} from "@angular/router";
+import {GlobalVariableService} from '../../shared/global-variable.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -34,18 +35,42 @@ export class SignUpComponent implements OnInit {
     private securityRoleService: SecurityRoleService,
     private amplifyService: AmplifyService,
     private _authService: AuthService,
-    private _router: Router) { }
+    private _router: Router,
+    private globalVariableService: GlobalVariableService) { }
 
   ngOnInit() {
     //console.log(this.role);
     //console.log(this.keys());
+/*    this.departmentService.getDepartments()
+      .then(deps => {
+        this.departments = deps;
+        for (let i = 0; i < deps.length; i++) {
+          console.log(deps[i]);
+        }
+      });*/
+
+    // console.log('getDepartments() subscription?');
+    // console.log(this.departmentService.getDepartments());
     this.departmentService.getDepartments()
+      .then((departments: Department[]) => {
+        this.departments = departments;
+
+        console.log('sign-up.component onInit: retrieved departments from departmentService.getDepartments()');
+        console.log(this.departments);
+      });
+/*    console.log('sign-up component this.departments:');
+    console.log(this.departments);
+    console.log('sign-up component this.departmentService.getDepartments():');
+    console.log(this.departmentService.getDepartments());*/
+/*
+    this.departments.push() = ;
       .then(deps => {
         this.departments = deps;
         for (let i = 0; i < deps.length; i++) {
           console.log(deps[i]);
         }
       });
+*/
 
     this.getSecurityRoles()
       .then(secRoles => {
@@ -66,14 +91,14 @@ export class SignUpComponent implements OnInit {
   }
 
 
-  getDepartments() {
-    console.log('getDepartments');
-
-    return this.departmentService.getDepartments()
-      .then(data => {
+  // getDepartments(): Promise<Department[]> {
+  //   console.log('getDepartments');
+    // new Promise()
+    // return this.departmentService.getDepartments();
+/*      .then(data => {
         return data;
-      });
-  }
+      });*/
+  // }
 
 
 /*

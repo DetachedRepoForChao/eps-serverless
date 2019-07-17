@@ -27,7 +27,7 @@ export class LeaderboardCardComponent implements OnInit {
               private globalVariableService: GlobalVariableService) { }
 
   ngOnInit() {
-    this.leaderboardService.populateLeaderboardDataSource();
+    this.leaderboardService.populateLeaderboardDataSource().then();
 
 
     $(function () {

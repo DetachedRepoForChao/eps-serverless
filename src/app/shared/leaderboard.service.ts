@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SecurityRole } from './securityrole.model';
 import { environment } from '../../environments/environment';
@@ -10,7 +10,8 @@ import {Observable} from 'rxjs';
 import {GlobalVariableService} from './global-variable.service';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
-import {AuthService} from "../login/auth.service";
+import {AuthService} from '../login/auth.service';
+import {DepartmentService} from './department.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -51,6 +52,7 @@ export class LeaderboardService {
 
   constructor(private http: HttpClient,
               private globalVariableService: GlobalVariableService,
+              private departmentService: DepartmentService,
               private authService: AuthService) { }
 
   populateLeaderboardDataSource() {
@@ -74,38 +76,39 @@ export class LeaderboardService {
               avatarUrl: res[i].avatarUrl
             };
 
-            this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
-                console.log('department list');
-                console.log(departmentList);
-                const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
-                console.log('departmentName: ' + departmentName);
 
-                const leaderboardUser: LeaderboardUser = {
-                  rank: userData.rank,
-                  id: userData.id,
-                  username: userData.username,
-                  name: userData.firstName + ' ' + userData.lastName,
-                  email: userData.email,
-                  position: userData.position,
-                  points: userData.points,
-                  avatar: userData.avatarUrl,
-                  department: departmentName,
-                };
+                this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
+                    console.log('department list');
+                    console.log(departmentList);
+                    const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
+                    console.log('departmentName: ' + departmentName);
 
-                console.log(leaderboardUser);
+                    const leaderboardUser: LeaderboardUser = {
+                      rank: userData.rank,
+                      id: userData.id,
+                      username: userData.username,
+                      name: userData.firstName + ' ' + userData.lastName,
+                      email: userData.email,
+                      position: userData.position,
+                      points: userData.points,
+                      avatar: userData.avatarUrl,
+                      department: departmentName,
+                    };
 
-                this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
-              }
-            );
+                    console.log(leaderboardUser);
+
+                    this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
+                  }
+                );
           }
         }
 
         // this.dataSource.data = this.leaderboardUsers;
         this.leaderboardUsersTop = this.leaderboardUsers.slice(0, 4);
 
-        $(function () {
+/*        $(function () {
           $('[data-toggle="tooltip"]').tooltip();
-        });
+        });*/
       });
 
   }
@@ -127,7 +130,7 @@ export class LeaderboardService {
   getUserPointsLeaderboardRecord(userId: number) {
     console.log('getUserPointsLeaderboardRank');
     return this.getPointsLeaderboard()
-      .then((res:any)=> {
+      .then((res: any) => {
           if (res) {
             console.log(res);
             let leaderboardUsers = [];

@@ -43,17 +43,8 @@ export class PointItemService {
       console.log(data);
       return data.data;
     });
-
-    // return this.http.get(environment.apiBaseUrl + '/getPointItems');
   }
 
-/*
-  addPointsToEmployee(sourceUserId: number, targetUserId: number, pointItemId: number, amount: number, description: string) {
-      console.log('addPointsToEmployee');
-    return this.http.post(environment.apiBaseUrl + '/addPointsToEmployee',
-      {sourceUserId: sourceUserId, targetUserId: targetUserId, pointItemId: pointItemId, amount: amount, description: description});
-  }
-*/
 
   async giftPointsToEmployee(sourceUserId: number, targetUserId: number, pointItemId: number, description: string) {
     console.log('giftPointsToEmployee');
@@ -73,9 +64,6 @@ export class PointItemService {
       console.log(data);
       return data.data;
     });
-
-    // return this.http.post(environment.apiBaseUrl + '/giftPointsToEmployee',
-    //   {sourceUserId: sourceUserId, targetUserId: targetUserId, pointItemId: pointItemId, description: description});
   }
 
   async getRemainingPointPool() {
@@ -90,8 +78,6 @@ export class PointItemService {
       console.log(data);
       return data.data;
     });
-
-    // return this.http.post(environment.apiBaseUrl + '/getRemainingPointPool', {managerId: managerId});
   }
 
   storeRemainingPointPool() {
@@ -99,8 +85,8 @@ export class PointItemService {
     return this.getRemainingPointPool()
       .then(data => {
           console.log(data);
-          localStorage.setItem('remainingPointPool', data['pointsRemaining']);
-          this.remainingPointPool = data['pointsRemaining'];
+          localStorage.setItem('remainingPointPool', data);
+          this.remainingPointPool = data;
           return true;
         }
       );

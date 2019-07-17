@@ -24,12 +24,20 @@ export class GlobalVariableService {
   private checkSessionHeartbeatListenerExistsSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public checkSessionHeartbeatListenerExists = this.checkSessionHeartbeatListenerExistsSource.asObservable();
 
+
+
+
   private departmentListSource: BehaviorSubject<Department[]> = new BehaviorSubject([]);
   public departmentList = this.departmentListSource.asObservable();
 
   public setDepartmentList(value: Department[]) {
+    console.log('setDepartmentList:');
+    console.log(value);
     this.departmentListSource.next(value);
   }
+
+
+
 
   public setUserLoggedIn(value: boolean) {
     this.userLoggedInSource.next(value);

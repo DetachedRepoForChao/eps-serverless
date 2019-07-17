@@ -24,7 +24,16 @@ export class ManagerUserComponent implements OnInit {
 
   ngOnInit() {
     // this.storeDepartmentName();
-    this.storeRemainingPointPool();
+    // this.storeRemainingPointPool();
+    this.pointItemService.getRemainingPointPool()
+      .then(data => {
+          console.log('storeRemainingPointPool remainingPointPool: ' + data);
+          // console.log(data);
+          localStorage.setItem('remainingPointPool', data);
+          this.remainingPointPool = data;
+          // return true;
+        }
+      );
     this.achievementComponent.getUserAchievements();
   }
 
@@ -40,9 +49,10 @@ export class ManagerUserComponent implements OnInit {
     console.log('storeRemainingPointPool');
     return this.pointItemService.getRemainingPointPool()
       .then(data => {
+        console.log('storeRemainingPointPool remainingPointPool:');
         console.log(data);
-        localStorage.setItem('remainingPointPool', data['pointsRemaining']);
-        this.remainingPointPool = data['pointsRemaining'];
+        localStorage.setItem('remainingPointPool', data);
+        this.remainingPointPool = data;
         return true;
         }
       );

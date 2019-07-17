@@ -68,7 +68,7 @@ export class UserComponent implements OnInit {
       this.sessionService.CreateSession();
     }*/
 
-    this.departmentService.storeDepartments();
+    // this.departmentService.storeDepartments();
     // this.securityRoleId = +this.route.snapshot.paramMap.get('id');
     this.securityRoleId = +localStorage.getItem('securityRoleId');
 
