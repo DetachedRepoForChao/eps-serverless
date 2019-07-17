@@ -18,6 +18,7 @@ import {GlobalVariableService} from '../../shared/global-variable.service';
   styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
+  componentName = 'sign-up.component';
   hide = true;
 
   departments: Department[];
@@ -39,56 +40,37 @@ export class SignUpComponent implements OnInit {
     private globalVariableService: GlobalVariableService) { }
 
   ngOnInit() {
-    //console.log(this.role);
-    //console.log(this.keys());
-/*    this.departmentService.getDepartments()
-      .then(deps => {
-        this.departments = deps;
-        for (let i = 0; i < deps.length; i++) {
-          console.log(deps[i]);
-        }
-      });*/
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
-    // console.log('getDepartments() subscription?');
-    // console.log(this.departmentService.getDepartments());
+    console.log(`${functionFullName}: populate departments`);
     this.departmentService.getDepartments()
       .then((departments: Department[]) => {
         this.departments = departments;
 
-        console.log('sign-up.component onInit: retrieved departments from departmentService.getDepartments()');
+        console.log(`${functionFullName}: retrieved departments from departmentService.getDepartments()`);
         console.log(this.departments);
       });
-/*    console.log('sign-up component this.departments:');
-    console.log(this.departments);
-    console.log('sign-up component this.departmentService.getDepartments():');
-    console.log(this.departmentService.getDepartments());*/
-/*
-    this.departments.push() = ;
-      .then(deps => {
-        this.departments = deps;
-        for (let i = 0; i < deps.length; i++) {
-          console.log(deps[i]);
-        }
-      });
-*/
 
-    this.getSecurityRoles()
-      .then(secRoles => {
-        this.securityRoles = secRoles;
-        for (let i = 0; i < secRoles.length; i++) {
-          console.log(secRoles[i]);
-        }
+    console.log(`${functionFullName}: populate securityRoles`);
+    this.securityRoleService.getSecurityRoles()
+      .then((securityRoles: SecurityRole[]) => {
+        this.securityRoles = securityRoles;
+
+        console.log(`${functionFullName}: retrieved securityRoles from securityRoleService.getSecurityRoles()`);
+        console.log(this.securityRoles);
       }
     );
   }
 
-  getSecurityRoles() {
+/*  getSecurityRoles() {
     console.log('getSecurityRoles');
     return this.securityRoleService.getSecurityRoles()
       .then(data => {
         return data;
       });
-  }
+  }*/
 
 
   // getDepartments(): Promise<Department[]> {

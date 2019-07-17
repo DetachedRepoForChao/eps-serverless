@@ -36,7 +36,6 @@ export class DepartmentService {
   }
 
   // HttpMethods
-
   getDepartments(): Promise<Department[]> {
     console.log('Starting department.service getDepartments');
 
@@ -74,65 +73,9 @@ export class DepartmentService {
           resolve(departmentObjList);
         });
       });
-
     }
-
-/*    const cachedDepartments = this.globalVariableService.departmentList;
-    return cachedDepartments.subscribe(departments => {
-      if (departments.length > 0) {
-        console.log('cached departments exists');
-        console.log(departments);
-        // return departments;
-      } else {
-        console.log('cached list of departments does not exists. retrieving via API call');
-        API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
-          console.log('serverless departments api');
-          console.log(data);
-          console.log('caching list of departments');
-          const departmentObjList: Department[] = [];
-          data.data.forEach(department => {
-            const departmentObj: Department = {
-              Id: department.id,
-              Name: department.name
-            };
-
-            departmentObjList.push(departmentObj);
-          });
-          console.log('settings global variable: departmentList');
-          this.globalVariableService.setDepartmentList(departmentObjList);
-          // return departmentObjList;
-        });
-      }
-    });*/
-
-
-    // console.log(awsconfig);
-/*    return API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
-      console.log('serverless departments api');
-      console.log(data);
-      return data.data;
-    });*/
   }
 
-/*  storeDepartments() {
-    console.log('storeDepartments');
-    this.getDepartments()
-      .then((result: any) => {
-        console.log('departments:');
-        console.log(result);
-        const departmentObjList: Department[] = [];
-        result.forEach(department => {
-          const departmentObj: Department = {
-            Id: department.id,
-            Name: department.name
-          };
-
-          departmentObjList.push(departmentObj);
-        });
-
-        this.globalVariableService.setDepartmentList(departmentObjList);
-      });
-  }*/
   
   getDepartmentById(departmentId: number) {
     console.log('departmentService.getDepartmentById: ' + departmentId);
