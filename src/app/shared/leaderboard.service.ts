@@ -32,6 +32,8 @@ export interface LeaderboardUser {
   providedIn: 'root'
 })
 export class LeaderboardService {
+  componentName = 'leaderboard.service';
+  departments: Department[];
 
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
@@ -56,7 +58,10 @@ export class LeaderboardService {
               private authService: AuthService) { }
 
   populateLeaderboardDataSource() {
-    console.log('populateLeaderboardDataSource');
+    const functionName = 'populateLeaderboardDataSource';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     return this.getPointsLeaderboard()
       .then((res: any) => {
         if (res) {
@@ -76,39 +81,63 @@ export class LeaderboardService {
               avatarUrl: res[i].avatarUrl
             };
 
+            console.log(`${functionFullName}: populate departments`);
+            this.departmentService.getDepartments()
+              .then((departments: Department[]) => {
+                this.departments = departments;
 
-                this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
-                    console.log('department list');
-                    console.log(departmentList);
-                    const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
-                    console.log('departmentName: ' + departmentName);
+                const departmentName = (departments.find(x => x.Id === userData.departmentId)).Name;
+                console.log('departmentName: ' + departmentName);
 
-                    const leaderboardUser: LeaderboardUser = {
-                      rank: userData.rank,
-                      id: userData.id,
-                      username: userData.username,
-                      name: userData.firstName + ' ' + userData.lastName,
-                      email: userData.email,
-                      position: userData.position,
-                      points: userData.points,
-                      avatar: userData.avatarUrl,
-                      department: departmentName,
-                    };
+                const leaderboardUser: LeaderboardUser = {
+                  rank: userData.rank,
+                  id: userData.id,
+                  username: userData.username,
+                  name: userData.firstName + ' ' + userData.lastName,
+                  email: userData.email,
+                  position: userData.position,
+                  points: userData.points,
+                  avatar: userData.avatarUrl,
+                  department: departmentName,
+                };
 
-                    console.log(leaderboardUser);
+                console.log(leaderboardUser);
 
-                    this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
-                  }
-                );
+                this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
+              });
+
+            /*this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
+                console.log('department list');
+                console.log(departmentList);
+                const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
+                console.log('departmentName: ' + departmentName);
+
+                const leaderboardUser: LeaderboardUser = {
+                  rank: userData.rank,
+                  id: userData.id,
+                  username: userData.username,
+                  name: userData.firstName + ' ' + userData.lastName,
+                  email: userData.email,
+                  position: userData.position,
+                  points: userData.points,
+                  avatar: userData.avatarUrl,
+                  department: departmentName,
+                };
+
+                console.log(leaderboardUser);
+
+                this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
+              }
+            );*/
           }
         }
 
         // this.dataSource.data = this.leaderboardUsers;
         this.leaderboardUsersTop = this.leaderboardUsers.slice(0, 4);
 
-/*        $(function () {
-          $('[data-toggle="tooltip"]').tooltip();
-        });*/
+        /*        $(function () {
+                  $('[data-toggle="tooltip"]').tooltip();
+                });*/
       });
 
   }
@@ -128,53 +157,56 @@ export class LeaderboardService {
   }
 
   getUserPointsLeaderboardRecord(userId: number) {
-    console.log('getUserPointsLeaderboardRank');
+    const functionName = 'getUserPointsLeaderboardRecord';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    
     return this.getPointsLeaderboard()
       .then((res: any) => {
-          if (res) {
-            console.log(res);
-            let leaderboardUsers = [];
-            for ( let i = 0; i < res.length; i++) {
-              const userData = {
-                rank: i + 1,
-                id: res[i].id,
-                username: res[i].username,
-                firstName: res[i].firstName,
-                lastName: res[i].lastName,
-                email: res[i].email,
-                position: res[i].position,
-                departmentId: res[i].departmentId,
-                points: res[i].points,
-                avatarUrl: res[i].avatarUrl
+        if (res) {
+          console.log(res);
+          let leaderboardUsers = [];
+          for ( let i = 0; i < res.length; i++) {
+            const userData = {
+              rank: i + 1,
+              id: res[i].id,
+              username: res[i].username,
+              firstName: res[i].firstName,
+              lastName: res[i].lastName,
+              email: res[i].email,
+              position: res[i].position,
+              departmentId: res[i].departmentId,
+              points: res[i].points,
+              avatarUrl: res[i].avatarUrl
+            };
+
+            this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
+              const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
+
+              const leaderboardUser: LeaderboardUser = {
+                rank: userData.rank,
+                id: userData.id,
+                username: userData.username,
+                name: userData.firstName + ' ' + userData.lastName,
+                email: userData.email,
+                position: userData.position,
+                points: userData.points,
+                avatar: userData.avatarUrl,
+                department: departmentName,
               };
 
-              this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
-                const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
+              // console.log(leaderboardUser);
 
-                const leaderboardUser: LeaderboardUser = {
-                  rank: userData.rank,
-                  id: userData.id,
-                  username: userData.username,
-                  name: userData.firstName + ' ' + userData.lastName,
-                  email: userData.email,
-                  position: userData.position,
-                  points: userData.points,
-                  avatar: userData.avatarUrl,
-                  department: departmentName,
-                };
-
-                // console.log(leaderboardUser);
-
-                leaderboardUsers = leaderboardUsers.concat(leaderboardUser);
-              });
-            }
-
-            const userLeaderboardRecord = leaderboardUsers.find(result => result.id === userId);
-            // console.log('leadboardUsers.find');
-            console.log(userLeaderboardRecord);
-            this.currentUserLeaderboardRecord = userLeaderboardRecord;
-            // return userLeaderboardRecord;
+              leaderboardUsers = leaderboardUsers.concat(leaderboardUser);
+            });
           }
+
+          const userLeaderboardRecord = leaderboardUsers.find(result => result.id === userId);
+          // console.log('leadboardUsers.find');
+          console.log(userLeaderboardRecord);
+          this.currentUserLeaderboardRecord = userLeaderboardRecord;
+          // return userLeaderboardRecord;
+        }
       });
   }
 }

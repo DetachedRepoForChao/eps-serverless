@@ -84,7 +84,7 @@ export class UserComponent implements OnInit {
       .then(securityRole => {
         this.securityRole = securityRole;
 
-        switch (this.securityRole.name) {
+        switch (this.securityRole.Name) {
           case 'employee': {
             console.log('navigating to standard-user');
             // this.router.navigate(['standard-user']);
@@ -163,7 +163,7 @@ export class UserComponent implements OnInit {
   }
 
 
-  storeSecurityRole() {
+/*  storeSecurityRole() {
     const securityRoleId = +localStorage.getItem('securityRoleId');
     return this.securityRoleService.getSecurityRoleById(securityRoleId)
       .then(data => {
@@ -179,7 +179,7 @@ export class UserComponent implements OnInit {
         }
 
       });
-  }
+  }*/
 
   onLogout() {
     // const sessionId = localStorage.getItem('socketSessionId');
@@ -205,7 +205,7 @@ export class UserComponent implements OnInit {
   onSocketTestClick2() {
     // this.socketService.socketTest2();
     // debugger;
-    //console.log(this.socketService.sessionHash);
+    // console.log(this.socketService.sessionHash);
     // console.log(this.socketService.socket);
     // this.sessionService.getServerIo().subscribe(() => {});
   }

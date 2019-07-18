@@ -1,4 +1,5 @@
 export class SecurityRole {
   Name: string;
-  Id: string;
+  Id: number;
+  Description: string;
 }

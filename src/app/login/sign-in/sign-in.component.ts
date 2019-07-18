@@ -17,6 +17,7 @@ import {AmplifyService} from 'aws-amplify-angular';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import { AuthService } from "../auth.service";
 import { environment } from 'src/environments/environment';
+import {SecurityRole} from '../../shared/securityrole.model';
 
 @Component({
   selector: 'app-sign-in',
@@ -75,19 +76,19 @@ export class SignInComponent implements OnInit {
             localStorage.setItem('securityRoleId', userDetails.securityRoleId);
             localStorage.setItem('departmentId', userDetails.departmentId);
 
-            this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)
-              .then(securityData => {
+            this.securityRoleService.getSecurityRoleById(+userDetails.securityRoleId)
+              .then((securityRole: SecurityRole) => {
                 console.log('this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)');
-                console.log(securityData);
-                localStorage.setItem('securityRoleName', securityData.name);
-                localStorage.setItem('securityRoleDescription', securityData.description);
+                console.log(securityRole);
+                localStorage.setItem('securityRoleName', securityRole.Name);
+                localStorage.setItem('securityRoleDescription', securityRole.Description);
               });
 
-            this.departmentService.getDepartmentById(userDetails.departmentId)
-              .then(departmentData => {
+            this.departmentService.getDepartmentById(+userDetails.departmentId)
+              .then((department: Department) => {
                 console.log('this.departmentService.getDepartmentById(userDetails.departmentId)');
-                console.log(departmentData);
-                localStorage.setItem('departmentName', departmentData.name);
+                console.log(department);
+                localStorage.setItem('departmentName', department.Name);
               });
 
             //this.achievementService.incrementAchievementSignIn(userDetails.id)

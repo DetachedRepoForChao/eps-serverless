@@ -16,8 +16,7 @@ import {Globals} from '../globals';
 })
 export class DepartmentService {
 
-  // departments: Department[];
-
+  componentName = 'department.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
   myInit = {
@@ -37,26 +36,28 @@ export class DepartmentService {
 
   // HttpMethods
   getDepartments(): Promise<Department[]> {
-    console.log('Starting department.service getDepartments');
+    const functionName = 'getDepartments';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Starting ${functionFullName}`);
 
     const departments: Department[] = this.globals.departments;
-    console.log('department.service getDepartments: check if departments have been cached');
+    console.log(`${functionFullName}: check if departments have been cached`);
     if (departments) {
-      console.log('department.service getDepartments: departments cache exists');
+      console.log(`${functionFullName}: departments cache exists`);
       console.log(departments);
 
       return new Promise(resolve => {
-        console.log('department.service getDepartments: returning departments from cache');
+        console.log(`${functionFullName}: returning departments from cache`);
         resolve(departments);
       });
     } else {
-      console.log('department.service getDepartments: departments cache does not exist');
+      console.log(`${functionFullName}: departments cache does not exist`);
       return new Promise( resolve => {
-        console.log('department.service getDepartments: retrieve departments from API');
+        console.log(`${functionFullName}: retrieve departments from API`);
         API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
-          console.log('department.service getDepartments: successfully retrieved data from API');
+          console.log(`${functionFullName}: successfully retrieved data from API`);
           console.log(data);
-          console.log('department.service getDepartments: caching departments');
+          console.log(`${functionFullName}: caching departments`);
           const departmentObjList: Department[] = [];
           data.data.forEach((department: any) => {
             const departmentObj: Department = {
@@ -69,7 +70,7 @@ export class DepartmentService {
 
           this.globals.departments = departmentObjList;
 
-          console.log('department.service getDepartments: returning departments from API');
+          console.log(`${functionFullName}: returning departments from API`);
           resolve(departmentObjList);
         });
       });
@@ -77,7 +78,11 @@ export class DepartmentService {
   }
 
   
-  getDepartmentById(departmentId: number) {
+/*  getDepartmentById(departmentId: number) {
+    const functionName = 'getDepartmentById';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Starting ${functionFullName}`);
+
     console.log('departmentService.getDepartmentById: ' + departmentId);
     // return this.http.post(environment.apiBaseUrl + '/getDepartments', {departmentId: departmentId});
     this.myInit['body'] = {departmentId: departmentId};
@@ -86,6 +91,49 @@ export class DepartmentService {
       console.log(data);
       return data.data;
     });
+  }*/
+
+  getDepartmentById(departmentId: number): Promise<Department> {
+    const functionName = 'getDepartmentById';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Starting ${functionFullName}`);
+
+    const departments: Department[] = this.globals.departments;
+    console.log('department.service getDepartments: check if departments have been cached');
+    if (departments) {
+      console.log('department.service getDepartments: departments cache exists');
+      // console.log(departments);
+
+      console.log(`${functionFullName}: retrieve department id ${departmentId} from cache`);
+
+      const department = departments.find(x => x.Id === departmentId);
+      console.log(department);
+
+      return new Promise(resolve => {
+        console.log(`${functionFullName}: returning department id ${departmentId} from cache`);
+        resolve(department);
+      });
+    } else {
+      console.log(`${functionFullName}: departments cache does not exist`);
+      return new Promise( resolve => {
+        console.log(`${functionFullName}: retrieve department id ${departmentId} from API`);
+
+        const myInit = this.myInit;
+        myInit['body'] = {departmentId: departmentId};
+        API.post(this.apiName, this.apiPath + '/getDepartments', this.myInit).then(data => {
+          console.log(`${functionFullName}: successfully retrieved data from API`);
+          console.log(data);
+
+          const departmentObj: Department = {
+            Id: data.data.id,
+            Name: data.data.name
+          };
+
+          console.log(`${functionFullName}: returning department id ${departmentId} from API`);
+          resolve(departmentObj);
+        });
+      });
+    }
   }
 
   async getEmployeesByDepartmentId(departmentId: number) {
@@ -93,10 +141,11 @@ export class DepartmentService {
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
-    this.myInit['body'] = {departmentId: departmentId};
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
+    myInit['body'] = {departmentId: departmentId};
 
-    return API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', this.myInit).then(data => {
+    return API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
       console.log('serverless getEmployeesByDepartmentId');
       console.log(data);
       return data.data;

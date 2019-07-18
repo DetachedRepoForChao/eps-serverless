@@ -28,23 +28,6 @@ export class SecurityRoleService {
   }
 
   // HttpMethods
-
-/*  getSecurityRoles() {
-    console.log('getSecurityRoles');
-    //console.log(this.http.get(environment.apiBaseUrl + '/getSecurityRoles'));
-    return this.http.get(environment.apiBaseUrl + '/getSecurityRoles', this.noAuthHeader);
-  }*/
-
-/*  getSecurityRoles() {
-    console.log('getSecurityRoles');
-
-    return API.get(this.apiName, this.apiPath + '/getSecurityRoles', {}).then(data => {
-      console.log('serverless security roles api');
-      console.log(data);
-      return data.data;
-    });
-  }*/
-
   getSecurityRoles(): Promise<SecurityRole[]> {
     const functionName = 'getSecurityRoles';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -72,7 +55,8 @@ export class SecurityRoleService {
           data.data.forEach((securityRole: any) => {
             const securityRoleObj: SecurityRole = {
               Id: securityRole.id,
-              Name: securityRole.name
+              Name: securityRole.name,
+              Description: securityRole.description
             };
 
             securityRoleObjList.push(securityRoleObj);
@@ -88,7 +72,7 @@ export class SecurityRoleService {
   }
 
 
-  getSecurityRoleById(securityRoleId: number) {
+  getSecurityRoleById(securityRoleId: number): Promise<SecurityRole> {
     const functionName = 'getSecurityRoleById';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
@@ -97,23 +81,46 @@ export class SecurityRoleService {
     console.log(`${functionFullName}: check if securityRoles have been cached`);
     if (securityRoles) {
       console.log(`${functionFullName}: securityRoles cache exists`);
+      console.log(`${functionFullName}: retrieve securityRole id ${securityRoleId} from cache`);
 
-      // console.log(securityRoles);
+      const securityRole = securityRoles.find(x => x.Id === securityRoleId);
+      console.log(securityRole);
 
       return new Promise(resolve => {
-        console.log(`${functionFullName}: returning securityRoles from cache`);
-        resolve(securityRoles);
+        console.log(`${functionFullName}: returning securityRole id ${securityRoleId} from cache`);
+        resolve(securityRole);
+      });
+    } else {
+      console.log(`${functionFullName}: securityRoles cache does not exist`);
+      return new Promise( resolve => {
+        console.log(`${functionFullName}: retrieve securityRole id ${securityRoleId} from API`);
+
+        const myInit = this.myInit;
+        myInit['body'] = {securityRoleId: securityRoleId};
+        return API.post(this.apiName, this.apiPath + '/getSecurityRoles', myInit).then(data => {
+          console.log(`${functionFullName}: successfully retrieved data from API`);
+          console.log(data);
+
+          const securityRoleObj: SecurityRole = {
+            Id: data.data.id,
+            Name: data.data.name,
+            Description: data.data.description
+          };
+
+          console.log(`${functionFullName}: returning securityRole id ${securityRoleId} from API`);
+          resolve(securityRoleObj);
+        });
       });
     }
 
-    console.log('getSecurityRoleById');
+/*    console.log('getSecurityRoleById');
     console.log('securityRoleService.getSecurityRoleById: ' + securityRoleId);
     this.myInit['body'] = {securityRoleId: securityRoleId};
     return API.post(this.apiName, this.apiPath + '/getSecurityRoles', this.myInit).then(data => {
       console.log('serverless getSecurityRoleById');
       console.log(data);
       return data.data;
-    });
+    });*/
     // return this.http.post(environment.apiBaseUrl + '/getSecurityRoles', {securityRoleId: securityRoleId}, this.noAuthHeader);
   }
 }
