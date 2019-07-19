@@ -11,6 +11,7 @@ import {GlobalVariableService} from '../shared/global-variable.service';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import {AuthService} from '../login/auth.service';
 
 declare var $: any;
 
@@ -45,7 +46,8 @@ export class UserComponent implements OnInit {
               private globalVariableService: GlobalVariableService,
               // private sessionService: SessionService,
               private userIdle: UserIdleService,
-              private departmentService: DepartmentService) { }
+              private departmentService: DepartmentService,
+              private authService: AuthService) { }
 
   ngOnInit() {
 /*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
@@ -191,6 +193,10 @@ export class UserComponent implements OnInit {
     // this.sessionService.LogoutSession();
     localStorage.clear();
     this.router.navigate(['/login']);
+  }
+
+  onCognitoLogout() {
+    this.authService.signOut();
   }
 
   onProfileClick() {

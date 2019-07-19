@@ -5,6 +5,7 @@ const sqlPointPoolModel = Models.PointPool;
 const sqlUserModel = Models.User;
 const sqlPointTransactionModel = Models.PointTransaction;
 const ctrlPointPool = require('./point_pool.controller');
+const ctrlUser = require('./user.controller');
 
 const getPointItems = function () {
     console.log('getPointItems');
@@ -55,25 +56,40 @@ const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, a
   // Create New Points Transaction
   newPointsTransaction('Add', sourceUserId, targetUserId, pointItemId, amount, description);
 
-  // Add Points To Employee
-  return sqlUserModel.update({
-    points: amount,
-  }, {
+  // Get user's current points amount
+  return sqlUserModel.findOne({
+    attributes: ['id', 'username', 'points'],
     where: {
-      id: targetUserId,
+      id: targetUserId
     }
   })
-    .then(result => {
-      if(!result) {
-        console.log('Something went wrong');
-        return {status: 404, message: 'Something went wrong'};
-      } else {
-        console.log('User points updated successfully');
-        return {status: 200, message: 'Success' };
-      }
+    .then(user => {
+      // Add Points To Employee
+      const newAmount = user.points + amount;
+      return sqlUserModel.update({
+        points: newAmount,
+      }, {
+        where: {
+          id: targetUserId,
+        }
+      })
+        .then(result => {
+          if(!result) {
+            console.log('Something went wrong');
+            return {status: 404, message: 'Something went wrong'};
+          } else {
+            console.log('User points updated successfully');
+            return {status: 200, message: 'Success' };
+          }
+        })
+        .catch(err => {
+          console.log('Database error');
+          console.log(err);
+          return {status: 500, message: err};
+        });
     })
     .catch(err => {
-      console.log('Database error');
+      console.log(`Database error`);
       console.log(err);
       return {status: 500, message: err};
     });
@@ -81,36 +97,6 @@ const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, a
 
 module.exports.addPointsToEmployee = addPointsToEmployee;
 
-/*var addPointsToEmployeeLocal = function(sourceUserId, targetUserId, pointItemId, amount, description) {
-    console.log('addPointToEmployeeLocal');
-
-    const data = {
-        sourceUserId: sourceUserId,
-        targetUserId: targetUserId,
-        pointItemId: pointItemId,
-        amount: amount,
-        description: description
-    };
-
-    // Create New Points Transaction
-    newPointsTransaction('Add', data.sourceUserId, data.targetUserId, data.pointItemId, data.amount, data.description);
-
-    // Add Points To Employee
-    return SqlModel.sequelize.query('UPDATE `user` SET `points` = `points` + ' + data.amount + ' WHERE `user`.`id` = ' + data.targetUserId + ';', { type: SqlModel.sequelize.QueryTypes.UPDATE})
-        .then(queryResult => {
-            if(!queryResult) {
-                console.log('Something went wrong');
-                return { status: false , message: 'Something went wrong'};
-            } else {
-                console.log('User points updated successfully');
-                return {status: true, message: 'User points updated successfully'};
-            }
-        })
-        .catch(err => {
-            console.log('Error with the database');
-            return {status: false, message: err};
-        });
-};*/
 
 const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, description) {
     console.log('giftPointsToEmployee');
@@ -182,7 +168,7 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
 module.exports.giftPointsToEmployee = giftPointsToEmployee;
 
 
-var newPointsTransaction = function (type, sourceUserId, targetUserId, pointItemId, amount, description) {
+const newPointsTransaction = function (type, sourceUserId, targetUserId, pointItemId, amount, description) {
     console.log('newPointsTransaction');
     console.log('type: ' + type);
     console.log('sourceUserId: ' + sourceUserId);
@@ -215,53 +201,3 @@ var newPointsTransaction = function (type, sourceUserId, targetUserId, pointItem
             console.log(err);
         });
 };
-
-/*
-module.exports.newAchievementTransaction = (req, res, next) => {
-    console.log('newAchievementTransaction:');
-    console.log(req.body);
-
-    const data = {
-        type: req.body.type,
-        amount: req.body.amount,
-        userAchievementId: req.body.userAchievementId,
-        description: req.body.description
-    };
-
-
-    sqlUserAchievementProgressModel.findOne({
-        where: {
-            id: data.userAchievementId
-        },
-    })
-        .then(userAchievementProgress => {
-            console.log('newAchievementTransaction userAchievementProgress:');
-            if(!userAchievementProgress) {
-                console.log('Unable to find User Achievement Progress record for userAchievementId: ' + data.userAchievementId);
-                //return userAchievementProgress.status(404).json({ status: false, message: 'Unable to find User Achievement Progress record for userAchievementId: ' + data.userAchievementId});
-            } else {
-                console.log('Found User Achievement Progress record for userId: ' + data.userAchievementId);
-                console.log('User Id: ' + userAchievementProgress['userId']);
-                console.log('Achievement Id: ' + userAchievementProgress['achievementId']);
-
-                //return res.status(200).json({ status: true, userAchievementProgress : _.pick(userAchievementProgress,['userId','achievementId', 'goalProgress', 'id']) });
-                //sqlAchievementModel.findOne()
-                sqlAchievementTransactionModel.create({
-                    type: data.type,
-                    amount: data.amount,
-                    description: data.description,
-                    userAchievementId: data.userAchievementId
-                }).then(res => {
-                    console.log('Achievement Transaction created in db');
-                    if(!res) {
-                        //return res.status(404).json({ status: false, message: 'Update failed.' });
-                        return JSON.stringify({ status: false, message: 'Transaction Creation failed.' });
-                    } else {
-                        console.log(res);
-                        return JSON.stringify({ status: true, message: 'Transaction Creation succeeded.' });
-                    }
-                });
-            }
-        });
-};
-*/

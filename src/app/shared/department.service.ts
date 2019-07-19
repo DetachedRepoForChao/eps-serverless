@@ -77,31 +77,15 @@ export class DepartmentService {
     }
   }
 
-  
-/*  getDepartmentById(departmentId: number) {
-    const functionName = 'getDepartmentById';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Starting ${functionFullName}`);
-
-    console.log('departmentService.getDepartmentById: ' + departmentId);
-    // return this.http.post(environment.apiBaseUrl + '/getDepartments', {departmentId: departmentId});
-    this.myInit['body'] = {departmentId: departmentId};
-    return API.post(this.apiName, this.apiPath + '/getDepartments', this.myInit).then(data => {
-      console.log('serverless departments api');
-      console.log(data);
-      return data.data;
-    });
-  }*/
-
   getDepartmentById(departmentId: number): Promise<Department> {
     const functionName = 'getDepartmentById';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
 
     const departments: Department[] = this.globals.departments;
-    console.log('department.service getDepartments: check if departments have been cached');
+    console.log(`${functionFullName}: check if departments have been cached`);
     if (departments) {
-      console.log('department.service getDepartments: departments cache exists');
+      console.log(`${functionFullName}: departments cache exists`);
       // console.log(departments);
 
       console.log(`${functionFullName}: retrieve department id ${departmentId} from cache`);
@@ -147,15 +131,12 @@ export class DepartmentService {
     myInit.headers['Authorization'] = token;
     myInit['body'] = {departmentId: departmentId};
 
-    API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
-      console.log(`${functionFullName}: successfully retrieved data from API`);
-      console.log(data);
-      return new Promise(resolve => {
+    return new Promise<any>(resolve => {
+      API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
+        console.log(`${functionFullName}: successfully retrieved data from API`);
+        console.log(data);
         resolve(data.data);
       });
     });
-
-    // return this.http.post(environment.apiBaseUrl + '/getEmployeesByDepartmentId', {departmentId: departmentId});
   }
-
 }

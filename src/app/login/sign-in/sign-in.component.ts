@@ -50,9 +50,15 @@ export class SignInComponent implements OnInit {
 
 
   ngOnInit() {
-    if (this.userService.isLoggedIn()) {
+    this.userService.isLoggedIn()
+      .then(result => {
+        if (result) {
+          this.router.navigateByUrl('/user');
+        }
+      });
+/*    if (this.userService.isLoggedIn()) {
       this.router.navigateByUrl('/user');
-    }
+    }*/
 
   }
 

@@ -12,9 +12,9 @@ import {AuthService} from "../login/auth.service";
   providedIn: 'root'
 })
 export class UserService {
+  componentName = 'user.service';
 
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
-  // apiName = "api9819f38d";
   apiPath = '/items';
   myInit = {
     headers: {
@@ -46,7 +46,10 @@ export class UserService {
   // HttpMethods
 
   postUser(user: User) {
-    // return this.http.post(environment.apiBaseUrl+'/register',login,this.noAuthHeader);
+    const functionName = 'postUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     console.log(user);
     this.myInit['body'] = user;
     console.log(this.myInit);
@@ -60,29 +63,35 @@ export class UserService {
   }
 
   login(authCredentials) {
-    // return this.http.post(environment.apiBaseUrl + '/authenticate', authCredentials,this.noAuthHeader);
-    console.log('login authCredentials');
+    const functionName = 'login';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     console.log(authCredentials);
     return this.http.post(environment.apiBaseUrl + '/authenticateUser', authCredentials, this.noAuthHeader);
   }
 
-  async getUserProfile() {
-    console.log('getUserProfile');
+  async getUserProfile(): Promise<any> {
+    const functionName = 'getUserProfile';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
-    console.log(this.myInit);
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
+    console.log(myInit);
 
     // return this.authService.currentAuthenticatedUser().then(data => {
       // console.log(data);
-      return API.get(this.apiName, this.apiPath + '/userProfile', this.myInit).then(data => {
-        console.log('serverless getUserProfile');
+    return new Promise<any>(resolve => {
+      API.get(this.apiName, this.apiPath + '/userProfile', myInit).then(data => {
+        console.log(`${functionFullName}: data retrieved from API`);
         console.log(data);
-        return data.data;
+        // return data.data;
+        resolve(data.data);
       });
-    // });
-
-    // return this.http.get(environment.apiBaseUrl + '/userProfile');
+    });
   }
 
   setUserProfile() {
@@ -93,24 +102,24 @@ export class UserService {
   }
 
 
-  getUserRole() {
-    // return this.http.get(environment.apiBaseUrl + '/userProfile');
-    return this.http.get(environment.apiBaseUrl + '/userRoleGet');
-  }
+  async getUserPoints(): Promise<any> {
+    const functionName = 'getUserPoints';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
-  async getUserPoints() {
-    console.log('getUserPoints');
-    // return this.http.get(environment.apiBaseUrl + '/getUserPoints');
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
 
-    return API.get(this.apiName, this.apiPath + '/getUserPoints', this.myInit).then(data => {
-      console.log('serverless getUserPoints');
-      console.log(data);
-      return data.data;
+    return new Promise<any>(resolve => {
+      API.get(this.apiName, this.apiPath + '/getUserPoints', myInit).then(data => {
+        console.log(`${functionFullName}: retrieved data from API`);
+        console.log(data);
+        // return data.data;
+        resolve(data.data);
+      });
     });
-
   }
 
   // Helper Methods
@@ -127,24 +136,40 @@ export class UserService {
     localStorage.removeItem('token');
   }
 
-  getUserPayload() {
-    console.log('getUserPayload');
-    const token = this.getToken();
+  async getUserPayload() {
+    const functionName = 'getUserPayload';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    const user = await this.authService.currentAuthenticatedUser();
+    const token = user.signInUserSession.idToken.jwtToken;
+
     if (token) {
+      console.log(`${functionFullName}: token exists`);
+      console.log(token);
       const userPayload = atob(token.split('.')[1]);
       return JSON.parse(userPayload);
     } else {
+      console.warn(`${functionFullName}: no token`);
       return null;
     }
   }
 
 
   isLoggedIn() {
-    const userPayload = this.getUserPayload();
-    if (userPayload) {
-      return userPayload.exp > Date.now() / 1000;
-    } else {
-      return false;
-    }
+    const functionName = 'isLoggedIn';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return this.getUserPayload()
+      .then(userPayload => {
+        if (userPayload) {
+          console.log(`${functionFullName}: user logged in`);
+          return userPayload.exp > Date.now() / 1000;
+        } else {
+          console.warn(`${functionFullName}: user not logged in`);
+          return false;
+        }
+      });
   }
 }

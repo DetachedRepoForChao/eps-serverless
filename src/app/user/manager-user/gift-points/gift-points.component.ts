@@ -33,6 +33,7 @@ export interface DepartmentEmployee {
   styleUrls: ['./gift-points.component.css']
 })
 export class GiftPointsComponent implements OnInit {
+  componentName = 'gift-points.component';
   departmentEmployees = [];
   department: Department;
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
@@ -54,7 +55,55 @@ export class GiftPointsComponent implements OnInit {
     private leaderboardService: LeaderboardService) { }
 
   ngOnInit() {
-    this.populateEmployeeDataSource();
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    this.populateEmployeeDataSource().then();
+
+    /*this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
+      .then(res => {
+        console.log(res);
+        if (res) {
+          console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
+          console.log(res);
+          this.departmentEmployees = [];
+          for ( let i = 0; i < res.length; i++) {
+            const userData = {
+              id: res[i].id,
+              username: res[i].username,
+              firstName: res[i].firstName,
+              lastName: res[i].lastName,
+              email: res[i].email,
+              position: res[i].position,
+              securityRoleId: res[i].securityRoleId,
+              points: res[i].points,
+              avatarUrl: res[i].avatarUrl,
+            };
+
+            const departmentEmployee: DepartmentEmployee = {
+              id: userData.id,
+              avatar: userData.avatarUrl,
+              name: userData.firstName + ' ' + userData.lastName,
+              username: userData.username,
+              email: userData.email,
+              position: userData.position,
+              points: userData.points,
+            };
+
+            console.log(departmentEmployee);
+
+            this.departmentEmployees = this.departmentEmployees.concat(departmentEmployee);
+          }
+
+          this.dataSource.data = this.departmentEmployees;
+          console.log(`${functionFullName}: department employees data source`);
+          console.log(this.dataSource.data);
+
+        } else {
+          console.log(`${functionFullName}: departmentId does not exist in local storage`);
+        }
+      });*/
 
     this.pointItemService.getPointItems()
       .then(res => {
@@ -73,50 +122,59 @@ export class GiftPointsComponent implements OnInit {
 
   }
 
-  populateEmployeeDataSource() {
-    if (localStorage.getItem('departmentId')) {
-      this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
-        .then(res => {
-          if (res) {
-            console.log('gift-points OnInit');
+  populateEmployeeDataSource(): Promise<any> {
+    const functionName = 'populateEmployeeDataSource';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Promise<any>(resolve => {
+      if (localStorage.getItem('departmentId')) {
+        this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
+          .then(res => {
             console.log(res);
-            this.departmentEmployees = [];
-            for ( let i = 0; i < res.length; i++) {
-              const userData = {
-                id: res[i].id,
-                username: res[i].username,
-                firstName: res[i].firstName,
-                lastName: res[i].lastName,
-                email: res[i].email,
-                position: res[i].position,
-                securityRoleId: res[i].securityRoleId,
-                points: res[i].points,
-                avatarUrl: res[i].avatarUrl,
-              };
+            if (res) {
+              console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
+              console.log(res);
+              this.departmentEmployees = [];
+              for ( let i = 0; i < res.length; i++) {
+                const userData = {
+                  id: res[i].id,
+                  username: res[i].username,
+                  firstName: res[i].firstName,
+                  lastName: res[i].lastName,
+                  email: res[i].email,
+                  position: res[i].position,
+                  securityRoleId: res[i].securityRoleId,
+                  points: res[i].points,
+                  avatarUrl: res[i].avatarUrl,
+                };
 
-              const departmentEmployee: DepartmentEmployee = {
-                id: userData.id,
-                avatar: userData.avatarUrl,
-                name: userData.firstName + ' ' + userData.lastName,
-                username: userData.username,
-                email: userData.email,
-                position: userData.position,
-                points: userData.points,
-              };
+                const departmentEmployee: DepartmentEmployee = {
+                  id: userData.id,
+                  avatar: userData.avatarUrl,
+                  name: userData.firstName + ' ' + userData.lastName,
+                  username: userData.username,
+                  email: userData.email,
+                  position: userData.position,
+                  points: userData.points,
+                };
 
-              console.log(departmentEmployee);
+                console.log(departmentEmployee);
 
-              this.departmentEmployees = this.departmentEmployees.concat(departmentEmployee);
+                this.departmentEmployees = this.departmentEmployees.concat(departmentEmployee);
+              }
             }
-          }
 
-          this.dataSource.data = this.departmentEmployees;
+            this.dataSource.data = this.departmentEmployees;
+            console.log(`${functionFullName}: department employees data source`);
+            console.log(this.dataSource.data);
+            resolve();
 
-        });
-    } else {
-      console.log('departmentId does not exist in local storage');
-    }
-
+          });
+      } else {
+        console.log(`${functionFullName}: departmentId does not exist in local storage`);
+      }
+    });
   }
 
 
@@ -155,12 +213,6 @@ export class GiftPointsComponent implements OnInit {
         pointItemId: form.value['selectedPointItem'].id,
         amount: form.value['selectedPointItem'].amount,
       };
-
-/*      const observables: Observable<any>[] = [];
-      for ( let i = 0; i < this.selection.selected.length; i++) {
-        console.log('gifting points to: ' + this.selection.selected[i].email);
-        observables.push(this.pointItemService.giftPointsToEmployee(data.sourceUserId, this.selection.selected[i].id, data.pointItemId, 'Test'));
-      }*/
 
       const pointItems: any[] = [];
       for ( let i = 0; i < this.selection.selected.length; i++) {

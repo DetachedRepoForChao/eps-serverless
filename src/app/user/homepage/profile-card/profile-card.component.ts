@@ -19,6 +19,7 @@ declare var $: any;
 export class ProfileCardComponent implements OnInit {
 
   isImageLoading: boolean;
+  userLeaderboardRecord;
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
@@ -37,7 +38,10 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });
 
-    this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId'));
+    this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId'))
+      .then(userLeaderboardRecord => {
+        this.userLeaderboardRecord = userLeaderboardRecord;
+      });
     this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
   }
 

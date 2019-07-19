@@ -12,7 +12,7 @@ import {StandardUserComponent} from './user/standard-user/standard-user.componen
 import {ManagerUserComponent} from './user/manager-user/manager-user.component';
 import {ProfileComponent} from './user/profile/profile.component';
 import {HomepageComponent} from './user/homepage/homepage.component';
-import {ConfirmCodeComponent} from "./login/confirm-code/confirm-code.component";
+import {ConfirmCodeComponent} from './login/confirm-code/confirm-code.component';
 
 export const appRoutes: Routes = [
   {
@@ -46,20 +46,20 @@ export const appRoutes: Routes = [
   {
     path: 'user',
     component: UserComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
 
   {
     path: 'homepage',
     component: UserComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [{path: '', component: HomepageComponent}],
   },
 
   {
     path: 'profile',
     component: ProfileComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   /*
   {

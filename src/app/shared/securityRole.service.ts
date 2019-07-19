@@ -97,7 +97,7 @@ export class SecurityRoleService {
 
         const myInit = this.myInit;
         myInit['body'] = {securityRoleId: securityRoleId};
-        return API.post(this.apiName, this.apiPath + '/getSecurityRoles', myInit).then(data => {
+        API.post(this.apiName, this.apiPath + '/getSecurityRoles', myInit).then(data => {
           console.log(`${functionFullName}: successfully retrieved data from API`);
           console.log(data);
 

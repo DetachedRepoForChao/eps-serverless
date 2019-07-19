@@ -50,12 +50,18 @@ export class LeaderboardCardComponent implements OnInit {
     const functionName = 'ngOnInit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: populating leaderboard data`);
-    this.populateLeaderboardDataSource().then(() => {
-      console.log(`${functionFullName}: leaderboard data populated`);
-      console.log(`${functionFullName}: leaderboardUsers:`);
-      console.log(this.leaderboardUsers);
-    });
+
+    this.leaderboardService.getPointsLeaderboard()
+      .then(result => {
+        console.log(`${functionFullName}: populating leaderboard data`);
+        this.populateLeaderboardDataSource(result).then(() => {
+          console.log(`${functionFullName}: leaderboard data populated`);
+          console.log(`${functionFullName}: leaderboardUsers:`);
+          console.log(this.leaderboardUsers);
+        });
+      });
+
+
 
 
     $(function () {
@@ -63,73 +69,63 @@ export class LeaderboardCardComponent implements OnInit {
     });
   }
 
-  populateLeaderboardDataSource(): Promise<any> {
+  populateLeaderboardDataSource(leaderboardData): Promise<any> {
     const functionName = 'populateLeaderboardDataSource';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
     return new Promise(resolve => {
-      console.log(`${functionFullName}: retrieving leaderboard users from leaderboard service`);
-      this.leaderboardService.getPointsLeaderboard()
-        .then((res: any) => {
-          if (res) {
-            console.log(res);
-            this.leaderboardUsers = [];
-            console.log(`${functionFullName}: populate departments`);
-            this.departmentService.getDepartments()
-              .then((departments: Department[]) => {
-                this.departments = departments;
+      console.log(leaderboardData);
+      this.leaderboardUsers = [];
+      console.log(`${functionFullName}: populate departments`);
+      this.departmentService.getDepartments()
+        .then((departments: Department[]) => {
+          this.departments = departments;
 
-                for ( let i = 0; i < res.length; i++) {
-                  console.log(`${functionFullName}: current leadboardUser item`);
-                  console.log(res[i]);
-                  const userData = {
-                    rank: i + 1,
-                    id: res[i].id,
-                    username: res[i].username,
-                    firstName: res[i].firstName,
-                    lastName: res[i].lastName,
-                    email: res[i].email,
-                    position: res[i].position,
-                    departmentId: res[i].departmentId,
-                    points: res[i].points,
-                    avatarUrl: res[i].avatarUrl
-                  };
+          for ( let i = 0; i < leaderboardData.length; i++) {
+            console.log(`${functionFullName}: current leadboardUser item`);
+            console.log(leaderboardData[i]);
+            const userData = {
+              rank: i + 1,
+              id: leaderboardData[i].id,
+              username: leaderboardData[i].username,
+              firstName: leaderboardData[i].firstName,
+              lastName: leaderboardData[i].lastName,
+              email: leaderboardData[i].email,
+              position: leaderboardData[i].position,
+              departmentId: leaderboardData[i].departmentId,
+              points: leaderboardData[i].points,
+              avatarUrl: leaderboardData[i].avatarUrl
+            };
 
-                  const departmentName = (departments.find(x => x.Id === userData.departmentId)).Name;
-                  // console.log(`${functionFullName}: departmentName:  ${departmentName}`);
+            const departmentName = (departments.find(x => x.Id === userData.departmentId)).Name;
+            // console.log(`${functionFullName}: departmentName:  ${departmentName}`);
 
-                  const leaderboardUser: LeaderboardUser = {
-                    rank: userData.rank,
-                    id: userData.id,
-                    username: userData.username,
-                    name: userData.firstName + ' ' + userData.lastName,
-                    email: userData.email,
-                    position: userData.position,
-                    points: userData.points,
-                    avatar: userData.avatarUrl,
-                    department: departmentName,
-                  };
+            const leaderboardUser: LeaderboardUser = {
+              rank: userData.rank,
+              id: userData.id,
+              username: userData.username,
+              name: userData.firstName + ' ' + userData.lastName,
+              email: userData.email,
+              position: userData.position,
+              points: userData.points,
+              avatar: userData.avatarUrl,
+              department: departmentName,
+            };
 
-                  console.log(leaderboardUser);
+            console.log(leaderboardUser);
 
-                  this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
-                }
-              });
-
-            this.leaderboardUsersTop = this.leaderboardUsers.slice(0, 4);
-            console.log(`${functionFullName}: this.leaderboardUsers`);
-            console.log(this.leaderboardUsers);
-            resolve();
-          } else {
-            console.error(`${functionFullName}: Error retrieving leaderboard users`);
-            resolve();
+            this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
           }
-        }).catch(error => {
-        console.warn(`${functionFullName}: Error retrieving leaderboard users from leaderboard service`);
-        console.error(error);
-        resolve();
-      });
+
+          return this.leaderboardUsers;
+        })
+        .then((leaderboardUsers) => {
+          this.leaderboardUsersTop = leaderboardUsers.slice(0, 4);
+          console.log(`${functionFullName}: leaderboardUsers`);
+          console.log(this.leaderboardUsersTop);
+          resolve();
+        });
     });
   }
 

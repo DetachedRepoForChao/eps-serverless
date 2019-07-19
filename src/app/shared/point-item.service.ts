@@ -12,7 +12,7 @@ import {AuthService} from '../login/auth.service';
   providedIn: 'root'
 })
 export class PointItemService {
-
+  componentName = 'point-item.service';
   remainingPointPool;
 
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
@@ -32,14 +32,17 @@ export class PointItemService {
   // HttpMethods
 
   async getPointItems() {
-    console.log('getPointItems');
+    const functionName = 'getPointItems';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
 
-    return API.get(this.apiName, this.apiPath + '/getPointItems', this.myInit).then(data => {
-      console.log('serverless getPointItems');
+    return API.get(this.apiName, this.apiPath + '/getPointItems', myInit).then(data => {
+      console.log(`${functionFullName}: data retrieved from API`);
       console.log(data);
       return data.data;
     });
@@ -47,41 +50,50 @@ export class PointItemService {
 
 
   async giftPointsToEmployee(sourceUserId: number, targetUserId: number, pointItemId: number, description: string) {
-    console.log('giftPointsToEmployee');
+    const functionName = 'giftPointsToEmployee';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
-    this.myInit['body'] = {
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
+    myInit['body'] = {
       sourceUserId: sourceUserId,
       targetUserId: targetUserId,
       pointItemId: pointItemId,
       description: description
     };
 
-    return API.post(this.apiName, this.apiPath + '/giftPointsToEmployee', this.myInit).then(data => {
-      console.log('serverless giftPointsToEmployee');
+    return API.post(this.apiName, this.apiPath + '/giftPointsToEmployee', myInit).then(data => {
+      console.log(`${functionFullName}: data retrieved from API`);
       console.log(data);
       return data.data;
     });
   }
 
   async getRemainingPointPool() {
-    console.log('getRemainingPointPool');
+    const functionName = 'getRemainingPointPool';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
 
-    return API.get(this.apiName, this.apiPath + '/getRemainingPointPool', this.myInit).then(data => {
-      console.log('serverless getRemainingPointPool');
+    return API.get(this.apiName, this.apiPath + '/getRemainingPointPool', myInit).then(data => {
+      console.log(`${functionFullName}: data retrieved from API`);
       console.log(data);
       return data.data;
     });
   }
 
   storeRemainingPointPool() {
-    console.log('storeRemainingPointPool');
+    const functionName = 'storeRemainingPointPool';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     return this.getRemainingPointPool()
       .then(data => {
           console.log(data);

@@ -139,58 +139,61 @@ export class LeaderboardService {
     });
   }
 
-  getUserPointsLeaderboardRecord(userId: number) {
+  getUserPointsLeaderboardRecord(userId: number): Promise<any> {
     const functionName = 'getUserPointsLeaderboardRecord';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-    
-    return this.getPointsLeaderboard()
-      .then((res: any) => {
-        if (res) {
-          console.log(res);
-          let leaderboardUsers: LeaderboardUser[] = [];
-          for ( let i = 0; i < res.length; i++) {
-            const userData = {
-              rank: i + 1,
-              id: res[i].id,
-              username: res[i].username,
-              firstName: res[i].firstName,
-              lastName: res[i].lastName,
-              email: res[i].email,
-              position: res[i].position,
-              departmentId: res[i].departmentId,
-              points: res[i].points,
-              avatarUrl: res[i].avatarUrl
-            };
 
+    return new Promise<any>(resolve => {
+      this.getPointsLeaderboard()
+        .then((res: any) => {
+          if (res) {
+            console.log(res);
+            let leaderboardUsers: LeaderboardUser[] = [];
             // this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
             this.departmentService.getDepartments().then((departmentList: Department[]) => {
-              const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
+              for ( let i = 0; i < res.length; i++) {
+                const userData = {
+                  rank: i + 1,
+                  id: res[i].id,
+                  username: res[i].username,
+                  firstName: res[i].firstName,
+                  lastName: res[i].lastName,
+                  email: res[i].email,
+                  position: res[i].position,
+                  departmentId: res[i].departmentId,
+                  points: res[i].points,
+                  avatarUrl: res[i].avatarUrl
+                };
 
-              const leaderboardUser: LeaderboardUser = {
-                rank: userData.rank,
-                id: userData.id,
-                username: userData.username,
-                name: userData.firstName + ' ' + userData.lastName,
-                email: userData.email,
-                position: userData.position,
-                points: userData.points,
-                avatar: userData.avatarUrl,
-                department: departmentName,
-              };
+                const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
 
-              // console.log(leaderboardUser);
+                const leaderboardUser: LeaderboardUser = {
+                  rank: userData.rank,
+                  id: userData.id,
+                  username: userData.username,
+                  name: userData.firstName + ' ' + userData.lastName,
+                  email: userData.email,
+                  position: userData.position,
+                  points: userData.points,
+                  avatar: userData.avatarUrl,
+                  department: departmentName,
+                };
 
-              leaderboardUsers = leaderboardUsers.concat(leaderboardUser);
+                // console.log(leaderboardUser);
+
+                leaderboardUsers = leaderboardUsers.concat(leaderboardUser);
+              }
+
+              const userLeaderboardRecord = leaderboardUsers.find(result => result.id === userId);
+              // console.log('leadboardUsers.find');
+              console.log(userLeaderboardRecord);
+              this.currentUserLeaderboardRecord = userLeaderboardRecord;
+              resolve(userLeaderboardRecord);
+              // return userLeaderboardRecord;
             });
           }
-
-          const userLeaderboardRecord = leaderboardUsers.find(result => result.id === userId);
-          // console.log('leadboardUsers.find');
-          console.log(userLeaderboardRecord);
-          this.currentUserLeaderboardRecord = userLeaderboardRecord;
-          // return userLeaderboardRecord;
-        }
-      });
+        });
+    });
   }
 }
