@@ -11,10 +11,10 @@ declare var $: any;
   templateUrl: './image-gallery.component.html',
   styleUrls: ['./image-gallery.component.css']
 })
-export class ImageGalleryComponent implements OnInit{
+export class ImageGalleryComponent implements OnInit {
 // get reference to gallery component
-
-  public showConf: boolean = true;
+  componentName = 'image-gallery.component';
+  public showConf = true;
 
   @ViewChild('ngxImageGallery') ngxImageGallery: NgxImageGalleryComponent;
 
@@ -35,7 +35,7 @@ export class ImageGalleryComponent implements OnInit{
     this.avatarService.getAvatars()
       .then((result: any) => {
         result.forEach(image => {
-          console.log(image);
+          // console.log(image);
           const imageObj = {
             // url: 'http://localhost:3000/public/avatars/' + image,
             url: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image,
@@ -44,7 +44,7 @@ export class ImageGalleryComponent implements OnInit{
             // thumbnailUrl: 'http://localhost:3000/public/avatars/' + image + '?w=60',
             thumbnailUrl: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image + '?w=60',
           };
-          console.log(imageObj);
+          // console.log(imageObj);
           this.images.push(imageObj);
         });
       });
@@ -99,7 +99,7 @@ export class ImageGalleryComponent implements OnInit{
       .then(res => {
         console.log('galleryImageClicked: response:');
         console.log(res);
-        this.avatarService.refreshUserAvatar(localStorage.getItem('userId'));
+        this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
         $('#imageSelectorModal').modal('hide');
       });
     // this.ngxImageGallery.open(index);
@@ -107,12 +107,12 @@ export class ImageGalleryComponent implements OnInit{
 
   // callback on gallery image changed
   galleryImageChanged(index) {
-    console.info('Gallery image changed to index ', index);
+    console.log('Gallery image changed to index ', index);
   }
 
   // callback on user clicked delete button
   deleteImage(index) {
-    console.info('Delete image at index ', index);
+    console.log('Delete image at index ', index);
   }
 
 }

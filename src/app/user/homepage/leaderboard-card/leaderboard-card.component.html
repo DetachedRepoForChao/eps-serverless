@@ -13,14 +13,14 @@
         <table class="table table-hover">
           <thead>
           <tr>
-            <th *ngFor="let col of this.leaderboardService.displayedColumns">
+            <th *ngFor="let col of this.displayedColumns">
               {{col}}
             </th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of this.leaderboardService.leaderboardUsersTop" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
-            <td *ngFor="let col of this.leaderboardService.displayedColumns">
+          <tr *ngFor="let user of this.leaderboardUsersTop" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
+            <td *ngFor="let col of this.displayedColumns">
               <div *ngIf="col === 'avatar'"><img src="{{user[col]}}"
                                                  class="img-row"
                                                  data-toggle="tooltip"

@@ -38,7 +38,7 @@ export class ProfileCardComponent implements OnInit {
     });
 
     this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId'));
-    this.avatarService.refreshUserAvatar(localStorage.getItem('userId'));
+    this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
   }
 
   showGallery() {

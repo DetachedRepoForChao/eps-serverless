@@ -26,7 +26,7 @@ export class ProfileCardManagerComponent implements OnInit {
               public pointItemService: PointItemService) { }
 
   ngOnInit() {
-    this.avatarService.refreshUserAvatar(localStorage.getItem('userId'));
+    this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
     this.pointItemService.storeRemainingPointPool();
   }
 

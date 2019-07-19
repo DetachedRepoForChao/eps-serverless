@@ -11,7 +11,7 @@ import {AuthService} from "../login/auth.service";
   providedIn: 'root'
 })
 export class AvatarService implements OnInit {
-
+  componentName = 'avatar.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
   myInit = {
@@ -33,15 +33,19 @@ export class AvatarService implements OnInit {
 
   }
 
-  async getUserAvatar(userId: string) {
-    console.log('getUserAvatar');
+  async getUserAvatar(userId: number) {
+    const functionName = 'getUserAvatar';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
-    this.myInit['body'] = {userId: userId};
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
+    myInit['body'] = {userId: userId};
 
-    return API.post(this.apiName, this.apiPath + '/getUserAvatar', this.myInit).then(data => {
-      console.log('serverless getUserAvatar');
+    return API.post(this.apiName, this.apiPath + '/getUserAvatar', myInit).then(data => {
+      console.log(`${functionFullName}: successfully retrieved data from API`);
       console.log(data);
       return data.data;
     });
@@ -59,7 +63,7 @@ export class AvatarService implements OnInit {
       });
   }*/
 
-  refreshUserAvatar(userId: string) {
+  refreshUserAvatar(userId: number) {
     console.log('refreshUserAvatar');
     this.getUserAvatar(userId)
       .then((res: any) => {
@@ -95,15 +99,18 @@ export class AvatarService implements OnInit {
   }
 
   async setUserAvatar(avatarUrl: string) {
-    console.log('setUserAvatar');
+    const functionName = 'setUserAvatar';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
-    this.myInit['body'] = {avatarUrl: avatarUrl};
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
+    myInit['body'] = {avatarUrl: avatarUrl};
 
-    return API.post(this.apiName, this.apiPath + '/setUserAvatar', this.myInit).then(data => {
-      console.log('serverless setUserAvatar');
+    return API.post(this.apiName, this.apiPath + '/setUserAvatar', myInit).then(data => {
+      console.log(`${functionFullName}: successfully retrieved data from API`);
       console.log(data);
       return data.data;
     });
@@ -111,14 +118,17 @@ export class AvatarService implements OnInit {
   }
 
   async getAvatars() {
-    console.log('getAvatars');
+    const functionName = 'getAvatars';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
 
-    return API.get(this.apiName, this.apiPath + '/getAvatars', this.myInit).then(data => {
-      console.log('serverless getAvatars');
+    return API.get(this.apiName, this.apiPath + '/getAvatars', myInit).then(data => {
+      console.log(`${functionFullName}: successfully retrieved data from API`);
       console.log(data);
       return data.data;
     });

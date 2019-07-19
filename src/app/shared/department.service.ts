@@ -136,8 +136,10 @@ export class DepartmentService {
     }
   }
 
-  async getEmployeesByDepartmentId(departmentId: number) {
-    console.log('getEmployeesByDepartmentId');
+  async getEmployeesByDepartmentId(departmentId: number): Promise<any> {
+    const functionName = 'getEmployeesByDepartmentId';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Starting ${functionFullName}`);
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
@@ -145,10 +147,12 @@ export class DepartmentService {
     myInit.headers['Authorization'] = token;
     myInit['body'] = {departmentId: departmentId};
 
-    return API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
-      console.log('serverless getEmployeesByDepartmentId');
+    API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
+      console.log(`${functionFullName}: successfully retrieved data from API`);
       console.log(data);
-      return data.data;
+      return new Promise(resolve => {
+        resolve(data.data);
+      });
     });
 
     // return this.http.post(environment.apiBaseUrl + '/getEmployeesByDepartmentId', {departmentId: departmentId});

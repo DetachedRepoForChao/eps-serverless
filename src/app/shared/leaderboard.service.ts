@@ -46,8 +46,8 @@ export class LeaderboardService {
 
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
-  public leaderboardUsers = [];
-  public leaderboardUsersTop = [];
+  public leaderboardUsers: LeaderboardUser[] = [];
+  public leaderboardUsersTop: LeaderboardUser[] = [];
   selection = new SelectionModel<LeaderboardUser>(true, []);
   dataSource = new MatTableDataSource<LeaderboardUser>();
   public currentUserLeaderboardRecord;
@@ -87,7 +87,7 @@ export class LeaderboardService {
                 this.departments = departments;
 
                 const departmentName = (departments.find(x => x.Id === userData.departmentId)).Name;
-                console.log('departmentName: ' + departmentName);
+                // console.log(`${functionFullName}: departmentName:  ${departmentName}`);
 
                 const leaderboardUser: LeaderboardUser = {
                   rank: userData.rank,
@@ -106,29 +106,6 @@ export class LeaderboardService {
                 this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
               });
 
-            /*this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
-                console.log('department list');
-                console.log(departmentList);
-                const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
-                console.log('departmentName: ' + departmentName);
-
-                const leaderboardUser: LeaderboardUser = {
-                  rank: userData.rank,
-                  id: userData.id,
-                  username: userData.username,
-                  name: userData.firstName + ' ' + userData.lastName,
-                  email: userData.email,
-                  position: userData.position,
-                  points: userData.points,
-                  avatar: userData.avatarUrl,
-                  department: departmentName,
-                };
-
-                console.log(leaderboardUser);
-
-                this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
-              }
-            );*/
           }
         }
 
@@ -142,17 +119,23 @@ export class LeaderboardService {
 
   }
 
-  async getPointsLeaderboard() {
-    console.log('getPointsLeaderboard');
+  async getPointsLeaderboard(): Promise<any> {
+    const functionName = 'getPointsLeaderboard';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     // return this.http.get(environment.apiBaseUrl + '/getPointsLeaderboard');
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
-    this.myInit.headers['Authorization'] = token;
+    const myInit = this.myInit;
+    myInit.headers['Authorization'] = token;
 
-    return API.get(this.apiName, this.apiPath + '/getPointsLeaderboard', this.myInit).then(data => {
-      console.log('serverless getPointsLeaderboard');
-      console.log(data);
-      return data.data;
+    return new Promise(resolve => {
+      API.get(this.apiName, this.apiPath + '/getPointsLeaderboard', myInit).then(data => {
+        console.log(`${functionFullName}: successfully retrieved data from API`);
+        console.log(data);
+        resolve(data.data);
+      });
     });
   }
 
@@ -165,7 +148,7 @@ export class LeaderboardService {
       .then((res: any) => {
         if (res) {
           console.log(res);
-          let leaderboardUsers = [];
+          let leaderboardUsers: LeaderboardUser[] = [];
           for ( let i = 0; i < res.length; i++) {
             const userData = {
               rank: i + 1,
@@ -180,7 +163,8 @@ export class LeaderboardService {
               avatarUrl: res[i].avatarUrl
             };
 
-            this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
+            // this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
+            this.departmentService.getDepartments().then((departmentList: Department[]) => {
               const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
 
               const leaderboardUser: LeaderboardUser = {
