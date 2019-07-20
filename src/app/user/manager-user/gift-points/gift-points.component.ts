@@ -61,50 +61,6 @@ export class GiftPointsComponent implements OnInit {
 
     this.populateEmployeeDataSource().then();
 
-    /*this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
-      .then(res => {
-        console.log(res);
-        if (res) {
-          console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
-          console.log(res);
-          this.departmentEmployees = [];
-          for ( let i = 0; i < res.length; i++) {
-            const userData = {
-              id: res[i].id,
-              username: res[i].username,
-              firstName: res[i].firstName,
-              lastName: res[i].lastName,
-              email: res[i].email,
-              position: res[i].position,
-              securityRoleId: res[i].securityRoleId,
-              points: res[i].points,
-              avatarUrl: res[i].avatarUrl,
-            };
-
-            const departmentEmployee: DepartmentEmployee = {
-              id: userData.id,
-              avatar: userData.avatarUrl,
-              name: userData.firstName + ' ' + userData.lastName,
-              username: userData.username,
-              email: userData.email,
-              position: userData.position,
-              points: userData.points,
-            };
-
-            console.log(departmentEmployee);
-
-            this.departmentEmployees = this.departmentEmployees.concat(departmentEmployee);
-          }
-
-          this.dataSource.data = this.departmentEmployees;
-          console.log(`${functionFullName}: department employees data source`);
-          console.log(this.dataSource.data);
-
-        } else {
-          console.log(`${functionFullName}: departmentId does not exist in local storage`);
-        }
-      });*/
-
     this.pointItemService.getPointItems()
       .then(res => {
         const pointItems = res;
@@ -119,7 +75,6 @@ export class GiftPointsComponent implements OnInit {
           this.pointItemList = this.pointItemList.concat(data);
         }
       });
-
   }
 
   populateEmployeeDataSource(): Promise<any> {

@@ -9,12 +9,14 @@
           <h4 class="text-uppercase">Leaderboard</h4>
         </div>
 
-
         <table class="table table-hover">
           <thead>
           <tr>
             <th *ngFor="let col of this.displayedColumns">
-              {{col}}
+              <div *ngIf="col === 'avatar'"></div>
+              <div *ngIf="col === 'rank'" class="text-center">{{col}}</div>
+              <div *ngIf="col === 'name'" >{{col}}</div>
+              <div *ngIf="col === 'points'" class="text-center">{{col}}</div>
             </th>
           </tr>
           </thead>
@@ -25,17 +27,15 @@
                                                  class="img-row"
                                                  data-toggle="tooltip"
                                                  data-placement="auto"
-                                                 title='<img src="{{user.avatar}}">'
                                                  data-html="true"></div>
 
               <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>
               <div *ngIf="col === 'name'">{{user[col]}}</div>
-              <div *ngIf="col === 'points'">{{user[col]}}</div>
+              <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
 
             </td>
           </tr>
           </tbody>
-
         </table>
 
         <div *ngIf="selectedRow">
@@ -50,7 +50,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <!---modal body---->
+                <!---Modal body---->
                 <div class="modal-body">
 
                   <div class="card">
@@ -93,45 +93,12 @@
                     </div>
                   </div>
                 </div>
-                <!----End Mod Bod---->
+                <!----End Modal Body---->
 
               </div>
             </div>
           </div>
         </div>
-        <!--
-        <table class="table">
-          <thead>
-          <tr>
-            <th class="text-center">#</th>
-            <th>Photo</th>
-            <th>Name</th>
-            <th>Points</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td class="text-center">1</td>
-            <td><img src=""><img src="http://localhost:3000/public/avatars/batman@3x.png" class="img-row" ></td>
-            <td>Alice Mike</td>
-            <td>1500</td>
-          </tr>
-          <tr>
-            <td class="text-center">2</td>
-            <td><img src=""><img src="../../../../assets/img/human2.svg" class="img-row" ></td>
-            <td>John Doe</td>
-            <td>1200</td>
-          </tr>
-          <tr>
-            <td class="text-center">3</td>
-            <td><img src=""><img src="../../../../assets/img/human3.svg" class="img-row"></td>
-            <td>Alex Mike</td>
-            <td>500</td>
-          </tr>
-          </tbody>
-        </table>
-        -->
-
       </div>
     </div>
     <div class="card-footer text-center">
@@ -156,14 +123,14 @@
         <table  class="table">
           <thead>
           <tr>
-            <th *ngFor="let col of this.leaderboardService.displayedColumnsAll">
+            <th *ngFor="let col of this.displayedColumnsAll">
               {{col}}
             </th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of this.leaderboardService.leaderboardUsers">
-            <td *ngFor="let col of this.leaderboardService.displayedColumnsAll">
+          <tr *ngFor="let user of this.leaderboardUsers">
+            <td *ngFor="let col of this.displayedColumnsAll">
               <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>
               <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>
               <div *ngIf="col === 'name'">{{user[col]}}</div>

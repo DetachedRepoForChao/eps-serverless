@@ -43,8 +43,7 @@ export class LeaderboardCardComponent implements OnInit {
   constructor(public leaderboardService: LeaderboardService,
               private avatarService: AvatarService,
               private globals: Globals,
-              private departmentService: DepartmentService,
-              private globalVariableService: GlobalVariableService) { }
+              private departmentService: DepartmentService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -60,9 +59,6 @@ export class LeaderboardCardComponent implements OnInit {
           console.log(this.leaderboardUsers);
         });
       });
-
-
-
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();

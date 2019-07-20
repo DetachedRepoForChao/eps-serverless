@@ -112,9 +112,9 @@ export class LeaderboardService {
         // this.dataSource.data = this.leaderboardUsers;
         this.leaderboardUsersTop = this.leaderboardUsers.slice(0, 4);
 
-        /*        $(function () {
-                  $('[data-toggle="tooltip"]').tooltip();
-                });*/
+/*        $(function () {
+          $('[data-toggle="tooltip"]').tooltip();
+        });*/
       });
 
   }
