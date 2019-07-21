@@ -12,6 +12,7 @@ import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import {AuthService} from '../login/auth.service';
+import {Storage} from 'aws-amplify';
 
 declare var $: any;
 
@@ -197,6 +198,39 @@ export class UserComponent implements OnInit {
 
   onCognitoLogout() {
     this.authService.signOut();
+  }
+
+  onTestClick3() {
+    // console.log(Storage);
+/*    Storage.get('aquaman@3x.png', )
+    // Storage.list('')
+      .then(result => {
+
+        console.log(result);
+      });*/
+    Storage.get('pic.png', {
+      level: 'private'
+    })
+    // Storage.list('')
+      .then(result => {
+
+        console.log(result);
+      });
+  }
+
+  onTestClick4() {
+/*    Storage.put('test.txt', 'Hello', {
+      level: 'private',
+      contentType: 'text/plain'
+    })*/
+/*    Storage.put('public.txt', 'Public')
+      .then(result => console.log(result))
+      .catch(err => console.log(err));*/
+    Storage.put('private.txt', 'Private', {
+      level: 'private'
+    })
+      .then(result => console.log(result))
+      .catch(err => console.log(err));
   }
 
   onProfileClick() {

@@ -4,6 +4,8 @@ import {AvatarService} from '../shared/avatar.service';
 import {Router} from '@angular/router';
 // import {SocketService} from '../shared/socket.service';
 import { environment } from 'src/environments/environment';
+import {Storage} from 'aws-amplify';
+
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -15,6 +17,10 @@ declare var event: any;
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+
   signUpConfig = {
     header: 'My Customized Sign Up',
     hideAllDefaults: true,

@@ -45,9 +45,8 @@
           Customize
         </button>
         <button type="button" class="btn btn-danger" (click)="showGallery()">Change Avatar</button>
-        <div class="modal fade" id="myModal" role="dialog">
-          <div class="modal-dialog">
-
+        <div class="modal fade modal-black" id="myModal" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
             <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header">
@@ -56,8 +55,44 @@
               </div>
               <!---modal body---->
               <div class="modal-body">
-                <div class="row">
-                  <!---- Form 1 ------>
+                <input type="file" (change)="fileChangeEvent($event)" />
+                <button type="button" (click)="onImageSelected($event)">Upload</button>
+
+<!--                <image-cropper
+                  [imageChangedEvent]="imageChangedEvent"
+                  [maintainAspectRatio]="true"
+                  [aspectRatio]="4 / 3"
+                  [resizeToWidth]="128"
+                  format="png"
+                  (imageCropped)="imageCropped($event)"
+                  (imageLoaded)="imageLoaded()"
+                  (cropperReady)="cropperReady()"
+                  (loadImageFailed)="loadImageFailed()"
+                ></image-cropper>-->
+
+                <image-cropper
+                  [imageChangedEvent]="imageChangedEvent"
+                  format="png"
+                  outputType="both"
+                  (imageCropped)="imageCropped($event)"
+                  (imageLoaded)="imageLoaded()"
+                  (cropperReady)="cropperReady()"
+                  (loadImageFailed)="loadImageFailed()"
+                ></image-cropper>
+                <br />
+                <br />
+                <br />
+                <br />
+
+
+                <img [src]="croppedImageToShow" />
+<!--                <amplify-photo-picker
+                  (loaded)="onImagePreviewLoaded($event)"
+                  (picked)="onImageSelected($event)">
+                </amplify-photo-picker>-->
+<!--                <div class="row">-->
+
+<!--                  &lt;!&ndash;&#45;&#45; Form 1 &#45;&#45;&#45;&#45;&ndash;&gt;
                   <div class="col-lg-12">
                     <div class="form-group has-success">
                       <div class="file-field">
@@ -71,25 +106,26 @@
                       </div>
                     </div>
                   </div>
-                  <!---- Form 2 ------>
+                  &lt;!&ndash;&#45;&#45; Form 2 &#45;&#45;&#45;&#45;&ndash;&gt;
                   <div class="col-lg-12">
                     <div class="form-group has-success">
                       <input type="text" value="Success" class="form-control form-control-success">
                     </div>
                   </div>
-                  <!---- Form 3 ------>
+                  &lt;!&ndash;&#45;&#45; Form 3 &#45;&#45;&#45;&#45;&ndash;&gt;
                   <div class="col-lg-12">
                     <div class="form-group has-success">
                       <input type="text" value="Success" class="form-control form-control-success">
                     </div>
                   </div>
-                  <!---- Form 4 ------>
+                  &lt;!&ndash;&#45;&#45; Form 4 &#45;&#45;&#45;&#45;&ndash;&gt;
                   <div class="col-lg-12">
                     <div class="form-group has-success">
                       <input type="text" value="Suc" class="form-control form-control-success">
                     </div>
-                  </div>
-                </div>
+                  </div>-->
+<!--                </div>-->
+
               </div>
 
               <!----End Mod Bod---->

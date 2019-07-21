@@ -59,6 +59,7 @@ import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
 import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
 import { RequestCacheService} from './shared/request-cache.service';
 import { CachingInterceptorService} from './shared/caching-interceptor.service';
+import { ImageCropperModule} from 'ngx-image-cropper';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -118,7 +119,8 @@ import { CachingInterceptorService} from './shared/caching-interceptor.service';
     MatInputModule,
     MatListModule,
     AmplifyAngularModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ImageCropperModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

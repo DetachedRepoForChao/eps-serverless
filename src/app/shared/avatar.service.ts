@@ -53,16 +53,6 @@ export class AvatarService implements OnInit {
     // return this.http.post(environment.apiBaseUrl + '/getUserAvatar', {userId: userId});
   }
 
-/*  getUserAvatar2(userId: string) {
-    console.log('getUserAvatar');
-    this.http.post(environment.apiBaseUrl + '/getUserAvatar', {userId: userId})
-      .subscribe((res: any) => {
-        if (res.status !== false) {
-          this.userAvatarUrl = res.avatarUrl.avatarUrl;
-        }
-      });
-  }*/
-
   refreshUserAvatar(userId: number) {
     console.log('refreshUserAvatar');
     this.getUserAvatar(userId)
