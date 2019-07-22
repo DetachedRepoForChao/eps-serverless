@@ -3,9 +3,11 @@ import {HttpClient} from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
 import {ImageService} from './image.service';
-import Amplify, {API} from 'aws-amplify';
+import Amplify, {API, Storage} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from "../login/auth.service";
+import * as AWS from 'aws-sdk/global';
+import * as S3 from 'aws-sdk/clients/s3';
 
 @Injectable({
   providedIn: 'root'
@@ -49,25 +51,65 @@ export class AvatarService implements OnInit {
       console.log(data);
       return data.data;
     });
+  }
 
-    // return this.http.post(environment.apiBaseUrl + '/getUserAvatar', {userId: userId});
+  saveUserAvatar(image) {
+    const userId = +localStorage.getItem('userId');
+    return Storage.put(`pic-${userId}.png`, image, {
+      level: 'private',
+      contentType: `image/png`,
+    })
+      .then((result: any) => {
+        console.log('result:');
+        console.log(result);
+
+        Storage.get(result.key, {
+          level: 'private'
+        })
+          .then((resultImage: any) => {
+            console.log('resultImage:');
+            console.log(resultImage);
+
+            this.setUserAvatar(result.key)
+              .then(res => {
+                console.log('galleryImageClicked: response:');
+                console.log(res);
+                this.refreshUserAvatar(+localStorage.getItem('userId'));
+              });
+          });
+      })
+      .catch(err => console.log(err));
   }
 
   refreshUserAvatar(userId: number) {
     console.log('refreshUserAvatar');
     this.getUserAvatar(userId)
       .then((res: any) => {
+        console.log('refreshUserAvatar getUserAvatar result:');
+        console.log(res);
+
         if (res.status !== false) {
-          this.userAvatarUrl = res.avatarUrl;
-          this.userAvatarImageToShow = res.avatarUrl;
-          // this.getImageFromService();
+          Storage.get(res.avatarUrl, {
+            level: 'private'
+          })
+            .then((resultUrl: any) => {
+              console.log('refreshUserAvatar Storage.get resultImage:');
+              console.log(resultUrl);
+
+              this.userAvatarUrl = resultUrl;
+              // this.userAvatarImageToShow = res.avatarUrl;
+              this.getImageFromService();
+            });
         }
       });
   }
 
   createImageFromBlob(image: Blob) {
+    console.log('createImageFromBlob');
     const reader = new FileReader();
     reader.addEventListener('load', () => {
+      console.log('userAvatarImageToShow blob:');
+      console.log(reader.result);
       this.userAvatarImageToShow = reader.result;
     }, false);
 
@@ -80,6 +122,8 @@ export class AvatarService implements OnInit {
     console.log('getImageFromService');
     this.isUserAvatarImageLoading = true;
     this.imageService.getImage(this.userAvatarUrl).subscribe(data => {
+      console.log('getImageFromService data');
+      console.log(data);
       this.createImageFromBlob(data);
       this.isUserAvatarImageLoading = false;
     }, error => {
@@ -104,7 +148,6 @@ export class AvatarService implements OnInit {
       console.log(data);
       return data.data;
     });
-    // return this.http.post(environment.apiBaseUrl + '/setUserAvatar', {userId: userId, avatarUrl: avatarUrl});
   }
 
   async getAvatars() {

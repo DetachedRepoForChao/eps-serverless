@@ -13,6 +13,11 @@ import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Storage} from 'aws-amplify';
+import * as Amplify from 'aws-amplify';
+// import * as AWS from 'aws-sdk/global';
+// import * as S3 from 'aws-sdk/clients/s3';
+import * as AWS from 'aws-sdk';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 declare var $: any;
 
@@ -48,6 +53,7 @@ export class UserComponent implements OnInit {
               // private sessionService: SessionService,
               private userIdle: UserIdleService,
               private departmentService: DepartmentService,
+              private http: HttpClient,
               private authService: AuthService) { }
 
   ngOnInit() {
@@ -166,24 +172,6 @@ export class UserComponent implements OnInit {
   }
 
 
-/*  storeSecurityRole() {
-    const securityRoleId = +localStorage.getItem('securityRoleId');
-    return this.securityRoleService.getSecurityRoleById(securityRoleId)
-      .then(data => {
-        if ( !data) {
-          console.log('Did not receive valid security role data');
-          return false;
-        } else {
-          console.log('Received valid security role data');
-          debugger;
-          localStorage.setItem('securityRoleName', data.name);
-          localStorage.setItem('securityRoleDescription', data.description);
-          return data;
-        }
-
-      });
-  }*/
-
   onLogout() {
     // const sessionId = localStorage.getItem('socketSessionId');
     this.userService.deleteToken();
@@ -200,6 +188,9 @@ export class UserComponent implements OnInit {
     this.authService.signOut();
   }
 
+  publicImage: any;
+  privateImage: any;
+
   onTestClick3() {
     // console.log(Storage);
 /*    Storage.get('aquaman@3x.png', )
@@ -208,29 +199,90 @@ export class UserComponent implements OnInit {
 
         console.log(result);
       });*/
-    Storage.get('pic.png', {
+
+
+
+    Storage.get('pic-7.png')
+    // Storage.list('')
+      .then(result => {
+        console.log('storage get public result:');
+        console.log(result);
+
+        this.http.get(result.toString(), {
+          responseType: 'blob'
+        })
+          .subscribe(res => {
+            console.log('http get publicImage:');
+            console.log(res);
+
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+              this.publicImage = reader.result;
+              console.log(reader.result);
+            }, false);
+
+            reader.readAsDataURL(res);
+
+          });
+      })
+      .catch(err => {
+        console.log('public error:');
+        console.log(err);
+      });
+
+    Storage.get('pic-7.png', {
       level: 'private'
     })
     // Storage.list('')
       .then(result => {
-
+        console.log('storage get private result:');
         console.log(result);
+
+        this.http.get(result.toString(), {
+          responseType: 'blob'
+        })
+          .subscribe(res => {
+            console.log('http get privateImage:');
+            console.log(res);
+
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+              this.privateImage = reader.result;
+              console.log(reader.result);
+            }, false);
+
+            reader.readAsDataURL(res);
+          });
+      })
+      .catch(err => {
+        console.log('public error:');
+        console.log(err);
       });
   }
 
+/*  createImageFromBlob(image: Blob) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      this.userAvatarImageToShow = reader.result;
+      console.log(reader.result);
+    }, false);
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+  }*/
+
+  encode(data) {
+    const str = data.reduce(function(a, b) { return a + String.fromCharCode(b); }, '');
+    return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
+  }
+
   onTestClick4() {
-/*    Storage.put('test.txt', 'Hello', {
-      level: 'private',
-      contentType: 'text/plain'
-    })*/
-/*    Storage.put('public.txt', 'Public')
-      .then(result => console.log(result))
-      .catch(err => console.log(err));*/
-    Storage.put('private.txt', 'Private', {
-      level: 'private'
-    })
-      .then(result => console.log(result))
-      .catch(err => console.log(err));
+    const s3 = new AWS.S3();
+
+
+
+    console.log(s3);
   }
 
   onProfileClick() {
@@ -238,8 +290,9 @@ export class UserComponent implements OnInit {
   }
 
   onSocketTestClick1() {
-    // this.socketService.socketTest1();
-    // this.socketService.emit('Test1');
+    console.log('TestClick1');
+    console.log(Storage);
+    console.log(Amplify);
   }
 
   onSocketTestClick2() {

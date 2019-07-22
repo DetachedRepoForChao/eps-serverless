@@ -122,17 +122,18 @@ import { ImageCropperModule} from 'ngx-image-cropper';
     ReactiveFormsModule,
     ImageCropperModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
-  },
-    RequestCacheService,
+  providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: CachingInterceptorService,
+      useClass: AuthInterceptor,
       multi: true
     },
+    /*    RequestCacheService,
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: CachingInterceptorService,
+          multi: true
+        },*/
     AuthGuard,
     RoleGuardService,
     UserService,

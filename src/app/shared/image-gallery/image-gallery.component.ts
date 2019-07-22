@@ -5,6 +5,7 @@ import {AvatarService} from '../avatar.service';
 import { BehaviorSubject } from 'rxjs';
 import {ImageService} from '../image.service';
 // import {ProfileCardComponent} from '../../user/homepage/profile-card/profile-card.component';
+
 declare var $: any;
 @Component({
   selector: 'app-image-gallery',
@@ -27,7 +28,7 @@ export class ImageGalleryComponent implements OnInit {
   // images: GALLERY_IMAGE[] = DEMO_GALLERY_IMAGE;
   images: GALLERY_IMAGE[] = [];
 
-  constructor(private avatarService: AvatarService) {
+  constructor(private avatarService: AvatarService, private imageService: ImageService) {
 
   }
 
@@ -95,13 +96,26 @@ export class ImageGalleryComponent implements OnInit {
   galleryImageClicked(index) {
     console.log('Gallery image clicked with index ', index);
     // this.avatarService.setUserAvatar(localStorage.getItem('userId'), this.images[index].url)
-    this.avatarService.setUserAvatar(this.images[index].url)
+    const imageUrl = this.images[index].url;
+    this.imageService.getImage(imageUrl)
+      .subscribe(blob => {
+        console.log('galleryImageClicked blob:');
+        console.log(blob);
+        this.avatarService.saveUserAvatar(blob).then(() => {
+          // console.log('galleryImageClicked: response:');
+          // console.log(res);
+          this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
+          $('#imageSelectorModal').modal('hide');
+        });
+      });
+
+/*    this.avatarService.setUserAvatar(this.images[index].url)
       .then(res => {
         console.log('galleryImageClicked: response:');
         console.log(res);
         this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
         $('#imageSelectorModal').modal('hide');
-      });
+      });*/
     // this.ngxImageGallery.open(index);
   }
 

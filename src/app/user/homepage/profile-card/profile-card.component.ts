@@ -10,6 +10,8 @@ import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {Storage} from 'aws-amplify';
 import awsconfig from '../../../../aws-exports';
+import * as AWS from 'aws-sdk/global';
+import * as S3 from 'aws-sdk/clients/s3';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -66,21 +68,24 @@ export class ProfileCardComponent implements OnInit {
 
     const userId = +localStorage.getItem('userId');
 
-    Storage.put(`pic-${userId}.png`, this.croppedImage, {
+    this.avatarService.saveUserAvatar(this.croppedImage).then();
+    /*Storage.put(`pic-${userId}.png`, this.croppedImage, {
+      level: 'private',
       contentType: `image/png`,
     })
       .then((result: any) => {
         console.log('result:');
         console.log(result);
 
-        Storage.get(result.key)
+
+        Storage.get(result.key, {
+          level: 'private'
+        })
           .then((resultImage: any) => {
             console.log('resultImage:');
             console.log(resultImage);
 
-            const imagePath = `https://${awsconfig.aws_user_files_s3_bucket}.s3.amazonaws.com/public/pic-${userId}.png`;
-            console.log(`imagePath: ${imagePath}`);
-            this.avatarService.setUserAvatar(imagePath)
+            this.avatarService.setUserAvatar(result.key)
               .then(res => {
                 console.log('galleryImageClicked: response:');
                 console.log(res);
@@ -89,7 +94,12 @@ export class ProfileCardComponent implements OnInit {
               });
           });
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err));*/
+  }
+
+  encode(data) {
+    const str = data.reduce(function(a, b) { return a + String.fromCharCode(b); }, '');
+    return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
   }
 
   fileChangeEvent(event: any): void {
