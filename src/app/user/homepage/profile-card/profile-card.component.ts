@@ -69,32 +69,6 @@ export class ProfileCardComponent implements OnInit {
     const userId = +localStorage.getItem('userId');
 
     this.avatarService.saveUserAvatar(this.croppedImage).then();
-    /*Storage.put(`pic-${userId}.png`, this.croppedImage, {
-      level: 'private',
-      contentType: `image/png`,
-    })
-      .then((result: any) => {
-        console.log('result:');
-        console.log(result);
-
-
-        Storage.get(result.key, {
-          level: 'private'
-        })
-          .then((resultImage: any) => {
-            console.log('resultImage:');
-            console.log(resultImage);
-
-            this.avatarService.setUserAvatar(result.key)
-              .then(res => {
-                console.log('galleryImageClicked: response:');
-                console.log(res);
-                this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
-                $('#myModal').modal('hide');
-              });
-          });
-      })
-      .catch(err => console.log(err));*/
   }
 
   encode(data) {

@@ -56,7 +56,7 @@ export class AvatarService implements OnInit {
   saveUserAvatar(image) {
     const userId = +localStorage.getItem('userId');
     return Storage.put(`pic-${userId}.png`, image, {
-      level: 'private',
+      level: 'protected',
       contentType: `image/png`,
     })
       .then((result: any) => {
@@ -64,7 +64,7 @@ export class AvatarService implements OnInit {
         console.log(result);
 
         Storage.get(result.key, {
-          level: 'private'
+          level: 'protected'
         })
           .then((resultImage: any) => {
             console.log('resultImage:');
@@ -90,7 +90,7 @@ export class AvatarService implements OnInit {
 
         if (res.status !== false) {
           Storage.get(res.avatarUrl, {
-            level: 'private'
+            level: 'protected'
           })
             .then((resultUrl: any) => {
               console.log('refreshUserAvatar Storage.get resultImage:');

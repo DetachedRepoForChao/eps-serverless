@@ -28,12 +28,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"epsserverlesse3f718f3",
+						"epsserverless76cf8c60",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"epsserverlesse3f718f3",
+									"epsserverless76cf8c60",
 									"-",
 									{
 										"Ref": "env"
@@ -60,7 +60,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "eps-serverless-dev-20190630120450-deployment",
-					"S3Key": "amplify-builds/epsserverlesse3f718f3-1563576854-latest-build.zip"
+					"S3Key": "amplify-builds/epsserverless76cf8c60-1563770639-latest-build.zip"
 				}
 			}
 		},
@@ -70,12 +70,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"epsserverlessLambdaRoleb1f39a56",
+						"epsserverlessLambdaRole3f2a7b7b",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"epsserverlessLambdaRoleb1f39a56",
+									"epsserverlessLambdaRole3f2a7b7b",
 									"-",
 									{
 										"Ref": "env"
