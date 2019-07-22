@@ -52,7 +52,7 @@ export class ImageGalleryComponent implements OnInit {
     this.avatarService.getAvatars()
       .then((result: any) => {
         result.forEach(image => {
-
+          console.log(image);
           const imageObj = {
             // url: 'http://localhost:3000/public/avatars/' + image,
             url: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image,
