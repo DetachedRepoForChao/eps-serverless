@@ -53,6 +53,12 @@
 					]
 				}
 			]
+		},
+		"epsserverless76cf8c60": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": []
 		}
 	},
 	"api": {

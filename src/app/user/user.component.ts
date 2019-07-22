@@ -278,11 +278,13 @@ export class UserComponent implements OnInit {
   }
 
   onTestClick4() {
-    const s3 = new AWS.S3();
+    Storage.list('', {
+      level: 'protected'
+    }).then(result => {
+      console.log(result);
+    });
 
 
-
-    console.log(s3);
   }
 
   onProfileClick() {
