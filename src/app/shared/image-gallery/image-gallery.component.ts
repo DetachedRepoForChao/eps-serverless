@@ -36,6 +36,7 @@ export class ImageGalleryComponent implements OnInit {
     this.avatarService.getAvatars()
       .then((result: any) => {
         result.forEach(image => {
+          
           // console.log(image);
           const imageObj = {
             // url: 'http://localhost:3000/public/avatars/' + image,
