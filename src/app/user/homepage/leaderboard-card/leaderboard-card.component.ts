@@ -8,6 +8,8 @@ import {Globals} from '../../../globals';
 import {DepartmentService} from '../../../shared/department.service';
 import {GlobalVariableService} from '../../../shared/global-variable.service';
 import {Department} from '../../../shared/department.model';
+import {Storage} from 'aws-amplify';
+import {ImageService} from '../../../shared/image.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -35,7 +37,7 @@ export class LeaderboardCardComponent implements OnInit {
   leaderboardUsersTop: LeaderboardUser[] = [];
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
-
+  avatarList: string[] = [];
   departments: Department[] = [];
 
   selectedRow;
@@ -43,22 +45,41 @@ export class LeaderboardCardComponent implements OnInit {
   constructor(public leaderboardService: LeaderboardService,
               private avatarService: AvatarService,
               private globals: Globals,
-              private departmentService: DepartmentService) { }
+              private departmentService: DepartmentService,
+              private imageService: ImageService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.leaderboardService.getPointsLeaderboard()
-      .then(result => {
-        console.log(`${functionFullName}: populating leaderboard data`);
-        this.populateLeaderboardDataSource(result).then(() => {
-          console.log(`${functionFullName}: leaderboard data populated`);
-          console.log(`${functionFullName}: leaderboardUsers:`);
-          console.log(this.leaderboardUsers);
+    if (this.avatarList.length === 0) {
+      this.avatarService.getAvatars()
+        .then(avatarList => {
+          this.avatarList = avatarList;
+
+          this.leaderboardService.getPointsLeaderboard()
+            .then(result => {
+              console.log(`${functionFullName}: populating leaderboard data`);
+              this.populateLeaderboardDataSource(result).then(() => {
+                console.log(`${functionFullName}: leaderboard data populated`);
+                console.log(`${functionFullName}: leaderboardUsers:`);
+                console.log(this.leaderboardUsers);
+              });
+            });
         });
-      });
+    } else {
+      this.leaderboardService.getPointsLeaderboard()
+        .then(result => {
+          console.log(`${functionFullName}: populating leaderboard data`);
+          this.populateLeaderboardDataSource(result).then(() => {
+            console.log(`${functionFullName}: leaderboard data populated`);
+            console.log(`${functionFullName}: leaderboardUsers:`);
+            console.log(this.leaderboardUsers);
+          });
+        });
+    }
+
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
@@ -81,37 +102,71 @@ export class LeaderboardCardComponent implements OnInit {
           for ( let i = 0; i < leaderboardData.length; i++) {
             console.log(`${functionFullName}: current leadboardUser item`);
             console.log(leaderboardData[i]);
-            const userData = {
-              rank: i + 1,
-              id: leaderboardData[i].id,
-              username: leaderboardData[i].username,
-              firstName: leaderboardData[i].firstName,
-              lastName: leaderboardData[i].lastName,
-              email: leaderboardData[i].email,
-              position: leaderboardData[i].position,
-              departmentId: leaderboardData[i].departmentId,
-              points: leaderboardData[i].points,
-              avatarUrl: leaderboardData[i].avatarUrl
-            };
 
-            const departmentName = (departments.find(x => x.Id === userData.departmentId)).Name;
-            // console.log(`${functionFullName}: departmentName:  ${departmentName}`);
+            // console.log('avatarList: ');
+            // console.log(this.avatarList);
+            const userAvatarKey = this.avatarList.find(x => x.includes(`pic-${leaderboardData[i].id}.png`) === true);
+            console.log(`userAvatarKey: ${userAvatarKey}`);
+            console.log(`key: ${userAvatarKey.split('/')[2]}`);
+            console.log(`identityId: ${userAvatarKey.split('/')[1]}`);
+            Storage.get(userAvatarKey.split('/')[2], {
+              level: 'protected',
+              identityId: userAvatarKey.split('/')[1]
+            })
+              .then((avatarUrl: string) => {
+                console.log(`avatarUrl: ${avatarUrl}`);
 
-            const leaderboardUser: LeaderboardUser = {
-              rank: userData.rank,
-              id: userData.id,
-              username: userData.username,
-              name: userData.firstName + ' ' + userData.lastName,
-              email: userData.email,
-              position: userData.position,
-              points: userData.points,
-              avatar: userData.avatarUrl,
-              department: departmentName,
-            };
+                this.imageService.getImage(avatarUrl)
+                  .subscribe((blob) => {
+                    console.log(`avatarBlob: ${blob}`);
 
-            console.log(leaderboardUser);
+                    let avatarImg;
+                    console.log('createImageFromBlob');
+                    const reader = new FileReader();
+                    reader.addEventListener('load', () => {
+                      console.log('userAvatar blob:');
+                      console.log(reader.result);
+                      avatarImg = reader.result;
+                    }, false);
 
-            this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
+                    if (blob) {
+                      reader.readAsDataURL(blob);
+                    }
+
+                    const userData = {
+                      rank: i + 1,
+                      id: leaderboardData[i].id,
+                      username: leaderboardData[i].username,
+                      firstName: leaderboardData[i].firstName,
+                      lastName: leaderboardData[i].lastName,
+                      email: leaderboardData[i].email,
+                      position: leaderboardData[i].position,
+                      departmentId: leaderboardData[i].departmentId,
+                      points: leaderboardData[i].points,
+                      avatarUrl: avatarImg
+                    };
+
+                    const departmentName = (departments.find(x => x.Id === userData.departmentId)).Name;
+                    // console.log(`${functionFullName}: departmentName:  ${departmentName}`);
+
+                    const leaderboardUser: LeaderboardUser = {
+                      rank: userData.rank,
+                      id: userData.id,
+                      username: userData.username,
+                      name: userData.firstName + ' ' + userData.lastName,
+                      email: userData.email,
+                      position: userData.position,
+                      points: userData.points,
+                      avatar: userData.avatarUrl,
+                      department: departmentName,
+                    };
+
+                    console.log('leaderboardUser:');
+                    console.log(leaderboardUser);
+
+                    this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
+                  });
+              });
           }
 
           return this.leaderboardUsers;
