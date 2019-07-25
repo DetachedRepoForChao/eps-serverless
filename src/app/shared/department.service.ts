@@ -42,7 +42,7 @@ export class DepartmentService {
 
     const departments: Department[] = this.globals.departments;
     console.log(`${functionFullName}: check if departments have been cached`);
-    if (departments) {
+    if (departments.length > 0) {
       console.log(`${functionFullName}: departments cache exists`);
       console.log(departments);
 
@@ -84,7 +84,7 @@ export class DepartmentService {
 
     const departments: Department[] = this.globals.departments;
     console.log(`${functionFullName}: check if departments have been cached`);
-    if (departments) {
+    if (departments.length > 0) {
       console.log(`${functionFullName}: departments cache exists`);
       // console.log(departments);
 

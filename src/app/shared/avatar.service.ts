@@ -8,6 +8,7 @@ import awsconfig from '../../aws-exports';
 import {AuthService} from "../login/auth.service";
 import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -55,22 +56,32 @@ export class AvatarService implements OnInit {
 
   saveUserAvatar(image) {
     const userId = +localStorage.getItem('userId');
-    return Storage.put(`pic-${userId}.png`, image, {
+    // return Storage.put(`pic-${userId}.png`, image, {
+    return Storage.put(`avatar.png`, image, {
       level: 'protected',
       contentType: `image/png`,
     })
       .then((result: any) => {
         console.log('result:');
         console.log(result);
+        const level = 'protected';
 
         Storage.get(result.key, {
-          level: 'protected'
+          level: level
         })
           .then((resultImage: any) => {
             console.log('resultImage:');
             console.log(resultImage);
 
-            this.setUserAvatar(result.key)
+            const localStorageItems = [];
+            for ( let i = 0; i < localStorage.length; i++) {
+              localStorageItems.push(localStorage.key(i));
+            }
+
+            const cognitoIdentityId = localStorageItems.find((x: string) => x.includes('aws.cognito.identity-id') === true);
+            const cognitoIdentityIdValue = localStorage.getItem(cognitoIdentityId);
+
+            this.setUserAvatar(`${level}/${cognitoIdentityIdValue}/${result.key}`)
               .then(res => {
                 console.log('galleryImageClicked: response:');
                 console.log(res);
@@ -89,8 +100,13 @@ export class AvatarService implements OnInit {
         console.log(res);
 
         if (res.status !== false) {
-          Storage.get(res.avatarUrl, {
-            level: 'protected'
+          const level = res.avatarUrl.split('/')[0];
+          const cognitoIdentityId = res.avatarUrl.split('/')[1];
+          const key = res.avatarUrl.split('/')[2];
+
+          Storage.get(key, {
+            level: level,
+            identityId: cognitoIdentityId
           })
             .then((resultUrl: any) => {
               console.log('refreshUserAvatar Storage.get resultImage:');
@@ -108,8 +124,8 @@ export class AvatarService implements OnInit {
     console.log('createImageFromBlob');
     const reader = new FileReader();
     reader.addEventListener('load', () => {
-      console.log('userAvatarImageToShow blob:');
-      console.log(reader.result);
+      // console.log('userAvatarImageToShow blob:');
+      // console.log(reader.result);
       this.userAvatarImageToShow = reader.result;
     }, false);
 
@@ -122,8 +138,8 @@ export class AvatarService implements OnInit {
     console.log('getImageFromService');
     this.isUserAvatarImageLoading = true;
     this.imageService.getImage(this.userAvatarUrl).subscribe(data => {
-      console.log('getImageFromService data');
-      console.log(data);
+      // console.log('getImageFromService data');
+      // console.log(data);
       this.createImageFromBlob(data);
       this.isUserAvatarImageLoading = false;
     }, error => {
@@ -167,5 +183,33 @@ export class AvatarService implements OnInit {
     });
 
     // return this.http.get(environment.apiBaseUrl + '/getAvatars');
+  }
+
+  resolveAvatar(leaderboardUser: any): Observable<any> {
+    const functionName = 'resolveAvatar';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: leaderboardUser: ${leaderboardUser}`);
+    if (leaderboardUser) {
+      const level = leaderboardUser.avatar.split('/')[0];
+      const cognitoIdentityId = leaderboardUser.avatar.split('/')[1];
+      const key = leaderboardUser.avatar.split('/')[2];
+
+      console.log(`${functionFullName}: key: ${key}`);
+      console.log(`${functionFullName}: identityId: ${cognitoIdentityId}`);
+
+      return new Observable<string>(() => {
+        Storage.get(key, {
+          level: level,
+          identityId: cognitoIdentityId
+        })
+          .then((avatarUrl: string) => {
+            console.log(`${functionFullName}: avatarUrl: ${avatarUrl}`);
+            leaderboardUser.avatar = avatarUrl;
+            return leaderboardUser;
+          });
+      });
+    }
   }
 }

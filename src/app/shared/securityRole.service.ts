@@ -35,7 +35,7 @@ export class SecurityRoleService {
 
     const securityRoles: SecurityRole[] = this.globals.securityRoles;
     console.log(`${functionFullName}: check if securityRoles have been cached`);
-    if (securityRoles) {
+    if (securityRoles.length > 0) {
       console.log(`${functionFullName}: securityRoles cache exists`);
       console.log(securityRoles);
 
@@ -79,7 +79,7 @@ export class SecurityRoleService {
 
     const securityRoles: SecurityRole[] = this.globals.securityRoles;
     console.log(`${functionFullName}: check if securityRoles have been cached`);
-    if (securityRoles) {
+    if (securityRoles.length > 0) {
       console.log(`${functionFullName}: securityRoles cache exists`);
       console.log(`${functionFullName}: retrieve securityRole id ${securityRoleId} from cache`);
 

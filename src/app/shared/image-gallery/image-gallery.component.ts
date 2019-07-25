@@ -7,6 +7,8 @@ import awsconfig from '../../../aws-exports';
 import {ImageService} from '../image.service';
 // import {ProfileCardComponent} from '../../user/homepage/profile-card/profile-card.component';
 import {API, Storage} from 'aws-amplify';
+import {AuthService} from '../../login/auth.service';
+import {LeaderboardService} from '../leaderboard.service';
 
 declare var $: any;
 @Component({
@@ -38,9 +40,13 @@ export class ImageGalleryComponent implements OnInit {
   // gallery images
   // images: GALLERY_IMAGE[] = DEMO_GALLERY_IMAGE;
   images: GALLERY_IMAGE[] = [];
-  identities: any;
+  identities: any = null;
+  currentUserId: any = null;
 
-  constructor(private avatarService: AvatarService, private imageService: ImageService) {
+  constructor(private avatarService: AvatarService,
+              private imageService: ImageService,
+              private authService: AuthService,
+              private leaderboardService: LeaderboardService) {
 
   }
 
@@ -68,11 +74,12 @@ export class ImageGalleryComponent implements OnInit {
         });
       });
 
-    API.get(this.apiName, this.apiPath + '/listIdentities', this.myInit).then(data => {
+/*    API.get(this.apiName, this.apiPath + '/listIdentities', this.myInit).then(data => {
       console.log(`listIdentities: successfully retrieved data from API`);
       console.log(data);
       this.identities = data.data;
-    });
+    });*/
+
 
   }
 
@@ -118,11 +125,15 @@ export class ImageGalleryComponent implements OnInit {
 
   // callback on gallery image clicked
   galleryImageClicked(index) {
-    console.log('Gallery image clicked with index ', index);
+    const functionName = 'galleryImageClicked';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: Gallery image clicked with index ${index}`);
     // this.avatarService.setUserAvatar(localStorage.getItem('userId'), this.images[index].url)
     const split = this.images[index].url.split(`/`);
     const imageKey = `${split[split.length - 2]}/${split[split.length - 1]}`;
-    console.log(`imageKey: ${imageKey}`);
+    console.log(`${functionFullName}: imageKey: ${imageKey}`);
 
 /*    this.identities.forEach(identity => {
       console.log(identity);
@@ -132,15 +143,26 @@ export class ImageGalleryComponent implements OnInit {
       level: ''
     })
       .then((result: any) => {
-        console.log(`result: ${result}`);
+        console.log(`${functionFullName}: result: ${result}`);
         this.imageService.getImage(result)
           .subscribe(blob => {
-            console.log('galleryImageClicked blob:');
+            console.log(`${functionFullName}: galleryImageClicked blob:`);
             console.log(blob);
             this.avatarService.saveUserAvatar(blob).then(() => {
               // console.log('galleryImageClicked: response:');
               // console.log(res);
               this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
+
+              if (this.leaderboardService.isUserInLeaderboardTop5(+localStorage.getItem('userId'))) {
+                console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
+                this.leaderboardService.getPointsLeaderboard()
+                  .then(leaderboardData => {
+                    console.log(`${functionFullName}: populating leaderboard data`);
+                    this.leaderboardService.populateLeaderboardDataSource(leaderboardData).then(() => {
+                      console.log(`${functionFullName}: leaderboard data populated`);
+                    });
+                  });
+              }
               $('#imageSelectorModal').modal('hide');
             });
           });

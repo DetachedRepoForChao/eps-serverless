@@ -6,6 +6,20 @@
             "privacy": {
                 "open": true
             }
+        },
+        {
+            "name": "/things",
+            "lambdaFunction": "epsserverless76cf8c60",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
         }
     ],
     "resourceName": "api9819f38d",
@@ -13,10 +27,13 @@
     "functionArns": [
         {
             "lambdaFunction": "epsserverlesse3f718f3"
+        },
+        {
+            "lambdaFunction": "epsserverless76cf8c60"
         }
     ],
     "privacy": {
-        "auth": 0,
+        "auth": 1,
         "unauth": 0,
         "authRoleName": "eps-serverless-dev-20190630120450-authRole",
         "unAuthRoleName": "eps-serverless-dev-20190630120450-unauthRole"
@@ -29,6 +46,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "epsserverless76cf8c60",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
-    ]
+    ],
+    "uuid": "d1cce744"
 }

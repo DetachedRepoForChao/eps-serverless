@@ -156,6 +156,10 @@ export class GiftPointsComponent implements OnInit {
   }
 
   pointItemOnSubmit(form: NgForm) {
+    const functionName = 'pointItemOnSubmit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     if (!form.value['selectedPointItem'] || (this.selection.selected.length === 0)) {
     } else {
 
@@ -181,7 +185,13 @@ export class GiftPointsComponent implements OnInit {
           console.log(dataArray);
           this.populateEmployeeDataSource();
           this.pointItemService.storeRemainingPointPool();
-          this.leaderboardService.populateLeaderboardDataSource();
+          this.leaderboardService.getPointsLeaderboard()
+            .then(leaderboardData => {
+              console.log(`${functionFullName}: populating leaderboard data`);
+              this.leaderboardService.populateLeaderboardDataSource(leaderboardData).then(() => {
+                console.log(`${functionFullName}: leaderboard data populated`);
+              });
+            });
           this.resetForm(form);
           const userId: number = +localStorage.getItem('userId');
           // this.achievementService.incrementAchievementGiftFirstPointItem(userId)
@@ -197,6 +207,10 @@ export class GiftPointsComponent implements OnInit {
   }
 
   resetForm(form: NgForm) {
+    const functionName = 'resetForm';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     form.resetForm();
   }
 }

@@ -45,7 +45,7 @@ app.get('/things/getCognitoUsers', function(req, res) {
     if (err) {
       console.log(err);
       // reject(err)
-      res.json({success: 'post call succeed!', data: err})
+      res.json({success: 'post call failed!', data: err})
     }
     else {
       console.log("Users", data);
@@ -72,7 +72,7 @@ app.get('/things/getCognitoIdentityProviders', function(req, res) {
     if (err) {
       console.log(err);
       // reject(err)
-      res.json({success: 'post call succeed!', data: err})
+      res.json({success: 'post call failed!', data: err})
     }
     else {
       console.log("Providers", data);
@@ -94,13 +94,12 @@ app.get('/things/getIdentityId', function(req, res) {
   var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
   var cognitoidentity = new AWS.CognitoIdentity();
 
-  cognitoidentity.listIdentities()
   cognitoidentity.getId(params, (err, data) => {
     if (err) {
       console.log(err);
       // console.log(cognitoidentity.config);
       // reject(err)
-      res.json({success: 'post call succeed!', data: err})
+      res.json({success: 'post call failed!', data: err})
     }
     else {
       console.log("Providers", data);
@@ -130,11 +129,11 @@ app.get('/things/listIdentities', function(req, res) {
     }
     else {
       console.log("Providers", data);
+
       res.json({success: 'post call succeed!', data: data})
     }
   });
 });
-
 
 
 app.get('/things', function(req, res) {

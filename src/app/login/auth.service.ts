@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import Auth, { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import { Hub, ICredentials } from '@aws-amplify/core';
 import { Subject, Observable } from 'rxjs';
 import { CognitoUser } from 'amazon-cognito-identity-js';
+import {Globals} from '../globals';
 
 export interface NewUser {
   username: string;
@@ -27,7 +28,7 @@ export class AuthService {
   public static FACEBOOK = CognitoHostedUIIdentityProvider.Facebook;
   public static GOOGLE = CognitoHostedUIIdentityProvider.Google;
 
-  constructor() {
+  constructor(private globals: Globals) {
     Hub.listen('auth', (data) => {
       const { channel, payload } = data;
       if (channel === 'auth') {
@@ -35,6 +36,15 @@ export class AuthService {
       }
     });
   }
+
+/*  ngOnInit(): void {
+    Auth.currentUserInfo()
+      .then((userInfo: any) => {
+        this.globals.cognitoUserId = userInfo.id.split(':')[1];
+        console.log('this.globals.currentUserId');
+        console.log(this.globals.cognitoUserId);
+      });
+  }*/
 
   signUp(user: NewUser): Promise<CognitoUser|any> {
     return Auth.signUp({
@@ -65,6 +75,10 @@ export class AuthService {
 
   currentAuthenticatedUser(): Promise<any> {
     return Auth.currentAuthenticatedUser();
+  }
+
+  currentUserInfo(): Promise<any> {
+    return Auth.currentUserInfo();
   }
 
 }

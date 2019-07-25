@@ -6,8 +6,9 @@ import {SecurityRole} from './shared/securityrole.model';
 
 export class Globals {
 
-  departments: Department[];
-  securityRoles: SecurityRole[];
+  departments: Department[] = [];
+  securityRoles: SecurityRole[] = [];
+  cognitoUserId: string = null;
 
   constructor() {}
 

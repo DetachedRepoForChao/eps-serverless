@@ -1,6 +1,6 @@
 {
   "resource": "/things",
-  "path": "/things/listIdentities",
+  "path": "/things/getCognitoUsers",
   "httpMethod": "GET",
   "headers": null,
   "multiValueHeaders": null,

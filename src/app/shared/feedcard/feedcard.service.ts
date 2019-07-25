@@ -9,7 +9,7 @@ import {AuthService} from '../../login/auth.service';
   providedIn: 'root'
 })
 export class FeedcardService implements OnInit {
-
+  componentName = 'feedcard.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   // apiName = "api9819f38d";
   apiPath = '/items';
@@ -26,21 +26,27 @@ export class FeedcardService implements OnInit {
   }
 
   async getPointTransaction() {
-    console.log('getPointTransaction:');
+    const functionName = 'getPointTransaction';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
     const user = await this.authService.currentAuthenticatedUser();
     const token = user.signInUserSession.idToken.jwtToken;
     this.myInit.headers['Authorization'] = token;
 
     return API.get(this.apiName, this.apiPath + '/getPointTransaction', this.myInit).then(data => {
-      console.log('serverless getPointTransaction');
+      console.log(`${functionFullName}: successfully retrieved data from API`);
       console.log(data);
       return data.data;
     });
   }
 
   addLike(sourceUserId, targetUserId, postId) {
-    console.log('GetLike');
+    const functionName = 'addLike';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: GetLike`);
     return this.http.post(environment.apiBaseUrl + 'likeManage', {'sourceUserId': sourceUserId,
       'targetUserId': targetUserId, 'postId': postId});
   }
