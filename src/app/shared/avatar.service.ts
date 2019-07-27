@@ -10,6 +10,12 @@ import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
 import {Observable} from 'rxjs';
 
+export interface UserAvatarRelationship {
+  userId: number;
+  avatarString: string;
+  dateModified: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })

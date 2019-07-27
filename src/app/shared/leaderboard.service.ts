@@ -148,6 +148,7 @@ export class LeaderboardService {
 
         // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
       });
+
   }
 
   async getPointsLeaderboard(): Promise<any> {
