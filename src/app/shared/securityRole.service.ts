@@ -7,6 +7,7 @@ import {Department} from './department.model';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {Globals} from '../globals';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class SecurityRoleService {
   }
 
   // HttpMethods
-  getSecurityRoles(): Promise<SecurityRole[]> {
+  getSecurityRoles(): Observable<SecurityRole[]> {
     const functionName = 'getSecurityRoles';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
@@ -39,13 +40,14 @@ export class SecurityRoleService {
       console.log(`${functionFullName}: securityRoles cache exists`);
       console.log(securityRoles);
 
-      return new Promise(resolve => {
+      return new Observable<SecurityRole[]>(observer => {
         console.log(`${functionFullName}: returning securityRoles from cache`);
-        resolve(securityRoles);
+        observer.next(securityRoles);
+        observer.complete();
       });
     } else {
       console.log(`${functionFullName}: securityRoles cache does not exist`);
-      return new Promise( resolve => {
+      return new Observable<SecurityRole[]>( observer => {
         console.log(`${functionFullName}: retrieve securityRoles from API`);
         API.get(this.apiName, this.apiPath + '/getSecurityRoles', {}).then(data => {
           console.log(`${functionFullName}: successfully retrieved data from API`);
@@ -65,14 +67,15 @@ export class SecurityRoleService {
           this.globals.securityRoles = securityRoleObjList;
 
           console.log(`${functionFullName}: returning securityRoles from API`);
-          resolve(securityRoleObjList);
+          observer.next(securityRoleObjList);
+          observer.complete();
         });
       });
     }
   }
 
 
-  getSecurityRoleById(securityRoleId: number): Promise<SecurityRole> {
+  getSecurityRoleById(securityRoleId: number): Observable<SecurityRole> {
     const functionName = 'getSecurityRoleById';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
@@ -86,13 +89,14 @@ export class SecurityRoleService {
       const securityRole = securityRoles.find(x => x.Id === securityRoleId);
       console.log(securityRole);
 
-      return new Promise(resolve => {
+      return new Observable<SecurityRole>(observer => {
         console.log(`${functionFullName}: returning securityRole id ${securityRoleId} from cache`);
-        resolve(securityRole);
+        observer.next(securityRole);
+        observer.complete();
       });
     } else {
       console.log(`${functionFullName}: securityRoles cache does not exist`);
-      return new Promise( resolve => {
+      return new Observable<SecurityRole>(observer => {
         console.log(`${functionFullName}: retrieve securityRole id ${securityRoleId} from API`);
 
         const myInit = this.myInit;
@@ -108,7 +112,8 @@ export class SecurityRoleService {
           };
 
           console.log(`${functionFullName}: returning securityRole id ${securityRoleId} from API`);
-          resolve(securityRoleObj);
+          observer.next(securityRoleObj);
+          observer.complete();
         });
       });
     }

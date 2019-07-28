@@ -83,7 +83,7 @@ export class SignInComponent implements OnInit {
             localStorage.setItem('departmentId', userDetails.departmentId);
 
             this.securityRoleService.getSecurityRoleById(+userDetails.securityRoleId)
-              .then((securityRole: SecurityRole) => {
+              .subscribe((securityRole: SecurityRole) => {
                 console.log('this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)');
                 console.log(securityRole);
                 localStorage.setItem('securityRoleName', securityRole.Name);
@@ -91,7 +91,7 @@ export class SignInComponent implements OnInit {
               });
 
             this.departmentService.getDepartmentById(+userDetails.departmentId)
-              .then((department: Department) => {
+              .subscribe((department: Department) => {
                 console.log('this.departmentService.getDepartmentById(userDetails.departmentId)');
                 console.log(department);
                 localStorage.setItem('departmentName', department.Name);

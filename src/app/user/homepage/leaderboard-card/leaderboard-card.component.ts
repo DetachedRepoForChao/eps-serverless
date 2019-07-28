@@ -16,18 +16,6 @@ import {AchievementData} from '../../../shared/achievement/achievement.component
 // Create a variable to interact with jquery
 declare var $: any;
 
-export interface LeaderboardUser {
-  rank: number;
-  id: number;
-  username: string;
-  name: string;
-  email: string;
-  position: string;
-  points: number;
-  avatar: string;
-  department: string;
-}
-
 @Component({
   selector: 'app-leaderboard-card',
   templateUrl: './leaderboard-card.component.html',
@@ -35,8 +23,14 @@ export interface LeaderboardUser {
 })
 export class LeaderboardCardComponent implements OnInit {
   componentName = 'leaderboard-card.component';
-  leaderboardUsers: LeaderboardUser[] = [];
-  leaderboardUsersTop: LeaderboardUser[] = [];
+  // leaderboardUsers: LeaderboardUser[] = [];
+  // leaderboardUsersTop: LeaderboardUser[] = [];
+
+  // public leaderboardUsers$: Observable<LeaderboardUser[]>;
+  // public leaderboardUsersTop$: Observable<LeaderboardUser[]>;
+  // private leaderboardUsers: LeaderboardUser[];
+  // private leaderboardUsersTop: LeaderboardUser[];
+
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
   avatarList: string[] = [];
@@ -58,15 +52,7 @@ export class LeaderboardCardComponent implements OnInit {
     this.leaderboardService.getPointsLeaderboard()
       .then(result => {
         console.log(`${functionFullName}: populating leaderboard data`);
-        this.leaderboardService.populateLeaderboardDataSource(result).then(() => {
-          // this.leaderboardUsers = this.leaderboardService.leaderboardUsers;
-          // this.leaderboardUsersTop = this.leaderboardService.leaderboardUsersTop;
-          console.log(`${functionFullName}: leaderboard data populated`);
-          // console.log(`${functionFullName}: leaderboardUsers:`);
-          // console.log(this.leaderboardUsers);
-          // console.log(`${functionFullName}: leaderboardUsersTop:`);
-          // console.log(this.leaderboardUsersTop);
-        });
+        this.leaderboardService.populateLeaderboardDataSource(result).subscribe();
       });
 
 

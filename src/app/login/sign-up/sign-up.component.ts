@@ -46,7 +46,7 @@ export class SignUpComponent implements OnInit {
 
     console.log(`${functionFullName}: populate departments`);
     this.departmentService.getDepartments()
-      .then((departments: Department[]) => {
+      .subscribe((departments: Department[]) => {
         this.departments = departments;
 
         console.log(`${functionFullName}: retrieved departments from departmentService.getDepartments()`);
@@ -55,7 +55,7 @@ export class SignUpComponent implements OnInit {
 
     console.log(`${functionFullName}: populate securityRoles`);
     this.securityRoleService.getSecurityRoles()
-      .then((securityRoles: SecurityRole[]) => {
+      .subscribe((securityRoles: SecurityRole[]) => {
         this.securityRoles = securityRoles;
 
         console.log(`${functionFullName}: retrieved securityRoles from securityRoleService.getSecurityRoles()`);
@@ -173,6 +173,6 @@ export class SignUpComponent implements OnInit {
     form.resetForm();
     this.serverErrorMessages = '';
   }
- 
-  
+
+
 }

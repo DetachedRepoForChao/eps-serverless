@@ -9,6 +9,7 @@ import {ImageService} from '../image.service';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
 import {LeaderboardService} from '../leaderboard.service';
+import {FeedcardService} from '../feedcard/feedcard.service';
 
 declare var $: any;
 @Component({
@@ -46,7 +47,8 @@ export class ImageGalleryComponent implements OnInit {
   constructor(private avatarService: AvatarService,
               private imageService: ImageService,
               private authService: AuthService,
-              private leaderboardService: LeaderboardService) {
+              private leaderboardService: LeaderboardService,
+              private feedcardService: FeedcardService) {
 
   }
 
@@ -56,9 +58,9 @@ export class ImageGalleryComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     this.avatarService.getAvatars()
-      .then((result: any) => {
+      .subscribe((result: any) => {
         result.forEach(image => {
-          console.log(image);
+          // console.log(image);
           const imageObj = {
             // url: 'http://localhost:3000/public/avatars/' + image,
             url: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image,
@@ -73,14 +75,6 @@ export class ImageGalleryComponent implements OnInit {
           this.images.push(imageObj);
         });
       });
-
-/*    API.get(this.apiName, this.apiPath + '/listIdentities', this.myInit).then(data => {
-      console.log(`listIdentities: successfully retrieved data from API`);
-      console.log(data);
-      this.identities = data.data;
-    });*/
-
-
   }
 
   // METHODS
@@ -135,9 +129,6 @@ export class ImageGalleryComponent implements OnInit {
     const imageKey = `${split[split.length - 2]}/${split[split.length - 1]}`;
     console.log(`${functionFullName}: imageKey: ${imageKey}`);
 
-/*    this.identities.forEach(identity => {
-      console.log(identity);
-    });*/
 
     Storage.get(imageKey, {
       level: ''
@@ -148,34 +139,30 @@ export class ImageGalleryComponent implements OnInit {
           .subscribe(blob => {
             console.log(`${functionFullName}: galleryImageClicked blob:`);
             console.log(blob);
-            this.avatarService.saveUserAvatar(blob).then(() => {
-              // console.log('galleryImageClicked: response:');
-              // console.log(res);
-              this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
+            this.avatarService.saveUserAvatar(blob).subscribe((saveResult) => {
+              console.log(`${functionFullName}: saveResult: ${saveResult}`);
+              if (saveResult === true) {
+                this.leaderboardService.isUserInLeaderboardTop5(+localStorage.getItem('userId')).subscribe(isTop5Result => {
+                  console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
+                  if (isTop5Result === true) {
+                    console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
+                    this.leaderboardService.getPointsLeaderboard()
+                      .then(leaderboardData => {
+                        console.log(`${functionFullName}: populating leaderboard data`);
+                        this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
+                          console.log(`${functionFullName}: leaderboard data populated`);
+                        });
+                      });
+                  }
+                });
 
-              if (this.leaderboardService.isUserInLeaderboardTop5(+localStorage.getItem('userId'))) {
-                console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
-                this.leaderboardService.getPointsLeaderboard()
-                  .then(leaderboardData => {
-                    console.log(`${functionFullName}: populating leaderboard data`);
-                    this.leaderboardService.populateLeaderboardDataSource(leaderboardData).then(() => {
-                      console.log(`${functionFullName}: leaderboard data populated`);
-                    });
-                  });
+                this.feedcardService.refreshPointTransactionAvatars();
               }
+
               $('#imageSelectorModal').modal('hide');
             });
           });
       });
-
-/*    this.avatarService.setUserAvatar(this.images[index].url)
-      .then(res => {
-        console.log('galleryImageClicked: response:');
-        console.log(res);
-        this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
-        $('#imageSelectorModal').modal('hide');
-      });*/
-    // this.ngxImageGallery.open(index);
   }
 
   // callback on gallery image changed

@@ -10,6 +10,7 @@ import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
 import {Globals} from '../globals';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class DepartmentService {
   }
 
   // HttpMethods
-  getDepartments(): Promise<Department[]> {
+  getDepartments(): Observable<Department[]> {
     const functionName = 'getDepartments';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
@@ -46,13 +47,15 @@ export class DepartmentService {
       console.log(`${functionFullName}: departments cache exists`);
       console.log(departments);
 
-      return new Promise(resolve => {
+      return new Observable<Department[]>((observer) => {
         console.log(`${functionFullName}: returning departments from cache`);
-        resolve(departments);
+        observer.next(departments);
+        // resolve(departments);
+        observer.complete();
       });
     } else {
       console.log(`${functionFullName}: departments cache does not exist`);
-      return new Promise( resolve => {
+      return new Observable<Department[]>( (observer) => {
         console.log(`${functionFullName}: retrieve departments from API`);
         API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
           console.log(`${functionFullName}: successfully retrieved data from API`);
@@ -71,13 +74,15 @@ export class DepartmentService {
           this.globals.departments = departmentObjList;
 
           console.log(`${functionFullName}: returning departments from API`);
-          resolve(departmentObjList);
+          // resolve(departmentObjList);
+          observer.next(departmentObjList);
+          observer.complete();
         });
       });
     }
   }
 
-  getDepartmentById(departmentId: number): Promise<Department> {
+  getDepartmentById(departmentId: number): Observable<Department> {
     const functionName = 'getDepartmentById';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
@@ -93,13 +98,14 @@ export class DepartmentService {
       const department = departments.find(x => x.Id === departmentId);
       console.log(department);
 
-      return new Promise(resolve => {
+      return new Observable<Department>(observer => {
         console.log(`${functionFullName}: returning department id ${departmentId} from cache`);
-        resolve(department);
+        observer.next(department);
+        observer.complete();
       });
     } else {
       console.log(`${functionFullName}: departments cache does not exist`);
-      return new Promise( resolve => {
+      return new Observable<Department>( observer => {
         console.log(`${functionFullName}: retrieve department id ${departmentId} from API`);
 
         const myInit = this.myInit;
@@ -114,29 +120,34 @@ export class DepartmentService {
           };
 
           console.log(`${functionFullName}: returning department id ${departmentId} from API`);
-          resolve(departmentObj);
+          observer.next(departmentObj);
+          observer.complete();
         });
       });
     }
   }
 
-  async getEmployeesByDepartmentId(departmentId: number): Promise<any> {
+  getEmployeesByDepartmentId(departmentId: number): Observable<any> {
     const functionName = 'getEmployeesByDepartmentId';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
 
-    const user = await this.authService.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
-    const myInit = this.myInit;
-    myInit.headers['Authorization'] = token;
-    myInit['body'] = {departmentId: departmentId};
+    // const user = await this.authService.currentAuthenticatedUser();
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {departmentId: departmentId};
 
-    return new Promise<any>(resolve => {
-      API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
-        console.log(`${functionFullName}: successfully retrieved data from API`);
-        console.log(data);
-        resolve(data.data);
-      });
+          API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+          });
+        });
     });
+
   }
 }

@@ -18,6 +18,8 @@ import * as Amplify from 'aws-amplify';
 // import * as S3 from 'aws-sdk/clients/s3';
 import * as AWS from 'aws-sdk';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {SecurityRole} from '../shared/securityrole.model';
+import {FeedcardService} from '../shared/feedcard/feedcard.service';
 
 declare var $: any;
 
@@ -54,7 +56,8 @@ export class UserComponent implements OnInit {
               private userIdle: UserIdleService,
               private departmentService: DepartmentService,
               private http: HttpClient,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private feedcardService: FeedcardService) { }
 
   ngOnInit() {
 /*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
@@ -90,7 +93,7 @@ export class UserComponent implements OnInit {
     }
 
     this.securityRoleService.getSecurityRoleById(this.securityRoleId)
-      .then(securityRole => {
+      .subscribe((securityRole: SecurityRole) => {
         this.securityRole = securityRole;
 
         switch (this.securityRole.Name) {
@@ -298,6 +301,7 @@ export class UserComponent implements OnInit {
   }
 
   onSocketTestClick2() {
+    this.feedcardService.refreshPointTransactionAvatars();
     // this.socketService.socketTest2();
     // debugger;
     // console.log(this.socketService.sessionHash);

@@ -59,7 +59,7 @@ export class GiftPointsComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.populateEmployeeDataSource().then();
+    this.populateEmployeeDataSource().subscribe();
 
     this.pointItemService.getPointItems()
       .then(res => {
@@ -77,15 +77,15 @@ export class GiftPointsComponent implements OnInit {
       });
   }
 
-  populateEmployeeDataSource(): Promise<any> {
+  populateEmployeeDataSource(): Observable<any> {
     const functionName = 'populateEmployeeDataSource';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    return new Promise<any>(resolve => {
+    return new Observable<any>(observer => {
       if (localStorage.getItem('departmentId')) {
         this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
-          .then(res => {
+          .subscribe(res => {
             console.log(res);
             if (res) {
               console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
@@ -123,12 +123,17 @@ export class GiftPointsComponent implements OnInit {
             this.dataSource.data = this.departmentEmployees;
             console.log(`${functionFullName}: department employees data source`);
             console.log(this.dataSource.data);
-            resolve();
+            observer.next();
+            // observer.complete();
 
           });
       } else {
         console.log(`${functionFullName}: departmentId does not exist in local storage`);
+        observer.next();
+        // observer.complete();
       }
+
+      observer.complete();
     });
   }
 
@@ -188,7 +193,7 @@ export class GiftPointsComponent implements OnInit {
           this.leaderboardService.getPointsLeaderboard()
             .then(leaderboardData => {
               console.log(`${functionFullName}: populating leaderboard data`);
-              this.leaderboardService.populateLeaderboardDataSource(leaderboardData).then(() => {
+              this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
                 console.log(`${functionFullName}: leaderboard data populated`);
               });
             });

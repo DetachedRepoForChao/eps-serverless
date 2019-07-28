@@ -43,7 +43,7 @@ export class StandardUserComponent implements OnInit {
 
   storeDepartmentName() {
     this.getDepartment()
-      .then(data => {
+      .subscribe(data => {
         localStorage.setItem('departmentName', data['department'].name);
       });
   }
@@ -52,7 +52,7 @@ export class StandardUserComponent implements OnInit {
     console.log('getUserPoints');
     const oldPoints = +localStorage.getItem('points');
     this.userService.getUserPoints()
-      .then((data:any) => {
+      .then((data: any) => {
         const newPoints = data.points;
         console.log('points: ' + newPoints);
         if (newPoints !== 0) {
@@ -82,7 +82,7 @@ export class StandardUserComponent implements OnInit {
       });
   }
 
-  
+
   onLogout() {
     this.userService.deleteToken();
     localStorage.clear();

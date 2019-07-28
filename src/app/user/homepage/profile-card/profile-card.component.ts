@@ -12,6 +12,7 @@ import {Storage} from 'aws-amplify';
 import awsconfig from '../../../../aws-exports';
 import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
+import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -22,7 +23,7 @@ declare var $: any;
   styleUrls: ['./profile-card.component.css']
 })
 export class ProfileCardComponent implements OnInit {
-
+  componentName = 'profile-card.component';
   isImageLoading: boolean;
   userLeaderboardRecord;
   imageChangedEvent: any = '';
@@ -33,7 +34,8 @@ export class ProfileCardComponent implements OnInit {
               private imageService: ImageService,
               private avatarService: AvatarService,
               public globals: Globals,
-              public leaderboardService: LeaderboardService) { }
+              public leaderboardService: LeaderboardService,
+              private feedcardService: FeedcardService) { }
 
   ngOnInit() {
       const text_max = 200;
@@ -47,10 +49,10 @@ export class ProfileCardComponent implements OnInit {
     });
 
     this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId'))
-      .then(userLeaderboardRecord => {
+      .subscribe(userLeaderboardRecord => {
         this.userLeaderboardRecord = userLeaderboardRecord;
       });
-    this.avatarService.refreshUserAvatar(+localStorage.getItem('userId'));
+    this.avatarService.refreshCurrentUserAvatar().subscribe();
   }
 
   showGallery() {
@@ -63,12 +65,35 @@ export class ProfileCardComponent implements OnInit {
   }
 
   onImageSelected(event) {
-    console.log(event);
-    console.log(this.croppedImage);
+    const functionName = 'onImageSelected';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
-    const userId = +localStorage.getItem('userId');
+    console.log(`${functionFullName}: event: ${event}`);
+    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
 
-    this.avatarService.saveUserAvatar(this.croppedImage).then();
+
+    this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
+      console.log(`${functionFullName}: saveResult: ${saveResult}`);
+      if (saveResult === true) {
+        this.leaderboardService.isUserInLeaderboardTop5(+localStorage.getItem('userId')).subscribe(isTop5Result => {
+          console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
+          if (isTop5Result === true) {
+            console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
+            this.leaderboardService.getPointsLeaderboard()
+              .then(leaderboardData => {
+                console.log(`${functionFullName}: populating leaderboard data`);
+                this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
+                  console.log(`${functionFullName}: leaderboard data populated`);
+                });
+              });
+          }
+        });
+
+        this.feedcardService.refreshPointTransactionAvatars();
+      }
+
+    });
   }
 
   encode(data) {

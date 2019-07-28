@@ -47,8 +47,12 @@ export class LeaderboardService {
 
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
-  public leaderboardUsers: LeaderboardUser[] = [];
-  public leaderboardUsersTop: LeaderboardUser[] = [];
+  // public leaderboardUsers: LeaderboardUser[] = [];
+  // public leaderboardUsersTop: LeaderboardUser[] = [];
+
+  public leaderboardUsers: LeaderboardUser[];
+  public leaderboardUsersTop: LeaderboardUser[];
+
   selection = new SelectionModel<LeaderboardUser>(true, []);
   dataSource = new MatTableDataSource<LeaderboardUser>();
   public currentUserLeaderboardRecord;
@@ -59,17 +63,18 @@ export class LeaderboardService {
               private authService: AuthService,
               private avatarService: AvatarService) { }
 
-  populateLeaderboardDataSource(leaderboardData): Promise<any> {
+  populateLeaderboardDataSource(leaderboardData): Observable<LeaderboardUser[]> {
     const functionName = 'populateLeaderboardDataSource';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    return new Promise(resolve => {
+    return new Observable<LeaderboardUser[]>(observer => {
       console.log(leaderboardData);
-      this.leaderboardUsers = [];
+      let leaderboardUsers: LeaderboardUser[] = [];
+      // let leaderboardUsersTop: LeaderboardUser[] = [];
       console.log(`${functionFullName}: populate departments`);
       this.departmentService.getDepartments()
-        .then((departments: Department[]) => {
+        .subscribe((departments: Department[]) => {
           this.departments = departments;
 
           for ( let i = 0; i < leaderboardData.length; i++) {
@@ -103,19 +108,30 @@ export class LeaderboardService {
               department: departmentName,
             };
 
+            console.log(`${functionFullName}: leaderboardUser`);
             console.log(leaderboardUser);
 
-            this.leaderboardUsers = this.leaderboardUsers.concat(leaderboardUser);
+            leaderboardUsers = leaderboardUsers.concat(leaderboardUser);
           }
 
-          return this.leaderboardUsers;
-        })
-        .then((leaderboardUsers: LeaderboardUser[]) => {
+          // return this.leaderboardUsers;
+
+          // .then((leaderboardUsers: LeaderboardUser[]) => {
+          //   this.resolveLeaderboardAvatars(leaderboardUsers);
+          console.log(`${functionFullName}: leaderboardUsers`);
+          console.log(leaderboardUsers);
           this.resolveLeaderboardAvatars(leaderboardUsers);
-          this.leaderboardUsersTop = this.leaderboardUsers.slice(0, 4);
+          this.leaderboardUsers = leaderboardUsers;
+          this.leaderboardUsersTop = leaderboardUsers.slice(0, 4);
+          observer.next(leaderboardUsers);
+          observer.complete();
+
+/*          leaderboardUsersTop = leaderboardUsers.slice(0, 4);
           console.log(`${functionFullName}: leaderboardUsersTop`);
-          console.log(this.leaderboardUsersTop);
-          resolve();
+          console.log(leaderboardUsersTop);
+          observer.next(leaderboardUsersTop);
+          observer.complete();*/
+          // });
         });
     });
   }
@@ -171,19 +187,19 @@ export class LeaderboardService {
     });
   }
 
-  getUserPointsLeaderboardRecord(userId: number): Promise<any> {
+  getUserPointsLeaderboardRecord(userId: number): Observable<LeaderboardUser> {
     const functionName = 'getUserPointsLeaderboardRecord';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    return new Promise<any>(resolve => {
+    return new Observable<LeaderboardUser>(observer => {
       this.getPointsLeaderboard()
         .then((res: any) => {
           if (res) {
             console.log(res);
             let leaderboardUsers: LeaderboardUser[] = [];
             // this.globalVariableService.departmentList.subscribe((departmentList: Department[]) => {
-            this.departmentService.getDepartments().then((departmentList: Department[]) => {
+            this.departmentService.getDepartments().subscribe((departmentList: Department[]) => {
               for ( let i = 0; i < res.length; i++) {
                 const userData = {
                   rank: i + 1,
@@ -221,7 +237,7 @@ export class LeaderboardService {
               // console.log('leadboardUsers.find');
               console.log(userLeaderboardRecord);
               this.currentUserLeaderboardRecord = userLeaderboardRecord;
-              resolve(userLeaderboardRecord);
+              observer.next(userLeaderboardRecord);
               // return userLeaderboardRecord;
             });
           }
@@ -229,17 +245,24 @@ export class LeaderboardService {
     });
   }
 
-  isUserInLeaderboardTop5(userId: number) {
+  isUserInLeaderboardTop5(userId: number): Observable<boolean> {
     const functionName = 'isUserInLeaderboardTop5';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    if (this.leaderboardUsersTop.find(x => x.id === userId)) {
-      console.log(`${functionFullName}: user with userId ${userId} is in the Leaderboard Top 5!`);
-      return true;
-    } else {
-      console.log(`${functionFullName}: user with userId ${userId} is NOT in the Leaderboard Top 5!`);
-      return false;
-    }
+    return new Observable(observer => {
+      if (this.leaderboardUsersTop.find(x => x.id === userId)) {
+        console.log(`${functionFullName}: user with userId ${userId} is in the Leaderboard Top 5!`);
+        observer.next(true);
+        // return true;
+      } else {
+        console.log(`${functionFullName}: user with userId ${userId} is NOT in the Leaderboard Top 5!`);
+        observer.next(false);
+        // return false;
+      }
+      observer.complete();
+    });
+
+
   }
 }

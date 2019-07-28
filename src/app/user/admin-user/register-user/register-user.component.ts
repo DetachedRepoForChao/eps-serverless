@@ -38,7 +38,7 @@ export class RegisterUserComponent implements OnInit {
     //   }
     // );
 
-    this.departmentService.getDepartments().then(deps => {
+    this.departmentService.getDepartments().subscribe((deps: Department[]) => {
         this.departments = deps;
         for (let i = 0; i < deps.length; i++) {
           console.log(deps[i]);
@@ -46,7 +46,7 @@ export class RegisterUserComponent implements OnInit {
       }
     );
 
-    this.securityRoleService.getSecurityRoles().then(secRoles => {
+    this.securityRoleService.getSecurityRoles().subscribe((secRoles: SecurityRole[]) => {
         this.securityRoles = secRoles;
         for (let i = 0; i < secRoles.length; i++) {
           console.log(secRoles[i]);

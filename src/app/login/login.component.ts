@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
   onSocketTestClick1() {
     // this.socketService.socketTest1();
     this.avatarService.getAvatars()
-      .then(result => {
+      .subscribe(result => {
         console.log(result);
     });
   }
