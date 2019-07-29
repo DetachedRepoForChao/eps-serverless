@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
 import {AvatarService} from '../../../shared/avatar.service';
 import {GALLERY_IMAGE} from 'ngx-image-gallery';
 import {Globals} from '../../../globals';
-import {LeaderboardService} from '../../../shared/leaderboard.service';
+import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {Storage} from 'aws-amplify';
 import awsconfig from '../../../../aws-exports';
 import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -29,15 +30,25 @@ export class ProfileCardComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
+  isCardLoading: boolean;
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
               private avatarService: AvatarService,
-              public globals: Globals,
-              public leaderboardService: LeaderboardService,
-              private feedcardService: FeedcardService) { }
+              private globals: Globals,
+              private leaderboardService: LeaderboardService,
+              private feedcardService: FeedcardService,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    this.isCardLoading = true;
+    this.isImageLoading = true;
+    this.spinner.show('profile-card-spinner');
+
       const text_max = 200;
     $('#count_message').html(text_max + ' remaining');
 
@@ -48,11 +59,56 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });
 
-    this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId'))
+    const observables: Observable<any>[] = [];
+
+/*    for (let i = 0; i < leaderboardUsers.length; i++) {
+      observables.push(this.avatarService.resolveAvatar(leaderboardUsers[i]));
+    }*/
+
+    observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId')));
+    observables.push(this.avatarService.refreshCurrentUserAvatar());
+
+    forkJoin(observables)
+      .subscribe(obsResults => {
+        console.log(`${functionFullName}: obsResults:`);
+        console.log(obsResults);
+
+        // Iterate over the returned values from the observables so we can act appropriately on each
+        obsResults.forEach(obsResult => {
+          console.log(`${functionFullName}: obsResult:`);
+          console.log(obsResult);
+
+          // Act on observable value that was returned from leaderboardService.getUserPointsLeaderboardRecord()
+          if (obsResult.avatar) {
+            console.log(`${functionFullName}: obsResult.avatar: ${obsResult.avatar}`);
+            this.userLeaderboardRecord = obsResult;
+          }
+
+        });
+
+        this.isCardLoading = false;
+        this.spinner.hide('profile-card-spinner');
+
+        /*     console.log(`${functionFullName}: forkJoin`);
+             console.log(`${functionFullName}: leaderboardUserArray`);
+             console.log(leaderboardUserArray);*/
+
+/*        leaderboardUserArray.forEach(resolvedLeaderboardUser => {
+          // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
+
+          leaderboardUsersNew = leaderboardUsersNew.concat(resolvedLeaderboardUser);
+        });*/
+
+        // this.leaderboardUsersTop = leaderboardUsersNew.slice(0, 4);
+
+        // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
+      });
+
+/*    this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId'))
       .subscribe(userLeaderboardRecord => {
         this.userLeaderboardRecord = userLeaderboardRecord;
       });
-    this.avatarService.refreshCurrentUserAvatar().subscribe();
+    this.avatarService.refreshCurrentUserAvatar().subscribe();*/
   }
 
   showGallery() {

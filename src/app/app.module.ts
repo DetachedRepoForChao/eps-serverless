@@ -60,6 +60,7 @@ import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.componen
 import { RequestCacheService} from './shared/request-cache.service';
 import { CachingInterceptorService} from './shared/caching-interceptor.service';
 import { ImageCropperModule} from 'ngx-image-cropper';
+import { NgxSpinnerModule} from 'ngx-spinner';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -120,7 +121,8 @@ import { ImageCropperModule} from 'ngx-image-cropper';
     MatListModule,
     AmplifyAngularModule,
     ReactiveFormsModule,
-    ImageCropperModule
+    ImageCropperModule,
+    NgxSpinnerModule
   ],
   providers: [
     {

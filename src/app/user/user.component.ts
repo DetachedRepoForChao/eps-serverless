@@ -20,6 +20,7 @@ import * as AWS from 'aws-sdk';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {SecurityRole} from '../shared/securityrole.model';
 import {FeedcardService} from '../shared/feedcard/feedcard.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 declare var $: any;
 
@@ -57,7 +58,8 @@ export class UserComponent implements OnInit {
               private departmentService: DepartmentService,
               private http: HttpClient,
               private authService: AuthService,
-              private feedcardService: FeedcardService) { }
+              private feedcardService: FeedcardService,
+              private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
 /*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
@@ -294,10 +296,20 @@ export class UserComponent implements OnInit {
     this.router.navigate(['/profile']);
   }
 
+  spinnerOn = false;
+
   onSocketTestClick1() {
-    console.log('TestClick1');
+/*    console.log('TestClick1');
     console.log(Storage);
-    console.log(Amplify);
+    console.log(Amplify);*/
+    if (this.spinnerOn) {
+      this.spinner.hide('profile-card-spinner');
+      this.spinnerOn = false;
+    } else {
+      this.spinner.show('profile-card-spinner');
+      this.spinnerOn = true;
+    }
+
   }
 
   onSocketTestClick2() {

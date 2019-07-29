@@ -18,6 +18,7 @@ import { CognitoUser } from 'amazon-cognito-identity-js';
 import { AuthService } from "../auth.service";
 import { environment } from 'src/environments/environment';
 import {SecurityRole} from '../../shared/securityrole.model';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-sign-in',
@@ -25,6 +26,7 @@ import {SecurityRole} from '../../shared/securityrole.model';
   // styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent implements OnInit {
+  componentName = 'sign-in.component';
   hide = true;
   // returnUrl: string;
   private userDetails;
@@ -39,7 +41,8 @@ export class SignInComponent implements OnInit {
               private departmentService: DepartmentService,
               private sessionService: SessionService,
               private amplifyService: AmplifyService,
-              public auth: AuthService) { }
+              public auth: AuthService,
+              private spinner: NgxSpinnerService) { }
 
   model = {
     username : '',
@@ -50,6 +53,10 @@ export class SignInComponent implements OnInit {
 
 
   ngOnInit() {
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     this.userService.isLoggedIn()
       .then(result => {
         if (result) {
@@ -63,12 +70,17 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    this.spinner.show();
     console.log(form.value);
     this.auth.signIn(form.value.username, form.value.password)
       .then((user: CognitoUser|any) => {
-        console.log('Success!');
+        console.log(`${functionFullName}: Success!`);
         console.log(user);
-        console.log('storeUserDetails');
+        console.log(`${functionFullName}: storeUserDetails`);
         this.userService.getUserProfile()
           .then(userData => {
             console.log(userData);
@@ -84,7 +96,7 @@ export class SignInComponent implements OnInit {
 
             this.securityRoleService.getSecurityRoleById(+userDetails.securityRoleId)
               .subscribe((securityRole: SecurityRole) => {
-                console.log('this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId)');
+                console.log(`${functionFullName}: this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId):`);
                 console.log(securityRole);
                 localStorage.setItem('securityRoleName', securityRole.Name);
                 localStorage.setItem('securityRoleDescription', securityRole.Description);
@@ -92,7 +104,7 @@ export class SignInComponent implements OnInit {
 
             this.departmentService.getDepartmentById(+userDetails.departmentId)
               .subscribe((department: Department) => {
-                console.log('this.departmentService.getDepartmentById(userDetails.departmentId)');
+                console.log(`${functionFullName}: this.departmentService.getDepartmentById(userDetails.departmentId):`);
                 console.log(department);
                 localStorage.setItem('departmentName', department.Name);
               });
@@ -118,6 +130,7 @@ export class SignInComponent implements OnInit {
 
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
             // this.sessionService.SetSessionLoggedIn();
+            this.spinner.hide();
             this.router.navigate(['/user']);
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
           });

@@ -238,6 +238,7 @@ export class LeaderboardService {
               console.log(userLeaderboardRecord);
               this.currentUserLeaderboardRecord = userLeaderboardRecord;
               observer.next(userLeaderboardRecord);
+              observer.complete();
               // return userLeaderboardRecord;
             });
           }
