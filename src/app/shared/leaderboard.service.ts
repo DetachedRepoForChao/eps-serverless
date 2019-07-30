@@ -196,7 +196,7 @@ export class LeaderboardService {
 
     return new Observable<LeaderboardUser>(observer => {
       this.getPointsLeaderboard()
-        .then((res: any) => {
+        .subscribe((res: any) => {
           if (res) {
             console.log(res);
             let leaderboardUsers: LeaderboardUser[] = [];

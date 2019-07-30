@@ -21,6 +21,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {SecurityRole} from '../shared/securityrole.model';
 import {FeedcardService} from '../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {GiftPointsService} from './manager-user/gift-points/gift-points.service';
 
 declare var $: any;
 
@@ -62,7 +63,8 @@ export class UserComponent implements OnInit {
               private http: HttpClient,
               private authService: AuthService,
               private feedcardService: FeedcardService,
-              private spinner: NgxSpinnerService) { }
+              private spinner: NgxSpinnerService,
+              private giftPointsService: GiftPointsService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -70,7 +72,7 @@ export class UserComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     console.log(`${functionFullName}: Showing user-component-spinner`);
-    this.spinner.show('user-component-spinner');
+    // this.spinner.show('user-component-spinner');
 /*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
       this.socketService.reinitialize();
 
@@ -179,7 +181,7 @@ export class UserComponent implements OnInit {
 
         this.isComponentLoading = false;
         console.log(`${functionFullName}: Hiding user-component-spinner`);
-        this.spinner.hide('user-component-spinner');
+        // this.spinner.hide('user-component-spinner');
       });
 
     this.idle = this.userIdle.getConfigValue().idle;
@@ -364,14 +366,19 @@ export class UserComponent implements OnInit {
 /*    console.log('TestClick1');
     console.log(Storage);
     console.log(Amplify);*/
-    if (this.spinnerOn) {
+/*    if (this.spinnerOn) {
       this.spinner.hide('profile-card-spinner');
       this.spinnerOn = false;
     } else {
       this.spinner.show('profile-card-spinner');
       this.spinnerOn = true;
-    }
+    }*/
+    this.giftPointsService.populateEmployeeDataSource().subscribe((result) => {
 
+      console.log(`setting isCardLoading to false: ${result}`);
+      // this.isCardLoading = false;
+      // this.spinner.hide('gift-points-spinner');
+    });
   }
 
   onSocketTestClick2() {

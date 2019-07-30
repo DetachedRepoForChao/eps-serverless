@@ -39,14 +39,7 @@ export class ProfileCardManagerComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('profile-card-manager-spinner');
 
-    // this.avatarService.refreshCurrentUserAvatar().subscribe();
-    // this.pointItemService.storeRemainingPointPool();
-
     const observables: Observable<any>[] = [];
-
-    /*    for (let i = 0; i < leaderboardUsers.length; i++) {
-          observables.push(this.avatarService.resolveAvatar(leaderboardUsers[i]));
-        }*/
 
     observables.push(this.pointItemService.storeRemainingPointPool());
     observables.push(this.avatarService.refreshCurrentUserAvatar());

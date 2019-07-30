@@ -138,7 +138,7 @@ export class ProfileCardComponent implements OnInit {
           if (isTop5Result === true) {
             console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
             this.leaderboardService.getPointsLeaderboard()
-              .then(leaderboardData => {
+              .subscribe(leaderboardData => {
                 console.log(`${functionFullName}: populating leaderboard data`);
                 this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
                   console.log(`${functionFullName}: leaderboard data populated`);

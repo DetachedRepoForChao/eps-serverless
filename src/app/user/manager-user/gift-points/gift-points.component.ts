@@ -17,6 +17,7 @@ import {AchievementService} from '../../../shared/achievement/achievement.servic
 import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {GiftPointsService} from './gift-points.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 export interface DepartmentEmployee {
   id: number;
@@ -35,14 +36,15 @@ export interface DepartmentEmployee {
 })
 export class GiftPointsComponent implements OnInit {
   componentName = 'gift-points.component';
-  departmentEmployees = [];
-  department: Department;
+  // departmentEmployees = [];
+  // department: Department;
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
   selection = new SelectionModel<DepartmentEmployee>(true, []);
-  dataSource = new MatTableDataSource<DepartmentEmployee>();
+  // dataSource = new MatTableDataSource<DepartmentEmployee>();
   pointItemList = [];
   selectedPointItem = {};
   selectedEmployees = [];
+  isCardLoading: boolean;
 
   constructor(
     private departmentService: DepartmentService,
@@ -54,18 +56,21 @@ export class GiftPointsComponent implements OnInit {
     private achievementService: AchievementService,
     private notifierService: NotifierService,
     private leaderboardService: LeaderboardService,
-    private giftPointsService: GiftPointsService) { }
+    private giftPointsService: GiftPointsService,
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.giftPointsService.populateEmployeeDataSource().subscribe();
+    console.log(`${functionFullName}: setting isCardLoading to true:`);
+    this.isCardLoading = true;
+    this.spinner.hide('gift-points-spinner');
+    const observables: Observable<any>[] = [];
 
     this.pointItemService.getPointItems()
-      .subscribe(res => {
-        const pointItems = res;
+      .subscribe(pointItems => {
         for ( let i = 0; i < pointItems.length; i++) {
           const data = {
             id: pointItems[i].id,
@@ -76,74 +81,60 @@ export class GiftPointsComponent implements OnInit {
 
           this.pointItemList = this.pointItemList.concat(data);
         }
+
+        this.giftPointsService.populateEmployeeDataSource().subscribe(() => {
+          console.log(`${functionFullName}: setting isCardLoading to false:`);
+          this.isCardLoading = false;
+          this.spinner.hide('gift-points-spinner');
+        });
+
+/*        console.log(`${functionFullName}: setting isCardLoading to false:`);
+        this.isCardLoading = false;
+        this.spinner.hide('gift-points-spinner');*/
       });
+
+    /*observables.push(this.giftPointsService.populateEmployeeDataSource());
+    observables.push(this.pointItemService.getPointItems());
+
+    forkJoin(observables)
+      .subscribe(obsResults => {
+        console.log(`${functionFullName}: obsResults:`);
+        console.log(obsResults);
+
+        // Iterate over the returned values from the observables so we can act appropriately on each
+        obsResults.forEach(y => {
+          console.log(`${functionFullName}: y:`);
+          console.log(y);
+        });
+
+        const obsResult = obsResults.find(x => x[0].amount);
+        console.log(`${functionFullName}: obsResult:`);
+        console.log(obsResult);
+
+        const pointItems = obsResult;
+        for ( let i = 0; i < pointItems.length; i++) {
+          const data = {
+            id: pointItems[i].id,
+            name: pointItems[i].name,
+            description: pointItems[i].description,
+            amount: pointItems[i].amount,
+          };
+
+          this.pointItemList = this.pointItemList.concat(data);
+        }
+
+        // this.dataSource = this.giftPointsService.dataSource;
+
+        console.log(`${functionFullName}: setting isCardLoading to false:`);
+        this.isCardLoading = false;
+        this.spinner.hide('gift-points-spinner');
+      });*/
   }
-
-  /*populateEmployeeDataSource(): Observable<any> {
-    const functionName = 'populateEmployeeDataSource';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      if (localStorage.getItem('departmentId')) {
-        this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
-          .subscribe(res => {
-            console.log(res);
-            if (res) {
-              console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
-              console.log(res);
-              this.departmentEmployees = [];
-              for ( let i = 0; i < res.length; i++) {
-                const userData = {
-                  id: res[i].id,
-                  username: res[i].username,
-                  firstName: res[i].firstName,
-                  lastName: res[i].lastName,
-                  email: res[i].email,
-                  position: res[i].position,
-                  securityRoleId: res[i].securityRoleId,
-                  points: res[i].points,
-                  avatarUrl: res[i].avatarUrl,
-                };
-
-                const departmentEmployee: DepartmentEmployee = {
-                  id: userData.id,
-                  avatar: userData.avatarUrl,
-                  name: userData.firstName + ' ' + userData.lastName,
-                  username: userData.username,
-                  email: userData.email,
-                  position: userData.position,
-                  points: userData.points,
-                };
-
-                console.log(departmentEmployee);
-
-                this.departmentEmployees = this.departmentEmployees.concat(departmentEmployee);
-              }
-            }
-
-            this.dataSource.data = this.departmentEmployees;
-            console.log(`${functionFullName}: department employees data source`);
-            console.log(this.dataSource.data);
-            observer.next();
-            // observer.complete();
-
-          });
-      } else {
-        console.log(`${functionFullName}: departmentId does not exist in local storage`);
-        observer.next();
-        // observer.complete();
-      }
-
-      observer.complete();
-    });
-  }*/
-
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.giftPointsService.dataSource.data.length;
     return numSelected === numRows;
   }
 
@@ -151,7 +142,7 @@ export class GiftPointsComponent implements OnInit {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+      this.giftPointsService.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -190,8 +181,8 @@ export class GiftPointsComponent implements OnInit {
         .subscribe(dataArray => {
           console.log('forkJoin');
           console.log(dataArray);
-          this.giftPointsService.populateEmployeeDataSource();
-          this.pointItemService.storeRemainingPointPool();
+          this.giftPointsService.populateEmployeeDataSource().subscribe();
+          this.pointItemService.storeRemainingPointPool().subscribe();
           this.leaderboardService.getPointsLeaderboard()
             .subscribe(leaderboardData => {
               console.log(`${functionFullName}: populating leaderboard data`);
@@ -200,15 +191,15 @@ export class GiftPointsComponent implements OnInit {
               });
             });
           this.resetForm(form);
-          const userId: number = +localStorage.getItem('userId');
+          // const userId: number = +localStorage.getItem('userId');
           // this.achievementService.incrementAchievementGiftFirstPointItem(userId)
-          this.achievementService.incrementAchievement('GiftFirstPointItem', userId)
+/*          this.achievementService.incrementAchievement('GiftFirstPointItem', userId)
             .subscribe((achievementResponse: any) => {
               if (achievementResponse.status === true) {
                 console.log('Gift First Point Item Successful');
                 this.notifierService.notify('success', 'Congratulations! You just gave your first points!', 'THAT_NOTIFICATION_ID');
               }
-            });
+            });*/
         });
     }
   }

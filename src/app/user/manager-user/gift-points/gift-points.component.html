@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card card-coin card-plain">
-    <div class="card-body">
+    <div class="card-body" *ngIf="!isCardLoading; else cardLoading">
       <div class="col-md-12">
         <h4 class="text-uppercase">Award Employee Points</h4>
         <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)" class="form">
@@ -28,7 +28,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of departmentEmployees">
+          <tr *ngFor="let user of this.giftPointsService.departmentEmployees">
             <td *ngFor="let col of displayedColumns">
               <div *ngIf="col === 'select'">
                 <!--<mat-checkbox (click)="$event.stopPropagation()"
@@ -68,139 +68,26 @@
             </td>
           </tr>
           </tbody>
-
         </table>
-
-        <!--
-        <div *ngIf="departmentEmployees">
-          <table mat-table [dataSource]="dataSource.data" class="mat-elevation-z8"> -->
-            <!-- Checkbox Column -->
-
-            <!-- <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? masterToggle() : null"
-                              [checked]="selection.hasValue() && isAllSelected()"
-                              [indeterminate]="selection.hasValue() && !isAllSelected()"
-                              [aria-label]="checkboxLabel()">
-                </mat-checkbox>
-              </th>
-              <td mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(row) : null"
-                              [checked]="selection.isSelected(row)"
-                              [aria-label]="checkboxLabel(row)">
-                </mat-checkbox>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="firstName">
-              <th mat-header-cell *matHeaderCellDef> First Name </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.firstName}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="lastName">
-              <th mat-header-cell *matHeaderCellDef> Last Name </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.lastName}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef> Email </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.email}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="position">
-              <th mat-header-cell *matHeaderCellDef> Position </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.position}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="points">
-              <th mat-header-cell *matHeaderCellDef> Points </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.points}}
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-        </div> -->
-
       </div>
     </div>
+
+    <ng-template #cardLoading>
+      <div class="card-body">
+        <ngx-spinner
+          name="gift-points-spinner"
+          [fullScreen]="false"
+          bdColor="rgba(51,51,51,0.8)"
+          size="medium"
+          color="#fff"
+          type="pacman"
+        >
+          <p style="font-size: 20px; color: white">Loading...</p>
+        </ngx-spinner>
+      </div>
+    </ng-template>
+
   </div>
 </div>
-<!--
-<div id="departmentEmployees">
 
-  <div>
-      <mat-card class="departmentEmployees-card">
-        <mat-card-header>
-          <mat-card-title>{{globals.localStorageItem('departmentName')}}</mat-card-title>
-          <mat-card-subtitle>Employees</mat-card-subtitle>
-        </mat-card-header>
-        <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)">
-          <div>
-            <mat-form-field class="point-item">
-              <mat-select #selectedPointItem="ngModel" placeholder="Point Item" name="selectedPointItem" [(ngModel)]="selectedPointItem.item">
-                <mat-option *ngFor="let pointItem of pointItemList" [value]="pointItem">
-                  {{pointItem.amount}} pts - {{pointItem.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="gift-points-container">
-            <button mat-raised-button color="primary" type="submit" class="gift-points-button" > Gift Points </button>
-          </div>
-        </form>
 
-        <div *ngIf="departmentEmployees">
-          <table mat-table [dataSource]="dataSource.data" class="mat-elevation-z8">
-            Checkbox Column -->
-            <!--
-            <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? masterToggle() : null"
-                              [checked]="selection.hasValue() && isAllSelected()"
-                              [indeterminate]="selection.hasValue() && !isAllSelected()"
-                              [aria-label]="checkboxLabel()">
-                </mat-checkbox>
-              </th>
-              <td mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(row) : null"
-                              [checked]="selection.isSelected(row)"
-                              [aria-label]="checkboxLabel(row)">
-                </mat-checkbox>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="firstName">
-              <th mat-header-cell *matHeaderCellDef> First Name </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.firstName}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="lastName">
-              <th mat-header-cell *matHeaderCellDef> Last Name </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.lastName}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef> Email </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.email}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="position">
-              <th mat-header-cell *matHeaderCellDef> Position </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.position}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="points">
-              <th mat-header-cell *matHeaderCellDef> Points </th>
-              <td mat-cell *matCellDef="let departmentEmployee"> {{departmentEmployee.points}}
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-        </div>
-      </mat-card>
-    </div>
-
-</div>
--->

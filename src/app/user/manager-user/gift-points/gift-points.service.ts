@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SecurityRole } from './securityrole.model';
-import { environment } from '../../environments/environment';
-import { User } from './user.model';
+// import { SecurityRole } from './securityrole.model';
+// import { environment } from '../../environments/environment';
+// import { User } from './user.model';
 import { Department} from '../../../shared/department.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material';
@@ -36,7 +36,7 @@ export class GiftPointsService {
   componentName = 'gift-points-service.service';
   departments: Department[];
 
-  departmentEmployees: DepartmentEmployee[] = [];
+  public departmentEmployees: DepartmentEmployee[] = [];
   department: Department;
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
   selection = new SelectionModel<DepartmentEmployee>(true, []);
@@ -49,13 +49,13 @@ export class GiftPointsService {
   apiPath = '/items';
   myInit = {
     headers: {
-      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      'Content-Type': "application/json;charset=UTF-8"
+      'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Content-Type': 'application/json;charset=UTF-8'
     }
   };
 
-  displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
-  displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
+  // displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
+  // displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
   // public leaderboardUsers: LeaderboardUser[] = [];
   // public leaderboardUsersTop: LeaderboardUser[] = [];
 
@@ -84,90 +84,114 @@ export class GiftPointsService {
         this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
           .subscribe(res => {
             console.log(res);
-            if (res) {
-              console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
-              console.log(res);
 
-              for ( let i = 0; i < res.length; i++) {
-                const userData = {
-                  id: res[i].id,
-                  username: res[i].username,
-                  firstName: res[i].firstName,
-                  lastName: res[i].lastName,
-                  email: res[i].email,
-                  position: res[i].position,
-                  securityRoleId: res[i].securityRoleId,
-                  points: res[i].points,
-                  avatarUrl: res[i].avatarUrl,
-                };
+            console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
 
-                const departmentEmployee: DepartmentEmployee = {
-                  id: userData.id,
-                  avatar: userData.avatarUrl,
-                  name: userData.firstName + ' ' + userData.lastName,
-                  username: userData.username,
-                  email: userData.email,
-                  position: userData.position,
-                  points: userData.points,
-                };
 
-                console.log(departmentEmployee);
+            for ( let i = 0; i < res.length; i++) {
+              console.log(res[i]);
+              const userData = {
+                id: res[i].id,
+                username: res[i].username,
+                firstName: res[i].firstName,
+                lastName: res[i].lastName,
+                email: res[i].email,
+                position: res[i].position,
+                securityRoleId: res[i].securityRoleId,
+                points: res[i].points,
+                avatarUrl: res[i].avatarUrl,
+              };
 
-                departmentEmployees = departmentEmployees.concat(departmentEmployee);
-              }
+              const departmentEmployee: DepartmentEmployee = {
+                id: userData.id,
+                avatar: userData.avatarUrl,
+                name: userData.firstName + ' ' + userData.lastName,
+                username: userData.username,
+                email: userData.email,
+                position: userData.position,
+                points: userData.points,
+              };
+
+              console.log(departmentEmployee);
+
+              departmentEmployees = departmentEmployees.concat(departmentEmployee);
             }
+
 
             console.log(`${functionFullName}: departmentEmployees`);
             console.log(departmentEmployees);
-            this.resolveDepartmentEmployeeAvatars(departmentEmployees);
-            this.departmentEmployees = departmentEmployees;
-            observer.next(departmentEmployees);
-            observer.complete();
+            this.resolveDepartmentEmployeeAvatars(departmentEmployees).subscribe(resolveResult => {
+              console.log(resolveResult);
+
+              this.departmentEmployees = departmentEmployees;
+              // observer.next(departmentEmployees);
+              // observer.complete();
+
+              this.dataSource.data = this.departmentEmployees;
+              console.log(`${functionFullName}: department employees data source`);
+
+              console.log(this.dataSource.data);
+              observer.next(true);
+              // debugger;
+              observer.complete();
+            });
+
+/*            this.departmentEmployees = departmentEmployees;
+            // observer.next(departmentEmployees);
+            // observer.complete();
 
             this.dataSource.data = this.departmentEmployees;
             console.log(`${functionFullName}: department employees data source`);
+
             console.log(this.dataSource.data);
-            observer.next();
-            // observer.complete();
+            observer.next(true);
+            // debugger;
+            observer.complete();*/
 
           });
       } else {
         console.log(`${functionFullName}: departmentId does not exist in local storage`);
-        observer.next();
-        // observer.complete();
+        observer.next(false);
+        observer.complete();
       }
 
-      observer.complete();
+      // observer.complete();
     });
   }
 
-  resolveDepartmentEmployeeAvatars(departmentEmployees: DepartmentEmployee[]) {
+  resolveDepartmentEmployeeAvatars(departmentEmployees: DepartmentEmployee[]): Observable<any> {
     const functionName = 'resolveDepartmentEmployeeAvatars';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    let departmentEmployeesNew: DepartmentEmployee[] = [];
-    const observables: Observable<any>[] = [];
+    return new Observable<any>(observer => {
+      let departmentEmployeesNew: DepartmentEmployee[] = [];
+      const observables: Observable<any>[] = [];
 
-    for (let i = 0; i < departmentEmployees.length; i++) {
-      observables.push(this.avatarService.resolveAvatar(departmentEmployees[i]));
-    }
+      for (let i = 0; i < departmentEmployees.length; i++) {
+        observables.push(this.avatarService.resolveAvatar(departmentEmployees[i]));
+      }
 
-    return forkJoin(observables)
-      .subscribe(departmentEmployeeArray => {
-        /*     console.log(`${functionFullName}: forkJoin`);
-             console.log(`${functionFullName}: leaderboardUserArray`);
-             console.log(leaderboardUserArray);*/
+      forkJoin(observables)
+        .subscribe(departmentEmployeeArray => {
+          /*     console.log(`${functionFullName}: forkJoin`);
+               console.log(`${functionFullName}: leaderboardUserArray`);
+               console.log(leaderboardUserArray);*/
 
-        departmentEmployeeArray.forEach(resolvedDepartmentEmployee => {
-          // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
+          departmentEmployeeArray.forEach(resolvedDepartmentEmployee => {
+            // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
 
-          departmentEmployeesNew = departmentEmployeesNew.concat(resolvedDepartmentEmployee);
+            departmentEmployeesNew = departmentEmployeesNew.concat(resolvedDepartmentEmployee);
+          });
+
+          // this.leaderboardUsersTop = leaderboardUsersNew.slice(0, 4);
+
+          // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
         });
 
-        // this.leaderboardUsersTop = leaderboardUsersNew.slice(0, 4);
 
-        // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
-      });
+      observer.next(true);
+      observer.complete();
+    });
   }
 }

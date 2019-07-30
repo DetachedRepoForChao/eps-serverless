@@ -50,9 +50,11 @@ export class LeaderboardCardComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     this.leaderboardService.getPointsLeaderboard()
-      .then(result => {
+      .subscribe(result => {
         console.log(`${functionFullName}: populating leaderboard data`);
-        this.leaderboardService.populateLeaderboardDataSource(result).subscribe();
+        this.leaderboardService.populateLeaderboardDataSource(result).subscribe(() => {
+          console.log(`${functionFullName}: finished populating leaderboard data`);
+        });
       });
 
 
