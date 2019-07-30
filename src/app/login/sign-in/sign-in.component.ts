@@ -74,6 +74,7 @@ export class SignInComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    console.log(`${functionFullName}: Showing sign-in-onSubmit-spinner`);
     this.spinner.show();
     console.log(form.value);
     this.auth.signIn(form.value.username, form.value.password)
@@ -82,7 +83,7 @@ export class SignInComponent implements OnInit {
         console.log(user);
         console.log(`${functionFullName}: storeUserDetails`);
         this.userService.getUserProfile()
-          .then(userData => {
+          .subscribe((userData: any) => {
             console.log(userData);
             const userDetails = userData;
             localStorage.setItem('userId', userDetails.id);
@@ -130,6 +131,7 @@ export class SignInComponent implements OnInit {
 
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
             // this.sessionService.SetSessionLoggedIn();
+            console.log(`${functionFullName}: Hiding sign-in-onSubmit-spinner`);
             this.spinner.hide();
             this.router.navigate(['/user']);
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);

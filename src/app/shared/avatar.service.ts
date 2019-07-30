@@ -79,15 +79,26 @@ export class AvatarService implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const oldAvatarPath = this.userAvatarPath;
-    const oldAvatarLevel = oldAvatarPath.split('/')[0];
-    const oldAvatarCognitoIdentityId = oldAvatarPath.split('/')[1];
-    const oldAvatarKey = oldAvatarPath.split('/')[2];
+    let oldAvatarPath;
+    let oldAvatarLevel;
+    let oldAvatarCognitoIdentityId;
+    let oldAvatarKey;
 
-    console.log(`${functionFullName}: oldAvatarPath: ${oldAvatarPath}`);
-    console.log(`${functionFullName}: oldAvatarLevel: ${oldAvatarLevel}`);
-    console.log(`${functionFullName}: oldAvatarCognitoIdentityId: ${oldAvatarCognitoIdentityId}`);
-    console.log(`${functionFullName}: oldAvatarKey: ${oldAvatarKey}`);
+    if (this.userAvatarPath) {
+      oldAvatarPath = this.userAvatarPath;
+      oldAvatarLevel = oldAvatarPath.split('/')[0];
+      oldAvatarCognitoIdentityId = oldAvatarPath.split('/')[1];
+      oldAvatarKey = oldAvatarPath.split('/')[2];
+
+      console.log(`${functionFullName}: oldAvatarPath: ${oldAvatarPath}`);
+      console.log(`${functionFullName}: oldAvatarLevel: ${oldAvatarLevel}`);
+      console.log(`${functionFullName}: oldAvatarCognitoIdentityId: ${oldAvatarCognitoIdentityId}`);
+      console.log(`${functionFullName}: oldAvatarKey: ${oldAvatarKey}`);
+    } else {
+
+    }
+
+
 
     const uniqueId = Math.random().toString(36).substring(2) + Date.now().toString(36);
     const fileName = 'avatar_' + uniqueId + '.png';
@@ -129,14 +140,16 @@ export class AvatarService implements OnInit {
                   this.refreshCurrentUserAvatar().subscribe(refreshResult => {
                     console.log(`${functionFullName}: refreshResult: ${refreshResult}`);
                     if (refreshResult === true) {
-                      // Delete old Avatar image
-                      Storage.remove(oldAvatarKey, {
-                        level: oldAvatarLevel,
-                        identityId: oldAvatarCognitoIdentityId
-                      }).then(removeResult => {
-                        console.log(`${functionFullName}: Deleted old avatar file:`);
-                        console.log(removeResult);
-                      });
+                      // Delete old Avatar image if there was one
+                      if (oldAvatarKey) {
+                        Storage.remove(oldAvatarKey, {
+                          level: oldAvatarLevel,
+                          identityId: oldAvatarCognitoIdentityId
+                        }).then(removeResult => {
+                          console.log(`${functionFullName}: Deleted old avatar file:`);
+                          console.log(removeResult);
+                        });
+                      }
 
                       observer.next(true);
                       observer.complete();
@@ -280,7 +293,7 @@ export class AvatarService implements OnInit {
     });
   }
 
-  resolveAvatar(leaderboardUser: LeaderboardUser): Observable<LeaderboardUser> {
+  resolveAvatar(leaderboardUser: any): Observable<any> {
     const functionName = 'resolveAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -300,7 +313,7 @@ export class AvatarService implements OnInit {
     console.log(`${functionFullName}: key: ${key}`);
     console.log(`${functionFullName}: identityId: ${cognitoIdentityId}`);
 
-    return new Observable<LeaderboardUser>((observer) => {
+    return new Observable<any>((observer) => {
       let avatarResolvedUrl = null;
       // Try to find the resolved avatar URL in the userAvatarHash
       // if (this.userAvatarHash.length > 0) {

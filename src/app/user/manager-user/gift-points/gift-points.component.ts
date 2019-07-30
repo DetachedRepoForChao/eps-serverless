@@ -16,6 +16,7 @@ import {Observable, forkJoin} from 'rxjs';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
+import {GiftPointsService} from './gift-points.service';
 
 export interface DepartmentEmployee {
   id: number;
@@ -52,17 +53,18 @@ export class GiftPointsComponent implements OnInit {
     private achievementComponent: AchievementComponent,
     private achievementService: AchievementService,
     private notifierService: NotifierService,
-    private leaderboardService: LeaderboardService) { }
+    private leaderboardService: LeaderboardService,
+    private giftPointsService: GiftPointsService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.populateEmployeeDataSource().subscribe();
+    this.giftPointsService.populateEmployeeDataSource().subscribe();
 
     this.pointItemService.getPointItems()
-      .then(res => {
+      .subscribe(res => {
         const pointItems = res;
         for ( let i = 0; i < pointItems.length; i++) {
           const data = {
@@ -77,7 +79,7 @@ export class GiftPointsComponent implements OnInit {
       });
   }
 
-  populateEmployeeDataSource(): Observable<any> {
+  /*populateEmployeeDataSource(): Observable<any> {
     const functionName = 'populateEmployeeDataSource';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -135,7 +137,7 @@ export class GiftPointsComponent implements OnInit {
 
       observer.complete();
     });
-  }
+  }*/
 
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -188,10 +190,10 @@ export class GiftPointsComponent implements OnInit {
         .subscribe(dataArray => {
           console.log('forkJoin');
           console.log(dataArray);
-          this.populateEmployeeDataSource();
+          this.giftPointsService.populateEmployeeDataSource();
           this.pointItemService.storeRemainingPointPool();
           this.leaderboardService.getPointsLeaderboard()
-            .then(leaderboardData => {
+            .subscribe(leaderboardData => {
               console.log(`${functionFullName}: populating leaderboard data`);
               this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
                 console.log(`${functionFullName}: leaderboard data populated`);

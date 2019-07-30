@@ -86,6 +86,7 @@ export class ProfileCardComponent implements OnInit {
 
         });
 
+        this.isImageLoading = false;
         this.isCardLoading = false;
         this.spinner.hide('profile-card-spinner');
 

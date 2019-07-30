@@ -10,7 +10,7 @@ import {GlobalVariableService} from '../shared/global-variable.service';
 // import {SessionService} from '../shared/session.service';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import {forkJoin, Observable, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Storage} from 'aws-amplify';
 import * as Amplify from 'aws-amplify';
@@ -30,6 +30,7 @@ declare var $: any;
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
+  componentName = 'user.component';
   securityRole;
   securityRoleId;
   socketSessionId;
@@ -42,6 +43,8 @@ export class UserComponent implements OnInit {
   isTimer: boolean;
   timeIsUp: boolean;
   timerCount: number;
+  isComponentLoading = true;
+
   private timerStartSubscription: Subscription;
   private timeoutSubscription: Subscription;
   private pingSubscription: Subscription;
@@ -62,6 +65,12 @@ export class UserComponent implements OnInit {
               private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: Showing user-component-spinner`);
+    this.spinner.show('user-component-spinner');
 /*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
       this.socketService.reinitialize();
 
@@ -86,38 +95,91 @@ export class UserComponent implements OnInit {
     // this.securityRoleId = +this.route.snapshot.paramMap.get('id');
     this.securityRoleId = +localStorage.getItem('securityRoleId');
 
+    const observables: Observable<any>[] = [];
+
+
     if (!this.securityRoleId) {
+      // observables.push(this.userService.getUserProfile());
       this.userService.getUserProfile()
-        .then(userData => {
-          this.securityRoleId = userData['user'].securityRoleId;
-          localStorage.setItem('securityRoleId', userData['user'].securityRoleId);
+        .subscribe((userData: any) => {
+          this.securityRoleId = userData.securityRoleId;
+          localStorage.setItem('securityRoleId', userData.securityRoleId);
+
+          observables.push(this.securityRoleService.getSecurityRoleById(this.securityRoleId));
         });
+    } else {
+      observables.push(this.securityRoleService.getSecurityRoleById(this.securityRoleId));
     }
 
-    this.securityRoleService.getSecurityRoleById(this.securityRoleId)
-      .subscribe((securityRole: SecurityRole) => {
+
+/*      .subscribe((securityRole: SecurityRole) => {
         this.securityRole = securityRole;
 
         switch (this.securityRole.Name) {
           case 'employee': {
-            console.log('navigating to standard-user');
+            console.log(`${functionFullName}: navigating to standard-user`);
             // this.router.navigate(['standard-user']);
             this.router.navigate(['homepage']);
             break;
           }
           case 'manager': {
-            console.log('navigating to manager-user');
+            console.log(`${functionFullName}: navigating to manager-user`);
             // this.router.navigate(['manager-user']);
             this.router.navigate(['homepage']);
             break;
           }
           case 'admin': {
-            console.log('navigating to admin-user');
+            console.log(`${functionFullName}: navigating to admin-user`);
             this.router.navigate(['admin-user']);
             break;
           }
-
         }
+      });*/
+
+    forkJoin(observables)
+      .subscribe(obsResults => {
+        console.log(`${functionFullName}: obsResults:`);
+        console.log(obsResults);
+
+        // Iterate over the returned values from the observables so we can act appropriately on each
+        obsResults.forEach(obsResult => {
+          console.log(`${functionFullName}: obsResult:`);
+          console.log(obsResult);
+
+          // Act on observable value that was returned from userService.getUserProfile()
+/*          if (obsResult.securityRoleId) {
+            console.log(`${functionFullName}: obsResult.securityRoleId: ${obsResult.securityRoleId}`);
+            this.securityRoleId = obsResult.securityRoleId;
+            localStorage.setItem('securityRoleId', obsResult.securityRoleId);
+          } else */if (obsResult.Name) { // observable value returned from securityRoleService.getSecurityRoleById()
+            console.log(`${functionFullName}: obsResult.Name: ${obsResult.Name}`);
+            this.securityRole = obsResult;
+
+            switch (this.securityRole.Name) {
+              case 'employee': {
+                console.log(`${functionFullName}: navigating to standard-user`);
+                // this.router.navigate(['standard-user']);
+                this.router.navigate(['homepage']);
+                break;
+              }
+              case 'manager': {
+                console.log(`${functionFullName}: navigating to manager-user`);
+                // this.router.navigate(['manager-user']);
+                this.router.navigate(['homepage']);
+                break;
+              }
+              case 'admin': {
+                console.log(`${functionFullName}: navigating to admin-user`);
+                this.router.navigate(['admin-user']);
+                break;
+              }
+            }
+          }
+        });
+
+        this.isComponentLoading = false;
+        console.log(`${functionFullName}: Hiding user-component-spinner`);
+        this.spinner.hide('user-component-spinner');
       });
 
     this.idle = this.userIdle.getConfigValue().idle;

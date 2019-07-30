@@ -1,50 +1,46 @@
+<div class="modal fade" id="timeOutModal" role="dialog" tabindex="-1" aria-labelledby="timeOutModalLabel" aria-hidden="true" >
+  <div class="modal-dialog" role="document">
 
-<!--
-<div *ngIf="globals.localStorageItem('securityRoleName')">
-  <div *ngIf="globals.localStorageItem('securityRoleName') === 'admin'">
-    <app-admin-user></app-admin-user>
-  </div>
-  <div *ngIf="globals.localStorageItem('securityRoleName') === 'manager'">
-    <app-manager-user></app-manager-user>
-  </div>
-  <div *ngIf="globals.localStorageItem('securityRoleName') === 'employee'">
-    <app-standard-user></app-standard-user>
-  </div>
-</div>
--->
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Session Timeout</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!---modal body---->
+      <div class="modal-body">
+        <div *ngIf="(timeout - timerCount) > 0">
+          <p>Are you still there? Your session has been idle for {{idle}} seconds...</p>
+          <p>Please click the Continue button in the next {{timeout - timerCount}} seconds to keep your session alive...</p>
+        </div>
+        <div *ngIf="(timeout - timerCount) === 0">
+          <p>Your session has ended. To continue, please log back again</p>
+        </div>
 
-  <div class="modal fade" id="timeOutModal" role="dialog" tabindex="-1" aria-labelledby="timeOutModalLabel" aria-hidden="true" >
-    <div class="modal-dialog" role="document">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Session Timeout</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <!---modal body---->
-        <div class="modal-body">
-          <div *ngIf="(timeout - timerCount) > 0">
-            <p>Are you still there? Your session has been idle for {{idle}} seconds...</p>
-            <p>Please click the Continue button in the next {{timeout - timerCount}} seconds to keep your session alive...</p>
-          </div>
-          <div *ngIf="(timeout - timerCount) === 0">
-            <p>Your session has ended. To continue, please log back again</p>
-          </div>
-
-        </div>
-        <!----End Mod Bod---->
-        <div class="modal-footer" *ngIf="(timeout - timerCount) > 0">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onResetTimer()">Continue</button>
-        </div>
-        <div class="modal-footer" *ngIf="(timeout - timerCount) === 0">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onLogout()">Login</button>
-        </div>
+      </div>
+      <!----End Mod Bod---->
+      <div class="modal-footer" *ngIf="(timeout - timerCount) > 0">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onResetTimer()">Continue</button>
+      </div>
+      <div class="modal-footer" *ngIf="(timeout - timerCount) === 0">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onLogout()">Login</button>
       </div>
     </div>
   </div>
+</div>
+
+<ngx-spinner
+  name="user-component-spinner"
+  [fullScreen]="true"
+  bdColor="rgba(51,51,51,0.8)"
+  size="large"
+  color="#fff"
+  type="pacman"
+>
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
 
 <router-outlet></router-outlet>
 <div class="wrapper-user">

@@ -10,7 +10,7 @@ import {Globals} from '../../globals';
   // styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
-
+  componentName = 'homepage.component';
   globalService;
 
   constructor(
@@ -19,6 +19,10 @@ export class HomepageComponent implements OnInit {
     public globals: Globals) { }
 
   ngOnInit() {
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     this.globalService = this.globals;
     // if (this.socketService.onSessionCreate() != null) {
     //  console.log(this.socketService.onSessionCreate());

@@ -167,23 +167,25 @@ export class LeaderboardService {
 
   }
 
-  async getPointsLeaderboard(): Promise<any> {
+  getPointsLeaderboard(): Observable<any> {
     const functionName = 'getPointsLeaderboard';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    // return this.http.get(environment.apiBaseUrl + '/getPointsLeaderboard');
-    const user = await this.authService.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
-    const myInit = this.myInit;
-    myInit.headers['Authorization'] = token;
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
 
-    return new Promise(resolve => {
-      API.get(this.apiName, this.apiPath + '/getPointsLeaderboard', myInit).then(data => {
-        console.log(`${functionFullName}: successfully retrieved data from API`);
-        console.log(data);
-        resolve(data.data);
-      });
+          API.get(this.apiName, this.apiPath + '/getPointsLeaderboard', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
     });
   }
 

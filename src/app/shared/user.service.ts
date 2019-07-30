@@ -7,6 +7,7 @@ import { Department } from './department.model';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from "../login/auth.service";
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -71,26 +72,25 @@ export class UserService {
     return this.http.post(environment.apiBaseUrl + '/authenticateUser', authCredentials, this.noAuthHeader);
   }
 
-  async getUserProfile(): Promise<any> {
+  getUserProfile(): Observable<any> {
     const functionName = 'getUserProfile';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const user = await this.authService.currentAuthenticatedUser();
-    const token = user.signInUserSession.idToken.jwtToken;
-    const myInit = this.myInit;
-    myInit.headers['Authorization'] = token;
-    console.log(myInit);
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
 
-    // return this.authService.currentAuthenticatedUser().then(data => {
-      // console.log(data);
-    return new Promise<any>(resolve => {
-      API.get(this.apiName, this.apiPath + '/userProfile', myInit).then(data => {
-        console.log(`${functionFullName}: data retrieved from API`);
-        console.log(data);
-        // return data.data;
-        resolve(data.data);
-      });
+          API.get(this.apiName, this.apiPath + '/userProfile', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
     });
   }
 

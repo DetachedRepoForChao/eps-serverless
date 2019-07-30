@@ -12,7 +12,7 @@ import {AchievementComponent} from '../../shared/achievement/achievement.compone
   styleUrls: ['./manager-user.component.css']
 })
 export class ManagerUserComponent implements OnInit {
-
+  componentName = 'manager-user.component';
   remainingPointPool;
 
   constructor(public globals: Globals,
@@ -23,15 +23,16 @@ export class ManagerUserComponent implements OnInit {
               private achievementComponent: AchievementComponent) { }
 
   ngOnInit() {
-    // this.storeDepartmentName();
-    // this.storeRemainingPointPool();
+    const functionName = 'getPointItems';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     this.pointItemService.getRemainingPointPool()
-      .then(data => {
-          console.log('storeRemainingPointPool remainingPointPool: ' + data);
+      .subscribe(remainingPoints => {
+          console.log(`${functionFullName}: remainingPoints: ` + remainingPoints);
           // console.log(data);
-          localStorage.setItem('remainingPointPool', data);
-          this.remainingPointPool = data;
-          // return true;
+          localStorage.setItem('remainingPointPool', remainingPoints);
+          this.remainingPointPool = remainingPoints;
         }
       );
     this.achievementComponent.getUserAchievements();
@@ -48,7 +49,7 @@ export class ManagerUserComponent implements OnInit {
   storeRemainingPointPool() {
     console.log('storeRemainingPointPool');
     return this.pointItemService.getRemainingPointPool()
-      .then(data => {
+      .subscribe(data => {
         console.log('storeRemainingPointPool remainingPointPool:');
         console.log(data);
         localStorage.setItem('remainingPointPool', data);

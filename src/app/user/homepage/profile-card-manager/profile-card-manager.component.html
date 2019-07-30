@@ -2,13 +2,20 @@
   <div class="card card-coin card-plain maxheight">
     <div class="card-header">
       <!-- <img src="../../../../assets/img/mike.jpg" class="img-center img-fluid rounded-circle"> -->
-      <img [src]="this.avatarService.userAvatarImageToShow"
+      <img [src]="this.avatarService.userAvatarUrl"
            alt="Avatar"
+           *ngIf="!isImageLoading; else avatarPlaceholder"
            class="img-center img-fluid rounded-circle"
            id="avatar">
 
+      <ng-template #avatarPlaceholder>
+        <!--        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                     alt="Avatar"
+                     class="img-center img-fluid rounded-circle"
+                     id="avatarPlaceholder">-->
+      </ng-template>
     </div>
-    <div class="card-body">
+    <div class="card-body" *ngIf="!isCardLoading; else cardLoading">
       <div class="row">
         <div class="col-md-12 text-center">
           <h4 class="text-uppercase">{{globals.localStorageItem('firstName')}} {{globals.localStorageItem('lastName')}}</h4>
@@ -92,6 +99,23 @@
     </div>
   </div>
 </div>
+
+<!-- Blank card to display while loading -->
+<ng-template #cardLoading>
+  <div class="card-body">
+    <ngx-spinner
+      name="profile-card-manager-spinner"
+      [fullScreen]="false"
+      bdColor="rgba(51,51,51,0.8)"
+      size="medium"
+      color="#fff"
+      type="pacman"
+    >
+      <p style="font-size: 20px; color: white">Loading...</p>
+    </ngx-spinner>
+  </div>
+</ng-template>
+
 <div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-sm" role="document">
 
