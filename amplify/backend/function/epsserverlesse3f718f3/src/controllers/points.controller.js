@@ -11,7 +11,7 @@ const getPointItems = function () {
     console.log('getPointItems');
 
     return sqlPointItemModel.findAll({
-        attributes: ['id', 'name', 'description', 'amount']
+        attributes: ['id', 'name', 'description', 'amount', 'coreValues']
     })
         .then(pointItems => {
             return {status: 200, pointItems: pointItems };
@@ -29,7 +29,7 @@ const getPointItem = function (pointItemId) {
     console.log('getPointItem: ' + pointItemId);
 
     return sqlPointItemModel.findOne({
-        attributes: ['id', 'name', 'description', 'amount'],
+        attributes: ['id', 'name', 'description', 'amount', 'coreValues'],
         where: {
             id: pointItemId
         }

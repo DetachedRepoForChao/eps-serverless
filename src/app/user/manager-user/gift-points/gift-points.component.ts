@@ -32,7 +32,7 @@ export interface DepartmentEmployee {
 @Component({
   selector: 'app-gift-points',
   templateUrl: './gift-points.component.html',
-  styleUrls: ['./gift-points.component.css']
+  styleUrls: ['./gift-points.component.scss']
 })
 export class GiftPointsComponent implements OnInit {
   componentName = 'gift-points.component';
@@ -129,6 +129,7 @@ export class GiftPointsComponent implements OnInit {
         this.isCardLoading = false;
         this.spinner.hide('gift-points-spinner');
       });*/
+
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -210,5 +211,31 @@ export class GiftPointsComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     form.resetForm();
+  }
+
+  isClicked = [];
+  buttons = [
+    'item1',
+    'item1',
+    'item1',
+    'item1'
+  ]
+
+
+  setActive() {
+// Add active class to the current button (highlight it)
+    const button = document.getElementById('button1');
+    console.log(button);
+    button.className += ' active';
+    /*var btns = header.getElementsByClassName("btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function() {
+        var current = document.getElementsByClassName("active");
+        if (current.length > 0) {
+          current[0].className = current[0].className.replace(" active", "");
+        }
+        this.className += " active";
+      });
+    }*/
   }
 }

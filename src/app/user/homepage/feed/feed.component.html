@@ -2,7 +2,7 @@
 
                                         <!-- ////// post to share/type -->
   <div class="card card-coin card-plain">
-    <div class="card-body">
+    <div class="card-body" *ngIf="!isCardLoading; else feedCardLoading">
       <div class="row">
         <div class="col-md-12 text-center">
           <h4 class="text-uppercase">Feed Card</h4>
@@ -151,3 +151,19 @@
 
 
 </div>
+
+<!-- Blank card to display while loading -->
+<ng-template #feedCardLoading >
+  <div class="card-body">
+    <ngx-spinner
+      name="feed-card-spinner"
+      [fullScreen]="false"
+      bdColor="rgba(51,51,51,0.8)"
+      size="medium"
+      color="#fff"
+      type="pacman"
+    >
+      <p style="font-size: 20px; color: white">Loading...</p>
+    </ngx-spinner>
+  </div>
+</ng-template>

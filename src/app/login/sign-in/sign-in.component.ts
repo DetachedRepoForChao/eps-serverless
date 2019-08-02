@@ -75,7 +75,7 @@ export class SignInComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     console.log(`${functionFullName}: Showing sign-in-onSubmit-spinner`);
-    this.spinner.show();
+    this.spinner.show('sign-in-onSubmit-spinner');
     console.log(form.value);
     this.auth.signIn(form.value.username, form.value.password)
       .then((user: CognitoUser|any) => {
@@ -132,7 +132,7 @@ export class SignInComponent implements OnInit {
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
             // this.sessionService.SetSessionLoggedIn();
             console.log(`${functionFullName}: Hiding sign-in-onSubmit-spinner`);
-            this.spinner.hide();
+            this.spinner.hide('sign-in-onSubmit-spinner');
             this.router.navigate(['/user']);
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
           });

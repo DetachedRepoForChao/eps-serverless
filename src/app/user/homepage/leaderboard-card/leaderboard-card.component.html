@@ -3,7 +3,21 @@
     <div class="card-header">
       <img src="../../../../assets/img/trophy2.svg" class="img-center img-fluid"/>
     </div>
-    <div class="card-body">
+    <div class="card-body" *ngIf="!isCardLoading; else leaderboardCardLoading">
+<!--    <div class="card-body">-->
+<!--
+      <ngx-spinner *ngIf="isCardLoading"
+        name="leaderboard-card-spinner"
+        [fullScreen]="false"
+        bdColor="rgba(51,51,51,0.8)"
+        size="medium"
+        color="#fff"
+        type="pacman"
+      >
+        <p style="font-size: 20px; color: white">Loading...</p>
+      </ngx-spinner>
+-->
+
       <div class="row">
         <div class="col-md-12 text-center">
           <h4 class="text-uppercase">Leaderboard</h4>
@@ -106,6 +120,22 @@
     </div>
   </div>
 </div>
+
+<!-- Blank card to display while loading -->
+<ng-template #leaderboardCardLoading >
+  <div class="card-body">
+    <ngx-spinner
+      name="leaderboard-card-spinner"
+      [fullScreen]="false"
+      bdColor="rgba(51,51,51,0.8)"
+      size="medium"
+      color="#fff"
+      type="pacman"
+    >
+      <p style="font-size: 20px; color: white">Loading...</p>
+    </ngx-spinner>
+  </div>
+</ng-template>
 
 <div class="modal fade modal-black" id="leaderboardModal" role="dialog" tabindex="-1" aria-labelledby="leaderboardModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg" role="document">

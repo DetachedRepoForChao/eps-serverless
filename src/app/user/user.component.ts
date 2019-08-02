@@ -71,7 +71,7 @@ export class UserComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: Showing user-component-spinner`);
+    // console.log(`${functionFullName}: Showing user-component-spinner`);
     // this.spinner.show('user-component-spinner');
 /*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
       this.socketService.reinitialize();
@@ -180,7 +180,7 @@ export class UserComponent implements OnInit {
         });
 
         this.isComponentLoading = false;
-        console.log(`${functionFullName}: Hiding user-component-spinner`);
+        // console.log(`${functionFullName}: Hiding user-component-spinner`);
         // this.spinner.hide('user-component-spinner');
       });
 
