@@ -6,53 +6,24 @@
         <div class="container">
           <div class="row">
             <div class="col-sm" >
-              <button *ngFor="let button of buttons; let i = index" [ngClass]="{'active':isClicked[i]}" (click)="isClicked[i] = (isClicked[i]? false :true )">{{ button }}</button>
-
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"  id="button1" (click)="setActive()">HAPPY</button>
-              <ul class="tg-list">
-                <li class="tg-list-item">
-                  <h4>Light</h4>
-                  <input class="tgl tgl-light" id="cb1" type="checkbox"/>
-                  <label class="tgl-btn" for="cb1"></label>
-                </li>
-                <li class="tg-list-item">
-                  <h4>iOS</h4>
-                  <input class="tgl tgl-ios" id="cb2" type="checkbox"/>
-                  <label class="tgl-btn" for="cb2"></label>
-                </li>
-                <li class="tg-list-item">
-                  <h4>Skewed</h4>
-                  <input class="tgl tgl-skewed" id="cb3" type="checkbox"/>
-                  <label class="tgl-btn" data-tg-off="OFF" data-tg-on="ON" for="cb3"></label>
-                </li>
-                <li class="tg-list-item">
-                  <h4>Flat</h4>
-                  <input class="tgl tgl-flat" id="cb4" type="checkbox"/>
-                  <label class="tgl-btn" for="cb4"></label>
-                </li>
-                <li class="tg-list-item">
-                  <h4>Flip</h4>
-                  <input class="tgl tgl-flip" id="cb5" type="checkbox"/>
-                  <label class="tgl-btn" data-tg-off="Nope" data-tg-on="Yeah!" for="cb5"></label>
-                </li>
-              </ul>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" id="button1" (click)="toggleCoreValue('happy')">HAPPY</button>
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false">FUN</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('fun')">FUN</button>
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false">GENUINE</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('genuine')">GENUINE</button>
             </div>
           </div>
           <div class="row">
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false">CARING</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('caring')">CARING</button>
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false">RESPECT</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('respect')">RESPECT</button>
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false">HONEST</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('honest')">HONEST</button>
             </div>
           </div>
         </div>
@@ -60,9 +31,9 @@
           <div class="form-row">
             <div class="form-group col-8">
               <label for="selectedPointItem">Point Item</label>
-              <select #selectedPointItem="ngModel" class="form-control" id="selectedPointItem" name="selectedPointItem" [(ngModel)]="selectedPointItem.item">
-                <option *ngFor="let pointItem of pointItemList" [ngValue]="pointItem">
-                  {{pointItem.amount}} pts - {{pointItem.name}}
+              <select multiple #selectedPointItem="ngModel" class="form-control" id="selectedPointItem" name="selectedPointItem" [(ngModel)]="selectedPointItem.item">
+                <option *ngFor="let pointItem of filteredPointItemList" [ngValue]="pointItem" (click)="selectPointItem(pointItem)">
+                  {{pointItem.Amount}} pts - {{pointItem.Name}}
                 </option>
               </select>
             </div>

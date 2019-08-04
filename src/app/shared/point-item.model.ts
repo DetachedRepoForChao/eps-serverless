@@ -3,4 +3,5 @@ export class PointItem {
   Id: number;
   Description: string;
   Amount: number;
+  CoreValues: string[];
 }

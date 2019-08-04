@@ -29,6 +29,7 @@ export interface DepartmentEmployee {
   points: number;
 }
 
+
 @Component({
   selector: 'app-gift-points',
   templateUrl: './gift-points.component.html',
@@ -41,9 +42,11 @@ export class GiftPointsComponent implements OnInit {
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
   selection = new SelectionModel<DepartmentEmployee>(true, []);
   // dataSource = new MatTableDataSource<DepartmentEmployee>();
-  pointItemList = [];
+  pointItemList: PointItem[] = [];
+  filteredPointItemList: PointItem[] = [];
   selectedPointItem = {};
   selectedEmployees = [];
+  selectedCoreValues = [];
   isCardLoading: boolean;
 
   constructor(
@@ -70,17 +73,39 @@ export class GiftPointsComponent implements OnInit {
     const observables: Observable<any>[] = [];
 
     this.pointItemService.getPointItems()
-      .subscribe(pointItems => {
+      .subscribe((pointItems: any) => {
+        console.log(`${functionFullName}: Populating Point Items`);
         for ( let i = 0; i < pointItems.length; i++) {
+          const coreValues: string[] = pointItems[i].coreValues.split(';');
+          for (let j = 0; j < coreValues.length; j++) {
+            coreValues[j] = coreValues[j].trim();
+          }
+
+          const pointItem: PointItem = {
+            Id: pointItems[i].id,
+            Name: pointItems[i].name,
+            Description: pointItems[i].description,
+            Amount: pointItems[i].amount,
+            CoreValues: coreValues
+          };
+
+          console.log(pointItem);
+
+/*
           const data = {
             id: pointItems[i].id,
             name: pointItems[i].name,
             description: pointItems[i].description,
             amount: pointItems[i].amount,
+            coreValues: pointItems[i].coreValues
           };
+*/
 
-          this.pointItemList = this.pointItemList.concat(data);
+          // this.pointItemList = this.pointItemList.concat(data);
+          this.pointItemList.push(pointItem);
         }
+
+        this.filteredPointItemList = this.pointItemList;
 
         this.giftPointsService.populateEmployeeDataSource().subscribe(() => {
           console.log(`${functionFullName}: setting isCardLoading to false:`);
@@ -163,13 +188,13 @@ export class GiftPointsComponent implements OnInit {
     } else {
 
       console.log('pointItemOnSubmit');
-      console.log('form.value[selectedPointItem].id: ' + form.value['selectedPointItem'].id);
-      console.log('form.value[selectedPointItem].name: ' + form.value['selectedPointItem'].name);
-      console.log('form.value[selectedPointItem].amount: ' + form.value['selectedPointItem'].amount);
+      console.log('form.value[selectedPointItem].id: ' + form.value['selectedPointItem'].Id);
+      console.log('form.value[selectedPointItem].name: ' + form.value['selectedPointItem'].Name);
+      console.log('form.value[selectedPointItem].amount: ' + form.value['selectedPointItem'].Amount);
       const data = {
         sourceUserId: +localStorage.getItem('userId'),
-        pointItemId: form.value['selectedPointItem'].id,
-        amount: form.value['selectedPointItem'].amount,
+        pointItemId: form.value['selectedPointItem'].Id,
+        amount: form.value['selectedPointItem'].Amount,
       };
 
       const pointItems: any[] = [];
@@ -205,6 +230,61 @@ export class GiftPointsComponent implements OnInit {
     }
   }
 
+  toggleCoreValue(coreValue: string) {
+    const functionName = 'toggleCoreValue';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    if (this.selectedCoreValues.find(x => x === coreValue)) {
+      // Core value already toggled. Remove it from the list
+      const index = this.selectedCoreValues.indexOf(coreValue);
+      console.log(`${functionFullName}: Selected Core Values filtered:`);
+      console.log(this.selectedCoreValues.filter(x => x !== coreValue));
+      this.selectedCoreValues = this.selectedCoreValues.filter(x => x !== coreValue);
+    } else {
+      // Core value toggled. Adding it to the list
+      console.log(`${functionFullName}: Adding Core Value ${coreValue}`);
+      this.selectedCoreValues.push(coreValue);
+    }
+
+    console.log(`${functionFullName}: New Core Value list:`);
+    console.log(this.selectedCoreValues);
+
+    this.filterPointItemList(this.selectedCoreValues);
+  }
+
+  filterPointItemList(coreValues: string[]) {
+    const functionName = 'filterPointItemList';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    if (coreValues.length === 0) {
+      // No Core Values are selected. Display all point items
+      this.filteredPointItemList = this.pointItemList;
+    } else {
+      const filteredPointItemList = [];
+      for (let i = 0; i < this.pointItemList.length; i++ ) {
+        for (let j = 0; j < coreValues.length; j++) {
+          if (this.pointItemList[i].CoreValues.find(x => x === coreValues[j])) {
+            if (filteredPointItemList.indexOf(this.pointItemList[i]) === -1) {
+              filteredPointItemList.push(this.pointItemList[i]);
+            }
+          }
+        }
+      }
+
+      this.filteredPointItemList = filteredPointItemList;
+    }
+  }
+
+  selectPointItem(pointItem: any) {
+    const functionName = 'selectPointItem';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(pointItem);
+  }
+
   resetForm(form: NgForm) {
     const functionName = 'resetForm';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -213,29 +293,5 @@ export class GiftPointsComponent implements OnInit {
     form.resetForm();
   }
 
-  isClicked = [];
-  buttons = [
-    'item1',
-    'item1',
-    'item1',
-    'item1'
-  ]
 
-
-  setActive() {
-// Add active class to the current button (highlight it)
-    const button = document.getElementById('button1');
-    console.log(button);
-    button.className += ' active';
-    /*var btns = header.getElementsByClassName("btn");
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].addEventListener("click", function() {
-        var current = document.getElementsByClassName("active");
-        if (current.length > 0) {
-          current[0].className = current[0].className.replace(" active", "");
-        }
-        this.className += " active";
-      });
-    }*/
-  }
 }
