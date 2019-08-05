@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { UserService } from '../shared/user.service';
 import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { DepartmentService } from '../shared/department.service';
@@ -22,6 +22,8 @@ import {SecurityRole} from '../shared/securityrole.model';
 import {FeedcardService} from '../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {GiftPointsService} from './manager-user/gift-points/gift-points.service';
+import { TimerObservable } from 'rxjs/observable/TimerObservable';
+import 'rxjs/add/operator/takeWhile';
 
 declare var $: any;
 
@@ -30,7 +32,7 @@ declare var $: any;
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   componentName = 'user.component';
   securityRole;
   securityRoleId;
@@ -50,6 +52,16 @@ export class UserComponent implements OnInit {
   private timeoutSubscription: Subscription;
   private pingSubscription: Subscription;
 
+  private data: any;
+
+  private display: boolean; // whether to display info in the component
+                            // use *ngIf="display" in your html to take
+                            // advantage of this
+
+  private alive: boolean; // used to unsubscribe from the TimerObservable
+                          // when OnDestroy is called.
+  private interval: number;
+
   constructor(private globals: Globals,
               private userService: UserService,
               private router: Router,
@@ -64,7 +76,11 @@ export class UserComponent implements OnInit {
               private authService: AuthService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
-              private giftPointsService: GiftPointsService) { }
+              private giftPointsService: GiftPointsService) {
+    this.display = false;
+    this.alive = true;
+    this.interval = 10000;
+  }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -189,6 +205,36 @@ export class UserComponent implements OnInit {
     this.ping = this.userIdle.getConfigValue().ping;
 
     this.onStartWatching();
+
+    this.startAchievementPolling();
+  }
+
+  ngOnDestroy() {
+    const functionName = 'ngOnDestroy';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    this.alive = false; // switches your TimerObservable off
+  }
+
+  startAchievementPolling() {
+    const functionName = 'startAchievementPolling';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    TimerObservable.create(0, this.interval)
+      .takeWhile(() => this.alive)
+      .subscribe(() => {
+        this.departmentService.getDepartments()
+          .subscribe((data: any) => {
+            this.data = data;
+            if (!this.display) {
+              this.display = true;
+            }
+            console.log(Date.now());
+            console.log(this.data);
+          });
+      });
   }
 
   onStartWatching() {
