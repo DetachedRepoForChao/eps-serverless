@@ -4,4 +4,5 @@ export class PointItem {
   Description: string;
   Amount: number;
   CoreValues: string[];
+  Filtered: boolean;
 }

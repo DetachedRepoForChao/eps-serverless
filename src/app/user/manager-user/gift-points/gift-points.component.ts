@@ -29,6 +29,10 @@ export interface DepartmentEmployee {
   points: number;
 }
 
+export interface CoreValueButton {
+  Name: string;
+  Toggled: boolean;
+}
 
 @Component({
   selector: 'app-gift-points',
@@ -44,9 +48,12 @@ export class GiftPointsComponent implements OnInit {
   // dataSource = new MatTableDataSource<DepartmentEmployee>();
   pointItemList: PointItem[] = [];
   filteredPointItemList: PointItem[] = [];
-  selectedPointItem = {};
+  // selectedPointItem = {};
   selectedEmployees = [];
   selectedCoreValues = [];
+  coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
+  coreValueButtonList: CoreValueButton[] = [];
+  selectedPointItem: PointItem;
   isCardLoading: boolean;
 
   constructor(
@@ -72,6 +79,8 @@ export class GiftPointsComponent implements OnInit {
     this.spinner.hide('gift-points-spinner');
     const observables: Observable<any>[] = [];
 
+    this.populateCoreValueButtonList();
+
     this.pointItemService.getPointItems()
       .subscribe((pointItems: any) => {
         console.log(`${functionFullName}: Populating Point Items`);
@@ -86,7 +95,8 @@ export class GiftPointsComponent implements OnInit {
             Name: pointItems[i].name,
             Description: pointItems[i].description,
             Amount: pointItems[i].amount,
-            CoreValues: coreValues
+            CoreValues: coreValues,
+            Filtered: false
           };
 
           console.log(pointItem);
@@ -157,6 +167,21 @@ export class GiftPointsComponent implements OnInit {
 
   }
 
+  populateCoreValueButtonList() {
+    const functionName = 'populateCoreValueButtonList';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    for (let i = 0; i < this.coreValues.length; i++) {
+      const coreValueButton: CoreValueButton = {
+        Name: this.coreValues[i],
+        Toggled: false
+      };
+
+      this.coreValueButtonList.push(coreValueButton);
+    }
+  }
+
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -183,18 +208,32 @@ export class GiftPointsComponent implements OnInit {
     const functionName = 'pointItemOnSubmit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
+/*    console.log(`${functionFullName}: form:`);
+    console.log(form);
 
-    if (!form.value['selectedPointItem'] || (this.selection.selected.length === 0)) {
+    console.log(`${functionFullName}: form.value:`);
+    console.log(form.value);
+
+    console.log(`${functionFullName}: form.value['selectedPointItem']:`);
+    console.log(form.value['selectedPointItem']);*/
+
+    console.log(`${functionFullName}: this.selectedPointItem:`);
+    console.log(this.selectedPointItem);
+
+    console.log(`${functionFullName}: this.selection.selected:`);
+    console.log(this.selection.selected);
+
+    if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
     } else {
-
-      console.log('pointItemOnSubmit');
-      console.log('form.value[selectedPointItem].id: ' + form.value['selectedPointItem'].Id);
+/*      console.log('form.value[selectedPointItem].id: ' + form.value['selectedPointItem'].Id);
       console.log('form.value[selectedPointItem].name: ' + form.value['selectedPointItem'].Name);
-      console.log('form.value[selectedPointItem].amount: ' + form.value['selectedPointItem'].Amount);
+      console.log('form.value[selectedPointItem].amount: ' + form.value['selectedPointItem'].Amount);*/
       const data = {
         sourceUserId: +localStorage.getItem('userId'),
-        pointItemId: form.value['selectedPointItem'].Id,
-        amount: form.value['selectedPointItem'].Amount,
+/*        pointItemId: form.value['selectedPointItem'].Id,
+        amount: form.value['selectedPointItem'].Amount,*/
+        pointItemId: this.selectedPointItem.Id,
+        amount: this.selectedPointItem.Amount,
       };
 
       const pointItems: any[] = [];
@@ -205,7 +244,7 @@ export class GiftPointsComponent implements OnInit {
 
       forkJoin(pointItems)
         .subscribe(dataArray => {
-          console.log('forkJoin');
+          console.log(`${functionFullName}: forkJoin dataArray:`);
           console.log(dataArray);
           this.giftPointsService.populateEmployeeDataSource().subscribe();
           this.pointItemService.storeRemainingPointPool().subscribe();
@@ -230,59 +269,237 @@ export class GiftPointsComponent implements OnInit {
     }
   }
 
+  toggleCoreValueButton(coreValue: string) {
+    const functionName = 'toggleCoreValue';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
+
+    const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
+    if (coreValueButton.Toggled) {
+      console.log(`${functionFullName}: Core value button is already toggled. Untoggling`);
+      coreValueButton.Toggled = false;
+      document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className.replace('toggled', '').trim();
+    } else {
+      console.log(`${functionFullName}: Core value button is not yet toggled. Toggling`);
+      coreValueButton.Toggled = true;
+      document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className += ' toggled';
+    }
+
+    this.filterPointItemList();
+  }
+
+  isCoreValueButtonToggled(coreValue: string): boolean {
+    const functionName = 'isCoreValueButtonToggled';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: Checking if button for core value ${coreValue} is toggled`);
+    const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
+    if (coreValueButton.Toggled) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   toggleCoreValue(coreValue: string) {
     const functionName = 'toggleCoreValue';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
+    console.log(`${functionFullName}: Core value: ${coreValue}`);
 
-    if (this.selectedCoreValues.find(x => x === coreValue)) {
-      // Core value already toggled. Remove it from the list
-      const index = this.selectedCoreValues.indexOf(coreValue);
-      console.log(`${functionFullName}: Selected Core Values filtered:`);
-      console.log(this.selectedCoreValues.filter(x => x !== coreValue));
-      this.selectedCoreValues = this.selectedCoreValues.filter(x => x !== coreValue);
+    if (!this.isCoreValueToggled(coreValue)) {
+      // Core value button is not toggled. Proceed
+      console.log(`${functionFullName}: Core value is not yet toggled. Check if the core value exists in the core value list`);
+      if (!this.selectedCoreValues.find(x => x === coreValue)) {
+        // Core value not yet in the core value list. Adding it to the list
+        console.log(`${functionFullName}: Core value is not yet in the core value list. Adding core value ${coreValue} to the core value list`);
+        this.selectedCoreValues.push(coreValue);
+      }
     } else {
-      // Core value toggled. Adding it to the list
-      console.log(`${functionFullName}: Adding Core Value ${coreValue}`);
-      this.selectedCoreValues.push(coreValue);
+      // Core value button is already toggled. Check if the core value exists in the core value list and remove it if it does
+      console.log(`${functionFullName}: Core value is already toggled. Check if the core value exists in the core value list`);
+      if (this.selectedCoreValues.find(x => x === coreValue)) {
+        // Core value already toggled. Remove it from the list
+        console.log(`${functionFullName}: Core value exists in the core value list. Removing it`);
+        const index = this.selectedCoreValues.indexOf(coreValue);
+        console.log(`${functionFullName}: Selected Core Values filtered:`);
+        console.log(this.selectedCoreValues.filter(x => x !== coreValue));
+        this.selectedCoreValues = this.selectedCoreValues.filter(x => x !== coreValue);
+      }
     }
 
     console.log(`${functionFullName}: New Core Value list:`);
     console.log(this.selectedCoreValues);
 
-    this.filterPointItemList(this.selectedCoreValues);
+    // this.filterPointItemList(this.selectedCoreValues);
   }
 
-  filterPointItemList(coreValues: string[]) {
+  untoggleAllCoreValueButtons() {
+    const functionName = 'untoggleAllCoreValueButtons';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    for (let i = 0; i < this.coreValueButtonList.length; i++) {
+      console.log(`${functionFullName}: Untoggling core value button ${this.coreValueButtonList[i].Name}`);
+      this.coreValueButtonList[i].Toggled = false;
+      document.getElementById(`button_${this.coreValueButtonList[i].Name}`).className = document.getElementById(`button_${this.coreValueButtonList[i].Name}`).className.replace('toggled', '').trim();
+    }
+  }
+
+  filterPointItemList() {
     const functionName = 'filterPointItemList';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    const toggledCoreValues = this.coreValueButtonList.filter(x => x.Toggled);
+    if (toggledCoreValues.length === 0) {
+      for (let i = 0; i < this.filteredPointItemList.length; i++) {
+        this.filteredPointItemList[i].Filtered = false;
+      }
+    } else {
+      for (let i = 0; i < this.filteredPointItemList.length; i++) {
+        for (let j = 0; j < toggledCoreValues.length; j++) {
+          if (this.filteredPointItemList[i].CoreValues.find(x => x === toggledCoreValues[j].Name)) {
+            // filteredPointItem contains current toggled core value
+            this.filteredPointItemList[i].Filtered = true;
+          } else {
+            // filteredPointItem does NOT contain current toggled core value. Break out of loop
+            this.filteredPointItemList[i].Filtered = false;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /*filterPointItemList(coreValues: string[]) {
+    const functionName = 'filterPointItemList';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    this.filteredPointItemList = [];
     if (coreValues.length === 0) {
       // No Core Values are selected. Display all point items
-      this.filteredPointItemList = this.pointItemList;
+      console.log(`${functionFullName}: No core values selected. Setting all point items to unfiltered`);
+      console.log(this.pointItemList);
+      const filteredPointItemList = [];
+      for (let i = 0; i < this.pointItemList.length; i++) {
+        const item = this.pointItemList[i];
+        const filteredPointItem: PointItem = {
+          Id: item.Id,
+          Name: item.Name,
+          Amount: item.Amount,
+          CoreValues: item.CoreValues,
+          Description: item.Description,
+          Filtered: false
+        };
+
+        filteredPointItemList.push(filteredPointItem);
+      }
+
+      this.filteredPointItemList = filteredPointItemList;
     } else {
       const filteredPointItemList = [];
       for (let i = 0; i < this.pointItemList.length; i++ ) {
+        const item = this.pointItemList[i];
+        const filteredPointItem: PointItem = {
+          Id: item.Id,
+          Name: item.Name,
+          Amount: item.Amount,
+          CoreValues: item.CoreValues,
+          Description: item.Description,
+          Filtered: item.Filtered
+        };
+
+        // Iterate through core value list
         for (let j = 0; j < coreValues.length; j++) {
           if (this.pointItemList[i].CoreValues.find(x => x === coreValues[j])) {
-            if (filteredPointItemList.indexOf(this.pointItemList[i]) === -1) {
-              filteredPointItemList.push(this.pointItemList[i]);
-            }
+            // Current point item contains the current core value
+            filteredPointItem.Filtered = true;
+            // const matchingFilteredPointItem = this.filteredPointItemList.find(x => x.Id === this.pointItemList[i].Id);
+            // if (!matchingFilteredPointItem.Filtered) {
+              // Matching filtered point item is not set as Filtered. Set it as filtered
+              // filteredPointItem.Filtered = true;
+            // }
+/!*            if (filteredPointItemList.indexOf(this.pointItemList[i]) === -1) {
+
+              filteredPointItem.Filtered = true;
+            } else {
+              filteredPointItem.Filtered = false;
+            }*!/
+
+          } else {
+            // Current point item does NOT contain the current core value
+            // Set filtered to false and break out of the loop
+            filteredPointItem.Filtered = false;
+            break;
           }
         }
+        filteredPointItemList.push(filteredPointItem);
       }
 
       this.filteredPointItemList = filteredPointItemList;
     }
-  }
+  }*/
 
-  selectPointItem(pointItem: any) {
+  selectPointItem(pointItem: PointItem) {
     const functionName = 'selectPointItem';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
     console.log(pointItem);
+    this.selectedPointItem = pointItem;
+    // this.setAllButtonsInactive();
+    this.untoggleAllCoreValueButtons();
+
+    for (let i = 0; i < pointItem.CoreValues.length; i++) {
+      console.log(`${functionFullName}: Toggling core value '${pointItem.CoreValues[i]}' for point item '${pointItem.Name}'`);
+      this.toggleCoreValueButton(pointItem.CoreValues[i]);
+/*      const element = document.getElementById(`button_${pointItem.CoreValues[i]}`);
+      console.log(element);
+      if (element.className.match('active')) {
+        console.log(`${functionFullName}: element className contains 'active'`);
+
+      } else {
+        console.log(`${functionFullName}: element className does NOT contains 'active'`);
+        document.getElementById(`button_${pointItem.CoreValues[i]}`).className += ' active';
+        this.toggleCoreValue(pointItem.CoreValues[i]);
+      }*/
+    }
+  }
+
+  isCoreValueToggled(coreValue: string): boolean {
+    const functionName = 'isCoreValueToggled';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: Checking if button for core value ${coreValue} is toggled`);
+    const buttonClass = document.getElementById(`button_${coreValue}`).className;
+    if (buttonClass.match('active')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  setAllButtonsInactive() {
+    const functionName = 'setAllButtonsInactive';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    document.getElementById(`button_happy`).className = document.getElementById(`button_happy`).className.replace('active', '');
+    // this.toggleCoreValue('happy');
+    document.getElementById(`button_fun`).className = document.getElementById(`button_fun`).className.replace('active', '');
+    // this.toggleCoreValue('fun');
+    document.getElementById(`button_genuine`).className = document.getElementById(`button_genuine`).className.replace('active', '');
+    // this.toggleCoreValue('genuine');
+    document.getElementById(`button_caring`).className = document.getElementById(`button_caring`).className.replace('active', '');
+    // this.toggleCoreValue('caring');
+    document.getElementById(`button_respect`).className = document.getElementById(`button_respect`).className.replace('active', '');
+    // this.toggleCoreValue('respect');
+    document.getElementById(`button_honest`).className = document.getElementById(`button_honest`).className.replace('active', '');
+    // this.toggleCoreValue('honest');
   }
 
   resetForm(form: NgForm) {

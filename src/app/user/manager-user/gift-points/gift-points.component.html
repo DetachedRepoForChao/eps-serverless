@@ -6,28 +6,55 @@
         <div class="container">
           <div class="row">
             <div class="col-sm" >
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" id="button1" (click)="toggleCoreValue('happy')">HAPPY</button>
+              <button type="button"
+                      class="btn btn-primary btn-sm btn-block"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      id="button_happy"
+                      (click)="toggleCoreValueButton('happy')">HAPPY</button>
+<!--                      [ngStyle]="{border: this.isCoreValueButtonToggled('happy') === true ? 'green' : 'red'}"
+                      (click)="toggleCoreValueButton('happy')">HAPPY</button>-->
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('fun')">FUN</button>
+              <button type="button"
+                      class="btn btn-primary btn-sm btn-block"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      id="button_fun" (click)="toggleCoreValueButton('fun')">FUN</button>
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('genuine')">GENUINE</button>
+              <button type="button"
+                      class="btn btn-primary btn-sm btn-block"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      id="button_genuine" (click)="toggleCoreValueButton('genuine')">GENUINE</button>
             </div>
           </div>
           <div class="row">
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('caring')">CARING</button>
+              <button type="button"
+                      class="btn btn-primary btn-sm btn-block"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      id="button_caring" (click)="toggleCoreValueButton('caring')">CARING</button>
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('respect')">RESPECT</button>
+              <button type="button"
+                      class="btn btn-primary btn-sm btn-block"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      id="button_respect" (click)="toggleCoreValueButton('respect')">RESPECT</button>
             </div>
             <div class="col-sm">
-              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false" (click)="toggleCoreValue('honest')">HONEST</button>
+              <button type="button"
+                      class="btn btn-primary btn-sm btn-block"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      id="button_honest" (click)="toggleCoreValueButton('honest')">HONEST</button>
             </div>
           </div>
         </div>
-        <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)" class="form">
+<!--        <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)" class="form">
           <div class="form-row">
             <div class="form-group col-8">
               <label for="selectedPointItem">Point Item</label>
@@ -41,7 +68,27 @@
           <div class="gift-points-container">
             <button type="submit" class="btn btn-info btn-round btn-lg" > Gift Points </button>
           </div>
+        </form>-->
+
+
+
+        <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)" class="form">
+          <div class="row">
+            <div class="col-lg" style="height: 100px; overflow-y: auto; overflow-x: hidden">
+              <div class="form-check form-check-radio" *ngFor="let pointItem of filteredPointItemList">
+                <label class="form-check-label" [ngStyle]="{color: pointItem.Filtered === true ? 'green' : 'red'}" >
+                  <input class="form-check-input" type="radio" name="selectedPointItem" (click)="selectPointItem(pointItem)">
+                  {{pointItem.Amount}} pts - {{pointItem.Name}}
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="gift-points-container">
+            <button type="submit" class="btn btn-info btn-round btn-lg" > Gift Points </button>
+          </div>
         </form>
+
 
         <table class="table">
           <thead>

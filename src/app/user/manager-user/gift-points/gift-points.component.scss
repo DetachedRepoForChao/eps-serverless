@@ -21,6 +21,10 @@ table {
   left: 25%;
 }
 */
+/*.form-check-label {
+  color: red;
+}*/
+
 .card {
   background: #8656d22e;
 }
@@ -57,7 +61,13 @@ table {
   background-image: linear-gradient(to bottom left, #666, #f1f1f1, #e14eca) !important;
 }*/
 
-.btn.active {
+/*.btn.active {
+  background-color: #666;
+  color: white;
+  background-image: linear-gradient(to bottom left, #666, #f1f1f1, #e14eca) !important;
+}*/
+
+.btn.toggled {
   background-color: #666;
   color: white;
   background-image: linear-gradient(to bottom left, #666, #f1f1f1, #e14eca) !important;
