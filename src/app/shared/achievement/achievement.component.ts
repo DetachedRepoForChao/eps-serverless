@@ -8,11 +8,13 @@ import {DepartmentEmployee} from '../../user/manager-user/gift-points/gift-point
 import {Observable, forkJoin} from 'rxjs';
 import {Router} from '@angular/router';
 
-export interface AchievementData {
-  name: string;
-  goal: number;
-  progress: number;
-  status: string;
+export interface AchievementItem {
+  Name: string;
+  Description: string;
+  Cost: number;
+  Progress: number;
+  AchievementStatus: string;
+  ProgressStatus: string;
 }
 
 @Injectable({
@@ -25,11 +27,13 @@ export interface AchievementData {
   styleUrls: ['./achievement.component.scss']
 })
 export class AchievementComponent implements OnInit {
-
-  dataSource = new MatTableDataSource<AchievementData>();
+  componentName = 'achievement.component';
+  // dataSource = new MatTableDataSource<AchievementItem>();
   achievements: Achievement[];
   userAchievementProgressList: UserAchievementProgress[];
-  achievementDataList = [];
+  // userAchievements: Achievement[];
+
+  achievementDataList: AchievementItem[];
   displayedColumns: string[] = ['name', 'progress'];
   displayedCompletedColumns: string[] = ['name', 'completed'];
   isCompletedRow = (index, item) => item.status === 'complete';
@@ -39,69 +43,23 @@ export class AchievementComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
-    this.achievementService.getUserAchievementProgressByUserId(localStorage.getItem('userId'))
-      .subscribe(result => {
-        this.getUserAchievements();
-        console.log('onInit after getUserAchievements:');
-        console.log(this.dataSource.data);
-      });
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
-    console.log('onInit after getUserAchievements:');
-    console.log(this.dataSource.data);
-  }
-
-  getUserAchievements() {
-    console.log('getUserAchievements');
-    return this.achievementService.getUserAchievementProgressByUserId(localStorage.getItem('userId'))
-      .subscribe(data => {
-        if (!data) {
-          console.log('No data returned');
-          return {status: false, message: 'No data returned'};
-        } else {
-          console.log('Data returned successfully');
-          this.achievementDataList = [];
-          const observables: Observable<any>[] = [];
-          // Get the associated Achievement details
-          console.log(data['userAchievementProgress']);
-          for (let i = 0; i < data['userAchievementProgress'].length; i++) {
-            const currentAchievementProgressItem = data['userAchievementProgress'][i];
-            console.log('currentAchievementProgressItem');
-            console.log(currentAchievementProgressItem);
-            observables.push(this.achievementService.getAchievementById(currentAchievementProgressItem.achievement_id));
-          }
-
-          return forkJoin(observables)
-            .subscribe(dataArray => {
-              console.log('forkJoin');
-              console.log(' data[\'userAchievementProgress\']');
-              console.log( data['userAchievementProgress']);
-
-              dataArray.forEach(item => {
-                const currentAchievementProgressItem = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
-
-                const achievementData: AchievementData = {
-                  name: item['achievement'].name,
-                  goal: item['achievement'].cost,
-                  progress: currentAchievementProgressItem.goalProgress,
-                  status: currentAchievementProgressItem.status
-                };
-
-                this.achievementDataList = this.achievementDataList.concat(achievementData);
-
-              });
-
-              this.dataSource.data = this.achievementDataList;
-              console.log('START this.dataSource.data');
-              console.log(this.dataSource.data);
-              console.log('END this.dataSource.data');
-              return {status: true, message: 'Datasource updated successfully'};
-            });
-        }
-      });
+    this.achievementService.getUserAchievements().subscribe((result: any) => {
+      if (result.status === true) {
+        console.log(`${functionFullName}: achievement data populated successfully`);
+        console.log(`${functionFullName}: after getUserAchievements:`);
+        console.log(this.achievementService.achievementDataList);
+      } else {
+        console.log(`${functionFullName}: error populating achievement data`);
+      }
+    });
   }
 
   refresh() {
-    this.getUserAchievements();
+    this.achievementService.getUserAchievements();
     this.router.navigate(['/']);
   }
 

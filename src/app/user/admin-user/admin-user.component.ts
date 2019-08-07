@@ -3,6 +3,7 @@ import { UserService } from '../../shared/user.service';
 import { Router } from '@angular/router';
 import { Globals} from '../../globals';
 import {AchievementComponent} from '../../shared/achievement/achievement.component';
+import {AchievementService} from '../../shared/achievement/achievement.service';
 
 @Component({
   selector: 'app-admin-user',
@@ -14,10 +15,10 @@ export class AdminUserComponent implements OnInit {
   constructor(public globals: Globals,
               private userService: UserService,
               private router: Router,
-              private achievementComponent: AchievementComponent) { }
+              private achievementService: AchievementService) { }
 
   ngOnInit() {
-    this.achievementComponent.getUserAchievements();
+    this.achievementService.getUserAchievements();
 
   }
 

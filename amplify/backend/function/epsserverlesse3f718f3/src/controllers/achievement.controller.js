@@ -5,6 +5,8 @@ const sqlAchievementModel = Models.Achievement;
 const sqlAchievementTransactionModel = Models.AchievementTransaction;
 const sqlUserAchievementProgressModel = Models.UserAchievementProgress;
 
+const componentName = 'achievement.controller';
+
 module.exports.getAchievements = (req, res, next) =>{
   //console.log('req.id:' + req.id);
   //console.log(req);
@@ -116,7 +118,7 @@ module.exports.getUserAchievementProgressById = (req, res, next) =>{
     });
 };
 
-module.exports.getUserAchievementProgressByUserId = (req, res, next) =>{
+/*module.exports.getUserAchievementProgressByUserId = (req, res, next) =>{
 
   console.log('getUserAchievementProgressByUserId req.userId:');
   console.log(req.body.userId);
@@ -138,7 +140,65 @@ module.exports.getUserAchievementProgressByUserId = (req, res, next) =>{
       console.log('Database error');
       return res.status(500).json({ status: false, message: err});
     });
+};*/
+
+const getUserAchievementsByUserId = function(userId) {
+  const functionName = 'getUserAchievementsByUserId';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: userId: ${userId}`);
+
+  const sequelize = SqlModel().sequelize;
+  return sequelize.query("" +
+    "SELECT `user_achievement_progress`.`id` AS `achievementProgressId`, `user_achievement_progress`.`user_id` AS `achievementProgressUserId`, " +
+    "`user_achievement_progress`.`achievement_id` AS `achievementProgressAchievementId`, `user_achievement_progress`.`goalProgress` AS `achievementProgressGoalProgress`, " +
+    "`user_achievement_progress`.`status` AS `achievementProgressStatus`, " +
+    "`achievement`.`id` AS `achievementId`, `achievement`.`name` AS `achievementName`, `achievement`.`description` AS `achievementDescription`, " +
+    "`achievement`.`status` AS `achievementStatus`, `achievement`.`cost` AS `achievementCost` " +
+    "FROM `user_achievement_progress` " +
+    "JOIN `achievement` ON `user_achievement_progress`.`achievement_id` = `achievement`.`id` " +
+    "WHERE `user_achievement_progress`.`user_id` = " + userId + " " ,
+    {type: sequelize.QueryTypes.SELECT})
+    .then(userAchievements => {
+      if(!userAchievements) {
+        console.log(`${functionFullName}: Records not found`);
+        return {status: 404, message: 'User Achievements not found.'};
+      } else {
+        console.log(`${functionFullName}: User Achievements retrieved successfully`);
+        console.log(userAchievements);
+        return {status: 200, userAchievements: userAchievements };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: database error`);
+      console.log(err);
+      return {status: 500, message: err };
+    });
+  /*return sqlUserAchievementProgressModel.findAll({
+    attributes: ['userId', 'achievementId', 'goalProgress', 'id', 'status'],
+    where: {
+      userId: userId
+    }
+  })
+    .then(userAchievementProgress => {
+      if(!userAchievementProgress) {
+        console.log(`${functionFullName}: Records not found`);
+        return {status: 404, message: 'User Achievement Progress not found.'};
+      } else {
+        console.log(`${functionFullName}: Records retrieved successfully`);
+        console.log(userAchievementProgress);
+        return {status: 200, userAchievementProgress: userAchievementProgress };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: database error`);
+      console.log(err);
+      return {status: 500, message: err };
+    });*/
 };
+
+module.exports.getUserAchievementsByUserId = getUserAchievementsByUserId;
 
 module.exports.getUserAchievementProgressByAchievementId = (req, res, next) =>{
 

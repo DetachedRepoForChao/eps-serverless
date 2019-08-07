@@ -5,7 +5,7 @@ import { DepartmentService} from '../../../shared/department.service';
 import { UserService} from '../../../shared/user.service';
 import {User} from '../../../shared/user.model';
 import { Department} from '../../../shared/department.model';
-import {AchievementComponent, AchievementData} from '../../../shared/achievement/achievement.component';
+import {AchievementComponent} from '../../../shared/achievement/achievement.component';
 import {MatTableDataSource} from '@angular/material';
 import {PointItemService} from '../../../shared/point-item.service';
 import {PointItem} from '../../../shared/point-item.model';

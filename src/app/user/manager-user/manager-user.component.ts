@@ -5,6 +5,7 @@ import { UserService } from '../../shared/user.service';
 import {DepartmentService} from '../../shared/department.service';
 import {PointItemService} from '../../shared/point-item.service';
 import {AchievementComponent} from '../../shared/achievement/achievement.component';
+import {AchievementService} from '../../shared/achievement/achievement.service';
 
 @Component({
   selector: 'app-manager-user',
@@ -20,7 +21,8 @@ export class ManagerUserComponent implements OnInit {
               private router: Router,
               private departmentService: DepartmentService,
               private pointItemService: PointItemService,
-              private achievementComponent: AchievementComponent) { }
+              private achievementComponent: AchievementComponent,
+              private achievementService: AchievementService) { }
 
   ngOnInit() {
     const functionName = 'getPointItems';
@@ -35,7 +37,7 @@ export class ManagerUserComponent implements OnInit {
           this.remainingPointPool = remainingPoints;
         }
       );
-    this.achievementComponent.getUserAchievements();
+    this.achievementService.getUserAchievements();
   }
 
 

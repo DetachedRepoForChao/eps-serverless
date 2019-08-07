@@ -24,6 +24,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {GiftPointsService} from './manager-user/gift-points/gift-points.service';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import 'rxjs/add/operator/takeWhile';
+import {AchievementService} from '../shared/achievement/achievement.service';
 
 declare var $: any;
 
@@ -76,7 +77,8 @@ export class UserComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
-              private giftPointsService: GiftPointsService) {
+              private giftPointsService: GiftPointsService,
+              private achievementService: AchievementService) {
     this.display = false;
     this.alive = true;
     this.interval = 10000;
@@ -129,30 +131,6 @@ export class UserComponent implements OnInit, OnDestroy {
       observables.push(this.securityRoleService.getSecurityRoleById(this.securityRoleId));
     }
 
-
-/*      .subscribe((securityRole: SecurityRole) => {
-        this.securityRole = securityRole;
-
-        switch (this.securityRole.Name) {
-          case 'employee': {
-            console.log(`${functionFullName}: navigating to standard-user`);
-            // this.router.navigate(['standard-user']);
-            this.router.navigate(['homepage']);
-            break;
-          }
-          case 'manager': {
-            console.log(`${functionFullName}: navigating to manager-user`);
-            // this.router.navigate(['manager-user']);
-            this.router.navigate(['homepage']);
-            break;
-          }
-          case 'admin': {
-            console.log(`${functionFullName}: navigating to admin-user`);
-            this.router.navigate(['admin-user']);
-            break;
-          }
-        }
-      });*/
 
     forkJoin(observables)
       .subscribe(obsResults => {
@@ -428,7 +406,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onSocketTestClick2() {
-    this.feedcardService.refreshPointTransactionAvatars();
+    this.achievementService.getUserAchievements();
+    // this.feedcardService.refreshPointTransactionAvatars();
     // this.socketService.socketTest2();
     // debugger;
     // console.log(this.socketService.sessionHash);

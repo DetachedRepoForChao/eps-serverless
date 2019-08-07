@@ -40,6 +40,7 @@ const ctrlAvatar = require('./controllers/avatar.controller');
 const ctrlLeaderboard = require('./controllers/leaderboard.controller');
 
 const jwtVerify = require('./config/decode-verify-jwt');
+const componentName = 'app';
 /**********************
  * Example get method *
  **********************/
@@ -180,7 +181,6 @@ app.post('/items/getSecurityRoles', function(req, res) {
 });
 
 // Achievement Routes
-
 app.post('/items/achievement', function(req, res) {
   console.log('starting post achievement');
 });
@@ -189,8 +189,62 @@ app.post('/items/userAchievementProgressByUserId', function(req, res) {
   console.log('starting post userAchievementProgressByUserId');
 });
 
-app.post('/items/incrementAchievement/:achievementName', function(req, res) {
-  console.log('starting post incrementAchievement');
+app.get('/items/currentUserAchievements', function(req, res) {
+  const functionName = 'get currentUserAchievements';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+
+      ctrlUser.getUserProfile(username)
+        .then(result => {
+          const userId = result.user.id;
+          ctrlAchievement.getUserAchievementsByUserId(userId)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data.userAchievements});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+// Named Achievement Routes
+app.post('/items/incrementAchievement', function(req, res) {
+  const functionName = 'post incrementAchievement';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+
+      ctrlUser.getUserProfile(username)
+        .then(result => {
+          const userId = result.user.id;
+          const achievementName = req.body.achievementName;
+          ctrlNamedAchievement.incrementAchievement(achievementName, userId)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data.message});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 // Point Routes
@@ -390,6 +444,7 @@ app.get('/items/getPointTransaction', function(req, res) {
 
 });
 
+
 app.get('/items/*', function(req, res) {
   // Add your code here
   res.json({success: 'get call succeed!', url: req.url});
@@ -452,4 +507,4 @@ app.listen(3000, function() {
 // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from
 // this file
-module.exports = app
+module.exports = app;

@@ -9,17 +9,17 @@
         <table mat-table [dataSource]="dataSource.data">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Achievement Name </th>
-            <td mat-cell *matCellDef="let achievement"> {{achievement.name}}
+            <td mat-cell *matCellDef="let achievement"> {{achievement.Name}}
             </td>
           </ng-container>
           <ng-container matColumnDef="progress">
             <th mat-header-cell *matHeaderCellDef> Current Progress </th>
-            <td mat-cell *matCellDef="let achievement"> {{achievement.progress}} / {{achievement.goal}}
+            <td mat-cell *matCellDef="let achievement"> {{achievement.Progress}} / {{achievement.Cost}}
             </td>
           </ng-container>
           <ng-container matColumnDef="goal">
             <th mat-header-cell *matHeaderCellDef> Goal </th>
-            <td mat-cell *matCellDef="let achievement"> {{achievement.goal}}
+            <td mat-cell *matCellDef="let achievement"> {{achievement.Cost}}
             </td>
           </ng-container>
           <ng-container matColumnDef="completed">

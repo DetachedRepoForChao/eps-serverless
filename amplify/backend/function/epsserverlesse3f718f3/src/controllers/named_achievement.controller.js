@@ -7,7 +7,9 @@ const sqlAchievementTransactionModel = Models.AchievementTransaction;
 const sqlUserAchievementProgressModel = Models.UserAchievementProgress;
 const ctrlAchievement = require('./achievement.controller');
 
+const componentName = 'named_achievement.controller';
 
+/*
 module.exports.incrementAchievement = (req, res, next) => {
     console.log('incrementAchievement: ' + req.params.achievementName);
 
@@ -39,9 +41,47 @@ module.exports.incrementAchievement = (req, res, next) => {
         return res.status(422).json({status: false, message: 'A function for this achievement does not exist'});
     }
 }
+*/
 
+const incrementAchievement = function(achievementName, userId) {
+  const functionName = 'incrementAchievement';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
 
-var incrementAchievementSignIn = function(userId) {
+  console.log(`${functionFullName}: Increment achievement '${achievementName}' for userId ${userId}`);
+
+  const data = {
+    userId: userId,
+    achievementName: achievementName
+  };
+
+  const functions = {
+    'incrementAchievementSignIn': incrementAchievementSignIn,
+    'incrementAchievementGiftFirstPointItem': incrementAchievementGiftFirstPointItem,
+    'incrementAchievementReceiveFirstPointItem': incrementAchievementReceiveFirstPointItem,
+  };
+
+  if(functions.hasOwnProperty('incrementAchievement' + data.achievementName)) {
+    return functions['incrementAchievement' + data.achievementName](data.userId)
+      .then(result => {
+        if(result.status === true) {
+          console.log(`${functionFullName}: Success`);
+          return {status: 200, message: 'Success'};
+        } else {
+          console.log(`${functionFullName}: Error`);
+          console.log(result.message);
+          return {status: 400, message: result.message};
+        }
+      })
+  } else {
+    console.log(`${functionFullName}: A function for this achievement does not exist`);
+    return {status: 422, message: 'A function for this achievement does not exist'};
+  }
+};
+
+module.exports.incrementAchievement = incrementAchievement;
+
+const incrementAchievementSignIn = function(userId) {
     console.log('incrementAchievementSignIn');
 
     const data = {
@@ -100,7 +140,7 @@ var incrementAchievementSignIn = function(userId) {
 };
 
 
-var incrementAchievementGiftFirstPointItem = function(userId) {
+const incrementAchievementGiftFirstPointItem = function(userId) {
     console.log('incrementAchievementGiftFirstPointItem');
 
     const data = {
@@ -158,7 +198,7 @@ var incrementAchievementGiftFirstPointItem = function(userId) {
 };
 
 
-var incrementAchievementReceiveFirstPointItem = function(userId) {
+const incrementAchievementReceiveFirstPointItem = function(userId) {
     console.log('incrementAchievementReceiveFirstPointItem');
 
     const data = {

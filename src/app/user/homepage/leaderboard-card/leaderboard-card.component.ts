@@ -11,7 +11,6 @@ import {Department} from '../../../shared/department.model';
 import {Storage} from 'aws-amplify';
 import {ImageService} from '../../../shared/image.service';
 import {forkJoin, Observable} from 'rxjs';
-import {AchievementData} from '../../../shared/achievement/achievement.component';
 import {NgxSpinnerService} from 'ngx-spinner';
 
 // Create a variable to interact with jquery

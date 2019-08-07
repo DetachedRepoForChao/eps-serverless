@@ -31,7 +31,7 @@ export class StandardUserComponent implements OnInit {
     }
 
     this.getUserPoints();
-    this.achievementComponent.getUserAchievements();
+    this.achievementService.getUserAchievements();
   }
 
 
