@@ -31,13 +31,16 @@
 
       <ul class="list-group">
 <!--        <li *ngFor="let achievement of this.achievementService.achievementDataList">-->
-          <div *ngFor="let achievement of this.achievementService.achievementDataList" class="progress-container progress-primary">
-            <span class="progress-badge">{{achievement.Name}}</span>
-            <div class="progress">
-              <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
-                <span class="progress-value">{{(achievement.Progress / achievement.Cost) * 100}}%</span>
+          <div *ngFor="let achievement of this.achievementService.achievementDataList.slice(0,4)" class="progress-container progress-primary">
+            <div *ngIf="achievement.Progress > 0">
+              <span class="progress-badge">{{achievement.Name}}</span>
+              <div class="progress">
+                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
+                  <span class="progress-value">{{(achievement.Progress / achievement.Cost) * 100}}%</span>
+                </div>
               </div>
             </div>
+
           </div>
 <!--        </li>-->
       </ul>

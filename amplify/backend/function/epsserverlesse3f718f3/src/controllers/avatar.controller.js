@@ -3,117 +3,90 @@ const Models = SqlModel().Models;
 const sqlUserModel = Models.User;
 // var fs = require('fs');
 const AWS = require('aws-sdk');
-
+const componentName = 'avatar.controller';
 
 const getAvatars = function (callback) {
-    console.log('getAvatars');
-    var s3 = new AWS.S3();
-    const bucket = "eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev";
-    const params = {
-      Bucket: bucket
-    };
-    s3.listObjects(params, function(err, data) {
-      if(err) {
-        console.log(err, err.stack);
-        return callback({status: 500, error: err});
-      } else {
-        // console.log(data);
+  const functionName = 'getAvatars';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
 
-        let avatarList = new Array();
-        data.Contents.forEach(function(item) {
-          avatarList.push(item.Key);
-        });
+  const s3 = new AWS.S3();
+  const bucket = "eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev";
+  const params = {
+    Bucket: bucket
+  };
+  s3.listObjects(params, function(err, data) {
+    if(err) {
+      console.log(err, err.stack);
+      return callback({status: 500, error: err});
+    } else {
+      // console.log(data);
 
-        // console.log(avatarList);
+      const avatarList = [];
+      data.Contents.forEach(function(item) {
+        avatarList.push(item.Key);
+      });
 
-        return callback({status: 200, avatarList: avatarList});
+      // console.log(avatarList);
 
-/*        fs.readdir('./public/avatars/', function(err, filenames) {
-          if (err) {
-            console.log(err);
-            //onError(err);
-            return;
-          }
-          filenames.forEach(function(filename) {
-            // console.log(filename);
-            // var avatarImage = filename;
-
-            avatarList.push(filename);
-            /!*fs.readFile(__dirname + filename, 'utf-8', function(err, content) {
-                if (err) {
-                    console.log(err);
-                    //onError(err);
-                    return;
-                }
-                onFileContent(filename, content);
-            }); *!/
-          });
-
-          console.log(avatarList);
-
-          return {status: 200, avatarList: data};
-        });*/
-      }
-    });
-
-    // var files = fs.readdirSync('../public/avatars/');
-    /*
-    var files = fs.readdirSync('./public/avatars/', result => {
-        console.log(result);
-    });
-    */
-
-
+      return callback({status: 200, avatarList: avatarList});
+    }
+  });
 };
 
 module.exports.getAvatars = getAvatars;
 
 const getUserAvatar = function(userId) {
-    console.log('getUserAvatar');
+  const functionName = 'getUserAvatar';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
 
-    return sqlUserModel.findOne({
-        attributes: ['avatarUrl'],
-        where: {
-            id: userId
-        }
+  return sqlUserModel.findOne({
+    attributes: ['avatarUrl'],
+    where: {
+      id: userId
+    }
+  })
+    .then(avatarUrl => {
+      console.log(`${functionFullName}: avatarUrl: ${avatarUrl}`);
+      if(!avatarUrl) {
+        console.log(`${functionFullName}: Did not find record`);
+        return {status: 404, message: 'Did not find record.' };
+      } else {
+        console.log(`${functionFullName}: Success`);
+        return {status: 200, avatarUrl: avatarUrl};
+      }
     })
-        .then(avatarUrl => {
-            console.log('getUserAvatar: avatarUrl: ');
-            console.log(avatarUrl);
-            if(!avatarUrl) {
-                console.log('getUserAvatar: Did not find record');
-                return {status: 404, message: 'getUserAvatar: Did not find record.' };
-            } else {
-                console.log('getUserAvatar: Success');
-                return {status: 200, avatarUrl: avatarUrl};
-            }
-        })
-        .catch(err => {
-            console.log('getUserAvatar: Error: ' + err);
-            return {status: 500, error: err};
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: 500, error: err};
     });
 };
 
 module.exports.getUserAvatar = getUserAvatar;
 
 const setUserAvatar = function(username, avatarUrl) {
-    console.log('setUserAvatar');
+  const functionName = 'setUserAvatar';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
 
-    return sqlUserModel.update({
-        avatarUrl: avatarUrl
-    }, {
-        where: {
-            username: username
-        }
+  return sqlUserModel.update({
+    avatarUrl: avatarUrl
+  }, {
+    where: {
+      username: username
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully updated user avatar`);
+      return {status: 200, avatarUrl: avatarUrl};
     })
-        .then(() => {
-            console.log('setUserAvatar: Success');
-            return {status: 200, avatarUrl: avatarUrl};
-        })
-        .catch(err => {
-            console.log('setUserAvatar: Error: err');
-            return {status: 500, error: err};
-        });
+    .catch(err => {
+      console.log(`${functionFullName}: Error updating user avatar`);
+      console.log(err);
+      return {status: 500, error: err};
+    });
 };
 
 module.exports.setUserAvatar = setUserAvatar;

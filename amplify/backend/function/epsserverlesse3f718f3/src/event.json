@@ -1,11 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items/currentUserAchievements",
-  "httpMethod": "GET",
+  "path": "/items/incrementAchievement",
+  "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiJUblFrWUNsS1NRRUEzVTNYZ2ZLekhOd296UVVLemI3emZLSXkzZ2dGcng0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3MDNhNzQ1Ny0zYjJlLTQxY2YtOTIxNy02ZDIwMGM5MjI4ZDMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZ2J6Q2tXVGpJIiwiY29nbml0bzp1c2VybmFtZSI6Imlyb25tYW4iLCJnaXZlbl9uYW1lIjoiVG9ueSIsImF1ZCI6IjVjdWpnZHA5aWNwdHNzczR2dXVkdjJrdDhoIiwiZXZlbnRfaWQiOiI3NDg3MDIyYS03NmFmLTRlY2EtOTg4My02ZDYzYjA2M2M1NzgiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU2NTIyMTczNywiZXhwIjoxNTY1MjI1MzM3LCJpYXQiOjE1NjUyMjE3MzcsImZhbWlseV9uYW1lIjoiU3RhcmsiLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.APbGBRGKcGWc82EUXacPcuBq2ENtpJkeVj1s2GnVt3ihtAinPYjgS3t5ZaOBrkMENJyHRz_E9w5NsiwQK_YTldxlsGtES1dMYx-iF3h1KjUFuynOUriPsW2egf8dkl8och73EZ_zHCstDWYPokWvHoCse2k_rizyZhvuJc4c6tBelEQolM7UMPotAkGOgxltXmGCD1bn7bZl1Cnyc-jcx5kibc353759XF65pCLJy5YZhlPCKrZSX4rbQZrHrz6EQa-aVs-afmuadaPOITOoZ1BURaQZdAYRQDdTCTXI250L_g4I_88mAv6yI2OsM2rISfMyTfsw_uZR5OhjxT-6IQ"
+    "Authorization": "eyJraWQiOiJUblFrWUNsS1NRRUEzVTNYZ2ZLekhOd296UVVLemI3emZLSXkzZ2dGcng0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3MDNhNzQ1Ny0zYjJlLTQxY2YtOTIxNy02ZDIwMGM5MjI4ZDMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZ2J6Q2tXVGpJIiwiY29nbml0bzp1c2VybmFtZSI6Imlyb25tYW4iLCJnaXZlbl9uYW1lIjoiVG9ueSIsImF1ZCI6IjVjdWpnZHA5aWNwdHNzczR2dXVkdjJrdDhoIiwiZXZlbnRfaWQiOiJkMjI0ZjZjOC01ZDJiLTRkYWItYjUzYi0xZjA1MTkzNTZmMWEiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU2NTI4NjEzNiwiZXhwIjoxNTY1Mjg5NzM2LCJpYXQiOjE1NjUyODYxMzYsImZhbWlseV9uYW1lIjoiU3RhcmsiLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.cR_DGT7_2e7ost1C7DwMWBYUq0XGmzzgC-_HaJL-EG_m47PPlUrGXamLCPl-ClSN4MoUH04WxBrtV23Z7odyT9D27LlzWAViLpGnWYDsof1_QIj_SKD95s9MogbNT0fCRonC875mAXHlyb--S9X0PFVBvbI1945xUij0ilMHpmR0dfJA45_Qe0gXPhJTzCVOsK3GnqYP9Nq8EEVQcbgViz4De_-XN6CL5HV7Pr7h5WRu3dyZyqOTgaedMn4gYUDZ6ml6bPXZNOUBrXmvPDE1_BAbaGyWpv4N9iiDTuqwtTyfpOUTcQ5PnsbVbytb31VZ5sFrnGWrlfn-2l6TJPCAUg"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -41,6 +41,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"sourceUserId\": 9,\"targetUserId\": 8, \"pointItemId\": 1, \"description\": \"This is a test\", \"avatarUrl\": \"https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/avatars/batman@3x.png\",\"userId\": 2,\"username\": \"mbado\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": 2, \"departmentId\": 2, \"password\": \"password123\"}",
+  "body": "{\"achievementName\": \"SignIn\", \"sourceUserId\": 9,\"targetUserId\": 8, \"pointItemId\": 1, \"description\": \"This is a test\", \"avatarUrl\": \"https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/avatars/batman@3x.png\",\"userId\": 2,\"username\": \"mbado\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": 2, \"departmentId\": 2, \"password\": \"password123\"}",
   "isBase64Encoded": false
 }
