@@ -184,7 +184,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.onStartWatching();
 
-    this.startAchievementPolling();
+    // this.startAchievementPolling();
   }
 
   ngOnDestroy() {
@@ -406,7 +406,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onSocketTestClick2() {
-    this.achievementService.getUserAchievements();
+    this.achievementService.getUserAchievements().subscribe();
     // this.feedcardService.refreshPointTransactionAvatars();
     // this.socketService.socketTest2();
     // debugger;
