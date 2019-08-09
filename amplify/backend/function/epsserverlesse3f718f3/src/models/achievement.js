@@ -42,7 +42,30 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false,
 			defaultValue: '100',
 			field: 'cost'
-		}
+		},
+    incrementAmount: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      defaultValue: '1',
+      field: 'increment_amount'
+    },
+    startAmount: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      defaultValue: '0',
+      field: 'start_amount'
+    },
+    achievementFamily: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      field: 'achievement_family'
+    },
+    level: {
+      type: DataTypes.INTEGER(3),
+      allowNull: false,
+      defaultValue: '1',
+      field: 'level'
+    },
 	}, {
 		tableName: 'achievement'
 	});

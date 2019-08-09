@@ -1,11 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items/incrementAchievement",
+  "path": "/items/resetAllUsersAchievements",
   "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiJUblFrWUNsS1NRRUEzVTNYZ2ZLekhOd296UVVLemI3emZLSXkzZ2dGcng0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3MDNhNzQ1Ny0zYjJlLTQxY2YtOTIxNy02ZDIwMGM5MjI4ZDMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZ2J6Q2tXVGpJIiwiY29nbml0bzp1c2VybmFtZSI6Imlyb25tYW4iLCJnaXZlbl9uYW1lIjoiVG9ueSIsImF1ZCI6IjVjdWpnZHA5aWNwdHNzczR2dXVkdjJrdDhoIiwiZXZlbnRfaWQiOiJkMjI0ZjZjOC01ZDJiLTRkYWItYjUzYi0xZjA1MTkzNTZmMWEiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU2NTI4NjEzNiwiZXhwIjoxNTY1Mjg5NzM2LCJpYXQiOjE1NjUyODYxMzYsImZhbWlseV9uYW1lIjoiU3RhcmsiLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.cR_DGT7_2e7ost1C7DwMWBYUq0XGmzzgC-_HaJL-EG_m47PPlUrGXamLCPl-ClSN4MoUH04WxBrtV23Z7odyT9D27LlzWAViLpGnWYDsof1_QIj_SKD95s9MogbNT0fCRonC875mAXHlyb--S9X0PFVBvbI1945xUij0ilMHpmR0dfJA45_Qe0gXPhJTzCVOsK3GnqYP9Nq8EEVQcbgViz4De_-XN6CL5HV7Pr7h5WRu3dyZyqOTgaedMn4gYUDZ6ml6bPXZNOUBrXmvPDE1_BAbaGyWpv4N9iiDTuqwtTyfpOUTcQ5PnsbVbytb31VZ5sFrnGWrlfn-2l6TJPCAUg"
+    "Authorization": "eyJraWQiOiJUblFrWUNsS1NRRUEzVTNYZ2ZLekhOd296UVVLemI3emZLSXkzZ2dGcng0PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3MDNhNzQ1Ny0zYjJlLTQxY2YtOTIxNy02ZDIwMGM5MjI4ZDMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfZ2J6Q2tXVGpJIiwiY29nbml0bzp1c2VybmFtZSI6Imlyb25tYW4iLCJnaXZlbl9uYW1lIjoiVG9ueSIsImF1ZCI6IjVjdWpnZHA5aWNwdHNzczR2dXVkdjJrdDhoIiwiZXZlbnRfaWQiOiIzY2NjYTFkYi01N2JmLTRlOGMtYTFlNi02OWZjYmE2OGY0ZmMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU2NTMxOTMxMywiZXhwIjoxNTY1MzIyOTEzLCJpYXQiOjE1NjUzMTkzMTMsImZhbWlseV9uYW1lIjoiU3RhcmsiLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.ktUA-3jRg4gPRFHYyPeH2W46vGZNay1LKULvGqMi28rf1HhcksRIQNitcIcvt_a5NFwVse0Q1SJPyQ4dwRWpaDTBH_GtsGBWiXlyXr8UVz5zgF5HJmeCZBoQn0hHNokFVgkue-_Uq5eSGjbQ4DWod30km9LT15SjCTdHb8eoydczBdtpEa5C9z9LoPHCAAzFSWKzLYhs6MeNsNpU2wiVjKa246sGfEzGsBSROjxVJbb2RrX1sZzmx8oFFT79stGpTc5lg_jRGKz10kbK8BfDEh8V4gYu1iUlreiNpTPOGwF7HvsgivQ8PgoY7eYxrItbNHYo7Y1FbCADtWDmDb1pVg"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -41,6 +41,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"achievementName\": \"SignIn\", \"sourceUserId\": 9,\"targetUserId\": 8, \"pointItemId\": 1, \"description\": \"This is a test\", \"avatarUrl\": \"https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/avatars/batman@3x.png\",\"userId\": 2,\"username\": \"mbado\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": 2, \"departmentId\": 2, \"password\": \"password123\"}",
+  "body": "{\"secretPassword\": \"123password#@!\", \"userId\": 8, \"achievementFamily\": \"SignIn\", \"achievementName\": \"SignIn\", \"sourceUserId\": 9,\"targetUserId\": 8, \"pointItemId\": 1, \"description\": \"This is a test\", \"avatarUrl\": \"https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/avatars/batman@3x.png\",\"username\": \"mbado\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": 2, \"departmentId\": 2, \"password\": \"password123\"}",
   "isBase64Encoded": false
 }

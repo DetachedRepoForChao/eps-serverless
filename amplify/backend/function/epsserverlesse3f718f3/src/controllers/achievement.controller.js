@@ -4,6 +4,8 @@ const Models = SqlModel().Models;
 const sqlAchievementModel = Models.Achievement;
 const sqlAchievementTransactionModel = Models.AchievementTransaction;
 const sqlUserAchievementProgressModel = Models.UserAchievementProgress;
+const sqlUserModel = Models.User;
+const ctrlUser = require('./user.controller');
 
 const componentName = 'achievement.controller';
 
@@ -183,121 +185,6 @@ const getUserAchievementsByUserId = function(userId) {
 
 module.exports.getUserAchievementsByUserId = getUserAchievementsByUserId;
 
-/*module.exports.getUserAchievementProgressByAchievementId = (req, res, next) =>{
-
-  console.log('getUserAchievementProgressByAchievementId req.achievementId:');
-  console.log(req.body.achievementId);
-  console.log(req.body);
-
-  SqlModel.sequelize.query(("SELECT `user_achievement_progress`.`id`, `user_achievement_progress`.`user_id`, `user_achievement_progress`.`achievement_id`, `user_achievement_progress`.`goalProgress`, `status` " +
-    "FROM `user_achievement_progress` " +
-    "WHERE `user_achievement_progress`.`achievement_id` = " + req.body.achievementId), { type: SqlModel.sequelize.QueryTypes.SELECT})
-    .then(userAchievementProgress => {
-      if(!userAchievementProgress) {
-        return res.status(404).json({ status: false, message: 'User Achievement Progress record not found.' });
-      } else {
-        console.log(userAchievementProgress);
-        return res.status(200).json({ status: true, userAchievementProgress : userAchievementProgress });
-      }
-    });
-};*/
-
-/*
-module.exports.getAchievementTransactionsByUserId = (req, res, next) =>{
-
-  console.log('getAchievementTransactionsByUserId req.userId:');
-  console.log(req.body.userId);
-  console.log(req.body);
-
-  //const userAchievementProgressList = this.getUserAchievementProgressByUserId(req.body.userId);
-  //console.log(userAchievementProgressList);
-
-  SqlModel.sequelize.query(("SELECT `achievement_transaction`.`id`, `achievement_transaction`.`type`, `achievement_transaction`.`amount`, `achievement_transaction`.`user_achievement_id`," +
-    "`user_achievement_progress`.`id`, `user_achievement_progress`.`user_id`, `user_achievement_progress`.`achievement_id` " +
-    "FROM `achievement_transaction` JOIN `user_achievement_progress` ON `achievement_transaction`.`user_achievement_id` = `user_achievement_progress`.`id`" +
-    "WHERE `user_achievement_progress`.`user_id` = " + req.body.userId), { type: SqlModel.sequelize.QueryTypes.SELECT})
-    .then(achievementTransactions => {
-      if(!achievementTransactions) {
-        return res.status(404).json({ status: false, message: 'Achievement Transactions not found.' });
-      } else {
-        console.log(achievementTransactions);
-        return res.status(200).json({ status: true, achievementTransactions : achievementTransactions});
-      }
-    });
-};
-*/
-
-/*
-module.exports.getAchievementTransactionsByAchievementId = (req, res, next) =>{
-
-  console.log('getAchievementTransactionsByAchievementId req.achievementId:');
-  console.log(req.body.achievementId);
-  console.log(req.body);
-
-  SqlModel.sequelize.query(("SELECT `achievement_transaction`.`id`, `achievement_transaction`.`type`, `achievement_transaction`.`amount`, `achievement_transaction`.`user_achievement_id`," +
-    "`user_achievement_progress`.`id`, `user_achievement_progress`.`user_id`, `user_achievement_progress`.`achievement_id` " +
-    "FROM `achievement_transaction` JOIN `user_achievement_progress` ON `achievement_transaction`.`user_achievement_id` = `user_achievement_progress`.`id`" +
-    "WHERE `user_achievement_progress`.`achievement_id` = " + req.body.achievementId), { type: SqlModel.sequelize.QueryTypes.SELECT})
-    .then(achievementTransactions => {
-      if(!achievementTransactions) {
-        return res.status(404).json({ status: false, message: 'Achievement Transactions not found.' });
-      } else {
-        console.log(achievementTransactions);
-        return res.status(200).json({ status: true, achievementTransaction :achievementTransactions });
-      }
-    });
-};
-*/
-
-
-/*module.exports.newAchievementTransaction = (req, res, next) => {
-  console.log('newAchievementTransaction:');
-  console.log(req.body);
-
-  const data = {
-    type: req.body.type,
-    amount: req.body.amount,
-    userAchievementId: req.body.userAchievementId,
-    description: req.body.description
-  };
-
-
-  sqlUserAchievementProgressModel.findOne({
-    attributes: ['id','userId', 'achievementId', 'goalProgress'],
-    where: {
-      id: data.userAchievementId
-    },
-  })
-    .then(userAchievementProgress => {
-      console.log('newAchievementTransaction userAchievementProgress:');
-      if(!userAchievementProgress) {
-        console.log('Unable to find User Achievement Progress record for userAchievementId: ' + data.userAchievementId);
-        //return userAchievementProgress.status(404).json({ status: false, message: 'Unable to find User Achievement Progress record for userAchievementId: ' + data.userAchievementId});
-      } else {
-        console.log('Found User Achievement Progress record for userId: ' + data.userAchievementId);
-        console.log('User Id: ' + userAchievementProgress['userId']);
-        console.log('Achievement Id: ' + userAchievementProgress['achievementId']);
-
-        //return res.status(200).json({ status: true, userAchievementProgress : _.pick(userAchievementProgress,['userId','achievementId', 'goalProgress', 'id']) });
-        //sqlAchievementModel.findOne()
-        sqlAchievementTransactionModel.create({
-          type: data.type,
-          amount: data.amount,
-          description: data.description,
-          userAchievementId: data.userAchievementId
-        }).then(res => {
-          console.log('Achievement Transaction created in db');
-          if(!res) {
-            //return res.status(404).json({ status: false, message: 'Update failed.' });
-            return { status: false, message: 'Transaction Creation failed.' };
-          } else {
-            console.log(res);
-            return { status: true, message: 'Transaction Creation succeeded.' };
-          }
-        });
-      }
-    });
-};*/
 
 const newAchievementTransaction = function(userAchievementId, amount, type, description) {
   const functionName = 'newAchievementTransaction';
@@ -519,7 +406,7 @@ const getAchievementById = function (id) {
 };
 
 
-const newUserAchievementProgress = function (userId, achievementId) {
+const newUserAchievementProgress = function (userId, achievementId, startAmount) {
   const functionName = 'newUserAchievementProgress';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -527,6 +414,7 @@ const newUserAchievementProgress = function (userId, achievementId) {
   const data = {
     userId: userId,
     achievementId: achievementId,
+    startAmount: startAmount
   };
 
   // Make sure this User/Achievement progress record doesn't already exist
@@ -545,10 +433,12 @@ const newUserAchievementProgress = function (userId, achievementId) {
         console.log(`${functionFullName}: User/Achievement relationship does not yet exist. Creating`);
         return sqlUserAchievementProgressModel.create({
           userId: data.userId,
-          achievementId: data.achievementId
+          achievementId: data.achievementId,
+          goalProgress: data.startAmount
         })
           .then(() => {
-          console.log(`${functionFullName}: User/Achievement relationship created in db`);
+          console.log(`${functionFullName}: User/Achievement relationship created: userId: ${data.userId}; ` +
+          `achievementId: ${data.achievementId}; goalProgress: ${data.startAmount}`);
           return {status: true, message: 'User/Achievement relationship created' };
         })
           .catch(err => {
@@ -581,10 +471,11 @@ const initializeUserAchievementProgress = function (userId) {
 
         const data = {
           userId: userId,
-          achievementId: achievements[i].id
+          achievementId: achievements[i].id,
+          startAmount: achievements[i].startAmount
         };
 
-        newUserAchievementProgress(data.userId, data.achievementId);
+        newUserAchievementProgress(data.userId, data.achievementId, data.startAmount);
       }
 
       console.log(`${functionFullName}: User Achievements initialized`);
@@ -599,3 +490,168 @@ const initializeUserAchievementProgress = function (userId) {
 };
 
 module.exports.initializeUserAchievementProgress = initializeUserAchievementProgress;
+
+const resetUserAchievementProgress = function (userId) {
+  const functionName = 'resetUserAchievementProgress';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  // Remove the user's achievement progress
+  return removeUserAchievements(userId)
+    .then(removeResult => {
+      if (!removeResult) {
+        console.log(`${functionFullName}: Something went very wrong`);
+        return {status: false, message: 'Something went very wrong'};
+      } else {
+        if (removeResult.status !== true) {
+          console.log(`${functionFullName}: Error removing user achievements`);
+          console.log(removeResult);
+          return {status: false, message: 'Error removing user achievements'};
+        } else {
+          console.log(`${functionFullName}: User achievements removed successfully`);
+          console.log(removeResult);
+
+          // Initialize user's achievements
+          return initializeUserAchievementProgress(userId)
+            .then(initializeResult => {
+              if (!initializeResult) {
+                console.log(`${functionFullName}: Something went very wrong`);
+                return {status: false, message: 'Something went very wrong'};
+              } else {
+                if (initializeResult.status !== true) {
+                  console.log(`${functionFullName}: Error initializing user achievements`);
+                  console.log(initializeResult);
+                  return {status: false, message: 'Error initializing user achievements'};
+                } else {
+                  console.log(`${functionFullName}: User achievements initialized successfully`);
+                  console.log(initializeResult);
+                  return {status: true, message: 'User achievements initialized successfully'};
+                }
+              }
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: Database error`);
+              console.log(err);
+              return {status: false, message: err};
+            });
+        }
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.resetUserAchievementProgress = resetUserAchievementProgress;
+
+
+
+const resetAllUsersAchievements = function () {
+  const functionName = 'resetAllUsersAchievements';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlUserModel.findAll()
+    .then(usersResult => {
+      if (!usersResult) {
+        console.log(`${functionFullName}: Did not find any user records`);
+        return {status: false, message: 'Did not find any user records'};
+      } else {
+        console.log(`${functionFullName}: User records retrieved successfully`);
+        for (let i = 0; i < usersResult.length; i++) {
+          console.log(`${functionFullName}: Resetting achievements for user ${usersResult[i].username}`);
+          resetUserAchievementProgress(usersResult[i].id)
+            .then(resetResult => {
+              if (!resetResult) {
+                console.log(`${functionFullName}: Something went very wrong`);
+              } else {
+                if (resetResult.status !== true) {
+                  console.log(`${functionFullName}: Error resetting achievements for ${usersResult[i].username}`);
+                } else {
+                  console.log(`${functionFullName}: Successfully reset achievements for ${usersResult[i].username}`);
+                }
+              }
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: Database error`);
+              console.log(err);
+            });
+        }
+
+        console.log(`${functionFullName}: Finished resetting all user achievements`);
+        return {status: true, message: 'Finished resetting all user achievements'};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    })
+};
+
+module.exports.resetAllUsersAchievements = resetAllUsersAchievements;
+
+const removeUserAchievements = function (userId) {
+  const functionName = 'removeUserAchievements';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  // Remove the user's achievement progress
+  return sqlUserAchievementProgressModel.destroy({
+    where: {
+      userId: userId
+    }
+  })
+    .then(result => {
+      if (!result) {
+        console.log(`${functionFullName}: Error deleting user achievements`);
+        return {status: false, message: 'Error deleting user achievements.'};
+      } else {
+        console.log(`${functionFullName}: User achievements deleted successfully`);
+        console.log(result);
+        return {status: true, message: 'User achievements deleted successfully'}
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.removeUserAchievements = removeUserAchievements;
+
+/*
+const removeUserAchievementTransactions = function (userId) {
+  const functionName = 'removeUserAchievementTransactions';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  // Remove the user's achievement progress
+  return sqlAchievementTransactionModel.destroy({
+    where: {
+      userId: userId
+    }
+  })
+    .then(result => {
+      if (!result) {
+        console.log(`${functionFullName}: Error deleting user achievements`);
+        return {status: false, message: 'Error deleting user achievements.'};
+      } else {
+        console.log(`${functionFullName}: User achievements deleted successfully`);
+        console.log(result);
+        return {status: true, message: 'User achievements deleted successfully'}
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+
+};
+
+module.exports.removeUserAchievementTransactions = removeUserAchievementTransactions;
+*/

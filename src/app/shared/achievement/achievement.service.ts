@@ -40,6 +40,7 @@ export class AchievementService {
   achievements: Achievement[];
   achievementProgressList: AchievementProgress[];
   public achievementDataList: AchievementItem[];
+  public achievementDataListFiltered: AchievementItem[];
 
   // noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
 
@@ -135,6 +136,11 @@ export class AchievementService {
 
             console.log(`${functionFullName}: achievementDataList:`);
             console.log(this.achievementDataList);
+
+            this.achievementDataListFiltered = this.achievementDataList.filter(x => ((x.ProgressStatus !== 'not started') && (x.ProgressStatus !== 'complete'))).slice(0, 4);
+            console.log(`${functionFullName}: achievementDataListFiltered:`);
+            console.log(this.achievementDataListFiltered);
+
             observer.next({status: true, message: 'Datasource updated successfully'});
             observer.complete();
           }

@@ -29,7 +29,7 @@ const ctrlDepartment = require('./controllers/department.controller');
 const ctrlSecurityRole = require('./controllers/securityrole.controller');
 const ctrlUser = require('./controllers/user.controller');
 const ctrlAchievement = require('./controllers/achievement.controller');
-const ctrlNamedAchievement = require('./controllers/named_achievement.controller');
+const ctrlAchievementLogic = require('./controllers/achievement_logic.controller');
 const ctrlPoints = require('./controllers/points.controller');
 const ctrlPointPool = require('./controllers/point_pool.controller');
 const ctrLike = require('./controllers/like.controller');
@@ -217,7 +217,46 @@ app.get('/items/currentUserAchievements', function(req, res) {
   });
 });
 
-// Named Achievement Routes
+app.post('/items/resetUserAchievementProgress', function(req, res) {
+  const functionName = 'post resetUserAchievementProgress';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const userId = req.body.userId;
+  const secretPassword = req.body.secretPassword;
+  if (secretPassword !== '123password#@!') {
+    res.json({status: 'Wrong Password'});
+  } else {
+    ctrlAchievement.resetUserAchievementProgress(userId)
+      .then(data => {
+        res.json({status: 'post call succeed!', data: data});
+      })
+      .catch(err => {
+        res.json({status: 'post call failed!', error: err});
+      });
+  }
+});
+
+app.post('/items/resetAllUsersAchievements', function(req, res) {
+  const functionName = 'post resetAllUsersAchievements';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const secretPassword = req.body.secretPassword;
+  if (secretPassword !== '123password#@!') {
+    res.json({status: 'Wrong Password'});
+  } else {
+    ctrlAchievement.resetAllUsersAchievements()
+      .then(data => {
+        res.json({status: 'post call succeed!', data: data});
+      })
+      .catch(err => {
+        res.json({status: 'post call failed!', error: err});
+      });
+  }
+});
+
+// Achievement Logic Routes
 app.post('/items/incrementAchievement', function(req, res) {
   const functionName = 'post incrementAchievement';
   const functionFullName = `${componentName} ${functionName}`;
@@ -233,9 +272,38 @@ app.post('/items/incrementAchievement', function(req, res) {
         .then(result => {
           const userId = result.user.id;
           const achievementName = req.body.achievementName;
-          ctrlNamedAchievement.incrementAchievement(achievementName, userId)
+          ctrlAchievementLogic.incrementAchievement(achievementName, userId)
             .then(data => {
               res.json({status: 'post call succeed!', data: data.message});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/achievementFamilyProgress', function(req, res) {
+  const functionName = 'post achievementFamilyProgress';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+
+      ctrlUser.getUserProfile(username)
+        .then(result => {
+          const userId = result.user.id;
+          const achievementFamily = req.body.achievementFamily;
+          ctrlAchievementLogic.getAchievementFamilyProgress(achievementFamily, userId)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data.achievementFamilyProgress});
             })
             .catch(err => {
               res.json({status: 'post call failed!', error: err});
