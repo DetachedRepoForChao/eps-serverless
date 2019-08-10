@@ -217,6 +217,36 @@ app.get('/items/currentUserAchievements', function(req, res) {
   });
 });
 
+
+app.post('/items/acknowledgeAchievementComplete', function(req, res) {
+  const functionName = 'post acknowledgeAchievementComplete';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+
+      ctrlUser.getUserProfile(username)
+        .then(result => {
+          const userId = result.user.id;
+          const achievementProgressId = req.body.achievementProgressId;
+          ctrlAchievement.acknowledgeAchievementComplete(achievementProgressId, userId)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data.message});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.post('/items/resetUserAchievementProgress', function(req, res) {
   const functionName = 'post resetUserAchievementProgress';
   const functionFullName = `${componentName} ${functionName}`;
@@ -256,6 +286,8 @@ app.post('/items/resetAllUsersAchievements', function(req, res) {
   }
 });
 
+
+
 // Achievement Logic Routes
 app.post('/items/incrementAchievement', function(req, res) {
   const functionName = 'post incrementAchievement';
@@ -286,7 +318,7 @@ app.post('/items/incrementAchievement', function(req, res) {
   });
 });
 
-app.post('/items/achievementFamilyProgress', function(req, res) {
+/*app.post('/items/achievementFamilyProgress', function(req, res) {
   const functionName = 'post achievementFamilyProgress';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -313,7 +345,7 @@ app.post('/items/achievementFamilyProgress', function(req, res) {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
   });
-});
+});*/
 
 // Point Routes
 app.get('/items/getPointItems', function(req, res) {

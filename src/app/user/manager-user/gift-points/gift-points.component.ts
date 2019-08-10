@@ -208,14 +208,6 @@ export class GiftPointsComponent implements OnInit {
     const functionName = 'pointItemOnSubmit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-/*    console.log(`${functionFullName}: form:`);
-    console.log(form);
-
-    console.log(`${functionFullName}: form.value:`);
-    console.log(form.value);
-
-    console.log(`${functionFullName}: form.value['selectedPointItem']:`);
-    console.log(form.value['selectedPointItem']);*/
 
     console.log(`${functionFullName}: this.selectedPointItem:`);
     console.log(this.selectedPointItem);
@@ -258,13 +250,13 @@ export class GiftPointsComponent implements OnInit {
           this.resetForm(form);
           // const userId: number = +localStorage.getItem('userId');
           // this.achievementService.incrementAchievementGiftFirstPointItem(userId)
-/*          this.achievementService.incrementAchievement('GiftFirstPointItem', userId)
+          this.achievementService.incrementAchievement('AwardPoint')
             .subscribe((achievementResponse: any) => {
               if (achievementResponse.status === true) {
                 console.log('Gift First Point Item Successful');
-                this.notifierService.notify('success', 'Congratulations! You just gave your first points!', 'THAT_NOTIFICATION_ID');
+                // this.notifierService.notify('success', 'Congratulations! You just gave your first points!', 'THAT_NOTIFICATION_ID');
               }
-            });*/
+            });
         });
     }
   }
@@ -373,76 +365,6 @@ export class GiftPointsComponent implements OnInit {
       }
     }
   }
-
-  /*filterPointItemList(coreValues: string[]) {
-    const functionName = 'filterPointItemList';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    this.filteredPointItemList = [];
-    if (coreValues.length === 0) {
-      // No Core Values are selected. Display all point items
-      console.log(`${functionFullName}: No core values selected. Setting all point items to unfiltered`);
-      console.log(this.pointItemList);
-      const filteredPointItemList = [];
-      for (let i = 0; i < this.pointItemList.length; i++) {
-        const item = this.pointItemList[i];
-        const filteredPointItem: PointItem = {
-          Id: item.Id,
-          Name: item.Name,
-          Amount: item.Amount,
-          CoreValues: item.CoreValues,
-          Description: item.Description,
-          Filtered: false
-        };
-
-        filteredPointItemList.push(filteredPointItem);
-      }
-
-      this.filteredPointItemList = filteredPointItemList;
-    } else {
-      const filteredPointItemList = [];
-      for (let i = 0; i < this.pointItemList.length; i++ ) {
-        const item = this.pointItemList[i];
-        const filteredPointItem: PointItem = {
-          Id: item.Id,
-          Name: item.Name,
-          Amount: item.Amount,
-          CoreValues: item.CoreValues,
-          Description: item.Description,
-          Filtered: item.Filtered
-        };
-
-        // Iterate through core value list
-        for (let j = 0; j < coreValues.length; j++) {
-          if (this.pointItemList[i].CoreValues.find(x => x === coreValues[j])) {
-            // Current point item contains the current core value
-            filteredPointItem.Filtered = true;
-            // const matchingFilteredPointItem = this.filteredPointItemList.find(x => x.Id === this.pointItemList[i].Id);
-            // if (!matchingFilteredPointItem.Filtered) {
-              // Matching filtered point item is not set as Filtered. Set it as filtered
-              // filteredPointItem.Filtered = true;
-            // }
-/!*            if (filteredPointItemList.indexOf(this.pointItemList[i]) === -1) {
-
-              filteredPointItem.Filtered = true;
-            } else {
-              filteredPointItem.Filtered = false;
-            }*!/
-
-          } else {
-            // Current point item does NOT contain the current core value
-            // Set filtered to false and break out of the loop
-            filteredPointItem.Filtered = false;
-            break;
-          }
-        }
-        filteredPointItemList.push(filteredPointItem);
-      }
-
-      this.filteredPointItemList = filteredPointItemList;
-    }
-  }*/
 
   selectPointItem(pointItem: PointItem) {
     const functionName = 'selectPointItem';

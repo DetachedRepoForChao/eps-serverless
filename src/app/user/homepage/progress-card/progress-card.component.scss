@@ -8,6 +8,24 @@
   min-height: 600px;
 }
 
+.glow {
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
+}
+
 /****************************************************************
  *
  * CSS Percentage Circle
@@ -92,7 +110,7 @@ $primary-color-orange-dark: #e08833;
     right: 0 !important;
     left: -12px !important;
     clip: rect(0em, 0.5em, 1em, 0em);
-   
+
 }
 
 .bar:before {
@@ -118,7 +136,7 @@ $primary-color-orange-dark: #e08833;
     clip: rect(0em, 1em, 0.5em, 0em);
     z-index: 999;
     transform: rotate(270deg);
-    
+
 }
 
 // .pie:before {
@@ -153,7 +171,7 @@ $primary-color-orange-dark: #e08833;
     // bigger size
     &.big {
         font-size: 160px;
-      
+
     }
   // medium size
     &.medium {
@@ -187,7 +205,7 @@ $primary-color-orange-dark: #e08833;
         background: -webkit-linear-gradient(left, #563490, #ee3656);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        
+
     }
     // background inside the circle
     &:after {
@@ -245,7 +263,7 @@ $primary-color-orange-dark: #e08833;
             line-height: 320px;
             font-size: 0.3em;
             color: $primary-color;
-            
+
         }
         &:after {
             top: $circle-width-hover;
@@ -370,7 +388,7 @@ $primary-color-orange-dark: #e08833;
     height: 1 - (2 * $circle-width);
     clip: rect(0em, 0.5em, 1em, 0em);
     border-radius: 50%;
-   
+
     @include rotate(0deg);
 }
 
@@ -404,7 +422,7 @@ $primary-color-orange-dark: #e08833;
     right: 0 !important;
     left: -12px !important;
     clip: rect(0em, 0.5em, 1em, 0em);
-   
+
 }
 
 .bar:before {
@@ -425,13 +443,13 @@ $primary-color-orange-dark: #e08833;
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    
+
     right: 0 !important;
     left: -12px !important;
     clip: rect(0em, 1em, 0.5em, 0em);
     z-index: 999;
     transform: rotate(270deg);
-    
+
 }
 
 // .pie:before {
@@ -450,11 +468,11 @@ $primary-color-orange-dark: #e08833;
     }
     box-shadow:inset 1px 1.7px 6px 0 rgba(0, 0, 0, 0.06);
     position: relative;
-    
+
     font-size: 120px;
     width: 1em;
     height: 1em;
-   
+
 
     border-radius: 50%;
     // float: left;
@@ -471,7 +489,7 @@ $primary-color-orange-dark: #e08833;
           //font-size: 150px;
       font-size: 150px;
 //        font-size: 100px;
-      
+
     }
     // smaller size
     &.small {
@@ -502,7 +520,7 @@ $primary-color-orange-dark: #e08833;
         background: -webkit-linear-gradient(left, #563490, #ee3656);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        
+
     }
     // background inside the circle
     &:after {
@@ -560,7 +578,7 @@ $primary-color-orange-dark: #e08833;
             line-height: 165px;
             font-size: 0.3em;
             color: $primary-color;
-            
+
         }
         &:after {
             top: $circle-width-hover;

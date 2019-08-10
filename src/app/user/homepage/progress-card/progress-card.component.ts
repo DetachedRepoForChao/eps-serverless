@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {AchievementService} from '../../../shared/achievement/achievement.service';
+import {AchievementItem, AchievementService} from '../../../shared/achievement/achievement.service';
 
 @Component({
   selector: 'app-progress-card',
@@ -27,4 +27,20 @@ export class ProgressCardComponent implements OnInit {
     // this.spinner.hide('progress-card-spinner');
   }
 
+  acknowledgeAchievement(achievement: AchievementItem) {
+    const functionName = 'acknowledgeAchievement';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: Acknowledging completed achievement:`);
+    console.log(achievement);
+
+    this.achievementService.acknowledgeAchievementComplete(achievement.ProgressId)
+      .subscribe(result => {
+        console.log(`${functionFullName}: Acknowledge result:`);
+        console.log(result);
+
+        this.achievementService.getUserAchievements().subscribe();
+      });
+  }
 }

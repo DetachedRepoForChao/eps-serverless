@@ -13,8 +13,10 @@ export interface AchievementItem {
   Description: string;
   Cost: number;
   Progress: number;
+  ProgressId: string;
   AchievementStatus: string;
   ProgressStatus: string;
+  Family: string;
 }
 
 @Injectable({

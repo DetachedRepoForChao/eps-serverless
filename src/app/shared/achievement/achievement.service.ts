@@ -17,8 +17,10 @@ export interface AchievementItem {
   Description: string;
   Cost: number;
   Progress: number;
+  ProgressId: string;
   AchievementStatus: string;
   ProgressStatus: string;
+  Family: string;
 }
 
 
@@ -125,8 +127,10 @@ export class AchievementService {
                 Description: data[i].achievementDescription,
                 Cost: data[i].achievementCost,
                 Progress: data[i].achievementProgressGoalProgress,
+                ProgressId: data[i].achievementProgressId,
                 AchievementStatus: data[i].achievementStatus,
-                ProgressStatus: data[i].achievementProgressStatus
+                ProgressStatus: data[i].achievementProgressStatus,
+                Family: data[i].achievementFamily
               };
 
               console.log(`${functionFullName}: current user achievement item:`);
@@ -137,7 +141,10 @@ export class AchievementService {
             console.log(`${functionFullName}: achievementDataList:`);
             console.log(this.achievementDataList);
 
-            this.achievementDataListFiltered = this.achievementDataList.filter(x => ((x.ProgressStatus !== 'not started') && (x.ProgressStatus !== 'complete'))).slice(0, 4);
+            const filteredList = this.filterAchievements(this.achievementDataList);
+            // this.achievementDataListFiltered = this.achievementDataList.filter(x => ((x.ProgressStatus !== 'not started') && (x.ProgressStatus !== 'complete acknowledged'))).slice(0, 4);
+            this.achievementDataListFiltered = filteredList.slice(0, 4);
+
             console.log(`${functionFullName}: achievementDataListFiltered:`);
             console.log(this.achievementDataListFiltered);
 
@@ -146,6 +153,47 @@ export class AchievementService {
           }
         });
     });
+  }
+
+  filterAchievements(achievementsList: AchievementItem[]): AchievementItem[] {
+    const functionName = 'filterAchievements';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: filtering achievements list:`);
+    console.log(achievementsList);
+
+    const filteredList: AchievementItem[] = [];
+    const completedList = achievementsList.filter(x => x.ProgressStatus === 'complete');
+    console.log(`${functionFullName}: 'completed' achievements list:`);
+    console.log(completedList);
+    const inProgressList = achievementsList.filter(x => x.ProgressStatus === 'in progress');
+    console.log(`${functionFullName}: 'in progress' achievements list:`);
+    console.log(inProgressList);
+
+    // Add the 'completed' achievements to the filtered achievements list
+    for (let i = 0; i < completedList.length; i++) {
+      console.log(`${functionFullName}: Adding 'completed' achievement ${completedList[i].Name} to the filtered list`);
+      filteredList.push(completedList[i]);
+    }
+
+    // Add the 'in progress' achievements to the filtered achievements list
+    for (let i = 0; i < inProgressList.length; i++) {
+      // If there is a 'completed' achievement in the completed achievements list of the same family as this 'in progress'
+      // achievement, do not add this achievement to the list
+      const sameFamilyAchievementsList = completedList.filter(x => x.Family === inProgressList[i].Family);
+      if (sameFamilyAchievementsList.length > 0) {
+        // There is a 'completed' 'achievement of the same family as this 'in progress' achievement. The 'in progress' achievement
+        // will not be added to the filtered list until the 'completed' achievement is acknowledged by the user.
+        console.log(`${functionFullName}: There is a 'completed' achievement in the '${inProgressList[i].Family}' family. ` +
+        `Not adding 'in progress' achievement '${inProgressList[i].Name}' to the filtered achievement list`);
+      } else {
+        console.log(`${functionFullName}: Adding 'in progress' achievement ${inProgressList[i].Name} to the filtered list`);
+        filteredList.push(inProgressList[i]);
+      }
+    }
+
+    return filteredList;
   }
 
   incrementAchievement(achievementName: string): Observable<any> {
@@ -164,6 +212,31 @@ export class AchievementService {
           };
 
           API.post(this.apiName, this.apiPath + '/incrementAchievement' , myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
+    });
+  }
+
+  acknowledgeAchievementComplete(achievementProgressId: string) {
+    const functionName = 'acknowledgeAchievementComplete';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            achievementProgressId: achievementProgressId
+          };
+
+          API.post(this.apiName, this.apiPath + '/acknowledgeAchievementComplete' , myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);

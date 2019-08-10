@@ -30,49 +30,29 @@
       </div>
 
       <ul class="list-group">
-<!--        <li *ngFor="let achievement of this.achievementService.achievementDataList">-->
-          <div *ngFor="let achievement of this.achievementService.achievementDataListFiltered" class="progress-container progress-primary">
-<!--            <div *ngIf="achievement.Progress > 0">-->
-              <span class="progress-badge">{{achievement.Name}}</span>
-              <div class="progress">
-                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
-                  <span class="progress-value">{{(achievement.Progress / achievement.Cost) * 100}}%</span>
-                </div>
-              </div>
-<!--            </div>-->
+        <div *ngFor="let achievement of this.achievementService.achievementDataListFiltered">
 
+          <div *ngIf="achievement.ProgressStatus === 'complete'" class="progress-container progress-success" style="cursor: pointer;">
+            <span class="progress-badge glow">{{achievement.Name}}</span>
+            <div class="progress" data-toggle="modal" data-target="#achievementModal" (click)="acknowledgeAchievement(achievement)">
+              <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
+                <span class="progress-value glow">{{(achievement.Progress / achievement.Cost) * 100}}%</span>
+              </div>
+            </div>
           </div>
-<!--        </li>-->
+
+          <div *ngIf="achievement.ProgressStatus === 'in progress'" class="progress-container progress-primary">
+            <span class="progress-badge">{{achievement.Name}}</span>
+            <div class="progress">
+              <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
+                <span class="progress-value">{{(achievement.Progress / achievement.Cost) * 100}}%</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </ul>
 
-      <!--<ul class="list-group">
-
-        <div class="progress-container progress-primary">
-          <span class="progress-badge">login</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-              <span class="progress-value">60%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="progress-container progress-warning">
-          <span class="progress-badge">2</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-              <span class="progress-value">60%</span>
-            </div>
-          </div>
-        </div>
-        <div class="progress-container progress-success">
-          <span class="progress-badge">3</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-              <span class="progress-value">60%</span>
-            </div>
-          </div>
-        </div>
-      </ul>-->
 
     </div>
     <div class="card-footer text-center">
@@ -87,6 +67,27 @@
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title">Your Trophies</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!---modal body---->
+          <div class="modal-body">
+            <app-trophy></app-trophy>
+          </div>
+          <!----End Mod Bod---->
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade modal-black" id="achievementModal" role="dialog" tabindex="-1" aria-labelledby="achievementModalLabel" aria-hidden="true" >
+      <div class="modal-dialog modal-sm" role="document">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Achievement Completed!</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
