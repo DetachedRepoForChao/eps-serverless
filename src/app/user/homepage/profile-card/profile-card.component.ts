@@ -148,6 +148,7 @@ export class ProfileCardComponent implements OnInit {
         });
 
         this.feedcardService.refreshPointTransactionAvatars();
+        $('#myModal').modal('hide');
       }
 
     });

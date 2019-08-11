@@ -32,6 +32,8 @@ export interface PointTransaction {
   type: string;
   createdAt: any;
   description: string;
+  pointItemName: string;
+  pointItemCoreValues: string;
   sourceUser: LeaderboardUser;
   targetUser: LeaderboardUser;
 }
@@ -42,14 +44,15 @@ export interface PointTransaction {
 export class FeedcardService implements OnInit {
   componentName = 'feedcard.service';
   pointTransactions: PointTransaction[] = [];
+  pointTransactionsLimited: PointTransaction[] = [];
 
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   // apiName = "api9819f38d";
   apiPath = '/items';
   myInit = {
     headers: {
-      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      'Content-Type': "application/json;charset=UTF-8"
+      'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Content-Type': 'application/json;charset=UTF-8'
     }
   };
 
@@ -181,6 +184,8 @@ export class FeedcardService implements OnInit {
               type: result[i].type,
               createdAt: result[i].createdAt,
               description: result[i].description,
+              pointItemName: result[i].pointItemName,
+              pointItemCoreValues: result[i].pointItemCoreValues,
               sourceUser: sourceUser,
               targetUser: targetUser
             };
@@ -196,6 +201,10 @@ export class FeedcardService implements OnInit {
 
           console.log(`${functionFullName}: PointTransactionResult:`);
           console.log(this.pointTransactions);
+
+          console.log(`${functionFullName}: Setting PointTransactionsLimited to the top 5 most recent entries:`);
+          this.pointTransactionsLimited = this.pointTransactions.sort(function(a, b) { return b.id - a.id; } ).slice(0, 5);
+
           observer.next();
           observer.complete();
         });

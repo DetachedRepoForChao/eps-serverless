@@ -1,7 +1,7 @@
 {
   "resource": "/items",
-  "path": "/items/currentUserAchievements",
-  "httpMethod": "GET",
+  "path": "/items/resetAllUsersAchievements",
+  "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",

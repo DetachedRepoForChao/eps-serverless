@@ -704,14 +704,17 @@ const removeUserAchievements = function (userId) {
     }
   })
     .then(result => {
-      if (!result) {
+      console.log(`${functionFullName}: User achievements deleted successfully`);
+      console.log(result);
+      return {status: true, message: 'User achievements deleted successfully'}
+/*      if (!result) {
         console.log(`${functionFullName}: Error deleting user achievements`);
         return {status: false, message: 'Error deleting user achievements.'};
       } else {
         console.log(`${functionFullName}: User achievements deleted successfully`);
         console.log(result);
         return {status: true, message: 'User achievements deleted successfully'}
-      }
+      }*/
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);

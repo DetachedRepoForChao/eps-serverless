@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AchievementItem, AchievementService} from '../../../shared/achievement/achievement.service';
 
+declare var $: any;
+
 @Component({
   selector: 'app-progress-card',
   templateUrl: './progress-card.component.html',
@@ -10,6 +12,16 @@ import {AchievementItem, AchievementService} from '../../../shared/achievement/a
 export class ProgressCardComponent implements OnInit {
   componentName = 'progress-card.component';
   isCardLoading: boolean;
+  selectedAchievement: AchievementItem = {
+    Name: null,
+    Description: null,
+    Cost: 0,
+    Progress: 0,
+    ProgressId: null,
+    AchievementStatus: null,
+    ProgressStatus: null,
+    Family: null
+  };
 
   constructor(private spinner: NgxSpinnerService,
               private achievementService: AchievementService) { }
@@ -19,7 +31,9 @@ export class ProgressCardComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.achievementService.getUserAchievements().subscribe();
+    this.achievementService.getUserAchievements().subscribe(() => {
+      this.selectedAchievement = this.achievementService.achievementDataList[0];
+    });
     // this.isCardLoading = true;
     // this.spinner.show('progress-card-spinner');
 
@@ -41,6 +55,18 @@ export class ProgressCardComponent implements OnInit {
         console.log(result);
 
         this.achievementService.getUserAchievements().subscribe();
+        $('#achievementModal').modal('hide');
       });
+  }
+
+  selectAchievement(achievement: AchievementItem) {
+    const functionName = 'selectAchievement';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: Selecting achievement:`);
+    console.log(achievement);
+
+    this.selectedAchievement = achievement;
   }
 }

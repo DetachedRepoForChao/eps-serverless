@@ -40,61 +40,44 @@
           Customize
         </button>
         <button type="button" class="btn btn-danger" (click)="showGallery()">Change Avatar</button>
-        <div class="modal fade" id="myModal" role="dialog">
-          <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Settings</h4>
-              </div>
-              <!---modal body---->
-              <div class="modal-body">
-                <div class="row">
-                  <!---- Form 1 ------>
-                  <div class="col-lg-12">
-                    <div class="form-group has-success">
-                      <div class="file-field">
-                        <div class="btn btn-warning btn-rounded btn-sm float-right">
-                          <span><i class="fas fa-upload mr-3" aria-hidden="true"></i>Select Picture</span>
-                          <input type="file">
-                        </div>
-                        <div class="file-path-wrapper">
-                          <input class="file-path validate" type="text" placeholder="Upload your Profile Picture">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!---- Form 2 ------>
-                  <div class="col-lg-12">
-                    <div class="form-group has-success">
-                      <input type="text" value="Success" class="form-control form-control-success">
-                    </div>
-                  </div>
-                  <!---- Form 3 ------>
-                  <div class="col-lg-12">
-                    <div class="form-group has-success">
-                      <input type="text" value="Success" class="form-control form-control-success">
-                    </div>
-                  </div>
-                  <!---- Form 4 ------>
-                  <div class="col-lg-12">
-                    <div class="form-group has-success">
-                      <input type="text" value="Suc" class="form-control form-control-success">
-                    </div>
-                  </div>
-                </div>
-              </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-              <!----End Mod Bod---->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-success">Save</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>
-              </div>
-            </div>
-          </div>
+<div class="modal fade modal-black" id="myModal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Settings</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body" style="text-align: center">
+        <input type="file" (change)="fileChangeEvent($event)" />
+        <button type="button" (click)="onImageSelected($event)">Upload</button>
+
+        <image-cropper
+                       [imageChangedEvent]="imageChangedEvent"
+                       format="png"
+                       outputType="both"
+                       (imageCropped)="imageCropped($event)"
+                       (imageLoaded)="imageLoaded()"
+                       (cropperReady)="cropperReady()"
+                       (loadImageFailed)="loadImageFailed()"
+        ></image-cropper>
+
+        <div>
+          <img [src]="croppedImageToShow" style="max-width: 150px"/>
         </div>
+      </div>
+
+      <!----End Mod Bod---->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>
       </div>
     </div>
   </div>

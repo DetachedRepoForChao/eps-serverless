@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div *ngFor="let pointTransaction of this.feedcardService.pointTransactions"><!-- /////// post -->
+  <div *ngFor="let pointTransaction of this.feedcardService.pointTransactionsLimited"><!-- /////// post -->
     <div class="card gedf-card">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
@@ -66,8 +66,8 @@
 <!--            <img class="rounded-circle" width="45" [src]="(this.avatarService.resolveAvatar(pointTransaction.targetUser) | async).avatar" alt="">-->
           </div>
           <div class="ml-2">
-            <div class="h5 m-0">@{{pointTransaction.sourceUserFirstName}}&nbsp;{{pointTransaction.sourceUserLastName}}</div>
-            <div class="h7 text-muted">{{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}}</div>
+            <div class="h5 m-0">@{{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}}</div>
+            <div class="h7 text-muted"><i class="fa fa-clock-o"></i>{{pointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
           </div>
         </div>
         <div>
@@ -86,13 +86,13 @@
       </div>
     </div>
     <div class="card-body">
-      <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{pointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+      <div class="text-muted h7 mb-2"> </div>
       <a class="card-link" href="#">
-        <h5 class="card-title">ECOWAS Team</h5>
+        <h5 class="card-title">{{pointTransaction.sourceUserFirstName}} {{pointTransaction.sourceUserLastName}} awarded {{pointTransaction.amount}} points to {{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}} for:</h5>
       </a>
 
       <p class="card-text">
-        {{pointTransaction.description}}
+        {{pointTransaction.pointItemName}}
       </p>
     </div>
     <div class="card-footer">

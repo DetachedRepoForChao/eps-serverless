@@ -8,6 +8,8 @@ import {Globals} from '../../../globals';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {PointItemService} from '../../../shared/point-item.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
+import {ImageCroppedEvent} from 'ngx-image-cropper';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -21,6 +23,9 @@ export class ProfileCardManagerComponent implements OnInit {
   componentName = 'profile-card-manager.component';
   isImageLoading: boolean;
   isCardLoading: boolean;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  croppedImageToShow: any = '';
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
@@ -28,7 +33,8 @@ export class ProfileCardManagerComponent implements OnInit {
               public globals: Globals,
               private leaderboardService: LeaderboardService,
               public pointItemService: PointItemService,
-              private spinner: NgxSpinnerService) { }
+              private spinner: NgxSpinnerService,
+              private feedcardService: FeedcardService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -64,5 +70,44 @@ export class ProfileCardManagerComponent implements OnInit {
   showGallery() {
     $('#imageSelectorModal').modal({backdrop: 'static'});
 
+  }
+
+  onImageSelected(event) {
+    const functionName = 'onImageSelected';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: event: ${event}`);
+    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
+
+
+    this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
+      console.log(`${functionFullName}: saveResult: ${saveResult}`);
+      this.feedcardService.refreshPointTransactionAvatars();
+      $('#myModal').modal('hide');
+    });
+  }
+
+  fileChangeEvent(event: any): void {
+    this.imageChangedEvent = event;
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImageToShow = event.base64;
+    this.croppedImage = event.file;
+  }
+  imageLoaded() {
+    console.log('Image Loaded');
+    // document.getElementById(`button_${this.coreValueButtonList[i].Name}`).className = document.getElementById(`button_${this.coreValueButtonList[i].Name}`).className.replace('toggled', '').trim();
+    // const sourceImage = document.getElementsByClassName('source-image')[0];
+    // console.log(sourceImage);
+
+    // document.getElementsByClassName('source-image')[0].className += ' source-image-fixed';
+    // show cropper
+  }
+  cropperReady() {
+    // cropper ready
+  }
+  loadImageFailed() {
+    // show message
   }
 }
