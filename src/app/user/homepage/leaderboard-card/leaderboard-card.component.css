@@ -12,15 +12,15 @@
   max-width: 50px;
 }
 
-/* tooltip link */
+/*!* tooltip link *!
 
 .tip {
   display: inline-block;
   cursor: pointer;
 }
 
-/* tooltip content */
+!* tooltip content *!
 
 .tooltip h2 {
   white-space: nowrap;
-}
+}*/

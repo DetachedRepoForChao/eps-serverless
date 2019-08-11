@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 // components
 import { AppComponent } from './app.component';
@@ -61,6 +62,8 @@ import { RequestCacheService} from './shared/request-cache.service';
 import { CachingInterceptorService} from './shared/caching-interceptor.service';
 import { ImageCropperModule} from 'ngx-image-cropper';
 import { NgxSpinnerModule} from 'ngx-spinner';
+import { AwesomeTooltipDirectiveDirective } from './shared/awesome-tooltip/awesome-tooltip-directive.directive';
+import { AwesomeTooltipComponent } from './shared/awesome-tooltip/awesome-tooltip.component';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -94,6 +97,8 @@ import { NgxSpinnerModule} from 'ngx-spinner';
     ProfileCardManagerComponent,
     TrophyComponent,
     ConfirmCodeComponent,
+    AwesomeTooltipDirectiveDirective,
+    AwesomeTooltipComponent,
 
   ],
   imports: [
@@ -122,7 +127,8 @@ import { NgxSpinnerModule} from 'ngx-spinner';
     AmplifyAngularModule,
     ReactiveFormsModule,
     ImageCropperModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    OverlayModule
   ],
   providers: [
     {
@@ -142,6 +148,7 @@ import { NgxSpinnerModule} from 'ngx-spinner';
     Globals,
     AmplifyService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AwesomeTooltipComponent]
 })
 export class AppModule { }

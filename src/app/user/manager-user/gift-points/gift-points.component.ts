@@ -252,10 +252,13 @@ export class GiftPointsComponent implements OnInit {
           // this.achievementService.incrementAchievementGiftFirstPointItem(userId)
           this.achievementService.incrementAchievement('AwardPoint')
             .subscribe((achievementResponse: any) => {
-              if (achievementResponse.status === true) {
-                console.log('Gift First Point Item Successful');
+              this.achievementService.getUserAchievements().subscribe();
+/*              if (achievementResponse.status !== false) {
+                // console.log('Gift First Point Item Successful');
+
                 // this.notifierService.notify('success', 'Congratulations! You just gave your first points!', 'THAT_NOTIFICATION_ID');
-              }
+
+              }*/
             });
         });
     }

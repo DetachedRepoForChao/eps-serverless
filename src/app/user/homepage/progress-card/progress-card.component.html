@@ -32,7 +32,7 @@
       <ul class="list-group">
         <div *ngFor="let achievement of this.achievementService.achievementDataListFiltered">
 
-          <div *ngIf="achievement.ProgressStatus === 'complete'" class="progress-container progress-success" style="cursor: pointer;">
+          <div *ngIf="achievement.ProgressStatus === 'complete'" class="progress-container progress-success" style="cursor: pointer;" [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.Description}">
             <span class="progress-badge glow">{{achievement.Name}}</span>
             <div class="progress" data-toggle="modal" data-target="#achievementModal" (click)="acknowledgeAchievement(achievement)">
               <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
@@ -41,7 +41,7 @@
             </div>
           </div>
 
-          <div *ngIf="achievement.ProgressStatus === 'in progress'" class="progress-container progress-primary">
+          <div *ngIf="achievement.ProgressStatus === 'in progress'" class="progress-container progress-primary" [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.Description}">
             <span class="progress-badge">{{achievement.Name}}</span>
             <div class="progress">
               <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">

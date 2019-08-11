@@ -1,0 +1,17 @@
+img {
+  max-height: 125px;
+  max-width: 125px;
+  padding: 5px;
+  border-radius: 15%;
+}
+
+:host {
+  display: block
+}
+
+div {
+  background-color: #292929;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}

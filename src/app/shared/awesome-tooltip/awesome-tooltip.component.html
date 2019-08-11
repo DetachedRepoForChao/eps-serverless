@@ -1,0 +1,8 @@
+<div @tooltip>
+  <div *ngIf="object.type === 'img'">
+    <img src="{{ object.data }}" />
+  </div>
+  <div *ngIf="object.type === 'achiev'">
+   {{ object.data }}
+  </div>
+</div>
