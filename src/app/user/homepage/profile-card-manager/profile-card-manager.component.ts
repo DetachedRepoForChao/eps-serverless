@@ -10,6 +10,7 @@ import {PointItemService} from '../../../shared/point-item.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
+import {AchievementService} from '../../../shared/achievement/achievement.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -34,7 +35,8 @@ export class ProfileCardManagerComponent implements OnInit {
               private leaderboardService: LeaderboardService,
               public pointItemService: PointItemService,
               private spinner: NgxSpinnerService,
-              private feedcardService: FeedcardService) { }
+              private feedcardService: FeedcardService,
+              private achievementService: AchievementService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';

@@ -38,7 +38,9 @@ export class AchievementComponent implements OnInit {
   achievementDataList: AchievementItem[];
   displayedColumns: string[] = ['name', 'progress'];
   displayedCompletedColumns: string[] = ['name', 'completed'];
+
   isCompletedRow = (index, item) => item.status === 'complete';
+
 
   constructor(private globals: Globals,
               private achievementService: AchievementService,

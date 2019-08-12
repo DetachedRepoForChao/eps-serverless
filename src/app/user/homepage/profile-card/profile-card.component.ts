@@ -14,6 +14,7 @@ import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {AchievementService} from '../../../shared/achievement/achievement.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -38,7 +39,8 @@ export class ProfileCardComponent implements OnInit {
               private globals: Globals,
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
-              private spinner: NgxSpinnerService) { }
+              private spinner: NgxSpinnerService,
+              private achievementService: AchievementService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';

@@ -43,7 +43,7 @@ export class AchievementService {
   achievementProgressList: AchievementProgress[];
   public achievementDataList: AchievementItem[];
   public achievementDataListFiltered: AchievementItem[];
-
+  public completeAchievements: AchievementItem[];
   // noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
 
   constructor(private http: HttpClient,
@@ -144,6 +144,7 @@ export class AchievementService {
             const filteredList = this.filterAchievements(this.achievementDataList);
             // this.achievementDataListFiltered = this.achievementDataList.filter(x => ((x.ProgressStatus !== 'not started') && (x.ProgressStatus !== 'complete acknowledged'))).slice(0, 4);
             this.achievementDataListFiltered = filteredList.slice(0, 4);
+            this.completeAchievements = this.achievementDataList.filter(x => ((x.ProgressStatus === 'complete') || (x.ProgressStatus === 'complete acknowledged')));
 
             console.log(`${functionFullName}: achievementDataListFiltered:`);
             console.log(this.achievementDataListFiltered);

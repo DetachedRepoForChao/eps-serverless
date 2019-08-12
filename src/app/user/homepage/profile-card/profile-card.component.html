@@ -37,11 +37,11 @@
         </div>
       </div>
       <!-------Quote Box------>
-      <form accept-charset="UTF-8" action="" method="POST">
+<!--      <form accept-charset="UTF-8" action="" method="POST">
         <textarea class="form-control" id="text" name="text" placeholder="Type in your message" rows="5"></textarea>
         <h6 class="pull-right" id="count_message"></h6>
         <button class="btn btn-info" type="submit">Post New Message</button>
-      </form>
+      </form>-->
       <!-------End of Quote Box----->
       <div class="row text-center mt-4">
         <div class="col p-2">
@@ -50,21 +50,26 @@
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-          <h4 class="mb-0">23/120</h4>
+          <h4 class="mb-0">{{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}</h4>
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
           <h4 class="mb-0" *ngIf="this.userLeaderboardRecord">{{this.userLeaderboardRecord.rank}}</h4>
         </div>
       </div>
-      <div class="card-footer text-center">
-        <!-----Button----->
 
-        <button class="btn-lg btn-primary btn-success" data-toggle="modal" data-target="#myModal">
-          Customize
-        </button>
-        <button type="button" class="btn btn-danger" (click)="showGallery()">Change Avatar</button>
-
+    </div>
+    <div class="card-footer text-center">
+      <!-----Button----->
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
+          </div>
+          <div class="col-sm">
+            <button type="button" class="btn btn-danger" (click)="showGallery()" style="padding-right: 10px; padding-left: 10px">Select Avatar</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -80,7 +85,7 @@
         <!---modal body---->
         <div class="modal-body" style="text-align: center">
           <input type="file" (change)="fileChangeEvent($event)" />
-          <button type="button" (click)="onImageSelected($event)">Upload</button>
+          <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>
 
           <image-cropper
             [imageChangedEvent]="imageChangedEvent"
@@ -99,8 +104,8 @@
 
         <!----End Mod Bod---->
         <div class="modal-footer">
-          <button type="button" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>
+<!--          <button type="button" class="btn btn-success">Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>-->
         </div>
       </div>
     </div>
