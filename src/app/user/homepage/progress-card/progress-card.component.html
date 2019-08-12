@@ -55,6 +55,10 @@
                     </span>
                   </div>
                 </div>
+                <span *ngFor="let star of achievementService.getAchievementFamilyCount(achievement)">
+                  <i *ngIf="star.ProgressStatus === 'complete' || star.ProgressStatus === 'complete acknowledged'" class="fas fa-star"></i>
+                  <i *ngIf="star.ProgressStatus === 'in progress' || star.ProgressStatus === 'not started'" class="far fa-star"></i>
+                </span>
               </div>
 
               <div *ngIf="achievement.ProgressStatus === 'in progress'"
@@ -75,6 +79,10 @@
                     </span>
                   </div>
                 </div>
+                <span *ngFor="let star of achievementService.getAchievementFamilyCount(achievement)">
+                  <i *ngIf="star.ProgressStatus === 'complete' || star.ProgressStatus === 'complete acknowledged'" class="fas fa-star"></i>
+                  <i *ngIf="star.ProgressStatus === 'in progress' || star.ProgressStatus === 'not started'" class="far fa-star"></i>
+                </span>
               </div>
 
             </li>

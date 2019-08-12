@@ -258,4 +258,8 @@ export class AchievementService {
         console.log(data);
       });
   }
+
+  getAchievementFamilyCount(achievement: AchievementItem): AchievementItem[] {
+    return this.achievementDataList.filter(x => x.Family === achievement.Family);
+  }
 }
