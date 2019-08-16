@@ -12,7 +12,7 @@ declare var $: any;
 declare var event: any;
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
