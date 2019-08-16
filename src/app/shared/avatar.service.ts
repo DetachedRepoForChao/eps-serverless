@@ -3,14 +3,15 @@ import {HttpClient} from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
 import {ImageService} from './image.service';
-import Amplify, {API, Storage} from 'aws-amplify';
+import Amplify, {API, Auth, Storage} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
-import {AuthService} from "../login/auth.service";
+import {AuthService} from '../login/auth.service';
 import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {LeaderboardUser} from './leaderboard.service';
 import {FeedcardService} from './feedcard/feedcard.service';
+import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
 
 export interface UserAvatarRelationship {
   userId: number;
@@ -31,8 +32,8 @@ export class AvatarService implements OnInit {
   apiPath = '/items';
   myInit = {
     headers: {
-      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      'Content-Type': "application/json;charset=UTF-8"
+      'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Content-Type': 'application/json;charset=UTF-8'
     }
   };
 
@@ -58,7 +59,33 @@ export class AvatarService implements OnInit {
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
+          Auth.userAttributes(user)
+            .then((userAttributes: CognitoUserAttribute[]) => {
+              const userPicture = userAttributes.find(x => x.getName() === 'picture');
+              if (userPicture) {
+                console.log(`${functionFullName}: user picture: ${userPicture.getValue()}`);
+                const data = {
+                  status: true,
+                  avatarUrl: userPicture.getValue()
+                };
+                observer.next(data);
+                observer.complete();
+              } else {
+                console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
+                const token = user.signInUserSession.idToken.jwtToken;
+                const myInit = this.myInit;
+                myInit.headers['Authorization'] = token;
+                myInit['body'] = {userId: userId};
+
+                API.post(this.apiName, this.apiPath + '/getUserAvatar', myInit).then(data => {
+                  console.log(`${functionFullName}: successfully retrieved data from API`);
+                  console.log(data);
+                  observer.next(data.data);
+                  observer.complete();
+                });
+              }
+            });
+/*          const token = user.signInUserSession.idToken.jwtToken;
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
           myInit['body'] = {userId: userId};
@@ -68,7 +95,7 @@ export class AvatarService implements OnInit {
             console.log(data);
             observer.next(data.data);
             observer.complete();
-          });
+          });*/
         });
     });
   }
@@ -97,8 +124,6 @@ export class AvatarService implements OnInit {
     } else {
 
     }
-
-
 
     const uniqueId = Math.random().toString(36).substring(2) + Date.now().toString(36);
     const fileName = 'avatar_' + uniqueId + '.png';
@@ -132,11 +157,19 @@ export class AvatarService implements OnInit {
               const cognitoIdentityId = localStorageItems.find((x: string) => x.includes('aws.cognito.identity-id') === true);
               const cognitoIdentityIdValue = localStorage.getItem(cognitoIdentityId);
 
+              const observables: Observable<any>[] = [];
+
               // Record new Avatar path in the database
-              this.setUserAvatar(`${level}/${cognitoIdentityIdValue}/${result.key}`)
-                .subscribe(() => {
-                  console.log(`${functionFullName}: setUserAvatar subscribed`);
-                  // console.log(res);
+              observables.push(this.setUserAvatar(`${level}/${cognitoIdentityIdValue}/${result.key}`));
+
+              // Set new Avatar path in the picture attribute within Cognito profile
+              observables.push(this.setCognitoPictureAttribute(`${level}/${cognitoIdentityIdValue}/${result.key}`));
+
+              forkJoin(observables)
+                .subscribe(obsResults => {
+                  console.log(`${functionFullName}: obsResults:`);
+                  console.log(obsResults);
+
                   this.refreshCurrentUserAvatar().subscribe(refreshResult => {
                     console.log(`${functionFullName}: refreshResult: ${refreshResult}`);
                     if (refreshResult === true) {
@@ -163,6 +196,33 @@ export class AvatarService implements OnInit {
           console.log(err);
           observer.next(false);
           observer.complete();
+        });
+    });
+  }
+
+  setCognitoPictureAttribute(avatarPath: string): Observable<any> {
+    const functionName = 'setCognitoPictureAttribute';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then((user: CognitoUser) => {
+          Auth.updateUserAttributes(user, {
+            picture: avatarPath
+          })
+            .then(updateResult => {
+              console.log(`${functionFullName}: update attributes success:`);
+              console.log(updateResult);
+              observer.next(updateResult);
+              observer.complete();
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: update attributes error:`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
         });
     });
   }

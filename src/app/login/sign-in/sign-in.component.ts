@@ -140,6 +140,7 @@ export class SignInComponent implements OnInit {
       .catch((error: any) => {
         // this._loader.hide();
         // this._notification.show(error.message);
+        this.spinner.hide('sign-in-onSubmit-spinner');
         this.notifierService.notify('Error', error.message);
         switch (error.code) {
           case 'UserNotConfirmedException':

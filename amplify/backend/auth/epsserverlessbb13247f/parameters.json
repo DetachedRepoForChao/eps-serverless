@@ -1,0 +1,77 @@
+{
+    "identityPoolName": "epsserverlessbb13247f_identitypool_bb13247f",
+    "allowUnauthenticatedIdentities": false,
+    "lambdaLogPolicy": "epsser_bb13247f_lambda_log_policy",
+    "openIdLambdaRoleName": "epsser_bb13247f_openid_lambda_role",
+    "openIdRolePolicy": "epsser_bb13247f_openid_pass_role_policy",
+    "openIdLambdaIAMPolicy": "epsser_bb13247f_openid_lambda_iam_policy",
+    "openIdLogPolicy": "epsser_bb13247f_openid_lambda_log_policy",
+    "userPoolName": "epsserverlessbb13247f_userpool_bb13247f",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "roleName": "epsserbb13247f_sns-role",
+    "roleExternalId": "epsserbb13247f_role_external_id",
+    "policyName": "epsserbb13247f-sns-policy",
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "birthdate",
+        "email",
+        "family_name",
+        "middle_name",
+        "gender",
+        "given_name",
+        "name",
+        "phone_number",
+        "picture",
+        "profile"
+    ],
+    "userpoolClientName": "epsserbb13247f_app_client",
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "mfaLambdaRole": "epsserbb13247f_totp_lambda_role",
+    "mfaLambdaLogPolicy": "epsserbb13247f_totp_lambda_log_policy",
+    "mfaPassRolePolicy": "epsserbb13247f_totp_pass_role_policy",
+    "mfaLambdaIAMPolicy": "epsserbb13247f_totp_lambda_iam_policy",
+    "userpoolClientLambdaRole": "epsserbb13247f_userpoolclient_lambda_role",
+    "userpoolClientLogPolicy": "epsserbb13247f_userpoolclient_lambda_log_policy",
+    "userpoolClientLambdaPolicy": "epsserbb13247f_userpoolclient_lambda_iam_policy",
+    "userpoolClientSetAttributes": false,
+    "resourceName": "epsserverlessbb13247f",
+    "authSelections": "identityPoolAndUserPool",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    },
+    "useDefault": "default"
+}

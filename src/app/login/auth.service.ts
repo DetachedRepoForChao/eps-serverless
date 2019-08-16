@@ -11,7 +11,13 @@ export interface NewUser {
   password: string;
   firstName: string;
   lastName: string;
-
+  gender: string;
+  profile: any;
+  picture: string;
+  name: string;
+  middleName: string;
+  phone: string;
+  birthdate: string;
 }
 
 @Injectable({
@@ -53,7 +59,14 @@ export class AuthService {
       'attributes': {
         'email': user.email,
         'given_name': user.firstName,
-        'family_name': user.lastName
+        'family_name': user.lastName,
+        'middle_name': user.middleName,
+        'gender': user.gender,
+        'profile': user.profile,
+        'picture': user.picture,
+        'name': user.name,
+        'birthdate': user.birthdate,
+        'phone_number': user.phone
       }
     });
   }

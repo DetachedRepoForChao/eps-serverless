@@ -28,8 +28,8 @@ export class RegisterUserComponent implements OnInit {
     private securityRoleService: SecurityRoleService) { }
 
   ngOnInit() {
-    //console.log(this.role);
-    //console.log(this.keys());
+    // console.log(this.role);
+    // console.log(this.keys());
     // this.getDepartments().subscribe(deps => {
     //     this.departments = deps;
     //     for (let i = 0; i < deps.length; i++) {
@@ -60,7 +60,7 @@ export class RegisterUserComponent implements OnInit {
   onSubmit(form: NgForm) {
     console.log('onSubmit');
     this.userService.postUser(form.value)
-      .then(res => {
+      .subscribe(res => {
         this.showSuccessMessage = true;
         setTimeout(() => this.showSuccessMessage = false, 4000);
         this.resetForm(form);
@@ -81,10 +81,12 @@ export class RegisterUserComponent implements OnInit {
       firstName: '',
       lastName: '',
       email: '',
-      securityRole: '',
-      department: '',
+      securityRoleId: '',
+      departmentId: '',
       points: 0,
-      password: ''
+      password: '',
+      phone: '',
+      birthdate: ''
     };
     form.resetForm();
     this.serverErrorMessages = '';

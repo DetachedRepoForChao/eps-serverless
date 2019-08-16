@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		password: {
 			type: DataTypes.STRING(255),
-			allowNull: false,
+			allowNull: true,
 			field: 'password'
 		},
 		firstName: {
@@ -152,7 +152,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		saltSecret: {
 			type: DataTypes.STRING(255),
-			allowNull: false,
+			allowNull: true,
 			field: 'saltSecret'
 		},
 		createdAt: {

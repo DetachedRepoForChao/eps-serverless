@@ -9,9 +9,9 @@
       <form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)">
         <div class="form-field-container">
           <mat-form-field >
-            <mat-select #role="ngModel" placeholder="Role" name="securityRoleId" [(ngModel)]="userService.selectedUser.securityRole" required>
-              <mat-option *ngFor="let role of securityRoles" [value]="role.id">
-                {{role.name}}
+            <mat-select #role="ngModel" placeholder="Role" name="securityRoleId" [(ngModel)]="userService.selectedUser.securityRoleId" required>
+              <mat-option *ngFor="let role of securityRoles" [value]="role.Id">
+                {{role.Name}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -46,9 +46,9 @@
           </mat-form-field>
 
           <mat-form-field >
-            <mat-select #department="ngModel" placeholder="Department" name="departmentId" [(ngModel)]="userService.selectedUser.department" required>
-              <mat-option *ngFor="let department of departments" [value]="department.id">
-                {{department.name}}
+            <mat-select #department="ngModel" placeholder="Department" name="departmentId" [(ngModel)]="userService.selectedUser.departmentId" required>
+              <mat-option *ngFor="let department of departments" [value]="department.Id">
+                {{department.Name}}
               </mat-option>
             </mat-select>
           </mat-form-field>

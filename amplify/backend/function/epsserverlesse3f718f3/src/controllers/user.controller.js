@@ -12,13 +12,115 @@ const ctrlAchievement = require('./achievement.controller');
 const ctrlPointPool = require('./point_pool.controller');
 
 const jwtVerify = require('../config/decode-verify-jwt');
+const componentName = 'user.controller';
+
+/*const registerUser = function (req) {
+  const functionName = 'registerUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: body:`);
+  console.log(req);
+
+  console.log(req.body.username);
+  console.log(req.body.firstName);
+  console.log(req.body.email);
+  console.log(req.body.securityRole);
+  console.log(req.body.password);
+
+  const data = {
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    securityRoleId: req.body.securityRole,
+    departmentId: req.body.department,
+    password: req.body.password,
+  };
+
+  var password;
+  var saltSecret;
+
+  return sqlUserModel.findOne({
+    where: {
+      username: data.username
+    },
+  })
+    .then(user => {
+      if (user != null) {
+        console.log(`${functionFullName}: username already taken`);
+        return {status: 422, error: 'username already taken'};
+      } else {
+        console.log(`${functionFullName}: user account does not yet exist. Creating...`);
+        bcrypt.genSalt(10, (err, salt) => {
+          if (err) {
+            console.log(`${functionFullName}: Bcrypt salt function error`);
+            console.log(err);
+            return {status: false, error: err};
+          }
+
+          console.log(`${functionFullName}: Bcrypt salt function success: ${salt}`);
+          bcrypt.hash(data.password, salt, (err, hash) => {
+            if (err) {
+              console.log(`${functionFullName}: Bcrypt hash function error`);
+              console.log(err);
+              return {status: false, error: err};
+            }
+
+            console.log(`${functionFullName}: Bcrypt hash function success: ${hash}`);
+            password = hash;
+            saltSecret = salt;
+            //next();
+            sqlUserModel.create({
+              username: data.username,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              securityRoleId: data.securityRoleId,
+              departmentId: data.departmentId,
+              password: password,
+              saltSecret: saltSecret,
+              points: 0
+            })
+              .then((user) => {
+                console.log(`${functionFullName}: user created in db`);
+
+                ctrlAchievement.initializeUserAchievementProgress(user.id);
+                // If the user is a manager, initialize their points pool
+                if (user.securityRoleId === 2) {
+                  console.log(`${functionFullName}: initializing manager point pool for new user`);
+                  ctrlPointPool.initializePointPool(user.id);
+                }
+
+                return {status: 200, message: 'user created'};
+              })
+              .catch(err => {
+                console.log(`${functionFullName}: User creation error`);
+                console.log(err);
+                return {status: false, message: err}
+              });
+          })
+        })
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Problem with the database`);
+      console.log(err);
+      return {status: 500, error: 'Problem with the database: ' + err};
+    });
+};
+
+module.exports.registerUser = registerUser;*/
 
 
 const registerUser = function (req) {
-  console.log("body: " + req.body);
-  // console.log(req.path);
-  // console.log(req.body["username"]);
-  // console.log(req);
+  const functionName = 'registerUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: body:`);
+  console.log(req.body);
+
   console.log(req.body.username);
   console.log(req.body.firstName);
   console.log(req.body.email);
@@ -45,46 +147,45 @@ const registerUser = function (req) {
   })
     .then(user => {
       if (user != null) {
-        console.log('username already taken');
-        return {status: 422, error: 'username already taken'};
+        console.log(`${functionFullName}: username already taken`);
+        return {status: false, error: 'username already taken'};
       } else {
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(data.password, salt, (err, hash) => {
-            password = hash;
-            saltSecret = salt;
-            //next();
-            sqlUserModel.create({
-              username: data.username,
-              firstName: data.firstName,
-              lastName: data.lastName,
-              email: data.email,
-              securityRoleId: data.securityRoleId,
-              departmentId: data.departmentId,
-              password: password,
-              saltSecret: saltSecret,
-              points: 0
-            }).then((user) => {
-              console.log('user created in db');
-              //console.log('user.id: ' + user.id);
-              //console.log('user.dataValues.id: ' + user.dataValues.id);
-              ctrlAchievement.initializeUserAchievementProgressLocal(user.id);
+        console.log(`${functionFullName}: user account does not yet exist. Creating...`);
 
-              // If the user is a manager, initialize their points pool
-              if (user.securityRoleId === 2) {
-                console.log('initializing manager point pool for new user');
-                ctrlPointPool.initializePointPool(user.id);
-              }
+        return sqlUserModel.create({
+          username: data.username,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          securityRoleId: data.securityRoleId,
+          departmentId: data.departmentId,
+          password: password,
+          saltSecret: saltSecret,
+          points: 0
+        })
+          .then((user) => {
+            console.log(`${functionFullName}: user created in db`);
 
-              return {status: 200, message: 'user created'};
-            });
+            ctrlAchievement.initializeUserAchievementProgress(user.id);
+            // If the user is a manager, initialize their points pool
+            if (user.securityRoleId === 2) {
+              console.log(`${functionFullName}: initializing manager point pool for new user`);
+              ctrlPointPool.initializePointPool(user.id);
+            }
+
+            return {status: true, message: 'user created'};
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: User creation error`);
+            console.log(err);
+            return {status: false, message: err}
           });
-        });
       }
     })
     .catch(err => {
-      console.log('Problem with the database');
+      console.log(`${functionFullName}: Problem with the database`);
       console.log(err);
-      return {status: 500, error: 'Problem with the database: ' + err};
+      return {status: false, error: 'Problem with the database: ' + err};
     });
 };
 
@@ -92,6 +193,10 @@ module.exports.registerUser = registerUser;
 
 
 module.exports.authenticateUser = (req, res, next) => {
+  const functionName = 'authenticateUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
   // call for passport authentication
   passport.authenticate('local', (err, user, info) => {
     console.log("authenticateUser().user");
@@ -134,8 +239,11 @@ module.exports.authenticateUser = (req, res, next) => {
 
 
 const getUserProfile = function (username) {
-  console.log('getUserProfile');
-  console.log('username: ' + username);
+  const functionName = 'getUserProfile';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`username: ${username}`);
   // console.log(req.headers.authorization);
 
   return sqlUserModel.findOne({
@@ -159,7 +267,11 @@ module.exports.setUserProfile = (req, res, next) => {
 }
 
 
-var getUserName=function (userid) {
+var getUserName = function (userid) {
+  const functionName = 'getUserName';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
   sqlUserModel.findOne({
     where: {
       id: userid,
@@ -175,8 +287,11 @@ var getUserName=function (userid) {
 
 
 const getUserPoints = function (username) {
-  console.log('getUserPoints');
-  console.log('username: ' + username);
+  const functionName = 'getUserPoints';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: username: ${username}`);
 
   return sqlUserModel.findOne({
     attributes: ['points'],
@@ -192,7 +307,7 @@ const getUserPoints = function (username) {
       }
     })
     .catch(err => {
-      console.log('getUserPoints: Problem with the database/');
+      console.log(`${functionFullName}: Problem with the database`);
       console.log(err);
       return {status: 500, error: 'getUserPoints: Problem with the database: ' + err};
     });

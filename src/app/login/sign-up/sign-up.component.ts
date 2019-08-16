@@ -9,8 +9,9 @@ import {map} from 'rxjs/operators';
 import {AmplifyService} from 'aws-amplify-angular';
 import {AuthService} from '../auth.service';
 import { environment } from 'src/environments/environment';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 import {GlobalVariableService} from '../../shared/global-variable.service';
+import {User} from '../../shared/user.model';
 
 @Component({
   selector: 'app-sign-up',
@@ -64,53 +65,13 @@ export class SignUpComponent implements OnInit {
     );
   }
 
-/*  getSecurityRoles() {
-    console.log('getSecurityRoles');
-    return this.securityRoleService.getSecurityRoles()
-      .then(data => {
-        return data;
-      });
-  }*/
-
-
-  // getDepartments(): Promise<Department[]> {
-  //   console.log('getDepartments');
-    // new Promise()
-    // return this.departmentService.getDepartments();
-/*      .then(data => {
-        return data;
-      });*/
-  // }
-
-
-/*
-  onSubmit(form: NgForm) {
-    console.log('onSubmit');
-    console.log(form.value);
-    this.userService.postUser(form.value).subscribe(
-      res => {
-        this.showSuccessMessage = true;
-        setTimeout(() => this.showSuccessMessage = false, 4000);
-        this.resetForm(form);
-      },
-      err => {
-        if (err.status === 422) {
-          this.serverErrorMessages = err.error.join('<br/>');
-        } else {
-          this.serverErrorMessages = 'Something went wrong. Please contact admin.';
-        }
-      }
-    );
-  }
-*/
-
 
   onSubmit(form: NgForm) {
     console.log('onSubmit');
     console.log(form.value);
 
     this.userService.postUser(form.value)
-      .then(res => {
+      .subscribe(res => {
           // this.showSuccessMessage = true;
           // setTimeout(() => this.showSuccessMessage = false, 4000);
 
@@ -120,7 +81,14 @@ export class SignUpComponent implements OnInit {
             'email': form.value.email,
             'password': form.value.password,
             'firstName': form.value.firstName,
-            'lastName': form.value.lastName
+            'lastName': form.value.lastName,
+            'gender': '',
+            'profile': '',
+            'picture': '',
+            'name': `${form.value.firstName} ${form.value.lastName}`,
+            'middleName': '',
+            'phone': form.value.phone,
+            'birthdate': '03/07/1985'
           })
             .then((data) => {
               environment.confirm.email = form.value.email;
@@ -159,16 +127,43 @@ export class SignUpComponent implements OnInit {
   }
   */
 
+  testRegister() {
+    const functionName = 'testRegister';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    const testUser: User = {
+      username: 'mbado',
+      firstName: 'Max',
+      lastName: 'Bado',
+      email: 'max.bado@gmail.com',
+      securityRoleId: 1,
+      departmentId: 1,
+      points: 0,
+      password: 'D@RTHtest911',
+      phone: '+17328597839',
+      birthdate: ''
+    };
+
+    this.userService.postUser(testUser)
+      .subscribe(result => {
+        console.log(`${functionFullName}: Register User result:`);
+        console.log(result);
+      });
+  }
+
   resetForm(form: NgForm) {
     this.userService.selectedUser = {
       username: '',
       firstName: '',
       lastName: '',
       email: '',
-      securityRole: '',
-      department: '',
+      securityRoleId: '',
+      departmentId: '',
       points: 0,
-      password: ''
+      password: '',
+      phone: '',
+      birthdate: '',
     };
     form.resetForm();
     this.serverErrorMessages = '';

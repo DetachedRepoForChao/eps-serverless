@@ -6,9 +6,10 @@ export class User {
     firstName: string;
     lastName: string;
     email: string;
-    securityRole: any;
-    department: any;
+    securityRoleId: any;
+    departmentId: any;
     points: number;
     password: string;
-
+    phone: string;
+    birthdate: string;
 }
