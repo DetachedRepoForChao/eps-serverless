@@ -13,6 +13,7 @@ import {ManagerUserComponent} from './user/manager-user/manager-user.component';
 import {ProfileComponent} from './user/profile/profile.component';
 import {HomepageComponent} from './user/homepage/homepage.component';
 import {ConfirmCodeComponent} from './login/confirm-code/confirm-code.component';
+import {PointsStoreComponent} from './user/points-store/points-store.component';
 
 export const appRoutes: Routes = [
   {
@@ -59,6 +60,12 @@ export const appRoutes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
+
+  {
+    path: 'store',
+    component: PointsStoreComponent,
     canActivate: [AuthGuard],
   },
   /*

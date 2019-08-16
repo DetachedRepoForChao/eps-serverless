@@ -64,6 +64,7 @@ import { ImageCropperModule} from 'ngx-image-cropper';
 import { NgxSpinnerModule} from 'ngx-spinner';
 import { AwesomeTooltipDirectiveDirective } from './shared/awesome-tooltip/awesome-tooltip-directive.directive';
 import { AwesomeTooltipComponent } from './shared/awesome-tooltip/awesome-tooltip.component';
+import { PointsStoreComponent } from './user/points-store/points-store.component';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -99,6 +100,7 @@ import { AwesomeTooltipComponent } from './shared/awesome-tooltip/awesome-toolti
     ConfirmCodeComponent,
     AwesomeTooltipDirectiveDirective,
     AwesomeTooltipComponent,
+    PointsStoreComponent,
 
   ],
   imports: [
