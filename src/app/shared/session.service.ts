@@ -1,3 +1,4 @@
+/*
 import { Injectable } from '@angular/core';
 import {SocketService} from './socket.service';
 import {NotifierService} from 'angular-notifier';
@@ -125,3 +126,4 @@ export class SessionService {
     return this.http.get(environment.apiBaseUrl + '/getIo');
   }
 }
+*/

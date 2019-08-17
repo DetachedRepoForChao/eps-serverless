@@ -250,14 +250,34 @@ export class FeedcardService implements OnInit {
     }
   }
 
-  addLike(sourceUserId, targetUserId, postId) {
+  addLike(likingUserId: number, targetUserId: number, postId: number): Observable<any> {
     const functionName = 'addLike';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: GetLike`);
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            likingUserId: likingUserId,
+            targetUserId: targetUserId,
+            postId: postId
+          };
+
+          API.post(this.apiName, this.apiPath + '/likeManage', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
+    });
+/*    console.log(`${functionFullName}: GetLike`);
     return this.http.post(environment.apiBaseUrl + 'likeManage', {'sourceUserId': sourceUserId,
-      'targetUserId': targetUserId, 'postId': postId});
+      'targetUserId': targetUserId, 'postId': postId});*/
   }
 
   refreshPointTransactionAvatars() {

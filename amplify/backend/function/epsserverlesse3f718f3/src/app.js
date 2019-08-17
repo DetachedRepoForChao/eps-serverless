@@ -424,6 +424,19 @@ app.get('/items/getRemainingPointPool', function(req, res) {
 // Like Routes
 app.post('/items/likeManage', function(req, res) {
   console.log('starting post likeManage');
+
+  const likingUserId = req.body.likingUserId;
+  const postId = req.body.postId;
+  const targetUserId = req.body.targetUserId;
+
+  ctrLike.saveLike(likingUserId, targetUserId, postId)
+    .then(data => {
+      res.json({status: 'post call succeed!', data: data});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });
+
 });
 
 // Avatar Routes

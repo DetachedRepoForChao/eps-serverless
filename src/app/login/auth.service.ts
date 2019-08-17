@@ -18,6 +18,10 @@ export interface NewUser {
   middleName: string;
   phone: string;
   birthdate: string;
+  department: string;
+  departmentId: string;
+  securityRole: string;
+  securityRoleId: number;
 }
 
 @Injectable({
@@ -66,7 +70,11 @@ export class AuthService {
         'picture': user.picture,
         'name': user.name,
         'birthdate': user.birthdate,
-        'phone_number': user.phone
+        'phone_number': user.phone,
+        'custom:department': user.department,
+        'custom:department_id': user.departmentId,
+        'custom:securityRole': user.securityRole,
+        'custom:securityRoleId': user.securityRoleId
       }
     });
   }

@@ -12,18 +12,18 @@
         <form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)" class="form">
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="securityRoleId">Role</label>
-              <select #role="ngModel" class="form-control" id="securityRoleId" name="securityRoleId" [(ngModel)]="selectedUser.securityRoleId"
+              <label for="securityRole">Role</label>
+              <select #securityRole="ngModel" class="form-control" id="securityRole" name="securityRole" [(ngModel)]="selectedUser.securityRole"
                       required>
-                <option *ngFor="let role of securityRoles" [ngValue]="role.Id">
-                  {{role.Name}}
+                <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole">
+                  {{securityRole.Name}}
                 </option>
               </select>
             </div>
             <div class="form-group col-md-6">
-              <label for="departmentId">Department</label>
-              <select #department="ngModel" class="form-control" id="departmentId" name="departmentId" [(ngModel)]="selectedUser.departmentId" required>
-                <option *ngFor="let department of departments" [ngValue]="department.Id">
+              <label for="department">Department</label>
+              <select #department="ngModel" class="form-control" id="department" name="department" [(ngModel)]="selectedUser.department" required>
+                <option *ngFor="let department of departments" [ngValue]="department">
                   {{department.Name}}
                 </option>
               </select>

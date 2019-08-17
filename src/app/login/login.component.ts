@@ -18,31 +18,6 @@ declare var event: any;
 })
 export class LoginComponent implements OnInit {
 
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
-
-  signUpConfig = {
-    header: 'My Customized Sign Up',
-    hideAllDefaults: true,
-    defaultCountryCode: '1',
-    signUpFields: [
-      {
-        label: 'Email',
-        key: 'email',
-        required: true,
-        displayOrder: 1,
-        type: 'string',
-      },
-      {
-        label: 'Password',
-        key: 'password',
-        required: true,
-        displayOrder: 2,
-        type: 'password'
-      }
-    ]
-  };
-
   constructor(// private socketService: SocketService,
               private avatarService: AvatarService,
               private router: Router) { }
@@ -73,10 +48,10 @@ export class LoginComponent implements OnInit {
         squares9.style.transform = 'perspective(500px) rotateY(' + posX * 0.02 + 'deg) rotateX(' + posY * (-0.02) + 'deg)';
         squares10.style.transform = 'perspective(500px) rotateY(' + posX * 0.02 + 'deg) rotateX(' + posY * (-0.02) + 'deg)';
 
-        $('.form-control').on("focus", function() {
-          $(this).parent('.input-group').addClass("input-group-focus");
-        }).on("blur", function() {
-          $(this).parent(".input-group").removeClass("input-group-focus");
+        $('.form-control').on('focus', function() {
+          $(this).parent('.input-group').addClass('input-group-focus');
+        }).on('blur', function() {
+          $(this).parent('.input-group').removeClass('input-group-focus');
         });
 
       });

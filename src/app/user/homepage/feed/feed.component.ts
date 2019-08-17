@@ -6,6 +6,7 @@ import {PointTransaction} from '../../../shared/feedcard/feedcard.service';
 import {User} from '../../../shared/user.model';
 import {LeaderboardUser} from '../../../shared/leaderboard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {Globals} from '../../../globals';
 
 
 @Component({
@@ -20,7 +21,8 @@ export class FeedComponent implements OnInit {
 
   constructor(public feedcardService: FeedcardService,
               private avatarService: AvatarService,
-              private spinner: NgxSpinnerService) { }
+              private spinner: NgxSpinnerService,
+              private globals: Globals) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -42,6 +44,12 @@ export class FeedComponent implements OnInit {
   //
   // }
 
+  onLikeClick(pointTransaction: PointTransaction) {
+    const functionName = 'onLikeClick';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
-
+    const likingUserId = localStorage.getItem('userId');
+    this.feedcardService.addLike(+likingUserId, pointTransaction.targetUserId, pointTransaction.id).subscribe();
+  }
 }

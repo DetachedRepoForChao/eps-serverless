@@ -151,10 +151,15 @@ module.exports = function(sequelize, DataTypes) {
 			field: 'avatarUrl'
 		},
 		saltSecret: {
-			type: DataTypes.STRING(255),
-			allowNull: true,
-			field: 'saltSecret'
-		},
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      field: 'saltSecret'
+    },
+    phone: {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+      field: 'phone'
+    },
 		createdAt: {
 			type: DataTypes.DATE,
 			allowNull: false,

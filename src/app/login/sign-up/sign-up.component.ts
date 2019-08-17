@@ -88,7 +88,11 @@ export class SignUpComponent implements OnInit {
             'name': `${form.value.firstName} ${form.value.lastName}`,
             'middleName': '',
             'phone': form.value.phone,
-            'birthdate': '03/07/1985'
+            'birthdate': '03/07/1985',
+            'department': form.value.department.Name,
+            'departmentId': form.value.department.Id,
+            'securityRole': form.value.securityRole.Name,
+            'securityRoleId': form.value.securityRole.Id
           })
             .then((data) => {
               environment.confirm.email = form.value.email;
@@ -132,13 +136,24 @@ export class SignUpComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    const securityRole: SecurityRole = {
+      Id: 1,
+      Name: 'employee',
+      Description: 'Standard employee'
+    };
+
+    const department: Department = {
+      Id: 1,
+      Name: 'Kitchen',
+    };
+
     const testUser: User = {
       username: 'mbado',
       firstName: 'Max',
       lastName: 'Bado',
       email: 'max.bado@gmail.com',
-      securityRoleId: 1,
-      departmentId: 1,
+      securityRole: securityRole,
+      department: department,
       points: 0,
       password: 'D@RTHtest911',
       phone: '+17328597839',
@@ -158,8 +173,8 @@ export class SignUpComponent implements OnInit {
       firstName: '',
       lastName: '',
       email: '',
-      securityRoleId: '',
-      departmentId: '',
+      securityRole: null,
+      department: null,
       points: 0,
       password: '',
       phone: '',

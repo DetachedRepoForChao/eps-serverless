@@ -5,7 +5,6 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             field: 'id',
             primaryKey: true,
-            primaryKey: true,
             autoIncrement: true,
 
         },
@@ -26,12 +25,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             field: 'user_id'
-        },
-        likeTime: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-            field: 'like_time'
         },
         createdAt: {
             type: DataTypes.DATE,

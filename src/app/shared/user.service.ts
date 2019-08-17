@@ -32,8 +32,8 @@ export class UserService {
     firstName: '',
     lastName: '',
     email: '',
-    securityRoleId: '',
-    departmentId: '',
+    securityRole: null,
+    department: null,
     points: 0,
     password: '',
     phone: '',
@@ -70,14 +70,14 @@ export class UserService {
     // return this.http.post(environment.apiBaseUrl + '/registerUser', user, this.noAuthHeader);
   }
 
-  login(authCredentials) {
+/*  login(authCredentials) {
     const functionName = 'login';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
     console.log(authCredentials);
     return this.http.post(environment.apiBaseUrl + '/authenticateUser', authCredentials, this.noAuthHeader);
-  }
+  }*/
 
   getUserProfile(): Observable<any> {
     const functionName = 'getUserProfile';
@@ -101,12 +101,12 @@ export class UserService {
     });
   }
 
-  setUserProfile() {
+/*  setUserProfile() {
     // return this.http.get(environment.apiBaseUrl + '/userProfile');
     console.log('getUserProfile');
     // console.log(this.http.get(environment.apiBaseUrl + '/userProfileGet'));
     return this.http.get(environment.apiBaseUrl + '/userProfileGet');
-  }
+  }*/
 
 
   async getUserPoints(): Promise<any> {

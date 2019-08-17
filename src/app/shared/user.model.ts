@@ -6,8 +6,8 @@ export class User {
     firstName: string;
     lastName: string;
     email: string;
-    securityRoleId: any;
-    departmentId: any;
+    securityRole: SecurityRole;
+    department: Department;
     points: number;
     password: string;
     phone: string;

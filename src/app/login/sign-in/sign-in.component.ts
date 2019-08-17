@@ -12,7 +12,7 @@ import {AchievementComponent} from '../../shared/achievement/achievement.compone
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {DepartmentService} from '../../shared/department.service';
 import {GlobalVariableService} from '../../shared/global-variable.service';
-import {SessionService} from '../../shared/session.service';
+// import {SessionService} from '../../shared/session.service';
 import {AmplifyService} from 'aws-amplify-angular';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import { AuthService } from '../auth.service';
@@ -30,7 +30,7 @@ export class SignInComponent implements OnInit {
   hide = true;
   // returnUrl: string;
   private userDetails;
-  //private departments: Department[];
+  // private departments: Department[];
   constructor(private achievementService: AchievementService,
               public userService: UserService,
               private router: Router,
@@ -39,7 +39,7 @@ export class SignInComponent implements OnInit {
               private achievementComponent: AchievementComponent,
               private securityRoleService: SecurityRoleService,
               private departmentService: DepartmentService,
-              private sessionService: SessionService,
+              // private sessionService: SessionService,
               private amplifyService: AmplifyService,
               public auth: AuthService,
               private spinner: NgxSpinnerService) { }
@@ -110,7 +110,7 @@ export class SignInComponent implements OnInit {
                 localStorage.setItem('departmentName', department.Name);
               });
 
-            //this.achievementService.incrementAchievementSignIn(userDetails.id)
+            // this.achievementService.incrementAchievementSignIn(userDetails.id)
            this.achievementService.incrementAchievement('SignIn')
               .subscribe((result: any) => {
                 console.log(`${functionFullName}: incrementAchievementSignIn result:`);

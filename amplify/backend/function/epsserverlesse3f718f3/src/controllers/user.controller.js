@@ -121,28 +121,38 @@ const registerUser = function (req) {
   console.log(`${functionFullName}: body:`);
   console.log(req.body);
 
-  console.log(req.body.username);
-  console.log(req.body.firstName);
-  console.log(req.body.email);
-  console.log(req.body.securityRoleId);
-  console.log(req.body.password);
+  const username = req.body.username;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const email = req.body.email;
+  const securityRoleId = req.body.securityRole.Id;
+  const departmentId = req.body.department.Id;
+  const phone = req.body.phone;
+  const birthdate = req.body.birthdate;
+  // const password = req.body.password;
+  const middleName = req.body.middleName;
+  const preferredName = req.body.preferredName;
+  const prefix = req.body.prefix;
+  const suffix = req.body.suffix;
+  const position = req.body.position;
+  const address1 = req.body.address1;
+  const address2 = req.body.address2;
+  const city = req.body.city;
+  const state = req.body.state;
+  const country = req.body.country;
+  const zip = req.body.zip;
+  const preferredPronoun = req.body.preferredPronoun;
+  const sex = req.body.sex;
+  const gender = req.body.gender;
+  const dateOfHire = req.body.dateOfHire;
 
-  const data = {
-    username: req.body.username,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    securityRoleId: req.body.securityRoleId,
-    departmentId: req.body.departmentId,
-    password: req.body.password,
-  };
 
-  var password;
-  var saltSecret;
+  // var password;
+  // var saltSecret;
 
   return sqlUserModel.findOne({
     where: {
-      username: data.username
+      username: username
     },
   })
     .then(user => {
@@ -153,15 +163,32 @@ const registerUser = function (req) {
         console.log(`${functionFullName}: user account does not yet exist. Creating...`);
 
         return sqlUserModel.create({
-          username: data.username,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          securityRoleId: data.securityRoleId,
-          departmentId: data.departmentId,
-          password: password,
-          saltSecret: saltSecret,
-          points: 0
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          securityRoleId: securityRoleId,
+          departmentId: departmentId,
+          phone: phone,
+          dateOfBirth: birthdate,
+          // password: password,
+          // saltSecret: saltSecret,
+          points: 0,
+          middleName: middleName,
+          preferredName: preferredName,
+          prefix: prefix,
+          suffix: suffix,
+          position: position,
+          address1: address1,
+          address2: address2,
+          city: city,
+          state: state,
+          country: country,
+          zip: zip,
+          preferredPronoun: preferredPronoun,
+          sex: sex,
+          gender: gender,
+          dateOfHire: dateOfHire
         })
           .then((user) => {
             console.log(`${functionFullName}: user created in db`);

@@ -41,6 +41,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"achievementProgressId\": \"1ae966b4-bb8b-11e9-bae1-16cbe0a02cfa\", \"secretPassword\": \"123password#@!\", \"userId\": 8, \"achievementFamily\": \"SignIn\", \"achievementName\": \"SignIn\", \"sourceUserId\": 9,\"targetUserId\": 8, \"pointItemId\": 1, \"description\": \"This is a test\", \"avatarUrl\": \"https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/avatars/batman@3x.png\",\"username\": \"mbado3\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRoleId\": 2, \"departmentId\": 2, \"password\": \"D@RTHtest911\"}",
+  "body": "{\"likingUserId\": 21, \"postId\": 1, \"achievementProgressId\": \"1ae966b4-bb8b-11e9-bae1-16cbe0a02cfa\", \"secretPassword\": \"123password#@!\", \"userId\": 8, \"achievementFamily\": \"SignIn\", \"achievementName\": \"SignIn\", \"sourceUserId\": 9,\"targetUserId\": 8, \"pointItemId\": 1, \"description\": \"This is a test\", \"avatarUrl\": \"https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/avatars/batman@3x.png\",\"username\": \"mbado3\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRole\": {\"Name\": \"employee\", \"Id\": 1}, \"department\": {\"Name\": \"Kitchen\", \"Id\": 1}, \"password\": \"D@RTHtest911\", \"position\": \"Cook\"}",
   "isBase64Encoded": false
 }
