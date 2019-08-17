@@ -11,3 +11,76 @@
 .h5{
   color: mintcream;
 }
+
+/**.icon-blue {color: #0088cc}
+*.icon-grey {color: grey}
+i {
+  width:100px;
+  text-align:center;
+  vertical-align:middle;
+  position: relative;
+}*/
+/*.badge:after{
+  content:"100";
+  position: absolute;
+  background: rgba(0,0,255,1);
+  height:2rem;
+  top:1rem;
+  right:1.5rem;
+  width:2rem;
+  text-align: center;
+  line-height: 2rem;;
+  font-size: 1rem;
+  border-radius: 50%;
+  color:white;
+  border:1px solid blue;
+}*/
+
+/*
+.badge:before {
+  font-size: 15px
+}
+*/
+
+/*.badge:after {
+  content: '';
+  position: absolute;
+  !*background: rgba(0,0,255,1);*!
+  height:10px;
+  !*top:1rem;*!
+  !*right:1.5rem;*!
+  width:10px;
+  text-align: center;
+  line-height: 10px;;
+  font-size: 10px;
+  border-radius: 50%;
+  !*color:white;*!
+  !*border:1px solid blue;*!
+}*/
+
+/*.badge:empty {
+  display: inline;
+}*/
+
+/*.badge-wrapper {
+  position: relative;
+}*/
+
+/*.badge {
+  position: absolute;
+  top: -0.75rem;
+  right: 15px;
+  padding: 0.25rem 0.25rem;
+  !*right: -5px;*!
+  display: inline-block;
+  !*width: 8px;*!
+  !*height: 8px;*!
+  border-radius: 50%;
+  background-color: #2b2b2b;
+  line-height: unset;
+}
+
+.badge-secondary {
+  font-size: 10px;
+  color: #00f2c3;
+}*/

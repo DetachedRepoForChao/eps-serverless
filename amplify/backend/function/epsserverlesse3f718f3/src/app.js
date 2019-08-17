@@ -436,7 +436,35 @@ app.post('/items/likeManage', function(req, res) {
     .catch(err => {
       res.json({status: 'post call failed!', error: err});
     });
+});
 
+app.post('/items/removeLike', function(req, res) {
+  console.log('starting post removeLike');
+
+  const likingUserId = req.body.likingUserId;
+  const postId = req.body.postId;
+
+  ctrLike.removeLike(likingUserId, postId)
+    .then(data => {
+      res.json({status: 'post call succeed!', data: data.message});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });
+});
+
+app.post('/items/getLikesByPostIds', function(req, res) {
+  console.log('starting post getLikesByPostIds');
+
+  const postIds = req.body.postIds;
+
+  ctrLike.getLikesByPostIds(postIds)
+    .then(data => {
+      res.json({status: 'post call succeed!', data: data.likes});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });
 });
 
 // Avatar Routes

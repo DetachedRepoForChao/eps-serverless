@@ -57,6 +57,8 @@ export class AuthService {
   }*/
 
   signUp(user: NewUser): Promise<CognitoUser|any> {
+    console.log('NewUser');
+    console.log(user);
     return Auth.signUp({
       'username': user.username,
       'password': user.password,
@@ -72,9 +74,9 @@ export class AuthService {
         'birthdate': user.birthdate,
         'phone_number': user.phone,
         'custom:department': user.department,
-        'custom:department_id': user.departmentId,
-        'custom:securityRole': user.securityRole,
-        'custom:securityRoleId': user.securityRoleId
+        'custom:department_id': `${user.departmentId}`,
+        'custom:security_role': user.securityRole,
+        'custom:security_role_id': `${user.securityRoleId}`
       }
     });
   }

@@ -4,7 +4,7 @@ const Models = SqlModel().Models;
 
 const sqlPointTransactionModel = Models.PointTransaction;
 const sqlUserModel = Models.User;
-
+const componentName = 'point_transaction.controller';
 
 
 const getUserName = function (userId) {
@@ -56,7 +56,9 @@ const getUserName = function (userId) {
  */
 
 const getPointTransaction = function () {
-  console.log("getPointTransaction");
+  const functionName = 'getPointTransaction';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
 
 /*  sqlUserModel.hasMany(sqlPointTransactionModel, {foreignKey: 'sourceUserId'});
   sqlUserModel.hasMany(sqlPointTransactionModel, {foreignKey: 'targetUserId'});
@@ -94,12 +96,12 @@ const getPointTransaction = function () {
     "JOIN `point_item` AS `pointItem` ON `point_transaction`.`point_item_id` = `pointItem`.`id` " +
     "ORDER BY `id` DESC LIMIT 25", {type: sequelize.QueryTypes.SELECT})
     .then(pointTransactionResult => {
-      console.log('pointTransactionResult:');
+      console.log(`${functionFullName}: pointTransactionResult:`);
       console.log(pointTransactionResult);
         //let pointTransactionResult=PointTransactionResult[0];
 
         const resultLength = pointTransactionResult.length;
-        console.log('resultLength: ' + resultLength);
+        console.log(`${functionFullName}: resultLength: ${resultLength}`);
         return {status: 200, pointTransactions: pointTransactionResult};
 
 /*        let pointTransactionResultList = new Array;
@@ -123,7 +125,7 @@ const getPointTransaction = function () {
       }
     )
     .catch(err => {
-        console.log('Database error');
+        console.log(`${functionFullName}: Database error`);
         console.log(err);
         return {status: 500, message: err};
       }

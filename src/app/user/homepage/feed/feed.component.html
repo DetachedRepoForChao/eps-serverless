@@ -1,29 +1,29 @@
 <div class="card">
 
-                                        <!-- ////// post to share/type -->
+  <!-- ////// post to share/type -->
   <div class="card card-coin card-plain">
     <div class="card-body" *ngIf="!isCardLoading; else feedCardLoading">
       <div class="row">
         <div class="col-md-12 text-center">
           <h4 class="text-uppercase">Feed Card</h4>
-<!--          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-              <div class="form-group">
-                <label class="sr-only" for="message">post</label>
-                <textarea class="form-control" id="message" rows="3" placeholder="What are you thinking?"></textarea>
-              </div>
+          <!--          <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                        <div class="form-group">
+                          <label class="sr-only" for="message">post</label>
+                          <textarea class="form-control" id="message" rows="3" placeholder="What are you thinking?"></textarea>
+                        </div>
 
-            </div>
-            <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
-              <div class="form-group">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="customFile">
-                  <label class="custom-file-label" for="customFile">Upload image</label>
-                </div>
-              </div>
-              <div class="py-4"></div>
-            </div>
-          </div>-->
+                      </div>
+                      <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                        <div class="form-group">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Upload image</label>
+                          </div>
+                        </div>
+                        <div class="py-4"></div>
+                      </div>
+                    </div>-->
           <!--<div class="btn-toolbar justify-content-between">
             <div class="btn-group">
               <button type="submit" class="btn btn-primary">share</button>
@@ -47,107 +47,138 @@
 
   <div *ngFor="let pointTransaction of this.feedcardService.pointTransactionsLimited"><!-- /////// post -->
     <div class="card gedf-card">
-    <div class="card-header">
-      <div class="d-flex justify-content-between align-items-center">
+      <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-          <div class="mr-2">
-            <div *ngIf="pointTransaction.targetUserAvatarCached === true; else avatarFromObservable">
-              <img class="rounded-circle" width="45" [src]="pointTransaction.targetUserAvatarUrl" alt="">
-            </div>
-            <ng-template #avatarFromObservable>
-              <img class="rounded-circle" width="45" [src]="(this.feedcardService.getAvatarForTargetUser(pointTransaction.targetUser) | async)" alt="">
-<!--              Test-->
-            </ng-template>
-<!--            <div>-->
-<!--              <img class="rounded-circle" width="45" [src]="this.avatarService.getAvatarFromCache(pointTransaction.targetUserName)" alt="">-->
-<!--              <img class="rounded-circle" width="45" [src]="(pointTransaction.targetUserAvatarUrl | async).avatar" alt="">-->
-<!--            </div>-->
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="mr-2">
+              <div *ngIf="pointTransaction.targetUserAvatarCached === true; else avatarFromObservable">
+                <img class="rounded-circle" width="45" [src]="pointTransaction.targetUserAvatarUrl" alt="">
+              </div>
+              <ng-template #avatarFromObservable>
+                <!--              <img class="rounded-circle" width="45" [src]="(this.feedcardService.getAvatarForTargetUser(pointTransaction.targetUser) | async)" alt="">-->
+                <img class="rounded-circle" width="45" [src]="" alt="">
+                <!--              Test-->
+              </ng-template>
+              <!--            <div>-->
+              <!--              <img class="rounded-circle" width="45" [src]="this.avatarService.getAvatarFromCache(pointTransaction.targetUserName)" alt="">-->
+              <!--              <img class="rounded-circle" width="45" [src]="(pointTransaction.targetUserAvatarUrl | async).avatar" alt="">-->
+              <!--            </div>-->
 
-<!--            <img class="rounded-circle" width="45" [src]="(this.avatarService.resolveAvatar(pointTransaction.targetUser) | async).avatar" alt="">-->
+              <!--            <img class="rounded-circle" width="45" [src]="(this.avatarService.resolveAvatar(pointTransaction.targetUser) | async).avatar" alt="">-->
+            </div>
+            <div class="ml-2">
+              <div class="h5 m-0">@{{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}}</div>
+              <div class="h7 text-muted"><i class="fa fa-clock-o"></i>{{pointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+            </div>
           </div>
-          <div class="ml-2">
-            <div class="h5 m-0">@{{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}}</div>
-            <div class="h7 text-muted"><i class="fa fa-clock-o"></i>{{pointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
-          </div>
-        </div>
-        <div>
-          <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-ellipsis-h"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
-              <div class="h6 dropdown-header">Configuration</div>
-              <a class="dropdown-item" >Save</a>
-              <a class="dropdown-item" href="#">Hide</a>
-              <a class="dropdown-item" href="#">Report</a>
+          <div>
+            <div class="dropdown">
+              <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-h"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                <div class="h6 dropdown-header">Configuration</div>
+                <a class="dropdown-item" >Save</a>
+                <a class="dropdown-item" href="#">Hide</a>
+                <a class="dropdown-item" href="#">Report</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="card-body">
-      <div class="text-muted h7 mb-2"> </div>
-      <a class="card-link" href="#">
-        <h5 class="card-title">{{pointTransaction.sourceUserFirstName}} {{pointTransaction.sourceUserLastName}} awarded {{pointTransaction.amount}} points to {{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}} for:</h5>
-      </a>
+      <div class="card-body">
+        <div class="text-muted h7 mb-2"> </div>
+        <a class="card-link" href="#">
+          <h5 class="card-title">{{pointTransaction.sourceUserFirstName}} {{pointTransaction.sourceUserLastName}} awarded {{pointTransaction.amount}} points to {{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}} for:</h5>
+        </a>
 
-      <p class="card-text">
-        {{pointTransaction.pointItemName}}
-      </p>
+
+        <p class="card-text">
+          {{pointTransaction.pointItemName}}
+        </p>
+      </div>
+      <div class="card-footer">
+        <div class="row">
+
+            <div class="col-2">
+              <a *ngIf="pointTransaction.likedByCurrentUser === false; else likedByUser" href="javascript:void(0)" (click)="onLikeClick(pointTransaction)" class="card-link">
+                <i class="far fa-heart"></i> Like
+                <span *ngIf="pointTransaction.likeData.length > 0" class="badge badge-secondary">{{pointTransaction.likeData.length}}</span>
+              </a>
+
+              <ng-template #likedByUser>
+                <a href="javascript:void(0)" (click)="onUnlikeClick(pointTransaction)" class="card-link">
+                  <!--          <i class="fas fa-heart"></i> Like <span class="badge badge-default">4</span>-->
+                  <i class="fas fa-heart" ></i> Like
+                  <span *ngIf="pointTransaction.likeData.length > 0" class="badge badge-secondary">{{pointTransaction.likeData.length}}</span>
+                </a>
+              </ng-template>
+            </div>
+            <div class="col-2">
+              <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+            </div>
+            <div class="col-2">
+              <a href="#" class="card-link"><i class="fas fa-share"></i> Share</a>
+            </div>
+
+<!--          <div class="col-4">
+
+          </div>-->
+
+        </div>
+
+
+
+
+      </div>
     </div>
-    <div class="card-footer">
-      <a href="javascript:void(0)" (click)="onLikeClick(pointTransaction)" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-      <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-      <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
-    </div>
+
   </div>
 
-  </div>
+  <!-- /////// Post -->
+  <!--  <div class="card gedf-card">-->
+  <!--    <div class="card-header">-->
+  <!--      <div class="d-flex justify-content-between align-items-center">-->
+  <!--        <div class="d-flex justify-content-between align-items-center">-->
+  <!--          <div class="mr-2">-->
+  <!--            <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">-->
+  <!--          </div>-->
+  <!--          <div class="ml-2">-->
+  <!--            <div class="h5 m-0">@DRosca</div>-->
+  <!--            <div class="h7 text-muted">Daniella Rosca</div>-->
+  <!--          </div>-->
+  <!--        </div>-->
+  <!--        <div>-->
+  <!--          <div class="dropdown">-->
+  <!--            <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+  <!--              <i class="fa fa-ellipsis-h"></i>-->
+  <!--            </button>-->
+  <!--            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">-->
+  <!--              <div class="h6 dropdown-header">Configuration</div>-->
+  <!--              <a class="dropdown-item" href="#">Save</a>-->
+  <!--              <a class="dropdown-item" href="#">Hide</a>-->
+  <!--              <a class="dropdown-item" href="#">Report</a>-->
+  <!--            </div>-->
+  <!--          </div>-->
+  <!--        </div>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--    <div class="card-body">-->
+  <!--      <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i> 10 min ago</div>-->
+  <!--      <a class="card-link" href="#">-->
+  <!--        <h5 class="card-title"> Weekly rundown </h5>-->
+  <!--      </a>-->
 
-                                        <!-- /////// Post -->
-<!--  <div class="card gedf-card">-->
-<!--    <div class="card-header">-->
-<!--      <div class="d-flex justify-content-between align-items-center">-->
-<!--        <div class="d-flex justify-content-between align-items-center">-->
-<!--          <div class="mr-2">-->
-<!--            <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">-->
-<!--          </div>-->
-<!--          <div class="ml-2">-->
-<!--            <div class="h5 m-0">@DRosca</div>-->
-<!--            <div class="h7 text-muted">Daniella Rosca</div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div>-->
-<!--          <div class="dropdown">-->
-<!--            <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--              <i class="fa fa-ellipsis-h"></i>-->
-<!--            </button>-->
-<!--            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">-->
-<!--              <div class="h6 dropdown-header">Configuration</div>-->
-<!--              <a class="dropdown-item" href="#">Save</a>-->
-<!--              <a class="dropdown-item" href="#">Hide</a>-->
-<!--              <a class="dropdown-item" href="#">Report</a>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="card-body">-->
-<!--      <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i> 10 min ago</div>-->
-<!--      <a class="card-link" href="#">-->
-<!--        <h5 class="card-title"> Weekly rundown </h5>-->
-<!--      </a>-->
-
-<!--      <p class="card-text">-->
-<!--        @KLewis congrats on the gold star for an outstanding performance over the last week.-->
-<!--      </p>-->
-<!--    </div>-->
-<!--    <div class="card-footer">-->
-<!--      <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>-->
-<!--      <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>-->
-<!--      <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>-->
-<!--    </div>-->
-<!--  </div>-->
+  <!--      <p class="card-text">-->
+  <!--        @KLewis congrats on the gold star for an outstanding performance over the last week.-->
+  <!--      </p>-->
+  <!--    </div>-->
+  <!--    <div class="card-footer">-->
+  <!--      <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>-->
+  <!--      <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>-->
+  <!--      <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>-->
+  <!--    </div>-->
+  <!--  </div>-->
 
 
 </div>

@@ -36,6 +36,24 @@ export interface PointTransaction {
   pointItemCoreValues: string;
   sourceUser: LeaderboardUser;
   targetUser: LeaderboardUser;
+  likeData: Like[];
+  likedByCurrentUser: boolean;
+}
+
+export interface LikingUser {
+  id: number;
+  username: string;
+  departmentName: string;
+  departmentId: number;
+}
+
+export interface Like {
+  id: number;
+  postId: number;
+  userId: number;
+  username: string;
+  departmentName: string;
+  departmentId: number;
 }
 
 @Injectable({
@@ -187,7 +205,9 @@ export class FeedcardService implements OnInit {
               pointItemName: result[i].pointItemName,
               pointItemCoreValues: result[i].pointItemCoreValues,
               sourceUser: sourceUser,
-              targetUser: targetUser
+              targetUser: targetUser,
+              likeData: [],
+              likedByCurrentUser: false
             };
 
             if (this.pointTransactions.find(x => x.id === pointTransaction.id)) {
@@ -205,8 +225,46 @@ export class FeedcardService implements OnInit {
           console.log(`${functionFullName}: Setting PointTransactionsLimited to the top 5 most recent entries:`);
           this.pointTransactionsLimited = this.pointTransactions.sort(function(a, b) { return b.id - a.id; } ).slice(0, 5);
 
-          observer.next();
-          observer.complete();
+          // Retrieve Likes info and merge it into the point transactions list
+          const pointTransactionIds = this.pointTransactions.map((pointTransaction) => pointTransaction.id);
+          this.getLikes(pointTransactionIds)
+            .subscribe((likeData: any) => {
+              if (!likeData) {
+                console.log(`${functionFullName}: did not retrieve any like data`);
+                observer.next();
+                observer.complete();
+              } else {
+                console.log(`${functionFullName}: retrieved like data successfully:`);
+                console.log(likeData);
+
+                // Match up and merge Like data into point transactions list
+                for (let i = 0; i < likeData.length; i++) {
+                  const correspondingPost = this.pointTransactions.find(x => x.id === likeData[i].postId);
+                  if (correspondingPost) {
+                    if (correspondingPost.likeData.find(x => x.id === likeData[i].id)) {
+                      console.log(`${functionFullName}: Like already attached to this point transaction`);
+                    } else {
+                      console.log(`${functionFullName}: adding like id ${likeData[i].id} to point transaction id ${correspondingPost.id}`);
+                      correspondingPost.likeData.push(likeData[i]);
+                    }
+
+                    // Check if post has been liked by the current user
+                    if (likeData[i].userId === +localStorage.getItem('userId')) {
+                      correspondingPost.likedByCurrentUser = true;
+                    }
+                  }
+                }
+
+
+                console.log(`${functionFullName}: point transaction list after adding like data:`);
+                console.log(this.pointTransactions);
+                observer.next();
+                observer.complete();
+              }
+            });
+
+          // observer.next();
+          // observer.complete();
         });
     });
   }
@@ -254,7 +312,8 @@ export class FeedcardService implements OnInit {
     const functionName = 'addLike';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-
+    console.log(`${functionFullName}: likingUserId: ${likingUserId}; targetUserId: ${targetUserId}; postId: ${postId}`);
+    // Add Like to database
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -270,14 +329,98 @@ export class FeedcardService implements OnInit {
           API.post(this.apiName, this.apiPath + '/likeManage', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
+            if (data.data.status !== false) {
+              // Add Like to the local point transactions list
+              const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
+              const newLike: Like = {
+                id: null,
+                postId: postId,
+                userId: likingUserId,
+                username: localStorage.getItem('username'),
+                departmentId: +localStorage.getItem('departmentId'),
+                departmentName: localStorage.getItem('departmentName')
+              };
+
+              targetPointTransaction.likeData.push(newLike);
+              targetPointTransaction.likedByCurrentUser = true;
+
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
+              console.log(data.data.likeRecord);
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  removeLike(likingUserId: number, postId: number): Observable<any> {
+    const functionName = 'removeLike';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    // Remove Like from database
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            likingUserId: likingUserId,
+            postId: postId
+          };
+
+          API.post(this.apiName, this.apiPath + '/removeLike', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            if (data.data.status !== false) {
+              // Remove Like from the local point transactions list
+              const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
+              targetPointTransaction.likeData = targetPointTransaction.likeData.filter(x => x.userId !== likingUserId);
+              targetPointTransaction.likedByCurrentUser = false;
+
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  getLikes(postIds: number[]): Observable<any> {
+    const functionName = 'getLikes';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: retrieving Like data for the following point transaction ids:`);
+    console.log(postIds);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            postIds: postIds
+          };
+
+          API.post(this.apiName, this.apiPath + '/getLikesByPostIds', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
             observer.next(data.data);
             observer.complete();
           });
         });
     });
-/*    console.log(`${functionFullName}: GetLike`);
-    return this.http.post(environment.apiBaseUrl + 'likeManage', {'sourceUserId': sourceUserId,
-      'targetUserId': targetUserId, 'postId': postId});*/
   }
 
   refreshPointTransactionAvatars() {

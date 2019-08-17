@@ -52,4 +52,13 @@ export class FeedComponent implements OnInit {
     const likingUserId = localStorage.getItem('userId');
     this.feedcardService.addLike(+likingUserId, pointTransaction.targetUserId, pointTransaction.id).subscribe();
   }
+
+  onUnlikeClick(pointTransaction: PointTransaction) {
+    const functionName = 'onUnlikeClick';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    const likingUserId = localStorage.getItem('userId');
+    this.feedcardService.removeLike(+likingUserId, pointTransaction.id).subscribe();
+  }
 }
