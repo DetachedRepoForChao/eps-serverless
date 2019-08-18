@@ -43,7 +43,7 @@ const componentName = 'like.controller';
     )
 }*/
 
-const saveLike = function (likingUserId, targetUserId, postId) {
+const addLike = function (likingUsername, targetUserId, postId) {
   const functionName = 'saveLike';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -52,19 +52,19 @@ const saveLike = function (likingUserId, targetUserId, postId) {
   return sqlLikeModel.findOne({
     where: {
       postId: postId,
-      userId: likingUserId
+      username: likingUsername
     }
   })
     .then(likeRecord => {
       if (likeRecord) {
-        console.log(`${functionFullName}: Like record for post id ${postId} and user id ${likingUserId} already exists`);
+        console.log(`${functionFullName}: Like record for post id ${postId} and username ${likingUsername} already exists`);
         console.log(likeRecord);
-        return {status: false, message: `Like record for post id ${postId} and user id ${likingUserId} already exists`, likeRecord: likeRecord};
+        return {status: false, message: `Like record for post id ${postId} and username ${likingUsername} already exists`, likeRecord: likeRecord};
       } else {
-        console.log(`${functionFullName}: Like record does not yet exist. Creating Like record for post id ${postId} and user id ${likingUserId}`);
+        console.log(`${functionFullName}: Like record does not yet exist. Creating Like record for post id ${postId} and username ${likingUsername}`);
         return sqlLikeModel.create({
           postId: postId,
-          userId: likingUserId
+          username: likingUsername
         })
           .then(insertLikeResult => {
             if (!insertLikeResult) {
@@ -76,7 +76,7 @@ const saveLike = function (likingUserId, targetUserId, postId) {
                 .then(countByPostId => {
                   if (countByPostId.status !== false) {
                     // return res.status(200).json({ status: true, countLikes: CountByPostId.likeNum,targetUserId:targetUserId});
-                    return {status: true, countLikes: countByPostId.likeNum, targetUserId: targetUserId};
+                    return {status: true, countLikes: countByPostId.likeNum, targetUserId: targetUserId, likeId: insertLikeResult.id};
                   } else {
                     // return res.status(500).json({status: false, message: 'Return Total Like Num Fail!'});
                     return {status: false, message: 'Return Total Like Num Fail!'};
@@ -104,9 +104,9 @@ const saveLike = function (likingUserId, targetUserId, postId) {
     });
 };
 
-module.exports.saveLike = saveLike;
+module.exports.addLike = addLike;
 
-const removeLike = function (likingUserId, postId) {
+const removeLike = function (likingUsername, postId) {
   const functionName = 'removeLike';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -114,7 +114,7 @@ const removeLike = function (likingUserId, postId) {
   return sqlLikeModel.destroy({
     where: {
       postId: postId,
-      userId: likingUserId
+      username: likingUsername
     }
   })
     .then(destroyResult => {

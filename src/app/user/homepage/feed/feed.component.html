@@ -100,7 +100,7 @@
       <div class="card-footer">
         <div class="row">
 
-            <div class="col-2">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-4">
               <a *ngIf="pointTransaction.likedByCurrentUser === false; else likedByUser" href="javascript:void(0)" (click)="onLikeClick(pointTransaction)" class="card-link">
                 <i class="far fa-heart"></i> Like
                 <span *ngIf="pointTransaction.likeData.length > 0" class="badge badge-secondary">{{pointTransaction.likeData.length}}</span>
@@ -114,10 +114,10 @@
                 </a>
               </ng-template>
             </div>
-            <div class="col-2">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-4">
               <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
             </div>
-            <div class="col-2">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-4">
               <a href="#" class="card-link"><i class="fas fa-share"></i> Share</a>
             </div>
 

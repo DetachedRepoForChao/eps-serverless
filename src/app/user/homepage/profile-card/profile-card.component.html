@@ -31,8 +31,8 @@
 
       <div class="row">
         <div class="col-md-12 text-center">
-          <h4 class="text-uppercase">{{globals.localStorageItem('firstName')}} {{globals.localStorageItem('lastName')}}</h4>
-          <span>{{globals.localStorageItem('departmentName')}}</span>
+          <h4 class="text-uppercase">{{globals.getUserAttribute('given_name')}} {{globals.getUserAttribute('family_name')}}</h4>
+          <span>{{globals.getUserAttribute('custom:department')}}</span>
           <hr class="line-success">
         </div>
       </div>
@@ -46,7 +46,7 @@
       <div class="row text-center mt-4">
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-          <h4 class="mb-0">{{globals.localStorageItem('points')}}</h4>
+          <h4 class="mb-0">{{globals.userDetails.points}}</h4>
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
@@ -63,10 +63,10 @@
       <!-----Button----->
       <div class="container">
         <div class="row">
-          <div class="col-sm">
+          <div class="col-sm-6 col-md-6 col-lg-6 col-6">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
           </div>
-          <div class="col-sm">
+          <div class="col-sm-6 col-md-6 col-lg-6 col-6">
             <button type="button" class="btn btn-danger" (click)="showGallery()" style="padding-right: 10px; padding-left: 10px">Select Avatar</button>
           </div>
         </div>

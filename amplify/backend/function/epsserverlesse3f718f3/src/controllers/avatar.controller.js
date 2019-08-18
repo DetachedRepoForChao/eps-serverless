@@ -36,7 +36,7 @@ const getAvatars = function (callback) {
 
 module.exports.getAvatars = getAvatars;
 
-const getUserAvatar = function(userId) {
+const getUserAvatar = function(username) {
   const functionName = 'getUserAvatar';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -44,7 +44,7 @@ const getUserAvatar = function(userId) {
   return sqlUserModel.findOne({
     attributes: ['avatarUrl'],
     where: {
-      id: userId
+      username: username
     }
   })
     .then(avatarUrl => {

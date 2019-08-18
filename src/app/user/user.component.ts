@@ -37,6 +37,7 @@ export class UserComponent implements OnInit, OnDestroy {
   componentName = 'user.component';
   securityRole;
   securityRoleId;
+  securityRoleName;
   socketSessionId;
   idle: number;
   timeout: number;
@@ -113,10 +114,34 @@ export class UserComponent implements OnInit, OnDestroy {
 
     // this.departmentService.storeDepartments();
     // this.securityRoleId = +this.route.snapshot.paramMap.get('id');
-    this.securityRoleId = +localStorage.getItem('securityRoleId');
+    // this.securityRoleId = +localStorage.getItem('securityRoleId');
+    // Setting global user attributes
 
-    const observables: Observable<any>[] = [];
+    this.securityRoleName = this.globals.getUserAttribute('custom:security_role');
 
+    switch (this.securityRoleName) {
+      case 'employee': {
+        console.log(`${functionFullName}: navigating to standard-user`);
+        // this.router.navigate(['standard-user']);
+        this.router.navigate(['homepage']);
+        break;
+      }
+      case 'manager': {
+        console.log(`${functionFullName}: navigating to manager-user`);
+        // this.router.navigate(['manager-user']);
+        this.router.navigate(['homepage']);
+        break;
+      }
+      case 'admin': {
+        console.log(`${functionFullName}: navigating to admin-user`);
+        this.router.navigate(['admin-user']);
+        break;
+      }
+    }
+
+    this.isComponentLoading = false;
+
+    /*const observables: Observable<any>[] = [];
 
     if (!this.securityRoleId) {
       // observables.push(this.userService.getUserProfile());
@@ -143,11 +168,11 @@ export class UserComponent implements OnInit, OnDestroy {
           console.log(obsResult);
 
           // Act on observable value that was returned from userService.getUserProfile()
-/*          if (obsResult.securityRoleId) {
+/!*          if (obsResult.securityRoleId) {
             console.log(`${functionFullName}: obsResult.securityRoleId: ${obsResult.securityRoleId}`);
             this.securityRoleId = obsResult.securityRoleId;
             localStorage.setItem('securityRoleId', obsResult.securityRoleId);
-          } else */if (obsResult.Name) { // observable value returned from securityRoleService.getSecurityRoleById()
+          } else *!/if (obsResult.Name) { // observable value returned from securityRoleService.getSecurityRoleById()
             console.log(`${functionFullName}: obsResult.Name: ${obsResult.Name}`);
             this.securityRole = obsResult;
 
@@ -176,7 +201,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.isComponentLoading = false;
         // console.log(`${functionFullName}: Hiding user-component-spinner`);
         // this.spinner.hide('user-component-spinner');
-      });
+      });*/
 
     this.idle = this.userIdle.getConfigValue().idle;
     this.timeout = this.userIdle.getConfigValue().timeout;

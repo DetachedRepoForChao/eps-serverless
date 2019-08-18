@@ -78,18 +78,18 @@ const getUserAvatar = function(userId) {
         }
     })
         .then(avatarUrl => {
-            console.log('getUserAvatar: avatarUrl: ');
+            console.log('getCurrentUserAvatar: avatarUrl: ');
             console.log(avatarUrl);
             if(!avatarUrl) {
-                console.log('getUserAvatar: Did not find record');
-                return {status: 404, message: 'getUserAvatar: Did not find record.' };
+                console.log('getCurrentUserAvatar: Did not find record');
+                return {status: 404, message: 'getCurrentUserAvatar: Did not find record.' };
             } else {
-                console.log('getUserAvatar: Success');
+                console.log('getCurrentUserAvatar: Success');
                 return {status: 200, avatarUrl: avatarUrl};
             }
         })
         .catch(err => {
-            console.log('getUserAvatar: Error: ' + err);
+            console.log('getCurrentUserAvatar: Error: ' + err);
             return {status: 500, error: err};
     });
 };

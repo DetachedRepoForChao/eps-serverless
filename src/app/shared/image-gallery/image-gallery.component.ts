@@ -10,6 +10,7 @@ import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
 import {LeaderboardService} from '../leaderboard.service';
 import {FeedcardService} from '../feedcard/feedcard.service';
+import {Globals} from '../../globals';
 
 declare var $: any;
 @Component({
@@ -48,7 +49,8 @@ export class ImageGalleryComponent implements OnInit {
               private imageService: ImageService,
               private authService: AuthService,
               private leaderboardService: LeaderboardService,
-              private feedcardService: FeedcardService) {
+              private feedcardService: FeedcardService,
+              private globals: Globals) {
 
   }
 
@@ -142,7 +144,7 @@ export class ImageGalleryComponent implements OnInit {
             this.avatarService.saveUserAvatar(blob).subscribe((saveResult) => {
               console.log(`${functionFullName}: saveResult: ${saveResult}`);
               if (saveResult === true) {
-                this.leaderboardService.isUserInLeaderboardTop5(+localStorage.getItem('userId')).subscribe(isTop5Result => {
+                this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
                   console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
                   if (isTop5Result === true) {
                     console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);

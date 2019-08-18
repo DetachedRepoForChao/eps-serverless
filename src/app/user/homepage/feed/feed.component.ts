@@ -49,8 +49,7 @@ export class FeedComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const likingUserId = localStorage.getItem('userId');
-    this.feedcardService.addLike(+likingUserId, pointTransaction.targetUserId, pointTransaction.id).subscribe();
+    this.feedcardService.addLike(pointTransaction.targetUserId, pointTransaction.id).subscribe();
   }
 
   onUnlikeClick(pointTransaction: PointTransaction) {
@@ -58,7 +57,6 @@ export class FeedComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const likingUserId = localStorage.getItem('userId');
-    this.feedcardService.removeLike(+likingUserId, pointTransaction.id).subscribe();
+    this.feedcardService.removeLike(pointTransaction.id).subscribe();
   }
 }

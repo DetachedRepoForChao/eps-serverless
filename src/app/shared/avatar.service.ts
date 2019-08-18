@@ -12,9 +12,10 @@ import {forkJoin, Observable} from 'rxjs';
 import {LeaderboardUser} from './leaderboard.service';
 import {FeedcardService} from './feedcard/feedcard.service';
 import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
+import {Globals} from '../globals';
 
 export interface UserAvatarRelationship {
-  userId: number;
+  // userId: number;
   username: string;
   avatarBase64String: string;
   avatarPath: string;
@@ -45,21 +46,47 @@ export class AvatarService implements OnInit {
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private globals: Globals) { }
 
   ngOnInit(): void {
 
   }
 
-  getUserAvatar(userId: number): Observable<any> {
-    const functionName = 'getUserAvatar';
+  getCurrentUserAvatar(): Observable<any> {
+    const functionName = 'getCurrentUserAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    const username = this.globals.getUsername();
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          Auth.userAttributes(user)
+          const userPicture = this.globals.getUserAttribute('picture');
+          if (userPicture) {
+            console.log(`${functionFullName}: user picture: ${userPicture}`);
+            const data = {
+              status: true,
+              avatarUrl: userPicture
+            };
+            observer.next(data);
+            observer.complete();
+          } else {
+            console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
+            const token = user.signInUserSession.idToken.jwtToken;
+            const myInit = this.myInit;
+            myInit.headers['Authorization'] = token;
+            myInit['body'] = {username: username};
+
+            API.post(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
+              console.log(`${functionFullName}: successfully retrieved data from API`);
+              console.log(data);
+              observer.next(data.data);
+              observer.complete();
+            });
+          }
+
+          /*Auth.userAttributes(user)
             .then((userAttributes: CognitoUserAttribute[]) => {
               const userPicture = userAttributes.find(x => x.getName() === 'picture');
               if (userPicture) {
@@ -75,27 +102,16 @@ export class AvatarService implements OnInit {
                 const token = user.signInUserSession.idToken.jwtToken;
                 const myInit = this.myInit;
                 myInit.headers['Authorization'] = token;
-                myInit['body'] = {userId: userId};
+                myInit['body'] = {username: username};
 
-                API.post(this.apiName, this.apiPath + '/getUserAvatar', myInit).then(data => {
+                API.post(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
                   console.log(`${functionFullName}: successfully retrieved data from API`);
                   console.log(data);
                   observer.next(data.data);
                   observer.complete();
                 });
               }
-            });
-/*          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-          myInit['body'] = {userId: userId};
-
-          API.post(this.apiName, this.apiPath + '/getUserAvatar', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data);
-            observer.complete();
-          });*/
+            });*/
         });
     });
   }
@@ -232,10 +248,10 @@ export class AvatarService implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const userId = +localStorage.getItem('userId');
-
+    // const userId = +localStorage.getItem('userId');
+    // const userId = +this.globals.userDetails.userId;
     return new Observable<boolean>(observer => {
-      this.getUserAvatar(userId)
+      this.getCurrentUserAvatar()
         .subscribe((res: any) => {
           console.log(`${functionFullName}: result:`);
           console.log(res);
@@ -258,8 +274,8 @@ export class AvatarService implements OnInit {
                 this.userAvatarUrl = resultUrl;
 
                 const userAvatarHashEntry: UserAvatarRelationship = {
-                  username: localStorage.getItem('username'),
-                  userId: +localStorage.getItem('userId'),
+                  username: this.globals.getUsername(),
+                  // userId: +this.globals.userDetails.userId,
                   avatarPath: this.userAvatarPath,
                   avatarResolvedUrl: this.userAvatarUrl,
                   avatarBase64String: null,
@@ -378,8 +394,10 @@ export class AvatarService implements OnInit {
       // Try to find the resolved avatar URL in the userAvatarHash
       // if (this.userAvatarHash.length > 0) {
       console.log(`${functionFullName}: Checking if resolved avatar URL exists in the userAvatarHash`);
-      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username) ||
-        (x.userId === leaderboardUser.id)) && (x.avatarPath === currentAvatarPath));
+/*      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username) ||
+        (x.userId === leaderboardUser.id)) && (x.avatarPath === currentAvatarPath));*/
+
+      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username)) && (x.avatarPath === currentAvatarPath));
 
       if (userAvatarRelationship) {
         console.log(`${functionFullName}: Found resolved avatar URL in userAvatarHash`);
@@ -403,7 +421,7 @@ export class AvatarService implements OnInit {
 
             const userAvatarHashEntry: UserAvatarRelationship = {
               username: leaderboardUser.username,
-              userId: leaderboardUser.id,
+              // userId: leaderboardUser.id,
               avatarPath: leaderboardUser.avatar,
               avatarResolvedUrl: avatarUrl,
               avatarBase64String: null,
@@ -438,8 +456,10 @@ export class AvatarService implements OnInit {
       console.log(`${functionFullName}: avatarResolvedUrl: ${userAvatarRelationship.avatarResolvedUrl}`);
 
       console.log(`${functionFullName}: Checking if user entry exists in userAvatarHash`);
-      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username) ||
-        (x.userId === userAvatarRelationship.userId));
+/*      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username) ||
+        (x.userId === userAvatarRelationship.userId));*/
+
+      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username));
 
       if (userAvatarEntry) {
         // User entry exists in userAvatarHash. We're going to update it

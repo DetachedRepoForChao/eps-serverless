@@ -189,7 +189,7 @@ export class LeaderboardService {
     });
   }
 
-  getUserPointsLeaderboardRecord(userId: number): Observable<LeaderboardUser> {
+  getUserPointsLeaderboardRecord(username: string): Observable<LeaderboardUser> {
     const functionName = 'getUserPointsLeaderboardRecord';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -235,7 +235,7 @@ export class LeaderboardService {
                 leaderboardUsers = leaderboardUsers.concat(leaderboardUser);
               }
 
-              const userLeaderboardRecord = leaderboardUsers.find(result => result.id === userId);
+              const userLeaderboardRecord = leaderboardUsers.find(result => result.username === username);
               // console.log('leadboardUsers.find');
               console.log(userLeaderboardRecord);
               this.currentUserLeaderboardRecord = userLeaderboardRecord;
@@ -248,18 +248,18 @@ export class LeaderboardService {
     });
   }
 
-  isUserInLeaderboardTop5(userId: number): Observable<boolean> {
+  isUserInLeaderboardTop5(username: string): Observable<boolean> {
     const functionName = 'isUserInLeaderboardTop5';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
     return new Observable(observer => {
-      if (this.leaderboardUsersTop.find(x => x.id === userId)) {
-        console.log(`${functionFullName}: user with userId ${userId} is in the Leaderboard Top 5!`);
+      if (this.leaderboardUsersTop.find(x => x.username === username)) {
+        console.log(`${functionFullName}: user with username ${username} is in the Leaderboard Top 5!`);
         observer.next(true);
         // return true;
       } else {
-        console.log(`${functionFullName}: user with userId ${userId} is NOT in the Leaderboard Top 5!`);
+        console.log(`${functionFullName}: user with username ${username} is NOT in the Leaderboard Top 5!`);
         observer.next(false);
         // return false;
       }

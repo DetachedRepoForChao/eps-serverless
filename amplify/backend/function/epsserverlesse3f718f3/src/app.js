@@ -199,7 +199,7 @@ app.get('/items/currentUserAchievements', function(req, res) {
 
     if(tokenResult.message === 'Success') {
       const username = tokenResult.claims['cognito:username'];
-
+      // const username = req.body.username;
       ctrlUser.getUserProfile(username)
         .then(result => {
           const userId = result.user.id;
@@ -422,35 +422,51 @@ app.get('/items/getRemainingPointPool', function(req, res) {
 });
 
 // Like Routes
-app.post('/items/likeManage', function(req, res) {
-  console.log('starting post likeManage');
+app.post('/items/addLike', function(req, res) {
+  console.log('starting post addLike');
 
-  const likingUserId = req.body.likingUserId;
+  // const likingUsername = req.body.likingUsername;
   const postId = req.body.postId;
   const targetUserId = req.body.targetUserId;
+  const token = req.headers.authorization;
 
-  ctrLike.saveLike(likingUserId, targetUserId, postId)
-    .then(data => {
-      res.json({status: 'post call succeed!', data: data});
-    })
-    .catch(err => {
-      res.json({status: 'post call failed!', error: err});
-    });
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrLike.addLike(username, targetUserId, postId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 app.post('/items/removeLike', function(req, res) {
   console.log('starting post removeLike');
 
-  const likingUserId = req.body.likingUserId;
+  // const likingUsername = req.body.likingUsername;
   const postId = req.body.postId;
+  const token = req.headers.authorization;
 
-  ctrLike.removeLike(likingUserId, postId)
-    .then(data => {
-      res.json({status: 'post call succeed!', data: data.message});
-    })
-    .catch(err => {
-      res.json({status: 'post call failed!', error: err});
-    });
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrLike.removeLike(username, postId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.message});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 app.post('/items/getLikesByPostIds', function(req, res) {
@@ -468,15 +484,16 @@ app.post('/items/getLikesByPostIds', function(req, res) {
 });
 
 // Avatar Routes
-app.post('/items/getUserAvatar', function(req, res) {
-  console.log('starting post getUserAvatar');
+app.post('/items/getCurrentUserAvatar', function(req, res) {
+  console.log('starting post getCurrentUserAvatar');
 
   const userId = req.body.userId;
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
       // const username = tokenResult.claims['cognito:username'];
-      ctrlAvatar.getUserAvatar(userId)
+      const username = req.body.username;
+      ctrlAvatar.getUserAvatar(username)
         .then(data => {
           res.json({status: 'post call succeed!', data: data.avatarUrl});
         })

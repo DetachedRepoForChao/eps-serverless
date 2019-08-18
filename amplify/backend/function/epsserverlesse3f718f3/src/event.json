@@ -1,7 +1,7 @@
 {
   "resource": "/items",
-  "path": "/items/getPointTransaction",
-  "httpMethod": "GET",
+  "path": "/items/registerUser",
+  "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
@@ -41,6 +41,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"likingUserId\": 21, \"postId\": 1, \"achievementProgressId\": \"1ae966b4-bb8b-11e9-bae1-16cbe0a02cfa\", \"secretPassword\": \"123password#@!\", \"userId\": 8, \"achievementFamily\": \"SignIn\", \"achievementName\": \"SignIn\", \"sourceUserId\": 9,\"targetUserId\": 8, \"pointItemId\": 1, \"description\": \"This is a test\", \"avatarUrl\": \"https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/avatars/batman@3x.png\",\"username\": \"mbado3\", \"firstName\": \"Max\", \"lastName\": \"Bado\", \"email\": \"max.bado@gmail.com\", \"securityRole\": {\"Name\": \"employee\", \"Id\": 1}, \"department\": {\"Name\": \"Kitchen\", \"Id\": 1}, \"password\": \"D@RTHtest911\", \"position\": \"Cook\"}",
+  "body": "{\"securityRole\":{\"Id\":1,\"Name\":\"employee\",\"Description\":\"Standard employee\"},\"department\":{\"Id\":1,\"Name\":\"Kitchen\"},\"firstName\":\"Max\",\"lastName\":\"Bado\",\"username\":\"mbado5\",\"email\":\"max.bado@gmail.com\",\"password\":\"D@RTHtest911\",\"phone\":\"+17328597839\"}",
   "isBase64Encoded": false
 }

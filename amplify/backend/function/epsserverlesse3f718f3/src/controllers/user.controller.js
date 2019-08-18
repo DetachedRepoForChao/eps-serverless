@@ -193,14 +193,41 @@ const registerUser = function (req) {
           .then((user) => {
             console.log(`${functionFullName}: user created in db`);
 
-            ctrlAchievement.initializeUserAchievementProgress(user.id);
             // If the user is a manager, initialize their points pool
             if (user.securityRoleId === 2) {
               console.log(`${functionFullName}: initializing manager point pool for new user`);
               ctrlPointPool.initializePointPool(user.id);
             }
 
-            return {status: true, message: 'user created'};
+            return {status: true, message: 'user created', user: user};
+
+            /*return ctrlAchievement.initializeUserAchievementProgress(user.id)
+              .then(initAchievResult => {
+                if (!initAchievResult) {
+                  console.log(`${functionFullName}: Did not receive achievement initialization result during user creation`);
+                  return {status: false, message: 'Did not receive achievement initialization result during user creation'}
+                } else {
+                  if (initAchievResult.status !== true) {
+                    console.log(`${functionFullName}: Error while initializing achievements for new user`);
+                    return {status: false, message: 'Error while initializing achievements for new user'}
+                  } else {
+                    console.log(`${functionFullName}: achievements initializing for new user successfully`);
+
+                    // If the user is a manager, initialize their points pool
+                    if (user.securityRoleId === 2) {
+                      console.log(`${functionFullName}: initializing manager point pool for new user`);
+                      ctrlPointPool.initializePointPool(user.id);
+                    }
+
+                    return {status: true, message: 'user created', user: user};
+                  }
+                }
+              })
+              .catch(err => {
+                console.log(`${functionFullName}: Database error during achievement initialization during user creation`);
+                console.log(err);
+                return {status: false, message: 'Database error during achievement initialization during user creation'}
+              });*/
           })
           .catch(err => {
             console.log(`${functionFullName}: User creation error`);
@@ -291,7 +318,7 @@ module.exports.getUserProfile = getUserProfile;
 
 module.exports.setUserProfile = (req, res, next) => {
   console.log('setUserProfile');
-}
+};
 
 
 var getUserName = function (userid) {

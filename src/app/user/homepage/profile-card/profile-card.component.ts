@@ -15,6 +15,7 @@ import * as S3 from 'aws-sdk/clients/s3';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
+import {UserService} from '../../../shared/user.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -40,7 +41,8 @@ export class ProfileCardComponent implements OnInit {
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
-              private achievementService: AchievementService) { }
+              private achievementService: AchievementService,
+              private userService: UserService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -61,13 +63,25 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });
 
+    if (!this.globals.userDetails) {
+      this.userService.getUserProfile()
+        .subscribe(userDetails => {
+          this.globals.userDetails = userDetails;
+        });
+    } else if (this.globals.userDetails.username !== this.globals.getUsername()) {
+      this.userService.getUserProfile()
+        .subscribe(userDetails => {
+          this.globals.userDetails = userDetails;
+        });
+    }
+
     const observables: Observable<any>[] = [];
 
 /*    for (let i = 0; i < leaderboardUsers.length; i++) {
       observables.push(this.avatarService.resolveAvatar(leaderboardUsers[i]));
     }*/
 
-    observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId')));
+    observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(this.globals.getUsername()));
     observables.push(this.avatarService.refreshCurrentUserAvatar());
 
     forkJoin(observables)
@@ -135,7 +149,7 @@ export class ProfileCardComponent implements OnInit {
     this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
       console.log(`${functionFullName}: saveResult: ${saveResult}`);
       if (saveResult === true) {
-        this.leaderboardService.isUserInLeaderboardTop5(+localStorage.getItem('userId')).subscribe(isTop5Result => {
+        this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
           console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
           if (isTop5Result === true) {
             console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);

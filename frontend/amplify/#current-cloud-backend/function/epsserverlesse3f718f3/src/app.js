@@ -199,8 +199,8 @@ app.post('/items/likeManage', function(req, res) {
 });
 
 // Avatar Routes
-app.post('/items/getUserAvatar', function(req, res) {
-  console.log('starting post getUserAvatar');
+app.post('/items/getCurrentUserAvatar', function(req, res) {
+  console.log('starting post getCurrentUserAvatar');
 
   const userId = req.body.userId;
   const token = req.headers.authorization;

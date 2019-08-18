@@ -19,6 +19,7 @@ import { AuthService } from '../auth.service';
 import { environment } from 'src/environments/environment';
 import {SecurityRole} from '../../shared/securityrole.model';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {Globals} from '../../globals';
 
 @Component({
   selector: 'app-sign-in',
@@ -42,7 +43,8 @@ export class SignInComponent implements OnInit {
               // private sessionService: SessionService,
               private amplifyService: AmplifyService,
               public auth: AuthService,
-              private spinner: NgxSpinnerService) { }
+              private spinner: NgxSpinnerService,
+              private globals: Globals) { }
 
   model = {
     username : '',
@@ -81,8 +83,9 @@ export class SignInComponent implements OnInit {
       .then((user: CognitoUser|any) => {
         console.log(`${functionFullName}: Success!`);
         console.log(user);
-        console.log(`${functionFullName}: storeUserDetails`);
-        this.userService.getUserProfile()
+
+        // console.log(`${functionFullName}: storeUserDetails`);
+/*        this.userService.getUserProfile()
           .subscribe((userData: any) => {
             console.log(userData);
             const userDetails = userData;
@@ -135,7 +138,30 @@ export class SignInComponent implements OnInit {
             this.spinner.hide('sign-in-onSubmit-spinner');
             this.router.navigate(['/user']);
             // this.router.navigate(['/user/' + userDetails.securityRoleId]);
+          });*/
+
+        // this.achievementService.incrementAchievementSignIn(userDetails.id)
+        this.achievementService.incrementAchievement('SignIn')
+          .subscribe((result: any) => {
+            console.log(`${functionFullName}: incrementAchievementSignIn result:`);
+            console.log(result);
+            if ( !result ) {
+              console.log(`${functionFullName}: Did not receive response from incrementAchievement: SignIn`);
+            } else {
+              if ( result.status !== true) {
+                console.log(`${functionFullName}: Something went wrong...`);
+                console.log(result.message);
+              } else {
+                console.log(`${functionFullName}: Success`);
+                console.log(result.message);
+                // this.achievementComponent.getUserAchievements();
+              }
+            }
           });
+
+        console.log(`${functionFullName}: Hiding sign-in-onSubmit-spinner`);
+        this.spinner.hide('sign-in-onSubmit-spinner');
+        this.router.navigate(['/user']);
       })
       .catch((error: any) => {
         // this._loader.hide();

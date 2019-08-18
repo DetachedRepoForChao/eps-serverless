@@ -17,14 +17,14 @@ module.exports = function(sequelize, DataTypes) {
             },
             field: 'post_id'
         },
-        userId:{
-            type: DataTypes.INTEGER(11),
+        username:{
+            type: DataTypes.STRING(45),
             allowNull: false,
             references: {
                 model: 'user',
-                key: 'id'
+                key: 'username'
             },
-            field: 'user_id'
+            field: 'username'
         },
         createdAt: {
             type: DataTypes.DATE,

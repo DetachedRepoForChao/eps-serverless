@@ -12,6 +12,13 @@
   color: mintcream;
 }
 
+.badge {
+  margin-bottom: 0px;
+  border-radius: 1rem;
+  position: absolute;
+  top: -0.5rem;
+}
+
 /**.icon-blue {color: #0088cc}
 *.icon-grey {color: grey}
 i {
