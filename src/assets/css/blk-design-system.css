@@ -16945,7 +16945,7 @@ textarea.form-control:active {
     left: 0 !important;
   }
   .section-coins {
-    margin-top: 0 !important;
+    /*!*margin-top: 0 !important;*! Editted by MB   */
   }
 }
 
@@ -20345,8 +20345,8 @@ input.datetimepicker[data-color="yellow"]+.bootstrap-datetimepicker-widget.dropd
 }
 
 .card.card-coin .card-header {
-  margin: -100px auto 20px;
-}
+    margin: -100px auto 20px;
+  }
 
 .card.card-coin img {
   width: 150px;

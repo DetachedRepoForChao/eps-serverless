@@ -62,29 +62,34 @@ export class AvatarService implements OnInit {
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          const userPicture = this.globals.getUserAttribute('picture');
-          if (userPicture) {
-            console.log(`${functionFullName}: user picture: ${userPicture}`);
-            const data = {
-              status: true,
-              avatarUrl: userPicture
-            };
-            observer.next(data);
-            observer.complete();
-          } else {
-            console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-            const token = user.signInUserSession.idToken.jwtToken;
-            const myInit = this.myInit;
-            myInit.headers['Authorization'] = token;
-            myInit['body'] = {username: username};
+          // const userPicture = this.globals.getUserAttribute('picture');
+          Auth.currentUserInfo()
+            .then(userAttributes => {
+              const userPicture = userAttributes.picture;
+              if (userPicture) {
+                console.log(`${functionFullName}: user picture: ${userPicture}`);
+                const data = {
+                  status: true,
+                  avatarUrl: userPicture
+                };
+                observer.next(data);
+                observer.complete();
+              } else {
+                console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
+                const token = user.signInUserSession.idToken.jwtToken;
+                const myInit = this.myInit;
+                myInit.headers['Authorization'] = token;
+                myInit['body'] = {username: username};
 
-            API.post(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
-              console.log(`${functionFullName}: successfully retrieved data from API`);
-              console.log(data);
-              observer.next(data.data);
-              observer.complete();
+                API.post(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
+                  console.log(`${functionFullName}: successfully retrieved data from API`);
+                  console.log(data);
+                  observer.next(data.data);
+                  observer.complete();
+                });
+              }
             });
-          }
+
 
           /*Auth.userAttributes(user)
             .then((userAttributes: CognitoUserAttribute[]) => {
@@ -258,6 +263,7 @@ export class AvatarService implements OnInit {
 
           if (res.status !== false) {
             this.userAvatarPath = res.avatarUrl;
+            // this.userAvatarPath = this.globals.getUserAttribute('picture');
 
             const level = res.avatarUrl.split('/')[0];
             const cognitoIdentityId = res.avatarUrl.split('/')[1];

@@ -8,7 +8,7 @@ import {GALLERY_IMAGE} from 'ngx-image-gallery';
 import {Globals} from '../../../globals';
 import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
-import {Storage} from 'aws-amplify';
+import {Auth, Storage} from 'aws-amplify';
 import awsconfig from '../../../../aws-exports';
 import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
@@ -192,5 +192,30 @@ export class ProfileCardComponent implements OnInit {
     // show message
   }
 
+  Debug() {
+
+    const avatarPath = this.globals.getUserAttribute('picture');
+    const level = avatarPath.split('/')[0];
+    const cognitoIdentityId = avatarPath.split('/')[1];
+    const key = avatarPath.split('/')[2];
+
+    console.log('avatarPath');
+    console.log(avatarPath);
+
+    Auth.currentUserInfo().then(result => console.log(result));
+
+    Storage.get(key, {
+      level: level,
+      identityId: cognitoIdentityId
+    })
+      .then(result => {
+        console.log(result);
+        this.avatarService.userAvatarUrl = result;
+      })
+      .catch(err => {
+        console.log('Error');
+        console.log(err);
+      });
+  }
 
 }

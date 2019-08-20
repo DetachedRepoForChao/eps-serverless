@@ -12,7 +12,7 @@ import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
 import {forkJoin, Observable, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
-import {Storage} from 'aws-amplify';
+import {Auth, Storage} from 'aws-amplify';
 import * as Amplify from 'aws-amplify';
 // import * as AWS from 'aws-sdk/global';
 // import * as S3 from 'aws-sdk/clients/s3';
@@ -218,6 +218,8 @@ export class UserComponent implements OnInit, OnDestroy {
     console.log(`Start ${functionFullName}`);
 
     this.alive = false; // switches your TimerObservable off
+
+
   }
 
   startAchievementPolling() {

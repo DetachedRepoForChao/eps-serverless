@@ -491,8 +491,8 @@ app.post('/items/getCurrentUserAvatar', function(req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      // const username = tokenResult.claims['cognito:username'];
-      const username = req.body.username;
+      const username = tokenResult.claims['cognito:username'];
+      // const username = req.body.username;
       ctrlAvatar.getUserAvatar(username)
         .then(data => {
           res.json({status: 'post call succeed!', data: data.avatarUrl});

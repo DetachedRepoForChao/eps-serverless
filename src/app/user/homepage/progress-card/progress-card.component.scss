@@ -1,4 +1,4 @@
-.card {
+/*.card {
   background: #8656d22e;
 }
 
@@ -6,6 +6,49 @@
   margin-bottom: 0;
   border: 0;
   min-height: 600px;
+}*/
+
+.card-coin {
+  border: 0;
+  min-height: 600px;
+}
+
+div.card.card-coin.card-plain.card-custom {
+  background-color: #674ba580;
+}
+
+div.card {
+  background-color: rgba(167,53,43,0)
+}
+
+@media (max-width: 575.98px) {
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .card.card-coin {
+    margin-bottom: 0px;
+  }
 }
 
 .glow {
