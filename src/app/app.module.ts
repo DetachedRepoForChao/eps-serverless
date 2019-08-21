@@ -65,6 +65,14 @@ import { NgxSpinnerModule} from 'ngx-spinner';
 import { AwesomeTooltipDirectiveDirective } from './shared/awesome-tooltip/awesome-tooltip-directive.directive';
 import { AwesomeTooltipComponent } from './shared/awesome-tooltip/awesome-tooltip.component';
 import { PointsStoreComponent } from './user/points-store/points-store.component';
+import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { environment } from '../environments/environment';
+import { UserAvatarFiltersComponent } from './entity-store/user-avatar/filter/user-avatar-filters.component';
+import { UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
+import { UserAvatarsComponent} from './entity-store/user-avatar/user-avatars.component';
+import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.component';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -101,6 +109,11 @@ import { PointsStoreComponent } from './user/points-store/points-store.component
     AwesomeTooltipDirectiveDirective,
     AwesomeTooltipComponent,
     PointsStoreComponent,
+    UserAvatarFiltersComponent,
+    UserAvatarPageComponent,
+    UserAvatarsComponent,
+    UserAvatarComponent
+
 
   ],
   imports: [
@@ -130,7 +143,9 @@ import { PointsStoreComponent } from './user/points-store/points-store.component
     ReactiveFormsModule,
     ImageCropperModule,
     NgxSpinnerModule,
-    OverlayModule
+    OverlayModule,
+    environment.production ? [] : AkitaNgDevtools.forRoot(),
+    AkitaNgRouterStoreModule.forRoot()
   ],
   providers: [
     {
@@ -148,7 +163,8 @@ import { PointsStoreComponent } from './user/points-store/points-store.component
     RoleGuardService,
     UserService,
     Globals,
-    AmplifyService
+    AmplifyService,
+    { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }}
   ],
   bootstrap: [AppComponent],
   entryComponents: [AwesomeTooltipComponent]

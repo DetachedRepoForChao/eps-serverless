@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Angular6": {
+    "EPS": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -29,9 +29,7 @@
               "node_modules/angular-notifier/styles.scss",
               "./node_modules/@angular/cdk/overlay-prebuilt.css"
             ],
-            "scripts": [
-
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -56,18 +54,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Angular6:build"
+            "browserTarget": "EPS:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Angular6:build:production"
+              "browserTarget": "EPS:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Angular6:build"
+            "browserTarget": "EPS:build"
           }
         },
         "test": {
@@ -102,7 +100,7 @@
         }
       }
     },
-    "Angular6-e2e": {
+    "EPS-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -110,7 +108,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "Angular6:serve"
+            "devServerTarget": "EPS:serve"
           }
         },
         "lint": {
@@ -125,5 +123,8 @@
       }
     }
   },
-  "defaultProject": "Angular6"
+  "defaultProject": "EPS",
+  "cli": {
+    "defaultCollection": "@datorama/akita"
+  }
 }

@@ -13,6 +13,8 @@ import {LeaderboardUser} from './leaderboard.service';
 import {FeedcardService} from './feedcard/feedcard.service';
 import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
 import {Globals} from '../globals';
+import {EntityUserAvatarService} from '../entity-store/user-avatar/state/entity-user-avatar.service';
+import {EntityUserAvatarModel} from '../entity-store/user-avatar/state/entity-user-avatar.model';
 
 export interface UserAvatarRelationship {
   // userId: number;
@@ -47,7 +49,8 @@ export class AvatarService implements OnInit {
   constructor(private http: HttpClient,
               private imageService: ImageService,
               private authService: AuthService,
-              private globals: Globals) { }
+              private globals: Globals,
+              private entityUserAvatarService) { }
 
   ngOnInit(): void {
 
@@ -169,47 +172,65 @@ export class AvatarService implements OnInit {
               console.log(`${functionFullName}: resultImage:`);
               console.log(resultImage);
 
-              const localStorageItems = [];
-              for ( let i = 0; i < localStorage.length; i++) {
-                localStorageItems.push(localStorage.key(i));
-              }
+              Auth.currentUserInfo()
+                .then(userInfo => {
+                  const observables: Observable<any>[] = [];
 
-              // Get Cognito ID in order to record the appropriate path in the database
-              const cognitoIdentityId = localStorageItems.find((x: string) => x.includes('aws.cognito.identity-id') === true);
-              const cognitoIdentityIdValue = localStorage.getItem(cognitoIdentityId);
+                  // Record new Avatar path in the database
+                  observables.push(this.setUserAvatar(`${level}/${cognitoIdentityIdValue}/${result.key}`));
 
-              const observables: Observable<any>[] = [];
+                  // Set new Avatar path in the picture attribute within Cognito profile
+                  observables.push(this.setCognitoPictureAttribute(`${level}/${cognitoIdentityIdValue}/${result.key}`));
 
-              // Record new Avatar path in the database
-              observables.push(this.setUserAvatar(`${level}/${cognitoIdentityIdValue}/${result.key}`));
+                  forkJoin(observables)
+                    .subscribe(obsResults => {
+                      console.log(`${functionFullName}: obsResults:`);
+                      console.log(obsResults);
 
-              // Set new Avatar path in the picture attribute within Cognito profile
-              observables.push(this.setCognitoPictureAttribute(`${level}/${cognitoIdentityIdValue}/${result.key}`));
+                      this.refreshCurrentUserAvatar()
+                        .subscribe(refreshResult => {
+                          console.log(`${functionFullName}: refreshResult: ${refreshResult}`);
+                          if (refreshResult === true) {
+                            // Delete old Avatar image if there was one
+                            if (oldAvatarKey) {
+                              Storage.remove(oldAvatarKey, {
+                                level: oldAvatarLevel,
+                                identityId: oldAvatarCognitoIdentityId
+                              }).then(removeResult => {
+                                console.log(`${functionFullName}: Deleted old avatar file:`);
+                                console.log(removeResult);
+                              });
+                            }
 
-              forkJoin(observables)
-                .subscribe(obsResults => {
-                  console.log(`${functionFullName}: obsResults:`);
-                  console.log(obsResults);
-
-                  this.refreshCurrentUserAvatar().subscribe(refreshResult => {
-                    console.log(`${functionFullName}: refreshResult: ${refreshResult}`);
-                    if (refreshResult === true) {
-                      // Delete old Avatar image if there was one
-                      if (oldAvatarKey) {
-                        Storage.remove(oldAvatarKey, {
-                          level: oldAvatarLevel,
-                          identityId: oldAvatarCognitoIdentityId
-                        }).then(removeResult => {
-                          console.log(`${functionFullName}: Deleted old avatar file:`);
-                          console.log(removeResult);
+                            observer.next(true);
+                            observer.complete();
+                          }
                         });
-                      }
-
-                      observer.next(true);
-                      observer.complete();
-                    }
-                  });
+                    });
+                })
+                .catch(err => {
+                  console.log(`${functionFullName}: Error retrieving current user info`);
+                  console.log(err);
+                  observer.next(false);
+                  observer.complete();
                 });
+
+              /*              const localStorageItems = [];
+                            for ( let i = 0; i < localStorage.length; i++) {
+                              localStorageItems.push(localStorage.key(i));
+                            }
+
+                            // Get Cognito ID in order to record the appropriate path in the database
+                            const cognitoIdentityId = localStorageItems.find((x: string) => x.includes('aws.cognito.identity-id') === true);
+                            const cognitoIdentityIdValue = localStorage.getItem(cognitoIdentityId);*/
+
+
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: Error retrieving item from storage`);
+              console.log(err);
+              observer.next(false);
+              observer.complete();
             });
         })
         .catch(err => {
@@ -330,7 +351,7 @@ export class AvatarService implements OnInit {
     });
   }
 
-   setUserAvatar(avatarUrl: string): Observable<any> {
+  setUserAvatar(avatarUrl: string): Observable<any> {
     const functionName = 'setUserAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -400,8 +421,8 @@ export class AvatarService implements OnInit {
       // Try to find the resolved avatar URL in the userAvatarHash
       // if (this.userAvatarHash.length > 0) {
       console.log(`${functionFullName}: Checking if resolved avatar URL exists in the userAvatarHash`);
-/*      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username) ||
-        (x.userId === leaderboardUser.id)) && (x.avatarPath === currentAvatarPath));*/
+      /*      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username) ||
+              (x.userId === leaderboardUser.id)) && (x.avatarPath === currentAvatarPath));*/
 
       const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username)) && (x.avatarPath === currentAvatarPath));
 
@@ -451,7 +472,7 @@ export class AvatarService implements OnInit {
     });
   }
 
-  cacheUserAvatarRelationship(userAvatarRelationship: UserAvatarRelationship): Observable<any> {
+/*  cacheUserAvatarRelationship(userAvatarRelationship: UserAvatarRelationship): Observable<any> {
     const functionName = 'cacheUserAvatarRelationship';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -462,9 +483,40 @@ export class AvatarService implements OnInit {
       console.log(`${functionFullName}: avatarResolvedUrl: ${userAvatarRelationship.avatarResolvedUrl}`);
 
       console.log(`${functionFullName}: Checking if user entry exists in userAvatarHash`);
-/*      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username) ||
-        (x.userId === userAvatarRelationship.userId));*/
+      /!*      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username) ||
+              (x.userId === userAvatarRelationship.userId));*!/
 
+      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username));
+
+      if (userAvatarEntry) {
+        // User entry exists in userAvatarHash. We're going to update it
+        console.log(`${functionFullName}: User entry exists in userAvatarHash. We're going to update it`);
+        const index = this.userAvatarHash.indexOf(userAvatarEntry);
+        this.userAvatarHash[index].avatarPath = userAvatarRelationship.avatarPath;
+        this.userAvatarHash[index].dateModified = userAvatarRelationship.dateModified;
+        this.userAvatarHash[index].avatarResolvedUrl = userAvatarRelationship.avatarResolvedUrl;
+      } else {
+        console.log(`${functionFullName}: User entry does not exist in userAvatarHash. Creating one`);
+        this.userAvatarHash.push(userAvatarRelationship);
+      }
+
+      observer.next();
+      observer.complete();
+    });
+  }*/
+
+  cacheUserAvatarRelationship(userAvatarRelationship: UserAvatarRelationship): Observable<any> {
+    const functionName = 'cacheUserAvatarRelationship';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      console.log(`${functionFullName}: Adding userAvatarRelationship to user-avatar store`);
+      console.log(`${functionFullName}: username: ${userAvatarRelationship.username}`);
+      console.log(`${functionFullName}: avatarResolvedUrl: ${userAvatarRelationship.avatarResolvedUrl}`);
+      console.log(`${functionFullName}: Checking if user entry exists in userAvatarHash`);
+
+      // this.entityUserAvatarService.
       const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username));
 
       if (userAvatarEntry) {

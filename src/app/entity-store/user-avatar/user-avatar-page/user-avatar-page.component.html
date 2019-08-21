@@ -1,0 +1,13 @@
+<div class="input-field">
+  <i class="material-icons prefix">add_alarm</i>
+  <input type="text" class="form-control" placeholder="Add Todo..." #input (keydown.enter)="add(input)">
+</div>
+
+<app-user-avatar-filters (update)="changeFilter($event)" [filters]="filters" [active]="activeFilter$ | async">
+</app-user-avatar-filters>
+
+<app-user-avatars [userAvatars]="userAvatars$ | async" (delete)="delete($event)" (complete)="complete($event)"></app-user-avatars>
+
+<button (click)="getUserAvatar()">Get</button>
+<button (click)="getSomething()">Something</button>
+
