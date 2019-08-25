@@ -29,9 +29,17 @@ export class UserAvatarPageComponent implements OnInit {
 
   add(input: HTMLInputElement) {
 
-    const username = 'mbado';
+    let avatarPath;
+    if (input.value === 'mbado') {
+      avatarPath = 'protected/us-east-1:822e6f40-361b-4f0a-a8e8-2cfcc6547420/avatar_x186fc09kbjzjdop7j.png';
+    }
+    if (input.value === 'hulk') {
+      avatarPath = 'protected/us-east-1:4d6125b2-9525-4199-a874-c798f4b6c773/avatar_iqtj43tstbijzkco2ws.png';
+    }
+
+    const username = input.value;
     const base64 = '';
-    const path = 'protected/us-east-1:822e6f40-361b-4f0a-a8e8-2cfcc6547420/avatar_x186fc09kbjzjdop7j.png';
+    const path = avatarPath;
     const key = path.split('/')[2];
     const identityId = path.split('/')[1];
     Storage.get(key, {
@@ -52,6 +60,7 @@ export class UserAvatarPageComponent implements OnInit {
   }
 
   delete(id: ID) {
+    console.log(`user-avatar-page.component: delete ${id}`);
     this.entityUserAvatarService.delete(id);
   }
 
@@ -59,20 +68,31 @@ export class UserAvatarPageComponent implements OnInit {
     this.entityUserAvatarService.updateFilter(filter);
   }
 
-  getUserAvatar() {
+  getUserAvatar(username: string) {
+    console.log(`query.getUserAvatar(${username}):`);
     this.entityUserAvatarQuery.getUserAvatar('mbado');
-    console.log(this.entityUserAvatarQuery.getHasCache());
+    console.log(`query.getHasCache(): ${this.entityUserAvatarQuery.getHasCache()}`);
   }
 
-  getSomething() {
-    this.entityUserAvatarService.getSomething()
+  getSomething(username: string) {
+    this.entityUserAvatarService.getSomething(username)
       .subscribe(uhhh => {
         console.log(uhhh);
       });
 
     console.log(this.entityUserAvatarQuery.getHasCache());
     console.log(this.entityUserAvatarQuery);
+  }
 
+  showStore() {
+    this.entityUserAvatarService.showStore();
+  }
+
+  getUserAvatars() {
+    this.entityUserAvatarService.getUserAvatars()
+      .subscribe(avatarsStore => {
+        console.log(avatarsStore);
+      });
   }
 
 }

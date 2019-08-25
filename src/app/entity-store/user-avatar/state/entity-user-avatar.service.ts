@@ -6,8 +6,9 @@ import { VISIBILITY_FILTER } from '../filter/user-avatar-filter.model';
 import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
 import {Storage} from 'aws-amplify';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
+import {AvatarService} from '../../../shared/avatar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ import {tap} from 'rxjs/operators';
 export class EntityUserAvatarService {
 
   constructor(private userAvatarStore: UserAvatarStore,
-              private entityUserAvatarQuery: EntityUserAvatarQuery) { }
+              private entityUserAvatarQuery: EntityUserAvatarQuery,
+              private avatarService: AvatarService) { }
 
   updateFilter(filter: VISIBILITY_FILTER) {
     this.userAvatarStore.update({
@@ -26,8 +28,8 @@ export class EntityUserAvatarService {
   }
 
 
-  complete({ id, avatarPath }: EntityUserAvatarModel) {
-    this.userAvatarStore.update(id, {
+  complete({ username, avatarPath }: EntityUserAvatarModel) {
+    this.userAvatarStore.update(username, {
       avatarPath
     });
   }
@@ -39,43 +41,78 @@ export class EntityUserAvatarService {
   }
 
 
-  delete(id: ID) {
-    this.userAvatarStore.remove(id);
+  delete(username: ID) {
+    console.log(`entity-user-avatar.service: delete ${username}`);
+    this.userAvatarStore.remove(username);
   }
 
-/*  getSomething() {
-    const path = 'protected/us-east-1:822e6f40-361b-4f0a-a8e8-2cfcc6547420/avatar_x186fc09kbjzjdop7j.png';
-    const request$ = this.getItemFromStorage()
-      .pipe(tap(item => {
-        console.log(`caching: ${item}`);
-        this.add('mbado', '', path, item);
-      }));
+  getSomething(username: string) {
+    console.log(`Retrieving avatar for ${username}`);
 
-    return cacheable(this.userAvatarStore, request$);
-  }*/
+    let avatarPath;
+    if (username === 'mbado') {
+      avatarPath = 'protected/us-east-1:822e6f40-361b-4f0a-a8e8-2cfcc6547420/avatar_x186fc09kbjzjdop7j.png';
+    }
+    if (username === 'hulk') {
+      avatarPath = 'protected/us-east-1:4d6125b2-9525-4199-a874-c798f4b6c773/avatar_iqtj43tstbijzkco2ws.png';
+    }
 
-  getSomething() {
-    const path = 'protected/us-east-1:822e6f40-361b-4f0a-a8e8-2cfcc6547420/avatar_x186fc09kbjzjdop7j.png';
-    const request$ = this.getItemFromStorage()
+    const request$ = this.getAvatarFromStorage(avatarPath)
+      // .subscribe((item: string) => {
       .pipe(tap((item: string) => {
         console.log(`caching: ${item}`);
-        this.add('mbado', '', path, item);
-        const username: string = 'mbado';
+        // this.add(username, '', avatarPath, item);
+        // const username: string = 'mbado';
         const avatarBase64String: string = '';
-        const avatarPath: string = path;
+        // const avatarPath: string = path;
         const avatarResolvedUrl: string = item;
         const avatar = createEntityUserAvatarModel({username, avatarBase64String, avatarPath, avatarResolvedUrl});
+        // this.userAvatarStore.set([avatar]);
         this.userAvatarStore.set([avatar]);
+        // this.userAvatarStore.add(avatar);
+        // });
       }));
 
-    // return this.entityUserAvatarQuery.getHasCache() ? of() : request$;
     return cacheable(this.userAvatarStore, request$);
   }
 
-  getItemFromStorage(): Observable<any> {
-    const path = 'protected/us-east-1:822e6f40-361b-4f0a-a8e8-2cfcc6547420/avatar_x186fc09kbjzjdop7j.png';
-    const key = path.split('/')[2];
-    const identityId = path.split('/')[1];
+  getUserAvatars() {
+    console.log(`Retrieving all user avatars`);
+
+    const request$ = this.avatarService.getUserAvatars()
+      .pipe(tap((avatars: any) => {
+        console.log(`caching:`);
+        console.log(avatars);
+
+        const avatarsArray: EntityUserAvatarModel[] = [];
+        const observables: Observable<any>[] = [];
+        for (let i = 0; i < avatars.length; i++) {
+          observables.push(this.getAvatarFromStorage(avatars[i]));
+        }
+
+        forkJoin(observables)
+          .subscribe((obsResult: any) => {
+            for (let i = 0; i < obsResult.length; i++) {
+              const username = obsResult[i].username;
+              const avatarPath = obsResult[i].avatarPath;
+              const avatarBase64String = '';
+              const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
+              const avatar = createEntityUserAvatarModel({username, avatarBase64String, avatarPath, avatarResolvedUrl});
+              avatarsArray.push(avatar);
+            }
+
+            this.userAvatarStore.set(avatarsArray);
+          });
+      }));
+
+    return cacheable(this.userAvatarStore, request$);
+  }
+
+  getAvatarFromStorage(userAvatarData: any): Observable<any> {
+    console.log('Getting item from storage');
+
+    const key = userAvatarData.avatarUrl.split('/')[2];
+    const identityId = userAvatarData.avatarUrl.split('/')[1];
 
     return new Observable<any>(observer => {
       Storage.get(key, {
@@ -84,10 +121,19 @@ export class EntityUserAvatarService {
       })
         .then((result: string) => {
           console.log(result);
+          const data = {
+            username: userAvatarData.username,
+            avatarPath: userAvatarData.avatarUrl,
+            avatarResolvedUrl: result
+          };
 
-          observer.next(result);
+          observer.next(data);
           observer.complete();
         });
     });
+  }
+
+  showStore() {
+    console.log(this.userAvatarStore);
   }
 }

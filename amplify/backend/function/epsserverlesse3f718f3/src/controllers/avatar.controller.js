@@ -66,6 +66,35 @@ const getUserAvatar = function(username) {
 
 module.exports.getUserAvatar = getUserAvatar;
 
+
+const getUserAvatars = function() {
+  const functionName = 'getUserAvatars';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlUserModel.findAll({
+    attributes: ['id', 'username', 'avatarUrl'],
+  })
+    .then(avatarsResult => {
+      // console.log(`${functionFullName}: avatarUrl: ${avatarUrl}`);
+      if(!avatarsResult) {
+        console.log(`${functionFullName}: Did not find any records`);
+        return {status: false, message: 'Did not find any records.' };
+      } else {
+        console.log(`${functionFullName}: Success`);
+        return {status: true, avatarsResult: avatarsResult};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, error: err};
+    });
+};
+
+module.exports.getUserAvatars = getUserAvatars;
+
+
 const setUserAvatar = function(username, avatarUrl) {
   const functionName = 'setUserAvatar';
   const functionFullName = `${componentName} ${functionName}`;

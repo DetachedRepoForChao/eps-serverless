@@ -50,10 +50,48 @@ export class AvatarService implements OnInit {
               private imageService: ImageService,
               private authService: AuthService,
               private globals: Globals,
-              private entityUserAvatarService) { }
+              ) { }
 
   ngOnInit(): void {
 
+  }
+
+  getAvatar(username: string): Observable<any> {
+    const functionName = 'getAvatar';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            username: username
+          };
+
+          API.post(this.apiName, this.apiPath + '/userAvatar', myInit)
+            .then(data => {
+              console.log(`${functionFullName}: ${username} avatar data retrieved from API`);
+              console.log(data);
+              observer.next(data.data);
+              observer.complete();
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving ${username} avatar data from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
   }
 
   getCurrentUserAvatar(): Observable<any> {
@@ -82,9 +120,9 @@ export class AvatarService implements OnInit {
                 const token = user.signInUserSession.idToken.jwtToken;
                 const myInit = this.myInit;
                 myInit.headers['Authorization'] = token;
-                myInit['body'] = {username: username};
+                // myInit['body'] = {username: username};
 
-                API.post(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
+                API.get(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
                   console.log(`${functionFullName}: successfully retrieved data from API`);
                   console.log(data);
                   observer.next(data.data);
@@ -174,6 +212,7 @@ export class AvatarService implements OnInit {
 
               Auth.currentUserInfo()
                 .then(userInfo => {
+                  const cognitoIdentityIdValue = userInfo.id;
                   const observables: Observable<any>[] = [];
 
                   // Record new Avatar path in the database
@@ -392,6 +431,40 @@ export class AvatarService implements OnInit {
             observer.next(data.data);
             observer.complete();
           });
+        });
+    });
+  }
+
+  getUserAvatars(): Observable<any> {
+    const functionName = 'getUserAvatars';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/getUserAvatars', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving user avatars data from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
         });
     });
   }

@@ -36,12 +36,14 @@ export class EntityUserAvatarQuery extends QueryEntity<UserAvatarState, EntityUs
     }
   }
 
-  public getUserAvatar(username: string): EntityUserAvatarModel {
-    const avatar = this.getEntity(1);
+  // public getUserAvatar(username: string): EntityUserAvatarModel {
+  public getUserAvatar(username: string) {
+    const avatars = this.getAll();
+    // const avatar = this.getEntity(username);
 
-    console.log(avatar);
-    console.log(this.getAll());
-    return avatar;
+    console.log(avatars);
+    // console.log(this.getAll());
+    // return avatars;
   }
 
 }

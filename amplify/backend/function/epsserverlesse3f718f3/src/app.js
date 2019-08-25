@@ -484,10 +484,10 @@ app.post('/items/getLikesByPostIds', function(req, res) {
 });
 
 // Avatar Routes
-app.post('/items/getCurrentUserAvatar', function(req, res) {
+app.get('/items/getCurrentUserAvatar', function(req, res) {
   console.log('starting post getCurrentUserAvatar');
 
-  const userId = req.body.userId;
+  // const userId = req.body.userId;
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
@@ -554,6 +554,45 @@ app.get('/items/getAvatars', function(req, res) {
         .catch(err => {
           res.json({status: 'post call failed!', error: err});
         });*/
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/getAvatar', function(req, res) {
+  console.log('starting post getAvatar');
+
+  const token = req.headers.authorization;
+  const username = req.body.username;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlAvatar.getUserAvatar(username)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.avatarUrl});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.get('/items/getUserAvatars', function(req, res) {
+  console.log('starting get getUserAvatars');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlAvatar.getUserAvatars()
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.avatarsResult});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
