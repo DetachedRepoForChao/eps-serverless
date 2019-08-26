@@ -38,8 +38,13 @@
           <tbody>
           <tr *ngFor="let user of this.leaderboardService.leaderboardUsersTop" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
             <td *ngFor="let col of this.displayedColumns">
-              <div *ngIf="col === 'avatar'" [appAwesomeTooltipDirective]="{'type': 'img', 'data': user[col]}"><img src="{{user[col]}}" class="img-row"/></div>
-
+<!--              <div *ngIf="col === 'avatar'" [appAwesomeTooltipDirective]="{'type': 'img', 'data': user[col]}"><img src="{{user[col]}}" class="img-row"/></div>-->
+<!--              <div *ngIf="col === 'avatar'" [appAwesomeTooltipDirective]="{'type': 'img', 'data': user[col]}">-->
+              <div *ngIf="col === 'avatar'">
+                <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                </div>
+              </div>
               <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>
               <div *ngIf="col === 'name'">{{user[col]}}</div>
               <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
@@ -68,10 +73,19 @@
                     <div class="card card-coin card-plain maxheight">
                       <div class="card-header">
 
-                        <img src="{{selectedRow.avatar}}"
-                             alt="Place image title"
-                             class="img-center img-fluid rounded-circle"
-                             id="avatar">
+                        <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else selectedAvatarLoading">
+                          <img src="{{(userAvatarQuery.getUserAvatar(selectedRow.username))[0].avatarResolvedUrl}}"
+                               alt="Place image title"
+                               class="img-center img-fluid rounded-circle"
+                               id="avatar">
+                        </div>
+
+                        <ng-template #selectedAvatarLoading >
+                          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                               alt="Loading..."
+                               class="img-center img-fluid rounded-circle"
+                               id="avatarPlaceholder">
+                        </ng-template>
 
                       </div>
                       <div class="card-body">
@@ -134,6 +148,13 @@
   </div>
 </ng-template>
 
+<!-- Placeholder for loading avatar -->
+<ng-template #avatarLoading >
+  <div>
+    <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..." class="img-row">
+  </div>
+</ng-template>
+
 <div class="modal fade modal-black" id="leaderboardModal" role="dialog" tabindex="-1" aria-labelledby="leaderboardModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg" role="document">
 
@@ -158,7 +179,12 @@
           <tbody>
           <tr *ngFor="let user of this.leaderboardService.leaderboardUsers">
             <td *ngFor="let col of this.displayedColumnsAll">
-              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>
+<!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>-->
+              <div *ngIf="col === 'avatar'">
+                <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                </div>
+              </div>
               <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>
               <div *ngIf="col === 'name'">{{user[col]}}</div>
               <div *ngIf="col === 'points'">{{user[col]}}</div>

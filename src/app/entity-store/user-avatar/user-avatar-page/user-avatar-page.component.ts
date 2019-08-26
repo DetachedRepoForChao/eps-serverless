@@ -74,7 +74,7 @@ export class UserAvatarPageComponent implements OnInit {
     console.log(`query.getHasCache(): ${this.entityUserAvatarQuery.getHasCache()}`);
   }
 
-  getSomething(username: string) {
+/*  getSomething(username: string) {
     this.entityUserAvatarService.getSomething(username)
       .subscribe(uhhh => {
         console.log(uhhh);
@@ -82,7 +82,7 @@ export class UserAvatarPageComponent implements OnInit {
 
     console.log(this.entityUserAvatarQuery.getHasCache());
     console.log(this.entityUserAvatarQuery);
-  }
+  }*/
 
   showStore() {
     this.entityUserAvatarService.showStore();

@@ -1,17 +1,16 @@
 <div class="card">
   <div class="card card-coin card-plain card-custom">
     <div class="card-header">
-      <!-- <img src="../../../../assets/img/mike.jpg" class="img-center img-fluid rounded-circle"> -->
-<!--      <img [src]="this.avatarService.userAvatarImageToShow"-->
-      <img [src]="this.avatarService.userAvatarUrl"
-            alt="Avatar"
-           *ngIf="!isImageLoading; else avatarPlaceholder"
+
+      <img [src]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
+           alt="Avatar"
+           *ngIf="(userQuery.selectLoading() | async) === false; else avatarLoading"
            class="img-center img-fluid rounded-circle"
            id="avatar">
 
-      <ng-template #avatarPlaceholder>
+      <ng-template #avatarLoading >
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-             alt="Avatar"
+             alt="Loading..."
              class="img-center img-fluid rounded-circle"
              id="avatarPlaceholder">
       </ng-template>
@@ -63,7 +62,7 @@
       <!-----Button----->
       <div class="container">
         <div class="row">
-          <button type="button" (click)="Debug()">Debug</button>
+<!--          <button type="button" (click)="Debug()">Debug</button>-->
           <div class="col-sm-6 col-md-6 col-lg-6 col-6">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
           </div>
@@ -111,7 +110,6 @@
       </div>
     </div>
   </div>
-
 
   <!-- Blank card to display while loading -->
   <ng-template #cardLoading>

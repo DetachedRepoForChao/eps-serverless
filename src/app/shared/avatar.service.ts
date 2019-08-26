@@ -15,6 +15,7 @@ import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
 import {Globals} from '../globals';
 import {EntityUserAvatarService} from '../entity-store/user-avatar/state/entity-user-avatar.service';
 import {EntityUserAvatarModel} from '../entity-store/user-avatar/state/entity-user-avatar.model';
+import {EntityUserService} from '../entity-store/user/state/entity-user.service';
 
 export interface UserAvatarRelationship {
   // userId: number;
@@ -50,13 +51,15 @@ export class AvatarService implements OnInit {
               private imageService: ImageService,
               private authService: AuthService,
               private globals: Globals,
+              private entityUserService: EntityUserService,
+              private entityUserAvatarService: EntityUserAvatarService
               ) { }
 
   ngOnInit(): void {
 
   }
 
-  getAvatar(username: string): Observable<any> {
+  /*getAvatar(username: string): Observable<any> {
     const functionName = 'getAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -92,14 +95,14 @@ export class AvatarService implements OnInit {
           observer.complete();
         });
     });
-  }
+  }*/
 
   getCurrentUserAvatar(): Observable<any> {
     const functionName = 'getCurrentUserAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const username = this.globals.getUsername();
+    // const username = this.globals.getUsername();
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -253,17 +256,6 @@ export class AvatarService implements OnInit {
                   observer.next(false);
                   observer.complete();
                 });
-
-              /*              const localStorageItems = [];
-                            for ( let i = 0; i < localStorage.length; i++) {
-                              localStorageItems.push(localStorage.key(i));
-                            }
-
-                            // Get Cognito ID in order to record the appropriate path in the database
-                            const cognitoIdentityId = localStorageItems.find((x: string) => x.includes('aws.cognito.identity-id') === true);
-                            const cognitoIdentityIdValue = localStorage.getItem(cognitoIdentityId);*/
-
-
             })
             .catch(err => {
               console.log(`${functionFullName}: Error retrieving item from storage`);
@@ -339,20 +331,21 @@ export class AvatarService implements OnInit {
 
                 this.userAvatarUrl = resultUrl;
 
-                const userAvatarHashEntry: UserAvatarRelationship = {
-                  username: this.globals.getUsername(),
-                  // userId: +this.globals.userDetails.userId,
-                  avatarPath: this.userAvatarPath,
-                  avatarResolvedUrl: this.userAvatarUrl,
-                  avatarBase64String: null,
-                  avatarUrl: null,
-                  dateModified: Date.now()
-                };
+                const username = this.globals.getUsername();
+                const avatarPath = res.avatarUrl;
+                const avatarResolvedUrl = resultUrl;
+                const avatarBase64String = '';
 
-                this.cacheUserAvatarRelationship(userAvatarHashEntry).subscribe(() => {
+                this.entityUserService.update(avatarPath, avatarResolvedUrl);
+                this.entityUserAvatarService.update(username, avatarPath, avatarResolvedUrl);
+
+                observer.next(true);
+                observer.complete();
+
+/*                this.cacheUserAvatarRelationship(userAvatarHashEntry).subscribe(() => {
                   observer.next(true);
                   observer.complete();
-                });
+                });*/
               });
           }
         });
@@ -469,7 +462,7 @@ export class AvatarService implements OnInit {
     });
   }
 
-  resolveAvatar(leaderboardUser: any): Observable<any> {
+  /*resolveAvatar(leaderboardUser: any): Observable<any> {
     const functionName = 'resolveAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -494,10 +487,11 @@ export class AvatarService implements OnInit {
       // Try to find the resolved avatar URL in the userAvatarHash
       // if (this.userAvatarHash.length > 0) {
       console.log(`${functionFullName}: Checking if resolved avatar URL exists in the userAvatarHash`);
-      /*      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username) ||
-              (x.userId === leaderboardUser.id)) && (x.avatarPath === currentAvatarPath));*/
+      /!*      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username) ||
+              (x.userId === leaderboardUser.id)) && (x.avatarPath === currentAvatarPath));*!/
 
-      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username)) && (x.avatarPath === currentAvatarPath));
+      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username))
+        && (x.avatarPath === currentAvatarPath));
 
       if (userAvatarRelationship) {
         console.log(`${functionFullName}: Found resolved avatar URL in userAvatarHash`);
@@ -511,7 +505,8 @@ export class AvatarService implements OnInit {
       // }
 
       if (!avatarResolvedUrl) {
-        console.log(`${functionFullName}: Resolved avatar URL was not retrieved from the userAvatarHash. Resolving the URL using the Storage API`);
+        console.log(`${functionFullName}: Resolved avatar URL was not retrieved from the userAvatarHash.` +
+          ` Resolving the URL using the Storage API`);
         Storage.get(key, {
           level: level,
           identityId: cognitoIdentityId
@@ -543,7 +538,7 @@ export class AvatarService implements OnInit {
         observer.complete();
       }
     });
-  }
+  }*/
 
 /*  cacheUserAvatarRelationship(userAvatarRelationship: UserAvatarRelationship): Observable<any> {
     const functionName = 'cacheUserAvatarRelationship';

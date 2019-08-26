@@ -7,6 +7,9 @@ import {User} from '../../../shared/user.model';
 import {LeaderboardUser} from '../../../shared/leaderboard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Globals} from '../../../globals';
+import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
+import {UserAvatarStore} from '../../../entity-store/user-avatar/state/user-avatar.store';
+import {EntityUserAvatarQuery} from '../../../entity-store/user-avatar/state/entity-user-avatar.query';
 
 
 @Component({
@@ -22,7 +25,10 @@ export class FeedComponent implements OnInit {
   constructor(public feedcardService: FeedcardService,
               private avatarService: AvatarService,
               private spinner: NgxSpinnerService,
-              private globals: Globals) { }
+              private globals: Globals,
+              private userAvatarService: EntityUserAvatarService,
+              private userAvatarStore: UserAvatarStore,
+              private userAvatarQuery: EntityUserAvatarQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';

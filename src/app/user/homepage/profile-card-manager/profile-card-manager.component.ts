@@ -11,6 +11,10 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
+import {UserStore} from '../../../entity-store/user/state/user.store';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {UserService} from '../../../shared/user.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -36,7 +40,11 @@ export class ProfileCardManagerComponent implements OnInit {
               public pointItemService: PointItemService,
               private spinner: NgxSpinnerService,
               private feedcardService: FeedcardService,
-              private achievementService: AchievementService) { }
+              private achievementService: AchievementService,
+              private userService: UserService,
+              private userStore: UserStore,
+              private userQuery: EntityUserQuery,
+              private entityUserService: EntityUserService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -46,6 +54,20 @@ export class ProfileCardManagerComponent implements OnInit {
     this.isCardLoading = true;
     this.isImageLoading = true;
     this.spinner.show('profile-card-manager-spinner');
+
+    this.entityUserService.cacheCurrentUserAvatar().subscribe();
+
+    if (!this.globals.userDetails) {
+      this.userService.getUserProfile()
+        .subscribe(userDetails => {
+          this.globals.userDetails = userDetails;
+        });
+    } else if (this.globals.userDetails.username !== this.globals.getUsername()) {
+      this.userService.getUserProfile()
+        .subscribe(userDetails => {
+          this.globals.userDetails = userDetails;
+        });
+    }
 
     const observables: Observable<any>[] = [];
 

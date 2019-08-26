@@ -120,7 +120,7 @@ export class LeaderboardService {
           //   this.resolveLeaderboardAvatars(leaderboardUsers);
           console.log(`${functionFullName}: leaderboardUsers`);
           console.log(leaderboardUsers);
-          this.resolveLeaderboardAvatars(leaderboardUsers);
+          // this.resolveLeaderboardAvatars(leaderboardUsers);
           this.leaderboardUsers = leaderboardUsers;
           this.leaderboardUsersTop = leaderboardUsers.slice(0, 4);
           observer.next(leaderboardUsers);
@@ -136,7 +136,7 @@ export class LeaderboardService {
     });
   }
 
-  resolveLeaderboardAvatars(leaderboardUsers: LeaderboardUser[]) {
+/*  resolveLeaderboardAvatars(leaderboardUsers: LeaderboardUser[]) {
     const functionName = 'resolveLeaderboardAvatars';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -150,9 +150,9 @@ export class LeaderboardService {
 
     return forkJoin(observables)
       .subscribe(leaderboardUserArray => {
-        /*     console.log(`${functionFullName}: forkJoin`);
+        /!*     console.log(`${functionFullName}: forkJoin`);
              console.log(`${functionFullName}: leaderboardUserArray`);
-             console.log(leaderboardUserArray);*/
+             console.log(leaderboardUserArray);*!/
 
         leaderboardUserArray.forEach(resolvedLeaderboardUser => {
           // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
@@ -165,7 +165,7 @@ export class LeaderboardService {
         // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
       });
 
-  }
+  }*/
 
   getPointsLeaderboard(): Observable<any> {
     const functionName = 'getPointsLeaderboard';

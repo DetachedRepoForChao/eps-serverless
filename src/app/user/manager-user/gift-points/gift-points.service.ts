@@ -15,6 +15,7 @@ import {DepartmentService} from '../../../shared/department.service';
 import {AvatarService} from '../../../shared/avatar.service';
 import {DepartmentEmployee} from './gift-points.component';
 import {LeaderboardUser} from '../../../shared/leaderboard.service';
+import {Globals} from '../../../globals';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -70,7 +71,8 @@ export class GiftPointsService {
               private globalVariableService: GlobalVariableService,
               private departmentService: DepartmentService,
               private authService: AuthService,
-              private avatarService: AvatarService) { }
+              private avatarService: AvatarService,
+              private globals: Globals) { }
 
   populateEmployeeDataSource(): Observable<any> {
     const functionName = 'populateEmployeeDataSource';
@@ -80,12 +82,12 @@ export class GiftPointsService {
     return new Observable<any>(observer => {
       let departmentEmployees: DepartmentEmployee[] = [];
 
-      if (localStorage.getItem('departmentId')) {
-        this.departmentService.getEmployeesByDepartmentId(+localStorage.getItem('departmentId'))
+      if (this.globals.getUserAttribute('custom:department_id')) {
+        this.departmentService.getEmployeesByDepartmentId(+this.globals.getUserAttribute('custom:department_id'))
           .subscribe(res => {
             console.log(res);
 
-            console.log(`${functionFullName}: employee list for department id ${+localStorage.getItem('departmentId')}`);
+            console.log(`${functionFullName}: employee list for department id ${+this.globals.getUserAttribute('custom:department_id')}`);
 
 
             for ( let i = 0; i < res.length; i++) {
@@ -120,7 +122,12 @@ export class GiftPointsService {
 
             console.log(`${functionFullName}: departmentEmployees`);
             console.log(departmentEmployees);
-            this.resolveDepartmentEmployeeAvatars(departmentEmployees).subscribe(resolveResult => {
+            this.departmentEmployees = departmentEmployees;
+            this.dataSource.data = this.departmentEmployees;
+            observer.next(true);
+            observer.complete();
+
+            /*this.resolveDepartmentEmployeeAvatars(departmentEmployees).subscribe(resolveResult => {
               console.log(resolveResult);
 
               this.departmentEmployees = departmentEmployees;
@@ -134,7 +141,7 @@ export class GiftPointsService {
               observer.next(true);
               // debugger;
               observer.complete();
-            });
+            });*/
 
 /*            this.departmentEmployees = departmentEmployees;
             // observer.next(departmentEmployees);
@@ -159,7 +166,7 @@ export class GiftPointsService {
     });
   }
 
-  resolveDepartmentEmployeeAvatars(departmentEmployees: DepartmentEmployee[]): Observable<any> {
+  /*resolveDepartmentEmployeeAvatars(departmentEmployees: DepartmentEmployee[]): Observable<any> {
     const functionName = 'resolveDepartmentEmployeeAvatars';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -174,9 +181,9 @@ export class GiftPointsService {
 
       forkJoin(observables)
         .subscribe(departmentEmployeeArray => {
-          /*     console.log(`${functionFullName}: forkJoin`);
+          /!*     console.log(`${functionFullName}: forkJoin`);
                console.log(`${functionFullName}: leaderboardUserArray`);
-               console.log(leaderboardUserArray);*/
+               console.log(leaderboardUserArray);*!/
 
           departmentEmployeeArray.forEach(resolvedDepartmentEmployee => {
             // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
@@ -193,5 +200,5 @@ export class GiftPointsService {
       observer.next(true);
       observer.complete();
     });
-  }
+  }*/
 }

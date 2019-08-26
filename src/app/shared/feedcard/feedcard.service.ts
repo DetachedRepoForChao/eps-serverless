@@ -251,8 +251,11 @@ export class FeedcardService implements OnInit {
                     }
 
                     // Check if post has been liked by the current user
-                    if (likeData[i].userId === +localStorage.getItem('userId')) {
+                    if (likeData[i].username === this.globals.getUsername()) {
                       correspondingPost.likedByCurrentUser = true;
+                    } else {
+                      console.log(`${functionFullName}: like ${likeData[i].id} by user ${likeData[i].username}` +
+                        ` is not liked by user ${this.globals.getUsername()}`);
                     }
                   }
                 }
@@ -267,32 +270,6 @@ export class FeedcardService implements OnInit {
 
           // observer.next();
           // observer.complete();
-        });
-    });
-  }
-
-  getAvatarForTargetUser(targetUser: LeaderboardUser): Observable<string> {
-    const functionName = 'getAvatarFromService';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<string>(observer => {
-      this.avatarService.resolveAvatar(targetUser)
-        .subscribe(resolvedUser => {
-          console.log(`${functionFullName}: resolved user:`);
-          console.log(resolvedUser);
-
-          for (let i = 0; i < this.pointTransactions.length; i++) {
-            if (this.pointTransactions[i].targetUserName === targetUser.username) {
-              console.log(`${functionFullName}: Setting avatar for point transaction targetUser ${targetUser.username}`);
-              this.pointTransactions[i].targetUserAvatarUrl = resolvedUser.avatar;
-              console.log(`${functionFullName}: Setting targetUserAvatarCached to true for point transaction targetUser ${targetUser.username}`);
-              this.pointTransactions[i].targetUserAvatarCached = true;
-            }
-          }
-
-          observer.next(resolvedUser.avatar);
-          observer.complete();
         });
     });
   }

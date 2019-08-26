@@ -5,19 +5,31 @@ import { Injectable } from '@angular/core';
 import { VISIBILITY_FILTER } from '../filter/user-avatar-filter.model';
 import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
-import {Storage} from 'aws-amplify';
+import {API, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {AvatarService} from '../../../shared/avatar.service';
+import {Globals} from '../../../globals';
+import awsconfig from '../../../../aws-exports';
+import {AuthService} from '../../../login/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EntityUserAvatarService {
+  componentName = 'entity-user-avatar.service';
+  apiName = awsconfig.aws_cloud_logic_custom[0].name;
+  apiPath = '/items';
+  myInit = {
+    headers: {
+      'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  };
 
   constructor(private userAvatarStore: UserAvatarStore,
               private entityUserAvatarQuery: EntityUserAvatarQuery,
-              private avatarService: AvatarService) { }
+              private authService: AuthService) { }
 
   updateFilter(filter: VISIBILITY_FILTER) {
     this.userAvatarStore.update({
@@ -41,12 +53,20 @@ export class EntityUserAvatarService {
   }
 
 
-  delete(username: ID) {
-    console.log(`entity-user-avatar.service: delete ${username}`);
-    this.userAvatarStore.remove(username);
+  delete(id: ID) {
+    console.log(`entity-user-avatar.service: delete ${id}`);
+    this.userAvatarStore.remove(id);
   }
 
-  getSomething(username: string) {
+
+  update(username: string, avatarPath: string, avatarResolvedUrl: string) {
+    this.userAvatarStore.update((e) => e.username === username, {
+      avatarPath: avatarPath,
+      avatarResolvedUrl: avatarResolvedUrl
+    });
+  }
+
+  /*getSomething(username: string) {
     console.log(`Retrieving avatar for ${username}`);
 
     let avatarPath;
@@ -74,12 +94,12 @@ export class EntityUserAvatarService {
       }));
 
     return cacheable(this.userAvatarStore, request$);
-  }
+  }*/
 
-  getUserAvatars() {
+  cacheUserAvatars() {
     console.log(`Retrieving all user avatars`);
-
-    const request$ = this.avatarService.getUserAvatars()
+    // this.userAvatarStore.setLoading(true);  // this is the initial state before doing anything
+    const request$ = this.getUserAvatars()
       .pipe(tap((avatars: any) => {
         console.log(`caching:`);
         console.log(avatars);
@@ -102,6 +122,7 @@ export class EntityUserAvatarService {
             }
 
             this.userAvatarStore.set(avatarsArray);
+            // this.userAvatarStore.setLoading(false);  // this gets set to false automatically after store is set
           });
       }));
 
@@ -128,6 +149,40 @@ export class EntityUserAvatarService {
           };
 
           observer.next(data);
+          observer.complete();
+        });
+    });
+  }
+
+  getUserAvatars(): Observable<any> {
+    const functionName = 'getUserAvatars';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/getUserAvatars', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving user avatars data from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
           observer.complete();
         });
     });

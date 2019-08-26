@@ -99,7 +99,12 @@
                   </label>
                 </div>
               </div>
-              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>
+<!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>-->
+              <div *ngIf="col === 'avatar'">
+                <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                </div>
+              </div>
               <!-- <ng-template #templateImgRow>
                 <img src="{{char[col]}}" class="img-row" >
               </ng-template> -->
@@ -133,6 +138,13 @@
         >
           <p style="font-size: 20px; color: white">Loading...</p>
         </ngx-spinner>
+      </div>
+    </ng-template>
+
+    <!-- Placeholder for loading avatar -->
+    <ng-template #avatarLoading >
+      <div>
+        <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..." class="img-row">
       </div>
     </ng-template>
 

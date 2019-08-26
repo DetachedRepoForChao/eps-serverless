@@ -12,6 +12,9 @@ import {Storage} from 'aws-amplify';
 import {ImageService} from '../../../shared/image.service';
 import {forkJoin, Observable} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
+import {UserAvatarStore} from '../../../entity-store/user-avatar/state/user-avatar.store';
+import {EntityUserAvatarQuery} from '../../../entity-store/user-avatar/state/entity-user-avatar.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -45,7 +48,10 @@ export class LeaderboardCardComponent implements OnInit {
               private globals: Globals,
               private departmentService: DepartmentService,
               private imageService: ImageService,
-              private spinner: NgxSpinnerService) { }
+              private spinner: NgxSpinnerService,
+              private userAvatarService: EntityUserAvatarService,
+              private userAvatarStore: UserAvatarStore,
+              private userAvatarQuery: EntityUserAvatarQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -55,7 +61,9 @@ export class LeaderboardCardComponent implements OnInit {
     this.isCardLoading = true;
     console.log(`${functionFullName}: showing leaderboard-card-spinner`);
     this.spinner.show('leaderboard-card-spinner');
+    this.spinner.show('avatar-loading-spinner');
 
+    this.userAvatarService.cacheUserAvatars().subscribe();
     this.leaderboardService.getPointsLeaderboard()
       .subscribe(result => {
         this.isCardLoading = true;
@@ -78,5 +86,9 @@ export class LeaderboardCardComponent implements OnInit {
 
   onRowClick(user) {
     this.selectedRow = user;
+  }
+
+  showAvatarLoadingSpinner() {
+    this.spinner.show('avatar-loading-spinner');
   }
 }

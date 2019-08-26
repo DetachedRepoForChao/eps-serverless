@@ -18,6 +18,9 @@ import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {GiftPointsService} from './gift-points.service';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
+import {UserAvatarStore} from '../../../entity-store/user-avatar/state/user-avatar.store';
+import {EntityUserAvatarQuery} from '../../../entity-store/user-avatar/state/entity-user-avatar.query';
 
 export interface DepartmentEmployee {
   id: number;
@@ -67,7 +70,10 @@ export class GiftPointsComponent implements OnInit {
     private notifierService: NotifierService,
     private leaderboardService: LeaderboardService,
     private giftPointsService: GiftPointsService,
-    private spinner: NgxSpinnerService) { }
+    private spinner: NgxSpinnerService,
+    private userAvatarService: EntityUserAvatarService,
+    private userAvatarStore: UserAvatarStore,
+    private userAvatarQuery: EntityUserAvatarQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -221,7 +227,7 @@ export class GiftPointsComponent implements OnInit {
       console.log('form.value[selectedPointItem].name: ' + form.value['selectedPointItem'].Name);
       console.log('form.value[selectedPointItem].amount: ' + form.value['selectedPointItem'].Amount);*/
       const data = {
-        sourceUserId: +localStorage.getItem('userId'),
+        // sourceUserId: +localStorage.getItem('userId'),
 /*        pointItemId: form.value['selectedPointItem'].Id,
         amount: form.value['selectedPointItem'].Amount,*/
         pointItemId: this.selectedPointItem.Id,
@@ -231,7 +237,7 @@ export class GiftPointsComponent implements OnInit {
       const pointItems: any[] = [];
       for ( let i = 0; i < this.selection.selected.length; i++) {
         console.log('gifting points to: ' + this.selection.selected[i].email);
-        pointItems.push(this.pointItemService.giftPointsToEmployee(data.sourceUserId, this.selection.selected[i].id, data.pointItemId, 'Test'));
+        pointItems.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].id, data.pointItemId, 'Test'));
       }
 
       forkJoin(pointItems)

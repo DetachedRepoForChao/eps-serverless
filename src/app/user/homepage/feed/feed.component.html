@@ -51,13 +51,14 @@
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex justify-content-between align-items-center">
             <div class="mr-2">
-              <div *ngIf="pointTransaction.targetUserAvatarCached === true; else avatarFromObservable">
-                <img class="rounded-circle" width="45" [src]="pointTransaction.targetUserAvatarUrl" alt="">
+              <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
+                <img class="rounded-circle" width="45" [src]="(userAvatarQuery.getUserAvatar(pointTransaction.targetUserName))[0].avatarResolvedUrl" alt="">
               </div>
-              <ng-template #avatarFromObservable>
-<!--                              <img class="rounded-circle" width="45" [src]="(this.feedcardService.getAvatarForTargetUser(pointTransaction.targetUser) | async)" alt="">-->
-                <img class="rounded-circle" width="45" [src]="" alt="">
-                <!--              Test-->
+              <!-- Placeholder for loading avatar -->
+              <ng-template #avatarLoading >
+                <div>
+                  <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..." class="rounded-circle" width="45">
+                </div>
               </ng-template>
               <!--            <div>-->
               <!--              <img class="rounded-circle" width="45" [src]="this.avatarService.getAvatarFromCache(pointTransaction.targetUserName)" alt="">-->

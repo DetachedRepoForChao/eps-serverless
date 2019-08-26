@@ -73,6 +73,7 @@ import { UserAvatarFiltersComponent } from './entity-store/user-avatar/filter/us
 import { UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
 import { UserAvatarsComponent} from './entity-store/user-avatar/user-avatars.component';
 import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.component';
+import {UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -112,8 +113,8 @@ import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.compo
     UserAvatarFiltersComponent,
     UserAvatarPageComponent,
     UserAvatarsComponent,
-    UserAvatarComponent
-
+    UserAvatarComponent,
+    UserFiltersComponent
 
   ],
   imports: [
@@ -145,7 +146,7 @@ import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.compo
     NgxSpinnerModule,
     OverlayModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
-    AkitaNgRouterStoreModule.forRoot()
+    AkitaNgRouterStoreModule.forRoot(),
   ],
   providers: [
     {

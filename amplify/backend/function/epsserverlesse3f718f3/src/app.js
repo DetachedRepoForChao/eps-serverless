@@ -377,18 +377,22 @@ app.post('/items/giftPointsToEmployee', function(req, res) {
 
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      // const username = tokenResult.claims['cognito:username'];
-      const sourceUserId = req.body.sourceUserId;
-      const targetUserId = req.body.targetUserId;
-      const pointItemId = req.body.pointItemId;
-      const description = req.body.description;
-      ctrlPoints.giftPointsToEmployee(sourceUserId, targetUserId, pointItemId, description)
-        .then(data => {
-          res.json({status: 'post call succeed!', data: data});
-        })
-        .catch(err => {
-          res.json({status: 'post call failed!', error: err});
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(result => {
+          const sourceUserId = result.user.id;
+          const targetUserId = req.body.targetUserId;
+          const pointItemId = req.body.pointItemId;
+          const description = req.body.description;
+          ctrlPoints.giftPointsToEmployee(sourceUserId, targetUserId, pointItemId, description)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
         });
+
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }

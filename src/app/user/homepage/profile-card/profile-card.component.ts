@@ -16,6 +16,9 @@ import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {UserService} from '../../../shared/user.service';
+import {UserStore} from '../../../entity-store/user/state/user.store';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -42,7 +45,10 @@ export class ProfileCardComponent implements OnInit {
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private achievementService: AchievementService,
-              private userService: UserService) { }
+              private userService: UserService,
+              private userStore: UserStore,
+              private userQuery: EntityUserQuery,
+              private entityUserService: EntityUserService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -53,7 +59,7 @@ export class ProfileCardComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('profile-card-spinner');
 
-      const text_max = 200;
+/*      const text_max = 200;
     $('#count_message').html(text_max + ' remaining');
 
     $('#text').keyup(function() {
@@ -61,7 +67,9 @@ export class ProfileCardComponent implements OnInit {
       const text_remaining = text_max - text_length;
 
       $('#count_message').html(text_remaining + ' remaining');
-    });
+    });*/
+
+    this.entityUserService.cacheCurrentUserAvatar().subscribe();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()
@@ -105,27 +113,8 @@ export class ProfileCardComponent implements OnInit {
         this.isImageLoading = false;
         this.isCardLoading = false;
         this.spinner.hide('profile-card-spinner');
-
-        /*     console.log(`${functionFullName}: forkJoin`);
-             console.log(`${functionFullName}: leaderboardUserArray`);
-             console.log(leaderboardUserArray);*/
-
-/*        leaderboardUserArray.forEach(resolvedLeaderboardUser => {
-          // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
-
-          leaderboardUsersNew = leaderboardUsersNew.concat(resolvedLeaderboardUser);
-        });*/
-
-        // this.leaderboardUsersTop = leaderboardUsersNew.slice(0, 4);
-
-        // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
       });
 
-/*    this.leaderboardService.getUserPointsLeaderboardRecord(+localStorage.getItem('userId'))
-      .subscribe(userLeaderboardRecord => {
-        this.userLeaderboardRecord = userLeaderboardRecord;
-      });
-    this.avatarService.refreshCurrentUserAvatar().subscribe();*/
   }
 
   showGallery() {
@@ -194,12 +183,14 @@ export class ProfileCardComponent implements OnInit {
 
   Debug() {
 
-    const avatarPath = this.globals.getUserAttribute('picture');
-    const level = avatarPath.split('/')[0];
-    const cognitoIdentityId = avatarPath.split('/')[1];
-    const key = avatarPath.split('/')[2];
+    // const avatarPath = this.globals.getUserAttribute('picture');
+    // const level = avatarPath.split('/')[0];
+    // const cognitoIdentityId = avatarPath.split('/')[1];
+    // const key = avatarPath.split('/')[2];
 
-    console.log('avatarPath');
+    this.entityUserService.showStore();
+
+/*    console.log('avatarPath');
     console.log(avatarPath);
 
     Auth.currentUserInfo().then(result => console.log(result));
@@ -215,7 +206,7 @@ export class ProfileCardComponent implements OnInit {
       .catch(err => {
         console.log('Error');
         console.log(err);
-      });
+      });*/
   }
 
 }
