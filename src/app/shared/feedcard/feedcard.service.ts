@@ -83,6 +83,15 @@ export class FeedcardService implements OnInit {
   ngOnInit(): void {
   }
 
+  clearPointTransactionCache() {
+    const functionName = 'clearPointTransactionCache';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    this.pointTransactions = [];
+    this.pointTransactionsLimited = [];
+  }
+
   getPointTransaction(): Observable<any> {
     const functionName = 'getPointTransaction';
     const functionFullName = `${this.componentName} ${functionName}`;
