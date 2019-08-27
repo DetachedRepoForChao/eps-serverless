@@ -40,8 +40,6 @@ export class UserService {
     birthdate: ''
   };
 
-  noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
-
   constructor(private http: HttpClient, private authService: AuthService) {
     // this.departments = this.getDepartments();
   }

@@ -25,8 +25,8 @@ export class ImageGalleryComponent implements OnInit {
   apiPath = '/things';
   myInit = {
     headers: {
-      'Accept': "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      'Content-Type': "application/json;charset=UTF-8"
+      'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Content-Type': 'application/json;charset=UTF-8'
     }
   };
 
@@ -61,20 +61,25 @@ export class ImageGalleryComponent implements OnInit {
 
     this.avatarService.getAvatars()
       .subscribe((result: any) => {
-        result.forEach(image => {
-          // console.log(image);
-          const imageObj = {
-            // url: 'http://localhost:3000/public/avatars/' + image,
-            url: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image,
-            // url: image,
-            altText: '',
-            title: image,
-            // thumbnailUrl: 'http://localhost:3000/public/avatars/' + image + '?w=60',
-            thumbnailUrl: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image + '?w=60',
-            // thumbnailUrl: image + '?w=60',
-          };
+        result.forEach((image: string) => {
+          if ((image.startsWith(`public/avatars/superheroes/`, 0) && (image !== `public/avatars/superheroes/`))) {
+            console.log(image);
+            const imageObj = {
+              // url: 'http://localhost:3000/public/avatars/' + image,
+              url: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image,
+              // url: image,
+              altText: '',
+              title: image,
+              // thumbnailUrl: 'http://localhost:3000/public/avatars/' + image + '?w=60',
+              thumbnailUrl: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image + '?w=60',
+              // thumbnailUrl: image + '?w=60',
+            };
+
+            this.images.push(imageObj);
+          }
+
           // console.log(imageObj);
-          this.images.push(imageObj);
+
         });
       });
   }

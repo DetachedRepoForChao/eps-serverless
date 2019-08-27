@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
 import {ImageService} from './image.service';
@@ -16,6 +16,7 @@ import {Globals} from '../globals';
 import {EntityUserAvatarService} from '../entity-store/user-avatar/state/entity-user-avatar.service';
 import {EntityUserAvatarModel} from '../entity-store/user-avatar/state/entity-user-avatar.model';
 import {EntityUserService} from '../entity-store/user/state/entity-user.service';
+import {RequestMethod} from '@angular/http';
 
 export interface UserAvatarRelationship {
   // userId: number;
@@ -462,189 +463,34 @@ export class AvatarService implements OnInit {
     });
   }
 
-  /*resolveAvatar(leaderboardUser: any): Observable<any> {
-    const functionName = 'resolveAvatar';
+  generateRandomAvatar() {
+    const functionName = 'generateRandomAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: leaderboardUser:`);
-    console.log(leaderboardUser);
-
-    console.log(`${functionFullName}: userAvatarHash:`);
-    console.log(this.userAvatarHash);
-
-    const currentAvatarPath = leaderboardUser.avatar;
-
-    const level = leaderboardUser.avatar.split('/')[0];
-    const cognitoIdentityId = leaderboardUser.avatar.split('/')[1];
-    const key = leaderboardUser.avatar.split('/')[2];
-
-    console.log(`${functionFullName}: key: ${key}`);
-    console.log(`${functionFullName}: identityId: ${cognitoIdentityId}`);
-
-    return new Observable<any>((observer) => {
-      let avatarResolvedUrl = null;
-      // Try to find the resolved avatar URL in the userAvatarHash
-      // if (this.userAvatarHash.length > 0) {
-      console.log(`${functionFullName}: Checking if resolved avatar URL exists in the userAvatarHash`);
-      /!*      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username) ||
-              (x.userId === leaderboardUser.id)) && (x.avatarPath === currentAvatarPath));*!/
-
-      const userAvatarRelationship = this.userAvatarHash.find(x => ((x.username === leaderboardUser.username))
-        && (x.avatarPath === currentAvatarPath));
-
-      if (userAvatarRelationship) {
-        console.log(`${functionFullName}: Found resolved avatar URL in userAvatarHash`);
-        console.log(`${functionFullName}: Current avatarPath for user ${leaderboardUser.username}: ${currentAvatarPath}`);
-        console.log(`${functionFullName}: Hashed avatarPath for user ${leaderboardUser.username}: ${userAvatarRelationship.avatarPath}`);
-
-        avatarResolvedUrl = userAvatarRelationship.avatarResolvedUrl;
-      } else {
-        console.log(`${functionFullName}: Did not find resolved avatar URL in userAvatarHash`);
-      }
-      // }
-
-      if (!avatarResolvedUrl) {
-        console.log(`${functionFullName}: Resolved avatar URL was not retrieved from the userAvatarHash.` +
-          ` Resolving the URL using the Storage API`);
-        Storage.get(key, {
-          level: level,
-          identityId: cognitoIdentityId
+    return new Observable<any>(observer => {
+      const noAuthHeader = {
+        headers: new HttpHeaders({
+          'Accept': '*/*',
+          'NoAuth': 'True',
         })
-          .then((avatarUrl: string) => {
-            console.log(`${functionFullName}: avatarUrl: ${avatarUrl}`);
-
-            const userAvatarHashEntry: UserAvatarRelationship = {
-              username: leaderboardUser.username,
-              // userId: leaderboardUser.id,
-              avatarPath: leaderboardUser.avatar,
-              avatarResolvedUrl: avatarUrl,
-              avatarBase64String: null,
-              avatarUrl: null,
-              dateModified: Date.now()
-            };
-
-            this.cacheUserAvatarRelationship(userAvatarHashEntry).subscribe();
-
-            leaderboardUser.avatar = avatarUrl;
-            observer.next(leaderboardUser);
-            observer.complete();
-          });
-      } else {
-        console.log(`${functionFullName}: Resolved avatar URL was successfully retrieved from the userAvatarHash`);
-
-        leaderboardUser.avatar = avatarResolvedUrl;
-        observer.next(leaderboardUser);
-        observer.complete();
-      }
-    });
-  }*/
-
-/*  cacheUserAvatarRelationship(userAvatarRelationship: UserAvatarRelationship): Observable<any> {
-    const functionName = 'cacheUserAvatarRelationship';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      console.log(`${functionFullName}: Adding userAvatarRelationship to userAvatarHash`);
-      console.log(`${functionFullName}: username: ${userAvatarRelationship.username}`);
-      console.log(`${functionFullName}: avatarResolvedUrl: ${userAvatarRelationship.avatarResolvedUrl}`);
-
-      console.log(`${functionFullName}: Checking if user entry exists in userAvatarHash`);
-      /!*      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username) ||
-              (x.userId === userAvatarRelationship.userId));*!/
-
-      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username));
-
-      if (userAvatarEntry) {
-        // User entry exists in userAvatarHash. We're going to update it
-        console.log(`${functionFullName}: User entry exists in userAvatarHash. We're going to update it`);
-        const index = this.userAvatarHash.indexOf(userAvatarEntry);
-        this.userAvatarHash[index].avatarPath = userAvatarRelationship.avatarPath;
-        this.userAvatarHash[index].dateModified = userAvatarRelationship.dateModified;
-        this.userAvatarHash[index].avatarResolvedUrl = userAvatarRelationship.avatarResolvedUrl;
-      } else {
-        console.log(`${functionFullName}: User entry does not exist in userAvatarHash. Creating one`);
-        this.userAvatarHash.push(userAvatarRelationship);
-      }
-
-      observer.next();
-      observer.complete();
-    });
-  }*/
-
-  cacheUserAvatarRelationship(userAvatarRelationship: UserAvatarRelationship): Observable<any> {
-    const functionName = 'cacheUserAvatarRelationship';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      console.log(`${functionFullName}: Adding userAvatarRelationship to user-avatar store`);
-      console.log(`${functionFullName}: username: ${userAvatarRelationship.username}`);
-      console.log(`${functionFullName}: avatarResolvedUrl: ${userAvatarRelationship.avatarResolvedUrl}`);
-      console.log(`${functionFullName}: Checking if user entry exists in userAvatarHash`);
-
-      // this.entityUserAvatarService.
-      const userAvatarEntry = this.userAvatarHash.find(x => (x.username === userAvatarRelationship.username));
-
-      if (userAvatarEntry) {
-        // User entry exists in userAvatarHash. We're going to update it
-        console.log(`${functionFullName}: User entry exists in userAvatarHash. We're going to update it`);
-        const index = this.userAvatarHash.indexOf(userAvatarEntry);
-        this.userAvatarHash[index].avatarPath = userAvatarRelationship.avatarPath;
-        this.userAvatarHash[index].dateModified = userAvatarRelationship.dateModified;
-        this.userAvatarHash[index].avatarResolvedUrl = userAvatarRelationship.avatarResolvedUrl;
-      } else {
-        console.log(`${functionFullName}: User entry does not exist in userAvatarHash. Creating one`);
-        this.userAvatarHash.push(userAvatarRelationship);
-      }
-
-      observer.next();
-      observer.complete();
-    });
-  }
-
-  resolveAvatarPath(avatarPath: string): Observable<string> {
-    const functionName = 'resolveAvatarUrl';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    console.log(`${functionFullName}: avatarPath: ${avatarPath}`);
-    const level = avatarPath.split('/')[0];
-    const cognitoIdentityId = avatarPath.split('/')[1];
-    const key = avatarPath.split('/')[2];
-
-    console.log(`${functionFullName}: key: ${key}`);
-    console.log(`${functionFullName}: identityId: ${cognitoIdentityId}`);
-
-    return new Observable<string>((observer) => {
-      Storage.get(key, {
-        level: level,
-        identityId: cognitoIdentityId
+      };
+      const uniqueId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+      const proxyurl = 'https://cors-anywhere.herokuapp.com/';
+      const avatarUrl = `https://api.adorable.io/avatars/285/${uniqueId}.png`;
+      const url = proxyurl + avatarUrl;
+      return this.http.get(url, {
+        responseType: 'blob',
+        headers: {
+          'Accept': '*/*',
+          'NoAuth': 'True',
+        }
       })
-        .then((avatarUrl: string) => {
-          console.log(`${functionFullName}: avatarUrl: ${avatarUrl}`);
-          observer.next(avatarUrl);
+        .subscribe(result => {
+          observer.next({avatarUrl: avatarUrl, result: result});
           observer.complete();
         });
     });
 
-  }
-
-  getAvatarFromCache(username: string): string {
-    const functionName = 'getAvatarFromCache';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    let userAvatarResolvedUrl = null;
-    const userAvatarEntry = this.userAvatarHash.find(x => (x.username === username));
-    if (userAvatarEntry) {
-      console.log(`${functionFullName}: Found avatar entry for user ${username} in the avatarUserHash`);
-      userAvatarResolvedUrl = userAvatarEntry.avatarResolvedUrl;
-    } else {
-      console.log(`${functionFullName}: Did not find avatar entry for user ${username} in the avatarUserHash`);
-    }
-
-    return userAvatarResolvedUrl;
   }
 }

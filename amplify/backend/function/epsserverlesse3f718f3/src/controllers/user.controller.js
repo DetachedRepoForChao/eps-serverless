@@ -14,138 +14,40 @@ const ctrlPointPool = require('./point_pool.controller');
 const jwtVerify = require('../config/decode-verify-jwt');
 const componentName = 'user.controller';
 
-/*const registerUser = function (req) {
+
+const registerUser = function (user) {
   const functionName = 'registerUser';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
   console.log(`${functionFullName}: body:`);
-  console.log(req);
+  console.log(user.body);
 
-  console.log(req.body.username);
-  console.log(req.body.firstName);
-  console.log(req.body.email);
-  console.log(req.body.securityRole);
-  console.log(req.body.password);
-
-  const data = {
-    username: req.body.username,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    securityRoleId: req.body.securityRole,
-    departmentId: req.body.department,
-    password: req.body.password,
-  };
-
-  var password;
-  var saltSecret;
-
-  return sqlUserModel.findOne({
-    where: {
-      username: data.username
-    },
-  })
-    .then(user => {
-      if (user != null) {
-        console.log(`${functionFullName}: username already taken`);
-        return {status: 422, error: 'username already taken'};
-      } else {
-        console.log(`${functionFullName}: user account does not yet exist. Creating...`);
-        bcrypt.genSalt(10, (err, salt) => {
-          if (err) {
-            console.log(`${functionFullName}: Bcrypt salt function error`);
-            console.log(err);
-            return {status: false, error: err};
-          }
-
-          console.log(`${functionFullName}: Bcrypt salt function success: ${salt}`);
-          bcrypt.hash(data.password, salt, (err, hash) => {
-            if (err) {
-              console.log(`${functionFullName}: Bcrypt hash function error`);
-              console.log(err);
-              return {status: false, error: err};
-            }
-
-            console.log(`${functionFullName}: Bcrypt hash function success: ${hash}`);
-            password = hash;
-            saltSecret = salt;
-            //next();
-            sqlUserModel.create({
-              username: data.username,
-              firstName: data.firstName,
-              lastName: data.lastName,
-              email: data.email,
-              securityRoleId: data.securityRoleId,
-              departmentId: data.departmentId,
-              password: password,
-              saltSecret: saltSecret,
-              points: 0
-            })
-              .then((user) => {
-                console.log(`${functionFullName}: user created in db`);
-
-                ctrlAchievement.initializeUserAchievementProgress(user.id);
-                // If the user is a manager, initialize their points pool
-                if (user.securityRoleId === 2) {
-                  console.log(`${functionFullName}: initializing manager point pool for new user`);
-                  ctrlPointPool.initializePointPool(user.id);
-                }
-
-                return {status: 200, message: 'user created'};
-              })
-              .catch(err => {
-                console.log(`${functionFullName}: User creation error`);
-                console.log(err);
-                return {status: false, message: err}
-              });
-          })
-        })
-      }
-    })
-    .catch(err => {
-      console.log(`${functionFullName}: Problem with the database`);
-      console.log(err);
-      return {status: 500, error: 'Problem with the database: ' + err};
-    });
-};
-
-module.exports.registerUser = registerUser;*/
-
-
-const registerUser = function (req) {
-  const functionName = 'registerUser';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  console.log(`${functionFullName}: body:`);
-  console.log(req.body);
-
-  const username = req.body.username;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const email = req.body.email;
-  const securityRoleId = req.body.securityRole.Id;
-  const departmentId = req.body.department.Id;
-  const phone = req.body.phone;
-  const birthdate = req.body.birthdate;
+  const username = user.body.username;
+  const firstName = user.body.firstName;
+  const lastName = user.body.lastName;
+  const email = user.body.email;
+  const securityRoleId = user.body.securityRole.Id;
+  const departmentId = user.body.department.Id;
+  const phone = user.body.phone;
+  const birthdate = user.body.birthdate;
   // const password = req.body.password;
-  const middleName = req.body.middleName;
-  const preferredName = req.body.preferredName;
-  const prefix = req.body.prefix;
-  const suffix = req.body.suffix;
-  const position = req.body.position;
-  const address1 = req.body.address1;
-  const address2 = req.body.address2;
-  const city = req.body.city;
-  const state = req.body.state;
-  const country = req.body.country;
-  const zip = req.body.zip;
-  const preferredPronoun = req.body.preferredPronoun;
-  const sex = req.body.sex;
-  const gender = req.body.gender;
-  const dateOfHire = req.body.dateOfHire;
-
+  const middleName = user.body.middleName;
+  const preferredName = user.body.preferredName;
+  const prefix = user.body.prefix;
+  const suffix = user.body.suffix;
+  const position = user.body.position;
+  const address1 = user.body.address1;
+  const address2 = user.body.address2;
+  const city = user.body.city;
+  const state = user.body.state;
+  const country = user.body.country;
+  const zip = user.body.zip;
+  const preferredPronoun = user.body.preferredPronoun;
+  const sex = user.body.sex;
+  const gender = user.body.gender;
+  const dateOfHire = user.body.dateOfHire;
+  // const avatarUrl =
 
   // var password;
   // var saltSecret;
@@ -297,20 +199,26 @@ const getUserProfile = function (username) {
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
-  console.log(`username: ${username}`);
-  // console.log(req.headers.authorization);
-
   return sqlUserModel.findOne({
-    attributes: ['id','username','firstName','lastName','points','email', 'securityRoleId','departmentId'],
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'email',
+      'securityRoleId', 'departmentId', 'avatarUrl'],
     where: {
       username: username,
     },
   })
     .then(user => {
-      if (!user)
-        return { status: 404, message: 'User record not found.' };
-      else
-        return  {status: 200, user: user};
+      if (!user) {
+        console.log(`${functionFullName}: User record not found`);
+        return { status: false, message: 'User record not found.' };
+      } else {
+        console.log(`${functionFullName}: User record found`);
+        return  {status: true, user: user};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Error retrieving user profile`);
+      console.log(err);
+      return {status: false, message: err};
     });
 };
 

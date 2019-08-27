@@ -19,6 +19,7 @@ import {UserService} from '../../../shared/user.service';
 import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -48,7 +49,8 @@ export class ProfileCardComponent implements OnInit {
               private userService: UserService,
               private userStore: UserStore,
               private userQuery: EntityUserQuery,
-              private entityUserService: EntityUserService) { }
+              private entityUserService: EntityUserService,
+              private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -188,7 +190,7 @@ export class ProfileCardComponent implements OnInit {
     // const cognitoIdentityId = avatarPath.split('/')[1];
     // const key = avatarPath.split('/')[2];
 
-    this.entityUserService.showStore();
+    // this.entityUserService.showStore();
 
 /*    console.log('avatarPath');
     console.log(avatarPath);
@@ -207,6 +209,21 @@ export class ProfileCardComponent implements OnInit {
         console.log('Error');
         console.log(err);
       });*/
-  }
 
+
+
+    this.avatarService.generateRandomAvatar()
+      .subscribe((data: any) => {
+        const currentFn = this;
+        const reader = new FileReader();
+        reader.readAsDataURL(data.result);
+        reader.onloadend = function() {
+          const base64data = reader.result;
+          console.log(base64data);
+          console.log(data.avatarUrl);
+          currentFn.entityUserService.update(data.avatarUrl, base64data.toString());
+          currentFn.avatarService.saveUserAvatar(data.result).subscribe();
+        };
+      });
+  }
 }

@@ -43,10 +43,10 @@ export class EntityUserService {
 
 
 
-/*  add(username: string, avatarBase64String: string, avatarPath: string, avatarResolvedUrl: string) {
+  add(username: string, avatarBase64String: string, avatarPath: string, avatarResolvedUrl: string) {
     const userAvatar = createEntityUserModel({ username, avatarBase64String, avatarPath, avatarResolvedUrl });
     this.userStore.add(userAvatar);
-  }*/
+  }
 
 
   delete(id: ID) {
