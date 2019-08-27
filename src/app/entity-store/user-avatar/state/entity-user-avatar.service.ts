@@ -8,7 +8,7 @@ import { cacheable} from '@datorama/akita';
 import {API, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {AvatarService} from '../../../shared/avatar.service';
+import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';

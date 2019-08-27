@@ -24,7 +24,7 @@ export class ProgressCardComponent implements OnInit {
   };
 
   constructor(private spinner: NgxSpinnerService,
-              private achievementService: AchievementService) { }
+              public achievementService: AchievementService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';

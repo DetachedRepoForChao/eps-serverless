@@ -1,21 +1,21 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
-import {ImageService} from './image.service';
+import {ImageService} from '../image.service';
 import Amplify, {API, Auth, Storage} from 'aws-amplify';
-import awsconfig from '../../aws-exports';
-import {AuthService} from '../login/auth.service';
+import awsconfig from '../../../aws-exports';
+import {AuthService} from '../../login/auth.service';
 import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
 import {forkJoin, Observable} from 'rxjs';
-import {LeaderboardUser} from './leaderboard.service';
-import {FeedcardService} from './feedcard/feedcard.service';
+import {LeaderboardUser} from '../leaderboard.service';
+import {FeedcardService} from '../feedcard/feedcard.service';
 import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
-import {Globals} from '../globals';
-import {EntityUserAvatarService} from '../entity-store/user-avatar/state/entity-user-avatar.service';
-import {EntityUserAvatarModel} from '../entity-store/user-avatar/state/entity-user-avatar.model';
-import {EntityUserService} from '../entity-store/user/state/entity-user.service';
+import {Globals} from '../../globals';
+import {EntityUserAvatarService} from '../../entity-store/user-avatar/state/entity-user-avatar.service';
+import {EntityUserAvatarModel} from '../../entity-store/user-avatar/state/entity-user-avatar.model';
+import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
 import {RequestMethod} from '@angular/http';
 
 export interface UserAvatarRelationship {

@@ -12,7 +12,7 @@ import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
 import {DepartmentService} from './department.service';
-import {AvatarService} from './avatar.service';
+import {AvatarService} from './avatar/avatar.service';
 
 // Create a variable to interact with jquery
 declare var $: any;

@@ -28,7 +28,7 @@
           <div class="form-group">
 
             <label for="code">Confirmation code</label>
-            <input type="text" id="code" name="code" #code="ngModel" class="form-control" [(ngModel)]="confirmForm.code" required>
+            <input type="text" id="code" name="code" #code="ngModel" class="form-control" [(ngModel)]="confirmForm.value.code" required>
             <div *ngIf="codeForm.submitted && !code.valid">
               <label class="validation-message">This field is required.</label>
             </div>

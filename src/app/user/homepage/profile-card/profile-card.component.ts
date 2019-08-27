@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import {forkJoin, Observable} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
-import {AvatarService} from '../../../shared/avatar.service';
+import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {GALLERY_IMAGE} from 'ngx-image-gallery';
 import {Globals} from '../../../globals';
 import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.service';
@@ -48,7 +48,7 @@ export class ProfileCardComponent implements OnInit {
               private achievementService: AchievementService,
               private userService: UserService,
               private userStore: UserStore,
-              private userQuery: EntityUserQuery,
+              public userQuery: EntityUserQuery,
               private entityUserService: EntityUserService,
               private sanitizer: DomSanitizer) { }
 
@@ -181,6 +181,10 @@ export class ProfileCardComponent implements OnInit {
   }
   loadImageFailed() {
     // show message
+  }
+
+  avatarClick() {
+    $('#avatarModal').modal('show');
   }
 
   Debug() {

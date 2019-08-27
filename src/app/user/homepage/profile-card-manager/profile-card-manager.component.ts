@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import {forkJoin, Observable} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
-import {AvatarService} from '../../../shared/avatar.service';
+import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {Globals} from '../../../globals';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {PointItemService} from '../../../shared/point-item.service';
@@ -43,7 +43,7 @@ export class ProfileCardManagerComponent implements OnInit {
               private achievementService: AchievementService,
               private userService: UserService,
               private userStore: UserStore,
-              private userQuery: EntityUserQuery,
+              public userQuery: EntityUserQuery,
               private entityUserService: EntityUserService) { }
 
   ngOnInit() {

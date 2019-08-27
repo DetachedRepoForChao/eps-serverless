@@ -4,9 +4,10 @@
 
       <img [src]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
            alt="Avatar"
-           *ngIf="(userQuery.selectLoading() | async) === false; else avatarLoading"
+           *ngIf="(this.userQuery.selectLoading() | async) === false; else avatarLoading"
            class="img-center img-fluid rounded-circle"
-           id="avatar">
+           id="avatar"
+      (click)="avatarClick()">
 
       <ng-template #avatarLoading >
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
@@ -142,6 +143,24 @@
       <!---modal body---->
       <div class="modal-body">
         <app-image-gallery></app-image-gallery>
+      </div>
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-lg" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Choose Your Avatar</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body">
+        <app-avatar></app-avatar>
       </div>
       <!----End Mod Bod---->
 

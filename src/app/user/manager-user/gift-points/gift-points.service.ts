@@ -12,7 +12,7 @@ import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {DepartmentService} from '../../../shared/department.service';
-import {AvatarService} from '../../../shared/avatar.service';
+import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {DepartmentEmployee} from './gift-points.component';
 import {LeaderboardUser} from '../../../shared/leaderboard.service';
 import {Globals} from '../../../globals';

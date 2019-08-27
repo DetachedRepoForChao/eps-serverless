@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {Pointtransaction} from '../../../shared/feedcard/pointtransaction';
-import {AvatarService} from '../../../shared/avatar.service';
+import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {PointTransaction} from '../../../shared/feedcard/feedcard.service';
 import {User} from '../../../shared/user.model';
 import {LeaderboardUser} from '../../../shared/leaderboard.service';

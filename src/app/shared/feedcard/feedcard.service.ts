@@ -6,7 +6,7 @@ import awsconfig from '../../../aws-exports';
 import {AuthService} from '../../login/auth.service';
 import {Observable} from 'rxjs';
 import {LeaderboardUser} from '../leaderboard.service';
-import {AvatarService} from '../avatar.service';
+import {AvatarService} from '../avatar/avatar.service';
 import {Globals} from '../../globals';
 
 export interface PointTransaction {

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {DEMO_GALLERY_CONF_INLINE, DEMO_GALLERY_IMAGE} from '../../config';
 import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
-import {AvatarService} from '../avatar.service';
+import {AvatarService} from '../avatar/avatar.service';
 import { BehaviorSubject } from 'rxjs';
 import awsconfig from '../../../aws-exports';
 import {ImageService} from '../image.service';
@@ -131,11 +131,14 @@ export class ImageGalleryComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     console.log(`${functionFullName}: Gallery image clicked with index ${index}`);
-    // this.avatarService.setUserAvatar(localStorage.getItem('userId'), this.images[index].url)
-    const split = this.images[index].url.split(`/`);
-    const imageKey = `${split[split.length - 2]}/${split[split.length - 1]}`;
-    console.log(`${functionFullName}: imageKey: ${imageKey}`);
 
+    const split = this.images[index].url.split(`com/`);
+    console.log(split);
+    const imagePath = split[1];
+    const level = imagePath.split('/')[0];
+    const imageKey = imagePath.split(`${level}/`)[1];
+
+    console.log(`${functionFullName}: imageKey: ${imageKey}`);
 
     Storage.get(imageKey, {
       level: ''

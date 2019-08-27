@@ -3,7 +3,7 @@ import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.s
 import {MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {DepartmentEmployee} from '../../manager-user/gift-points/gift-points.component';
-import {AvatarService} from '../../../shared/avatar.service';
+import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {Globals} from '../../../globals';
 import {DepartmentService} from '../../../shared/department.service';
 import {GlobalVariableService} from '../../../shared/global-variable.service';

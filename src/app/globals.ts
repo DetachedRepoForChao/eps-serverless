@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Department} from './shared/department.model';
 import {SecurityRole} from './shared/securityrole.model';
-import {UserAvatarRelationship} from './shared/avatar.service';
+import {UserAvatarRelationship} from './shared/avatar/avatar.service';
 
 @Injectable()
 

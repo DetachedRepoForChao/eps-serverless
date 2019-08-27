@@ -30,7 +30,7 @@ export interface AchievementItem {
 })
 export class AchievementComponent implements OnInit {
   componentName = 'achievement.component';
-  // dataSource = new MatTableDataSource<AchievementItem>();
+  dataSource = new MatTableDataSource<AchievementItem>();
   achievements: Achievement[];
   userAchievementProgressList: UserAchievementProgress[];
   // userAchievements: Achievement[];

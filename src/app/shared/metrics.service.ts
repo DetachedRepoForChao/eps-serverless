@@ -12,7 +12,7 @@ import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
 import {DepartmentService} from './department.service';
-import {AvatarService} from './avatar.service';
+import {AvatarService} from './avatar/avatar.service';
 
 export interface MetricsItem {
   Name: string;

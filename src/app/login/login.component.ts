@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 // import {SocketService} from '../shared/socket.service';
-import {AvatarService} from '../shared/avatar.service';
+import {AvatarService} from '../shared/avatar/avatar.service';
 import {Router} from '@angular/router';
 // import {SocketService} from '../shared/socket.service';
 import { environment } from 'src/environments/environment';
