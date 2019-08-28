@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
-import {AvatarService} from './avatar.service';
+import {AvatarService} from '../avatar/avatar.service';
 import {LeaderboardService} from '../leaderboard.service';
 import {Globals} from '../../globals';
 import {FeedcardService} from '../feedcard/feedcard.service';
@@ -8,23 +8,16 @@ import {EntityUserService} from '../../entity-store/user/state/entity-user.servi
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 
 @Component({
-  selector: 'app-avatar',
-  templateUrl: './avatar.component.html',
-  styleUrls: ['./avatar.component.css']
+  selector: 'app-image-cropper',
+  templateUrl: './image-cropper.component.html',
+  styleUrls: ['./image-cropper.component.css']
 })
-export class AvatarComponent implements OnInit {
-  @Input() avatarUrl: string;
-
-  componentName = 'avatar.component';
-  isImageLoading: boolean;
-
+export class ImageCropperComponent implements OnInit {
+  componentName = 'image-cropper.component';
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
   isCardLoading: boolean;
-
-  avatarUpload = false;
-  avatarSelect = false;
 
   constructor(private avatarService: AvatarService,
               private leaderboardService: LeaderboardService,
@@ -34,19 +27,6 @@ export class AvatarComponent implements OnInit {
               public userQuery: EntityUserQuery) { }
 
   ngOnInit() {
-    this.croppedImageToShow = this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl;
-    console.log('croppedImageToShow:');
-    console.log(this.croppedImageToShow);
-  }
-
-  toggleAvatarUpload() {
-    this.avatarUpload = true;
-    this.avatarSelect = false;
-  }
-
-  toggleAvatarSelect() {
-    this.avatarSelect = true;
-    this.avatarUpload = false;
   }
 
   onImageSelected(event) {
@@ -96,25 +76,5 @@ export class AvatarComponent implements OnInit {
   }
   loadImageFailed() {
     // show message
-  }
-
-  generateRandomAvatar() {
-    this.avatarSelect = false;
-    this.avatarUpload = false;
-
-    this.avatarService.generateRandomAvatar()
-      .subscribe((data: any) => {
-        const currentFn = this;
-        const reader = new FileReader();
-        reader.readAsDataURL(data.result);
-        reader.onloadend = function() {
-          const base64data = reader.result;
-          console.log(base64data);
-          console.log(data.avatarUrl);
-          currentFn.avatarUrl = base64data.toString();
-          currentFn.entityUserService.update(data.avatarUrl, base64data.toString());
-          currentFn.avatarService.saveUserAvatar(data.result).subscribe();
-        };
-      });
   }
 }

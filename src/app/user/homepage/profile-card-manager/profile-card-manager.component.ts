@@ -134,4 +134,8 @@ export class ProfileCardManagerComponent implements OnInit {
   loadImageFailed() {
     // show message
   }
+
+  avatarClick() {
+    $('#avatarModal').modal('show');
+  }
 }

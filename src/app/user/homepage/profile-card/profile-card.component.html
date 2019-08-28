@@ -7,7 +7,7 @@
            *ngIf="(this.userQuery.selectLoading() | async) === false; else avatarLoading"
            class="img-center img-fluid rounded-circle"
            id="avatar"
-      (click)="avatarClick()">
+           (click)="avatarClick()">
 
       <ng-template #avatarLoading >
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
@@ -37,11 +37,11 @@
         </div>
       </div>
       <!-------Quote Box------>
-<!--      <form accept-charset="UTF-8" action="" method="POST">
-        <textarea class="form-control" id="text" name="text" placeholder="Type in your message" rows="5"></textarea>
-        <h6 class="pull-right" id="count_message"></h6>
-        <button class="btn btn-info" type="submit">Post New Message</button>
-      </form>-->
+      <!--      <form accept-charset="UTF-8" action="" method="POST">
+              <textarea class="form-control" id="text" name="text" placeholder="Type in your message" rows="5"></textarea>
+              <h6 class="pull-right" id="count_message"></h6>
+              <button class="btn btn-info" type="submit">Post New Message</button>
+            </form>-->
       <!-------End of Quote Box----->
       <div class="row text-center mt-4">
         <div class="col p-2">
@@ -63,27 +63,27 @@
       <!-----Button----->
       <div class="container">
         <div class="row">
-          <button type="button" (click)="Debug()">Debug</button>
-          <div class="col-sm-6 col-md-6 col-lg-6 col-6">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
-          </div>
-          <div class="col-sm-6 col-md-6 col-lg-6 col-6">
-            <button type="button" class="btn btn-danger" (click)="showGallery()" style="padding-right: 10px; padding-left: 10px">Select Avatar</button>
-          </div>
+          <!--          <button type="button" (click)="Debug()">Debug</button>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-6">
+                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-6">
+                      <button type="button" class="btn btn-danger" (click)="showGallery()" style="padding-right: 10px; padding-left: 10px">Select Avatar</button>
+                    </div>-->
         </div>
       </div>
     </div>
   </div>
 
-  <div class="modal fade modal-black" id="myModal" role="dialog">
+  <!--<div class="modal fade modal-black" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
-      <!-- Modal content-->
+      &lt;!&ndash; Modal content&ndash;&gt;
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Settings</h4>
         </div>
-        <!---modal body---->
+        &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
         <div class="modal-body" style="text-align: center">
           <input type="file" (change)="fileChangeEvent($event)" />
           <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>
@@ -103,14 +103,14 @@
           </div>
         </div>
 
-        <!----End Mod Bod---->
+        &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
         <div class="modal-footer">
-<!--          <button type="button" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>-->
+&lt;!&ndash;          <button type="button" class="btn btn-success">Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>&ndash;&gt;
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <!-- Blank card to display while loading -->
   <ng-template #cardLoading>
@@ -129,10 +129,10 @@
   </ng-template>
 
 </div>
-<div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
+<!--<div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-sm" role="document">
 
-    <!-- Modal content-->
+    &lt;!&ndash; Modal content&ndash;&gt;
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Choose Your Avatar</h4>
@@ -140,15 +140,15 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <!---modal body---->
+      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
       <div class="modal-body">
         <app-image-gallery></app-image-gallery>
       </div>
-      <!----End Mod Bod---->
+      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
 
     </div>
   </div>
-</div>
+</div>-->
 
 <div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg" role="document">
@@ -160,7 +160,7 @@
       </div>
       <!---modal body---->
       <div class="modal-body">
-        <app-avatar></app-avatar>
+        <app-avatar [avatarUrl]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
       </div>
       <!----End Mod Bod---->
 

@@ -1,0 +1,15 @@
+<div>
+  <image-cropper
+    [imageChangedEvent]="imageChangedEvent"
+    format="png"
+    outputType="both"
+    (imageCropped)="imageCropped($event)"
+    (imageLoaded)="imageLoaded()"
+    (cropperReady)="cropperReady()"
+    (loadImageFailed)="loadImageFailed()"
+  ></image-cropper>
+
+  <div>
+    <img [src]="croppedImageToShow" style="max-width: 150px"/>
+  </div>
+</div>

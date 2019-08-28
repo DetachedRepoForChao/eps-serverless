@@ -75,6 +75,7 @@ import { UserAvatarsComponent} from './entity-store/user-avatar/user-avatars.com
 import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.component';
 import {UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
+import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -116,7 +117,8 @@ import { AvatarComponent } from './shared/avatar/avatar.component';
     UserAvatarsComponent,
     UserAvatarComponent,
     UserFiltersComponent,
-    AvatarComponent
+    AvatarComponent,
+    ImageCropperComponent
 
   ],
   imports: [
