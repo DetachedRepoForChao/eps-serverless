@@ -25,6 +25,7 @@ export class AvatarComponent implements OnInit {
 
   avatarUpload = false;
   avatarSelect = false;
+  avatarPreview = true;
 
   constructor(private avatarService: AvatarService,
               private leaderboardService: LeaderboardService,
@@ -42,11 +43,13 @@ export class AvatarComponent implements OnInit {
   toggleAvatarUpload() {
     this.avatarUpload = true;
     this.avatarSelect = false;
+    this.avatarPreview = false;
   }
 
   toggleAvatarSelect() {
     this.avatarSelect = true;
     this.avatarUpload = false;
+    this.avatarPreview = false;
   }
 
   onImageSelected(event) {
@@ -76,9 +79,18 @@ export class AvatarComponent implements OnInit {
         });
 
         this.feedcardService.refreshPointTransactionAvatars();
+
+        this.avatarUpload = false;
+        this.avatarPreview = true;
       }
 
     });
+  }
+
+  onSuperheroSelected(event) {
+    console.log(event);
+    this.avatarSelect = false;
+    this.avatarPreview = true;
   }
 
   fileChangeEvent(event: any): void {
@@ -101,6 +113,7 @@ export class AvatarComponent implements OnInit {
   generateRandomAvatar() {
     this.avatarSelect = false;
     this.avatarUpload = false;
+    this.avatarPreview = true;
 
     this.avatarService.generateRandomAvatar()
       .subscribe((data: any) => {

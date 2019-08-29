@@ -16,6 +16,66 @@
                   <div class="row">
                     <div class="col-md-12 text-center">
                       ** Store **
+                      <div *ngFor="let row of rows">
+                        <div class="row">
+                          <div class="col">
+                            <div class="container" style="max-height: 150px; margin-bottom: 5px; margin-top: 5px">
+                              <img *ngIf="row.items[0]" [src]="row.items[0]"/>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="container" style="max-height: 150px; margin-bottom: 5px; margin-top: 5px">
+                              <img *ngIf="row.items[1]" [src]="row.items[1]"/>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="container" style="max-height: 150px; margin-bottom: 5px; margin-top: 5px">
+                              <img *ngIf="row.items[2]" [src]="row.items[2]"/>
+                            </div>
+                          </div>
+<!--                          <div *ngFor="let item of row">
+                            <div class="col">
+                              <div class="container" style="max-height: 150px">
+                                <img [src]="item"/>
+                              </div>
+                            </div>
+                          </div>-->
+                        </div>
+                      </div>
+                      <!--<div class="row">
+                        <div class="col">
+                          <div class="container" style="max-height: 150px">
+                            {{items[0]}}
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="container" style="max-height: 150px">
+
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="container" style="max-height: 150px">
+
+                          </div>
+                        </div>
+                      </div>-->
+<!--                      <div class="row">
+                        <div class="col">
+                          <div class="container" style="max-height: 150px">
+
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="container" style="max-height: 150px">
+
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="container" style="max-height: 150px">
+
+                          </div>
+                        </div>
+                      </div>-->
                     </div>
                   </div>
                 </div>

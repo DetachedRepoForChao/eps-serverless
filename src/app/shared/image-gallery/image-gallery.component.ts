@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {DEMO_GALLERY_CONF_INLINE, DEMO_GALLERY_IMAGE} from '../../config';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {DEMO_GALLERY_CONF, DEMO_GALLERY_CONF_INLINE, DEMO_GALLERY_IMAGE} from '../../config';
 import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
 import {AvatarService} from '../avatar/avatar.service';
 import { BehaviorSubject } from 'rxjs';
@@ -33,11 +33,13 @@ export class ImageGalleryComponent implements OnInit {
   public showConf = true;
 
   @ViewChild('ngxImageGallery') ngxImageGallery: NgxImageGalleryComponent;
+  @Output() selected = new EventEmitter<string>();
 
   title = 'Demo App';
 
   // gallery configuration
   conf: GALLERY_CONF = DEMO_GALLERY_CONF_INLINE;
+  // conf: GALLERY_CONF = DEMO_GALLERY_CONF;
 
   // gallery images
   // images: GALLERY_IMAGE[] = DEMO_GALLERY_IMAGE;
@@ -152,7 +154,7 @@ export class ImageGalleryComponent implements OnInit {
             this.avatarService.saveUserAvatar(blob).subscribe((saveResult) => {
               console.log(`${functionFullName}: saveResult: ${saveResult}`);
               if (saveResult === true) {
-                this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
+                /*this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
                   console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
                   if (isTop5Result === true) {
                     console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
@@ -166,10 +168,11 @@ export class ImageGalleryComponent implements OnInit {
                   }
                 });
 
-                this.feedcardService.refreshPointTransactionAvatars();
+                this.feedcardService.refreshPointTransactionAvatars();*/
               }
 
-              $('#imageSelectorModal').modal('hide');
+              // $('#imageSelectorModal').modal('hide');
+              this.selected.emit(result);
             });
           });
       });
