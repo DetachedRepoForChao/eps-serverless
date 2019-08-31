@@ -15,68 +15,30 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-12 text-center">
-                      ** Store **
-                      <div *ngFor="let row of rows">
+                      <div *ngIf="(this.storeItemQuery.selectLoading() | async) === false; else storeLoading">
+                        ** Store **
                         <div class="row">
-                          <div class="col">
-                            <div class="container" style="max-height: 150px; margin-bottom: 5px; margin-top: 5px">
-                              <img *ngIf="row.items[0]" [src]="row.items[0]"/>
+                          <div *ngFor="let row of (this.storeItemQuery.getAll())" class="col-4">
+                              <div *ngIf="row">
+                                <div class="container-img">
+                                  <img [src]="row.imageResolvedUrl"/>
+                                </div>
+                                <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
+                                <div class="container-text2">{{row.description}}</div>
                             </div>
                           </div>
-                          <div class="col">
-                            <div class="container" style="max-height: 150px; margin-bottom: 5px; margin-top: 5px">
-                              <img *ngIf="row.items[1]" [src]="row.items[1]"/>
-                            </div>
-                          </div>
-                          <div class="col">
-                            <div class="container" style="max-height: 150px; margin-bottom: 5px; margin-top: 5px">
-                              <img *ngIf="row.items[2]" [src]="row.items[2]"/>
-                            </div>
-                          </div>
-<!--                          <div *ngFor="let item of row">
-                            <div class="col">
-                              <div class="container" style="max-height: 150px">
-                                <img [src]="item"/>
-                              </div>
-                            </div>
-                          </div>-->
                         </div>
+
                       </div>
-                      <!--<div class="row">
-                        <div class="col">
-                          <div class="container" style="max-height: 150px">
-                            {{items[0]}}
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="container" style="max-height: 150px">
 
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="container" style="max-height: 150px">
+                      <ng-template #storeLoading>
+                        Loading...
+                      </ng-template>
 
-                          </div>
-                        </div>
-                      </div>-->
-<!--                      <div class="row">
-                        <div class="col">
-                          <div class="container" style="max-height: 150px">
-
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="container" style="max-height: 150px">
-
-                          </div>
-                        </div>
-                        <div class="col">
-                          <div class="container" style="max-height: 150px">
-
-                          </div>
-                        </div>
-                      </div>-->
                     </div>
+
+<!--                    <button type="button" class="btn btn-danger" (click)="listStoreItems()" style="padding-right: 10px; padding-left: 10px">List Store Items</button>-->
+<!--                    <button type="button" class="btn btn-danger" (click)="getStoreItems()" style="padding-right: 10px; padding-left: 10px">Get Store Items</button>-->
                   </div>
                 </div>
               </div>

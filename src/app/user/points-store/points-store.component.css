@@ -1,0 +1,23 @@
+.col {
+
+}
+
+.container-img {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 150px;
+  line-height: 150px
+}
+
+.container-text {
+  line-height: 50px
+}
+
+.container-text2 {
+  line-height: 20px;
+  margin-top: -10px;
+}
+
+.container-img img {
+  vertical-align: middle;
+}

@@ -38,6 +38,7 @@ const jwtHelper = require('./config/jwtHelper');
 const ctrlSession = require('./controllers/session.controller');
 const ctrlAvatar = require('./controllers/avatar.controller');
 const ctrlLeaderboard = require('./controllers/leaderboard.controller');
+const ctrlStoreItem = require('./controllers/store_item.controller');
 
 const jwtVerify = require('./config/decode-verify-jwt');
 const componentName = 'app';
@@ -642,7 +643,26 @@ app.get('/items/getPointTransaction', function(req, res) {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
   });
+});
 
+// Store Item Routes
+app.get('/items/getStoreItems', function(req, res) {
+  console.log('starting get getStoreItems');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlStoreItem.getStoreItems()
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.storeItems});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 

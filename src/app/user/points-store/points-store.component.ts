@@ -3,6 +3,10 @@ import awsconfig from '../../../aws-exports';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
 import {Observable} from 'rxjs';
+import {StoreItemStore} from '../../entity-store/store-item/state/store-item.store';
+import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
+import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
+import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
 
 @Component({
   selector: 'app-points-store',
@@ -20,17 +24,62 @@ export class PointsStoreComponent implements OnInit {
     }
   };
 
-  items = [];
+  items: StoreItemModel[] = [];
   numRows: number;
   rows = [];
 
-  constructor() { }
+  constructor(private storeItemStore: StoreItemStore,
+              private storeItemQuery: StoreItemQuery,
+              private storeItemService: StoreItemService) { }
 
   ngOnInit() {
-    this.getStoreItems();
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    this.storeItemService.cacheStoreItems().subscribe();
+  }
+
+  listStoreItems() {
+    // const storeItems = this.storeItemQuery.getAll();
+    // const storeItems = this.rows;
+    // console.log(storeItems);
+    console.log('items:');
+    console.log(this.items);
+    console.log('numRows:');
+    console.log(this.numRows);
+    console.log('rows:');
+    console.log(this.rows);
+    console.log('getAll()');
+    console.log(this.storeItemQuery.getAll());
   }
 
   getStoreItems() {
+    this.items = this.storeItemQuery.getAll();
+    console.log(this.storeItemQuery.getAll());
+    console.log(this.items);
+    this.numRows = Math.ceil(this.items.length / 3);
+    let index = 0;
+    for (let i = 0; i < this.numRows; i++) {
+      /*          const row = {
+                  items: [this.items[index], this.items[index + 1], this.items[index + 2]]
+                };*/
+
+      const row = [];
+      row.push(this.items[index]);
+      row.push(this.items[index + 1]);
+      row.push(this.items[index + 2]);
+      console.log('row:');
+      console.log(row);
+      this.rows.push(row);
+      index = index + 3;
+    }
+
+    console.log('rows:');
+    console.log(this.rows);
+  }
+
+/*  getStoreItems() {
     Storage.list('store', {
       level: 'public',
 
@@ -65,6 +114,7 @@ export class PointsStoreComponent implements OnInit {
             console.log(this.rows);
           });
       });
+  }*/
 
-  }
+
 }

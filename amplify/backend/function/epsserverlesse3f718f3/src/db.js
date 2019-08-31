@@ -12,6 +12,7 @@ const MetricsModel = require('./models/metrics');
 const PointPoolModel = require('./models/point_pool');
 const SessionModel = require('./models/session');
 const LikeModel = require('./models/like');
+const StoreItemModel = require('./models/store_item');
 
 // console.log('starting db.js');
 
@@ -50,6 +51,7 @@ const Metrics = MetricsModel(sequelize, Sequelize);
 const PointPool = PointPoolModel(sequelize, Sequelize);
 const Session = SessionModel(sequelize, Sequelize);
 const Like = LikeModel(sequelize,Sequelize);
+const StoreItem = StoreItemModel(sequelize ,Sequelize);
 
 const Models = {
   User,
@@ -64,7 +66,8 @@ const Models = {
   Metrics,
   PointPool,
   Session,
-  Like
+  Like,
+  StoreItem
 };
 const connection = {};
 
