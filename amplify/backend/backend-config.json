@@ -11,49 +11,7 @@
 			"providerPlugin": "awscloudformation",
 			"build": true,
 			"dependsOn": []
-		},
-		"epsserverless4934766d": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true,
-			"dependsOn": [
-				{
-					"category": "auth",
-					"resourceName": "epsserverlessauth0001",
-					"attributes": [
-						"UserPoolId"
-					]
-				},
-				{
-					"category": "function",
-					"resourceName": "epsserverlesse3f718f3",
-					"attributes": [
-						"Name"
-					]
-				},
-				{
-					"category": "api",
-					"resourceName": "api9819f38d",
-					"attributes": [
-						"ApiName"
-					]
-				},
-				{
-					"category": "hosting",
-					"resourceName": "S3AndCloudFront",
-					"attributes": [
-						"HostingBucketName"
-					]
-				},
-				{
-					"category": "storage",
-					"resourceName": "s3be1e6785",
-					"attributes": [
-						"BucketName"
-					]
-				}
-			]
-		},
+		},		
 		"epsserverless76cf8c60": {
 			"service": "Lambda",
 			"providerPlugin": "awscloudformation",
