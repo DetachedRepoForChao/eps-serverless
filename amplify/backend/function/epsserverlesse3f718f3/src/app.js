@@ -39,6 +39,7 @@ const ctrlSession = require('./controllers/session.controller');
 const ctrlAvatar = require('./controllers/avatar.controller');
 const ctrlLeaderboard = require('./controllers/leaderboard.controller');
 const ctrlStoreItem = require('./controllers/store_item.controller');
+const ctrlNotifications = require('./controllers/notification.controller');
 
 const jwtVerify = require('./config/decode-verify-jwt');
 const componentName = 'app';
@@ -665,6 +666,34 @@ app.get('/items/getStoreItems', function(req, res) {
   });
 });
 
+
+// Notifications Routes
+app.get('/items/getNotifications', function(req, res) {
+  console.log('starting get getNotifications');
+
+  ctrlNotifications.getNotifications()
+    .then(data => {
+      res.json({status: 'get call succeed!', data: data.notifications});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });
+
+  // const token = req.headers.authorization;
+  // jwtVerify.parseToken(token, function(tokenResult) {
+  //   if(tokenResult.message === 'Success') {
+  //     ctrlStoreItem.getStoreItems()
+  //       .then(data => {
+  //         res.json({status: 'post call succeed!', data: data.storeItems});
+  //       })
+  //       .catch(err => {
+  //         res.json({status: 'post call failed!', error: err});
+  //       });
+  //   } else {
+  //     res.json({status: 'Unauthorized', data: tokenResult.message});
+  //   }
+  // });
+});
 
 app.get('/items/*', function(req, res) {
   // Add your code here
