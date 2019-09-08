@@ -15,6 +15,7 @@ import {HomepageComponent} from './user/homepage/homepage.component';
 import {ConfirmCodeComponent} from './login/confirm-code/confirm-code.component';
 import {PointsStoreComponent} from './user/points-store/points-store.component';
 import {UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
+import {ForgotPasswordComponent} from './login/forgot-password/forgot-password.component';
 
 export const appRoutes: Routes = [
   {
@@ -40,6 +41,13 @@ export const appRoutes: Routes = [
     component: LoginComponent,
     children: [
       { path: '', component: ConfirmCodeComponent },
+    ]
+  },
+  {
+    path: 'forgotPassword',
+    component: LoginComponent,
+    children: [
+      { path: '', component: ForgotPasswordComponent },
     ]
   },
   {

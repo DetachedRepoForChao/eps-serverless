@@ -81,8 +81,8 @@ export class LoginComponent implements OnInit {
   onConfirmClick() {
     // this.socketService.socketTest2();
     // debugger;
-    environment.confirm.email = 'max.bado@gmail.com';
-    environment.confirm.password = 'D@RTHtest911';
+    // environment.confirm.email = '';
+    // environment.confirm.password = '';
     this.router.navigateByUrl('confirm');
   }
 }

@@ -76,6 +76,7 @@ import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.compo
 import {UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -118,7 +119,8 @@ import { ImageCropperComponent } from './shared/image-cropper/image-cropper.comp
     UserAvatarComponent,
     UserFiltersComponent,
     AvatarComponent,
-    ImageCropperComponent
+    ImageCropperComponent,
+    ForgotPasswordComponent
 
   ],
   imports: [
