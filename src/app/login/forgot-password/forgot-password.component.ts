@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import Auth from '@aws-amplify/auth';
 import {NotifierService} from 'angular-notifier';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,9 +10,10 @@ import {NotifierService} from 'angular-notifier';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-
-  codeSent = false;
-  username: string;
+  @Input() username: string;
+  @Input() codeSent = false;
+  // codeSent = false;
+  // username: string;
 
   getCodeModel: FormGroup = new FormGroup({
     username: new FormControl(''),
@@ -23,7 +25,15 @@ export class ForgotPasswordComponent implements OnInit {
     password: new FormControl('')
   });
 
-  constructor(private notifierService: NotifierService) { }
+  constructor(private notifierService: NotifierService,
+              private router: Router) {
+    console.log(this.router.getCurrentNavigation().extras);
+    if (this.router.getCurrentNavigation().extras.state) {
+      this.username = this.router.getCurrentNavigation().extras.state.username;
+      this.codeSent = this.router.getCurrentNavigation().extras.state.codeSent;
+      this.resetPasswordModel.value.username = this.username;
+    }
+  }
 
   ngOnInit() {
   }
@@ -71,9 +81,11 @@ export class ForgotPasswordComponent implements OnInit {
       .catch(() => this.notifierService.notify('error', 'An error occurred'));
   }
 
-  getUsername() {
-    return this.username;
+  alreadyHaveCodeClick() {
+    this.codeSent = true;
   }
+
+
 
   notify(type: string) {
     this.notifierService.notify(type, 'Test');
