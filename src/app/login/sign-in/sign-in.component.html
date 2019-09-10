@@ -38,10 +38,8 @@
                    minlength="3"
                    maxlength="50"
                    class="form-control">
-            <div class="input-group-append" *ngIf="signInForm.submitted && username.errors?.minlength">
-              <div class="validation-message">The username must be at least 3 characters long.</div>
-            </div>
           </div>
+          <label class="validation-message" *ngIf="signInForm.submitted && username.errors?.minlength">The username must be at least 3 characters long.</label>
 
           <div class="input-group">
             <div class="input-group-prepend">
@@ -59,13 +57,8 @@
                    [ngClass]="{'invalid-textbox' :signInForm.submitted && !password.valid }"
                    minlength="8"
                    class="form-control">
-            <!-- <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon> -->
-            <div class="input-group-append" *ngIf="signInForm.submitted && password.errors?.minlength">
-              <div class="validation-message">The password must be at least 8 characters long.</div>
-            </div>
-
-            <!--<input type="text" placeholder="Email" class="form-control">-->
           </div>
+          <label class="validation-message" *ngIf="signInForm.submitted && password.errors?.minlength">The password must be at least 8 characters long.</label>
 
           <button type="submit" class="btn btn-info btn-round">Sign In</button>
           <button type="button" class="btn btn-info btn-round" routerLink="/signup">Register</button>
