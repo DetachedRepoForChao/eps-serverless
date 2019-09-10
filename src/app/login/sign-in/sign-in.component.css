@@ -1,7 +1,22 @@
+/*
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');*/
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+.card-register .card-header img {
+  top: -200px;
+  margin-top: 0px;
+}
+
+.card-register .card-img {
+  top: -200px;
+  margin-top: 0px
+}
+
+.input-group .form-control {
+  min-width: 300px;
+}
 
 
+/*
 .register-page {
   background-color: #171941;
 }
@@ -101,3 +116,4 @@
   top: 400px;
   opacity: .4;
 }
+*/
