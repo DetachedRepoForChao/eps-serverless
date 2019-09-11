@@ -329,8 +329,8 @@ $primary-color-orange-dark: #e08833;
   &:hover {
     cursor: default;
     >span {
-      width: 165px;
-      line-height: 200px;
+      width: 320px;
+      line-height: 320px;
       font-size: 0.3em;
       color: $primary-color;
 
@@ -645,7 +645,7 @@ $primary-color-orange-dark: #e08833;
     cursor: default;
     >span {
       width: 165px;
-      line-height: 165px;
+      line-height: 200px;
       font-size: 0.3em;
       color: $primary-color;
 
