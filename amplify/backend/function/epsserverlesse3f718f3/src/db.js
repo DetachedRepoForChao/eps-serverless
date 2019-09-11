@@ -13,7 +13,7 @@ const PointPoolModel = require('./models/point_pool');
 const SessionModel = require('./models/session');
 const LikeModel = require('./models/like');
 const StoreItemModel = require('./models/store_item');
-
+const NotificationModel = require('./models/notification'); 
 // console.log('starting db.js');
 
 const sequelize = new Sequelize(
@@ -52,6 +52,7 @@ const PointPool = PointPoolModel(sequelize, Sequelize);
 const Session = SessionModel(sequelize, Sequelize);
 const Like = LikeModel(sequelize,Sequelize);
 const StoreItem = StoreItemModel(sequelize ,Sequelize);
+const Notification = NotificationModel(sequelize ,Sequelize);
 
 const Models = {
   User,
@@ -67,7 +68,8 @@ const Models = {
   PointPool,
   Session,
   Like,
-  StoreItem
+  StoreItem,
+  Notification
 };
 const connection = {};
 

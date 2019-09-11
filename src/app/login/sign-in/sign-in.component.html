@@ -28,11 +28,18 @@
               </div>
             </div>
 
-            <input type="text" name="username" #username="ngModel" [(ngModel)]="model.username" placeholder="Username" required
-                     [ngClass]="{'invalid-textbox' :signInForm.submitted}" class="form-control">
-
-            <!--<input type="text" class="form-control" placeholder="Full Name">-->
+            <input type="text"
+                   name="username"
+                   #username="ngModel"
+                   [(ngModel)]="model.username"
+                   placeholder="Username"
+                   required
+                   [ngClass]="{'invalid-textbox' :signInForm.submitted}"
+                   minlength="3"
+                   maxlength="50"
+                   class="form-control">
           </div>
+          <label class="validation-message" *ngIf="signInForm.submitted && username.errors?.minlength">The username must be at least 3 characters long.</label>
 
           <div class="input-group">
             <div class="input-group-prepend">
@@ -41,25 +48,27 @@
               </div>
             </div>
 
-              <input [type]="hide ? 'password' : 'text'" name="password" #password="ngModel" [(ngModel)]="model.password" placeholder="Password" required
-                     [ngClass]="{'invalid-textbox' :signInForm.submitted && !password.valid }" class="form-control">
-              <!-- <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon> -->
-              <div *ngIf="signInForm.submitted && password.errors?.minlength">
-                <label class="validation-message">Minimum 4 characters.</label>
-              </div>
-
-            <!--<input type="text" placeholder="Email" class="form-control">-->
+            <input [type]="hide ? 'password' : 'text'"
+                   name="password"
+                   #password="ngModel"
+                   [(ngModel)]="model.password"
+                   placeholder="Password"
+                   required
+                   [ngClass]="{'invalid-textbox' :signInForm.submitted && !password.valid }"
+                   minlength="8"
+                   class="form-control">
           </div>
+          <label class="validation-message" *ngIf="signInForm.submitted && password.errors?.minlength">The password must be at least 8 characters long.</label>
+
+          <button type="submit" class="btn btn-info btn-round">Sign In</button>
+          <button type="button" class="btn btn-info btn-round" routerLink="/signup">Register</button>
 
 
-
-          <div class="card-footer">
-            <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
-            <button type="submit" class="btn btn-info btn-round">Sign In</button>
-            <button type="button" class="btn btn-info btn-round" routerLink="/signup">Register</button>
-          </div>
         </form>
-
+        <div class="card-footer">
+          <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
+          <p>Forgot your password? <a routerLink="/forgotPassword">Reset password</a></p>
+        </div>
 
       </div>
     </div>

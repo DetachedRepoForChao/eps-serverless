@@ -24,7 +24,7 @@ import {Globals} from '../../globals';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
-  // styleUrls: ['./sign-in.component.css']
+  styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent implements OnInit {
   componentName = 'sign-in.component';
@@ -166,8 +166,9 @@ export class SignInComponent implements OnInit {
       .catch((error: any) => {
         // this._loader.hide();
         // this._notification.show(error.message);
+        console.log(error);
         this.spinner.hide('sign-in-onSubmit-spinner');
-        this.notifierService.notify('Error', error.message);
+        this.notifierService.notify('error', error.message);
         switch (error.code) {
           case 'UserNotConfirmedException':
             console.log(`${functionFullName}: UserNotConfirmedException`);
@@ -179,6 +180,9 @@ export class SignInComponent implements OnInit {
             console.log(`${functionFullName}: UsernameExistsException`);
             this.router.navigateByUrl('/signin');
             break;
+          case 'PasswordResetRequiredException':
+            console.log(`${functionFullName}: PasswordResetRequiredException`);
+            this.router.navigate(['forgotPassword'], {state: {username: form.value.username, codeSent: true}});
         }
       });
   }
