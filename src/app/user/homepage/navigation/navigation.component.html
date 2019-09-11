@@ -1,192 +1,193 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg fixed-top navbar-transparent " color-on-scroll="100">
-  <div class="container">
-    <div class="navbar-translate">
-      <!--
-      <a class="navbar-brand" href="https://demos.creative-tim.com/blk-design-system/index.html" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
-        <span>The Asbury Hotel </span> Employee Points System
-      </a>
-      -->
-
-      <a class="navbar-brand" target="_blank">
-        <span>The Asbury Hotel </span>| EPS
-      </a>
-
-      <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-bar bar1"></span>
-        <span class="navbar-toggler-bar bar2"></span>
-        <span class="navbar-toggler-bar bar3"></span>
-      </button>
-    </div>
-    <div class="collapse navbar-collapse justify-content-end" id="navigation">
-      <div class="navbar-collapse-header">
-        <div class="row">
-          <div class="col-6 collapse-brand">
-            <a>
-              <span>
-              </span>
-            </a>
-          </div>
-          <div class="col-6 collapse-close text-right">
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-              <i class="tim-icons icon-simple-remove"></i>
-            </button>
+    <div class="container">
+      <div class="navbar-translate">
+        <!--
+        <a class="navbar-brand" href="https://demos.creative-tim.com/blk-design-system/index.html" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
+          <span>The Asbury Hotel </span> Employee Points System
+        </a>
+        -->
+  
+        <a class="navbar-brand" target="_blank">
+          <span>The Asbury Hotel </span>| EPS
+        </a>
+  
+        <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-bar bar1"></span>
+          <span class="navbar-toggler-bar bar2"></span>
+          <span class="navbar-toggler-bar bar3"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse justify-content-end" id="navigation">
+        <div class="navbar-collapse-header">
+          <div class="row">
+            <div class="col-6 collapse-brand">
+              <a>
+                <span>
+                </span>
+              </a>
+            </div>
+            <div class="col-6 collapse-close text-right">
+              <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="tim-icons icon-simple-remove"></i>
+              </button>
+            </div>
           </div>
         </div>
+        <ul>
+            <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#notiModal"><i class="tim-icons icon-bell-55" title="Notifications"></i></button>
+            <div class="modal fade" id="notiModal" role="dialog">
+                <div class="modal-dialog tweet">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><b>Notifications</b></h4>
+                        </div>
+                        <div class="col-lg-12 ">
+                            <div class="col-lg-12 twitter-card bg-primary">
+                                <div class="card-fluid">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Events</h4>
+                                        <p class="card-text data-height=100%">
+                                            <a class="twitter-timeline" data-height="600px" href="https://twitter.com/theasburyhotel?ref_src=twsrc%5Etfw">Tweets by theasburyhotel</a>
+                                            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                                        </p>
+  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  
+            <!----- Settings---->
+            <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#settingsModal">
+                <i class="tim-icons icon-settings-gear-63" title="settings"></i></button>
+            <div class="modal fade" id="settingsModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><b>Settings</b></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="logout-button">
+                                    <button mat-raised-button color="warn" (click)="onLogout()">Log Out</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!----- Gift---->
+            <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#giftModal">
+                <i class="tim-icons icon-coins" title="gift"></i>
+            </button>
+            <div class="modal fade" id="giftModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><b>Gifts</b></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row text-center mt-4">
+                                 <div class="col p-2">
+                                    <h5><a href="http://www.amazon.com"><span class="font-weight-bold">Spend Points</span></a></h5>
+                                    <h4 class="mb-0 text-muted"></h4>
+                                </div>
+                                 <div class="col p-2">
+                                    <h3 class="mb-1 line-height-5 font-weight-bold ">Gold Amount</h3>
+                                    <h4 class="mb-0 text-muted"></h4>
+                                </div>
+                                 <div class="col p-2">
+                                    <h4 class="mb-0"></h4>
+                                    <h3 class="mt-3 align-self-end line-height-0 font-weight-bold">25</h3>
+                                </div>
+                                 <div class="col p-2">
+                                    <h3 class="mb-1 line-height-5 font-weight-bold text-muted">Gold Amount</h3>
+                                    <h4 class="mb-0 text-muted"></h4>
+                                </div>
+                                <div class="col p-1">
+                                    <h2 class="text-muted font-weight-bold mb-0">23</h2>
+                                    <img src="../../../../assets/img/golds.png" class="img-center img-fluid" />
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-----Achievements----->
+            <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#achievementModal">
+                <i class="tim-icons icon-trophy" title="recent achievements">
+                </i></button>
+            <div class="modal fade" id="achievementModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><b>Achievements</b></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="progress-container progress-primary">
+                                <span class="progress-badge text-muted">Logged In (2 of 3)</span>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
+                                        <span class="progress-value text-muted">1/4</span>
+                                    </div>
+                                </div>
+                            </div>
+  
+                            <div class="progress-container progress-warning">
+                                <span class="progress-badge text-muted">Arrived Early (1 of 4)</span>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                                        <span class="progress-value text-muted">3/5</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress-container progress-success">
+                                <span class="progress-badge text-muted">Good Review (1 of 4)</span>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
+                                        <span class="progress-value text-muted">4/5</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress-container progress-danger">
+                                <span class="progress-badge text-muted">Lead Group Meeting (1 of 2)</span>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                                        <span class="progress-value text-muted">5/10</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress-container progress-info">
+                                <span class="progress-badge text-muted">Covered a Shift (1 of 3)</span>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 33.3%;">
+                                        <span class="progress-value text-muted">2/6</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <app-trophy></app-trophy>
+                        </div>
+                    </div>
+                </div>
+            </div>
+  <!--        <i class="tim-icons icon-bell-55" title="notifications" style="margin-left:35px;"> </i>
+          <i class="tim-icons icon-settings-gear-63" title="settings" style="margin-left:35px;"></i>
+          <i class="tim-icons icon-gift-2" title="gift" style="margin-left:35px;"></i>
+          <i class="tim-icons icon-trophy" title="recent achievements" style="margin-left:35px;"></i>-->
+          <button type="button" class="btn-sm btn-success" routerLink="/homepage" style="padding-right: 10px; padding-left: 10px">Home</button>
+          <button type="button" class="btn-sm btn-primary" routerLink="/store" style="padding-right: 10px; padding-left: 10px">Store</button>
+          <button type="button" class="btn-sm btn-danger" (click)="onLogout()" style="padding-right: 10px; padding-left: 10px">Log Out</button>
+        </ul>
       </div>
-      <ul>
-          <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#notiModal"><i class="tim-icons icon-bell-55" title="Notifications"></i></button>
-          <div class="modal fade" id="notiModal" role="dialog">
-              <div class="modal-dialog tweet">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title"><b>Notifications</b></h4>
-                      </div>
-                      <div class="col-lg-12 ">
-                          <div class="col-lg-12 twitter-card bg-primary">
-                              <div class="card-fluid">
-                                  <div class="card-body">
-                                      <h4 class="card-title">Events</h4>
-                                      <p class="card-text data-height=100%">
-                                          <a class="twitter-timeline" data-height="600px" href="https://twitter.com/theasburyhotel?ref_src=twsrc%5Etfw">Tweets by theasburyhotel</a>
-                                          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                                      </p>
-
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          <!----- Settings---->
-          <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#settingsModal">
-              <i class="tim-icons icon-settings-gear-63" title="settings"></i></button>
-          <div class="modal fade" id="settingsModal" role="dialog">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title"><b>Settings</b></h4>
-                      </div>
-                      <div class="modal-body">
-                          <div class="row">
-                              <div class="logout-button">
-                                  <button mat-raised-button color="warn" (click)="onLogout()">Log Out</button>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <!----- Gift---->
-          <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#giftModal">
-              <i class="tim-icons icon-coins" title="gift"></i>
-          </button>
-          <div class="modal fade" id="giftModal" role="dialog">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title"><b>Gifts</b></h4>
-                      </div>
-                      <div class="modal-body">
-                          <div class="row text-center mt-4">
-                               <div class="col p-2">
-                                  <h5><a href="http://www.amazon.com"><span class="font-weight-bold">Spend Points</span></a></h5>
-                                  <h4 class="mb-0 text-muted"></h4>
-                              </div>
-                               <div class="col p-2">
-                                  <h3 class="mb-1 line-height-5 font-weight-bold ">Gold Amount</h3>
-                                  <h4 class="mb-0 text-muted"></h4>
-                              </div>
-                               <div class="col p-2">
-                                  <h4 class="mb-0"></h4>
-                                  <h3 class="mt-3 align-self-end line-height-0 font-weight-bold">25</h3>
-                              </div>
-                               <div class="col p-2">
-                                  <h3 class="mb-1 line-height-5 font-weight-bold text-muted">Gold Amount</h3>
-                                  <h4 class="mb-0 text-muted"></h4>
-                              </div>
-                              <div class="col p-1">
-                                  <h2 class="text-muted font-weight-bold mb-0">23</h2>
-                                  <img src="../../../../assets/img/golds.png" class="img-center img-fluid" />
-                              </div>
-                             
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <!-----Achievements----->
-          <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#achievementModal">
-              <i class="tim-icons icon-trophy" title="recent achievements">
-              </i></button>
-          <div class="modal fade" id="achievementModal" role="dialog">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
-                          <h4 class="modal-title"><b>Achievements</b></h4>
-                      </div>
-                      <div class="modal-body">
-                          <div class="progress-container progress-primary">
-                              <span class="progress-badge text-muted">Logged In (2 of 3)</span>
-                              <div class="progress">
-                                  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-                                      <span class="progress-value text-muted">1/4</span>
-                                  </div>
-                              </div>
-                          </div>
-
-                          <div class="progress-container progress-warning">
-                              <span class="progress-badge text-muted">Arrived Early (1 of 4)</span>
-                              <div class="progress">
-                                  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                      <span class="progress-value text-muted">3/5</span>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="progress-container progress-success">
-                              <span class="progress-badge text-muted">Good Review (1 of 4)</span>
-                              <div class="progress">
-                                  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
-                                      <span class="progress-value text-muted">4/5</span>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="progress-container progress-danger">
-                              <span class="progress-badge text-muted">Lead Group Meeting (1 of 2)</span>
-                              <div class="progress">
-                                  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                                      <span class="progress-value text-muted">5/10</span>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="progress-container progress-info">
-                              <span class="progress-badge text-muted">Covered a Shift (1 of 3)</span>
-                              <div class="progress">
-                                  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 33.3%;">
-                                      <span class="progress-value text-muted">2/6</span>
-                                  </div>
-                              </div>
-                          </div>
-                          <app-trophy></app-trophy>
-                      </div>
-                  </div>
-              </div>
-          </div>
-<!--        <i class="tim-icons icon-bell-55" title="notifications" style="margin-left:35px;"> </i>
-        <i class="tim-icons icon-settings-gear-63" title="settings" style="margin-left:35px;"></i>
-        <i class="tim-icons icon-gift-2" title="gift" style="margin-left:35px;"></i>
-        <i class="tim-icons icon-trophy" title="recent achievements" style="margin-left:35px;"></i>-->
-        <button type="button" class="btn-sm btn-success" routerLink="/homepage" style="padding-right: 10px; padding-left: 10px">Home</button>
-        <button type="button" class="btn-sm btn-primary" routerLink="/store" style="padding-right: 10px; padding-left: 10px">Store</button>
-        <button type="button" class="btn-sm btn-danger" (click)="onLogout()" style="padding-right: 10px; padding-left: 10px">Log Out</button>
-      </ul>
     </div>
-  </div>
-</nav>
-<!-- End Navbar -->
+  </nav>
+  <!-- End Navbar -->
+  
