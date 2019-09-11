@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from '../../../shared/user.service';
 import {GlobalVariableService} from '../../../shared/global-variable.service';
-import {Router} from '@angular/router';
-import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
+import {SessionService} from '../../../shared/session.service';
+import { UserService } from '../../../shared/user.service';
+import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
@@ -20,8 +20,8 @@ export class NavigationComponent implements OnInit {
 
   constructor(private userService: UserService,
               private globalVariableService: GlobalVariableService,
-              private router: Router,
-              private feedcardService: FeedcardService) { }
+              private sessionService: SessionService,
+              private router: Router) { }
 
   ngOnInit() {
     // Initialize the navbar script
@@ -30,22 +30,15 @@ export class NavigationComponent implements OnInit {
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
   }
-
-  onLogout() {
+ onLogout() {
+    // const sessionId = localStorage.getItem('socketSessionId');
     this.userService.deleteToken();
     this.globalVariableService.resetAllVariables();
-    this.feedcardService.clearPointTransactionCache();
+    // this.socketService.removeAlListeners();
+    // this.socketService.destroySession(sessionId);
+    // this.socketService.logoutSession();
+    this.sessionService.LogoutSession();
     localStorage.clear();
     this.router.navigate(['/login']);
   }
-
-  onStoreClick() {
-
-  }
-
-  onHomeClick() {
-
-    // this.router.navigate(['/user']);
-  }
-
 }
