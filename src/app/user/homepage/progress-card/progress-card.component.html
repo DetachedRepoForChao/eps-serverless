@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="card card-coin card-plain">
+  <div class="card card-coin card-plain card-custom">
 
 
     <div class="card-header">
@@ -29,39 +29,71 @@
         </div>
       </div>
 
-      <ul class="list-group">
+      <div class="row">
+        <div class="col-md-12 text-center" style="margin: 0; padding: 0;">
+          <ul class="list-group nobullets" >
+            <li *ngFor="let achievement of this.achievementService.achievementDataListFiltered"
+                class="achievlist"
+                data-toggle="modal"
+                data-target="#achievementModal"
+                (click)="selectAchievement(achievement)">
 
-        <div class="progress-container progress-primary">
-          <span class="progress-badge">Logged In</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-              <span class="progress-value">1/4</span>
-            </div>
-          </div>
-        </div>
+              <div *ngIf="achievement.ProgressStatus === 'complete'"
+                   class="progress-container progress-success"
+                   style="cursor: pointer; padding-left: 15px; padding-right: 15px"
+                   [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.Description}">
+                <span class="progress-badge glow">{{achievement.Name}}</span>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-warning"
+                       role="progressbar"
+                       aria-valuenow="0" aria-valuemin="0"
+                       aria-valuemax="100"
+                       [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
+                    <span class="progress-value glow"
+                          style="padding-left: 15px; padding-right: 15px">
+                      {{((achievement.Progress / achievement.Cost) * 100) | number:'1.0-0'}}%
+                    </span>
+                  </div>
+                </div>
+                <span *ngFor="let star of achievementService.getAchievementFamilyCount(achievement)">
+                  <i *ngIf="star.ProgressStatus === 'complete' || star.ProgressStatus === 'complete acknowledged'" class="fas fa-star"></i>
+                  <i *ngIf="star.ProgressStatus === 'in progress' || star.ProgressStatus === 'not started'" class="far fa-star"></i>
+                </span>
+              </div>
 
-        <div class="progress-container progress-warning">
-          <span class="progress-badge">Arrived Early</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-              <span class="progress-value">3/5</span>
-            </div>
-          </div>
+              <div *ngIf="achievement.ProgressStatus === 'in progress'"
+                   class="progress-container progress-primary"
+                   style="padding-left: 15px; padding-right: 15px"
+                   [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.Description}">
+                <span class="progress-badge">{{achievement.Name}}</span>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-warning"
+                       role="progressbar"
+                       aria-valuenow="0"
+                       aria-valuemin="0"
+                       aria-valuemax="100"
+                       [ngStyle]="{'width': (achievement.Progress / achievement.Cost) * 100 + '%'}">
+                    <span class="progress-value"
+                          style="padding-left: 15px; padding-right: 15px">
+                      {{((achievement.Progress / achievement.Cost) * 100) | number:'1.0-0'}}%
+                    </span>
+                  </div>
+                </div>
+                <span *ngFor="let star of achievementService.getAchievementFamilyCount(achievement)">
+                  <i *ngIf="star.ProgressStatus === 'complete' || star.ProgressStatus === 'complete acknowledged'" class="fas fa-star"></i>
+                  <i *ngIf="star.ProgressStatus === 'in progress' || star.ProgressStatus === 'not started'" class="far fa-star"></i>
+                </span>
+              </div>
+
+            </li>
+          </ul>
         </div>
-        <div class="progress-container progress-success">
-          <span class="progress-badge">Good Review</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
-              <span class="progress-value">4/5</span>
-            </div>
-          </div>
-        </div>
-      </ul>
+      </div>
 
     </div>
     <div class="card-footer text-center">
 
-      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#trophyModal">view</button>
+<!--      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#trophyModal">view</button>-->
     </div>
 
     <div class="modal fade modal-black" id="trophyModal" role="dialog" tabindex="-1" aria-labelledby="trophyModalLabel" aria-hidden="true" >
@@ -70,56 +102,76 @@
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title"><b>Your Trophies</b></h4>
+            <h4 class="modal-title">Your Trophies</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <!---modal body---->
           <div class="modal-body">
-              <div class="progress-container progress-primary">
-          <span class="progress-badge">Logged In (2 of 3)</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-              <span class="progress-value">1/4</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="progress-container progress-warning">
-          <span class="progress-badge">Arrived Early (1 of 4)</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-              <span class="progress-value">3/5</span>
-            </div>
-          </div>
-        </div>
-        <div class="progress-container progress-success">
-          <span class="progress-badge">Good Review (1 of 4)</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
-              <span class="progress-value">4/5</span>
-            </div>
-          </div>
-        </div>
-              <div class="progress-container progress-danger">
-          <span class="progress-badge">Lead Group Meeting (1 of 2)</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-              <span class="progress-value">5/10</span>
-            </div>
-          </div>
-        </div>
-              <div class="progress-container progress-info">
-          <span class="progress-badge">Covered a Shift (1 of 3)</span>
-          <div class="progress">
-            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 33.3%;">
-              <span class="progress-value">2/6</span>
-            </div>
-          </div>
-        </div>
             <app-trophy></app-trophy>
           </div>
+          <!----End Mod Bod---->
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade modal-black" id="achievementModal" role="dialog" tabindex="-1" aria-labelledby="achievementModalLabel" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Achievement Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!---modal body---->
+          <div class="modal-body">
+            <h4>{{selectedAchievement.Name}}</h4>
+            <h4>{{selectedAchievement.Description}}</h4>
+            <ul class="list-group nobullets" >
+              <li>
+                <div *ngIf="selectedAchievement.ProgressStatus === 'complete'"
+                     class="progress-container progress-success"
+                     style="cursor: pointer; padding-left: 15px; padding-right: 15px"
+                     [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': selectedAchievement.Description}">
+
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-warning"
+                         role="progressbar"
+                         aria-valuenow="0" aria-valuemin="0"
+                         aria-valuemax="100"
+                         [ngStyle]="{'width': (selectedAchievement.Progress / selectedAchievement.Cost) * 100 + '%'}">
+                    </div>
+                  </div>
+                  <span class="progress-badge glow">{{selectedAchievement.Progress}} out of {{selectedAchievement.Cost}}</span>
+                  <br>
+                  <button type="button" class="btn btn-success glow" (click)="acknowledgeAchievement(selectedAchievement)">COMPLETE</button>
+                </div>
+
+                <div *ngIf="selectedAchievement.ProgressStatus === 'in progress'"
+                     class="progress-container progress-primary"
+                     style="padding-left: 15px; padding-right: 15px"
+                     [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': selectedAchievement.Description}">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-warning"
+                         role="progressbar"
+                         aria-valuenow="0"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         [ngStyle]="{'width': (selectedAchievement.Progress / selectedAchievement.Cost) * 100 + '%'}">
+
+                    </div>
+                  </div>
+                  <span class="progress-badge">{{selectedAchievement.Progress}} out of {{selectedAchievement.Cost}}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
           <!----End Mod Bod---->
 
         </div>

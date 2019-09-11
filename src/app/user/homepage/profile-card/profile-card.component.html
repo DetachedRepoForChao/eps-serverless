@@ -1,111 +1,169 @@
 <div class="card">
-    <div class="card card-coin card-plain maxheight">
-        <div class="card-header">
-            <!-- <img src="../../../../assets/img/mike.jpg" class="img-center img-fluid rounded-circle"> -->
-            <img [src]="this.avatarService.userAvatarImageToShow" alt="Place image title" *ngIf="!isImageLoading;" class="img-center img-fluid rounded-circle" id="avatar">
+  <div class="card card-coin card-plain card-custom">
+    <div class="card-header">
 
+      <img [src]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
+           alt="Avatar"
+           *ngIf="(this.userQuery.selectLoading() | async) === false; else avatarLoading"
+           class="img-center img-fluid rounded-circle"
+           id="avatar"
+           (click)="avatarClick()">
+
+      <ng-template #avatarLoading >
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+             alt="Loading..."
+             class="img-center img-fluid rounded-circle"
+             id="avatarPlaceholder">
+      </ng-template>
+    </div>
+
+    <div class="card-body" *ngIf="!isCardLoading; else cardLoading">
+      <ngx-spinner
+        name="profile-card-spinner"
+        [fullScreen]="false"
+        bdColor="rgba(51,51,51,0.8)"
+        size="medium"
+        color="#fff"
+        type="pacman"
+      >
+        <p style="font-size: 20px; color: white">Loading...</p>
+      </ngx-spinner>
+
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h4 class="text-uppercase">{{globals.getUserAttribute('given_name')}} {{globals.getUserAttribute('family_name')}}</h4>
+          <span>{{globals.getUserAttribute('custom:department')}}</span>
+          <hr class="line-success">
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h4 class="text-uppercase">{{globals.localStorageItem('firstName')}} {{globals.localStorageItem('lastName')}}</h4>
-                    <span>{{globals.localStorageItem('departmentName')}}</span>
-                    <hr class="line-success">
-                </div>
-            </div>
-            <div>
-                <i>{{userDetails.quote}}</i>
-            </div>
-            <!-------Quote Box------>
-            <form accept-charset="UTF-8" action="" method="POST" #quoteSubmitForm="ngForm" (ngSubmit)="submitQuote(quoteSubmitForm)">
-                <textarea class="form-control" id="text" name="text" #quoteText="ngModel" [(ngModel)]="quote" placeholder="Type in your message" rows="5"></textarea>
-                <h6 class="pull-right" id="count_message"></h6>
-                <button class="btn btn-info" type="submit">Post New Message</button>
-            </form>
-            <!-------End of Quote Box----->
-            <div class="row text-center mt-4">
-                <div class="col p-2">
-                    <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-                    <h4 class="mb-0">{{globals.localStorageItem('points')}}</h4>
-                </div>
-                <div class="col p-2">
-                    <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-                    <h4 class="mb-0">23/120</h4>
-                </div>
-                <div class="col p-2">
-                    <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-                    <h4 class="mb-0" *ngIf="this.leaderboardService.currentUserLeaderboardRecord">{{this.leaderboardService.currentUserLeaderboardRecord.rank}}</h4>
-                </div>
-            </div>
-            <div class="card-footer text-center">
-                <!-----Button----->
+      </div>
+      <!-------Quote Box------>
+      <!--      <form accept-charset="UTF-8" action="" method="POST">
+              <textarea class="form-control" id="text" name="text" placeholder="Type in your message" rows="5"></textarea>
+              <h6 class="pull-right" id="count_message"></h6>
+              <button class="btn btn-info" type="submit">Post New Message</button>
+            </form>-->
+      <!-------End of Quote Box----->
+      <div class="row text-center mt-4">
+        <div class="col p-2">
+          <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
+          <h4 class="mb-0">{{globals.userDetails.points}}</h4>
+        </div>
+        <div class="col p-2">
+          <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
+          <h4 class="mb-0">{{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}</h4>
+        </div>
+        <div class="col p-2">
+          <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
+          <h4 class="mb-0" *ngIf="this.userLeaderboardRecord">{{this.userLeaderboardRecord.rank}}</h4>
+        </div>
+      </div>
 
-                <button class="btn-lg btn-primary btn-success" data-toggle="modal" data-target="#myModal">
-                    Customize
-                </button>
-                <button type="button" class="btn btn-danger" (click)="showGallery()">Change Avatar</button>
-                <div class="modal fade" id="myModal" role="dialog">
-                    <div class="modal-dialog">
-
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Settings</h4>
-                            </div>
-                            <!---modal body---->
-                            <div class="modal-body">
-                                <div class="row">
-                                    <!---- Form 1 ------>
-                                    <div class="col-lg-12">
-                                        <div class="row">
-                                            <div class="container">
-                                                <form action="/action_page.php">
-                                                    <div class="form-group input-field">
-                                                        <label for="email" class="text-muted text-left">Email:</label>
-                                                        <input type="email" class="form-control text-muted" id="email" placeholder="Change email" name="email">
-                                                    </div>
-                                                    <div class="form-group input-field">
-                                                        <label for="pwd" class="text-muted">Password:</label>
-                                                        <input type="password" class="form-control text-muted" id="pwd" placeholder="Change password" name="pwd">
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!---- Form 3 ------>
-                                </div>
-                            </div>
-
-                            <!----End Mod Bod---->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>
-                            </div>
-                        </div>
+    </div>
+    <div class="card-footer text-center">
+      <!-----Button----->
+      <div class="container">
+        <div class="row">
+          <!--          <button type="button" (click)="Debug()">Debug</button>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-6">
+                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
                     </div>
-                </div>
-            </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-6">
+                      <button type="button" class="btn btn-danger" (click)="showGallery()" style="padding-right: 10px; padding-left: 10px">Select Avatar</button>
+                    </div>-->
         </div>
+      </div>
     </div>
+  </div>
+
+  <!--<div class="modal fade modal-black" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      &lt;!&ndash; Modal content&ndash;&gt;
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Settings</h4>
+        </div>
+        &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
+        <div class="modal-body" style="text-align: center">
+          <input type="file" (change)="fileChangeEvent($event)" />
+          <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>
+
+          <image-cropper
+            [imageChangedEvent]="imageChangedEvent"
+            format="png"
+            outputType="both"
+            (imageCropped)="imageCropped($event)"
+            (imageLoaded)="imageLoaded()"
+            (cropperReady)="cropperReady()"
+            (loadImageFailed)="loadImageFailed()"
+          ></image-cropper>
+
+          <div>
+            <img [src]="croppedImageToShow" style="max-width: 150px"/>
+          </div>
+        </div>
+
+        &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
+        <div class="modal-footer">
+&lt;!&ndash;          <button type="button" class="btn btn-success">Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>&ndash;&gt;
+        </div>
+      </div>
+    </div>
+  </div>-->
+
+  <!-- Blank card to display while loading -->
+  <ng-template #cardLoading>
+    <div class="card-body">
+      <ngx-spinner
+        name="profile-card-spinner"
+        [fullScreen]="false"
+        bdColor="rgba(51,51,51,0.8)"
+        size="medium"
+        color="#fff"
+        type="pacman"
+      >
+        <p style="font-size: 20px; color: white">Loading...</p>
+      </ngx-spinner>
+    </div>
+  </ng-template>
+
 </div>
-<div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+<!--<div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-sm" role="document">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Choose Your Avatar</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <!---modal body---->
-            <div class="modal-body">
-                <app-image-gallery></app-image-gallery>
-            </div>
-            <!----End Mod Bod---->
+    &lt;!&ndash; Modal content&ndash;&gt;
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Choose Your Avatar</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
+      <div class="modal-body">
+        <app-image-gallery></app-image-gallery>
+      </div>
+      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
 
-        </div>
     </div>
+  </div>
+</div>-->
+
+<div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-lg" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Choose Your Avatar</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body">
+        <app-avatar [avatarUrl]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
+      </div>
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
 </div>

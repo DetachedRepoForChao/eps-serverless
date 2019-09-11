@@ -1,4 +1,4 @@
-.card {
+/*.card {
   background: #8656d22e;
 }
 
@@ -6,7 +6,95 @@
   margin-bottom: 0;
   border: 0;
   min-height: 600px;
+}*/
+
+.card-coin {
+  border: 0;
+  min-height: 600px;
 }
+
+div.card.card-coin.card-plain.card-custom {
+  background-color: #674ba580;
+}
+
+div.card {
+  background-color: rgba(167,53,43,0)
+}
+
+@media (max-width: 575.98px) {
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .card.card-coin {
+    margin-bottom: 0px;
+  }
+}
+
+.glow {
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
+}
+
+ul.nobullets {
+  list-style-type: none;
+}
+
+/*li:hover {
+  background-color: rgba(0, 0, 0, 0.11);
+}*/
+
+li.achievlist:hover {
+  background-color: rgba(0, 0, 0, 0.11);
+}
+
+/*
+.achievlist {
+  li:hover {
+    background-color: rgba(0, 0, 0, 0.11);
+  }
+}
+*/
+
+// Makes the modal show up closer to the middle of the screen
+.modal.show .modal-dialog {
+  -webkit-transform: translate(0, 150%);
+  transform: translate(0, 150%);
+}
+
 
 /****************************************************************
  *
@@ -25,11 +113,11 @@
 
 //transform rotate
 @mixin rotate($degrees) {
-    -webkit-transform: rotate($degrees);
-    -moz-transform: rotate($degrees);
-    -ms-transform: rotate($degrees);
-    -o-transform: rotate($degrees);
-    transform: rotate($degrees);
+  -webkit-transform: rotate($degrees);
+  -moz-transform: rotate($degrees);
+  -ms-transform: rotate($degrees);
+  -o-transform: rotate($degrees);
+  transform: rotate($degrees);
 }
 
 // Compass utilities
@@ -52,73 +140,73 @@ $primary-color-orange-dark: #e08833;
 // CIRCLE
 // classes 2 extend
 .rect-auto {
-    clip: rect(auto, auto, auto, auto);
+  clip: rect(auto, auto, auto, auto);
 }
 
 .pie {
-    position: absolute;
-    border: $circle-width solid $primary-color;
-    width: 1 - (2 * $circle-width);
-    height: 1 - (2 * $circle-width);
-    clip: rect(0em, 0.5em, 1em, 0em);
-    border-radius: 50%;
-    @include rotate(0deg);
+  position: absolute;
+  border: $circle-width solid $primary-color;
+  width: 1 - (2 * $circle-width);
+  height: 1 - (2 * $circle-width);
+  clip: rect(0em, 0.5em, 1em, 0em);
+  border-radius: 50%;
+  @include rotate(0deg);
 }
 
 .pie-fill {
-    @include rotate(180deg);
+  @include rotate(180deg);
 }
 
 .fill:after {
-    content: "";
-    position: absolute;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#ee1d7d));
-    background-image: -webkit-linear-gradient(#2a2d7e, #ee1d7d);
-    background-image: -moz-linear-gradient(#2a2d7e, #ee1d7d);
-    background-image: -o-linear-gradient(#2a2d7e, #ee1d7d);
-    background-image: linear-gradient(#2a2d7e, #ee1d7d);
-    top: -12.5px;
-    bottom: 0;
-    width: 30px;
-    clip: 0, 0.5em, 1em, 0 !important;
-    clip: rect(0em, 0.5em, 1em, 0em);
-    -webkit-clip-path: circle(50% at 50% 50%);
-    clip-path: circle(50% at 50% 50%);
-    width: 0.84em;
-    z-index: 998.4;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    right: 0 !important;
-    left: -12px !important;
-    clip: rect(0em, 0.5em, 1em, 0em);
-   
+  content: "";
+  position: absolute;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#ee1d7d));
+  background-image: -webkit-linear-gradient(#2a2d7e, #ee1d7d);
+  background-image: -moz-linear-gradient(#2a2d7e, #ee1d7d);
+  background-image: -o-linear-gradient(#2a2d7e, #ee1d7d);
+  background-image: linear-gradient(#2a2d7e, #ee1d7d);
+  top: -12.5px;
+  bottom: 0;
+  width: 30px;
+  clip: 0, 0.5em, 1em, 0 !important;
+  clip: rect(0em, 0.5em, 1em, 0em);
+  -webkit-clip-path: circle(50% at 50% 50%);
+  clip-path: circle(50% at 50% 50%);
+  width: 0.84em;
+  z-index: 998.4;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  right: 0 !important;
+  left: -12px !important;
+  clip: rect(0em, 0.5em, 1em, 0em);
+
 }
 
 .bar:before {
-    content: "";
-    position: absolute;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#332c7e));
-    background-image: -webkit-linear-gradient(#2a2d7e, #332c7e);
-    background-image: -moz-linear-gradient(#2a2d7e, #332c7e);
-    background-image: -o-linear-gradient(#2a2d7e, #332c7e);
-    background-image: linear-gradient(#2a2d7e, #332c7e);
-    top: -13px;
-    bottom: 0;
-    width: 30px;
-    clip: 0, 0.5em, 1em, 0 !important;
-    clip: rect(0em, 0.5em, 1em, 0em);
-    width: 0.84em;
-    z-index: 998.4;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    right: 0 !important;
-    left: -12px !important;
-    clip: rect(0em, 1em, 0.5em, 0em);
-    z-index: 999;
-    transform: rotate(270deg);
-    
+  content: "";
+  position: absolute;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#332c7e));
+  background-image: -webkit-linear-gradient(#2a2d7e, #332c7e);
+  background-image: -moz-linear-gradient(#2a2d7e, #332c7e);
+  background-image: -o-linear-gradient(#2a2d7e, #332c7e);
+  background-image: linear-gradient(#2a2d7e, #332c7e);
+  top: -13px;
+  bottom: 0;
+  width: 30px;
+  clip: 0, 0.5em, 1em, 0 !important;
+  clip: rect(0em, 0.5em, 1em, 0em);
+  width: 0.84em;
+  z-index: 998.4;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  right: 0 !important;
+  left: -12px !important;
+  clip: rect(0em, 1em, 0.5em, 0em);
+  z-index: 999;
+  transform: rotate(270deg);
+
 }
 
 // .pie:before {
@@ -129,213 +217,213 @@ $primary-color-orange-dark: #e08833;
 // }
 // main
 .c100 {
-    *,
-    *:before,
-    *:after {
-        // @include box-sizing(content-box);
-        box-sizing: content-box;
-    }
-    box-shadow:inset 1px 1.7px 6px 0 rgba(0, 0, 0, 0.06);
-    position: relative;
-    font-size: 120px;
-    width: 1em;
-    height: 1em;
-    border-radius: 50%;
-    // float: left;
-    margin: 0 0.1em 0.1em 0;
+  *,
+  *:before,
+  *:after {
+    // @include box-sizing(content-box);
+    box-sizing: content-box;
+  }
+  box-shadow:inset 1px 1.7px 6px 0 rgba(0, 0, 0, 0.06);
+  position: relative;
+  font-size: 120px;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  // float: left;
+  margin: 0 0.1em 0.1em 0;
+  margin: 0 auto;
+  background-color: $secondary-color;
+  // center circle to its parent
+  &.center {
+    float: none;
     margin: 0 auto;
-    background-color: $secondary-color;
-    // center circle to its parent
-    &.center {
-        float: none;
-        margin: 0 auto;
-    }
-    // bigger size
-    &.big {
-        font-size: 160px;
-      
-    }
+  }
+  // bigger size
+  &.big {
+    font-size: 160px;
+
+  }
   // medium size
-    &.medium {
+  &.medium {
     font-size: 250px;
   }
 
-    // smaller size
-    &.small {
-        font-size: 80px;
+  // smaller size
+  &.small {
+    font-size: 80px;
+  }
+  // centered value inside circle
+  >span {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    left: 0;
+    top: -20px;
+    width: 320px;
+    line-height: 320px;
+    font-size: 0.2em;
+    color: $secondary-color;
+    display: block;
+    text-align: center;
+    white-space: nowrap;
+    // @include transition-property(all);
+    // @include transition-duration(0.2s);
+    // @include transition-timing-function(ease-out);
+    transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    background: -webkit-linear-gradient(left, #563490, #ee3656);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+  }
+  // background inside the circle
+  &:after {
+    position: absolute;
+    top: $circle-width;
+    left: $circle-width;
+    display: block;
+    content: " ";
+    border-radius: 50%;
+    background-color: $bg-color;
+    width: 1 - (2 * $circle-width);
+    height: 1 - (2 * $circle-width);
+    // @include transition-property(all);
+    // @include transition-duration(0.2s);
+    // @include transition-timing-function(ease-in);
+    transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+  }
+  // the slice (mask)
+  .slice {
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    clip: rect(0em, 1em, 1em, 0.5em);
+  }
+  // circle to show the status
+  .bar {
+    @extend .pie;
+  }
+  // loop to create all needed elements automatically
+  @for $j from 51 through 100 {
+    &.p#{$j} .slice {
+      @extend .rect-auto;
     }
-    // centered value inside circle
+    &.p#{$j} .bar:after {
+      @extend .pie-fill;
+    }
+    &.p#{$j} .fill {
+      @extend .pie;
+      @extend .pie-fill;
+    }
+  }
+  // loop to rotate all 100 circles
+  @for $j from 1 through 100 {
+    &.p#{$j} .bar {
+      @include rotate((360/100*$j) + deg);
+    }
+  }
+  // hover styles
+  &:hover {
+    cursor: default;
     >span {
-        position: absolute;
-        width: 100%;
-        z-index: 1;
-        left: 0;
-        top: -20px;
-        width: 320px;
-        line-height: 320px;
-        font-size: 0.2em;
-        color: $secondary-color;
-        display: block;
-        text-align: center;
-        white-space: nowrap;
-        // @include transition-property(all);
-        // @include transition-duration(0.2s);
-        // @include transition-timing-function(ease-out);
-        transition-property: all;
-        transition-duration: 0.2s;
-        transition-timing-function: ease-out;
-        background: -webkit-linear-gradient(left, #563490, #ee3656);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        
+      width: 320px;
+      line-height: 320px;
+      font-size: 0.3em;
+      color: $primary-color;
+
     }
-    // background inside the circle
     &:after {
-        position: absolute;
-        top: $circle-width;
-        left: $circle-width;
-        display: block;
-        content: " ";
-        border-radius: 50%;
-        background-color: $bg-color;
-        width: 1 - (2 * $circle-width);
-        height: 1 - (2 * $circle-width);
-        // @include transition-property(all);
-        // @include transition-duration(0.2s);
-        // @include transition-timing-function(ease-in);
-        transition-property: all;
-        transition-duration: 0.2s;
-        transition-timing-function: ease-out;
+      top: $circle-width-hover;
+      left: $circle-width-hover;
+      width: 1 - (2 * $circle-width-hover);
+      height: 1 - (2 * $circle-width-hover);
     }
-    // the slice (mask)
-    .slice {
-        position: absolute;
-        width: 1em;
-        height: 1em;
-        clip: rect(0em, 1em, 1em, 0.5em);
+  }
+  // override colors for the dark skin
+  &.dark {
+    background-color: $secondary-color-dark;
+    .bar,
+    .fill {
+      border-color: $primary-color-dark !important;
     }
-    // circle to show the status
-    .bar {
-        @extend .pie;
+    >span {
+      color: $secondary-color-dark;
     }
-    // loop to create all needed elements automatically
-    @for $j from 51 through 100 {
-        &.p#{$j} .slice {
-            @extend .rect-auto;
-        }
-        &.p#{$j} .bar:after {
-            @extend .pie-fill;
-        }
-        &.p#{$j} .fill {
-            @extend .pie;
-            @extend .pie-fill;
-        }
+    &:after {
+      background-color: $bg-color-dark;
     }
-    // loop to rotate all 100 circles
-    @for $j from 1 through 100 {
-        &.p#{$j} .bar {
-            @include rotate((360/100*$j) + deg);
-        }
-    }
-    // hover styles
     &:hover {
-        cursor: default;
-        >span {
-            width: 320px;
-            line-height: 320px;
-            font-size: 0.3em;
-            color: $primary-color;
-            
-        }
-        &:after {
-            top: $circle-width-hover;
-            left: $circle-width-hover;
-            width: 1 - (2 * $circle-width-hover);
-            height: 1 - (2 * $circle-width-hover);
-        }
+      >span {
+        color: $primary-color-dark;
+      }
     }
-    // override colors for the dark skin
-    &.dark {
-        background-color: $secondary-color-dark;
-        .bar,
-        .fill {
-            border-color: $primary-color-dark !important;
-        }
-        >span {
-            color: $secondary-color-dark;
-        }
-        &:after {
-            background-color: $bg-color-dark;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-dark;
-            }
-        }
+  }
+  // green skin
+  &.green {
+    .bar,
+    .fill {
+      border-color: $primary-color-green !important;
     }
-    // green skin
-    &.green {
-        .bar,
-        .fill {
-            border-color: $primary-color-green !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-green;
-            }
-        }
+    &:hover {
+      >span {
+        color: $primary-color-green;
+      }
     }
-    &.green.dark {
-        .bar,
-        .fill {
-            border-color: $primary-color-green-dark !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-green-dark;
-            }
-        }
+  }
+  &.green.dark {
+    .bar,
+    .fill {
+      border-color: $primary-color-green-dark !important;
     }
-    // orange skin
-    &.orange {
-        .bar,
-        .fill {
-            border-color: $primary-color-orange !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-orange;
-            }
-        }
+    &:hover {
+      >span {
+        color: $primary-color-green-dark;
+      }
     }
-    &.orange.dark {
-        .bar,
-        .fill {
-            border-color: $primary-color-orange-dark !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-orange-dark;
-            }
-        }
+  }
+  // orange skin
+  &.orange {
+    .bar,
+    .fill {
+      border-color: $primary-color-orange !important;
     }
+    &:hover {
+      >span {
+        color: $primary-color-orange;
+      }
+    }
+  }
+  &.orange.dark {
+    .bar,
+    .fill {
+      border-color: $primary-color-orange-dark !important;
+    }
+    &:hover {
+      >span {
+        color: $primary-color-orange-dark;
+      }
+    }
+  }
 }
 
 .c100:after {
-    top: 0.13em;
-    left: 0.13em;
-    width: 0.74em;
-    height: 0.74em;
+  top: 0.13em;
+  left: 0.13em;
+  width: 0.74em;
+  height: 0.74em;
 }
 
 
 //transform rotate
 @mixin rotate($degrees) {
-    -webkit-transform: rotate($degrees);
-    -moz-transform: rotate($degrees);
-    -ms-transform: rotate($degrees);
-    -o-transform: rotate($degrees);
-    transform: rotate($degrees);
+  -webkit-transform: rotate($degrees);
+  -moz-transform: rotate($degrees);
+  -ms-transform: rotate($degrees);
+  -o-transform: rotate($degrees);
+  transform: rotate($degrees);
 }
 
 // Compass utilities
@@ -360,78 +448,78 @@ $primary-color-orange-dark: #e08833;
 // CIRCLE
 // classes 2 extend
 .rect-auto {
-    clip: rect(auto, auto, auto, auto);
+  clip: rect(auto, auto, auto, auto);
 }
 
 .pie {
-    position: absolute;
-    border: $circle-width solid $primary-color;
-    width: 1 - (2 * $circle-width);
-    height: 1 - (2 * $circle-width);
-    clip: rect(0em, 0.5em, 1em, 0em);
-    border-radius: 50%;
-   
-    @include rotate(0deg);
+  position: absolute;
+  border: $circle-width solid $primary-color;
+  width: 1 - (2 * $circle-width);
+  height: 1 - (2 * $circle-width);
+  clip: rect(0em, 0.5em, 1em, 0em);
+  border-radius: 50%;
+
+  @include rotate(0deg);
 }
 
 .pie-fill {
-    @include rotate(180deg);
+  @include rotate(180deg);
 }
 
 .fill:after {
-    content: "";
-    position: absolute;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#ee1d7d));
-    background-image: -webkit-linear-gradient(#2a2d7e, #ee1d7d);
-    background-image: -moz-linear-gradient(#2a2d7e, #ee1d7d);
-    background-image: -o-linear-gradient(#2a2d7e, #ee1d7d);
-    background-image: linear-gradient(#2a2d7e, #ee1d7d);
+  content: "";
+  position: absolute;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#ee1d7d));
+  background-image: -webkit-linear-gradient(#2a2d7e, #ee1d7d);
+  background-image: -moz-linear-gradient(#2a2d7e, #ee1d7d);
+  background-image: -o-linear-gradient(#2a2d7e, #ee1d7d);
+  background-image: linear-gradient(#2a2d7e, #ee1d7d);
 
-    top: -13px;
+  top: -13px;
 
-    top: -12.5px;
-    bottom: 0;
-    width: 15px;
-    clip: 0, 0.5em, 1em, 0 !important;
-    clip: rect(0em, 0.5em, 1em, 0em);
-    -webkit-clip-path: circle(50% at 50% 50%);
-    clip-path: circle(50% at 50% 50%);
-    width: 0.84em;
-    z-index: 998.4;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    right: 0 !important;
-    left: -12px !important;
-    clip: rect(0em, 0.5em, 1em, 0em);
-   
+  top: -12.5px;
+  bottom: 0;
+  width: 15px;
+  clip: 0, 0.5em, 1em, 0 !important;
+  clip: rect(0em, 0.5em, 1em, 0em);
+  -webkit-clip-path: circle(50% at 50% 50%);
+  clip-path: circle(50% at 50% 50%);
+  width: 0.84em;
+  z-index: 998.4;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  right: 0 !important;
+  left: -12px !important;
+  clip: rect(0em, 0.5em, 1em, 0em);
+
 }
 
 .bar:before {
-    content: "";
-    position: absolute;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#332c7e));
-    background-image: -webkit-linear-gradient(#2a2d7e, #332c7e);
-    background-image: -moz-linear-gradient(#2a2d7e, #332c7e);
-    background-image: -o-linear-gradient(#2a2d7e, #332c7e);
-    background-image: linear-gradient(#2a2d7e, #332c7e);
-    top: -13px;
-    bottom: 0;
-    width: 30px;
-    clip: 0, 0.5em, 1em, 0 !important;
-    clip: rect(0em, 0.5em, 1em, 0em);
-    width: 0.84em;
-    z-index: 998.4;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    
-    right: 0 !important;
-    left: -12px !important;
-    clip: rect(0em, 1em, 0.5em, 0em);
-    z-index: 999;
-    transform: rotate(270deg);
-    
+  content: "";
+  position: absolute;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2a2d7e), to(#332c7e));
+  background-image: -webkit-linear-gradient(#2a2d7e, #332c7e);
+  background-image: -moz-linear-gradient(#2a2d7e, #332c7e);
+  background-image: -o-linear-gradient(#2a2d7e, #332c7e);
+  background-image: linear-gradient(#2a2d7e, #332c7e);
+  top: -13px;
+  bottom: 0;
+  width: 30px;
+  clip: 0, 0.5em, 1em, 0 !important;
+  clip: rect(0em, 0.5em, 1em, 0em);
+  width: 0.84em;
+  z-index: 998.4;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+
+  right: 0 !important;
+  left: -12px !important;
+  clip: rect(0em, 1em, 0.5em, 0em);
+  z-index: 999;
+  transform: rotate(270deg);
+
 }
 
 // .pie:before {
@@ -442,203 +530,204 @@ $primary-color-orange-dark: #e08833;
 // }
 // main
 .c100 {
-    *,
-    *:before,
-    *:after {
-        // @include box-sizing(content-box);
-  box-sizing: content-box;
-    }
-    box-shadow:inset 1px 1.7px 6px 0 rgba(0, 0, 0, 0.06);
-    position: relative;
-    
-    font-size: 120px;
+  *,
+  *:before,
+  *:after {
+    // @include box-sizing(content-box);
+    box-sizing: content-box;
+  }
+  box-shadow:inset 1px 1.7px 6px 0 rgba(0, 0, 0, 0.06);
+  position: relative;
+
+  font-size: 120px;
+  width: 1em;
+  height: 1em;
+
+
+  border-radius: 50%;
+  // float: left;
+  margin: 0 0.1em 0.1em 0;
+  margin: 0 auto;
+  background-color: $secondary-color;
+  // center circle to its parent
+  &.center {
+    float: none;
+    margin: 0 auto;
+  }
+  // bigger size
+  &.big {
+    //font-size: 150px;
+    font-size: 150px;
+    //        font-size: 100px;
+
+  }
+  // smaller size
+  &.small {
+    //font-size: 20px;
+    font-size: 80px;
+    //         font-size: 50px;
+  }
+  // centered value inside circle
+  >span {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    left: 0;
+    top: -25px;
+    width: 150px;
+    line-height: 200px;
+    font-size: 0.2em;
+    color: $secondary-color;
+    display: block;
+    text-align: center;
+    white-space: nowrap;
+    // @include transition-property(all);
+    // @include transition-duration(0.2s);
+    // @include transition-timing-function(ease-out);
+    transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    background: -webkit-linear-gradient(left, #563490, #ee3656);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+  }
+  // background inside the circle
+  &:after {
+    position: absolute;
+    top: $circle-width;
+    left: $circle-width;
+    display: block;
+    content: " ";
+    border-radius: 50%;
+    background-color: $bg-color;
+    width: 1 - (2 * $circle-width);
+    height: 1 - (2 * $circle-width);
+    // @include transition-property(all);
+    // @include transition-duration(0.2s);
+    // @include transition-timing-function(ease-in);
+    transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+  }
+  // the slice (mask)
+  .slice {
+    position: absolute;
     width: 1em;
     height: 1em;
-   
-
-    border-radius: 50%;
-    // float: left;
-    margin: 0 0.1em 0.1em 0;
-    margin: 0 auto;
-    background-color: $secondary-color;
-    // center circle to its parent
-    &.center {
-        float: none;
-        margin: 0 auto;
+    clip: rect(0em, 1em, 1em, 0.5em);
+  }
+  // circle to show the status
+  .bar {
+    @extend .pie;
+  }
+  // loop to create all needed elements automatically
+  @for $j from 51 through 100 {
+    &.p#{$j} .slice {
+      @extend .rect-auto;
     }
-    // bigger size
-    &.big {
-          //font-size: 150px;
-      font-size: 150px;
-//        font-size: 100px;
-      
+    &.p#{$j} .bar:after {
+      @extend .pie-fill;
     }
-    // smaller size
-    &.small {
-        //font-size: 20px;
-    font-size: 80px;
-//         font-size: 50px;
+    &.p#{$j} .fill {
+      @extend .pie;
+      @extend .pie-fill;
     }
-    // centered value inside circle
+  }
+  // loop to rotate all 100 circles
+  @for $j from 1 through 100 {
+    &.p#{$j} .bar {
+      @include rotate((360/100*$j) + deg);
+    }
+  }
+  // hover styles
+  &:hover {
+    cursor: default;
     >span {
-        position: absolute;
-        width: 100%;
-        z-index: 1;
-        left: 0;
-        top: -25px;
-        width: 150px;
-        line-height: 200px;
-        font-size: 0.2em;
-        color: $secondary-color;
-        display: block;
-        text-align: center;
-        white-space: nowrap;
-        // @include transition-property(all);
-        // @include transition-duration(0.2s);
-        // @include transition-timing-function(ease-out);
-        transition-property: all;
-        transition-duration: 0.2s;
-        transition-timing-function: ease-out;
-        background: -webkit-linear-gradient(left, #563490, #ee3656);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        
+      width: 165px;
+      line-height: 165px;
+      font-size: 0.3em;
+      color: $primary-color;
+
     }
-    // background inside the circle
     &:after {
-        position: absolute;
-        top: $circle-width;
-        left: $circle-width;
-        display: block;
-        content: " ";
-        border-radius: 50%;
-        background-color: $bg-color;
-        width: 1 - (2 * $circle-width);
-        height: 1 - (2 * $circle-width);
-        // @include transition-property(all);
-        // @include transition-duration(0.2s);
-        // @include transition-timing-function(ease-in);
-        transition-property: all;
-        transition-duration: 0.2s;
-        transition-timing-function: ease-out;
+      top: $circle-width-hover;
+      left: $circle-width-hover;
+      width: 1 - (2 * $circle-width-hover);
+      height: 1 - (2 * $circle-width-hover);
     }
-    // the slice (mask)
-    .slice {
-        position: absolute;
-        width: 1em;
-        height: 1em;
-        clip: rect(0em, 1em, 1em, 0.5em);
+  }
+  // override colors for the dark skin
+  &.dark {
+    background-color: $secondary-color-dark;
+    .bar,
+    .fill {
+      border-color: $primary-color-dark !important;
     }
-    // circle to show the status
-    .bar {
-        @extend .pie;
+    >span {
+      color: $secondary-color-dark;
     }
-    // loop to create all needed elements automatically
-    @for $j from 51 through 100 {
-        &.p#{$j} .slice {
-            @extend .rect-auto;
-        }
-        &.p#{$j} .bar:after {
-            @extend .pie-fill;
-        }
-        &.p#{$j} .fill {
-            @extend .pie;
-            @extend .pie-fill;
-        }
+    &:after {
+      background-color: $bg-color-dark;
     }
-    // loop to rotate all 100 circles
-    @for $j from 1 through 100 {
-        &.p#{$j} .bar {
-            @include rotate((360/100*$j) + deg);
-        }
-    }
-    // hover styles
     &:hover {
-        cursor: default;
-        >span {
-            width: 165px;
-            line-height: 200px;
-            font-size: 0.3em;
-            color: $primary-color;
-            
-        }
-        &:after {
-            top: $circle-width-hover;
-            left: $circle-width-hover;
-            width: 1 - (2 * $circle-width-hover);
-            height: 1 - (2 * $circle-width-hover);
-        }
+      >span {
+        color: $primary-color-dark;
+      }
     }
-    // override colors for the dark skin
-    &.dark {
-        background-color: $secondary-color-dark;
-        .bar,
-        .fill {
-            border-color: $primary-color-dark !important;
-        }
-        >span {
-            color: $secondary-color-dark;
-        }
-        &:after {
-            background-color: $bg-color-dark;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-dark;
-            }
-        }
+  }
+  // green skin
+  &.green {
+    .bar,
+    .fill {
+      border-color: $primary-color-green !important;
     }
-    // green skin
-    &.green {
-        .bar,
-        .fill {
-            border-color: $primary-color-green !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-green;
-            }
-        }
+    &:hover {
+      >span {
+        color: $primary-color-green;
+      }
     }
-    &.green.dark {
-        .bar,
-        .fill {
-            border-color: $primary-color-green-dark !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-green-dark;
-            }
-        }
+  }
+  &.green.dark {
+    .bar,
+    .fill {
+      border-color: $primary-color-green-dark !important;
     }
-    // orange skin
-    &.orange {
-        .bar,
-        .fill {
-            border-color: $primary-color-orange !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-orange;
-            }
-        }
+    &:hover {
+      >span {
+        color: $primary-color-green-dark;
+      }
     }
-    &.orange.dark {
-        .bar,
-        .fill {
-            border-color: $primary-color-orange-dark !important;
-        }
-        &:hover {
-            >span {
-                color: $primary-color-orange-dark;
-            }
-        }
+  }
+  // orange skin
+  &.orange {
+    .bar,
+    .fill {
+      border-color: $primary-color-orange !important;
     }
+    &:hover {
+      >span {
+        color: $primary-color-orange;
+      }
+    }
+  }
+  &.orange.dark {
+    .bar,
+    .fill {
+      border-color: $primary-color-orange-dark !important;
+    }
+    &:hover {
+      >span {
+        color: $primary-color-orange-dark;
+      }
+    }
+  }
 }
 
 .c100:after {
-    top: 0.13em;
-    left: 0.13em;
-    width: 0.74em;
-    height: 0.74em;
+  top: 0.13em;
+  left: 0.13em;
+  width: 0.74em;
+  height: 0.74em;
 }
+
