@@ -197,4 +197,18 @@ export class SignInComponent implements OnInit {
     console.log('userRole: ' + userRole);
     console.log(userRole);
   }*/
+
+  test() {
+    const CloudFrontUrl = 'https://d1bfmzcw9hc4v9.cloudfront.net/';
+    const imageRequest = JSON.stringify({
+      bucket: 'image-manipulation-test-mbado',
+      key: '2019-07-24 23_27_35-Window.png',
+      edits: {
+        grayscale: true
+      }
+    });
+    const url = `${CloudFrontUrl}/${btoa(imageRequest)}`;
+    console.log(url);
+  }
+
 }

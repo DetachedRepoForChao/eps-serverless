@@ -2,12 +2,14 @@
   <div class="card card-coin card-plain card-custom">
     <div class="card-header">
 
-      <img [src]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
-           alt="Avatar"
-           *ngIf="(this.userQuery.selectLoading() | async) === false; else avatarLoading"
-           class="img-center img-fluid rounded-circle"
-           id="avatar"
-           (click)="avatarClick()">
+<!--      <div *ngIf="(this.userQuery.selectLoading() | async) === false; else avatarLoading">-->
+      <div *ngIf="this.userQuery.getCurrentUserAvatar()[0]; else avatarLoading">
+        <img [src]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
+             alt="Avatar"
+             class="img-center img-fluid rounded-circle"
+             id="avatar"
+             (click)="avatarClick()">
+      </div>
 
       <ng-template #avatarLoading >
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
@@ -46,11 +48,13 @@
       <div class="row text-center mt-4">
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-          <h4 class="mb-0">{{globals.userDetails.points}}</h4>
+          <h4 class="mb-0" *ngIf="globals.userDetails">{{globals.userDetails.points}}</h4>
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-          <h4 class="mb-0">{{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}</h4>
+          <h4 class="mb-0" *ngIf="achievementService.completeAchievements && achievementService.achievementDataList">
+            {{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}
+          </h4>
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
@@ -159,9 +163,12 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body">
+      <div class="modal-body" *ngIf="this.userQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
         <app-avatar [avatarUrl]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
       </div>
+      <ng-template #avatarModalLoading>
+
+      </ng-template>
       <!----End Mod Bod---->
 
     </div>

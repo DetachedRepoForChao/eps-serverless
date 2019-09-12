@@ -28,8 +28,11 @@
 
           <image-cropper
             [imageChangedEvent]="imageChangedEvent"
+            [resizeToWidth]="200"
+            autoCrop="false"
             format="png"
             outputType="both"
+            onlyScaleDown="true"
             (imageCropped)="imageCropped($event)"
             (imageLoaded)="imageLoaded()"
             (cropperReady)="cropperReady()"
