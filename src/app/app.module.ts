@@ -77,7 +77,8 @@ import {UserFiltersComponent} from './entity-store/user/filter/user-filters.comp
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
-
+import { PhonePipe } from './pipe/phone.pipe';
+import { PhoneMaskDirective } from './directives/phone-mask.directive';
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
 
@@ -120,7 +121,9 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
     UserFiltersComponent,
     AvatarComponent,
     ImageCropperComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    PhonePipe,
+    PhoneMaskDirective
 
   ],
   imports: [

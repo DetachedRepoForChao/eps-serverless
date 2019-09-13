@@ -9,101 +9,157 @@
       </div>
       <div class="card-body">
 
-        <form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)" class="form">
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="securityRole">Role</label>
-              <select #securityRole="ngModel" class="form-control" id="securityRole" name="securityRole" [(ngModel)]="selectedUser.securityRole"
-                      required>
-                <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole">
-                  {{securityRole.Name}}
-                </option>
-              </select>
+        <div *ngIf="!isCardLoading; else signupLoading">
+          <form [formGroup]="signUpForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)" class="form">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="securityRole">Role</label>
+<!--                <select #securityRole="ngModel" class="form-control" id="securityRole" name="securityRole" [(ngModel)]="selectedUser.securityRole"
+                        required>
+                  <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole">
+                    {{securityRole.Name}}
+                  </option>
+                </select>-->
+                <select formControlName="securityRole" class="form-control" id="securityRole" name="securityRole">
+                  <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole">
+                    {{securityRole.Name}}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="department">Department</label>
+<!--                <select #department="ngModel" class="form-control" id="department" name="department" [(ngModel)]="selectedUser.department" required>
+                  <option *ngFor="let department of departments" [ngValue]="department">
+                    {{department.Name}}
+                  </option>
+                </select>-->
+                <select formControlName="department" class="form-control" id="department" name="department">
+                  <option *ngFor="let department of departments" [ngValue]="department">
+                    {{department.Name}}
+                  </option>
+                </select>
+              </div>
             </div>
-            <div class="form-group col-md-6">
-              <label for="department">Department</label>
-              <select #department="ngModel" class="form-control" id="department" name="department" [(ngModel)]="selectedUser.department" required>
-                <option *ngFor="let department of departments" [ngValue]="department">
-                  {{department.Name}}
-                </option>
-              </select>
-            </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="firstName">First Name</label>
-              <input type="text" class="form-control" id="firstName" #firstName="ngModel" [(ngModel)]="selectedUser.firstName" name="firstName"
-                     required>
-              <div *ngIf="signUpForm.submitted && !firstName.valid">
-                <label class="validation-message">This field is required.</label>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="firstName">First Name</label>
+<!--                <input type="text" class="form-control" id="firstName" #firstName="ngModel" [(ngModel)]="selectedUser.firstName" name="firstName"
+                       required>
+                <div *ngIf="isSubmitted && !firstName.valid">
+                  <label class="validation-message">This field is required.</label>
+                </div>-->
+                <input formControlName="firstName" type="text" class="form-control" id="firstName" name="firstName">
+                <div *ngIf="firstName.invalid && signUpForm.dirty">
+                  <label class="validation-message">This field is required.</label>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" #lastName="ngModel" [(ngModel)]="selectedUser.lastName" name="lastName"
+                       required>
+                <div *ngIf="isSubmitted && !lastName.valid">
+                  <label class="validation-message">This field is required.</label>
+                </div>
               </div>
             </div>
-            <div class="form-group col-md-6">
-              <label for="lastName">Last Name</label>
-              <input type="text" class="form-control" id="lastName" #lastName="ngModel" [(ngModel)]="selectedUser.lastName" name="lastName"
-                     required>
-              <div *ngIf="signUpForm.submitted && !lastName.valid">
-                <label class="validation-message">This field is required.</label>
-              </div>
-            </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group col-md-4">
-              <label for="username">Username</label>
-              <input type="text" name="username" #username="ngModel" [(ngModel)]="selectedUser.username" class="form-control" id="username"
-                     required [ngClass]="{'invalid-textbox' :signUpForm.submitted}">
-              <div *ngIf="signUpForm.submitted && !username.valid">
-                <label class="validation-message">This field is required.</label>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="username">Username</label>
+                <input type="text" name="username" #username="ngModel" [(ngModel)]="selectedUser.username" class="form-control" id="username"
+                       required [ngClass]="{'invalid-textbox' : isSubmitted}">
+                <div *ngIf="isSubmitted && !username.valid">
+                  <label class="validation-message">This field is required.</label>
+                </div>
+              </div>
+              <div class="form-group col-md-4" >
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" #email="ngModel" [(ngModel)]="selectedUser.email" name="email"
+                       required [pattern]="emailRegex">
+                <div *ngIf="isSubmitted && email.errors">
+                  <label *ngIf="email.errors.required" class="validation-message">This field is required.</label>
+                  <label *ngIf="email.errors.pattern" class="validation-message">Invalid email address.</label>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="password">Password</label>
+                <input [type]="hide ? 'password' : 'text'" #password="ngModel" [(ngModel)]="selectedUser.password" class="form-control" name="password" id="password"
+                       minlength="4" required [ngClass]="{'invalid-textbox' : isSubmitted && !password.valid }">
+                <div *ngIf="isSubmitted && password.errors">
+                  <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
+                  <label *ngIf="password.errors.minlength" class="validation-message">Enter at least 4 characters.</label>
+                </div>
               </div>
             </div>
-            <div class="form-group col-md-4" >
-              <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" #email="ngModel" [(ngModel)]="selectedUser.email" name="email"
-                     required [pattern]="emailRegex">
-              <div *ngIf="signUpForm.submitted && email.errors">
-                <label *ngIf="email.errors.required" class="validation-message">This field is required.</label>
-                <label *ngIf="email.errors.pattern" class="validation-message">Invalid email address.</label>
-              </div>
-            </div>
-            <div class="form-group col-md-4">
-              <label for="password">Password</label>
-              <input [type]="hide ? 'password' : 'text'" #password="ngModel" [(ngModel)]="selectedUser.password" class="form-control" name="password" id="password"
-                     minlength="4" required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !password.valid }">
-              <div *ngIf="signUpForm.submitted && password.errors">
-                <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
-                <label *ngIf="password.errors.minlength" class="validation-message">Enter at least 4 characters.</label>
-              </div>
-            </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group col-md-4">
-              <label for="phone">Phone</label>
-              <input type="telephone" name="phone" #phone="ngModel" [(ngModel)]="selectedUser.phone" class="form-control" id="phone"
-                     required [ngClass]="{'invalid-textbox' :signUpForm.submitted}">
-              <div *ngIf="signUpForm.submitted && !phone.valid">
-                <label class="validation-message">This field is required.</label>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="phone">Phone</label>
+                <input class="form-control"
+                       type="telephone"
+                       appPhoneMask
+                       formControlName="phone"
+                       name="phone"
+                       [ngClass]="{'invalid-textbox' : isSubmitted}"
+                       id="phone">
+<!--                <input type="telephone"
+                       name="phone"
+                       #phone="ngModel"
+                       [(ngModel)]="selectedUser.phone"
+                       class="form-control"
+                       id="phone"
+                       placeholder="(555) 555-5555"
+                       appPhoneMask
+                       required [ngClass]="{'invalid-textbox' : isSubmitted}">-->
+<!--                <div *ngIf="isSubmitted && !phone.valid">
+                  <label class="validation-message">This field is required.</label>
+                </div>-->
               </div>
             </div>
-          </div>
-          <div class="card-footer">
-            <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
-            <button type="submit" class="btn btn-info btn-round">Register</button>
-            <button type="button" class="btn btn-info btn-round" routerLink="/signin">Sign In</button>
-            <button type="button" class="btn btn-info btn-round" (click)="testRegister()">Test</button>
-            <!-- Success message -->
-            <span class="success" *ngIf="showSuccessMessage">
+            <div class="card-footer">
+              <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
+              <button type="submit" class="btn btn-info btn-round">Register</button>
+              <button type="button" class="btn btn-info btn-round" routerLink="/signin">Sign In</button>
+              <button type="button" class="btn btn-info btn-round" (click)="testRegister()">Test</button>
+              <!-- Success message -->
+              <span class="success" *ngIf="showSuccessMessage">
               Saved successfully
             </span>
 
-            <!-- Error message -->
-            <span class="alert" *ngIf="serverErrorMessages">
+              <!-- Error message -->
+              <span class="alert" *ngIf="serverErrorMessages">
               {{serverErrorMessages}}
             </span>
+            </div>
+          </form>
+        </div>
+
+<!--        <form [formGroup]="form">
+
+
+          <div class="form-group">
+
+
+            <label for="phone-number">Phone Number</label>
+
+            <input class="form-control"  type="text" appPhoneMask  formControlName="phone" id="phone-number"  >
           </div>
-        </form>
+        </form>-->
+        <!-- Loading spinner while data is retrieved from the backend-->
+        <ng-template #signupLoading>
+          <ngx-spinner
+            name="signup-spinner"
+            [fullScreen]="false"
+            bdColor="rgba(51,51,51,0.8)"
+            size="medium"
+            color="#fff"
+            type="pacman"
+          >
+            <p style="font-size: 20px; color: white">Loading...</p>
+          </ngx-spinner>
+        </ng-template>
+
       </div>
     </div>
   </div>

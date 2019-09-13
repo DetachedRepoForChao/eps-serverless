@@ -1,27 +1,31 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {SecurityRole} from '../../shared/securityrole.model';
 import {UserService} from '../../shared/user.service';
 import {DepartmentService} from '../../shared/department.service';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {Department} from '../../shared/department.model';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {AmplifyService} from 'aws-amplify-angular';
 import {AuthService} from '../auth.service';
 import { environment } from 'src/environments/environment';
 import {Router} from '@angular/router';
 import {GlobalVariableService} from '../../shared/global-variable.service';
 import {User} from '../../shared/user.model';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {Observable, forkJoin} from 'rxjs';
+import {PhonePipe} from '../../pipe/phone.pipe';
+
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.css']
+  styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent implements OnInit {
   componentName = 'sign-up.component';
   hide = true;
-
+  isCardLoading: boolean;
   departments: Department[];
   securityRoles: SecurityRole[];
 
@@ -30,6 +34,8 @@ export class SignUpComponent implements OnInit {
   serverErrorMessages: string;
 
   selectedUser = this.userService.selectedUser;
+  signUpForm: FormGroup;
+  isSubmitted = false;
 
   constructor(
     public userService: UserService,
@@ -38,35 +44,88 @@ export class SignUpComponent implements OnInit {
     private amplifyService: AmplifyService,
     private _authService: AuthService,
     private _router: Router,
-    private globalVariableService: GlobalVariableService) { }
+    private globalVariableService: GlobalVariableService,
+    private spinner: NgxSpinnerService,
+    public formBuilder: FormBuilder) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: populate departments`);
-    this.departmentService.getDepartments()
-      .subscribe((departments: Department[]) => {
-        this.departments = departments;
+    this.isCardLoading = true;
+    this.spinner.show('signup-spinner');
 
-        console.log(`${functionFullName}: retrieved departments from departmentService.getDepartments()`);
-        console.log(this.departments);
+    const observables: Observable<any>[] = [];
+    const departments$ = this.departmentService.getDepartments()
+      .pipe(
+        tap((departments: Department[]) => {
+          // console.log(departments);
+          this.departments = departments;
+        })
+      );
+
+    const securityRoles$ = this.securityRoleService.getSecurityRoles()
+      .pipe(
+        tap((securityRoles: SecurityRole[]) => {
+          // console.log(securityRoles);
+          this.securityRoles = securityRoles;
+        })
+      );
+
+    observables.push(departments$);
+    observables.push(securityRoles$);
+
+    forkJoin(observables)
+      .subscribe(() => {
+        this.isCardLoading = false;
+        this.spinner.hide('signup-spinner');
       });
 
-    console.log(`${functionFullName}: populate securityRoles`);
-    this.securityRoleService.getSecurityRoles()
-      .subscribe((securityRoles: SecurityRole[]) => {
-        this.securityRoles = securityRoles;
 
-        console.log(`${functionFullName}: retrieved securityRoles from securityRoleService.getSecurityRoles()`);
-        console.log(this.securityRoles);
-      }
-    );
+    /*    console.log(`${functionFullName}: populate departments`);
+        this.departmentService.getDepartments()
+          .subscribe((departments: Department[]) => {
+            this.departments = departments;
+
+            console.log(`${functionFullName}: retrieved departments from departmentService.getDepartments()`);
+            console.log(this.departments);
+          });
+
+        console.log(`${functionFullName}: populate securityRoles`);
+        this.securityRoleService.getSecurityRoles()
+          .subscribe((securityRoles: SecurityRole[]) => {
+            this.securityRoles = securityRoles;
+
+            console.log(`${functionFullName}: retrieved securityRoles from securityRoleService.getSecurityRoles()`);
+            console.log(this.securityRoles);
+          }
+        );*/
+/*    this.signUpForm = this.formBuilder.group(({
+      username: [''],
+      firstName: ['', [Validators.required]],
+      lastName: [''],
+      email: [''],
+      securityRole: [null],
+      department: [null],
+      password: [''],
+      phone: ['']
+    }));*/
+
+    this.signUpForm = new FormGroup({
+      username: new FormControl('', Validators.minLength(3)),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl(''),
+      email: new FormControl('', Validators.email),
+      securityRole: new FormControl(''),
+      department: new FormControl(''),
+      password: new FormControl('', Validators.minLength(3)),
+      phone: new FormControl(''),
+    });
   }
 
 
-  onSubmit(form: NgForm) {
+  onSubmit(form: FormGroup) {
     console.log('onSubmit');
     console.log(form.value);
 
@@ -98,7 +157,8 @@ export class SignUpComponent implements OnInit {
               environment.confirm.email = form.value.email;
               environment.confirm.password = form.value.password;
               environment.confirm.username = form.value.username;
-              this.resetForm(form);
+              // this.resetForm(form);
+              form.reset();
               this._router.navigateByUrl('/confirm');
             })
             .catch((error) => console.log(error));
