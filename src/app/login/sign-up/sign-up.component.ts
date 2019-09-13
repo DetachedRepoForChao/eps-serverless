@@ -36,6 +36,7 @@ export class SignUpComponent implements OnInit {
   selectedUser = this.userService.selectedUser;
   signUpForm: FormGroup;
   isSubmitted = false;
+  phoneValidationError: string;
 
   constructor(
     public userService: UserService,
@@ -82,53 +83,42 @@ export class SignUpComponent implements OnInit {
         this.spinner.hide('signup-spinner');
       });
 
+    this.buildForm();
+  }
 
-    /*    console.log(`${functionFullName}: populate departments`);
-        this.departmentService.getDepartments()
-          .subscribe((departments: Department[]) => {
-            this.departments = departments;
-
-            console.log(`${functionFullName}: retrieved departments from departmentService.getDepartments()`);
-            console.log(this.departments);
-          });
-
-        console.log(`${functionFullName}: populate securityRoles`);
-        this.securityRoleService.getSecurityRoles()
-          .subscribe((securityRoles: SecurityRole[]) => {
-            this.securityRoles = securityRoles;
-
-            console.log(`${functionFullName}: retrieved securityRoles from securityRoleService.getSecurityRoles()`);
-            console.log(this.securityRoles);
-          }
-        );*/
-/*    this.signUpForm = this.formBuilder.group(({
-      username: [''],
-      firstName: ['', [Validators.required]],
-      lastName: [''],
-      email: [''],
-      securityRole: [null],
-      department: [null],
-      password: [''],
-      phone: ['']
-    }));*/
-
+  buildForm() {
     this.signUpForm = new FormGroup({
-      username: new FormControl('', Validators.minLength(3)),
+      username: new FormControl('', [Validators.required, Validators.minLength(3)]),
       firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl(''),
-      email: new FormControl('', Validators.email),
-      securityRole: new FormControl(''),
-      department: new FormControl(''),
-      password: new FormControl('', Validators.minLength(3)),
-      phone: new FormControl(''),
+      lastName: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      securityRole: new FormControl('', [Validators.required]),
+      department: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      phone: new FormControl('', [Validators.required]),
     });
   }
 
+  validatePhoneNumber(phone: string): (string | null) {
+    console.log(phone);
+    this.phoneValidationError = null;
+    // Strip out all characters except numbers
+    const newVal = phone.replace(/\D+/g, '');
+    console.log (newVal);
+    if (newVal.length === 10) {
+      return newVal;
+    } else {
+      console.log(`Phone validation error. Phone length: ${newVal.length}`);
+      this.phoneValidationError = 'The phone number must be 10 digits long.';
+      return null;
+    }
+  }
 
   onSubmit(form: FormGroup) {
     console.log('onSubmit');
     console.log(form.value);
-
+    this.isSubmitted = true;
+    const phone = this.validatePhoneNumber(form.controls.phone.value);
     this.userService.postUser(form.value)
       .subscribe(res => {
           // this.showSuccessMessage = true;
@@ -146,7 +136,7 @@ export class SignUpComponent implements OnInit {
             'picture': '',
             'name': `${form.value.firstName} ${form.value.lastName}`,
             'middleName': '',
-            'phone': form.value.phone,
+            'phone': `+1${phone}`, // Add +1 for the US country code
             'birthdate': '03/07/1985',
             'department': form.value.department.Name,
             'departmentId': form.value.department.Id,
@@ -157,8 +147,7 @@ export class SignUpComponent implements OnInit {
               environment.confirm.email = form.value.email;
               environment.confirm.password = form.value.password;
               environment.confirm.username = form.value.username;
-              // this.resetForm(form);
-              form.reset();
+              this.resetForm(form);
               this._router.navigateByUrl('/confirm');
             })
             .catch((error) => console.log(error));
@@ -227,7 +216,7 @@ export class SignUpComponent implements OnInit {
       });
   }
 
-  resetForm(form: NgForm) {
+  resetForm(form: FormGroup) {
     this.userService.selectedUser = {
       username: '',
       firstName: '',
@@ -240,8 +229,9 @@ export class SignUpComponent implements OnInit {
       phone: '',
       birthdate: '',
     };
-    form.resetForm();
+    form.reset();
     this.serverErrorMessages = '';
+    this.isSubmitted = false;
   }
 
 
