@@ -40,7 +40,7 @@ export class ProfileCardComponent implements OnInit {
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
-              private avatarService: AvatarService,
+              // private avatarService: AvatarService,
               private globals: Globals,
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
@@ -92,7 +92,7 @@ export class ProfileCardComponent implements OnInit {
     }*/
 
     observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(this.globals.getUsername()));
-    observables.push(this.avatarService.refreshCurrentUserAvatar());
+    // observables.push(this.avatarService.refreshCurrentUserAvatar());
 
     forkJoin(observables)
       .subscribe(obsResults => {
@@ -128,7 +128,7 @@ export class ProfileCardComponent implements OnInit {
     console.log(event);
   }
 
-  onImageSelected(event) {
+/*  onImageSelected(event) {
     const functionName = 'onImageSelected';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -159,7 +159,7 @@ export class ProfileCardComponent implements OnInit {
       }
 
     });
-  }
+  }*/
 
   encode(data) {
     const str = data.reduce(function(a, b) { return a + String.fromCharCode(b); }, '');
@@ -213,22 +213,6 @@ export class ProfileCardComponent implements OnInit {
         console.log('Error');
         console.log(err);
       });*/
-
-
-
-    this.avatarService.generateRandomAvatar()
-      .subscribe((data: any) => {
-        const currentFn = this;
-        const reader = new FileReader();
-        reader.readAsDataURL(data.result);
-        reader.onloadend = function() {
-          const base64data = reader.result;
-          console.log(base64data);
-          console.log(data.avatarUrl);
-          currentFn.entityUserService.update(data.avatarUrl, base64data.toString());
-          currentFn.avatarService.saveUserAvatar(data.result).subscribe();
-        };
-      });
   }
 
   test() {

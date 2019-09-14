@@ -147,7 +147,7 @@ module.exports = function(sequelize, DataTypes) {
 		avatarUrl: {
 			type: DataTypes.STRING(255),
 			allowNull: true,
-			defaultValue: 'http://localhost:3000/public/avatars/batman@3x.png',
+			defaultValue: 'public/avatars/placeholder.svg',
 			field: 'avatarUrl'
 		},
 		saltSecret: {

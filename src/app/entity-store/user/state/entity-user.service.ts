@@ -56,12 +56,12 @@ export class EntityUserService {
 
 
   update(avatarPath: string, avatarResolvedUrl: string) {
-/*
-    this.userStore.update((e) => e.username === username, {
-      avatarPath: avatarPath,
-      avatarResolvedUrl: avatarResolvedUrl
-    });
-*/
+    /*
+        this.userStore.update((e) => e.username === username, {
+          avatarPath: avatarPath,
+          avatarResolvedUrl: avatarResolvedUrl
+        });
+    */
 
     /** Update All */
     this.userStore.update(null, {
@@ -96,12 +96,24 @@ export class EntityUserService {
   getAvatarFromStorage(userAvatarData: any): Observable<any> {
     console.log('Getting item from storage');
 
-    const key = userAvatarData.avatarUrl.split('/')[2];
-    const identityId = userAvatarData.avatarUrl.split('/')[1];
-
     return new Observable<any>(observer => {
+
+      const split = userAvatarData.avatarUrl.split('/');
+      const level = split[0];
+      let key;
+      let identityId;
+      if (level === 'public') {
+        key = split.slice(1, split.length).join('/');
+
+      } else {
+        key = split.slice(2, split.length).join('/');
+        identityId = split[1];
+      }
+
+      // console.log(`avatar key: ${key}`);
+
       Storage.get(key, {
-        level: 'protected',
+        level: level,
         identityId: identityId
       })
         .then((result: string) => {
