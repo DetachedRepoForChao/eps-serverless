@@ -16,6 +16,7 @@ import {ConfirmCodeComponent} from './login/confirm-code/confirm-code.component'
 import {PointsStoreComponent} from './user/points-store/points-store.component';
 import {UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
 import {ForgotPasswordComponent} from './login/forgot-password/forgot-password.component';
+import {User} from './shared/user.model';
 
 export const appRoutes: Routes = [
   {
@@ -61,13 +62,17 @@ export const appRoutes: Routes = [
     path: 'user',
     component: UserComponent,
     canActivate: [AuthGuard],
-  },
-
-  {
-    path: 'homepage',
-    component: UserComponent,
-    canActivate: [AuthGuard],
-    children: [{path: '', component: HomepageComponent}],
+    children: [
+      {
+        path: 'homepage', component: HomepageComponent
+      },
+      {path: 'admin-user', component: AdminUserComponent},
+      {
+        path: 'store',
+        component: PointsStoreComponent,
+        canActivate: [AuthGuard],
+      },
+    ]
   },
 
   {
@@ -76,11 +81,11 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
   },
 
-  {
+/*  {
     path: 'store',
     component: PointsStoreComponent,
     canActivate: [AuthGuard],
-  },
+  },*/
   /*
   {
     path: 'standard-user',
@@ -101,13 +106,13 @@ export const appRoutes: Routes = [
     }
   },
   */
-  {
+/*  {
     path: 'admin-user',
     component: UserComponent,
     children: [{path: '', component: AdminUserComponent}],
 
 
-  },
+  },*/
   {
       path: '', redirectTo: '/login', pathMatch: 'full'
   }

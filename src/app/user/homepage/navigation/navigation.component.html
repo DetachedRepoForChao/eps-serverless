@@ -159,11 +159,11 @@
           </div>
         </div>
         <!----- Home ---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" routerLink="/homepage">
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'homepage']">
           <i class="fas fa-home" title="home"></i>
         </button>
         <!----- Store ---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" routerLink="/store">
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'store']">
           <i class="fas fa-shopping-cart" title="store"></i>
         </button>
         <!----- Settings---->

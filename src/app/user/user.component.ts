@@ -119,22 +119,30 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.securityRoleName = this.globals.getUserAttribute('custom:security_role');
 
+
+
     switch (this.securityRoleName) {
       case 'employee': {
         console.log(`${functionFullName}: navigating to standard-user`);
         // this.router.navigate(['standard-user']);
-        this.router.navigate(['homepage']);
+        console.log(this.router);
+        console.log(this.router.getCurrentNavigation());
+        // console.log(this.router.)
+        this.router.navigate(['user', 'homepage']);
+        // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
         break;
       }
       case 'manager': {
         console.log(`${functionFullName}: navigating to manager-user`);
         // this.router.navigate(['manager-user']);
-        this.router.navigate(['homepage']);
+        this.router.navigate(['user', 'homepage']);
+        // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
         break;
       }
       case 'admin': {
         console.log(`${functionFullName}: navigating to admin-user`);
-        this.router.navigate(['admin-user']);
+        this.router.navigate(['user', 'admin-user']);
+        // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
         break;
       }
     }
@@ -210,6 +218,10 @@ export class UserComponent implements OnInit, OnDestroy {
     this.onStartWatching();
 
     // this.startAchievementPolling();
+  }
+
+  nav() {
+    this.router.navigate(['user', 'homepage']);
   }
 
   ngOnDestroy() {
