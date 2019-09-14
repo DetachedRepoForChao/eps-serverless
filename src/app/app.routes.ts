@@ -100,16 +100,14 @@ export const appRoutes: Routes = [
       expectedRoleId: 2
     }
   },
+  */
   {
     path: 'admin-user',
     component: UserComponent,
-    canActivate: [RoleGuard],
     children: [{path: '', component: AdminUserComponent}],
-    data: {
-      expectedRoleId: 3
-    }
 
-  }, */
+
+  },
   {
       path: '', redirectTo: '/login', pathMatch: 'full'
   }
