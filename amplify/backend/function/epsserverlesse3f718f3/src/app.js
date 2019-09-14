@@ -305,10 +305,10 @@ app.post('/items/incrementAchievement', function(req, res) {
       ctrlUser.getUserProfile(username)
         .then(result => {
           const userId = result.user.id;
-          const achievementName = req.body.achievementName;
-          ctrlAchievementLogic.incrementAchievement(achievementName, userId)
+          const achievementFamily = req.body.achievementFamily;
+          ctrlAchievementLogic.incrementAchievement(achievementFamily, userId)
             .then(data => {
-              res.json({status: 'post call succeed!', data: data.message});
+              res.json({status: 'post call succeed!', data: data});
             })
             .catch(err => {
               res.json({status: 'post call failed!', error: err});

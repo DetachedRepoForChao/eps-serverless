@@ -15,6 +15,8 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
 import {UserAvatarStore} from '../../../entity-store/user-avatar/state/user-avatar.store';
 import {EntityUserAvatarQuery} from '../../../entity-store/user-avatar/state/entity-user-avatar.query';
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
+import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -51,7 +53,9 @@ export class LeaderboardCardComponent implements OnInit {
               private spinner: NgxSpinnerService,
               private userAvatarService: EntityUserAvatarService,
               private userAvatarStore: UserAvatarStore,
-              private userAvatarQuery: EntityUserAvatarQuery) { }
+              private userAvatarQuery: EntityUserAvatarQuery,
+              public achievementService: AchievementService,
+              public achievementQuery: AchievementQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -90,5 +94,13 @@ export class LeaderboardCardComponent implements OnInit {
 
   showAvatarLoadingSpinner() {
     this.spinner.show('avatar-loading-spinner');
+  }
+
+  test1() {
+    this.achievementService.cacheAchievements().subscribe();
+  }
+
+  test2() {
+    console.log(this.achievementQuery.getCurrentUserAchievements());
   }
 }

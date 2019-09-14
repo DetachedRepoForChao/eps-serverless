@@ -73,7 +73,8 @@ import { UserAvatarFiltersComponent } from './entity-store/user-avatar/filter/us
 import { UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
 import { UserAvatarsComponent} from './entity-store/user-avatar/user-avatars.component';
 import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.component';
-import {UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
+import { UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
+import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
@@ -119,6 +120,7 @@ import { PhoneMaskDirective } from './directives/phone-mask.directive';
     UserAvatarsComponent,
     UserAvatarComponent,
     UserFiltersComponent,
+    AchievementFiltersComponent,
     AvatarComponent,
     ImageCropperComponent,
     ForgotPasswordComponent,

@@ -69,4 +69,5 @@ export class ProgressCardComponent implements OnInit {
 
     this.selectedAchievement = achievement;
   }
+
 }

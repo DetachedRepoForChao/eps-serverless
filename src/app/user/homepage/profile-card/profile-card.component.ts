@@ -230,4 +230,8 @@ export class ProfileCardComponent implements OnInit {
         };
       });
   }
+
+  test() {
+
+  }
 }
