@@ -56,7 +56,7 @@ const incrementAchievement = function(achievementFamily, userId) {
           return {status: false, message: result.message};
         } else {
           console.log(`${functionFullName}: Success incrementing generic achievement family ${achievementFamily} for user id ${userId}`);
-          return {status: true, message: 'Success incrementing generic achievement family'};
+          return {status: true, message: 'Success incrementing generic achievement family', achievementFamilyProgress: result.achievementFamilyProgress};
         }
       })
       .catch(err => {
@@ -131,7 +131,7 @@ const incrementGenericAchievement = function(achievementFamily, userId) {
         // Get new achievement family progress to return
         return ctrlAchievement.getAchievementFamilyProgress(achievementFamily, userId)
           .then(getResult => {
-            if(getResult.start !== true) {
+            if(getResult.status !== true) {
               console.log(`${functionFullName}: Something went wrong retrieving achievement family progress`);
               return {status: false, message: getResult.message};
             } else {

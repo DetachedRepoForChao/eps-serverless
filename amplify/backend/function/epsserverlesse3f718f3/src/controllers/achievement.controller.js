@@ -456,7 +456,7 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
         console.log(`${functionFullName}: User / Achievement Family progress retrieved successfully`);
         console.log(achievementFamilyProgress);
 
-        return {status: true, achievementFamilyProgress: achievementFamilyProgress};
+        return {status: true, message: 'User / Achievement Family progress retrieved successfully', achievementFamilyProgress: achievementFamilyProgress};
         // const goalProgress = queryResult[0].goalProgress;
         // const achievementProgressId = queryResult[0].id;
         // const achievementId = queryResult[0].achievementId;

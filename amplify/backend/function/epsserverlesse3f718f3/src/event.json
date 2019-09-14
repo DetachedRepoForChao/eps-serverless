@@ -1,11 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items/getNotifications",
-  "httpMethod": "GET",
+  "path": "/items/incrementAchievement",
+  "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIyMTdlMTUzMC05OWMzLTQwMmUtOTUzYy1jOTcyNTE1ZWVhNzMiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImJpcnRoZGF0ZSI6IjAzXC8wN1wvMTk4NSIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX3ZPZzRIU1pjOCIsInBob25lX251bWJlcl92ZXJpZmllZCI6dHJ1ZSwiY29nbml0bzp1c2VybmFtZSI6Im1iYWRvIiwiZ2l2ZW5fbmFtZSI6Ik1heCIsInBpY3R1cmUiOiJwcm90ZWN0ZWRcL3VzLWVhc3QtMTowNTJhNzFkNy1lOGM2LTQwNWMtOTQ1ZC0zOGQ5ZDUyNzE1MTdcL2F2YXRhcl9waHdqMWo0Y2d1anpkZXgwdHUucG5nIiwiYXVkIjoiN3ZnYzVnZDdxMjBrMXA0bThhcjliY3FkOG0iLCJldmVudF9pZCI6ImY3YjUwYTJlLTk3YTQtNDgyMi05NjRjLTkyMGRiYTJlMTgwMSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNTY2MDY1ODczLCJuYW1lIjoiTWF4IEJhZG8iLCJwaG9uZV9udW1iZXIiOiIrMTczMjg1OTc4MzkiLCJleHAiOjE1NjYwNjk0NzMsImlhdCI6MTU2NjA2NTg3MywiZmFtaWx5X25hbWUiOiJCYWRvIiwiZW1haWwiOiJtYXguYmFkb0BnbWFpbC5jb20ifQ.CrAAqRqcOFSDb-fqChSjsiGVLdoioIWOspoz_3T3du3XOR2SFGhfdVanl7p9vET17hfFniw7CEYP9E8P8fDeDpg00S8Yh6rzMcIVNgxGWvBPKgNnT_Sem2JC6TwduPh8ER3N-uKaKlaETAVhGqQIZl0v7A90QJGT4s8-cDkj0ttZls8tH9v_Kfqgf1WZheOAnnislQANVi-zJDn12IS6Ef1QBDC698PS4J0Zm1kzDhDvuRMvffAU-ZXt3JpRWxKndm0NPDdTH_K8KJvM67OWCLQ7irov3JbssAF4ZL6sLuhpVYhtPrp-AaPc4sH19HkAyOjlg_iU_txLpM2j6edB1w"
+    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1ZDRiYTY1ZS1lMDAyLTQ0ZWQtYWQ4Ny03ZTllZWY2ZTdkNzEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImJpcnRoZGF0ZSI6IjAzXC8wN1wvMTk4NSIsImN1c3RvbTpkZXBhcnRtZW50IjoiRnJvbnQgRGVzayIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX3ZPZzRIU1pjOCIsInBob25lX251bWJlcl92ZXJpZmllZCI6dHJ1ZSwiY29nbml0bzp1c2VybmFtZSI6Im1iYWRvIiwiY3VzdG9tOnNlY3VyaXR5X3JvbGUiOiJlbXBsb3llZSIsImdpdmVuX25hbWUiOiJNYXgiLCJwaWN0dXJlIjoicHJvdGVjdGVkXC91cy1lYXN0LTE6ODIyZTZmNDAtMzYxYi00ZjBhLWE4ZTgtMmNmY2M2NTQ3NDIwXC9hdmF0YXJfd2FzYXAyYnE4b2lrMGg1dGZtci5wbmciLCJjdXN0b206ZGVwYXJ0bWVudF9pZCI6IjIiLCJhdWQiOiI3dmdjNWdkN3EyMGsxcDRtOGFyOWJjcWQ4bSIsImV2ZW50X2lkIjoiNDU1N2Y1ODItYmZjYy00YzA5LTljYTAtZDgzZjMxZWVkZTc2IiwiY3VzdG9tOnNlY3VyaXR5X3JvbGVfaWQiOiIxIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1Njg0MzU4OTksIm5hbWUiOiJNYXggQmFkbyIsInBob25lX251bWJlciI6IisxNzMyODU5NzgzOSIsImV4cCI6MTU2ODQzOTQ5OSwiaWF0IjoxNTY4NDM1ODk5LCJmYW1pbHlfbmFtZSI6IkJhZG8iLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.HkeCyTU11KOAyazG-Z79D5lEZdH2cfzT9qDxFpR3AsIYMli4UEA40cBXppFNEV7qlfg400pz9LJ92bXgWJjv_zvMNaQb1QLDZpf5ieM4LHuuB3XuB7fvPI1yQknSbd6T5W29oGh2FcWMsJW1g7el9CfG0d5cBgotAcsBI_udnRsEkfzl9qZVmX1Nf-yo0nDsNLVcigBit6EMnuKYGgsfy_Alr5v5xgYmzPZuo5ccNqgfUYPi-d0_gM1evw0DEKg-wB6p2FdIuJktVfUFuwuVJZCdGMYfLhBZNSic4ktnrqhovpFCVCYi-Eo19SsuAWavOFz2ipGixOs6KdoIrJ2yPQ"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -41,6 +41,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"securityRole\":{\"Id\":1,\"Name\":\"employee\",\"Description\":\"Standard employee\"},\"department\":{\"Id\":1,\"Name\":\"Kitchen\"},\"firstName\":\"Max\",\"lastName\":\"Bado\",\"username\":\"mbado5\",\"email\":\"max.bado@gmail.com\",\"password\":\"D@RTHtest911\",\"phone\":\"+17328597839\"}",
+  "body": "{\"securityRole\":{\"Id\":1,\"Name\":\"employee\",\"Description\":\"Standard employee\"},\"department\":{\"Id\":1,\"Name\":\"Kitchen\"},\"firstName\":\"Max\",\"lastName\":\"Bado\",\"username\":\"mbado5\",\"email\":\"max.bado@gmail.com\",\"password\":\"D@RTHtest911\",\"phone\":\"+17328597839\", \"achievementFamily\":\"SignIn\"}",
   "isBase64Encoded": false
 }
