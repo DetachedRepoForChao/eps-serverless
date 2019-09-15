@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
-import { UserState, UserStore } from './user.store';
-import { EntityUserModel } from './entity-user.model';
+import { CurrentUserState, CurrentUserStore } from './current-user.store';
+import { EntityCurrentUserModel } from './entity-current-user.model';
 import { QueryEntity } from '@datorama/akita';
 import { combineLatest } from 'rxjs';
-import { VISIBILITY_FILTER } from '../filter/user-filter.model';
+import { VISIBILITY_FILTER } from '../filter/current-user-filter.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
+export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, EntityCurrentUserModel> {
   selectVisibilityFilter$ = this.select(state => state.ui.filter);
 
 
   selectVisibleUserAvatars$ = combineLatest(
     this.selectVisibilityFilter$,
     this.selectAll(),
-    this.getVisibleUserAvatars
+    this.getVisibleUser
   );
 
 
-  constructor(protected store: UserStore) {
+  constructor(protected store: CurrentUserStore) {
     super(store);
   }
 
 
-  private getVisibleUserAvatars(filter, userAvatars): EntityUserModel[] {
+  private getVisibleUser(filter, userAvatars): EntityCurrentUserModel[] {
     switch (filter) {
       case VISIBILITY_FILTER.SHOW_COMPLETED:
         return userAvatars.filter(t => t.completed);
@@ -37,15 +37,8 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
   }
 
   // public getUserAvatar(username: string): EntityUserAvatarModel {
-  public getUserAvatar(username: string) {
-    const userAvatar = this.getAll({
-      filterBy: avatarEntity => avatarEntity.username === username
-    });
-    // const avatars = this.getAll();
-    // const avatar = this.getEntity(username);
-
-    // console.log(userAvatar);
-    // console.log(this.getAll());
-    return userAvatar;
+  public getCurrentUserAvatar() {
+    const currentUserAvatar = this.getAll();
+    return currentUserAvatar;
   }
 }

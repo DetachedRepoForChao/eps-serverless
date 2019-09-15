@@ -69,11 +69,8 @@ import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
-import { UserAvatarFiltersComponent } from './entity-store/user-avatar/filter/user-avatar-filters.component';
-import { UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
-import { UserAvatarsComponent} from './entity-store/user-avatar/user-avatars.component';
-import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.component';
-import { UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
+import { UserFiltersComponent } from './entity-store/user/filter/user-filters.component';
+import { CurrentUserFiltersComponent} from './entity-store/current-user/filter/current-user-filters.component';
 import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
@@ -120,11 +117,8 @@ akitaConfig({
     AwesomeTooltipDirectiveDirective,
     AwesomeTooltipComponent,
     PointsStoreComponent,
-    UserAvatarFiltersComponent,
-    UserAvatarPageComponent,
-    UserAvatarsComponent,
-    UserAvatarComponent,
     UserFiltersComponent,
+    CurrentUserFiltersComponent,
     AchievementFiltersComponent,
     AvatarComponent,
     ImageCropperComponent,

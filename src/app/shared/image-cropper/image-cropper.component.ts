@@ -4,8 +4,8 @@ import {AvatarService} from '../avatar/avatar.service';
 import {LeaderboardService} from '../leaderboard.service';
 import {Globals} from '../../globals';
 import {FeedcardService} from '../feedcard/feedcard.service';
-import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
-import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
+import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
+import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 
 @Component({
   selector: 'app-image-cropper',
@@ -23,8 +23,8 @@ export class ImageCropperComponent implements OnInit {
               private leaderboardService: LeaderboardService,
               private globals: Globals,
               private feedcardService: FeedcardService,
-              private entityUserService: EntityUserService,
-              public userQuery: EntityUserQuery) { }
+              private entityUserService: EntityCurrentUserService,
+              public userQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
   }

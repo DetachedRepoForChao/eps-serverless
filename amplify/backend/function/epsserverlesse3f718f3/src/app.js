@@ -490,8 +490,8 @@ app.post('/items/getLikesByPostIds', function(req, res) {
 });
 
 // Avatar Routes
-app.get('/items/getCurrentUserAvatar', function(req, res) {
-  console.log('starting post getCurrentUserAvatar');
+app.get('/items/getCurrentUser', function(req, res) {
+  console.log('starting post getCurrentUser');
 
   // const userId = req.body.userId;
   const token = req.headers.authorization;

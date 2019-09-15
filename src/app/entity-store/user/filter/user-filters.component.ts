@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
 @Component({
-  selector: 'app-user-filters',
+  selector: 'app-user-avatar-filters',
   templateUrl: './user-filters.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -14,15 +14,10 @@ import {ProfileComponent} from './user/profile/profile.component';
 import {HomepageComponent} from './user/homepage/homepage.component';
 import {ConfirmCodeComponent} from './login/confirm-code/confirm-code.component';
 import {PointsStoreComponent} from './user/points-store/points-store.component';
-import {UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
 import {ForgotPasswordComponent} from './login/forgot-password/forgot-password.component';
 import {User} from './shared/user.model';
 
 export const appRoutes: Routes = [
-  {
-    path: 'userAvatars',
-    component: UserAvatarPageComponent
-  },
   {
       path: 'signup',
       component: LoginComponent,

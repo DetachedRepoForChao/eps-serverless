@@ -18,9 +18,9 @@ import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {GiftPointsService} from './gift-points.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
-import {UserAvatarStore} from '../../../entity-store/user-avatar/state/user-avatar.store';
-import {EntityUserAvatarQuery} from '../../../entity-store/user-avatar/state/entity-user-avatar.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {UserStore} from '../../../entity-store/user/state/user.store';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 
 export interface DepartmentEmployee {
   id: number;
@@ -71,9 +71,9 @@ export class GiftPointsComponent implements OnInit {
     private leaderboardService: LeaderboardService,
     private giftPointsService: GiftPointsService,
     private spinner: NgxSpinnerService,
-    private userAvatarService: EntityUserAvatarService,
-    private userAvatarStore: UserAvatarStore,
-    private userAvatarQuery: EntityUserAvatarQuery) { }
+    private userAvatarService: EntityUserService,
+    private userAvatarStore: UserStore,
+    private userAvatarQuery: EntityUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';

@@ -16,9 +16,9 @@ import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 // import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {UserService} from '../../../shared/user.service';
-import {UserStore} from '../../../entity-store/user/state/user.store';
-import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
-import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
@@ -50,9 +50,9 @@ export class ProfileCardComponent implements OnInit {
               private achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               private userService: UserService,
-              private userStore: UserStore,
-              public userQuery: EntityUserQuery,
-              private entityUserService: EntityUserService,
+              private currentUserStore: CurrentUserStore,
+              public currentUserQuery: EntityCurrentUserQuery,
+              private entityCurrentUserService: EntityCurrentUserService,
               private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
@@ -74,7 +74,7 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });*/
 
-    this.entityUserService.cacheCurrentUserAvatar().subscribe();
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()

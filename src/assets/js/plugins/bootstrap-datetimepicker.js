@@ -538,7 +538,7 @@
           e = 'YYYY';
         }
         notifyEvent({
-          type: 'dp.update',
+          type: 'dp.updateAvatar',
           change: e,
           viewDate: viewDate.clone()
         });

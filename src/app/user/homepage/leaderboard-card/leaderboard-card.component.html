@@ -41,8 +41,8 @@
 <!--              <div *ngIf="col === 'avatar'" [appAwesomeTooltipDirective]="{'type': 'img', 'data': user[col]}"><img src="{{user[col]}}" class="img-row"/></div>-->
 <!--              <div *ngIf="col === 'avatar'" [appAwesomeTooltipDirective]="{'type': 'img', 'data': user[col]}">-->
               <div *ngIf="col === 'avatar'">
-                <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img src="{{(entityUserQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
                 </div>
               </div>
               <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>
@@ -73,8 +73,8 @@
                     <div class="card card-coin card-plain maxheight">
                       <div class="card-header">
 
-                        <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else selectedAvatarLoading">
-                          <img src="{{(userAvatarQuery.getUserAvatar(selectedRow.username))[0].avatarResolvedUrl}}"
+                        <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
+                          <img src="{{(entityUserQuery.getUserAvatar(selectedRow.username))[0].avatarResolvedUrl}}"
                                alt="Place image title"
                                class="img-center img-fluid rounded-circle"
                                id="avatar">
@@ -183,8 +183,8 @@
             <td *ngFor="let col of this.displayedColumnsAll">
 <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>-->
               <div *ngIf="col === 'avatar'">
-                <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img src="{{(entityUserQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
                 </div>
               </div>
               <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>

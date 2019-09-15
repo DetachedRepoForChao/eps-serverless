@@ -37,7 +37,7 @@ export class StoreItemQuery extends QueryEntity<StoreItemState, StoreItemModel> 
   }
 
   // public getUserAvatar(username: string): EntityUserAvatarModel {
-/*  public getCurrentUserAvatar() {
+/*  public getCurrentUser() {
     const currentUserAvatar = this.getAll();
     return currentUserAvatar;
   }*/
