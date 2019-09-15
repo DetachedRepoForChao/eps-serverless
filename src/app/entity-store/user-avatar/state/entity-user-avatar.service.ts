@@ -58,6 +58,9 @@ export class EntityUserAvatarService {
     this.userAvatarStore.remove(id);
   }
 
+  reset() {
+    this.userAvatarStore.reset();
+  }
 
   update(username: string, avatarPath: string, avatarResolvedUrl: string) {
     this.userAvatarStore.update((e) => e.username === username, {
@@ -65,36 +68,6 @@ export class EntityUserAvatarService {
       avatarResolvedUrl: avatarResolvedUrl
     });
   }
-
-  /*getSomething(username: string) {
-    console.log(`Retrieving avatar for ${username}`);
-
-    let avatarPath;
-    if (username === 'mbado') {
-      avatarPath = 'protected/us-east-1:822e6f40-361b-4f0a-a8e8-2cfcc6547420/avatar_x186fc09kbjzjdop7j.png';
-    }
-    if (username === 'hulk') {
-      avatarPath = 'protected/us-east-1:4d6125b2-9525-4199-a874-c798f4b6c773/avatar_iqtj43tstbijzkco2ws.png';
-    }
-
-    const request$ = this.getAvatarFromStorage(avatarPath)
-      // .subscribe((item: string) => {
-      .pipe(tap((item: string) => {
-        console.log(`caching: ${item}`);
-        // this.add(username, '', avatarPath, item);
-        // const username: string = 'mbado';
-        const avatarBase64String: string = '';
-        // const avatarPath: string = path;
-        const avatarResolvedUrl: string = item;
-        const avatar = createEntityUserAvatarModel({username, avatarBase64String, avatarPath, avatarResolvedUrl});
-        // this.userAvatarStore.set([avatar]);
-        this.userAvatarStore.set([avatar]);
-        // this.userAvatarStore.add(avatar);
-        // });
-      }));
-
-    return cacheable(this.userAvatarStore, request$);
-  }*/
 
   cacheUserAvatars() {
     console.log(`Retrieving all user avatars`);

@@ -43,7 +43,9 @@
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-          <h4 class="mb-0">{{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}</h4>
+          <h4 class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
+            {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
+          </h4>
         </div>
       </div>
     </div>
@@ -63,15 +65,36 @@
   </div>
 </div>
 
-<div class="modal fade modal-black" id="myModal" role="dialog">
+<div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg" role="document">
+
     <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Choose Your Avatar</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body" *ngIf="this.userQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
+        <app-avatar [avatarUrl]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
+      </div>
+      <ng-template #avatarModalLoading>
+
+      </ng-template>
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+</div>
+
+<!--<div class="modal fade modal-black" id="myModal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    &lt;!&ndash; Modal content&ndash;&gt;
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Settings</h4>
       </div>
-      <!---modal body---->
+      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
       <div class="modal-body" style="text-align: center">
         <input type="file" (change)="fileChangeEvent($event)" />
         <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>
@@ -91,15 +114,15 @@
         </div>
       </div>
 
-      <!----End Mod Bod---->
+      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
       <div class="modal-footer">
-<!--        <button type="button" class="btn btn-success">Save</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>-->
+&lt;!&ndash;        <button type="button" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>&ndash;&gt;
       </div>
     </div>
   </div>
 
-  <!-- Blank card to display while loading -->
+  &lt;!&ndash; Blank card to display while loading &ndash;&gt;
   <ng-template #cardLoading>
     <div class="card-body">
       <ngx-spinner
@@ -119,7 +142,7 @@
 <div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-sm" role="document">
 
-    <!-- Modal content-->
+    &lt;!&ndash; Modal content&ndash;&gt;
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Choose Your Avatar</h4>
@@ -127,11 +150,11 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <!---modal body---->
+      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
       <div class="modal-body">
         <app-image-gallery></app-image-gallery>
       </div>
-      <!----End Mod Bod---->
+      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
 
     </div>
   </div>
@@ -140,17 +163,17 @@
 <div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg" role="document">
 
-    <!-- Modal content-->
+    &lt;!&ndash; Modal content&ndash;&gt;
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
-      <!---modal body---->
+      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
       <div class="modal-body">
         <app-avatar [avatarUrl]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
       </div>
-      <!----End Mod Bod---->
+      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
 
     </div>
   </div>
-</div>
+</div>-->

@@ -52,8 +52,10 @@
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-          <h4 class="mb-0" *ngIf="achievementService.completeAchievements && achievementService.achievementDataList">
-            {{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}
+<!--          <h4 class="mb-0" *ngIf="achievementService.completeAchievements && achievementService.achievementDataList">
+            {{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}-->
+          <h4 class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
+            {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
           </h4>
         </div>
         <div class="col p-2">

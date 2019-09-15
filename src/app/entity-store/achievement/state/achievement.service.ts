@@ -61,21 +61,26 @@ export class AchievementService {
     this.achievementStore.remove(id);
   }
 
+  reset() {
+    this.achievementStore.reset();
+  }
 
-/*  update(avatarPath: string, avatarResolvedUrl: string) {
-/!*
-    this.userStore.update((e) => e.username === username, {
-      avatarPath: avatarPath,
-      avatarResolvedUrl: avatarResolvedUrl
+  updateAchievementStatus(achievementProgressId: string, status: string) {
+    this.achievementStore.update((e) => e.progressId === achievementProgressId, {
+      progressStatus: status,
     });
-*!/
+  }
 
-    /!** Update All *!/
-    this.achievementStore.update(null, {
-      avatarPath: avatarPath,
-      avatarResolvedUrl: avatarResolvedUrl
-    });
-  }*/
+  updateAchievements(achievementsData: any) {
+    console.log('updateAchievements:');
+    console.log(achievementsData);
+    for (let i = 0; i < achievementsData.length; i++) {
+      this.achievementStore.update((e) => e.progressId === achievementsData[i].id, {
+        progress: achievementsData[i].goalProgress,
+        progressStatus: achievementsData[i].status,
+      });
+    }
+  }
 
   cacheAchievements() {
     const functionName = 'cacheAchievements';
@@ -152,6 +157,9 @@ export class AchievementService {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);
+
+            // Update achievements with new progress and status
+            this.updateAchievements(data.data.achievementFamilyProgress);
             observer.complete();
           });
         });
@@ -177,6 +185,9 @@ export class AchievementService {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);
+
+            // Update achievement as acknowledged in the local store
+            this.updateAchievementStatus(achievementProgressId, 'complete acknowledged');
             observer.complete();
           });
         });

@@ -54,6 +54,9 @@ export class EntityUserService {
     this.userStore.remove(id);
   }
 
+  reset() {
+    this.userStore.reset();
+  }
 
   update(avatarPath: string, avatarResolvedUrl: string) {
     /*

@@ -59,6 +59,9 @@ export class StoreItemService {
     this.storeItemStore.remove(id);
   }
 
+  reset() {
+    this.storeItemStore.reset();
+  }
 
   update(itemId: number, name: string, description: string, cost: number, imagePath: string) {
     const functionName = 'update';

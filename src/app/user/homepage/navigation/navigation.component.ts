@@ -3,7 +3,11 @@ import {UserService} from '../../../shared/user.service';
 import {GlobalVariableService} from '../../../shared/global-variable.service';
 import {Router} from '@angular/router';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
-
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
+import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
+import {resetStores} from '@datorama/akita';
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
 declare var blackKit: any;
@@ -21,7 +25,11 @@ export class NavigationComponent implements OnInit {
   constructor(private userService: UserService,
               private globalVariableService: GlobalVariableService,
               private router: Router,
-              private feedcardService: FeedcardService) { }
+              private feedcardService: FeedcardService,
+              private achievementService: AchievementService,
+              private entityUserAvatarService: EntityUserAvatarService,
+              private entityUserService: EntityUserService,
+              private storeItemService: StoreItemService) { }
 
   ngOnInit() {
     // Initialize the navbar script
@@ -36,7 +44,13 @@ export class NavigationComponent implements OnInit {
     this.globalVariableService.resetAllVariables();
     this.feedcardService.clearPointTransactionCache();
     localStorage.clear();
+/*    this.achievementService.reset();
+    this.entityUserService.reset();
+    this.entityUserAvatarService.reset();
+    this.storeItemService.reset();*/
+    resetStores();
     this.router.navigate(['/login']);
+
   }
 
   onStoreClick() {

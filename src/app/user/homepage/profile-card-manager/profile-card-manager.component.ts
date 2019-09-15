@@ -10,11 +10,13 @@ import {PointItemService} from '../../../shared/point-item.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
-import {AchievementService} from '../../../shared/achievement/achievement.service';
+// import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {UserService} from '../../../shared/user.service';
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
+import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -41,6 +43,7 @@ export class ProfileCardManagerComponent implements OnInit {
               private spinner: NgxSpinnerService,
               private feedcardService: FeedcardService,
               private achievementService: AchievementService,
+              public achievementQuery: AchievementQuery,
               private userService: UserService,
               private userStore: UserStore,
               public userQuery: EntityUserQuery,
@@ -72,7 +75,7 @@ export class ProfileCardManagerComponent implements OnInit {
     const observables: Observable<any>[] = [];
 
     observables.push(this.pointItemService.storeRemainingPointPool());
-    observables.push(this.avatarService.refreshCurrentUserAvatar());
+    // observables.push(this.avatarService.refreshCurrentUserAvatar());
 
     forkJoin(observables)
       .subscribe(obsResults => {
@@ -96,7 +99,7 @@ export class ProfileCardManagerComponent implements OnInit {
 
   }
 
-  onImageSelected(event) {
+/*  onImageSelected(event) {
     const functionName = 'onImageSelected';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -110,7 +113,7 @@ export class ProfileCardManagerComponent implements OnInit {
       this.feedcardService.refreshPointTransactionAvatars();
       $('#myModal').modal('hide');
     });
-  }
+  }*/
 
   fileChangeEvent(event: any): void {
     this.imageChangedEvent = event;

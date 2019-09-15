@@ -14,12 +14,14 @@ import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {AchievementService} from '../../../shared/achievement/achievement.service';
+// import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {UserService} from '../../../shared/user.service';
 import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
+import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -46,6 +48,7 @@ export class ProfileCardComponent implements OnInit {
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private achievementService: AchievementService,
+              public achievementQuery: AchievementQuery,
               private userService: UserService,
               private userStore: UserStore,
               public userQuery: EntityUserQuery,

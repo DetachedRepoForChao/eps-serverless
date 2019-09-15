@@ -80,8 +80,13 @@ import { ImageCropperComponent } from './shared/image-cropper/image-cropper.comp
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { PhonePipe } from './pipe/phone.pipe';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
+import { akitaConfig} from '@datorama/akita';
+
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
+akitaConfig({
+  resettable: true
+});
 
 @NgModule({
   declarations: [
