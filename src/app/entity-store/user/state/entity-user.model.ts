@@ -11,6 +11,7 @@ export type EntityUserModel = {
   middleName: string;
   position: string;
   points: number;
+  birthdate: string;
   securityRole: SecurityRole;
   department: Department;
   email: string;
@@ -21,9 +22,9 @@ export type EntityUserModel = {
   dateModified: any;
 };
 
-export function createEntityUserAvatarModel({ userId, username, firstName, lastName, middleName, position,
-                                              points, securityRole, department, email, phone, avatarBase64String,
-                                              avatarPath, avatarResolvedUrl }: Partial<EntityUserModel>) {
+export function createEntityUserAvatarModel({ userId, username, firstName, lastName, middleName, position, points, birthdate, securityRole,
+                                              department, email, phone, avatarBase64String, avatarPath, avatarResolvedUrl }:
+                                              Partial<EntityUserModel>) {
   return {
     id: guid(),
     userId,
@@ -33,6 +34,7 @@ export function createEntityUserAvatarModel({ userId, username, firstName, lastN
     middleName,
     position,
     points,
+    birthdate,
     securityRole,
     department,
     email,

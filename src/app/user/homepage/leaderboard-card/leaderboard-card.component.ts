@@ -17,6 +17,7 @@ import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
+import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -40,9 +41,8 @@ export class LeaderboardCardComponent implements OnInit {
 
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
-  avatarList: string[] = [];
-  departments: Department[] = [];
 
+  leaderboardUsers$: Observable<EntityUserModel[]>;
   selectedRow;
 
   constructor(public leaderboardService: LeaderboardService,
@@ -67,8 +67,15 @@ export class LeaderboardCardComponent implements OnInit {
     this.spinner.show('leaderboard-card-spinner');
     this.spinner.show('avatar-loading-spinner');
 
-    this.entityUserService.cacheUsers().subscribe();
-    this.leaderboardService.getPointsLeaderboard()
+    this.entityUserService.cacheUsers().subscribe(() => {
+      this.leaderboardUsers$ = this.entityUserQuery.selectAll({
+        filterBy: userEntity => userEntity.securityRole.Id === 1,
+      });
+
+      this.isCardLoading = false;
+    });
+
+    /*this.leaderboardService.getPointsLeaderboard()
       .subscribe(result => {
         this.isCardLoading = true;
         console.log(`${functionFullName}: showing leaderboard-card-spinner`);
@@ -80,7 +87,7 @@ export class LeaderboardCardComponent implements OnInit {
           this.isCardLoading = false;
           this.spinner.hide('leaderboard-card-spinner');
         });
-      });
+      });*/
 
 
     $(function () {
@@ -109,6 +116,14 @@ export class LeaderboardCardComponent implements OnInit {
     this.achievementQuery.filterAchievements().subscribe(result => console.log(result));
     console.log('completed');
     console.log(this.achievementQuery.getCompletedAchievements());
+    console.log('user query select all');
+    const users$ = this.entityUserQuery.selectAll({
+      filterBy: userEntity => userEntity.securityRole.Id === 1,
+    });
+
+    users$.subscribe(users => {
+      console.log(users);
+    });
     // console.log(this.achievementQuery.filterAchievements());
   }
 }

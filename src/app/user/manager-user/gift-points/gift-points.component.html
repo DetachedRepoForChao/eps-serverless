@@ -102,7 +102,7 @@
 <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>-->
               <div *ngIf="col === 'avatar'">
                 <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                  <img src="{{(userAvatarQuery.getUser(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
                 </div>
               </div>
               <!-- <ng-template #templateImgRow>

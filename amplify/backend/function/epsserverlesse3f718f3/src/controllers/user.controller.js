@@ -279,32 +279,32 @@ module.exports.getUserPoints = getUserPoints;
 
 
 
-const getEmployeeUsers = function (username) {
-  const functionName = 'getEmployeeUsers';
+const getUsersPublicDetails = function () {
+  const functionName = 'getUsersPublicDetails';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
   return sqlUserModel.findAll({
-    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'email',
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'dateOfBirth',
       'securityRoleId', 'departmentId', 'avatarUrl'],
     where: {
-      username: username,
+      securityRoleId: [1, 2],
     },
   })
-    .then(user => {
-      if (!user) {
-        console.log(`${functionFullName}: User record not found`);
-        return { status: false, message: 'User record not found.' };
+    .then(usersPublicDetailsResult => {
+      if (!usersPublicDetailsResult) {
+        console.log(`${functionFullName}: No records found`);
+        return { status: false, message: 'No records found' };
       } else {
-        console.log(`${functionFullName}: User record found`);
-        return  {status: true, user: user};
+        console.log(`${functionFullName}: User records found`);
+        return  {status: true, users: usersPublicDetailsResult};
       }
     })
     .catch(err => {
-      console.log(`${functionFullName}: Error retrieving user profile`);
+      console.log(`${functionFullName}: Error retrieving user records`);
       console.log(err);
       return {status: false, message: err};
     });
 };
 
-module.exports.getUserProfile = getUserProfile;
+module.exports.getUsersPublicDetails = getUsersPublicDetails;

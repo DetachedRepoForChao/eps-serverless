@@ -110,6 +110,24 @@ app.get('/items/getUserPoints', function(req, res) {
   });
 });
 
+app.get('/items/usersPublicDetails', function(req, res) {
+  console.log('starting get usersPublicDetails');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlUser.getUsersPublicDetails()
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data.users});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.put('/items/userProfile', function(req, res) {
   console.log('starting put userProfile');
 });

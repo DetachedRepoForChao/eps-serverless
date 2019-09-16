@@ -36,7 +36,7 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
     }
   }
 
-  // public getUserAvatar(username: string): EntityUserAvatarModel {
+  // public getUser(username: string): EntityUserAvatarModel {
   public getCurrentUserAvatar() {
     const currentUserAvatar = this.getAll();
     return currentUserAvatar;
