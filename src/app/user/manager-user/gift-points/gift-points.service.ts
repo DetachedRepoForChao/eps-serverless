@@ -55,18 +55,6 @@ export class GiftPointsService {
     }
   };
 
-  // displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
-  // displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
-  // public leaderboardUsers: LeaderboardUser[] = [];
-  // public leaderboardUsersTop: LeaderboardUser[] = [];
-
-  // public leaderboardUsers: LeaderboardUser[];
-  // public leaderboardUsersTop: LeaderboardUser[];
-
-  // selection = new SelectionModel<LeaderboardUser>(true, []);
-  // dataSource = new MatTableDataSource<LeaderboardUser>();
-  // public currentUserLeaderboardRecord;
-
   constructor(private http: HttpClient,
               private globalVariableService: GlobalVariableService,
               private departmentService: DepartmentService,
@@ -127,33 +115,6 @@ export class GiftPointsService {
             observer.next(true);
             observer.complete();
 
-            /*this.resolveDepartmentEmployeeAvatars(departmentEmployees).subscribe(resolveResult => {
-              console.log(resolveResult);
-
-              this.departmentEmployees = departmentEmployees;
-              // observer.next(departmentEmployees);
-              // observer.complete();
-
-              this.dataSource.data = this.departmentEmployees;
-              console.log(`${functionFullName}: department employees data source`);
-
-              console.log(this.dataSource.data);
-              observer.next(true);
-              // debugger;
-              observer.complete();
-            });*/
-
-/*            this.departmentEmployees = departmentEmployees;
-            // observer.next(departmentEmployees);
-            // observer.complete();
-
-            this.dataSource.data = this.departmentEmployees;
-            console.log(`${functionFullName}: department employees data source`);
-
-            console.log(this.dataSource.data);
-            observer.next(true);
-            // debugger;
-            observer.complete();*/
 
           });
       } else {
@@ -165,40 +126,4 @@ export class GiftPointsService {
       // observer.complete();
     });
   }
-
-  /*resolveDepartmentEmployeeAvatars(departmentEmployees: DepartmentEmployee[]): Observable<any> {
-    const functionName = 'resolveDepartmentEmployeeAvatars';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      let departmentEmployeesNew: DepartmentEmployee[] = [];
-      const observables: Observable<any>[] = [];
-
-      for (let i = 0; i < departmentEmployees.length; i++) {
-        observables.push(this.avatarService.resolveAvatar(departmentEmployees[i]));
-      }
-
-      forkJoin(observables)
-        .subscribe(departmentEmployeeArray => {
-          /!*     console.log(`${functionFullName}: forkJoin`);
-               console.log(`${functionFullName}: leaderboardUserArray`);
-               console.log(leaderboardUserArray);*!/
-
-          departmentEmployeeArray.forEach(resolvedDepartmentEmployee => {
-            // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
-
-            departmentEmployeesNew = departmentEmployeesNew.concat(resolvedDepartmentEmployee);
-          });
-
-          // this.leaderboardUsersTop = leaderboardUsersNew.slice(0, 4);
-
-          // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
-        });
-
-
-      observer.next(true);
-      observer.complete();
-    });
-  }*/
 }

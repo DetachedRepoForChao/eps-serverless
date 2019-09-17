@@ -95,7 +95,7 @@ const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, a
             return {status: 404, message: 'Error updating user points'};
           } else {
             console.log(`${functionFullName}: User points updated successfully`);
-            return {status: 200, message: 'Success' };
+            return {status: 200, message: 'Success', newPointAmount: newAmount };
           }
         })
         .catch(err => {
@@ -143,9 +143,7 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
               } else {
                 console.log(`${functionFullName}: Successfully removed points from the point pool`);
                 console.log(result.message);
-
-                // Create new point removal transaction
-                //newPointsTransaction('Remove', data.sourceUserId, data.targetUserId, data.pointItemId, data.amount, data.description);
+                const newPointPoolAmount = result.newPointPoolAmount;
 
                 // Add points to employee
                 return addPointsToEmployee(sourceUserId, targetUserId, pointItemId, amount, description)
@@ -157,7 +155,9 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
                     } else {
                       console.log(`${functionFullName}: Successfully added points to the employee`);
                       console.log(result.message);
-                      return {status: 200, message: `Success: ${result.message}`};
+                      const newPointAmount = result.newPointAmount;
+
+                      return {status: 200, message: `Success: ${result.message}`, newPointPoolAmount: newPointPoolAmount, newPointAmount: newPointAmount};
                     }
                   })
                   .catch(err => {

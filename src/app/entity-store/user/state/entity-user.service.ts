@@ -68,7 +68,7 @@ export class EntityUserService {
     const data = {
       avatarUrl: avatarPath
     };
-    this.getAvatarFromStorage(data)
+    this.getAvatarFromStorage(data.avatarUrl)
       .subscribe((result: any) => {
         this.userStore.update((e) => e.username === username, {
           avatarPath: avatarPath,

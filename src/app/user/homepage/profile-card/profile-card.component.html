@@ -60,7 +60,9 @@
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-          <h4 class="mb-0" *ngIf="this.userLeaderboardRecord">{{this.userLeaderboardRecord.rank}}</h4>
+          <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
+            {{(leaderboardUsers$ | async).indexOf(entityUserQuery.getUser(globals.getUsername())[0]) + 1}}
+          </h4>
         </div>
       </div>
 
