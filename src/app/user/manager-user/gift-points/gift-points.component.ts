@@ -261,7 +261,7 @@ export class GiftPointsComponent implements OnInit {
         // pointItems$.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].userId, data.pointItemId, 'Test'));
       }
 
-      // if ()
+      // if (this.entityCurrentUserQuery)
 
 
 
