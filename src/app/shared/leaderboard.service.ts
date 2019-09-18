@@ -13,6 +13,8 @@ import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
 import {DepartmentService} from './department.service';
 import {AvatarService} from './avatar/avatar.service';
+import {EntityUserService} from '../entity-store/user/state/entity-user.service';
+import {EntityUserQuery} from '../entity-store/user/state/entity-user.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -61,7 +63,9 @@ export class LeaderboardService {
               private globalVariableService: GlobalVariableService,
               private departmentService: DepartmentService,
               private authService: AuthService,
-              private avatarService: AvatarService) { }
+              private avatarService: AvatarService,
+              private entityUserService: EntityUserService,
+              private entityUserQuery: EntityUserQuery) { }
 
   populateLeaderboardDataSource(leaderboardData): Observable<LeaderboardUser[]> {
     const functionName = 'populateLeaderboardDataSource';
@@ -136,37 +140,6 @@ export class LeaderboardService {
     });
   }
 
-/*  resolveLeaderboardAvatars(leaderboardUsers: LeaderboardUser[]) {
-    const functionName = 'resolveLeaderboardAvatars';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    let leaderboardUsersNew: LeaderboardUser[] = [];
-    const observables: Observable<any>[] = [];
-
-    for (let i = 0; i < leaderboardUsers.length; i++) {
-      observables.push(this.avatarService.resolveAvatar(leaderboardUsers[i]));
-    }
-
-    return forkJoin(observables)
-      .subscribe(leaderboardUserArray => {
-        /!*     console.log(`${functionFullName}: forkJoin`);
-             console.log(`${functionFullName}: leaderboardUserArray`);
-             console.log(leaderboardUserArray);*!/
-
-        leaderboardUserArray.forEach(resolvedLeaderboardUser => {
-          // const resolvedAvatarUrl = data['userAchievementProgress'].find(x => x.achievement_id === item['achievement'].id);
-
-          leaderboardUsersNew = leaderboardUsersNew.concat(resolvedLeaderboardUser);
-        });
-
-        // this.leaderboardUsersTop = leaderboardUsersNew.slice(0, 4);
-
-        // return {status: true, message: `${functionFullName}: resolvedAvatarUrls retrieved successfully`};
-      });
-
-  }*/
-
   getPointsLeaderboard(): Observable<any> {
     const functionName = 'getPointsLeaderboard';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -188,6 +161,39 @@ export class LeaderboardService {
         });
     });
   }
+
+/*  getPointsLeaderboard(): Observable<any> {
+    const functionName = 'getPointsLeaderboard';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      const users$ = this.entityUserQuery.selectAll({
+          filterBy: userEntity => userEntity.securityRole.Id === 1,
+      });
+
+      users$.subscribe(users => {
+        console.log(users);
+        observer.next(users);
+        observer.complete();
+      });
+
+
+      /!*this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/getPointsLeaderboard', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });*!/
+    });
+  }*/
 
   getUserPointsLeaderboardRecord(username: string): Observable<LeaderboardUser> {
     const functionName = 'getUserPointsLeaderboardRecord';
@@ -213,7 +219,7 @@ export class LeaderboardService {
                   position: res[i].position,
                   departmentId: res[i].departmentId,
                   points: res[i].points,
-                  avatarUrl: res[i].avatarUrl
+                  avatarUrl: res[i].avatarPath
                 };
 
                 const departmentName = (departmentList.find(department => department.Id === userData.departmentId)).Name;
@@ -248,7 +254,7 @@ export class LeaderboardService {
     });
   }
 
-  isUserInLeaderboardTop5(username: string): Observable<boolean> {
+/*  isUserInLeaderboardTop5(username: string): Observable<boolean> {
     const functionName = 'isUserInLeaderboardTop5';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -267,5 +273,5 @@ export class LeaderboardService {
     });
 
 
-  }
+  }*/
 }

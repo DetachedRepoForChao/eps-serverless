@@ -490,7 +490,7 @@ const acknowledgeAchievementComplete = function (achievementProgressId, userId) 
     .then(updateResult => {
       if (!updateResult) {
         console.log(`${functionFullName}: Something went wrong during the Achievement Progress Status update`);
-        return {status: false, message: 'Something went wrong during the Achievement Progress Status update.'};
+        return {status: false, message: 'Something went wrong during the Achievement Progress Status updateAvatar.'};
       } else {
         console.log(`${functionFullName}: Status updated successfully`);
         return {status: true, message: 'Status updated successfully'};

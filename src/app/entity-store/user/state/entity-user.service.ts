@@ -1,23 +1,24 @@
 import { UserStore } from './user.store';
 import { EntityUserQuery} from './entity-user.query';
-import { createEntityUserModel, EntityUserModel } from './entity-user.model';
+import { createEntityUserAvatarModel, EntityUserModel } from './entity-user.model';
 import { Injectable } from '@angular/core';
 import { VISIBILITY_FILTER } from '../filter/user-filter.model';
 import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
-import {API, Auth, Storage} from 'aws-amplify';
+import {API, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
+import {SecurityRole} from '../../../shared/securityrole.model';
+import {Department} from '../../../shared/department.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EntityUserService {
-
   componentName = 'entity-user.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
@@ -29,8 +30,7 @@ export class EntityUserService {
   };
 
   constructor(private userStore: UserStore,
-              private entityUserQuery: EntityUserQuery,
-              private globals: Globals,
+              private entityUserAvatarQuery: EntityUserQuery,
               private authService: AuthService) { }
 
   updateFilter(filter: VISIBILITY_FILTER) {
@@ -42,9 +42,15 @@ export class EntityUserService {
   }
 
 
+  complete({ username, avatarPath }: EntityUserModel) {
+    this.userStore.update(username, {
+      avatarPath
+    });
+  }
+
 
   add(username: string, avatarBase64String: string, avatarPath: string, avatarResolvedUrl: string) {
-    const userAvatar = createEntityUserModel({ username, avatarBase64String, avatarPath, avatarResolvedUrl });
+    const userAvatar = createEntityUserAvatarModel({ username, avatarBase64String, avatarPath, avatarResolvedUrl });
     this.userStore.add(userAvatar);
   }
 
@@ -58,50 +64,108 @@ export class EntityUserService {
     this.userStore.reset();
   }
 
-  update(avatarPath: string, avatarResolvedUrl: string) {
-    /*
+  updateAvatar(username: string, avatarPath: string) {
+    const data = {
+      avatarUrl: avatarPath
+    };
+    this.getAvatarFromStorage(data.avatarUrl)
+      .subscribe((result: any) => {
         this.userStore.update((e) => e.username === username, {
           avatarPath: avatarPath,
-          avatarResolvedUrl: avatarResolvedUrl
+          avatarResolvedUrl: result.avatarResolvedUrl
         });
-    */
-
-    /** Update All */
-    this.userStore.update(null, {
-      avatarPath: avatarPath,
-      avatarResolvedUrl: avatarResolvedUrl
-    });
+      });
   }
 
-  cacheCurrentUserAvatar() {
-    console.log(`Retrieving current user avatar`);
-    // this.userStore.setLoading(true);  // this is the initial state before doing anything
-    const request$ = this.getCurrentUserAvatar()
-      .pipe(tap((avatarResult: any) => {
+/*  cacheUsers() {
+    console.log(`Retrieving all user avatars`);
+    // this.userAvatarStore.setLoading(true);  // this is the initial state before doing anything
+    const request$ = this.getUserAvatars()
+      .pipe(tap((avatars: any) => {
         console.log(`caching:`);
-        console.log(avatarResult);
+        console.log(avatars);
 
-        this.getAvatarFromStorage(avatarResult)
-          .subscribe((result: any) => {
-            const username = result.username;
-            const avatarPath = result.avatarPath;
-            const avatarBase64String = '';
-            const avatarResolvedUrl = result.avatarResolvedUrl;
-            const avatar = createEntityUserModel({username, avatarBase64String, avatarPath, avatarResolvedUrl});
-            this.userStore.set([avatar]);
-            // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
+        const avatarsArray: EntityUserModel[] = [];
+        const observables: Observable<any>[] = [];
+        for (let i = 0; i < avatars.length; i++) {
+          observables.push(this.getAvatarFromStorage(avatars[i]));
+        }
+
+        forkJoin(observables)
+          .subscribe((obsResult: any) => {
+            for (let i = 0; i < obsResult.length; i++) {
+              const username = obsResult[i].username;
+              const avatarPath = obsResult[i].avatarPath;
+              const avatarBase64String = '';
+              const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
+              const avatar = createEntityUserAvatarModel({username, avatarBase64String, avatarPath, avatarResolvedUrl});
+              avatarsArray.push(avatar);
+            }
+
+            this.userAvatarStore.set(avatarsArray);
+            // this.userAvatarStore.setLoading(false);  // this gets set to false automatically after store is set
+          });
+      }));
+
+    return cacheable(this.userAvatarStore, request$);
+  }*/
+
+  cacheUsers() {
+    console.log(`Retrieving all users public details`);
+    // this.userAvatarStore.setLoading(true);  // this is the initial state before doing anything
+    const request$ = this.getUsers()
+      .pipe(tap((users: any) => {
+        console.log(`caching:`);
+        console.log(users);
+
+        const usersArray: EntityUserModel[] = [];
+        const observables: Observable<any>[] = [];
+        for (let i = 0; i < users.length; i++) {
+          observables.push(this.getAvatarFromStorage(users[i].avatarUrl));
+        }
+
+        forkJoin(observables)
+          .subscribe((obsResult: any) => {
+            for (let i = 0; i < obsResult.length; i++) {
+              const userId = users[i].id;
+              const username = users[i].username;
+              const firstName = users[i].firstName;
+              const lastName = users[i].lastName;
+              const middleName = users[i].middleName;
+              const position = users[i].position;
+              const points = users[i].points;
+              const birthdate = users[i].dateOfBirth;
+              const securityRole: SecurityRole = {
+                Id: users[i].securityRoleId,
+                Name: '',
+                Description: ''
+              };
+              const department: Department = {
+                Id: users[i].departmentId,
+                Name: ''
+              };
+              const avatarPath = users[i].avatarUrl;
+              const avatarBase64String = '';
+              const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
+              const avatar = createEntityUserAvatarModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
+                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl});
+              usersArray.push(avatar);
+            }
+
+            this.userStore.set(usersArray);
+            // this.userAvatarStore.setLoading(false);  // this gets set to false automatically after store is set
           });
       }));
 
     return cacheable(this.userStore, request$);
   }
 
-  getAvatarFromStorage(userAvatarData: any): Observable<any> {
+  getAvatarFromStorage(avatarUrl: string): Observable<any> {
     console.log('Getting item from storage');
 
     return new Observable<any>(observer => {
 
-      const split = userAvatarData.avatarUrl.split('/');
+      const split = avatarUrl.split('/');
       const level = split[0];
       let key;
       let identityId;
@@ -113,8 +177,6 @@ export class EntityUserService {
         identityId = split[1];
       }
 
-      // console.log(`avatar key: ${key}`);
-
       Storage.get(key, {
         level: level,
         identityId: identityId
@@ -122,8 +184,6 @@ export class EntityUserService {
         .then((result: string) => {
           console.log(result);
           const data = {
-            username: this.globals.getUsername(),
-            avatarPath: userAvatarData.avatarUrl,
             avatarResolvedUrl: result
           };
 
@@ -131,56 +191,83 @@ export class EntityUserService {
           observer.complete();
         })
         .catch(err => {
-          console.log(`Error retrieving url for ${userAvatarData.avatarUrl}`);
+          console.log(`Error retrieving url for ${avatarUrl}`);
           console.log(err);
           const data = {
-            username: this.globals.getUsername(),
-            avatarPath: userAvatarData.avatarUrl,
             avatarResolvedUrl: ''
           };
 
-          observer.next();
+          observer.next(data);
           observer.complete();
         });
     });
   }
 
-  getCurrentUserAvatar(): Observable<any> {
-    const functionName = 'getCurrentUserAvatar';
+  getUserAvatars(): Observable<any> {
+    const functionName = 'getUserAvatars';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    // const username = this.globals.getUsername();
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          // const userPicture = this.globals.getUserAttribute('picture');
-          Auth.currentUserInfo()
-            .then(userAttributes => {
-              const userPicture = userAttributes.picture;
-              if (userPicture) {
-                console.log(`${functionFullName}: user picture: ${userPicture}`);
-                const data = {
-                  status: true,
-                  avatarUrl: userPicture
-                };
-                observer.next(data);
-                observer.complete();
-              } else {
-                console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                const token = user.signInUserSession.idToken.jwtToken;
-                const myInit = this.myInit;
-                myInit.headers['Authorization'] = token;
-                // myInit['body'] = {username: username};
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
 
-                API.get(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
-                  console.log(`${functionFullName}: successfully retrieved data from API`);
-                  console.log(data);
-                  observer.next(data.data);
-                  observer.complete();
-                });
-              }
+          API.get(this.apiName, this.apiPath + '/getUserAvatars', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving user avatars data from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
             });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
+  }
+
+  getUsers(): Observable<any> {
+    const functionName = 'getUsers';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/usersPublicDetails', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            console.log(data.data);
+            observer.next(data.data);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving users details from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
         });
     });
   }

@@ -276,3 +276,35 @@ const getUserPoints = function (username) {
 };
 
 module.exports.getUserPoints = getUserPoints;
+
+
+
+const getUsersPublicDetails = function () {
+  const functionName = 'getUsersPublicDetails';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlUserModel.findAll({
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'dateOfBirth',
+      'securityRoleId', 'departmentId', 'avatarUrl'],
+    where: {
+      securityRoleId: [1, 2],
+    },
+  })
+    .then(usersPublicDetailsResult => {
+      if (!usersPublicDetailsResult) {
+        console.log(`${functionFullName}: No records found`);
+        return { status: false, message: 'No records found' };
+      } else {
+        console.log(`${functionFullName}: User records found`);
+        return  {status: true, users: usersPublicDetailsResult};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Error retrieving user records`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.getUsersPublicDetails = getUsersPublicDetails;

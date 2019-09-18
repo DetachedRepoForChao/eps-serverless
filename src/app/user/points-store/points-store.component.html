@@ -23,8 +23,8 @@
                                 <div class="container-img">
                                   <img [src]="row.imageResolvedUrl"/>
                                 </div>
-                                <a href= "file.html" onclick="return confirm ('Would you like to redeem this gift?')"> <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
-                                <div class="container-text2">{{row.description}}</div></a>
+                                <button mat=button (click)="openDialog()"> <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
+                                <div class="container-text2">{{row.description}}</div></button>
                             </div>
                           </div>
                         </div>

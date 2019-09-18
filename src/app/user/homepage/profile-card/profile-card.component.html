@@ -2,9 +2,9 @@
   <div class="card card-coin card-plain card-custom">
     <div class="card-header">
 
-<!--      <div *ngIf="(this.userQuery.selectLoading() | async) === false; else avatarLoading">-->
-      <div *ngIf="this.userQuery.getCurrentUserAvatar()[0]; else avatarLoading">
-        <img [src]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
+<!--      <div *ngIf="(this.currentUserQuery.selectLoading() | async) === false; else avatarLoading">-->
+      <div *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarLoading">
+        <img [src]="this.currentUserQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
              alt="Avatar"
              class="img-center img-fluid rounded-circle"
              id="avatar"
@@ -60,7 +60,9 @@
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-          <h4 class="mb-0" *ngIf="this.userLeaderboardRecord">{{this.userLeaderboardRecord.rank}}</h4>
+          <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
+            {{(leaderboardUsers$ | async).indexOf(entityUserQuery.getUser(globals.getUsername())[0]) + 1}}
+          </h4>
         </div>
       </div>
 
@@ -165,8 +167,8 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" *ngIf="this.userQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
+      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
+        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
       </div>
       <ng-template #avatarModalLoading>
 

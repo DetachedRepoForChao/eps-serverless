@@ -8,7 +8,7 @@
  *      file.
  *
  * The current setup is for so-called "evergreen" browsers; the last versions of browsers that
- * automatically update themselves. This includes Safari >= 10, Chrome >= 55 (including Opera),
+ * automatically updateAvatar themselves. This includes Safari >= 10, Chrome >= 55 (including Opera),
  * Edge >= 13 on the desktop, and iOS 10 and Chrome on mobile.
  *
  * Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html
@@ -79,3 +79,6 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
  * APPLICATION IMPORTS
  */
 (window as any).global = window;
+(window as any).process = {
+    env: {DEBUG: undefined},
+};

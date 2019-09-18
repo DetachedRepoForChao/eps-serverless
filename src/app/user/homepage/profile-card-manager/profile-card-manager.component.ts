@@ -11,9 +11,9 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 // import {AchievementService} from '../../../shared/achievement/achievement.service';
-import {UserStore} from '../../../entity-store/user/state/user.store';
-import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
-import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {UserService} from '../../../shared/user.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
@@ -45,9 +45,9 @@ export class ProfileCardManagerComponent implements OnInit {
               private achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               private userService: UserService,
-              private userStore: UserStore,
-              public userQuery: EntityUserQuery,
-              private entityUserService: EntityUserService) { }
+              private userStore: CurrentUserStore,
+              public userQuery: EntityCurrentUserQuery,
+              private entityUserService: EntityCurrentUserService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -58,7 +58,7 @@ export class ProfileCardManagerComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('profile-card-manager-spinner');
 
-    this.entityUserService.cacheCurrentUserAvatar().subscribe();
+    this.entityUserService.cacheCurrentUser().subscribe();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()

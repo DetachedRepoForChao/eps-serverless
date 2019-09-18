@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { UserAvatarFilterModel, VISIBILITY_FILTER } from './user-avatar-filter.model';
+import { CurrentUserFilterModel, VISIBILITY_FILTER } from './current-user-filter.model';
 import { FormControl } from '@angular/forms';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
 @Component({
-  selector: 'app-user-avatar-filters',
-  templateUrl: './user-avatar-filters.component.html',
+  selector: 'app-user-filters',
+  templateUrl: './current-user-filters.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserAvatarFiltersComponent implements OnInit, OnDestroy {
+export class CurrentUserFiltersComponent implements OnInit, OnDestroy {
   @Input() active: VISIBILITY_FILTER;
-  @Input() filters: UserAvatarFilterModel[];
+  @Input() filters: CurrentUserFilterModel[];
   @Output() update = new EventEmitter<VISIBILITY_FILTER>();
 
   control: FormControl;

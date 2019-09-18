@@ -4,8 +4,8 @@ import {GlobalVariableService} from '../../../shared/global-variable.service';
 import {Router} from '@angular/router';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
-import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {resetStores} from '@datorama/akita';
 // We're creating an empty "blackKit" variable to interact with the
@@ -27,8 +27,8 @@ export class NavigationComponent implements OnInit {
               private router: Router,
               private feedcardService: FeedcardService,
               private achievementService: AchievementService,
-              private entityUserAvatarService: EntityUserAvatarService,
-              private entityUserService: EntityUserService,
+              private entityUserAvatarService: EntityUserService,
+              private entityUserService: EntityCurrentUserService,
               private storeItemService: StoreItemService) { }
 
   ngOnInit() {

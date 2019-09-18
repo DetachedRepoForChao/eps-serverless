@@ -16,12 +16,15 @@ import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 // import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {UserService} from '../../../shared/user.service';
-import {UserStore} from '../../../entity-store/user/state/user.store';
-import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
-import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -38,6 +41,8 @@ export class ProfileCardComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
+  leaderboardUsers$: Observable<EntityUserModel[]>;
+  userLeaderboardRecord$;
   isCardLoading: boolean;
 
   constructor(private http: HttpClient,
@@ -50,10 +55,12 @@ export class ProfileCardComponent implements OnInit {
               private achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               private userService: UserService,
-              private userStore: UserStore,
-              public userQuery: EntityUserQuery,
+              private currentUserStore: CurrentUserStore,
+              public currentUserQuery: EntityCurrentUserQuery,
+              private entityCurrentUserService: EntityCurrentUserService,
+              private sanitizer: DomSanitizer,
               private entityUserService: EntityUserService,
-              private sanitizer: DomSanitizer) { }
+              private entityUserQuery: EntityUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -74,7 +81,7 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });*/
 
-    this.entityUserService.cacheCurrentUserAvatar().subscribe();
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()
@@ -88,16 +95,16 @@ export class ProfileCardComponent implements OnInit {
         });
     }
 
-    const observables: Observable<any>[] = [];
+    // const observables: Observable<any>[] = [];
 
 /*    for (let i = 0; i < leaderboardUsers.length; i++) {
       observables.push(this.avatarService.resolveAvatar(leaderboardUsers[i]));
     }*/
 
-    observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(this.globals.getUsername()));
+    // observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(this.globals.getUsername()));
     // observables.push(this.avatarService.refreshCurrentUserAvatar());
 
-    forkJoin(observables)
+/*    forkJoin(observables)
       .subscribe(obsResults => {
         console.log(`${functionFullName}: obsResults:`);
         console.log(obsResults);
@@ -118,7 +125,17 @@ export class ProfileCardComponent implements OnInit {
         this.isImageLoading = false;
         this.isCardLoading = false;
         this.spinner.hide('profile-card-spinner');
-      });
+      });*/
+
+    this.entityUserService.cacheUsers().subscribe();
+
+    this.leaderboardUsers$ = this.entityUserQuery.selectAll({
+      filterBy: userEntity => userEntity.securityRole.Id === 1,
+    });
+
+    this.isImageLoading = false;
+    this.isCardLoading = false;
+    this.spinner.hide('profile-card-spinner');
 
   }
 

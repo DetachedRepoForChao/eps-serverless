@@ -18,9 +18,11 @@ import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {GiftPointsService} from './gift-points.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
-import {UserAvatarStore} from '../../../entity-store/user-avatar/state/user-avatar.store';
-import {EntityUserAvatarQuery} from '../../../entity-store/user-avatar/state/entity-user-avatar.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {UserStore} from '../../../entity-store/user/state/user.store';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
+import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 
 export interface DepartmentEmployee {
   id: number;
@@ -47,7 +49,8 @@ export class GiftPointsComponent implements OnInit {
   // departmentEmployees = [];
   // department: Department;
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
-  selection = new SelectionModel<DepartmentEmployee>(true, []);
+  // selection = new SelectionModel<DepartmentEmployee>(true, []);
+  selection = new SelectionModel<EntityUserModel>(true, []);
   // dataSource = new MatTableDataSource<DepartmentEmployee>();
   pointItemList: PointItem[] = [];
   filteredPointItemList: PointItem[] = [];
@@ -57,6 +60,7 @@ export class GiftPointsComponent implements OnInit {
   coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
   coreValueButtonList: CoreValueButton[] = [];
   selectedPointItem: PointItem;
+  employees$: Observable<EntityUserModel[]>;
   isCardLoading: boolean;
 
   constructor(
@@ -71,9 +75,10 @@ export class GiftPointsComponent implements OnInit {
     private leaderboardService: LeaderboardService,
     private giftPointsService: GiftPointsService,
     private spinner: NgxSpinnerService,
-    private userAvatarService: EntityUserAvatarService,
-    private userAvatarStore: UserAvatarStore,
-    private userAvatarQuery: EntityUserAvatarQuery) { }
+    private entityUserService: EntityUserService,
+    private userStore: UserStore,
+    private entityUserQuery: EntityUserQuery,
+    private entityCurrentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -123,11 +128,20 @@ export class GiftPointsComponent implements OnInit {
 
         this.filteredPointItemList = this.pointItemList;
 
-        this.giftPointsService.populateEmployeeDataSource().subscribe(() => {
-          console.log(`${functionFullName}: setting isCardLoading to false:`);
+        this.entityUserService.cacheUsers().subscribe(() => {
+          this.employees$ = this.entityUserQuery.selectAll({
+            filterBy: userEntity => userEntity.securityRole.Id === 1,
+          });
+
           this.isCardLoading = false;
           this.spinner.hide('gift-points-spinner');
         });
+
+/*        this.giftPointsService.populateEmployeeDataSource().subscribe(() => {
+          console.log(`${functionFullName}: setting isCardLoading to false:`);
+          this.isCardLoading = false;
+          this.spinner.hide('gift-points-spinner');
+        });*/
 
 /*        console.log(`${functionFullName}: setting isCardLoading to false:`);
         this.isCardLoading = false;
@@ -196,19 +210,19 @@ export class GiftPointsComponent implements OnInit {
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+/*  masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
       this.giftPointsService.dataSource.data.forEach(row => this.selection.select(row));
-  }
+  }*/
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: DepartmentEmployee): string {
+/*  checkboxLabel(row?: DepartmentEmployee): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
+  }*/
 
   pointItemOnSubmit(form: NgForm) {
     const functionName = 'pointItemOnSubmit';
@@ -223,36 +237,47 @@ export class GiftPointsComponent implements OnInit {
 
     if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
     } else {
-/*      console.log('form.value[selectedPointItem].id: ' + form.value['selectedPointItem'].Id);
-      console.log('form.value[selectedPointItem].name: ' + form.value['selectedPointItem'].Name);
-      console.log('form.value[selectedPointItem].amount: ' + form.value['selectedPointItem'].Amount);*/
       const data = {
-        // sourceUserId: +localStorage.getItem('userId'),
-/*        pointItemId: form.value['selectedPointItem'].Id,
-        amount: form.value['selectedPointItem'].Amount,*/
         pointItemId: this.selectedPointItem.Id,
         amount: this.selectedPointItem.Amount,
       };
 
-      const pointItems: any[] = [];
+      // Create an object array to send to the backend API in one bulk operation
+      const userPointObjectArray = [];
+      let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
+      const pointItems$: Observable<any>[] = [];
       for ( let i = 0; i < this.selection.selected.length; i++) {
         console.log('gifting points to: ' + this.selection.selected[i].email);
-        pointItems.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].id, data.pointItemId, 'Test'));
+        totalAmount = totalAmount + this.selectedPointItem.Amount;
+
+        const userPointObject = {
+          userId: this.selection.selected[i].userId,
+          pointItemId: this.selectedPointItem.Id,
+          amount: this.selectedPointItem.Amount,
+          description: 'Test',
+        };
+
+        userPointObjectArray.push(userPointObject);
+        // pointItems$.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].userId, data.pointItemId, 'Test'));
       }
 
-      forkJoin(pointItems)
+      // if ()
+
+
+
+      forkJoin(pointItems$)
         .subscribe(dataArray => {
           console.log(`${functionFullName}: forkJoin dataArray:`);
           console.log(dataArray);
-          this.giftPointsService.populateEmployeeDataSource().subscribe();
-          this.pointItemService.storeRemainingPointPool().subscribe();
-          this.leaderboardService.getPointsLeaderboard()
+          // this.giftPointsService.populateEmployeeDataSource().subscribe();
+          // this.pointItemService.storeRemainingPointPool().subscribe();
+/*          this.leaderboardService.getPointsLeaderboard()
             .subscribe(leaderboardData => {
               console.log(`${functionFullName}: populating leaderboard data`);
               this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
                 console.log(`${functionFullName}: leaderboard data populated`);
               });
-            });
+            });*/
           this.resetForm(form);
           // const userId: number = +localStorage.getItem('userId');
           // this.achievementService.incrementAchievementGiftFirstPointItem(userId)
