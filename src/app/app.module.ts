@@ -5,12 +5,14 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { AchievementComponent} from './shared/achievement/achievement.component';
+import { ConfirmationDialogComponent } from './user/components/shared/confirmation-dialog/confirmation-dialog.component'
 // routes
 import { appRoutes } from './app.routes';
 import { UserComponent } from './user/user.component';
@@ -69,8 +71,11 @@ import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
-import { UserFiltersComponent } from './entity-store/user/filter/user-filters.component';
-import { CurrentUserFiltersComponent} from './entity-store/current-user/filter/current-user-filters.component';
+import { UserAvatarFiltersComponent } from './entity-store/user-avatar/filter/user-avatar-filters.component';
+import { UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
+import { UserAvatarsComponent} from './entity-store/user-avatar/user-avatars.component';
+import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.component';
+import { UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
 import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
@@ -108,6 +113,7 @@ akitaConfig({
     NotesCardComponent,
     FooterComponent,
     FeedComponent,
+    ConfirmationDialogComponent,
     // WebsocketComponent,
     ImageGalleryComponent,
     KeysPipe,
@@ -117,8 +123,11 @@ akitaConfig({
     AwesomeTooltipDirectiveDirective,
     AwesomeTooltipComponent,
     PointsStoreComponent,
+    UserAvatarFiltersComponent,
+    UserAvatarPageComponent,
+    UserAvatarsComponent,
+    UserAvatarComponent,
     UserFiltersComponent,
-    CurrentUserFiltersComponent,
     AchievementFiltersComponent,
     AvatarComponent,
     ImageCropperComponent,
@@ -149,6 +158,7 @@ akitaConfig({
     MatToolbarModule,
     MatCardModule,
     MatButtonModule,
+    MatDialogModule,
     MatInputModule,
     MatListModule,
     AmplifyAngularModule,
@@ -179,6 +189,8 @@ akitaConfig({
     { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AwesomeTooltipComponent]
+  entryComponents: [AwesomeTooltipComponent,
+    ConfirmationDialogComponent
+  ]
 })
 export class AppModule { }

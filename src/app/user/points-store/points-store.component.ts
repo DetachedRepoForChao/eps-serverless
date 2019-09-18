@@ -7,6 +7,8 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
+import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
+import {MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-points-store',
@@ -21,6 +23,7 @@ export class PointsStoreComponent implements OnInit {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
       'Content-Type': 'application/json;charset=UTF-8'
+      
     }
   };
 
@@ -30,7 +33,14 @@ export class PointsStoreComponent implements OnInit {
 
   constructor(private storeItemStore: StoreItemStore,
               private storeItemQuery: StoreItemQuery,
-              private storeItemService: StoreItemService) { }
+              private storeItemService: StoreItemService,
+              public dialog: MatDialog ) {}
+  openDialog(): void {
+  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+  width: '350px',
+  data: "Would you like to redeem this gift?"
+        });
+      }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
