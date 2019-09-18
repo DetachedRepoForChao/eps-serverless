@@ -13,9 +13,9 @@ import {LeaderboardUser} from '../leaderboard.service';
 import {FeedcardService} from '../feedcard/feedcard.service';
 import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
 import {Globals} from '../../globals';
-import {EntityUserAvatarService} from '../../entity-store/user-avatar/state/entity-user-avatar.service';
-import {EntityUserAvatarModel} from '../../entity-store/user-avatar/state/entity-user-avatar.model';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
+import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
+import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {RequestMethod} from '@angular/http';
 
 export interface UserAvatarRelationship {
@@ -52,8 +52,8 @@ export class AvatarService implements OnInit {
               private imageService: ImageService,
               private authService: AuthService,
               private globals: Globals,
-              private entityUserService: EntityUserService,
-              private entityUserAvatarService: EntityUserAvatarService
+              private entityCurrentUserService: EntityCurrentUserService,
+              private entityUserService: EntityUserService
               ) { }
 
   ngOnInit(): void {
@@ -110,7 +110,7 @@ export class AvatarService implements OnInit {
           // const userPicture = this.globals.getUserAttribute('picture');
           Auth.currentUserInfo()
             .then(userAttributes => {
-              const userPicture = userAttributes.picture;
+              const userPicture = userAttributes.attributes['picture'];
               if (userPicture) {
                 console.log(`${functionFullName}: user picture: ${userPicture}`);
                 const data = {
@@ -126,7 +126,7 @@ export class AvatarService implements OnInit {
                 myInit.headers['Authorization'] = token;
                 // myInit['body'] = {username: username};
 
-                API.get(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
+                API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(data => {
                   console.log(`${functionFullName}: successfully retrieved data from API`);
                   console.log(data);
                   observer.next(data.data);
@@ -154,7 +154,7 @@ export class AvatarService implements OnInit {
                 myInit.headers['Authorization'] = token;
                 myInit['body'] = {username: username};
 
-                API.post(this.apiName, this.apiPath + '/getCurrentUserAvatar', myInit).then(data => {
+                API.post(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(data => {
                   console.log(`${functionFullName}: successfully retrieved data from API`);
                   console.log(data);
                   observer.next(data.data);
@@ -317,12 +317,20 @@ export class AvatarService implements OnInit {
           if (res.status !== false) {
             this.userAvatarPath = res.avatarUrl;
             // this.userAvatarPath = this.globals.getUserAttribute('picture');
+            const avatarPath = res.avatarUrl;
+            const username = this.globals.getUsername();
 
             const level = res.avatarUrl.split('/')[0];
             const cognitoIdentityId = res.avatarUrl.split('/')[1];
             const key = res.avatarUrl.split('/')[2];
 
-            Storage.get(key, {
+            this.entityCurrentUserService.updateAvatar(avatarPath);
+            this.entityUserService.updateAvatar(username, avatarPath);
+
+            observer.next(true);
+            observer.complete();
+
+/*            Storage.get(key, {
               level: level,
               identityId: cognitoIdentityId
             })
@@ -332,23 +340,65 @@ export class AvatarService implements OnInit {
 
                 this.userAvatarUrl = resultUrl;
 
-                const username = this.globals.getUsername();
-                const avatarPath = res.avatarUrl;
+
                 const avatarResolvedUrl = resultUrl;
                 const avatarBase64String = '';
 
-                this.entityUserService.update(avatarPath, avatarResolvedUrl);
-                this.entityUserAvatarService.update(username, avatarPath, avatarResolvedUrl);
+                this.entityCurrentUserService.updateAvatar(avatarPath, avatarResolvedUrl);
+                this.entityUserService.updateAvatar(username, avatarPath, avatarResolvedUrl);
 
                 observer.next(true);
                 observer.complete();
 
-/*                this.cacheUserAvatarRelationship(userAvatarHashEntry).subscribe(() => {
+/!*                this.cacheUserAvatarRelationship(userAvatarHashEntry).subscribe(() => {
                   observer.next(true);
                   observer.complete();
-                });*/
-              });
+                });*!/
+              });*/
           }
+        });
+    });
+  }
+
+  getAvatarFromStorage(avatarUrl: string): Observable<any> {
+    console.log('Getting item from storage');
+
+    return new Observable<any>(observer => {
+
+      const split = avatarUrl.split('/');
+      const level = split[0];
+      let key;
+      let identityId;
+      if (level === 'public') {
+        key = split.slice(1, split.length).join('/');
+
+      } else {
+        key = split.slice(2, split.length).join('/');
+        identityId = split[1];
+      }
+
+      Storage.get(key, {
+        level: level,
+        identityId: identityId
+      })
+        .then((result: string) => {
+          console.log(result);
+          const data = {
+            avatarResolvedUrl: result
+          };
+
+          observer.next(data);
+          observer.complete();
+        })
+        .catch(err => {
+          console.log(`Error retrieving url for ${avatarUrl}`);
+          console.log(err);
+          const data = {
+            avatarResolvedUrl: ''
+          };
+
+          observer.next(data);
+          observer.complete();
         });
     });
   }

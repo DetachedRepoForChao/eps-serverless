@@ -12,9 +12,12 @@ import {Storage} from 'aws-amplify';
 import {ImageService} from '../../../shared/image.service';
 import {forkJoin, Observable} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {EntityUserAvatarService} from '../../../entity-store/user-avatar/state/entity-user-avatar.service';
-import {UserAvatarStore} from '../../../entity-store/user-avatar/state/user-avatar.store';
-import {EntityUserAvatarQuery} from '../../../entity-store/user-avatar/state/entity-user-avatar.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {UserStore} from '../../../entity-store/user/state/user.store';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
+import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
+import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -38,9 +41,8 @@ export class LeaderboardCardComponent implements OnInit {
 
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
-  avatarList: string[] = [];
-  departments: Department[] = [];
 
+  leaderboardUsers$: Observable<EntityUserModel[]>;
   selectedRow;
 
   constructor(public leaderboardService: LeaderboardService,
@@ -49,9 +51,11 @@ export class LeaderboardCardComponent implements OnInit {
               private departmentService: DepartmentService,
               private imageService: ImageService,
               private spinner: NgxSpinnerService,
-              private userAvatarService: EntityUserAvatarService,
-              private userAvatarStore: UserAvatarStore,
-              private userAvatarQuery: EntityUserAvatarQuery) { }
+              private entityUserService: EntityUserService,
+              private userStore: UserStore,
+              private entityUserQuery: EntityUserQuery,
+              public achievementService: AchievementService,
+              public achievementQuery: AchievementQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -63,8 +67,15 @@ export class LeaderboardCardComponent implements OnInit {
     this.spinner.show('leaderboard-card-spinner');
     this.spinner.show('avatar-loading-spinner');
 
-    this.userAvatarService.cacheUserAvatars().subscribe();
-    this.leaderboardService.getPointsLeaderboard()
+    this.entityUserService.cacheUsers().subscribe(() => {
+      this.leaderboardUsers$ = this.entityUserQuery.selectAll({
+        filterBy: userEntity => userEntity.securityRole.Id === 1,
+      });
+
+      this.isCardLoading = false;
+    });
+
+    /*this.leaderboardService.getPointsLeaderboard()
       .subscribe(result => {
         this.isCardLoading = true;
         console.log(`${functionFullName}: showing leaderboard-card-spinner`);
@@ -76,7 +87,7 @@ export class LeaderboardCardComponent implements OnInit {
           this.isCardLoading = false;
           this.spinner.hide('leaderboard-card-spinner');
         });
-      });
+      });*/
 
 
     $(function () {
@@ -90,5 +101,29 @@ export class LeaderboardCardComponent implements OnInit {
 
   showAvatarLoadingSpinner() {
     this.spinner.show('avatar-loading-spinner');
+  }
+
+  test1() {
+    this.achievementService.cacheAchievements().subscribe();
+  }
+
+  test2() {
+    console.log('achievement family');
+    console.log(this.achievementQuery.getAchievementFamily('SignIn'));
+    console.log('get all');
+    console.log(this.achievementQuery.getAll());
+    console.log('filtered achievements');
+    this.achievementQuery.filterAchievements().subscribe(result => console.log(result));
+    console.log('completed');
+    console.log(this.achievementQuery.getCompletedAchievements());
+    console.log('user query select all');
+    const users$ = this.entityUserQuery.selectAll({
+      filterBy: userEntity => userEntity.securityRole.Id === 1,
+    });
+
+    users$.subscribe(users => {
+      console.log(users);
+    });
+    // console.log(this.achievementQuery.filterAchievements());
   }
 }

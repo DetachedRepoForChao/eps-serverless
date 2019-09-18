@@ -110,6 +110,24 @@ app.get('/items/getUserPoints', function(req, res) {
   });
 });
 
+app.get('/items/usersPublicDetails', function(req, res) {
+  console.log('starting get usersPublicDetails');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlUser.getUsersPublicDetails()
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data.users});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.put('/items/userProfile', function(req, res) {
   console.log('starting put userProfile');
 });
@@ -305,10 +323,10 @@ app.post('/items/incrementAchievement', function(req, res) {
       ctrlUser.getUserProfile(username)
         .then(result => {
           const userId = result.user.id;
-          const achievementName = req.body.achievementName;
-          ctrlAchievementLogic.incrementAchievement(achievementName, userId)
+          const achievementFamily = req.body.achievementFamily;
+          ctrlAchievementLogic.incrementAchievement(achievementFamily, userId)
             .then(data => {
-              res.json({status: 'post call succeed!', data: data.message});
+              res.json({status: 'post call succeed!', data: data});
             })
             .catch(err => {
               res.json({status: 'post call failed!', error: err});
@@ -490,8 +508,8 @@ app.post('/items/getLikesByPostIds', function(req, res) {
 });
 
 // Avatar Routes
-app.get('/items/getCurrentUserAvatar', function(req, res) {
-  console.log('starting post getCurrentUserAvatar');
+app.get('/items/getCurrentUser', function(req, res) {
+  console.log('starting post getCurrentUser');
 
   // const userId = req.body.userId;
   const token = req.headers.authorization;

@@ -4,8 +4,8 @@ import {AvatarService} from './avatar.service';
 import {LeaderboardService} from '../leaderboard.service';
 import {Globals} from '../../globals';
 import {FeedcardService} from '../feedcard/feedcard.service';
-import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
-import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
+import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
+import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 
 @Component({
   selector: 'app-avatar',
@@ -31,8 +31,8 @@ export class AvatarComponent implements OnInit {
               private leaderboardService: LeaderboardService,
               private globals: Globals,
               private feedcardService: FeedcardService,
-              private entityUserService: EntityUserService,
-              public userQuery: EntityUserQuery) { }
+              private entityCurrentUserService: EntityCurrentUserService,
+              public userQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     this.croppedImageToShow = this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl;
@@ -64,7 +64,7 @@ export class AvatarComponent implements OnInit {
     this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
       console.log(`${functionFullName}: saveResult: ${saveResult}`);
       if (saveResult === true) {
-        this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
+/*        this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
           console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
           if (isTop5Result === true) {
             console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
@@ -76,7 +76,7 @@ export class AvatarComponent implements OnInit {
                 });
               });
           }
-        });
+        });*/
 
         this.feedcardService.refreshPointTransactionAvatars();
 
@@ -125,7 +125,7 @@ export class AvatarComponent implements OnInit {
           console.log(base64data);
           console.log(data.avatarUrl);
           currentFn.avatarUrl = base64data.toString();
-          currentFn.entityUserService.update(data.avatarUrl, base64data.toString());
+          currentFn.entityCurrentUserService.updateAvatar(data.avatarUrl);
           currentFn.avatarService.saveUserAvatar(data.result).subscribe();
         };
       });

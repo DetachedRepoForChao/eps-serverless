@@ -197,7 +197,7 @@ export class AchievementService {
     return filteredList;
   }
 
-  incrementAchievement(achievementName: string): Observable<any> {
+  incrementAchievement(achievementFamily: string): Observable<any> {
     const functionName = 'incrementAchievement';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -209,7 +209,7 @@ export class AchievementService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
           myInit['body'] = {
-            achievementName: achievementName
+            achievementFamily: achievementFamily
           };
 
           API.post(this.apiName, this.apiPath + '/incrementAchievement' , myInit).then(data => {

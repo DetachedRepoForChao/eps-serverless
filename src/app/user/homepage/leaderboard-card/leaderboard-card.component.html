@@ -4,19 +4,19 @@
       <img src="../../../../assets/img/trophy2.svg" class="img-center img-fluid"/>
     </div>
     <div class="card-body" *ngIf="!isCardLoading; else leaderboardCardLoading">
-<!--    <div class="card-body">-->
-<!--
-      <ngx-spinner *ngIf="isCardLoading"
-        name="leaderboard-card-spinner"
-        [fullScreen]="false"
-        bdColor="rgba(51,51,51,0.8)"
-        size="medium"
-        color="#fff"
-        type="pacman"
-      >
-        <p style="font-size: 20px; color: white">Loading...</p>
-      </ngx-spinner>
--->
+      <!--    <div class="card-body">-->
+      <!--
+            <ngx-spinner *ngIf="isCardLoading"
+              name="leaderboard-card-spinner"
+              [fullScreen]="false"
+              bdColor="rgba(51,51,51,0.8)"
+              size="medium"
+              color="#fff"
+              type="pacman"
+            >
+              <p style="font-size: 20px; color: white">Loading...</p>
+            </ngx-spinner>
+      -->
 
       <div class="row">
         <div class="col-md-12 text-center">
@@ -36,17 +36,16 @@
 
           </thead>
           <tbody>
-          <tr *ngFor="let user of this.leaderboardService.leaderboardUsersTop" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
+
+          <tr *ngFor="let user of (leaderboardUsers$ | async).slice(0, 4)" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
             <td *ngFor="let col of this.displayedColumns">
-<!--              <div *ngIf="col === 'avatar'" [appAwesomeTooltipDirective]="{'type': 'img', 'data': user[col]}"><img src="{{user[col]}}" class="img-row"/></div>-->
-<!--              <div *ngIf="col === 'avatar'" [appAwesomeTooltipDirective]="{'type': 'img', 'data': user[col]}">-->
               <div *ngIf="col === 'avatar'">
-                <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img src="{{user.avatarResolvedUrl}}" class="img-row"/>
                 </div>
               </div>
-              <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>
-              <div *ngIf="col === 'name'">{{user[col]}}</div>
+              <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>
+              <div *ngIf="col === 'name'">{{user['firstName'] + ' ' + user['lastName']}}</div>
               <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
 
             </td>
@@ -73,8 +72,8 @@
                     <div class="card card-coin card-plain maxheight">
                       <div class="card-header">
 
-                        <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else selectedAvatarLoading">
-                          <img src="{{(userAvatarQuery.getUserAvatar(selectedRow.username))[0].avatarResolvedUrl}}"
+                        <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
+                          <img src="{{(entityUserQuery.getUser(selectedRow.username))[0].avatarResolvedUrl}}"
                                alt="Place image title"
                                class="img-center img-fluid rounded-circle"
                                id="avatar">
@@ -128,6 +127,8 @@
     </div>
     <div class="card-footer text-center">
       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#leaderboardModal">More</button>
+      <!--      <button type="button" class="btn btn-success" (click)="test1()">Test1</button>-->
+      <button type="button" class="btn btn-success" (click)="test2()">Test2</button>
     </div>
   </div>
 </div>
@@ -177,17 +178,17 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of this.leaderboardService.leaderboardUsers">
+          <tr *ngFor="let user of (leaderboardUsers$ | async)">
             <td *ngFor="let col of this.displayedColumnsAll">
-<!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>-->
+              <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>-->
               <div *ngIf="col === 'avatar'">
-                <div *ngIf="(userAvatarQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{(userAvatarQuery.getUserAvatar(user.username))[0].avatarResolvedUrl}}" class="img-row"/>
+                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img src="{{user.avatarResolvedUrl}}" class="img-row"/>
                 </div>
               </div>
-              <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div>
-              <div *ngIf="col === 'name'">{{user[col]}}</div>
-              <div *ngIf="col === 'points'">{{user[col]}}</div>
+              <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>
+              <div *ngIf="col === 'name'">{{user['firstName'] + ' ' + user['lastName']}}</div>
+              <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
               <div *ngIf="col === 'username'">{{user[col]}}</div>
               <div *ngIf="col === 'email'">{{user[col]}}</div>
               <div *ngIf="col === 'department'">{{user[col]}}</div>

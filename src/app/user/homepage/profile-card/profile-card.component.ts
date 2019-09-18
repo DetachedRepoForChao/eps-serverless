@@ -14,12 +14,17 @@ import * as AWS from 'aws-sdk/global';
 import * as S3 from 'aws-sdk/clients/s3';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {AchievementService} from '../../../shared/achievement/achievement.service';
+// import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {UserService} from '../../../shared/user.service';
-import {UserStore} from '../../../entity-store/user/state/user.store';
-import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
-import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
+import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -36,21 +41,26 @@ export class ProfileCardComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
+  leaderboardUsers$: Observable<EntityUserModel[]>;
+  userLeaderboardRecord$;
   isCardLoading: boolean;
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
-              private avatarService: AvatarService,
+              // private avatarService: AvatarService,
               private globals: Globals,
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private achievementService: AchievementService,
+              public achievementQuery: AchievementQuery,
               private userService: UserService,
-              private userStore: UserStore,
-              public userQuery: EntityUserQuery,
+              private currentUserStore: CurrentUserStore,
+              public currentUserQuery: EntityCurrentUserQuery,
+              private entityCurrentUserService: EntityCurrentUserService,
+              private sanitizer: DomSanitizer,
               private entityUserService: EntityUserService,
-              private sanitizer: DomSanitizer) { }
+              private entityUserQuery: EntityUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -71,7 +81,7 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });*/
 
-    this.entityUserService.cacheCurrentUserAvatar().subscribe();
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()
@@ -85,16 +95,16 @@ export class ProfileCardComponent implements OnInit {
         });
     }
 
-    const observables: Observable<any>[] = [];
+    // const observables: Observable<any>[] = [];
 
 /*    for (let i = 0; i < leaderboardUsers.length; i++) {
       observables.push(this.avatarService.resolveAvatar(leaderboardUsers[i]));
     }*/
 
-    observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(this.globals.getUsername()));
-    observables.push(this.avatarService.refreshCurrentUserAvatar());
+    // observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(this.globals.getUsername()));
+    // observables.push(this.avatarService.refreshCurrentUserAvatar());
 
-    forkJoin(observables)
+/*    forkJoin(observables)
       .subscribe(obsResults => {
         console.log(`${functionFullName}: obsResults:`);
         console.log(obsResults);
@@ -115,7 +125,17 @@ export class ProfileCardComponent implements OnInit {
         this.isImageLoading = false;
         this.isCardLoading = false;
         this.spinner.hide('profile-card-spinner');
-      });
+      });*/
+
+    this.entityUserService.cacheUsers().subscribe();
+
+    this.leaderboardUsers$ = this.entityUserQuery.selectAll({
+      filterBy: userEntity => userEntity.securityRole.Id === 1,
+    });
+
+    this.isImageLoading = false;
+    this.isCardLoading = false;
+    this.spinner.hide('profile-card-spinner');
 
   }
 
@@ -128,7 +148,7 @@ export class ProfileCardComponent implements OnInit {
     console.log(event);
   }
 
-  onImageSelected(event) {
+/*  onImageSelected(event) {
     const functionName = 'onImageSelected';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -159,7 +179,7 @@ export class ProfileCardComponent implements OnInit {
       }
 
     });
-  }
+  }*/
 
   encode(data) {
     const str = data.reduce(function(a, b) { return a + String.fromCharCode(b); }, '');
@@ -213,21 +233,9 @@ export class ProfileCardComponent implements OnInit {
         console.log('Error');
         console.log(err);
       });*/
+  }
 
+  test() {
 
-
-    this.avatarService.generateRandomAvatar()
-      .subscribe((data: any) => {
-        const currentFn = this;
-        const reader = new FileReader();
-        reader.readAsDataURL(data.result);
-        reader.onloadend = function() {
-          const base64data = reader.result;
-          console.log(base64data);
-          console.log(data.avatarUrl);
-          currentFn.entityUserService.update(data.avatarUrl, base64data.toString());
-          currentFn.avatarService.saveUserAvatar(data.result).subscribe();
-        };
-      });
   }
 }

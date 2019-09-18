@@ -69,17 +69,21 @@ import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
-import { UserAvatarFiltersComponent } from './entity-store/user-avatar/filter/user-avatar-filters.component';
-import { UserAvatarPageComponent} from './entity-store/user-avatar/user-avatar-page/user-avatar-page.component';
-import { UserAvatarsComponent} from './entity-store/user-avatar/user-avatars.component';
-import { UserAvatarComponent} from './entity-store/user-avatar/user-avatar.component';
-import {UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
+import { UserFiltersComponent } from './entity-store/user/filter/user-filters.component';
+import { CurrentUserFiltersComponent} from './entity-store/current-user/filter/current-user-filters.component';
+import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
+import { PhonePipe } from './pipe/phone.pipe';
+import { PhoneMaskDirective } from './directives/phone-mask.directive';
+import { akitaConfig} from '@datorama/akita';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
+akitaConfig({
+  resettable: true
+});
 
 @NgModule({
   declarations: [
@@ -113,14 +117,14 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
     AwesomeTooltipDirectiveDirective,
     AwesomeTooltipComponent,
     PointsStoreComponent,
-    UserAvatarFiltersComponent,
-    UserAvatarPageComponent,
-    UserAvatarsComponent,
-    UserAvatarComponent,
     UserFiltersComponent,
+    CurrentUserFiltersComponent,
+    AchievementFiltersComponent,
     AvatarComponent,
     ImageCropperComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    PhonePipe,
+    PhoneMaskDirective
 
   ],
   imports: [
@@ -137,6 +141,7 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
     // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     // and `ping` is 120 (2 minutes).
     UserIdleModule.forRoot({idle: 600, timeout: 300, ping: 20}),
+    // UserIdleModule.forRoot({idle: 10, timeout: 10, ping: 5}),
     // SocketIoModule.forRoot(config)
     NgxImageGalleryModule,
     FlexLayoutModule,

@@ -56,7 +56,7 @@ const incrementAchievement = function(achievementFamily, userId) {
           return {status: false, message: result.message};
         } else {
           console.log(`${functionFullName}: Success incrementing generic achievement family ${achievementFamily} for user id ${userId}`);
-          return {status: true, message: 'Success incrementing generic achievement family'};
+          return {status: true, message: 'Success incrementing generic achievement family', achievementFamilyProgress: result.achievementFamilyProgress};
         }
       })
       .catch(err => {
@@ -120,14 +120,32 @@ const incrementGenericAchievement = function(achievementFamily, userId) {
   console.log(`${functionFullName}: Incrementing achievement family '${achievementFamily}' for user id ${userId}`);
 
   return ctrlAchievement.addPointsToAchievementFamilyProgress(achievementFamily, userId)
-    .then(result => {
-      if(result.status !== true) {
+    .then(addResult => {
+      if(addResult.status !== true) {
         console.log(`${functionFullName}: Something went wrong incrementing achievement progress`);
-        return {status: false, message: result.message};
+        return {status: false, message: addResult.message};
       } else {
         console.log(`${functionFullName}: Success incrementing achievement progress`);
-        console.log(result);
-        return {status: true, message: 'Success incrementing achievement progress'};
+        console.log(addResult);
+
+        // Get new achievement family progress to return
+        return ctrlAchievement.getAchievementFamilyProgress(achievementFamily, userId)
+          .then(getResult => {
+            if(getResult.status !== true) {
+              console.log(`${functionFullName}: Something went wrong retrieving achievement family progress`);
+              return {status: false, message: getResult.message};
+            } else {
+              console.log(`${functionFullName}: Success retrieving achievement family progress`);
+              console.log(getResult);
+
+              return {status: true, message: 'Success incrementing achievement progress', achievementFamilyProgress: getResult.achievementFamilyProgress};
+            }
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: Database error`);
+            console.log(err);
+            return {status: false, message: err};
+          });
       }
     })
     .catch(err => {

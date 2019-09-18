@@ -1,3 +1,7 @@
+
+
+
+/*
 .example-header-image {
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
   background-size: cover;
@@ -36,14 +40,12 @@
 
 }
 
-/*
 #gift-points {
   width: 600px;
   position: absolute;
   top: 500px;
   padding: 20px;
 }
-*/
 
 #register-user-container {
   width: 94%;
@@ -51,3 +53,4 @@
   padding-left: 3%;
   padding-right: 3%;
 }
+*/

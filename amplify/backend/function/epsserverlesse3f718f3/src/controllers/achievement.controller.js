@@ -456,7 +456,7 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
         console.log(`${functionFullName}: User / Achievement Family progress retrieved successfully`);
         console.log(achievementFamilyProgress);
 
-        return {status: true, achievementFamilyProgress: achievementFamilyProgress};
+        return {status: true, message: 'User / Achievement Family progress retrieved successfully', achievementFamilyProgress: achievementFamilyProgress};
         // const goalProgress = queryResult[0].goalProgress;
         // const achievementProgressId = queryResult[0].id;
         // const achievementId = queryResult[0].achievementId;
@@ -490,7 +490,7 @@ const acknowledgeAchievementComplete = function (achievementProgressId, userId) 
     .then(updateResult => {
       if (!updateResult) {
         console.log(`${functionFullName}: Something went wrong during the Achievement Progress Status update`);
-        return {status: false, message: 'Something went wrong during the Achievement Progress Status update.'};
+        return {status: false, message: 'Something went wrong during the Achievement Progress Status updateAvatar.'};
       } else {
         console.log(`${functionFullName}: Status updated successfully`);
         return {status: true, message: 'Status updated successfully'};
