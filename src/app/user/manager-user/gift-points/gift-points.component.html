@@ -54,7 +54,12 @@
             </div>
           </div>
         </div>
-
+        <!-- Search form -->
+        <form class="form">
+          <div class="form-control col-xs-4">
+            <input class="form-control" type="text" placeholder="Search Employee">
+          </div>
+        </form>
 
         <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)" class="form">
           <div class="row">
