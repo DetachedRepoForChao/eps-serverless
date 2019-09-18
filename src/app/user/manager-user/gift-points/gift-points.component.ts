@@ -22,6 +22,7 @@ import {EntityUserService} from '../../../entity-store/user/state/entity-user.se
 import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 
 export interface DepartmentEmployee {
   id: number;
@@ -76,7 +77,8 @@ export class GiftPointsComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private entityUserService: EntityUserService,
     private userStore: UserStore,
-    private entityUserQuery: EntityUserQuery) { }
+    private entityUserQuery: EntityUserQuery,
+    private entityCurrentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -240,11 +242,28 @@ export class GiftPointsComponent implements OnInit {
         amount: this.selectedPointItem.Amount,
       };
 
+      // Create an object array to send to the backend API in one bulk operation
+      const userPointObjectArray = [];
+      let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
       const pointItems$: Observable<any>[] = [];
       for ( let i = 0; i < this.selection.selected.length; i++) {
         console.log('gifting points to: ' + this.selection.selected[i].email);
-        pointItems$.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].userId, data.pointItemId, 'Test'));
+        totalAmount = totalAmount + this.selectedPointItem.Amount;
+
+        const userPointObject = {
+          userId: this.selection.selected[i].userId,
+          pointItemId: this.selectedPointItem.Id,
+          amount: this.selectedPointItem.Amount,
+          description: 'Test',
+        };
+
+        userPointObjectArray.push(userPointObject);
+        // pointItems$.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].userId, data.pointItemId, 'Test'));
       }
+
+      // if ()
+
+
 
       forkJoin(pointItems$)
         .subscribe(dataArray => {
