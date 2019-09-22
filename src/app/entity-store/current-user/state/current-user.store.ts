@@ -15,7 +15,7 @@ const initialState = {
   ui: { filter: VISIBILITY_FILTER.SHOW_ALL }
 };
 
-@StoreConfig({name: 'userStore'})
+@StoreConfig({name: 'currentUserStore'})
 @Injectable({
   providedIn: 'root'
 })

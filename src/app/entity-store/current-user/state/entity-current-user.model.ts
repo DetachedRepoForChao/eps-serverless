@@ -12,6 +12,7 @@ export type EntityCurrentUserModel = {
   birthdate: string;
   position: string;
   points: number;
+  pointsPool: number;
   securityRole: SecurityRole;
   department: Department;
   email: string;
@@ -23,9 +24,11 @@ export type EntityCurrentUserModel = {
   isCurrentUser: boolean;
 };
 
-export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, birthdate, position, points, securityRole,
-                                               department, email, phone, avatarBase64String, avatarPath, avatarResolvedUrl,
+export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, birthdate, position, points, pointsPool,
+                                               securityRole, department, email, phone, avatarBase64String, avatarPath, avatarResolvedUrl,
                                                isCurrentUser }: Partial<EntityCurrentUserModel>) {
+  console.log('creatingCurrentUserModel... pointsPool');
+  console.log(pointsPool);
 
   return {
     id: guid(),
@@ -37,6 +40,7 @@ export function createEntityCurrentUserModel({ userId, username, firstName, last
     birthdate,
     position,
     points,
+    pointsPool,
     securityRole,
     department,
     email,

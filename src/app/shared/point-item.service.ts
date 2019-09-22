@@ -59,8 +59,8 @@ export class PointItemService {
   }
 
 
-  giftPointsToEmployee(targetUserId: number, pointItemId: number, description: string): Observable<any> {
-    const functionName = 'giftPointsToEmployee';
+  giftPointsToEmployees(userPointObjectArray: any): Observable<any> {
+    const functionName = 'giftPointsToEmployees';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -72,14 +72,12 @@ export class PointItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            targetUserId: targetUserId,
-            pointItemId: pointItemId,
-            description: description
+            userPointObjectArray: userPointObjectArray
           };
 
-          console.log(`${functionFullName}: user ${this.globals.getUsername()} is awarding point item id ${pointItemId} to user id ${targetUserId}`);
+          // console.log(`${functionFullName}: user ${this.globals.getUsername()} is awarding point item id ${pointItemId} to user id ${targetUserId}`);
 
-          API.post(this.apiName, this.apiPath + '/giftPointsToEmployee', myInit).then(data => {
+          API.post(this.apiName, this.apiPath + '/giftPointsToEmployees', myInit).then(data => {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(data);
             observer.next(data.data);

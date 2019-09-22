@@ -61,7 +61,7 @@
           </div>
         </form>
 
-        <form #giftPointsForm="ngForm" (ngSubmit)="giftPointsForm.valid && pointItemOnSubmit(giftPointsForm)" class="form">
+        <form #giftPointsForm="ngForm"  class="form">
           <div class="row">
             <div class="col-lg" style="height: 100px; overflow-y: auto; overflow-x: hidden">
               <div class="form-check form-check-radio" *ngFor="let pointItem of filteredPointItemList">
@@ -74,7 +74,7 @@
             </div>
           </div>
           <div class="gift-points-container text-center">
-            <button type="submit" class="btn-lg btn-info btn-round">Award Points</button>
+            <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
           </div>
         </form>
 

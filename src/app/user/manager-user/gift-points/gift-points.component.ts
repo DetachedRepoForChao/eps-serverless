@@ -23,6 +23,7 @@ import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 
 export interface DepartmentEmployee {
   id: number;
@@ -62,6 +63,7 @@ export class GiftPointsComponent implements OnInit {
   selectedPointItem: PointItem;
   employees$: Observable<EntityUserModel[]>;
   isCardLoading: boolean;
+  formSubmitted = false;
 
   constructor(
     private departmentService: DepartmentService,
@@ -78,7 +80,8 @@ export class GiftPointsComponent implements OnInit {
     private entityUserService: EntityUserService,
     private userStore: UserStore,
     private entityUserQuery: EntityUserQuery,
-    private entityCurrentUserQuery: EntityCurrentUserQuery) { }
+    private entityCurrentUserQuery: EntityCurrentUserQuery,
+    private entityCurrentUserService: EntityCurrentUserService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -229,70 +232,69 @@ export class GiftPointsComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: this.selectedPointItem:`);
-    console.log(this.selectedPointItem);
+/*    if (this.formSubmitted === true) {
+      console.log(`${functionFullName}: Form already submitted. Stopping...`);
+    } else {*/
+      // this.formSubmitted = true;
+      console.log(`${functionFullName}: this.selectedPointItem:`);
+      console.log(this.selectedPointItem);
 
-    console.log(`${functionFullName}: this.selection.selected:`);
-    console.log(this.selection.selected);
+      console.log(`${functionFullName}: this.selection.selected:`);
+      console.log(this.selection.selected);
 
-    if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
-    } else {
-      const data = {
-        pointItemId: this.selectedPointItem.Id,
-        amount: this.selectedPointItem.Amount,
-      };
-
-      // Create an object array to send to the backend API in one bulk operation
-      const userPointObjectArray = [];
-      let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
-      const pointItems$: Observable<any>[] = [];
-      for ( let i = 0; i < this.selection.selected.length; i++) {
-        console.log('gifting points to: ' + this.selection.selected[i].email);
-        totalAmount = totalAmount + this.selectedPointItem.Amount;
-
-        const userPointObject = {
-          userId: this.selection.selected[i].userId,
+      if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
+      } else {
+        const data = {
           pointItemId: this.selectedPointItem.Id,
           amount: this.selectedPointItem.Amount,
-          description: 'Test',
         };
 
-        userPointObjectArray.push(userPointObject);
-        // pointItems$.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].userId, data.pointItemId, 'Test'));
+        // Create an object array to send to the backend API in one bulk operation
+        const userPointObjectArray = [];
+        let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
+        // const pointItems$: Observable<any>[] = [];
+        console.log('selected.length');
+        console.log(this.selection.selected.length);
+        for ( let i = 0; i < this.selection.selected.length; i++) {
+          console.log('gifting points to: ' + this.selection.selected[i].email);
+          totalAmount = totalAmount + this.selectedPointItem.Amount;
+
+          const userPointObject = {
+            userId: this.selection.selected[i].userId,
+            pointItemId: this.selectedPointItem.Id,
+            amount: this.selectedPointItem.Amount,
+            description: 'Test',
+          };
+
+          userPointObjectArray.push(userPointObject);
+          // pointItems$.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].userId, data.pointItemId, 'Test'));
+        }
+
+        // Check if the manager has enough points in his points pool to complete the transaction
+        this.entityCurrentUserQuery.getCurrentUser()
+          .subscribe(currentUser => {
+            if (totalAmount > currentUser[0].pointsPool) {
+              console.log('Not enough points in the points pool to complete transaction. Stopping...');
+            } else {
+              console.log('Sufficient points in the points pool to complete the transaction. Continuing...');
+              console.log(userPointObjectArray);
+              this.pointItemService.giftPointsToEmployees(userPointObjectArray)
+                .subscribe((giftPointsResult: any) => {
+                  console.log('giftPointsResult');
+                  console.log(giftPointsResult);
+                  const newPointPoolAmount = giftPointsResult.newPointPoolAmount;
+                  const resultObjectArray = giftPointsResult.resultObjectArray;
+                  this.entityCurrentUserService.updatePointPool(+newPointPoolAmount);
+                  for (let i = 0; i < resultObjectArray.length; i++) {
+                    this.entityUserService.updatePoints(+resultObjectArray[i].targetUserId, +resultObjectArray[i].newPointAmount);
+                  }
+                  // this.formSubmitted = false;
+                  // debugger;
+                });
+            }
+          }).unsubscribe();
       }
-
-      // if ()
-
-
-
-      forkJoin(pointItems$)
-        .subscribe(dataArray => {
-          console.log(`${functionFullName}: forkJoin dataArray:`);
-          console.log(dataArray);
-          // this.giftPointsService.populateEmployeeDataSource().subscribe();
-          // this.pointItemService.storeRemainingPointPool().subscribe();
-/*          this.leaderboardService.getPointsLeaderboard()
-            .subscribe(leaderboardData => {
-              console.log(`${functionFullName}: populating leaderboard data`);
-              this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
-                console.log(`${functionFullName}: leaderboard data populated`);
-              });
-            });*/
-          this.resetForm(form);
-          // const userId: number = +localStorage.getItem('userId');
-          // this.achievementService.incrementAchievementGiftFirstPointItem(userId)
-          this.achievementService.incrementAchievement('AwardPoint')
-            .subscribe((achievementResponse: any) => {
-              this.achievementService.getUserAchievements().subscribe();
-/*              if (achievementResponse.status !== false) {
-                // console.log('Gift First Point Item Successful');
-
-                // this.notifierService.notify('success', 'Congratulations! You just gave your first points!', 'THAT_NOTIFICATION_ID');
-
-              }*/
-            });
-        });
-    }
+    // }
   }
 
   toggleCoreValueButton(coreValue: string) {

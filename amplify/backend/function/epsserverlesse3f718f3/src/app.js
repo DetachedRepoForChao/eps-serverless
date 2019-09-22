@@ -387,8 +387,8 @@ app.get('/items/getPointItems', function(req, res) {
   });
 });
 
-app.post('/items/giftPointsToEmployee', function(req, res) {
-  console.log('starting post giftPointsToEmployee');
+app.post('/items/giftPointsToEmployees', function(req, res) {
+  console.log('starting post giftPointsToEmployees');
 
   //const sourceUserId = req.body.userId;
   //sourceUserId, targetUserId, pointItemId, description
@@ -401,10 +401,8 @@ app.post('/items/giftPointsToEmployee', function(req, res) {
       ctrlUser.getUserProfile(username)
         .then(result => {
           const sourceUserId = result.user.id;
-          const targetUserId = req.body.targetUserId;
-          const pointItemId = req.body.pointItemId;
-          const description = req.body.description;
-          ctrlPoints.giftPointsToEmployee(sourceUserId, targetUserId, pointItemId, description)
+          const userPointObjectArray = req.body.userPointObjectArray;
+          ctrlPoints.giftPointsToEmployees(sourceUserId, userPointObjectArray)
             .then(data => {
               res.json({status: 'post call succeed!', data: data});
             })
@@ -412,12 +410,10 @@ app.post('/items/giftPointsToEmployee', function(req, res) {
               res.json({status: 'post call failed!', error: err});
             });
         });
-
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
   });
-
 });
 
 // Point Pool Routes

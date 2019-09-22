@@ -41,4 +41,8 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
     const currentUserAvatar = this.getAll();
     return currentUserAvatar;
   }
+
+  public getCurrentUser() {
+    return this.selectAll();
+  }
 }
