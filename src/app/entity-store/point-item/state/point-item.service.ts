@@ -1,8 +1,8 @@
-import { StoreItemStore } from './store-item.store';
-import { StoreItemQuery} from './store-item.query';
-import { createStoreItemModel, StoreItemModel } from './store-item.model';
+import { PointItemStore } from './point-item.store';
+import { PointItemQuery} from './point-item.query';
+import { createPointItemModel, PointItemModel } from './point-item.model';
 import { Injectable } from '@angular/core';
-import { VISIBILITY_FILTER } from '../filter/store-item-filter.model';
+import { VISIBILITY_FILTER } from '../filter/point-item-filter.model';
 import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
@@ -17,9 +17,9 @@ import {store} from '@angular/core/src/render3';
 @Injectable({
   providedIn: 'root'
 })
-export class StoreItemService {
+export class PointItemService {
 
-  componentName = 'store-item.service';
+  componentName = 'point-item.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
   myInit = {
@@ -29,14 +29,14 @@ export class StoreItemService {
     }
   };
 
-  constructor(private storeItemStore: StoreItemStore,
-              private storeItemQuery: StoreItemQuery,
+  constructor(private pointItemStore: PointItemStore,
+              private pointItemQuery: PointItemQuery,
               private globals: Globals,
               private authService: AuthService) {
   }
 
   updateFilter(filter: VISIBILITY_FILTER) {
-    this.storeItemStore.update({
+    this.pointItemStore.update({
       ui: {
         filter
       }
@@ -44,9 +44,9 @@ export class StoreItemService {
   }
 
 
-  add(itemId: number, name: string, description: string, cost: number, imagePath: string) {
-    const storeItem = createStoreItemModel({itemId, name, description, cost, imagePath});
-    this.storeItemStore.add(storeItem);
+  add(itemId: number, name: string, description: string, amount: number, coreValues: string[]) {
+    const pointItemModel = createPointItemModel({itemId, name, description, amount, coreValues});
+    this.pointItemStore.add(pointItemModel);
   }
 
 
@@ -56,30 +56,30 @@ export class StoreItemService {
     console.log(`Start ${functionFullName}`);
 
     console.log(`${functionFullName}: delete ${id}`);
-    this.storeItemStore.remove(id);
+    this.pointItemStore.remove(id);
   }
 
   reset() {
-    this.storeItemStore.reset();
+    this.pointItemStore.reset();
   }
 
-  update(itemId: number, name: string, description: string, cost: number, imagePath: string) {
+  update(itemId: number, name: string, description: string, amount: number, coreValues: string[]) {
     const functionName = 'update';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
     console.log(`${functionFullName}: update ${name}`);
     /** Update All */
-    this.storeItemStore.update((e) => e.itemId === itemId, {
+    this.pointItemStore.update((e) => e.itemId === itemId, {
       name: name,
       description: description,
-      cost: cost,
-      imagePath: imagePath
+      amount: amount,
+      coreValues: coreValues
     });
   }
 
-  getStoreItems(): Observable<any> {
-    const functionName = 'getStoreItems';
+  getPointItems(): Observable<any> {
+    const functionName = 'getPointItems';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -97,7 +97,7 @@ export class StoreItemService {
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving user store items data from API`);
+              console.log(`${functionFullName}: error retrieving point items data from API`);
               console.log(err);
               observer.next(err);
               observer.complete();
@@ -112,69 +112,62 @@ export class StoreItemService {
     });
   }
 
-  resolveStoreItemImage(storeItemData: any): Observable<any> {
-    const functionName = 'resolveStoreItemImage';
+  awardPointsToEmployees(userPointObjectArray: any): Observable<any> {
+    const functionName = 'awardPointsToEmployees';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    // const key = storeItemData.avatarUrl.split('/')[1];
-    const key = storeItemData.imagePath;
-
     return new Observable<any>(observer => {
-      Storage.get(key, {
-        level: 'public'
-      })
-        .then((result: string) => {
-          console.log(result);
-          const data = {
-            itemId: storeItemData.id,
-            name: storeItemData.name,
-            description: storeItemData.description,
-            cost: storeItemData.cost,
-            imagePath: storeItemData.imagePath,
-            imageResolvedUrl: result
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            userPointObjectArray: userPointObjectArray
           };
 
-          observer.next(data);
-          observer.complete();
+          API.post(this.apiName, this.apiPath + '/giftPointsToEmployees', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
         });
     });
   }
 
-  cacheStoreItems() {
-    const functionName = 'cacheStoreItems';
+  cachePointItems() {
+    const functionName = 'cachePointItems';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const request$ = this.getStoreItems()
-      .pipe(tap((storeItems: any) => {
+    const request$ = this.getPointItems()
+      .pipe(tap((pointItems: any) => {
         console.log(`${functionFullName}: caching:`);
-        console.log(storeItems);
+        console.log(pointItems);
 
-        const storeItemsArray: StoreItemModel[] = [];
-        const observables: Observable<any>[] = [];
+        const pointItemsArray: PointItemModel[] = [];
 
-        for (let i = 0; i < storeItems.length; i++) {
-          observables.push(this.resolveStoreItemImage(storeItems[i]));
+        for (let i = 0; i < pointItems.length; i++) {
+          // We need to split the core values into an array of strings
+          const coreValues: string[] = pointItems[i].coreValues.split(';');
+          for (let j = 0; j < coreValues.length; j++) {
+            coreValues[j] = coreValues[j].trim();
+          }
+
+          const itemId = pointItems[i].id;
+          const name = pointItems[i].name;
+          const description = pointItems[i].description;
+          const amount = pointItems[i].amount;
+          const pointItemModel = createPointItemModel({itemId, name, description, amount, coreValues});
+          pointItemsArray.push(pointItemModel);
         }
 
-        forkJoin(observables)
-          .subscribe((obsResult: any) => {
-            for (let i = 0; i < obsResult.length; i++) {
-              const itemId = obsResult[i].itemId;
-              const name = obsResult[i].name;
-              const description = obsResult[i].description;
-              const cost = obsResult[i].cost;
-              const imagePath = obsResult[i].imagePath;
-              const imageResolvedUrl = obsResult[i].imageResolvedUrl;
-              const storeItem = createStoreItemModel({itemId, name, description, cost, imagePath, imageResolvedUrl});
-              storeItemsArray.push(storeItem);
-            }
-
-            this.storeItemStore.set(storeItemsArray);
-          });
+        this.pointItemStore.set(pointItemsArray);
       }));
 
-    return cacheable(this.storeItemStore, request$);
+    return cacheable(this.pointItemStore, request$);
   }
 }

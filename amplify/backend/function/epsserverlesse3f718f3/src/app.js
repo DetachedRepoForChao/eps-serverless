@@ -661,8 +661,8 @@ app.get('/items/getPointTransaction', function(req, res) {
 });
 
 // Store Item Routes
-app.get('/items/getStoreItems', function(req, res) {
-  console.log('starting get getStoreItems');
+app.get('/items/getPointItems', function(req, res) {
+  console.log('starting get getPointItems');
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
@@ -696,7 +696,7 @@ app.get('/items/getNotifications', function(req, res) {
   // const token = req.headers.authorization;
   // jwtVerify.parseToken(token, function(tokenResult) {
   //   if(tokenResult.message === 'Success') {
-  //     ctrlStoreItem.getStoreItems()
+  //     ctrlStoreItem.getPointItems()
   //       .then(data => {
   //         res.json({status: 'post call succeed!', data: data.storeItems});
   //       })

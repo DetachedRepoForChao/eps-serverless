@@ -19,6 +19,7 @@ import {AchievementService} from '../../../entity-store/achievement/state/achiev
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -57,7 +58,8 @@ export class LeaderboardCardComponent implements OnInit {
               private entityUserQuery: EntityUserQuery,
               public achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
-              public entityCurrentUserQuery: EntityCurrentUserQuery) { }
+              public entityCurrentUserQuery: EntityCurrentUserQuery,
+              private pointItemQuery: PointItemQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -132,6 +134,10 @@ export class LeaderboardCardComponent implements OnInit {
       console.log(currentUser);
     });
 
+    const pointItems$ = this.pointItemQuery.selectAll();
+    pointItems$.subscribe(pointItems => {
+      console.log(pointItems);
+    });
     // console.log(this.achievementQuery.filterAchievements());
   }
 }

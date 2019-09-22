@@ -45,4 +45,8 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
   public getCurrentUser() {
     return this.selectAll();
   }
+
+  public getCurrentUserPointsPool() {
+    return this.getAll()[0].pointsPool;
+  }
 }

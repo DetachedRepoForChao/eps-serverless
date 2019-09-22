@@ -64,10 +64,10 @@
         <form #giftPointsForm="ngForm"  class="form">
           <div class="row">
             <div class="col-lg" style="height: 100px; overflow-y: auto; overflow-x: hidden">
-              <div class="form-check form-check-radio" *ngFor="let pointItem of filteredPointItemList">
-                <label class="form-check-label" [ngStyle]="{color: pointItem.Filtered === true ? '#FF83F6' : '#f1f1f1' }" >
+              <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
+                <label class="form-check-label" [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }" >
                   <input class="form-check-input" type="radio" name="selectedPointItem" (click)="selectPointItem(pointItem)">
-                  {{pointItem.Amount}} pts - {{pointItem.Name}}
+                  {{pointItem.amount}} pts - {{pointItem.name}}
                   <span class="form-check-sign"></span>
                 </label>
               </div>
