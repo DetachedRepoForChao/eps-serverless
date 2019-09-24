@@ -18,6 +18,8 @@ import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.quer
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -55,7 +57,9 @@ export class LeaderboardCardComponent implements OnInit {
               private userStore: UserStore,
               private entityUserQuery: EntityUserQuery,
               public achievementService: AchievementService,
-              public achievementQuery: AchievementQuery) { }
+              public achievementQuery: AchievementQuery,
+              public entityCurrentUserQuery: EntityCurrentUserQuery,
+              private pointItemQuery: PointItemQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -123,6 +127,16 @@ export class LeaderboardCardComponent implements OnInit {
 
     users$.subscribe(users => {
       console.log(users);
+    });
+
+    const currentUser$ = this.entityCurrentUserQuery.selectAll();
+    currentUser$.subscribe(currentUser => {
+      console.log(currentUser);
+    });
+
+    const pointItems$ = this.pointItemQuery.selectAll();
+    pointItems$.subscribe(pointItems => {
+      console.log(pointItems);
     });
     // console.log(this.achievementQuery.filterAchievements());
   }

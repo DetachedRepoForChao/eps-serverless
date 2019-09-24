@@ -43,6 +43,7 @@ export class ProfileCardComponent implements OnInit {
   croppedImageToShow: any = '';
   leaderboardUsers$: Observable<EntityUserModel[]>;
   userLeaderboardRecord$;
+  currentUser$;
   isCardLoading: boolean;
 
   constructor(private http: HttpClient,
@@ -82,6 +83,7 @@ export class ProfileCardComponent implements OnInit {
     });*/
 
     this.entityCurrentUserService.cacheCurrentUser().subscribe();
+    this.currentUser$ = this.currentUserQuery.getCurrentUser();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()

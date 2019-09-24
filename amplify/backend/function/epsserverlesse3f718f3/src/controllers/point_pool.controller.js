@@ -16,13 +16,13 @@ const getRemainingPointPool = function (managerId) {
       managerId: managerId,
     }
   })
-    .then(pointPool => {
+    .then(pointPoolResult => {
       // console.log('pointPool: ');
       // console.log(pointPool);
-      if (!pointPool) {
+      if (!pointPoolResult) {
         return {status: 404, message: 'Point Pool record not found.'};
       } else {
-        return {status: 200, pointsRemaining: pointPool.pointsRemaining};
+        return {status: 200, pointsRemaining: pointPoolResult.pointsRemaining};
       }
     })
     .catch(err => {
