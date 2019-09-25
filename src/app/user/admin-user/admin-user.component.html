@@ -5,19 +5,28 @@
  <nav class="navbar navbar-expand-lg bg-primary">
   <div class="container">
     <a class="navbar-brand" >The Asbury Admin Dashboard</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" > 
+   
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
+       
+      
+      
       
 <!--      icon for logout-->
       </ul>
       <span class="navbar-text">
    
-       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#"></i>
+<!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
+       
+       
+       <button type="button" class="btn btn-danger btn-icon btn-round" (click)="onLogout()">
+          <i class="tim-icons icon-button-power" title="logoff"></i>
+        </button>
       </span>
     </div>
   </div>
@@ -26,7 +35,7 @@
 <br><br><br><br>
 
 <!--cards-->
-
+<!--card1-->
 
 <div class="container-fluid">
 	<div class="row">
@@ -52,7 +61,7 @@
 		
 		
 		
-		
+<!--card2-->		
 		
 		
 		<div class="col-md-4">
@@ -65,20 +74,44 @@
 				POINT
 					</h1>
 				</div>
-				<div class="card-footer2">
-					<!-- Large modal -->
+				<div class="card-footer2">		
+		<!-- Button trigger modal -->
+
+<!--
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Point</button>
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+ Modal 
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      ...
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Point</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
     </div>
   </div>
 </div>
+			
+-->
+			
+			
 				</div>
 			</div>
 		</div>
+		
+<!--card3-->		
+		
+		
+		
 		<div class="col-md-4">
 			<div class="card">
 				<h5 class="card-header3">
@@ -90,27 +123,62 @@
 					</h1>
 				</div>
 				<div class="card-footer3">
-					<!-- Large modal -->
+    
+   		<!-- Button trigger modal -->
+
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Items</button>
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Items </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
+<!--       form-->
+      
+      
+      <form>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputitems_id">ID</label>
+      <input type="ID" class="form-control" id="inputEmail4" placeholder="ID">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputitems_name">Name</label>
+      <input type="Name" class="form-control" id="inputitem_name" placeholder="Name">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputitems_Description">Description</label>
+    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+  </div>
+  <div class="form-group">
+    <label for="inputAddress2">Address 2</label>
+    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+  </div>
+
+ 
+</form>
+       
+       
+       
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
-      
-      
+    </div>
+  </div>
+</div>   
+       
+        
+         
+           
       
       
       
@@ -128,10 +196,7 @@
 			
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
-
+	
 
 
 

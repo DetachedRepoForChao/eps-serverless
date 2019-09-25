@@ -22,9 +22,12 @@ export class AdminUserComponent implements OnInit {
 
   }
 
-  onLogout() {
-    this.userService.deleteToken();
+ onLogout() {
+    this.userService.deleteToken();  
     localStorage.clear();
+//    resetStores();
     this.router.navigate(['/login']);
   }
 }
+
+
