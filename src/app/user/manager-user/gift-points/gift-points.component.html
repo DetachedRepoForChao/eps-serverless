@@ -54,13 +54,23 @@
             </div>
           </div>
         </div>
-        <!-- Search form -->
-        <form class="form">
-          <div class="form-control col-xs-4">
-            <input class="form-control" type="text" placeholder="Search Employee">
-          </div>
-        </form>
 
+        <!------- Search form -------->
+        <div class="form-row">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-6">
+        <form class="form">
+ 
+            <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee">
+      
+        </form>
+      </div>
+      <div class="col-md-3">
+        
+        <!------award points----->
+      </div>
+        </div>
         <form #giftPointsForm="ngForm"  class="form">
           <div class="row">
             <div class="col-lg" style="height: 100px; overflow-y: auto; overflow-x: hidden">
@@ -78,7 +88,7 @@
           </div>
         </form>
 
-
+          <!------User Table------->
         <table class="table">
           <thead>
           <tr>
@@ -107,9 +117,10 @@
 <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>-->
               <div *ngIf="col === 'avatar'">
                 <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{user.avatarResolvedUrl}}" class="img-row"/>
+                  <img src="{{user.avatarResolvedUrl}}" class="img-row" (click)="onAvatarClick(user)"/>
                 </div>
               </div>
+              
               <!-- <ng-template #templateImgRow>
                 <img src="{{char[col]}}" class="img-row" >
               </ng-template> -->
@@ -128,9 +139,70 @@
           </tr>
           </tbody>
         </table>
+
+
       </div>
     </div>
+    <div #giftClickedModal id="giftClickedModal" class="modal fade modal-black" role="dialog" aria-labelledby="giftClickedModal" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">{{clickedUser.firstName}}</h4>
+                </div>
+                <div class="modal-body">
 
+                    <div class="card">
+                      <div class="card card-coin card-plain maxheight">
+                        <div class="card-header">
+  
+                          <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
+                            <img src="{{clickedUser.avatarResolvedUrl}}"
+                                 alt="Place image title"
+                                 class="img-center img-fluid rounded-circle"
+                                 id="avatar">
+                          </div>
+  
+                          <ng-template #selectedAvatarLoading >
+                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                 alt="Loading..."
+                                 class="img-center img-fluid rounded-circle"
+                                 id="avatarPlaceholder">
+                          </ng-template>
+  
+                        </div>
+                        <div class="card-body">
+                          <div class="userDetails"></div>
+                          <div class="row">
+                            <div class="col-md-12 text-center">
+                              <h4 class="text-uppercase">{{selectedRow.name}}</h4>
+                              <span>{{selectedRow.department}}</span>
+                              <hr class="line-success">
+                            </div>
+                          </div>
+  
+                          <div class="row text-center mt-4">
+                            <div class="col p-2">
+                              <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
+                              <h4 class="mb-0">{{clickedUser.points}}</h4>
+                            </div>
+                            <div class="col p-2">
+                              <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
+                              <h4 class="mb-0">23/120</h4>
+                            </div>
+                            <div class="col p-2">
+                              <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
+                              <h4 class="mb-0">{{selectedRow.rank}}</h4>
+                            </div>
+                          </div>
+                          <div class="card-footer text-center">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
     <ng-template #cardLoading>
       <div class="card-body">
         <ngx-spinner

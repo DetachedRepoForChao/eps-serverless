@@ -1,6 +1,6 @@
 const SqlModel = require('../db');
 const Models = SqlModel().Models;
-
+const sqlNotificationModel = Models.Notification;
 const sqlUserModel = Models.User;
 const sqlAchievementModel = Models.Achievement;
 const sqlAchievementTransactionModel = Models.AchievementTransaction;
@@ -10,13 +10,19 @@ const sqlNotification = Models.Notification;
 
 
 const componentName = 'notification.controller';
-
-const getNotifications = function () {
+/**
+ * Get the  notificaion by the userid
+ * @param {*} targetUserId 
+ */
+const getNotifications = function (targetUserId) {
     const functionName = 'getNotifications';
     const functionFullName = `${componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
   
     return sqlNotification.findAll({
+      where: {
+        targetUserId: targetUserId,
+      },
       attributes: ['id', 'title', 'description', 'timeSeen', 'audience', 'event']
     })
       .then(notificationsResult => {
@@ -35,5 +41,43 @@ const getNotifications = function () {
         return {status: 500, message: err};
       });
   };
+
+/**
+ * 
+ * Set up notification  to the target user and based on the role of user.
+ * Only Manager can send noticiations
+ * 
+ */
+const setNotificationsToPerson = function (targetUserId,title,event, description,event){
+      const functionName = 'setNotificationsToPerson';
+      const functionFullName = `${componentName} ${functionName}`;
+      console.log(`Start ${functionFullName}`);
+
+      return sqlAchievementModel.create({
+            targetPerson: targetUserId,
+            title:title,
+            description:description,
+            audience:'Group',
+            event:event,
+            timeSeen:null,
+      }).then((notifications)=>{
+          console.log(`${functionFullName}: notification created in the db`);
+          return {status:true,message:'notification created',noticiations:notifications}
+      }).catch(err=>{
+        console.log(`${functionFullName}: Problem with the database`);
+        console.log(err);
+        return { status: false, error: 'Problem with the database: ' + err };
+      })
+  }
+exports.setNotificationsToPerson = setNotificationsToPerson;
+
+
+
+const setNotificationsToGroup =function(targetGroup,notificaionTitle,event,description,event){
+
+}
+
+
+
   
   module.exports.getNotifications = getNotifications;
