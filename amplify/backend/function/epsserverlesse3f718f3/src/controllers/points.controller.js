@@ -113,6 +113,71 @@ const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, a
 
 module.exports.addPointsToEmployee = addPointsToEmployee;
 
+const giftPointsToEmployees = function (sourceUserId, userPointObjectArray) {
+  const functionName = 'giftPointsToEmployees';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  // Calculate total points amount to remove
+  let totalPointAmount = 0;
+  for (let i = 0; i < userPointObjectArray.length; i++) {
+    totalPointAmount += userPointObjectArray[i].amount;
+  }
+
+  // Remove points from the point pool
+  return ctrlPointPool.removePointsFromPointPool(sourceUserId, totalPointAmount)
+    .then(removePointsResult => {
+      if(removePointsResult.status === false) {
+        console.log(`${functionFullName}: Something went wrong with removing points from the point pool`);
+        console.log(removePointsResult.message);
+        return {status: false, message: `Error removing points from the points pool: ${removePointsResult.message}`};
+      } else {
+        console.log(`${functionFullName}: Successfully removed points from the point pool`);
+        console.log(removePointsResult.message);
+        const newPointPoolAmount = removePointsResult.newPointPoolAmount;
+
+        // Add points to employees
+        const promiseArray = [];
+        for (let i = 0; i < userPointObjectArray.length; i++) {
+          const targetUserId = userPointObjectArray[i].userId;
+          const pointItemId = userPointObjectArray[i].pointItemId;
+          const amount = userPointObjectArray[i].amount;
+          const description = userPointObjectArray[i].description;
+          promiseArray.push(addPointsToEmployee(sourceUserId, targetUserId, pointItemId, amount, description));
+        }
+
+
+        return Promise.all(promiseArray)
+          .then(addPointsResultArray => {
+            const resultObjectArray = [];
+            for (let i = 0; i < addPointsResultArray.length; i++) {
+              const resultObject = {
+                targetUserId: userPointObjectArray[i].userId,
+                newPointAmount: addPointsResultArray[i].newPointAmount,
+                message: addPointsResultArray[i].message
+              };
+
+              resultObjectArray.push(resultObject);
+            }
+
+            return {status: true, resultObjectArray: resultObjectArray, newPointPoolAmount: newPointPoolAmount};
+
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: Add points to employees database error`);
+            console.log(err);
+            return {status: false, message: 'Add points to employees database error', error: err};
+          });
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Remove points database error`);
+      console.log(err);
+      return {status: false, message: 'Remove points database error', error: err};
+    });
+};
+
+module.exports.giftPointsToEmployees = giftPointsToEmployees;
 
 const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, description) {
   const functionName = 'giftPointsToEmployee';

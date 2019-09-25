@@ -33,6 +33,7 @@ export class ProfileCardManagerComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
+  currentUser$;
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
@@ -45,9 +46,9 @@ export class ProfileCardManagerComponent implements OnInit {
               private achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               private userService: UserService,
-              private userStore: CurrentUserStore,
-              public userQuery: EntityCurrentUserQuery,
-              private entityUserService: EntityCurrentUserService) { }
+              private currentUserStore: CurrentUserStore,
+              private entityUserService: EntityCurrentUserService,
+              private entityCurrentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -59,6 +60,7 @@ export class ProfileCardManagerComponent implements OnInit {
     this.spinner.show('profile-card-manager-spinner');
 
     this.entityUserService.cacheCurrentUser().subscribe();
+    this.currentUser$ = this.entityCurrentUserQuery.getCurrentUser();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()

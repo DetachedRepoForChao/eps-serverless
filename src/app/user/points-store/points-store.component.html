@@ -23,7 +23,7 @@
                                 <div class="container-img">
                                   <img [src]="row.imageResolvedUrl"/>
                                 </div>
-                                <button mat=button (click)="openDialog()"> <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
+                                <button  mat-button (click)="openDialog()"> <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
                                 <div class="container-text2">{{row.description}}</div></button>
                             </div>
                           </div>
@@ -38,7 +38,7 @@
                     </div>
 
 <!--                    <button type="button" class="btn btn-danger" (click)="listStoreItems()" style="padding-right: 10px; padding-left: 10px">List Store Items</button>-->
-<!--                    <button type="button" class="btn btn-danger" (click)="getStoreItems()" style="padding-right: 10px; padding-left: 10px">Get Store Items</button>-->
+<!--                    <button type="button" class="btn btn-danger" (click)="storeItemQuery.getAll()" style="padding-right: 10px; padding-left: 10px">Get Store Items</button>-->
                   </div>
                 </div>
               </div>

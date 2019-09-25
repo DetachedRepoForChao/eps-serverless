@@ -77,6 +77,12 @@ export class EntityUserService {
       });
   }
 
+  updatePoints(userId: number, newAmount: number) {
+    this.userStore.update((e) => e.userId === userId, {
+      points: newAmount
+    });
+  }
+
 /*  cacheUsers() {
     console.log(`Retrieving all user avatars`);
     // this.userAvatarStore.setLoading(true);  // this is the initial state before doing anything
@@ -136,12 +142,12 @@ export class EntityUserService {
               const points = users[i].points;
               const birthdate = users[i].dateOfBirth;
               const securityRole: SecurityRole = {
-                Id: users[i].securityRoleId,
+                Id: +users[i].securityRoleId,
                 Name: '',
                 Description: ''
               };
               const department: Department = {
-                Id: users[i].departmentId,
+                Id: +users[i].departmentId,
                 Name: ''
               };
               const avatarPath = users[i].avatarUrl;

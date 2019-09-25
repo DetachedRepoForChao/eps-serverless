@@ -261,11 +261,11 @@ const getUserPoints = function (username) {
       username: username
     }
   })
-    .then(points => {
-      if(!points) {
+    .then(pointsResult => {
+      if(!pointsResult) {
         return {status: 404, message: 'getUserPoints: Something went wrong.' };
       } else {
-        return {status: 200, points: points};
+        return {status: 200, points: pointsResult.points};
       }
     })
     .catch(err => {

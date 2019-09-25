@@ -71,6 +71,12 @@ export class EntityCurrentUserService {
       });
   }
 
+  updatePointPool(newAmount: number) {
+    this.currentUserStore.update(null, {
+      pointsPool: newAmount
+    });
+  }
+
   cacheCurrentUser() {
     console.log(`Retrieving current user avatar`);
     // this.userStore.setLoading(true);  // this is the initial state before doing anything
@@ -88,13 +94,15 @@ export class EntityCurrentUserService {
         const securityRole = userDataResult.securityRole;
         const phone = userDataResult.phone;
         const avatarPath = userDataResult.userPicture;
+        const points = +userDataResult.points;
+        const pointsPool = +userDataResult.pointsPool;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
             const avatarBase64String = '';
             const avatarResolvedUrl = result.avatarResolvedUrl;
             const currentUser = createEntityCurrentUserModel({username, firstName, lastName, email, birthdate, avatarBase64String,
-              avatarPath, avatarResolvedUrl, department, securityRole, phone});
+              avatarPath, avatarResolvedUrl, department, securityRole, phone, points, pointsPool});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -164,11 +172,11 @@ export class EntityCurrentUserService {
               const email = userAttributes.attributes['email'];
               const birthdate = userAttributes.attributes['birthdate'];
               const department: Department = {
-                Id: userAttributes.attributes['custom:department_id'],
+                Id: +userAttributes.attributes['custom:department_id'], // Need the '+' to cast string to number
                 Name: userAttributes.attributes['custom:department'],
               };
               const securityRole: SecurityRole = {
-                Id: userAttributes.attributes['custom:security_role_id'],
+                Id: +userAttributes.attributes['custom:security_role_id'], // Need the '+' to cast string to number
                 Name: userAttributes.attributes['custom:security_role'],
                 Description: null
               };
@@ -184,34 +192,122 @@ export class EntityCurrentUserService {
                 department: department,
                 securityRole: securityRole,
                 phone: phone,
+                points: 0,
+                pointsPool: 0,
+                userPicture: ''
               };
 
               console.log('userData:');
               console.log(data);
-              if (userPicture) {
-                console.log(`${functionFullName}: user picture: ${userPicture}`);
 
-                data['userPicture'] = userPicture;
+              if (securityRole.Id === 1) {
+                this.getCurrentUserPoints()
+                  .subscribe(pointsResult => {
+                    data.points = pointsResult;
 
-                observer.next(data);
-                observer.complete();
-              } else {
-                console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                const token = user.signInUserSession.idToken.jwtToken;
-                const myInit = this.myInit;
-                myInit.headers['Authorization'] = token;
+                    // console.log('userData:');
+                    // console.log(data);
+                    if (userPicture) {
+                      console.log(`${functionFullName}: user picture: ${userPicture}`);
 
-                API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
-                  console.log(`${functionFullName}: successfully retrieved data from API`);
-                  console.log(currentUserResult);
+                      data.userPicture = userPicture;
 
-                  data['userPicture'] = currentUserResult.data.avatarUrl;
+                      observer.next(data);
+                      observer.complete();
+                    } else {
+                      console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
+                      const token = user.signInUserSession.idToken.jwtToken;
+                      const myInit = this.myInit;
+                      myInit.headers['Authorization'] = token;
 
-                  observer.next(data);
-                  observer.complete();
-                });
+                      API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
+                        console.log(`${functionFullName}: successfully retrieved data from API`);
+                        console.log(currentUserResult);
+
+                        data.userPicture = currentUserResult.data.avatarUrl;
+
+                        observer.next(data);
+                        observer.complete();
+                      });
+                    }
+                  });
+              } else if (securityRole.Id === 2) {
+                this.getCurrentUserPointsPool()
+                  .subscribe(pointsPoolResult => {
+                    data.pointsPool = pointsPoolResult;
+
+                    // console.log('userData:');
+                    // console.log(data);
+                    if (userPicture) {
+                      console.log(`${functionFullName}: user picture: ${userPicture}`);
+
+                      data.userPicture = userPicture;
+
+                      observer.next(data);
+                      observer.complete();
+                    } else {
+                      console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
+                      const token = user.signInUserSession.idToken.jwtToken;
+                      const myInit = this.myInit;
+                      myInit.headers['Authorization'] = token;
+
+                      API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
+                        console.log(`${functionFullName}: successfully retrieved data from API`);
+                        console.log(currentUserResult);
+
+                        data.userPicture = currentUserResult.data.avatarUrl;
+
+                        observer.next(data);
+                        observer.complete();
+                      });
+                    }
+                  });
               }
             });
+        });
+    });
+  }
+
+  getCurrentUserPoints() {
+    const functionName = 'getCurrentUserPoints';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/getUserPoints', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
+    });
+  }
+
+  getCurrentUserPointsPool() {
+    const functionName = 'getCurrentUserPointPool';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/getRemainingPointPool', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
         });
     });
   }
