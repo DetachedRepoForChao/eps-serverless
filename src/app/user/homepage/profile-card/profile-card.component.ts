@@ -209,6 +209,7 @@ export class ProfileCardComponent implements OnInit {
     $('#avatarModal').modal('show');
   }
 
+
   Debug() {
 
     // const avatarPath = this.globals.getUserAttribute('picture');
