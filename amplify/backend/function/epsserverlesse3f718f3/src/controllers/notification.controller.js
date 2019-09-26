@@ -23,7 +23,7 @@ const getNotifications = function (targetUserId) {
       where: {
         targetUserId: targetUserId,
       },
-      attributes: ['id', 'title', 'description', 'timeSeen', 'audience', 'event']
+      // attributes: ['id', 'title', 'description', 'timeSeen', 'audience', 'event']
     })
       .then(notificationsResult => {
         if(!notificationsResult) {
@@ -42,6 +42,8 @@ const getNotifications = function (targetUserId) {
       });
   };
 
+
+exports.getNotifications = getNotifications;
 /**
  * 
  * Set up notification  to the target user and based on the role of user.
@@ -80,4 +82,3 @@ const setNotificationsToGroup =function(targetGroup,notificaionTitle,event,descr
 
 
   
-  module.exports.getNotifications = getNotifications;

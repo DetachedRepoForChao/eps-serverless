@@ -682,16 +682,25 @@ app.get('/items/getPointItems', function(req, res) {
 
 
 // Notifications Routes
-app.get('/items/getNotifications', function(req, res) {
+app.post('/items/getNotifications', function(req, res) {
   console.log('starting get getNotifications');
+  
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const targetUserId = req.body.targetUserId;
+      ctrlNotifications.getNotifications(targetUserId)
+        .then(data => {
+          res.json({ status: 'get call succeed!', data: data.notifications });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
 
-  ctrlNotifications.getNotifications()
-    .then(data => {
-      res.json({status: 'get call succeed!', data: data.notifications});
-    })
-    .catch(err => {
-      res.json({status: 'post call failed!', error: err});
-    });
 
   // const token = req.headers.authorization;
   // jwtVerify.parseToken(token, function(tokenResult) {

@@ -16,6 +16,13 @@ const StoreItemModel = require('./models/store_item');
 const NotificationModel = require('./models/notification'); 
 // console.log('starting db.js');
 
+process.env.DB_NAME = "eps-test";
+process.env.DB_USER = "nodeuser";
+process.env.DB_PASSWORD = "F2GS_+tw4Se7$Qt2";
+process.env.DB_HOST = "eps-test.copg0vm8oufq.us-east-1.rds.amazonaws.com";
+process.env.DB_PORT = 3306
+
+
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -33,7 +40,8 @@ const sequelize = new Sequelize(
     logging: false
   }
 );
-
+console.log(process.env.DB_NAME);
+console.log(process.env.DB_USER);
 // console.log(sequelize);
 
 // console.log('created sequelize');

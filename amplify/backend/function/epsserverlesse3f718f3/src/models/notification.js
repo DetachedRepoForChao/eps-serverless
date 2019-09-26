@@ -49,7 +49,7 @@ module.exports = function (sequelize, DataTypes) {
         targetPerson:{
             type: DataTypes.INTEGER(11),
             allowNull:false,
-            field: 'targetuser'
+            field: 'targetUserId'
         }
     }, {
             tableName: 'notification'
