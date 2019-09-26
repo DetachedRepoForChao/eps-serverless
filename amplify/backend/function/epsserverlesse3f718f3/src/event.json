@@ -1,6 +1,6 @@
 {
   "resource": "/items",
-  "path": "/items/usersPublicDetails",
+  "path": "/items/getNotifications",
   "httpMethod": "GET",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
