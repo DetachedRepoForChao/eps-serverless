@@ -46,8 +46,8 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true,
             field: 'timeSeen'
         },
-        targetPerson:{
-            type: DataTypes.INTEGER(11),
+        targetUserId:{
+            type: DataTypes.STRING(20),
             allowNull:false,
             field: 'targetUserId'
         }
