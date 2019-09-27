@@ -27,8 +27,8 @@
 <!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
        
        
-       <button type="button" class="btn btn-danger btn-icon btn-round" (click)="onLogout()">
-          <i class="tim-icons icon-button-power" title="logoff"></i>
+       <button type="button" class="btn btn-icon btn-round" color="white"  (click)="onLogout()">
+          <i class="tim-icons icon-button-power" title="logout"></i>
         </button>
       </span>
     </div>
@@ -108,6 +108,12 @@
 </div>
 			
 -->
+			
+			<br><br>
+       <button class="btn btn-primary btn-lg">Edit Point</button>      
+           
+   <br><br>
+       <button class="btn btn-primary btn-lg">Dlete Point</button>  
 				</div>
 			</div>
 		</div>
@@ -132,10 +138,10 @@
 					</H1>
 				</div>
 				<div class="card-footer3">
-    
+   
    		<!-- Button trigger modal -->
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Items</button>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target=".bd-example-modal-lg">Add Items</button>
 
 <!-- Modal -->
 <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -153,29 +159,41 @@
       
       <form>
   <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputitems_id">ID</label>
-      <input type="ID" class="form-control" id="inputEmail4" placeholder="ID">
+    <div class="form-group col-md-6" >
+      <label for="inputitems_Name">Item Name </label>
+      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
     </div>
     <div class="form-group col-md-6">
-      <label for="inputitems_name">Name</label>
-      <input type="Name" class="form-control" id="inputitem_name" placeholder="Name">
+      <label for="inputitems_Point_amount">point amount</label>
+      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
     </div>
   </div>
   <div class="form-group">
     <label for="inputitems_Description">Description</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+    <input type="text" class="form-control" id="inputDescription" placeholder="Description">
   </div>
+<!--
   <div class="form-group">
     <label for="inputAddress2">Address 2</label>
     <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
   </div>
+-->
 
- 
+
+  <div class="form-group">
+   <label for="inputAddress2">Upload Img </label>
+    <input type="file" name="img[]" class="file">
+    <div class="input-group col-xs-12">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-picture" ></i></span>
+      <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+      <span class="input-group-btn">
+        <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+      </span>
+    </div>
+  </div>
 </form>
        
-       
-       
+    
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -185,10 +203,12 @@
   </div>
 </div>   
        
-        
-         
-           
       
+  <br><br>
+       <button class="btn btn-primary btn-lg">Edit Items</button>      
+           
+   <br><br>
+       <button class="btn btn-primary btn-lg">Dlete Items</button>      
       
       
       
@@ -199,9 +219,7 @@
     </div>
   </div>
 </div>	
-			
-			
-			
+			 
 			
 				</div>
 			</div>
