@@ -108,11 +108,13 @@ const setNotifictaionSeenTime = function(notifictaionId){
   const functionName = 'setNotifictaionSeenTime';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
+
+  console.log(new Date().getTime.toString);
   return sqlNotification.update({
-      timeSeen: new Date().getTime,
+      timeSeen: Date.now(),
   },{
       where:{
-        id: notifictaionId,
+         id: notifictaionId,
       }
   }).then((notifications) => {
       console.log(`${functionFullName}: timeseen update in the db`);
