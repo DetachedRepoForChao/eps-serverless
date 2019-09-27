@@ -2,11 +2,11 @@ const SqlModel = require('../db');
 const Models = SqlModel().Models;
 const sqlUserModel = Models.User;
 
-const bcrypt = require('bcryptjs');
-const passport = require('passport');
+// const bcrypt = require('bcryptjs');
+// const passport = require('passport');
 const _ = require('lodash');
-const jwt = require('jsonwebtoken');
-const BCRYPT_SALT_ROUNDS = 12;
+// const jwt = require('jsonwebtoken');
+// const BCRYPT_SALT_ROUNDS = 12;
 
 const ctrlAchievement = require('./achievement.controller');
 const ctrlPointPool = require('./point_pool.controller');
@@ -147,7 +147,7 @@ const registerUser = function (user) {
 
 module.exports.registerUser = registerUser;
 
-
+/*
 module.exports.authenticateUser = (req, res, next) => {
   const functionName = 'authenticateUser';
   const functionFullName = `${componentName} ${functionName}`;
@@ -190,7 +190,7 @@ module.exports.authenticateUser = (req, res, next) => {
     // unknown user or wrong password
     else return res.status(404).json(info);
   })(req, res);
-};
+};*/
 
 
 

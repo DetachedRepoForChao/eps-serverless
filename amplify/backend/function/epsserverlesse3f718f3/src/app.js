@@ -34,7 +34,6 @@ const ctrlPoints = require('./controllers/points.controller');
 const ctrlPointPool = require('./controllers/point_pool.controller');
 const ctrLike = require('./controllers/like.controller');
 const ctrlPointsTransaction = require('./controllers/point_transaction.controller');
-const jwtHelper = require('./config/jwtHelper');
 const ctrlSession = require('./controllers/session.controller');
 const ctrlAvatar = require('./controllers/avatar.controller');
 const ctrlLeaderboard = require('./controllers/leaderboard.controller');
@@ -67,9 +66,9 @@ app.post('/items/registerUser', function(req, res) {
     });
 });
 
-app.post('/items/authenticateUser', function(req, res) {
+/*app.post('/items/authenticateUser', function(req, res) {
   console.log('starting post authenticateUser');
-});
+});*/
 
 app.get('/items/userProfile', function(req, res) {
   console.log('starting get userProfile');

@@ -1,12 +1,12 @@
 
- 
+
 <!--navbar-->
- 
+
  <nav class="navbar navbar-expand-lg bg-primary">
   <div class="container">
 
-   
-   
+
+
     <a class="navbar-brand" >The Asbury Hotel Admin Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 
@@ -16,17 +16,17 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
-       
-      
-      
-      
+
+
+
+
 <!--      icon for logout-->
       </ul>
       <span class="navbar-text">
-   
+
 <!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
-       
-       
+
+
        <button type="button" class="btn btn-icon btn-round" color="white"  (click)="onLogout()">
           <i class="tim-icons icon-button-power" title="logout"></i>
         </button>
@@ -54,11 +54,11 @@
 				</div>
 				<div class="card-footer3" style="margin-bottom: 20px">
               <!-- Button trigger modal -->
-              
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add User</button>
-              
+
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">Add User</button>
+
               <!-- Modal -->
-              <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+              <div class="modal fade bd-example-modal-lg" id="addUserModal" tabindex="-1" role="dialog"
                 aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
@@ -68,12 +68,12 @@
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-              
-              
+
+
                     <div class="modal-body">
                       <!--       form-->
-              
-              
+
+
                       <form>
                         <div class="form-row">
                           <div class="form-group col-md-6">
@@ -93,12 +93,12 @@
                           <label for="inputAddress2">Address 2</label>
                           <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
                         </div>
-              
-              
+
+
                       </form>
-              
-              
-              
+
+
+
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -111,14 +111,14 @@
 			</div>
 		</div>
 
-		
-		
-		
-		
-		
-<!--card2-->		
-		
-		
+
+
+
+
+
+<!--card2-->
+
+
 
 		<div class="col-md-4">
 			<div class="card">
@@ -126,18 +126,18 @@
 				<img alt="Bootstrap Image Preview" width="175" height="175" src="https://www.clipartmax.com/png/full/282-2822110_finance-flat-icon-png-coin-flat-icon-png.png" class="rounded-circle" />
 				</h5>
 				<div class="card-body">
-				
+
 				<H1 class="card-text2">
-						POINT 
+						POINT
 					</H1>
-				
+
 				</div>
-				<div class="card-footer2">		
+				<div class="card-footer2">
 		<!-- Button trigger modal -->
 <!--
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Point</button>
 
- Modal 
+ Modal
 <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -157,27 +157,27 @@
     </div>
   </div>
 </div>
-			
+
 -->
-			
+
 			<br><br>
-       <button class="btn btn-primary btn-lg">Edit Point</button>      
-           
+       <button class="btn btn-primary btn-lg">Edit Point</button>
+
    <br><br>
-       <button class="btn btn-primary btn-lg">Dlete Point</button>  
+       <button class="btn btn-primary btn-lg">Dlete Point</button>
 				</div>
 			</div>
 		</div>
-		
-		
-		
-		
-		
-		
-<!--card3-->		
-		
-		
-		
+
+
+
+
+
+
+<!--card3-->
+
+
+
 		<div class="col-md-4">
 			<div class="card">
 				<h5 class="card-header3">
@@ -189,17 +189,17 @@
 					</H1>
 				</div>
 				<div class="card-footer3">
-   
+
    		<!-- Button trigger modal -->
 
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target=".bd-example-modal-lg">Add Items</button>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addItemModal">Add Items</button>
 
 <!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Items </h5>
+        <h5 class="modal-title" id="addItemsModalTitle">Add Items </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -208,8 +208,8 @@
 
       <div class="modal-body">
 <!--       form-->
-      
-      
+
+
       <form>
   <div class="form-row">
     <div class="form-group col-md-6" >
@@ -245,8 +245,8 @@
     </div>
   </div>
 </form>
-       
-    
+
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -254,33 +254,33 @@
       </div>
     </div>
   </div>
-</div>   
-       
+</div>
 
-      
+
+
   <br><br>
-       <button class="btn btn-primary btn-lg">Edit Items</button>      
-           
+       <button class="btn btn-primary btn-lg">Edit Items</button>
+
    <br><br>
-       <button class="btn btn-primary btn-lg">Dlete Items</button>      
-      
-      
-      
-      
-      
-      
-      
+       <button class="btn btn-primary btn-lg">Dlete Items</button>
+
+
+
+
+
+
+
     </div>
 
 </div>
 
   </div>
-</div>	
-			 
-			
+</div>
+
+
 				</div>
-			
-	
+
+
 
 
 
@@ -393,7 +393,7 @@
 <!--    <a class="navbar-brand" href="#"> <h1 class="display-4">USER</h1></a>-->
 <!--
     <a class="navbar-brand" > <h1 class="display-4"><p class="h1">USER</p></h1></a>
-   
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -437,7 +437,7 @@
 <!--    <a class="navbar-brand" href="#"> <h1 class="display-4">USER</h1></a>-->
 <!--
     <a class="navbar-brand" > <h1 class="display-4"><p class="h1">POINT</p></h1></a>
-   
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>
