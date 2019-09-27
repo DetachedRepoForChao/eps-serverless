@@ -10,6 +10,9 @@ import {StoreItemModel} from '../../entity-store/store-item/state/store-item.mod
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
 import {MatDialog } from '@angular/material'; 
+import { EntityCurrentUserService } from 'src/app/entity-store/current-user/state/entity-current-user.service';
+import { CostExplorer } from 'aws-sdk';
+import { CurrentUserStore } from 'src/app/entity-store/current-user/state/current-user.store';
 
 @Component({
   selector: 'app-points-store',
@@ -21,6 +24,9 @@ export class PointsStoreComponent implements OnInit {
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/things';
   dialogResult = " ";
+
+
+  
   myInit = {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -36,7 +42,8 @@ export class PointsStoreComponent implements OnInit {
   constructor(private storeItemStore: StoreItemStore,
               private storeItemQuery: StoreItemQuery,
               private storeItemService: StoreItemService,
-              private currentUserQuery: EntityCurrentUserQuery,
+              private entityCurrentUserService: EntityCurrentUserService,
+              private currentUserStore: CurrentUserStore,
               public dialog: MatDialog ) {}
 
 
@@ -46,11 +53,18 @@ export class PointsStoreComponent implements OnInit {
   data: "Would you like to redeem this gift?"
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(`Dialog closed: ${result}`);
+
+         dialogRef.afterClosed().subscribe(result => {
+            console.log(`Dialog closed: ${result}`);
           this.dialogResult = result;
-        })
+            })
+           
+           
+           
+
+        
       }
+    
 
   ngOnInit() {
     const functionName = 'ngOnInit';

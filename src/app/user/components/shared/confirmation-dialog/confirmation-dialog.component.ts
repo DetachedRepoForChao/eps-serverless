@@ -12,20 +12,19 @@ export class ConfirmationDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public message: string,
-    //public thisDialogRef: MatDialogRef<ConfirmationDialogComponent>, 
     private currentUserQuery: EntityCurrentUserQuery
   ) { }
 
   ngOnInit() {
   }
 
-  onCloseConfirm() {
+   onCloseConfirm() {
     this.dialogRef.close('Confirm');
-  }
+   }
 
-  onCloseCancel() {
-    this.dialogRef.close('Cancel');
-  }
+    onCloseCancel() {
+      this.dialogRef.close('Cancel');
+    }
 
 
 
