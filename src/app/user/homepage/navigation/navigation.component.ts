@@ -8,6 +8,7 @@ import {EntityUserService} from '../../../entity-store/user/state/entity-user.se
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {resetStores} from '@datorama/akita';
+import {AuthService} from '../../../login/auth.service';
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
 declare var blackKit: any;
@@ -29,7 +30,8 @@ export class NavigationComponent implements OnInit {
               private achievementService: AchievementService,
               private entityUserAvatarService: EntityUserService,
               private entityUserService: EntityCurrentUserService,
-              private storeItemService: StoreItemService) { }
+              private storeItemService: StoreItemService,
+              private auth: AuthService) { }
 
   ngOnInit() {
     // Initialize the navbar script
@@ -40,14 +42,15 @@ export class NavigationComponent implements OnInit {
   }
 
   onLogout() {
-    this.userService.deleteToken();
-    this.globalVariableService.resetAllVariables();
-    this.feedcardService.clearPointTransactionCache();
-    localStorage.clear();
+    // this.userService.deleteToken();
+    // this.globalVariableService.resetAllVariables();
+    // this.feedcardService.clearPointTransactionCache();
+    // localStorage.clear();
 /*    this.achievementService.reset();
     this.entityUserService.reset();
     this.entityUserAvatarService.reset();
     this.storeItemService.reset();*/
+    this.auth.signOut();
     resetStores();
     this.router.navigate(['/login']);
 
