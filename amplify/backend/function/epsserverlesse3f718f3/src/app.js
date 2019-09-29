@@ -661,8 +661,8 @@ app.get('/items/getPointTransaction', function(req, res) {
 });
 
 // Store Item Routes
-app.get('/items/getPointItems', function(req, res) {
-  console.log('starting get getPointItems');
+app.get('/items/getStoreItems', function(req, res) {
+  console.log('starting get getStoreItems');
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
