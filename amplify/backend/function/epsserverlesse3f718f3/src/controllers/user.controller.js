@@ -11,7 +11,7 @@ const _ = require('lodash');
 const ctrlAchievement = require('./achievement.controller');
 const ctrlPointPool = require('./point_pool.controller');
 
-const jwtVerify = require('../config/decode-verify-jwt');
+// const jwtVerify = require('../config/decode-verify-jwt');
 const componentName = 'user.controller';
 
 
@@ -200,8 +200,9 @@ const getUserProfile = function (username) {
   console.log(`Start ${functionFullName}`);
 
   return sqlUserModel.findOne({
-    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'email',
-      'securityRoleId', 'departmentId', 'avatarUrl'],
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
+      'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
+      'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl'],
     where: {
       username: username,
     },

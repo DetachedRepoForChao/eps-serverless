@@ -44,7 +44,7 @@ export class NavigationComponent implements OnInit {
   onLogout() {
     // this.userService.deleteToken();
     // this.globalVariableService.resetAllVariables();
-    // this.feedcardService.clearPointTransactionCache();
+    this.feedcardService.clearPointTransactionCache();
     // localStorage.clear();
 /*    this.achievementService.reset();
     this.entityUserService.reset();

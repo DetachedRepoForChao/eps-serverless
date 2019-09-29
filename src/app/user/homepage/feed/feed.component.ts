@@ -26,9 +26,9 @@ export class FeedComponent implements OnInit {
               private avatarService: AvatarService,
               private spinner: NgxSpinnerService,
               private globals: Globals,
-              private userAvatarService: EntityUserService,
-              private userAvatarStore: UserStore,
-              private userAvatarQuery: EntityUserQuery) { }
+              private entityUserService: EntityUserService,
+              private userStore: UserStore,
+              private entityUserQuery: EntityUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';

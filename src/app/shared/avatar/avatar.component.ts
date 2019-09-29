@@ -78,7 +78,7 @@ export class AvatarComponent implements OnInit {
           }
         });*/
 
-        this.feedcardService.refreshPointTransactionAvatars();
+        // this.feedcardService.refreshPointTransactionAvatars();
 
         this.avatarUpload = false;
         this.avatarPreview = true;
