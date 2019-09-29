@@ -29,14 +29,20 @@
 	color: Default;
 }
 
+/*
 
 .btn{
 	color: white;
 }
+*/
+
+.file {
+  visibility: hidden;
+  position: absolute;
+}
 
 
 	
-
 
 
 

@@ -29,5 +29,3 @@ export class AdminUserComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
-
-
