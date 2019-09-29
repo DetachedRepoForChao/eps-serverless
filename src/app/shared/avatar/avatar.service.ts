@@ -60,44 +60,6 @@ export class AvatarService implements OnInit {
 
   }
 
-  /*getAvatar(username: string): Observable<any> {
-    const functionName = 'getAvatar';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-          myInit['body'] = {
-            username: username
-          };
-
-          API.post(this.apiName, this.apiPath + '/userAvatar', myInit)
-            .then(data => {
-              console.log(`${functionFullName}: ${username} avatar data retrieved from API`);
-              console.log(data);
-              observer.next(data.data);
-              observer.complete();
-            })
-            .catch(err => {
-              console.log(`${functionFullName}: error retrieving ${username} avatar data from API`);
-              console.log(err);
-              observer.next(err);
-              observer.complete();
-            });
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
-          observer.next(err);
-          observer.complete();
-        });
-    });
-  }*/
-
   getCurrentUserAvatar(): Observable<any> {
     const functionName = 'getCurrentUserAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;

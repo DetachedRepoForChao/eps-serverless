@@ -50,6 +50,7 @@ export class NavigationComponent implements OnInit {
     this.entityUserService.reset();
     this.entityUserAvatarService.reset();
     this.storeItemService.reset();*/
+    this.achievementService.incrementAchievement('SignOut').subscribe();
     this.auth.signOut();
     resetStores();
     this.router.navigate(['/login']);

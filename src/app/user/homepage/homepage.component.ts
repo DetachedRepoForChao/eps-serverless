@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, HostListener, OnInit} from '@angular/core';
 import {SocketService} from '../../shared/socket.service';
 import {NotifierService} from 'angular-notifier';
 import {Globals} from '../../globals';
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
+import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 
 
 @Component({
@@ -16,13 +17,40 @@ export class HomepageComponent implements OnInit {
   componentName = 'homepage.component';
   globalService;
 
+  private codeEntered: EventEmitter<boolean> = new EventEmitter<boolean>();
+  private sequence: number[] = [];
+  private konamiCode: number[] = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.keyCode) {
+      console.log(event.keyCode);
+      console.log(this.sequence);
+      console.log(this.isKonamiCode());
+      this.sequence.push(event.keyCode);
+
+      if (this.sequence.length > this.konamiCode.length) {
+        this.sequence.shift();
+      }
+
+      if (this.isKonamiCode()) {
+        console.log('success');
+        this.codeEntered.emit(true);
+        this.achievementService.incrementAchievement('RetroGamer').subscribe();
+      } else {
+        this.codeEntered.emit(false);
+      }
+    }
+  }
+
   constructor(
     private socketService: SocketService,
     private notifierService: NotifierService,
     public globals: Globals,
     private metricsService: MetricsService,
     private currentUserService: EntityCurrentUserService,
-    private currentUserQuery: EntityCurrentUserQuery) { }
+    private currentUserQuery: EntityCurrentUserQuery,
+    private achievementService: AchievementService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -50,8 +78,9 @@ export class HomepageComponent implements OnInit {
           }
         });
     });
-
-
   }
 
+  private isKonamiCode(): boolean {
+    return this.konamiCode.every((code: number, index: number) => code === this.sequence[index]);
+  }
 }
