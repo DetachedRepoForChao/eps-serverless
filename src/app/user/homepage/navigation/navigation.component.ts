@@ -30,6 +30,7 @@ export class NavigationComponent implements OnInit {
               private entityUserAvatarService: EntityUserService,
               private entityUserService: EntityCurrentUserService,
               private storeItemService: StoreItemService) { }
+              private 
 
   ngOnInit() {
     // Initialize the navbar script
@@ -60,6 +61,10 @@ export class NavigationComponent implements OnInit {
   onHomeClick() {
 
     // this.router.navigate(['/user']);
+  }
+
+  onNOtificationClick(){
+    
   }
 
 }
