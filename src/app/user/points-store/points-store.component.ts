@@ -45,6 +45,7 @@ export class PointsStoreComponent implements OnInit {
               private storeItemService: StoreItemService,
               private entityCurrentUserService: EntityCurrentUserService,
               private currentUserStore: CurrentUserStore,
+              private currentUserQuery: EntityCurrentUserQuery,
               public dialog: MatDialog ) {}
 
 
@@ -59,16 +60,30 @@ export class PointsStoreComponent implements OnInit {
       this.dialogResult = result;
 
       if (result === 'Confirm') {
-        console.log('Test123');
+        this.checkPoints();
       } else if (result === 'Cancel') {
         console.log('Test567');
+        console.log(this.selectedStoreItem);
       }
     });
   }
 
   selectStoreItem(storeItem) {
     this.selectedStoreItem = storeItem;
-    
+    console.log(this.selectedStoreItem);
+  }
+
+  checkPoints() {
+    const userPoints = this.currentUserQuery.getAll()[0].points;
+    const itemCost = this.selectedStoreItem.cost;
+    console.log(`The item costs: ${itemCost}`);
+    console.log(`You currently have: ${userPoints}`);
+    if (userPoints < itemCost) {
+      console.log(`You don't have enough points`);
+    } else {
+      console.log(`You have enough points to redeem this. An email has been sent to your manager for approval`);
+
+    }
   }
 
   ngOnInit() {
