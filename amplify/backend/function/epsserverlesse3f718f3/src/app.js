@@ -34,7 +34,6 @@ const ctrlPoints = require('./controllers/points.controller');
 const ctrlPointPool = require('./controllers/point_pool.controller');
 const ctrLike = require('./controllers/like.controller');
 const ctrlPointsTransaction = require('./controllers/point_transaction.controller');
-const jwtHelper = require('./config/jwtHelper');
 const ctrlSession = require('./controllers/session.controller');
 const ctrlAvatar = require('./controllers/avatar.controller');
 const ctrlLeaderboard = require('./controllers/leaderboard.controller');
@@ -67,9 +66,9 @@ app.post('/items/registerUser', function(req, res) {
     });
 });
 
-app.post('/items/authenticateUser', function(req, res) {
+/*app.post('/items/authenticateUser', function(req, res) {
   console.log('starting post authenticateUser');
-});
+});*/
 
 app.get('/items/userProfile', function(req, res) {
   console.log('starting get userProfile');
@@ -79,10 +78,10 @@ app.get('/items/userProfile', function(req, res) {
       const username = tokenResult.claims['cognito:username'];
       ctrlUser.getUserProfile(username)
         .then(data => {
-          res.json({status: 'post call succeed!', data: data.user});
+          res.json({status: 'get call succeed!', data: data.user});
         })
         .catch(err => {
-          res.json({status: 'post call failed!', error: err});
+          res.json({status: 'get call failed!', error: err});
         });
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
@@ -662,8 +661,8 @@ app.get('/items/getPointTransaction', function(req, res) {
 });
 
 // Store Item Routes
-app.get('/items/getPointItems', function(req, res) {
-  console.log('starting get getPointItems');
+app.get('/items/getStoreItems', function(req, res) {
+  console.log('starting get getStoreItems');
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {

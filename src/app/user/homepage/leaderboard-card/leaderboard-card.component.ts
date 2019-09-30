@@ -20,6 +20,8 @@ import {AchievementQuery} from '../../../entity-store/achievement/state/achievem
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
+import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
+import {MetricsQuery} from '../../../entity-store/metrics/state/metrics.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -59,7 +61,8 @@ export class LeaderboardCardComponent implements OnInit {
               public achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               public entityCurrentUserQuery: EntityCurrentUserQuery,
-              private pointItemQuery: PointItemQuery) { }
+              private pointItemQuery: PointItemQuery,
+              private metricsQuery: MetricsQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -71,28 +74,13 @@ export class LeaderboardCardComponent implements OnInit {
     this.spinner.show('leaderboard-card-spinner');
     this.spinner.show('avatar-loading-spinner');
 
-    this.entityUserService.cacheUsers().subscribe(() => {
-      this.leaderboardUsers$ = this.entityUserQuery.selectAll({
-        filterBy: userEntity => userEntity.securityRole.Id === 1,
-      });
+    this.entityUserService.cacheUsers().subscribe();
 
-      this.isCardLoading = false;
+    this.leaderboardUsers$ = this.entityUserQuery.selectAll({
+      filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
 
-    /*this.leaderboardService.getPointsLeaderboard()
-      .subscribe(result => {
-        this.isCardLoading = true;
-        console.log(`${functionFullName}: showing leaderboard-card-spinner`);
-        this.spinner.show('leaderboard-card-spinner');
-
-        console.log(`${functionFullName}: populating leaderboard data`);
-        this.leaderboardService.populateLeaderboardDataSource(result).subscribe(() => {
-          console.log(`${functionFullName}: finished populating leaderboard data`);
-          this.isCardLoading = false;
-          this.spinner.hide('leaderboard-card-spinner');
-        });
-      });*/
-
+    this.isCardLoading = false;
 
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
@@ -139,5 +127,11 @@ export class LeaderboardCardComponent implements OnInit {
       console.log(pointItems);
     });
     // console.log(this.achievementQuery.filterAchievements());
+
+    const metrics$ = this.metricsQuery.selectAll();
+    metrics$.subscribe(metrics => {
+      console.log(metrics);
+    }).unsubscribe();
+
   }
 }
