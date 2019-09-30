@@ -83,13 +83,15 @@ export class PointsStoreComponent implements OnInit {
     console.log(`The item costs: ${itemCost}`);
     console.log(`You currently have: ${userPoints}`);
     if (userPoints < itemCost) {
-      const snack = this.snackBar.open('You do not have enough points to redeem this item');
-      console.log(`You don't have enough points`);
+      const snack = this.snackBar.open('You do not have enough points to redeem this item' , 'Close', { 
+        duration: 5000,
+      });
+      console.log(`You do not have enough points`);
+
     } else {
       const snack = this.snackBar.open(`You have enough points to redeem this item. An email has been sent to your manager for approval`, 'Close', {
         duration: 5000,
       });
-    
       console.log(`You have enough points to redeem this item. An email has been sent to your manager for approval`);
 
     }
