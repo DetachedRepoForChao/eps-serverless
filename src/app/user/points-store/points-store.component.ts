@@ -86,7 +86,10 @@ export class PointsStoreComponent implements OnInit {
       const snack = this.snackBar.open('You do not have enough points to redeem this item');
       console.log(`You don't have enough points`);
     } else {
-      const snack = this.snackBar.open(`You have enough points to redeem this item. An email has been sent to your manager for approval`);
+      const snack = this.snackBar.open(`You have enough points to redeem this item. An email has been sent to your manager for approval`, 'Close', {
+        duration: 5000,
+      });
+    
       console.log(`You have enough points to redeem this item. An email has been sent to your manager for approval`);
 
     }
