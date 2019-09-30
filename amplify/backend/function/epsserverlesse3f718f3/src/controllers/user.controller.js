@@ -291,6 +291,9 @@ const getUsersPublicDetails = function () {
     where: {
       securityRoleId: [1, 2],
     },
+    order: [
+      ['id', 'ASC'],
+    ],
   })
     .then(usersPublicDetailsResult => {
       if (!usersPublicDetailsResult) {

@@ -133,5 +133,7 @@ export class LeaderboardCardComponent implements OnInit {
       console.log(metrics);
     }).unsubscribe();
 
+    this.entityUserQuery.getUserCompleteAchievementCount(47);
+
   }
 }

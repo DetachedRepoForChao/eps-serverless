@@ -472,6 +472,44 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
 
 module.exports.getAchievementFamilyProgress = getAchievementFamilyProgress;
 
+const getUsersCompleteAchievementTotal = function() {
+  const functionName = 'getUserCompleteAchievements';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const sequelize = SqlModel().sequelize;
+  return sequelize.query("" +
+    "SELECT DISTINCT `user_achievement_progress`.`user_id` AS `userId`, " +
+    "(SELECT count(*) FROM `user_achievement_progress` " +
+    "   WHERE `user_achievement_progress`.`user_id` = `userId` " +
+    "   AND (`user_achievement_progress`.`status` = 'complete' " +
+    "     OR `user_achievement_progress`.`status` = 'complete acknowledged')" +
+    ") AS `num_complete` FROM `user_achievement_progress` ORDER BY `userId` ASC",
+    {type: sequelize.QueryTypes.SELECT})
+    .then(usersCompleteAchievementTotal => {
+      if (!usersCompleteAchievementTotal) {
+        console.log(`${functionFullName}: Unable to find any matching records`);
+        return {status: false, message: 'Unable to find any matching records.'};
+      } else {
+        console.log(`${functionFullName}: Complete achievement total for all users retrieved successfully`);
+        console.log(usersCompleteAchievementTotal);
+
+        return {
+          status: true,
+          message: 'Complete achievement total for all users retrieved successfully',
+          usersCompleteAchievementTotal: usersCompleteAchievementTotal
+        };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.getUsersCompleteAchievementTotal = getUsersCompleteAchievementTotal;
+
 const acknowledgeAchievementComplete = function (achievementProgressId, userId) {
   const functionName = 'acknowledgeAchievementComplete';
   const functionFullName = `${componentName} ${functionName}`;

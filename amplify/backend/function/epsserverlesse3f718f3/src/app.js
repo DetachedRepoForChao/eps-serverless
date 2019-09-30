@@ -127,6 +127,28 @@ app.get('/items/usersPublicDetails', function(req, res) {
   });
 });
 
+app.get('/items/usersPublicDetails2', function(req, res) {
+  console.log('starting get usersPublicDetails2');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const promises = [];
+      promises.push(ctrlUser.getUsersPublicDetails());
+      promises.push(ctrlAchievement.getUsersCompleteAchievementTotal());
+      Promise.all(promises)
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+
 app.put('/items/userProfile', function(req, res) {
   console.log('starting put userProfile');
 });
@@ -216,7 +238,7 @@ app.get('/items/currentUserAchievements', function(req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
 
-    console.log("tokenResult"+tokenResult.claims)
+    // console.log("tokenResult"+tokenResult.claims)
 
 
     if(tokenResult.message === 'Success') {
@@ -238,6 +260,28 @@ app.get('/items/currentUserAchievements', function(req, res) {
     }
   });
 });
+
+app.get('/items/usersCompleteAchievementTotal', function(req, res) {
+  const functionName = 'get usersCompleteAchievementTotal';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlAchievement.getUserAchievementsByUserId()
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data.usersCompleteAchievementTotal});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 
 
 app.post('/items/acknowledgeAchievementComplete', function(req, res) {
