@@ -6,7 +6,8 @@ import {Globals} from '../../globals';
 import {FeedcardService} from '../feedcard/feedcard.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
-
+import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
+import { Achievement } from '../achievement/achievement.model';
 @Component({
   selector: 'app-avatar',
   templateUrl: './avatar.component.html',
@@ -32,7 +33,9 @@ export class AvatarComponent implements OnInit {
               private globals: Globals,
               private feedcardService: FeedcardService,
               private entityCurrentUserService: EntityCurrentUserService,
-              public userQuery: EntityCurrentUserQuery) { }
+              public userQuery: EntityCurrentUserQuery,
+              public achievementQuery: AchievementQuery
+              ) { }
 
   ngOnInit() {
     this.croppedImageToShow = this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl;
@@ -129,5 +132,9 @@ export class AvatarComponent implements OnInit {
           currentFn.avatarService.saveUserAvatar(data.result).subscribe();
         };
       });
+  }
+  getCompletedAchievementsById(id: number){
+    return this.achievementQuery.getCompleteAchivievementById(id);
+
   }
 }
