@@ -23,7 +23,7 @@
                                 <div class="container-img">
                                   <img [src]="row.imageResolvedUrl"/>
                                 </div>
-                                <button  mat-button (click)="openDialog()"> <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
+                                <button  mat-button (click)="openDialog(); selectedStoreItem(row);"> <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
                                 <div class="container-text2">{{row.description}}</div></button>
                             </div>
                           </div>

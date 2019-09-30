@@ -9,7 +9,7 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
-import {MatDialog } from '@angular/material'; 
+import {MatDialog } from '@angular/material';
 import { EntityCurrentUserService } from 'src/app/entity-store/current-user/state/entity-current-user.service';
 import { CostExplorer } from 'aws-sdk';
 import { CurrentUserStore } from 'src/app/entity-store/current-user/state/current-user.store';
@@ -26,7 +26,7 @@ export class PointsStoreComponent implements OnInit {
   dialogResult = " ";
 
 
-  
+
   myInit = {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -38,6 +38,7 @@ export class PointsStoreComponent implements OnInit {
   items: StoreItemModel[] = [];
   numRows: number;
   rows = [];
+  selectedStoreItem;
 
   constructor(private storeItemStore: StoreItemStore,
               private storeItemQuery: StoreItemQuery,
@@ -48,23 +49,27 @@ export class PointsStoreComponent implements OnInit {
 
 
   openDialog(): void {
-  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-  width: '350px',
-  data: "Would you like to redeem this gift?"
-        });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: "Would you like to redeem this gift?"
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog closed: ${result}`);
+      this.dialogResult = result;
 
-         dialogRef.afterClosed().subscribe(result => {
-            console.log(`Dialog closed: ${result}`);
-          this.dialogResult = result;
-            })
-           
-           
-           
-
-        
+      if (result === 'Confirm') {
+        console.log('Test123');
+      } else if (result === 'Cancel') {
+        console.log('Test567');
       }
+    });
+  }
+
+  selectStoreItem(storeItem) {
+    this.selectedStoreItem = storeItem;
     
+  }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -114,7 +119,7 @@ export class PointsStoreComponent implements OnInit {
   }
 
 
-  
+
 /*  getPointItems() {
     Storage.list('store', {
       level: 'public',
