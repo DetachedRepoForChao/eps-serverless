@@ -55,7 +55,7 @@ export class ImageCropperComponent implements OnInit {
           }
         });*/
 
-        this.feedcardService.refreshPointTransactionAvatars();
+        // this.feedcardService.refreshPointTransactionAvatars();
       }
 
     });

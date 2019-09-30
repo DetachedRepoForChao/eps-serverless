@@ -13,11 +13,13 @@ module.exports = function (sequelize, DataTypes) {
             field: 'title'
         },
         audience: {
+            //Three Types:  Persoanl Group Global
             type: DataTypes.STRING(45),
             allowNull: false,
             field: 'audience'
         },
         event: {
+            // Archiev Point
             type: DataTypes.STRING(100),
             allowNull: false,
             field: 'event'
@@ -44,6 +46,11 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true,
             field: 'timeSeen'
         },
+        targetUserId:{
+            type: DataTypes.STRING(20),
+            allowNull:false,
+            field: 'targetUserId'
+        }
     }, {
             tableName: 'notification'
         });

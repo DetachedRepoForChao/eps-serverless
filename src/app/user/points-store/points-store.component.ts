@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import awsconfig from '../../../aws-exports';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
-import {Observable} from 'rxjs';
+import {Observable, from} from 'rxjs';
 import {StoreItemStore} from '../../entity-store/store-item/state/store-item.store';
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
+import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
-import {MatDialog } from '@angular/material';
+import {MatDialog } from '@angular/material'; 
 
 @Component({
   selector: 'app-points-store',
@@ -19,6 +20,7 @@ export class PointsStoreComponent implements OnInit {
   componentName = 'points-store.component';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/things';
+  dialogResult = " ";
   myInit = {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -34,12 +36,20 @@ export class PointsStoreComponent implements OnInit {
   constructor(private storeItemStore: StoreItemStore,
               private storeItemQuery: StoreItemQuery,
               private storeItemService: StoreItemService,
+              private currentUserQuery: EntityCurrentUserQuery,
               public dialog: MatDialog ) {}
+
+
   openDialog(): void {
   const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
   width: '350px',
   data: "Would you like to redeem this gift?"
         });
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog closed: ${result}`);
+          this.dialogResult = result;
+        })
       }
 
   ngOnInit() {
@@ -89,6 +99,8 @@ export class PointsStoreComponent implements OnInit {
     console.log(this.rows);
   }
 
+
+  
 /*  getPointItems() {
     Storage.list('store', {
       level: 'public',

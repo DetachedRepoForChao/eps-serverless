@@ -1,6 +1,6 @@
 const SqlModel = require('../db');
 const Models = SqlModel().Models;
-
+const sqlNotificationModel = Models.Notification;
 const sqlUserModel = Models.User;
 const sqlAchievementModel = Models.Achievement;
 const sqlAchievementTransactionModel = Models.AchievementTransaction;
@@ -10,14 +10,20 @@ const sqlNotification = Models.Notification;
 
 
 const componentName = 'notification.controller';
-
-const getNotifications = function () {
+/**
+ * Get the  notificaion by the userid
+ * @param {*} targetUserId 
+ */
+const getNotifications = function (targetUserId) {
     const functionName = 'getNotifications';
     const functionFullName = `${componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
   
     return sqlNotification.findAll({
-      attributes: ['id', 'title', 'description', 'timeSeen', 'audience', 'event']
+      where: {
+        targetUserId: targetUserId,
+      },
+      // attributes: ['id', 'title', 'description', 'timeSeen', 'audience', 'event']
     })
       .then(notificationsResult => {
         if(!notificationsResult) {
@@ -35,5 +41,103 @@ const getNotifications = function () {
         return {status: 500, message: err};
       });
   };
+
+module.exports.getNotifications = getNotifications;
+
+/**
+ * 
+ * Set up notification  to the target user and based on the role of user.
+ * Only Manager can send noticiations
+ * 
+ */
+const setNotificationsToPerson = function (targetUserId,title,event, description,event){
+      const functionName = 'setNotificationsToPerson';
+      const functionFullName = `${componentName} ${functionName}`;
+      console.log(`Start ${functionFullName}`);
+      return sqlNotification.create({
+            targetUserId: targetUserId,
+            title:title,
+            description:description,
+            audience:'Group',
+            event:event,
+            timeSeen:null,
+      }).then((notifications)=>{
+          console.log(`${functionFullName}: notification created in the db`);
+          return {status:true,message:'notification created',noticiations:notifications}
+      }).catch(err=>{
+        console.log(`${functionFullName}: Problem with the database`);
+        console.log(err);
+        return { status: false, error: 'Problem with the database: ' + err };
+      })
+}
+
+exports.setNotificationsToPerson = setNotificationsToPerson;
+
+
+
+
+const setNotificationsToGroup = function (group, title, event, description, event) {
+  const functionName = 'setNotificationsToPerson';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+  return sqlNotification.create({
+    targetUserId: targetUserId,
+    title: title,
+    description: description,
+    audience: 'Group',
+    event: event,
+    timeSeen: null,
+  }).then((notifications) => {
+    console.log(`${functionFullName}: notification created in the db`);
+    return { status: true, message: 'notification created', noticiations: notifications }
+  }).catch(err => {
+    console.log(`${functionFullName}: Problem with the database`);
+    console.log(err);
+    return { status: false, error: 'Problem with the database: ' + err };
+  })
+}
+
+module.exports.setNotificationsToGroup = setNotificationsToGroup;
+
+
+
+/**
+ * 
+ * @param {*} notifictaionId 
+ */
+
+const setNotifictaionSeenTime = function(notifictaionId){
+  const functionName = 'setNotifictaionSeenTime';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(new Date().getTime.toString);
+  return sqlNotification.update({
+      timeSeen: Date.now(),
+  },{
+      where:{
+         id: notifictaionId,
+      }
+  }).then((notifications) => {
+      console.log(`${functionFullName}: timeseen update in the db`);
+      return { status: true, message: 'timeseen updated', noticiations: notifications }
+  }).catch(err => {
+        console.log(`${functionFullName}: Problem with the database`);
+        console.log(err);
+        return { status: false, error: 'Problem with the database: ' + err };
+  })
+}
+
+module.exports.setNotifictaionSeenTime = setNotifictaionSeenTime;
+
+
+// const setNotificationsToGroup =function(targetGroup,notificaionTitle,event,description,event){
+
+// }
+
+
+// module.exports.setNotificationsToGroup = setNotificationsToGroup;
+
+
+
   
-  module.exports.getNotifications = getNotifications;

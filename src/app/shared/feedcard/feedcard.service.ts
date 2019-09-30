@@ -12,18 +12,18 @@ import {Globals} from '../../globals';
 export interface PointTransaction {
   id: number;
   amount: number;
-  sourceUserAvatarPath: string;
-  sourceUserAvatarUrl: string;
-  sourceUserAvatarCached: boolean;
+  // sourceUserAvatarPath: string;
+  // sourceUserAvatarUrl: string;
+  // sourceUserAvatarCached: boolean;
   sourceUserEmail: string;
   sourceUserFirstName: string;
   sourceUserLastName: string;
   sourceUserId: number;
   sourceUserName: string;
   sourceUserPoints: number;
-  targetUserAvatarPath: string;
-  targetUserAvatarUrl: string;
-  targetUserAvatarCached: boolean;
+  // targetUserAvatarPath: string;
+  // targetUserAvatarUrl: string;
+  // targetUserAvatarCached: boolean;
   targetUserEmail: string;
   targetUserFirstName: string;
   targetUserLastName: string;
@@ -46,6 +46,7 @@ export interface LikingUser {
   username: string;
   departmentName: string;
   departmentId: number;
+  
 }
 
 export interface Like {
@@ -161,13 +162,13 @@ export class FeedcardService implements OnInit {
             // this.avatarService.resolveAvatar(sourceUser).subscribe();
             // this.avatarService.resolveAvatar(targetUser).subscribe();
 
-            let sourceUserAvatarEntry = null;
-            let sourceUserAvatarUrl = null;
-            let sourceUserAvatarCached = false;
+            // let sourceUserAvatarEntry = null;
+            // let sourceUserAvatarUrl = null;
+            // let sourceUserAvatarCached = false;
 
-            sourceUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].sourceUserName);
+            // sourceUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].sourceUserName);
 
-            if (sourceUserAvatarEntry) {
+/*            if (sourceUserAvatarEntry) {
               console.log(`${functionFullName}: Retrieved cached user avatar entry for source user ${result[i].sourceUserName}`);
               sourceUserAvatarUrl = sourceUserAvatarEntry.avatarResolvedUrl;
               sourceUserAvatarCached = true;
@@ -187,23 +188,23 @@ export class FeedcardService implements OnInit {
               targetUserAvatarCached = true;
             } else {
               console.log(`${functionFullName}: Unable to find cached user avatar entry for target user ${result[i].targetUserName}`);
-            }
+            }*/
 
             const pointTransaction: PointTransaction = {
               id: result[i].id,
               amount: result[i].amount,
-              sourceUserAvatarPath: result[i].sourceUserAvatarUrl,
-              sourceUserAvatarUrl: sourceUserAvatarUrl,
-              sourceUserAvatarCached: sourceUserAvatarCached,
+              // sourceUserAvatarPath: result[i].sourceUserAvatarUrl,
+              // sourceUserAvatarUrl: sourceUserAvatarUrl,
+              // sourceUserAvatarCached: sourceUserAvatarCached,
               sourceUserEmail: result[i].sourceUserEmail,
               sourceUserFirstName: result[i].sourceUserFirstName,
               sourceUserLastName: result[i].sourceUserLastName,
               sourceUserId: result[i].sourceUserId,
               sourceUserName: result[i].sourceUserName,
               sourceUserPoints: result[i].sourceUserPoints,
-              targetUserAvatarPath: result[i].targetUserAvatarUrl,
-              targetUserAvatarUrl: targetUserAvatarUrl,
-              targetUserAvatarCached: targetUserAvatarCached,
+              // targetUserAvatarPath: result[i].targetUserAvatarUrl,
+              // targetUserAvatarUrl: targetUserAvatarUrl,
+              // targetUserAvatarCached: targetUserAvatarCached,
               targetUserEmail: result[i].targetUserEmail,
               targetUserFirstName: result[i].targetUserFirstName,
               targetUserLastName: result[i].targetUserLastName,
@@ -283,7 +284,7 @@ export class FeedcardService implements OnInit {
     });
   }
 
-  updatePointTransactionAvatar(targetUsername: string, avatarResolvedUrl: string) {
+/*  updatePointTransactionAvatar(targetUsername: string, avatarResolvedUrl: string) {
     const functionName = 'updatePointTransactionAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -294,7 +295,7 @@ export class FeedcardService implements OnInit {
         this.pointTransactions[i].targetUserAvatarUrl = avatarResolvedUrl;
       }
     }
-  }
+  }*/
 
   addLike(targetUserId: number, postId: number): Observable<any> {
     const functionName = 'addLike';
@@ -425,7 +426,7 @@ export class FeedcardService implements OnInit {
     });
   }
 
-  refreshPointTransactionAvatars() {
+/*  refreshPointTransactionAvatars() {
     const functionName = 'refreshPointTransactionAvatars';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -447,7 +448,7 @@ export class FeedcardService implements OnInit {
         if (userAvatarHashEntry.avatarPath === distinctTargetUser.targetUserAvatarPath) {
           // Urls match
         } else {
-          console.log(`${functionFullName}: Avatar paths don't match for point transaction targetUser ${distinctTargetUser.targetUserName}`);
+        console.log(`${functionFullName}: Avatar paths don't match for point transaction targetUser ${distinctTargetUser.targetUserName}`);
           for (let i = 0; i < this.pointTransactions.length; i++) {
             if (this.pointTransactions[i].targetUserName === distinctTargetUser.targetUserName) {
               console.log(`${functionFullName}: Setting avatar for point transaction targetUser ${distinctTargetUser.targetUserName}`);
@@ -457,5 +458,5 @@ export class FeedcardService implements OnInit {
         }
       }
     });
-  }
+  }*/
 }

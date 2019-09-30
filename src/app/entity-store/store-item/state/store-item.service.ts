@@ -90,7 +90,7 @@ export class StoreItemService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
 
-          API.get(this.apiName, this.apiPath + '/getPointItems', myInit).then(data => {
+          API.get(this.apiName, this.apiPath + '/getStoreItems', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);

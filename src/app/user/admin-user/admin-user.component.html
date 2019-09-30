@@ -4,20 +4,32 @@
  
  <nav class="navbar navbar-expand-lg bg-primary">
   <div class="container">
-    <a class="navbar-brand" >The Asbury Admin Dashboard</a>
+
+   
+   
+    <a class="navbar-brand" >The Asbury Hotel Admin Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
+       
+      
+      
       
 <!--      icon for logout-->
       </ul>
       <span class="navbar-text">
    
-       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#"></i>
+<!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
+       
+       
+       <button type="button" class="btn btn-icon btn-round" color="white"  (click)="onLogout()">
+          <i class="tim-icons icon-button-power" title="logout"></i>
+        </button>
       </span>
     </div>
   </div>
@@ -26,27 +38,79 @@
 <br><br><br><br>
 
 <!--cards-->
-
+<!--card1-->
 
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-4">
 			<div class="card">
-
-				<h5 class="card-header1">
-					Card title
+				<h5 class="card-header2">
+					<img alt="Bootstap Image Preview" width="175" height="175" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXx8hZf4F_P5gYeojzE7yOicnY7E-fwa3UALUYcwQP529XSZxc8Q" class="rounded-circle"/>
 				</h5>
-				<div class="card-body1">
-					<p class="card-text1">
-						Card content
-					</p>
+				<div class="card-body">
+          <H1 class="card-text3">
+            User
+          </H1>
 				</div>
-				<div class="card-footer1">
-					Card footer
-
+				<div class="card-footer3" style="margin-bottom: 20px">
+              <!-- Button trigger modal -->
+              
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModel">Add User</button>
+              
+              <!-- Modal -->
+              <div class="modal fade bd-example-modal-lg" id="addUserModel" tabindex="-1" role="dialog"
+                aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Add User </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+              
+              
+                    <div class="modal-body">
+                      <!--       form-->
+              
+              
+                      <form>
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="inputitems_id">ID</label>
+                            <input type="ID" class="form-control" id="inputEmail4" placeholder="ID">
+                          </div>
+                          <div class="form-group col-md-6">
+                            <label for="inputitems_name">Name</label>
+                            <input type="Name" class="form-control" id="inputitem_name" placeholder="Name">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="inputitems_Description">Description</label>
+                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                        </div>
+                        <div class="form-group">
+                          <label for="inputAddress2">Address 2</label>
+                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                        </div>
+              
+              
+                      </form>
+              
+              
+              
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 				</div>
 			</div>
 		</div>
+
 		
 		
 		
@@ -55,84 +119,197 @@
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+<!--card2-->		
+		
+		
+
 		<div class="col-md-4">
 			<div class="card">
 				<h5 class="card-header2">
-				<img alt="Bootstrap Image Preview" width="165" height="165" src="https://www.clipartmax.com/png/full/282-2822110_finance-flat-icon-png-coin-flat-icon-png.png" class="rounded-circle" />
+				<img alt="Bootstrap Image Preview" width="175" height="175" src="https://www.clipartmax.com/png/full/282-2822110_finance-flat-icon-png-coin-flat-icon-png.png" class="rounded-circle" />
 				</h5>
-				<div class="card-body2">
-					<h1 class="card-text2">
-				POINT
-					</h1>
+				<div class="card-body">
+				
+				<H1 class="card-text2">
+						POINT 
+					</H1>
+				
 				</div>
-				<div class="card-footer2">
-					<!-- Large modal -->
+				<div class="card-footer2">		
+		<!-- Button trigger modal -->
+<!--
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Point</button>
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      ...
-    </div>
-  </div>
-</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="card">
-				<h5 class="card-header3">
-				<img alt="Bootstrap Image Preview" width="165" height="165" src="https://cdn4.iconfinder.com/data/icons/e-commerce-and-shopping-3/500/cart-checked-512.png" class="rounded-circle" />
-				</h5>
-				<div class="card-body3">
-					<h1 class="card-text3">
-						STORE ITEMS
-					</h1>
-				</div>
-				<div class="card-footer3">
-					<!-- Large modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Items</button>
-
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+ Modal 
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Point</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
+        ...
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
     </div>
   </div>
-</div>	
+</div>
 			
+-->
 			
-			
-			
+			<br><br>
+       <button class="btn btn-primary btn-lg">Edit Point</button>      
+           
+   <br><br>
+       <button class="btn btn-primary btn-lg">Dlete Point</button>  
 				</div>
 			</div>
 		</div>
-	</div>
+		
+		
+		
+		
+		
+		
+<!--card3-->		
+		
+		
+		
+		<div class="col-md-4">
+			<div class="card">
+				<h5 class="card-header3">
+				<img alt="Bootstrap Image Preview" width="165" height="165" src="https://cdn4.iconfinder.com/data/icons/e-commerce-and-shopping-3/500/cart-checked-512.png" class="rounded-circle" />
+				</h5>
+				<div class="card-body">
+					<H1 class="card-text3">
+						STORE ITEMS
+					</H1>
+				</div>
+				<div class="card-footer3">
+   
+   		<!-- Button trigger modal -->
+
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addItemModel">Add Items</button>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="addItemModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Items </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+
+      <div class="modal-body">
+<!--       form-->
+      
+      
+      <form>
+  <div class="form-row">
+    <div class="form-group col-md-6" >
+      <label for="inputitems_Name">Item Name </label>
+      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputitems_Point_amount">point amount</label>
+      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputitems_Description">Description</label>
+    <input type="text" class="form-control" id="inputDescription" placeholder="Description">
+  </div>
+<!--
+  <div class="form-group">
+    <label for="inputAddress2">Address 2</label>
+    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+  </div>
+-->
+
+
+  <div class="form-group">
+   <label for="inputUploadImg">Upload Img </label>
+    <input type="file" name="img[]" class="file">
+    <div class="input-group col-xs-12">
+      <span class="input-group-addon"><i class="icon-image-02" ></i></span>
+      <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+      <span class="input-group-btn">
+        <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search" ></i> Browse</button>
+      </span>
+    </div>
+  </div>
+</form>
+       
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>   
+       
+
+      
+  <br><br>
+       <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Edit Items</button>      
+         
+   <br><br>
+       <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Dlete Items</button>      
+      
+  
+    
+      
+      
+    </div>
+
 </div>
 
-
+  </div>
+</div>	
+			 
+			
+				</div>
+			
+	
 
 
 

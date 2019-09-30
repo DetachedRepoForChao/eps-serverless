@@ -143,6 +143,7 @@ export class AchievementService {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    console.log(`${functionFullName}: achievement family: ${achievementFamily}`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {

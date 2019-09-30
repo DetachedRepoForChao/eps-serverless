@@ -10,6 +10,7 @@ import {Globals} from '../../../globals';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 
 
 @Component({
@@ -26,9 +27,10 @@ export class FeedComponent implements OnInit {
               private avatarService: AvatarService,
               private spinner: NgxSpinnerService,
               private globals: Globals,
-              private userAvatarService: EntityUserService,
-              private userAvatarStore: UserStore,
-              private userAvatarQuery: EntityUserQuery) { }
+              private entityUserService: EntityUserService,
+              private userStore: UserStore,
+              private entityUserQuery: EntityUserQuery,
+              private achievementService: AchievementService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -55,7 +57,9 @@ export class FeedComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.feedcardService.addLike(pointTransaction.targetUserId, pointTransaction.id).subscribe();
+    this.feedcardService.addLike(pointTransaction.targetUserId, pointTransaction.id).subscribe(() => {
+      this.achievementService.incrementAchievement('LikePost').subscribe();
+    });
   }
 
   onUnlikeClick(pointTransaction: PointTransaction) {
@@ -63,6 +67,8 @@ export class FeedComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.feedcardService.removeLike(pointTransaction.id).subscribe();
+    this.feedcardService.removeLike(pointTransaction.id).subscribe(() => {
+      this.achievementService.incrementAchievement('UnlikePost').subscribe();
+    });
   }
 }
