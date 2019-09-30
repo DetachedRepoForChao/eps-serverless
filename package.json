@@ -23,7 +23,6 @@
     "@angular/platform-browser": "^7.2.8",
     "@angular/platform-browser-dynamic": "^7.2.8",
     "@angular/router": "^7.2.8",
-    "@aws-amplify/cli": "^3.9.0",
     "@datorama/akita": "^4.10.0",
     "@datorama/akita-ng-entity-service": "^1.0.0",
     "amazon-cognito-identity-js": "^3.0.13",

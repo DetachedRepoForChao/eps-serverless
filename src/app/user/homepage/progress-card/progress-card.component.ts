@@ -42,11 +42,8 @@ export class ProgressCardComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-
-    this.achievementService.cacheAchievements().subscribe(() => {
-      this.filteredAchievements$ = this.achievementQuery.filterAchievements();
-      // this.selectedAchievement = this.filteredAchievements[0];
-    });
+    this.achievementService.cacheAchievements().subscribe();
+    this.filteredAchievements$ = this.achievementQuery.filterAchievements();
     // this.isCardLoading = true;
     // this.spinner.show('progress-card-spinner');
 
