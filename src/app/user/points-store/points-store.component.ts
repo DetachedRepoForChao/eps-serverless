@@ -9,7 +9,7 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
-import {MatDialog } from '@angular/material';
+import {MatDialog, MatSnackBar, VERSION } from '@angular/material';
 import { EntityCurrentUserService } from 'src/app/entity-store/current-user/state/entity-current-user.service';
 import { CostExplorer } from 'aws-sdk';
 import { CurrentUserStore } from 'src/app/entity-store/current-user/state/current-user.store';
@@ -24,6 +24,7 @@ export class PointsStoreComponent implements OnInit {
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/things';
   dialogResult = " ";
+  version = VERSION;
 
 
 
@@ -46,6 +47,7 @@ export class PointsStoreComponent implements OnInit {
               private entityCurrentUserService: EntityCurrentUserService,
               private currentUserStore: CurrentUserStore,
               private currentUserQuery: EntityCurrentUserQuery,
+              private snackBar: MatSnackBar,
               public dialog: MatDialog ) {}
 
 
@@ -73,15 +75,19 @@ export class PointsStoreComponent implements OnInit {
     console.log(this.selectedStoreItem);
   }
 
+
+
   checkPoints() {
     const userPoints = this.currentUserQuery.getAll()[0].points;
     const itemCost = this.selectedStoreItem.cost;
     console.log(`The item costs: ${itemCost}`);
     console.log(`You currently have: ${userPoints}`);
     if (userPoints < itemCost) {
+      const snack = this.snackBar.open('You do not have enough points to redeem this item');
       console.log(`You don't have enough points`);
     } else {
-      console.log(`You have enough points to redeem this. An email has been sent to your manager for approval`);
+      const snack = this.snackBar.open(`You have enough points to redeem this item. An email has been sent to your manager for approval`);
+      console.log(`You have enough points to redeem this item. An email has been sent to your manager for approval`);
 
     }
   }
