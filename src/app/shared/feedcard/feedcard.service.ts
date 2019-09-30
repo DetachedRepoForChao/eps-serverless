@@ -46,6 +46,7 @@ export interface LikingUser {
   username: string;
   departmentName: string;
   departmentId: number;
+  
 }
 
 export interface Like {

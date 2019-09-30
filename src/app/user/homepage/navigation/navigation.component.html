@@ -35,7 +35,9 @@
         </div>
       </div>
       <ul>
-        <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#notiModal"><i class="tim-icons icon-bell-55" title="Notifications"></i></button>
+        <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#notiModal">
+          <i class="tim-icons icon-bell-55" title="Notifications"></i>
+        </button>
         <div class="modal fade" id="notiModal" role="dialog">
           <div class="modal-dialog tweet">
             <div class="modal-content">
@@ -44,17 +46,42 @@
                 <h4 class="modal-title"><b>Notifications</b></h4>
               </div>
               <div class="col-lg-12 ">
-                <div class="col-lg-12 twitter-card bg-primary">
+                <!-- <div class="col-lg-12 twitter-card bg-primary"> -->
                   <div class="card-fluid">
                     <div class="card-body">
-                      <h4 class="card-title">Events</h4>
-                      <p class="card-text data-height=100%">
-                        <a class="twitter-timeline" data-height="600px" href="https://twitter.com/theasburyhotel?ref_src=twsrc%5Etfw">Tweets by theasburyhotel</a>
-                        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-                      </p>
+
+                    <div class="list-group">
+                      <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1">List group item heading</h5>
+                          <small>3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small>Donec id elit non mi porta.</small>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1">List group item heading</h5>
+                          <small class="text-muted">3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small class="text-muted">Donec id elit non mi porta.</small>
+                      </a>
+                      <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1">List group item heading</h5>
+                          <small class="text-muted">3 days ago</small>
+                        </div>
+                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                        <small class="text-muted">Donec id elit non mi porta.</small>
+                      </a>
+                    </div>
+
+
+
 
                     </div>
-                  </div>
+                  <!-- </div> -->
                 </div>
               </div>
             </div>
@@ -65,6 +92,7 @@
         <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#giftModal">
           <i class="tim-icons icon-coins" title="gift"></i>
         </button>
+
         <div class="modal fade" id="giftModal" role="dialog">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -72,6 +100,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title"><b>Gifts</b></h4>
               </div>
+
               <div class="modal-body">
                 <div class="row text-center mt-4">
                   <div class="col p-2">
@@ -168,6 +197,8 @@
                     </div>
                   </div>
                 </div>
+
+
                 <div class="progress-container progress-danger">
                   <span class="progress-badge text-muted">Lead Group Meeting (1 of 2)</span>
                   <div class="progress">

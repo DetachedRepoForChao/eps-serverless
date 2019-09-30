@@ -28,4 +28,14 @@ export class AdminUserComponent implements OnInit {
 //    resetStores();
     this.router.navigate(['/login']);
   }
+	
+//uploadFile(event:any){
+// let file = event.target.files[0];
+//let fileName = file.name;
+// console.log(file)
+// console.log(fileName)
+// let formData = new FormData();
+// formData.append('file',file);
+// this.examService.uploadAnswer(formData);
+// }
 }
