@@ -74,6 +74,8 @@ const setNotificationsToPerson = function (targetUserId,title,event, description
 exports.setNotificationsToPerson = setNotificationsToPerson;
 
 
+
+
 const setNotificationsToGroup = function (group, title, event, description, event) {
   const functionName = 'setNotificationsToPerson';
   const functionFullName = `${componentName} ${functionName}`;
