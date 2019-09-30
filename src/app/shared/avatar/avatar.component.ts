@@ -6,8 +6,13 @@ import {Globals} from '../../globals';
 import {FeedcardService} from '../feedcard/feedcard.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
+<<<<<<< HEAD
+import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
+import { Achievement } from '../achievement/achievement.model';
+=======
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 
+>>>>>>> 181725ffafcbbc9b9572dfb901b36bd79ff3ddd7
 @Component({
   selector: 'app-avatar',
   templateUrl: './avatar.component.html',
@@ -34,7 +39,12 @@ export class AvatarComponent implements OnInit {
               private feedcardService: FeedcardService,
               private entityCurrentUserService: EntityCurrentUserService,
               public userQuery: EntityCurrentUserQuery,
+<<<<<<< HEAD
+              public achievementQuery: AchievementQuery
+              ) { }
+=======
               private achievementService: AchievementService) { }
+>>>>>>> 181725ffafcbbc9b9572dfb901b36bd79ff3ddd7
 
   ngOnInit() {
     this.croppedImageToShow = this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl;
@@ -120,5 +130,9 @@ export class AvatarComponent implements OnInit {
           });
         };
       });
+  }
+  getCompletedAchievementsById(id: number){
+    return this.achievementQuery.getCompleteAchivievementById(id);
+
   }
 }
