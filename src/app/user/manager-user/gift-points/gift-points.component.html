@@ -61,13 +61,13 @@
           </div>
           <div class="col-md-6">
         <form class="form">
- 
+
             <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee">
-      
+
         </form>
       </div>
       <div class="col-md-3">
-        
+
         <!------award points----->
       </div>
         </div>
@@ -120,7 +120,7 @@
                   <img src="{{user.avatarResolvedUrl}}" class="img-row" (click)="onAvatarClick(user)"/>
                 </div>
               </div>
-              
+
               <!-- <ng-template #templateImgRow>
                 <img src="{{char[col]}}" class="img-row" >
               </ng-template> -->
@@ -147,43 +147,43 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title">{{clickedUser.firstName}}</h4>
+                  <h4 class="modal-title">{{clickedUser?.firstName}}</h4>
                 </div>
                 <div class="modal-body">
 
                     <div class="card">
                       <div class="card card-coin card-plain maxheight">
                         <div class="card-header">
-  
+
                           <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
-                            <img src="{{clickedUser.avatarResolvedUrl}}"
+                            <img src="{{clickedUser?.avatarResolvedUrl}}"
                                  alt="Place image title"
                                  class="img-center img-fluid rounded-circle"
                                  id="avatar">
                           </div>
-  
+
                           <ng-template #selectedAvatarLoading >
                             <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                                  alt="Loading..."
                                  class="img-center img-fluid rounded-circle"
                                  id="avatarPlaceholder">
                           </ng-template>
-  
+
                         </div>
                         <div class="card-body">
                           <div class="userDetails"></div>
                           <div class="row">
                             <div class="col-md-12 text-center">
-                              <h4 class="text-uppercase">{{selectedRow.name}}</h4>
-                              <span>{{selectedRow.department}}</span>
+                              <h4 class="text-uppercase">{{selectedRow?.name}}</h4>
+                              <span>{{selectedRow?.department}}</span>
                               <hr class="line-success">
                             </div>
                           </div>
-  
+
                           <div class="row text-center mt-4">
                             <div class="col p-2">
                               <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-                              <h4 class="mb-0">{{clickedUser.points}}</h4>
+                              <h4 class="mb-0">{{clickedUser?.points}}</h4>
                             </div>
                             <div class="col p-2">
                               <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
@@ -191,7 +191,7 @@
                             </div>
                             <div class="col p-2">
                               <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-                              <h4 class="mb-0">{{selectedRow.rank}}</h4>
+                              <h4 class="mb-0">{{selectedRow?.rank}}</h4>
                             </div>
                           </div>
                           <div class="card-footer text-center">

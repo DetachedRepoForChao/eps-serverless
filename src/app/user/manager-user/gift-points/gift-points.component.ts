@@ -13,7 +13,6 @@ import {NgForm} from '@angular/forms';
 import {componentRefresh} from '@angular/core/src/render3/instructions';
 import {Router} from '@angular/router';
 import {Observable, forkJoin} from 'rxjs';
-import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {GiftPointsService} from './gift-points.service';
@@ -27,6 +26,7 @@ import {EntityCurrentUserService} from '../../../entity-store/current-user/state
 import {PointItemService} from '../../../entity-store/point-item/state/point-item.service';
 import {PointItemModel} from '../../../entity-store/point-item/state/point-item.model';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
+import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 
 declare var $: any;
 
@@ -105,15 +105,16 @@ export class GiftPointsComponent implements OnInit {
     this.pointItemList$ = this.pointItemQuery.selectAll();
     // this.filteredPointItemList$ = this.pointItemQuery.selectAll();
 
-    this.entityUserService.cacheUsers().subscribe(() => {
-      this.employees$ = this.entityUserQuery.selectAll({
-        filterBy: userEntity => userEntity.securityRole.Id === 1,
-      });
-
-      this.isCardLoading = false;
-      this.spinner.hide('gift-points-spinner');
+    this.entityUserService.cacheUsers().subscribe();
+    this.employees$ = this.entityUserQuery.selectAll({
+      filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
+
+    this.isCardLoading = false;
+    this.spinner.hide('gift-points-spinner');
   }
+
+
 
   populateCoreValueButtonList() {
     const functionName = 'populateCoreValueButtonList';
@@ -186,6 +187,7 @@ export class GiftPointsComponent implements OnInit {
               for (let i = 0; i < resultObjectArray.length; i++) {
                 this.entityUserService.updatePoints(+resultObjectArray[i].targetUserId, +resultObjectArray[i].newPointAmount);
               }
+              this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length).subscribe();
             });
         }
       }
@@ -326,7 +328,7 @@ clickedUser;
   onAvatarClick(user) {
     console.log(user);
     this.clickedUser = user;
-    $("#giftClickedModal").modal('show');
-    console.log(document.getElementById("giftClickedModal"));
+    $('#giftClickedModal').modal('show');
+    console.log(document.getElementById('giftClickedModal'));
   }
 }

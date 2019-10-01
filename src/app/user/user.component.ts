@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import { UserService } from '../shared/user.service';
 import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { DepartmentService } from '../shared/department.service';
@@ -92,6 +92,25 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.securityRoleName = this.globals.getUserAttribute('custom:security_role');
 
+    this.navigateHome();
+
+    this.isComponentLoading = false;
+
+    this.idle = this.userIdle.getConfigValue().idle;
+    this.timeout = this.userIdle.getConfigValue().timeout;
+    this.ping = this.userIdle.getConfigValue().ping;
+
+    this.onStartWatching();
+
+    // this.startAchievementPolling();
+  }
+
+
+  navigateHome() {
+    const functionName = 'navigateHome';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     switch (this.securityRoleName) {
       case 'employee': {
         console.log(`${functionFullName}: navigating to standard-user`);
@@ -117,20 +136,6 @@ export class UserComponent implements OnInit, OnDestroy {
         break;
       }
     }
-
-    this.isComponentLoading = false;
-
-    this.idle = this.userIdle.getConfigValue().idle;
-    this.timeout = this.userIdle.getConfigValue().timeout;
-    this.ping = this.userIdle.getConfigValue().ping;
-
-    this.onStartWatching();
-
-    // this.startAchievementPolling();
-  }
-
-  nav() {
-    this.router.navigate(['user', 'homepage']);
   }
 
   ngOnDestroy() {

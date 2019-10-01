@@ -99,6 +99,11 @@ export class LeaderboardCardComponent implements OnInit {
     this.achievementService.cacheAchievements().subscribe();
   }
 
+  getFirstDigit(number: number) {
+    const one = String(number).charAt(0);
+    return Number(one);
+  }
+
   test2() {
     console.log('achievement family');
     console.log(this.achievementQuery.getAchievementFamily('SignIn'));
@@ -107,7 +112,7 @@ export class LeaderboardCardComponent implements OnInit {
     console.log('filtered achievements');
     this.achievementQuery.filterAchievements().subscribe(result => console.log(result));
     console.log('completed');
-    console.log(this.achievementQuery.getCompletedAchievements());
+    console.log(this.achievementQuery.getCompleteAchievements());
     console.log('user query select all');
     const users$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
@@ -133,7 +138,10 @@ export class LeaderboardCardComponent implements OnInit {
       console.log(metrics);
     }).unsubscribe();
 
-    this.entityUserQuery.getUserCompleteAchievementCount(47);
+    // this.entityUserQuery.getUserCompleteAchievementCount(47);
+
+    console.log(this.achievementQuery.getCompleteAchievements());
+    console.log(this.achievementQuery.getCompleteAchievementById(1));
 
   }
 }

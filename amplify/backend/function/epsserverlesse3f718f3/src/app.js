@@ -384,6 +384,36 @@ app.post('/items/incrementAchievement', function(req, res) {
   });
 });
 
+app.post('/items/incrementAchievementByX', function(req, res) {
+  const functionName = 'post incrementAchievementByX';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+
+      ctrlUser.getUserProfile(username)
+        .then(result => {
+          const userId = result.user.id;
+          const achievementFamily = req.body.achievementFamily;
+          const incrementAmount = req.body.incrementAmount;
+          ctrlAchievementLogic.incrementAchievementByX(achievementFamily, userId, incrementAmount)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 /*app.post('/items/achievementFamilyProgress', function(req, res) {
   const functionName = 'post achievementFamilyProgress';
   const functionFullName = `${componentName} ${functionName}`;

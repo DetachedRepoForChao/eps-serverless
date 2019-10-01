@@ -128,8 +128,9 @@ export class AvatarComponent implements OnInit {
         };
       });
   }
-  getCompletedAchievementsById(id: number){
-    return this.achievementQuery.getCompleteAchivievementById(id);
+
+  getCompleteAchievementById(id: number) {
+    return this.achievementQuery.getCompleteAchievementById(id);
 
   }
 }

@@ -134,9 +134,9 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
     return this.getAll().filter(x => ((x.progressStatus === 'complete') || (x.progressStatus === 'complete acknowledged')));
   }
 
-  getCompleteAchivievementById(id: number) {
-    const achievement = this.getCompleteAchievements().filter(x => x.id === id)[0];
-    if(!achievement) {
+  getCompleteAchievementById(id: number) {
+    const achievement = this.getCompleteAchievements().filter(x => x.achievementId === id)[0];
+    if (!achievement) {
       return false;
     } else {
       return true;
