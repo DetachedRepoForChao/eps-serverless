@@ -49,9 +49,9 @@ export class NavigationComponent implements OnInit {
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
     const targetUserID = this.globals.getUsername();
-    this.notificationService.getNotification(targetUserID).subscribe(result => {
+    this.notificationService.getNotification().subscribe(result => {
       this.Notifications = result;
-      if(result!=null){
+      if(result==''){
         $('#notification_button').addClass('btn-primary');
       }else{
         $('#notification_button').addClass('btn-danger');
@@ -86,8 +86,11 @@ export class NavigationComponent implements OnInit {
     // this.router.navigate(['/user']);
   }
 
-  onNotificationClick(){
-     
+  onSeenNotificationClick(notification){
+    console.log("notificationID:" + notification.id);
+    this.notificationService.setNotificationSeenTime(notification.id).subscribe(result =>{
+       console.log("onSeenNotificationClick"+result);
+     })
   }
 
   navigateHome() {
