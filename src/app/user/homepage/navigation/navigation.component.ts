@@ -89,7 +89,20 @@ export class NavigationComponent implements OnInit {
   onSeenNotificationClick(notification){
     console.log("notificationID:" + notification.id);
     this.notificationService.setNotificationSeenTime(notification.id).subscribe(result =>{
-       console.log("onSeenNotificationClick"+result);
+       console.log("onSeenNotificationClick");
+       if(true){
+         this.notificationService.getNotification().subscribe(result => {
+           if (result == '') {
+             $('#notification_button').removeClass('btn-danger');
+             if (!$('#notification_button').hasClass('btn-danger')){
+               $('#notification_button').addClass('btn-primary')
+             }
+           } else {
+             $('#notification_button').removeClass('btn-primary');
+           }
+           this.Notifications = result;
+         });
+       }
      })
   }
 
