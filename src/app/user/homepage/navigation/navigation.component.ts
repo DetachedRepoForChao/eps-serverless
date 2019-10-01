@@ -9,6 +9,8 @@ import {EntityCurrentUserService} from '../../../entity-store/current-user/state
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {resetStores} from '@datorama/akita';
 import {AuthService} from '../../../login/auth.service';
+import { NotificationService } from 'src/app/shared/notifications/notification.service';
+import { Globals } from 'src/app/globals';
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
 declare var blackKit: any;
@@ -22,6 +24,9 @@ declare var $: any;
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
+  componentName = 'navigation.component';
+
+  notifications;
 
   constructor(private userService: UserService,
               private globalVariableService: GlobalVariableService,
@@ -31,7 +36,10 @@ export class NavigationComponent implements OnInit {
               private entityUserAvatarService: EntityUserService,
               private entityUserService: EntityCurrentUserService,
               private storeItemService: StoreItemService,
-              private auth: AuthService) { }
+              private auth: AuthService,
+              private notificationService: NotificationService,
+              private globals: Globals
+              ) { }
 
   ngOnInit() {
     // Initialize the navbar script
@@ -66,8 +74,46 @@ export class NavigationComponent implements OnInit {
     // this.router.navigate(['/user']);
   }
 
-  onNOtificationClick(){
+  onNotificationClick(){
+      console.log("Notification-log click!!!!!!!!!!!!!!!!!!")
+      const targetUserID = this.globals.getUsername();
+      this.notificationService.getNotification(targetUserID).subscribe(result => {
+        this.notifications = result;
+        console.log(this.notifications);
+      });
+      
+  }
 
+  navigateHome() {
+    const functionName = 'navigateHome';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    switch (this.globals.getUserAttribute('custom:security_role')) {
+      case 'employee': {
+        console.log(`${functionFullName}: navigating to standard-user`);
+        // this.router.navigate(['standard-user']);
+        console.log(this.router);
+        console.log(this.router.getCurrentNavigation());
+        // console.log(this.router.)
+        this.router.navigate(['user', 'homepage']);
+        // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
+        break;
+      }
+      case 'manager': {
+        console.log(`${functionFullName}: navigating to manager-user`);
+        // this.router.navigate(['manager-user']);
+        this.router.navigate(['user', 'homepage']);
+        // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
+        break;
+      }
+      case 'admin': {
+        console.log(`${functionFullName}: navigating to admin-user`);
+        this.router.navigate(['user', 'admin-user']);
+        // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
+        break;
+      }
+    }
   }
 
 }

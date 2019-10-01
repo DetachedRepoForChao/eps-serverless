@@ -28,21 +28,21 @@
             </a>
           </div>
           <div class="col-6 collapse-close text-right">
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigation"  aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
               <i class="tim-icons icon-simple-remove"></i>
             </button>
           </div>
         </div>
       </div>
       <ul>
-        <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#notiModal">
+        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onNotificationClick()" data-toggle="modal" data-target="#notiModal">
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
         <div class="modal fade" id="notiModal" role="dialog">
           <div class="modal-dialog tweet">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" (click)="onNotificationClick()">&times;</button>
                 <h4 class="modal-title"><b>Notifications</b></h4>
               </div>
               <div class="col-lg-12 ">
@@ -51,6 +51,7 @@
                     <div class="card-body">
 
                     <div class="list-group">
+                    
                       <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
                         <div class="d-flex w-100 justify-content-between">
                           <h5 class="mb-1">List group item heading</h5>
@@ -191,7 +192,7 @@
                                     <h2 class="text-muted font-weight-bold mb-0">23</h2>
                                     <img src="../../../../assets/img/golds.png" class="img-center img-fluid" />
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -221,7 +222,8 @@
           </div>
         </div>
         <!----- Home ---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'homepage']">
+<!--        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'homepage']">-->
+        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="navigateHome()">
           <i class="fas fa-home" title="home"></i>
         </button>
         <!----- Store ---->

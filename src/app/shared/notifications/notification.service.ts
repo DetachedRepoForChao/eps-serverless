@@ -4,10 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../../login/auth.service';
 import { API } from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
-import { environment } from '../../../environments/environment';
-import { User } from '../user.model';
-import {Department} from '../department.model';
-import {mergeMap, map} from 'rxjs/operators';
+
 
 export interface Notification {
   Name: string;
@@ -45,14 +42,12 @@ export class NotificationService implements OnInit{
    * Get notifications by user token, fetch all the notificaions
    * @param targetUserId 
    */
-  getNotifictaion(targetUserId:String): Observable<any> {
+  getNotification(targetUserId:String): Observable<any> {
     const functionName = 'getNotifications';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-
     console.log(`${functionFullName}: retrieving Notification data for the following point transaction ids:`);
     console.log(targetUserId);
-
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -63,7 +58,7 @@ export class NotificationService implements OnInit{
             targetUserId: targetUserId
           };
 
-          API.post(this.apiName, this.apiPath + '/getNotification', myInit).then(data => {
+          API.get(this.apiName, this.apiPath + '/getNotifications', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);
