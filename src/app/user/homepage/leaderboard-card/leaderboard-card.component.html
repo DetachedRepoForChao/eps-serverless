@@ -42,11 +42,20 @@
               <div *ngIf="col === 'avatar'" class="avatar-container">
                 <div class="circle-container ">
                   <img src="{{user?.avatarResolvedUrl}}"/>
-                  <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
-                    <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" style="color: rgba(255,239,19,1);"></i>
-                    <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" style="color: rgba(43,255,198,1);"></i>
-                    <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" style="color: rgb(254,49,255);"></i>
-                  </span>
+                  <div *ngIf="user?.username === globals.getUsername(); else otherUser">
+                    <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" style="color: rgba(255,239,19,1);"></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" style="color: rgba(43,255,198,1);"></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" style="color: rgb(254,49,255);"></i>
+                    </span>
+                  </div>
+                  <ng-template #otherUser>
+                    <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" style="color: rgba(255,239,19,1);"></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" style="color: rgba(43,255,198,1);"></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" style="color: rgb(254,49,255);"></i>
+                    </span>
+                  </ng-template>
                 </div>
               </div>
               <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>
