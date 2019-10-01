@@ -54,7 +54,17 @@
               <!-- Button trigger modal -->
               
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModel">Add User</button>
-              
+              <!-- Large modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">ADD Documents/Files</button>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <input type="file"
+    name="my file" multiple>
+    </div>
+  </div>
+</div>
               <!-- Modal -->
               <div class="modal fade bd-example-modal-lg" id="addUserModel" tabindex="-1" role="dialog"
                 aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -137,17 +147,7 @@
                                             <label for="phone number">City</label>
                                             <input type="text" class="form-control" id="phone number">
                                           </div>
-                                          <div class="form-group col-md-4">
-                                            <label for="inputState">Department Name</label>
-                                            <select id="inputState" class="form-control">
-                                              <option selected>Choose Gender</option>
-                                              <option>...</option>
-                                            </select>
-                                          </div>
-                                          <div class="form-group col-md-2">
-                                            <label for="inputZip">Zip</label>
-                                            <input type="text" class="form-control" id="departmentName">
-                                          </div>
+                                         
                                         </div>
                                         <div class="form-group">
                                           <div class="form-check">
