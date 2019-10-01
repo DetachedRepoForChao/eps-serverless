@@ -1,13 +1,11 @@
 
+
  
 <!--navbar-->
  
  <nav class="navbar navbar-expand-lg bg-primary">
   <div class="container">
-
-   
-   
-    <a class="navbar-brand" >The Asbury Hotel Admin Dashboard</a>
+    <a class="navbar-brand" >The Asbury Admin Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 
     <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -49,21 +47,31 @@
 				</h5>
 				<div class="card-body">
           <H1 class="card-text3">
-            User
+            Users
           </H1>
 				</div>
 				<div class="card-footer3" style="margin-bottom: 20px">
               <!-- Button trigger modal -->
               
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModel">Add User</button>
-              
+              <!-- Large modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">ADD Images/Files</button>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <input type="file"
+    name="my file" multiple>
+    </div>
+  </div>
+</div>
               <!-- Modal -->
               <div class="modal fade bd-example-modal-lg" id="addUserModel" tabindex="-1" role="dialog"
                 aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Add User </h5>
+                      <h5 class="modal-title" id="exampleModalLabel">Fill in your information </h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -77,24 +85,82 @@
                       <form>
                         <div class="form-row">
                           <div class="form-group col-md-6">
-                            <label for="inputitems_id">ID</label>
-                            <input type="ID" class="form-control" id="inputEmail4" placeholder="ID">
+                            <label for="inputitems_id">User Name</label>
+                            <input type="Anisha" class="form-control" id="inputEmail4" placeholder="First Name">
                           </div>
                           <div class="form-group col-md-6">
-                            <label for="inputitems_name">Name</label>
-                            <input type="Name" class="form-control" id="inputitem_name" placeholder="Name">
+                            <label for="inputitems_name">First Name</label>
+                            <input type="Anisha" class="form-control" id="inputitem_name" placeholder="Last Name">
                           </div>
                         </div>
+                        
                         <div class="form-group">
-                          <label for="inputitems_Description">Description</label>
-                          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                          <label for="inputitems_Description">Address1</label>
+                          <input type="text" class="form-control" id="inputAddress" placeholder="Address 1">
                         </div>
                         <div class="form-group">
                           <label for="inputAddress2">Address 2</label>
-                          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                          <input type="text" class="form-control" id="inputAddress2" placeholder="Address2">
                         </div>
+                        <div class="form-group">
+                          <label for ="inputcity">city</label>
+                          <input type="text" class="form-control" id="city" placeholder="city">
+                        </div>
+                        <div class="form-group">
+                            <label for ="inputcity">state</label>
+                            <input type="text" class="form-control" id="state" placeholder="state">
+                          </div>
+          
+                              <div class="form-group">
+                                  <label for ="inputcity">Country</label>
+                                  <input type="text" class="form-control" id="Country" placeholder="Country">
+                                </div>
+                                <div class="form-group">
+                                    <label for ="inputcity">zip</label>
+                                    <input type="text" class="form-control" id="Zip" placeholder="Zip">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for ="date of birth">date of birth</label>
+                                      <input type="text" class="form-control" id="date of birth" placeholder="date of birth">
+                                    </div>
+                                    <form>
+                                        <div class="form-row">
+                                          <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Email</label>
+                                            <input type="email" class="form-control" id="inputEmail4" placeholder="date of hire">
+                                          </div>
+                                          <div class="form-group col-md-6">
+                                            <label for="inputPassword4">Password</label>
+                                            <input type="password" class="form-control" id="inputPassword4" placeholder="start date">
+                                          </div>
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="inputAddress">Address</label>
+                                          <input type="text" class="form-control" id="inputAddress" placeholder="Sex/Gender">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="inputAddress2">Address 2</label>
+                                          <input type="text" class="form-control" id="inputAddress2" placeholder="Phone number">
+                                        </div>
+                                        <div class="form-row">
+                                          <div class="form-group col-md-6">
+                                            <label for="phone number">City</label>
+                                            <input type="text" class="form-control" id="phone number">
+                                          </div>
+                                         
+                                        </div>
+                                        <div class="form-group">
+                                          <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gridCheck">
+                                            <label class="form-check-label" for="gridCheck">
+                                              Check me out
+                                            </label>
+                                          </div>
+                                        </div>
+                                
+                                      </form>
               
-              
+                                      
                       </form>
               
               
@@ -111,19 +177,8 @@
 			</div>
 		</div>
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+
 		
 		
 		
@@ -154,7 +209,7 @@
 		<div class="col-md-4">
 			<div class="card">
 				<h5 class="card-header2">
-				<img alt="Bootstrap Image Preview" width="175" height="175" src="https://www.clipartmax.com/png/full/282-2822110_finance-flat-icon-png-coin-flat-icon-png.png" class="rounded-circle" />
+				<img alt="Bootstrap Image Preview" width="165" height="165" src="https://www.clipartmax.com/png/full/282-2822110_finance-flat-icon-png-coin-flat-icon-png.png" class="rounded-circle" />
 				</h5>
 				<div class="card-body">
 				
@@ -241,24 +296,21 @@
 <!--       form-->
       
       
-  <form>
+      <form>
   <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputitems_Name" id="l1">Item Name </label>
-      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name"id="l1">
+    <div class="form-group col-md-6" >
+      <label for="inputitems_Name">Item Name </label>
+      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
     </div>
     <div class="form-group col-md-6">
-      <label for="inputitems_Point_amount" id="l1" >point amount</label>
-      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount" id="l1">
+      <label for="inputitems_Point_amount">point amount</label>
+      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
     </div>
   </div>
-
-  <div class="form-row">
-  <div class="form-group col-md-12">
-    <label for="inputitems_Description" id="l1">Description</label>
-    <input type="text" class="form-control" id="inputDescription" placeholder="Description" id="l1">
+  <div class="form-group">
+    <label for="inputitems_Description">Description</label>
+    <input type="text" class="form-control" id="inputDescription" placeholder="Description">
   </div>
-</div>
 <!--
   <div class="form-group">
     <label for="inputAddress2">Address 2</label>
@@ -266,17 +318,18 @@
   </div>
 -->
 
- <div class="form-row">
-  <div class="form-group col-md-12">
-   <label for="inputUploadImg" id="l1">Upload Img </label>
-    <input type="file" name="img" class="file" (change)="uploadFile($event)">
+
+  <div class="form-group">
+   <label for="inputUploadImg">Upload Img </label>
+    <input type="file" name="img[]" class="file">
+    <div class="input-group col-xs-12">
+      <span class="input-group-addon"><i class="icon-image-02" ></i></span>
       <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
       <span class="input-group-btn">
-        <button class="browse btn btn-primary input-lg" type="button"> Browse</button>
+        <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search" ></i> Browse</button>
       </span>
     </div>
   </div>
-	
 </form>
        
     
