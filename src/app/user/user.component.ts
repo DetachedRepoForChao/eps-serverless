@@ -90,36 +90,7 @@ export class UserComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    // console.log(`${functionFullName}: Showing user-component-spinner`);
-    // this.spinner.show('user-component-spinner');
-/*    if (this.sessionService.GetSessionProperty('backendSessionConnected') === false) {
-      this.socketService.reinitialize();
-
-      this.sessionService.CreateSessionCreatedListener();
-      this.sessionService.CreateSessionHeartbeatListener();
-      this.sessionService.CreateSessionDisconnectedListener();
-    } else if (this.sessionService.GetSessionProperty('backendSessionConnected') === true) {
-      // Reuse the same session. No need to recreate any listeners
-    } else {
-      // if the 'backendSessionConnected' field doesn't exist
-      this.sessionService.CreateSessionCreatedListener();
-      this.sessionService.CreateSessionHeartbeatListener();
-      this.sessionService.CreateSessionDisconnectedListener();
-    }
-
-    // Initialize session if it has not been initialized yet
-    if (!(this.sessionService.GetSessionProperty('initialized'))) {
-      this.sessionService.CreateSession();
-    }*/
-
-    // this.departmentService.storeDepartments();
-    // this.securityRoleId = +this.route.snapshot.paramMap.get('id');
-    // this.securityRoleId = +localStorage.getItem('securityRoleId');
-    // Setting global user attributes
-
     this.securityRoleName = this.globals.getUserAttribute('custom:security_role');
-
-
 
     switch (this.securityRoleName) {
       case 'employee': {
@@ -148,68 +119,6 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     this.isComponentLoading = false;
-
-    /*const observables: Observable<any>[] = [];
-
-    if (!this.securityRoleId) {
-      // observables.push(this.userService.getUserProfile());
-      this.userService.getUserProfile()
-        .subscribe((userData: any) => {
-          this.securityRoleId = userData.securityRoleId;
-          localStorage.setItem('securityRoleId', userData.securityRoleId);
-
-          observables.push(this.securityRoleService.getSecurityRoleById(this.securityRoleId));
-        });
-    } else {
-      observables.push(this.securityRoleService.getSecurityRoleById(this.securityRoleId));
-    }
-
-
-    forkJoin(observables)
-      .subscribe(obsResults => {
-        console.log(`${functionFullName}: obsResults:`);
-        console.log(obsResults);
-
-        // Iterate over the returned values from the observables so we can act appropriately on each
-        obsResults.forEach(obsResult => {
-          console.log(`${functionFullName}: obsResult:`);
-          console.log(obsResult);
-
-          // Act on observable value that was returned from userService.getUserProfile()
-/!*          if (obsResult.securityRoleId) {
-            console.log(`${functionFullName}: obsResult.securityRoleId: ${obsResult.securityRoleId}`);
-            this.securityRoleId = obsResult.securityRoleId;
-            localStorage.setItem('securityRoleId', obsResult.securityRoleId);
-          } else *!/if (obsResult.Name) { // observable value returned from securityRoleService.getSecurityRoleById()
-            console.log(`${functionFullName}: obsResult.Name: ${obsResult.Name}`);
-            this.securityRole = obsResult;
-
-            switch (this.securityRole.Name) {
-              case 'employee': {
-                console.log(`${functionFullName}: navigating to standard-user`);
-                // this.router.navigate(['standard-user']);
-                this.router.navigate(['homepage']);
-                break;
-              }
-              case 'manager': {
-                console.log(`${functionFullName}: navigating to manager-user`);
-                // this.router.navigate(['manager-user']);
-                this.router.navigate(['homepage']);
-                break;
-              }
-              case 'admin': {
-                console.log(`${functionFullName}: navigating to admin-user`);
-                this.router.navigate(['admin-user']);
-                break;
-              }
-            }
-          }
-        });
-
-        this.isComponentLoading = false;
-        // console.log(`${functionFullName}: Hiding user-component-spinner`);
-        // this.spinner.hide('user-component-spinner');
-      });*/
 
     this.idle = this.userIdle.getConfigValue().idle;
     this.timeout = this.userIdle.getConfigValue().timeout;

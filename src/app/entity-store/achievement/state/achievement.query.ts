@@ -129,4 +129,17 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
   getAchievementFamilyCount(achievement: AchievementModel): AchievementModel[] {
     return this.getAll().filter(x => x.family === achievement.family);
   }
+
+  getCompleteAchievements(): AchievementModel[] {
+    return this.getAll().filter(x => ((x.progressStatus === 'complete') || (x.progressStatus === 'complete acknowledged')));
+  }
+
+  getCompleteAchivievementById(id: number) {
+    const achievement = this.getCompleteAchievements().filter(x => x.id === id)[0];
+    if(!achievement) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

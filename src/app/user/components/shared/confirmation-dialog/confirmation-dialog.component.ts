@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { EntityCurrentUserQuery } from 'src/app/entity-store/current-user/state/entity-current-user.query';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -10,11 +11,21 @@ export class ConfirmationDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public message: string
+    @Inject(MAT_DIALOG_DATA) public message: string,
+    private currentUserQuery: EntityCurrentUserQuery
   ) { }
 
   ngOnInit() {
   }
+
+   onCloseConfirm() {
+    this.dialogRef.close('Confirm');
+   }
+
+    onCloseCancel() {
+      this.dialogRef.close('Cancel');
+    }
+
 
 
 }

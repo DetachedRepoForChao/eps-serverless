@@ -2,13 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import awsconfig from '../../../aws-exports';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
-import {Observable} from 'rxjs';
+import {Observable, from} from 'rxjs';
 import {StoreItemStore} from '../../entity-store/store-item/state/store-item.store';
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
+import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
-import {MatDialog } from '@angular/material';
+import {MatDialog, MatSnackBar, VERSION } from '@angular/material';
+import { EntityCurrentUserService } from 'src/app/entity-store/current-user/state/entity-current-user.service';
+import { CostExplorer } from 'aws-sdk';
+import { CurrentUserStore } from 'src/app/entity-store/current-user/state/current-user.store';
 
 @Component({
   selector: 'app-points-store',
@@ -19,6 +23,11 @@ export class PointsStoreComponent implements OnInit {
   componentName = 'points-store.component';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/things';
+  dialogResult = " ";
+  version = VERSION;
+
+
+
   myInit = {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -30,17 +39,63 @@ export class PointsStoreComponent implements OnInit {
   items: StoreItemModel[] = [];
   numRows: number;
   rows = [];
+  selectedStoreItem;
 
   constructor(private storeItemStore: StoreItemStore,
               private storeItemQuery: StoreItemQuery,
               private storeItemService: StoreItemService,
+              private entityCurrentUserService: EntityCurrentUserService,
+              private currentUserStore: CurrentUserStore,
+              private currentUserQuery: EntityCurrentUserQuery,
+              private snackBar: MatSnackBar,
               public dialog: MatDialog ) {}
+
+
   openDialog(): void {
-  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-  width: '350px',
-  data: "Would you like to redeem this gift?"
-        });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: "Would you like to redeem this gift?"
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog closed: ${result}`);
+      this.dialogResult = result;
+
+      if (result === 'Confirm') {
+        this.checkPoints();
+      } else if (result === 'Cancel') {
+        console.log('Test567');
+        console.log(this.selectedStoreItem);
       }
+    });
+  }
+
+  selectStoreItem(storeItem) {
+    this.selectedStoreItem = storeItem;
+    console.log(this.selectedStoreItem);
+  }
+
+
+
+  checkPoints() {
+    const userPoints = this.currentUserQuery.getAll()[0].points;
+    const itemCost = this.selectedStoreItem.cost;
+    console.log(`The item costs: ${itemCost}`);
+    console.log(`You currently have: ${userPoints}`);
+    if (userPoints < itemCost) {
+      const snack = this.snackBar.open('You do not have enough points to redeem this item' , 'Close', { 
+        duration: 5000,
+      });
+      console.log(`You do not have enough points`);
+
+    } else {
+      const snack = this.snackBar.open(`You have enough points to redeem this item. An email has been sent to your manager for approval`, 'Close', {
+        duration: 5000,
+      });
+      console.log(`You have enough points to redeem this item. An email has been sent to your manager for approval`);
+
+    }
+  }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -88,6 +143,8 @@ export class PointsStoreComponent implements OnInit {
     console.log('rows:');
     console.log(this.rows);
   }
+
+
 
 /*  getPointItems() {
     Storage.list('store', {

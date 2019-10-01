@@ -25,6 +25,7 @@ import {AchievementQuery} from '../../../entity-store/achievement/state/achievem
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
+import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -61,7 +62,8 @@ export class ProfileCardComponent implements OnInit {
               private entityCurrentUserService: EntityCurrentUserService,
               private sanitizer: DomSanitizer,
               private entityUserService: EntityUserService,
-              private entityUserQuery: EntityUserQuery) { }
+              private entityUserQuery: EntityUserQuery,
+              private metricsService: MetricsService ) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -82,10 +84,24 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });*/
 
-    this.entityCurrentUserService.cacheCurrentUser().subscribe();
+/*    this.entityCurrentUserService.cacheCurrentUser().subscribe(() => {
+      this.entityCurrentUserService.fillRemainingAttributes()
+        .subscribe(result => {
+          if (result === true) {
+            this.currentUserQuery.getCurrentUser()
+              .subscribe((currentUser: any) => {
+                console.log(`${functionFullName}: current user:`);
+                console.log(currentUser);
+                this.metricsService.cacheMetrics().subscribe(() => {
+                });
+              });
+          }
+        });
+    });*/
+
     this.currentUser$ = this.currentUserQuery.getCurrentUser();
 
-    if (!this.globals.userDetails) {
+/*    if (!this.globals.userDetails) {
       this.userService.getUserProfile()
         .subscribe(userDetails => {
           this.globals.userDetails = userDetails;
@@ -95,7 +111,7 @@ export class ProfileCardComponent implements OnInit {
         .subscribe(userDetails => {
           this.globals.userDetails = userDetails;
         });
-    }
+    }*/
 
     // const observables: Observable<any>[] = [];
 
@@ -130,6 +146,7 @@ export class ProfileCardComponent implements OnInit {
       });*/
 
     this.entityUserService.cacheUsers().subscribe();
+
 
     this.leaderboardUsers$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
@@ -208,6 +225,7 @@ export class ProfileCardComponent implements OnInit {
   avatarClick() {
     $('#avatarModal').modal('show');
   }
+
 
   Debug() {
 

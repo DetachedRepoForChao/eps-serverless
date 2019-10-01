@@ -7,6 +7,11 @@ import {FeedcardService} from '../feedcard/feedcard.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 
+import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
+import { Achievement } from '../achievement/achievement.model';
+
+import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
+
 @Component({
   selector: 'app-avatar',
   templateUrl: './avatar.component.html',
@@ -32,7 +37,11 @@ export class AvatarComponent implements OnInit {
               private globals: Globals,
               private feedcardService: FeedcardService,
               private entityCurrentUserService: EntityCurrentUserService,
-              public userQuery: EntityCurrentUserQuery) { }
+              public userQuery: EntityCurrentUserQuery,
+              private achievementService: AchievementService,
+              public achievementQuery: AchievementQuery
+              ) { }
+
 
   ngOnInit() {
     this.croppedImageToShow = this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl;
@@ -64,24 +73,9 @@ export class AvatarComponent implements OnInit {
     this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
       console.log(`${functionFullName}: saveResult: ${saveResult}`);
       if (saveResult === true) {
-/*        this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
-          console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
-          if (isTop5Result === true) {
-            console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
-            this.leaderboardService.getPointsLeaderboard()
-              .subscribe(leaderboardData => {
-                console.log(`${functionFullName}: populating leaderboard data`);
-                this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
-                  console.log(`${functionFullName}: leaderboard data populated`);
-                });
-              });
-          }
-        });*/
-
-        this.feedcardService.refreshPointTransactionAvatars();
-
         this.avatarUpload = false;
         this.avatarPreview = true;
+        this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
       }
 
     });
@@ -126,8 +120,16 @@ export class AvatarComponent implements OnInit {
           console.log(data.avatarUrl);
           currentFn.avatarUrl = base64data.toString();
           currentFn.entityCurrentUserService.updateAvatar(data.avatarUrl);
-          currentFn.avatarService.saveUserAvatar(data.result).subscribe();
+          currentFn.avatarService.saveUserAvatar(data.result).subscribe((saveResult) => {
+            if (saveResult === true) {
+              currentFn.achievementService.incrementAchievement('ChangeAvatar').subscribe();
+            }
+          });
         };
       });
+  }
+  getCompletedAchievementsById(id: number){
+    return this.achievementQuery.getCompleteAchivievementById(id);
+
   }
 }

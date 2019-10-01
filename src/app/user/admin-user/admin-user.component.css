@@ -24,10 +24,25 @@
 	text-align: center;	
 }
 
+.form-row{
+	
+	color: Default;
+}
+
+/*
+
+.btn{
+	color: white;
+}
+*/
+
+.file {
+  visibility: hidden;
+  position: absolute;
+}
 
 
-
-
+	
 
 
 

@@ -28,6 +28,8 @@ import {PointItemService} from '../../../entity-store/point-item/state/point-ite
 import {PointItemModel} from '../../../entity-store/point-item/state/point-item.model';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 
+declare var $: any;
+
 export interface DepartmentEmployee {
   id: number;
   avatar: string;
@@ -317,5 +319,14 @@ export class GiftPointsComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     form.resetForm();
+  }
+
+clickedUser;
+
+  onAvatarClick(user) {
+    console.log(user);
+    this.clickedUser = user;
+    $("#giftClickedModal").modal('show');
+    console.log(document.getElementById("giftClickedModal"));
   }
 }

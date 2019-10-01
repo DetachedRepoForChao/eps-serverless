@@ -9,8 +9,21 @@ export type EntityCurrentUserModel = {
   firstName: string;
   lastName: string;
   middleName: string;
+  preferredName: string;
+  prefix: string;
+  suffix: string;
   birthdate: string;
   position: string;
+  address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  country: string;
+  zip: number;
+  preferredPronoun: string;
+  sex: string;
+  gender: string;
+  dateOfHire: any;
   points: number;
   pointsPool: number;
   securityRole: SecurityRole;
@@ -24,11 +37,10 @@ export type EntityCurrentUserModel = {
   isCurrentUser: boolean;
 };
 
-export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, birthdate, position, points, pointsPool,
-                                               securityRole, department, email, phone, avatarBase64String, avatarPath, avatarResolvedUrl,
-                                               isCurrentUser }: Partial<EntityCurrentUserModel>) {
-  console.log('creatingCurrentUserModel... pointsPool');
-  console.log(pointsPool);
+export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, birthdate,
+                                               position, address1, address2, city, state, country, zip, preferredPronoun, sex, gender,
+                                               dateOfHire, points, pointsPool, securityRole, department, email, phone, avatarBase64String,
+                                               avatarPath, avatarResolvedUrl, isCurrentUser }: Partial<EntityCurrentUserModel>) {
 
   return {
     id: guid(),
@@ -37,8 +49,21 @@ export function createEntityCurrentUserModel({ userId, username, firstName, last
     firstName,
     lastName,
     middleName,
+    preferredName,
+    prefix,
+    suffix,
     birthdate,
     position,
+    address1,
+    address2,
+    city,
+    state,
+    country,
+    zip,
+    preferredPronoun,
+    sex,
+    gender,
+    dateOfHire,
     points,
     pointsPool,
     securityRole,

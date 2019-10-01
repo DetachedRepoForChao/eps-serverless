@@ -4,7 +4,7 @@
 
 <!--      <div *ngIf="(this.currentUserQuery.selectLoading() | async) === false; else avatarLoading">-->
       <div *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarLoading">
-        <img [src]="this.currentUserQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
+        <img [src]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"
              alt="Avatar"
              class="img-center img-fluid rounded-circle"
              id="avatar"
@@ -35,8 +35,8 @@
         <div class="col-md-12 text-center">
 <!--          <h4 class="text-uppercase">{{globals.getUserAttribute('given_name')}} {{globals.getUserAttribute('family_name')}}</h4>
           <span>{{globals.getUserAttribute('custom:department')}}</span>-->
-          <h4 class="text-uppercase">{{(currentUser$ | async)[0].firstName}} {{(currentUser$ | async)[0].lastName}}</h4>
-          <span>{{(currentUser$ | async)[0].department.Name}}</span>
+          <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+          <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
           <hr class="line-success">
         </div>
       </div>
@@ -50,7 +50,7 @@
       <div class="row text-center mt-4">
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-          <h4 class="mb-0" *ngIf="(currentUserQuery.selectLoading() | async) === false">{{(currentUser$ | async)[0].points}}</h4>
+          <h4 class="mb-0" *ngIf="(currentUserQuery.selectLoading() | async) === false">{{(currentUser$ | async)[0]?.points}}</h4>
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
@@ -170,7 +170,7 @@
       </div>
       <!---modal body---->
       <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
+        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"></app-avatar>
       </div>
       <ng-template #avatarModalLoading>
 
