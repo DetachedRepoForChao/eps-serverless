@@ -26,8 +26,8 @@ declare var $: any;
 export class NavigationComponent implements OnInit {
   componentName = 'navigation.component';
 
-  notifications;
-
+  Notifications;
+  NotificationStatus;
   constructor(private userService: UserService,
               private globalVariableService: GlobalVariableService,
               private router: Router,
@@ -42,11 +42,23 @@ export class NavigationComponent implements OnInit {
               ) { }
 
   ngOnInit() {
+    
     // Initialize the navbar script
     if ($('.navbar[color-on-scroll]').length !== 0) {
       blackKit.checkScrollForTransparentNavbar();
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
+    const targetUserID = this.globals.getUsername();
+    this.notificationService.getNotification(targetUserID).subscribe(result => {
+      this.Notifications = result;
+      if(result!=null){
+        $('#notification_button').addClass('btn-primary');
+      }else{
+        $('#notification_button').addClass('btn-danger');
+      }
+      console.log("Notification-log click!!!!!!!!!!!!!!!!!!" + this.Notifications);
+    });
+
   }
 
   onLogout() {
@@ -75,13 +87,7 @@ export class NavigationComponent implements OnInit {
   }
 
   onNotificationClick(){
-      console.log("Notification-log click!!!!!!!!!!!!!!!!!!")
-      const targetUserID = this.globals.getUsername();
-      this.notificationService.getNotification(targetUserID).subscribe(result => {
-        this.notifications = result;
-        console.log(this.notifications);
-      });
-      
+     
   }
 
   navigateHome() {
