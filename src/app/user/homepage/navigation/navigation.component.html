@@ -28,14 +28,14 @@
             </a>
           </div>
           <div class="col-6 collapse-close text-right">
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigation"  aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
               <i class="tim-icons icon-simple-remove"></i>
             </button>
           </div>
         </div>
       </div>
       <ul>
-        <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#notiModal">
+        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onNotificationClick()" data-toggle="modal" data-target="#notiModal">
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
         <div class="modal fade" id="notiModal" role="dialog">

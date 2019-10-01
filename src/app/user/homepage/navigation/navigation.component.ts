@@ -9,12 +9,8 @@ import {EntityCurrentUserService} from '../../../entity-store/current-user/state
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {resetStores} from '@datorama/akita';
 import {AuthService} from '../../../login/auth.service';
-<<<<<<< HEAD
 import { NotificationService } from 'src/app/shared/notifications/notification.service';
 import { Globals } from 'src/app/globals';
-=======
-import {Globals} from '../../../globals';
->>>>>>> 3d6cee007cfbe8756ed8e01d5d11603f51831337
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
 declare var blackKit: any;
@@ -79,9 +75,13 @@ export class NavigationComponent implements OnInit {
   }
 
   onNotificationClick(){
+      console.log("Notification-log click!!!!!!!!!!!!!!!!!!")
       const targetUserID = this.globals.getUsername();
-      this.notifications = this.notificationService.getNotification(targetUserID);
-      console.log(this.notifications);
+      this.notificationService.getNotification(targetUserID).subscribe(result => {
+        this.notifications = result;
+        console.log(this.notifications);
+      });
+      
   }
 
   navigateHome() {

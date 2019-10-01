@@ -58,7 +58,7 @@ export class NotificationService implements OnInit{
             targetUserId: targetUserId
           };
 
-          API.post(this.apiName, this.apiPath + '/getNotifications', myInit).then(data => {
+          API.get(this.apiName, this.apiPath + '/getNotifications', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);
