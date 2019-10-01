@@ -167,6 +167,36 @@ export class AchievementService {
     });
   }
 
+  incrementAchievementByX(achievementFamily: string, incrementAmount: number): Observable<any> {
+    const functionName = 'incrementAchievementByX';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: achievement family: ${achievementFamily}`);
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            achievementFamily: achievementFamily,
+            incrementAmount: incrementAmount,
+          };
+
+          API.post(this.apiName, this.apiPath + '/incrementAchievementByX' , myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+
+            // Update achievements with new progress and status
+            this.updateAchievements(data.data.achievementFamilyProgress);
+            observer.complete();
+          });
+        });
+    });
+  }
+
   acknowledgeAchievementComplete(achievementProgressId: string) {
     const functionName = 'acknowledgeAchievementComplete';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -194,6 +224,8 @@ export class AchievementService {
         });
     });
   }
+
+
 
   showStore() {
     console.log(this.achievementStore);

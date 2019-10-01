@@ -83,38 +83,6 @@ export class EntityUserService {
     });
   }
 
-/*  cacheUsers() {
-    console.log(`Retrieving all user avatars`);
-    // this.userAvatarStore.setLoading(true);  // this is the initial state before doing anything
-    const request$ = this.getUserAvatars()
-      .pipe(tap((avatars: any) => {
-        console.log(`caching:`);
-        console.log(avatars);
-
-        const avatarsArray: EntityUserModel[] = [];
-        const observables: Observable<any>[] = [];
-        for (let i = 0; i < avatars.length; i++) {
-          observables.push(this.getAvatarFromStorage(avatars[i]));
-        }
-
-        forkJoin(observables)
-          .subscribe((obsResult: any) => {
-            for (let i = 0; i < obsResult.length; i++) {
-              const username = obsResult[i].username;
-              const avatarPath = obsResult[i].avatarPath;
-              const avatarBase64String = '';
-              const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
-              const avatar = createEntityUserAvatarModel({username, avatarBase64String, avatarPath, avatarResolvedUrl});
-              avatarsArray.push(avatar);
-            }
-
-            this.userAvatarStore.set(avatarsArray);
-            // this.userAvatarStore.setLoading(false);  // this gets set to false automatically after store is set
-          });
-      }));
-
-    return cacheable(this.userAvatarStore, request$);
-  }*/
 
   cacheUsers() {
     console.log(`Retrieving all users public details`);
@@ -124,37 +92,55 @@ export class EntityUserService {
         console.log(`caching:`);
         console.log(users);
 
+        // Merge into single array
+        const usersMerged = [];
+        for (let i = 0; i < users[0].users.length; i++) {
+          const newUserObj = users[0].users[i];
+          for (let j = 0; j < users[1].usersCompleteAchievementTotal.length; j++) {
+            if (users[1].usersCompleteAchievementTotal[j].userId === newUserObj.id) {
+              newUserObj['completeAchievementsTotal'] = users[1].usersCompleteAchievementTotal[j].num_complete;
+              break;
+            }
+          }
+
+          usersMerged.push(newUserObj);
+        }
+
+        console.log('usersMerged');
+        console.log(usersMerged);
+
         const usersArray: EntityUserModel[] = [];
         const observables: Observable<any>[] = [];
-        for (let i = 0; i < users.length; i++) {
-          observables.push(this.getAvatarFromStorage(users[i].avatarUrl));
+        for (let i = 0; i < usersMerged.length; i++) {
+          observables.push(this.getAvatarFromStorage(usersMerged[i].avatarUrl));
         }
 
         forkJoin(observables)
           .subscribe((obsResult: any) => {
             for (let i = 0; i < obsResult.length; i++) {
-              const userId = users[i].id;
-              const username = users[i].username;
-              const firstName = users[i].firstName;
-              const lastName = users[i].lastName;
-              const middleName = users[i].middleName;
-              const position = users[i].position;
-              const points = users[i].points;
-              const birthdate = users[i].dateOfBirth;
+              const userId = usersMerged[i].id;
+              const username = usersMerged[i].username;
+              const firstName = usersMerged[i].firstName;
+              const lastName = usersMerged[i].lastName;
+              const middleName = usersMerged[i].middleName;
+              const position = usersMerged[i].position;
+              const points = usersMerged[i].points;
+              const birthdate = usersMerged[i].dateOfBirth;
               const securityRole: SecurityRole = {
-                Id: +users[i].securityRoleId,
+                Id: +usersMerged[i].securityRoleId,
                 Name: '',
                 Description: ''
               };
               const department: Department = {
-                Id: +users[i].departmentId,
+                Id: +usersMerged[i].departmentId,
                 Name: ''
               };
-              const avatarPath = users[i].avatarUrl;
+              const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
+              const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
               const avatar = createEntityUserAvatarModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
-                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl});
+                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal});
               usersArray.push(avatar);
             }
 
@@ -243,7 +229,7 @@ export class EntityUserService {
     });
   }
 
-  getUsers(): Observable<any> {
+/*  getUsers(): Observable<any> {
     const functionName = 'getUsers';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -256,6 +242,41 @@ export class EntityUserService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/usersPublicDetails', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            console.log(data.data);
+            observer.next(data.data);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving users details from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
+  }*/
+
+  getUsers(): Observable<any> {
+    const functionName = 'getUsers';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/usersPublicDetails2', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             console.log(data.data);

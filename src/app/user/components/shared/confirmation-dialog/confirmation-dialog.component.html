@@ -2,6 +2,6 @@
   {{message}}
  </div>
  <div mat-dialog-actions>
-   <button mat-button (click)="onCloseCancel()">No</button>
-   <button mat-button (click)="onCloseConfirm()">Yes</button>
+    <button mat-button (click)="onCloseConfirm()"cdkFocusInitial>Yes</button>
+   <button mat-button (click)="onCloseCancel()" >No</button>
  </div>

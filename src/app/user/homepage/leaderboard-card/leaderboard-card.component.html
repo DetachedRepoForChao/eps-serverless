@@ -38,10 +38,15 @@
           <tbody>
 
           <tr *ngFor="let user of (leaderboardUsers$ | async).slice(0, 4)" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
-            <td *ngFor="let col of this.displayedColumns">
-              <div *ngIf="col === 'avatar'">
-                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{user.avatarResolvedUrl}}" class="img-row"/>
+            <td *ngFor="let col of this.displayedColumns" >
+              <div *ngIf="col === 'avatar'" class="avatar-container">
+                <div class="circle-container ">
+                  <img src="{{user?.avatarResolvedUrl}}"/>
+                  <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
+                    <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" style="color: rgba(255,239,19,1);"></i>
+                    <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" style="color: rgba(43,255,198,1);"></i>
+                    <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" style="color: rgb(254,49,255);"></i>
+                  </span>
                 </div>
               </div>
               <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>
@@ -128,7 +133,7 @@
     <div class="card-footer text-center">
       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#leaderboardModal">More</button>
       <!--      <button type="button" class="btn btn-success" (click)="test1()">Test1</button>-->
-      <button type="button" class="btn btn-success" (click)="test2()">Test2</button>
+<!--      <button type="button" class="btn btn-success" (click)="test2()">Test2</button>-->
     </div>
   </div>
 </div>
@@ -181,9 +186,12 @@
           <tr *ngFor="let user of (leaderboardUsers$ | async)">
             <td *ngFor="let col of this.displayedColumnsAll">
               <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>-->
-              <div *ngIf="col === 'avatar'">
-                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{user.avatarResolvedUrl}}" class="img-row"/>
+              <div *ngIf="col === 'avatar'" class="avatar-container">
+                <div class="circle-container ">
+                  <img src="{{user?.avatarResolvedUrl}}" class="img-row "/>
+                  <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
+                    <i class="fas fa-star deg{{i * 45}}"></i>
+                  </span>
                 </div>
               </div>
               <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>

@@ -262,4 +262,21 @@ export class AchievementService {
   getAchievementFamilyCount(achievement: AchievementItem): AchievementItem[] {
     return this.achievementDataList.filter(x => x.Family === achievement.Family);
   }
+
+
+
+
+
+    // this.getCurrentUserAchievements()
+    // .subscribe(result => {
+    //   const completedList = result.filter(x => x.ProgressStatus === 'complete');
+
+    //   return completedList;
+    // });
+
+
+    // console.log(`${functionFullName}: 'completed' achievements list:`);
+    // console.log(completedList);
+    // return completedList;
+
 }

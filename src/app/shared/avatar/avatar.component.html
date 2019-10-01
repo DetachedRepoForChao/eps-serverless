@@ -13,7 +13,7 @@
   <div>
     <div class="row">
       <div class="col-md-12 text-center">
-        <button type="button" class="btn btn-success" (click)="toggleAvatarUpload()" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
+        <button type="button" class="btn btn-success" (click)="toggleAvatarUpload()" style="padding-right: 10px; padding-left: 10px" *ngIf="getCompleteAchievementById(1)">Upload Avatar</button>
         <button type="button" class="btn btn-danger" (click)="toggleAvatarSelect()" style="padding-right: 10px; padding-left: 10px">Superhero Avatar</button>
         <button type="button" class="btn btn-primary" (click)="generateRandomAvatar()" style="padding-right: 10px; padding-left: 10px">Random Avatar</button>
       </div>

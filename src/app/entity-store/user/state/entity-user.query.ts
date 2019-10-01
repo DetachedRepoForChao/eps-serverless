@@ -52,4 +52,14 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     // console.log(this.getAll());
     return user;
   }
+
+  public getUserCompleteAchievementCount(userId: number) {
+    const user = this.getAll({
+      filterBy: x => x.userId === userId
+    })[0];
+
+    const numArray = Array(user.completeAchievementsTotal).map((x, i) => i);
+    // console.log(numArray);
+    return numArray;
+  }
 }
