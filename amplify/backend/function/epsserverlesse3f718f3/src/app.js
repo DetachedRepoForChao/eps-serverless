@@ -805,12 +805,12 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
   });
 });
 
-app.post('/items/setNotifictaionSeenTime', function (req, res) {
+app.post('/items/setNotificationSeenTime', function (req, res) {
   console.log('starting get getNotifications');
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      const notificationid = req.body.notifictaionId;
+      const notificationid = req.body.notificationId;
       ctrlNotifications.setNotifictaionSeenTime(notificationid)
         .then(data => {
           res.json({ status: 'get call succeed!', data: data.notifications });

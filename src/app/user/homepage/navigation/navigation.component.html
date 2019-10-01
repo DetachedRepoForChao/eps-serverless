@@ -35,14 +35,14 @@
         </div>
       </div>
       <ul>
-        <button id="notification_button" type="button" class="btn btn-icon btn-round" (click)="onNotificationClick()" data-toggle="modal" data-target="#notiModal">
+        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notiModal">
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
         <div class="modal fade" id="notiModal" role="dialog">
           <div class="modal-dialog tweet">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" (click)="onNotificationClick()">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" >&times;</button>
                 <h4 class="modal-title"><b>Notifications</b></h4>
               </div>
               <div class="col-lg-12 ">
@@ -52,14 +52,15 @@
 
                     <div class="list-group">
                     <div *ngFor="let notification of Notifications">
-                      <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                    
+                      <div class="list-group-item list-group-item-action flex-column align-items-start" (click)="onSeenNotificationClick(notification)">
                         <div class="d-flex w-100 justify-content-between">
                           <h5 class="mb-1" style="color: black">{{notification.title}}</h5>
                           <small>{{notification.createdAt | date:'HH:mm:ss'}}</small>
                         </div>
                         <p class="mb-1" style="color: black">{{notification.description}}</p>
                         <small>Event: {{notification.event}}</small>
-                      </a>
+                      </div>
                       </div>
                     </div>
                     </div>

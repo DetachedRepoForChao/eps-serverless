@@ -42,22 +42,17 @@ export class NotificationService implements OnInit{
    * Get notifications by user token, fetch all the notificaions
    * @param targetUserId 
    */
-  getNotification(targetUserId:String): Observable<any> {
+  getNotification(): Observable<any> {
     const functionName = 'getNotifications';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
     console.log(`${functionFullName}: retrieving Notification data for the following point transaction ids:`);
-    console.log(targetUserId);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
           const token = user.signInUserSession.idToken.jwtToken;
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
-          myInit['body'] = {
-            targetUserId: targetUserId
-          };
-
           API.get(this.apiName, this.apiPath + '/getNotifications', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
@@ -66,12 +61,38 @@ export class NotificationService implements OnInit{
           });
         });
     });
-
   }
+
+
+
  
   /**
    * Get the update status of notifications,which was not seen.
    * @param targetUserId
    */
+
+  setNotificationSeenTime(notificationId: Number): Observable<any> {
+    const functionName = 'setNotificationSeenTime';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    console.log(`${functionFullName}: set Notification seen Time data for the following point transaction ids:`);
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            notificationId: notificationId,
+          };
+          API.post(this.apiName, this.apiPath + '/setNotificationSeenTime', myInit).then(data => {
+            console.log(`${functionFullName}: successfully set data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
+    });
+  }
 
 }
