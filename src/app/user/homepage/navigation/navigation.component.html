@@ -42,7 +42,7 @@
           <div class="modal-dialog tweet">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" (click)="onNotificationClick()">&times;</button>
                 <h4 class="modal-title"><b>Notifications</b></h4>
               </div>
               <div class="col-lg-12 ">
@@ -51,6 +51,7 @@
                     <div class="card-body">
 
                     <div class="list-group">
+                    
                       <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
                         <div class="d-flex w-100 justify-content-between">
                           <h5 class="mb-1">List group item heading</h5>

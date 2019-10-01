@@ -9,6 +9,8 @@ import {EntityCurrentUserService} from '../../../entity-store/current-user/state
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {resetStores} from '@datorama/akita';
 import {AuthService} from '../../../login/auth.service';
+import { NotificationService } from 'src/app/shared/notifications/notification.service';
+import { Globals } from 'src/app/globals';
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
 declare var blackKit: any;
@@ -23,6 +25,8 @@ declare var $: any;
 })
 export class NavigationComponent implements OnInit {
 
+  notifications;
+
   constructor(private userService: UserService,
               private globalVariableService: GlobalVariableService,
               private router: Router,
@@ -31,7 +35,10 @@ export class NavigationComponent implements OnInit {
               private entityUserAvatarService: EntityUserService,
               private entityUserService: EntityCurrentUserService,
               private storeItemService: StoreItemService,
-              private auth: AuthService) { }
+              private auth: AuthService,
+              private notificationService: NotificationService,
+              private globals: Globals
+              ) { }
 
   ngOnInit() {
     // Initialize the navbar script
@@ -66,8 +73,10 @@ export class NavigationComponent implements OnInit {
     // this.router.navigate(['/user']);
   }
 
-  onNOtificationClick(){
-
+  onNotificationClick(){
+      const targetUserID = this.globals.getUsername();
+      this.notifications = this.notificationService.getNotification(targetUserID);
+      console.log(this.notifications);
   }
 
 }
