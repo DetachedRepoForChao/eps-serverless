@@ -22,6 +22,7 @@ const getNotifications = function (targetUserId) {
     return sqlNotification.findAll({
       where: {
         targetUserId: targetUserId,
+        timeSeen:null,
       },
       // attributes: ['id', 'title', 'description', 'timeSeen', 'audience', 'event']
     })

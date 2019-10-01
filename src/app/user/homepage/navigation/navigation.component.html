@@ -35,7 +35,7 @@
         </div>
       </div>
       <ul>
-        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onNotificationClick()" data-toggle="modal" data-target="#notiModal">
+        <button id="notification_button" type="button" class="btn btn-icon btn-round" (click)="onNotificationClick()" data-toggle="modal" data-target="#notiModal">
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
         <div class="modal fade" id="notiModal" role="dialog">
@@ -51,36 +51,17 @@
                     <div class="card-body">
 
                     <div class="list-group">
-                    
-                      <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                        <div class="d-flex w-100 justify-content-between">
-                          <h5 class="mb-1">List group item heading</h5>
-                          <small>3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small>Donec id elit non mi porta.</small>
-                      </a>
+                    <div *ngFor="let notification of Notifications">
                       <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
-                          <h5 class="mb-1">List group item heading</h5>
-                          <small class="text-muted">3 days ago</small>
+                          <h5 class="mb-1" style="color: black">{{notification.title}}</h5>
+                          <small>{{notification.createdAt | date:'HH:mm:ss'}}</small>
                         </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
+                        <p class="mb-1" style="color: black">{{notification.description}}</p>
+                        <small>Event: {{notification.event}}</small>
                       </a>
-                      <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                          <h5 class="mb-1">List group item heading</h5>
-                          <small class="text-muted">3 days ago</small>
-                        </div>
-                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                        <small class="text-muted">Donec id elit non mi porta.</small>
-                      </a>
+                      </div>
                     </div>
-
-
-
-
                     </div>
                   <!-- </div> -->
                 </div>
