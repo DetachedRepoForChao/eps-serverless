@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "AwardPointTemplate",
+    "SubjectPart": "You were awarded points!",
+    "HtmlPart": "<h1>Hello {{name}},</h1><p>{{managerName}} awarded you {{points}} points for:</p><p>{{pointItemName}}</p><p>{{description}}</p>",
+    "TextPart": "Hello {{name}},\r\n{{managerName}} awarded you {{points}} points for:\r\n{{pointItemName}}\r\n{{description}}"
+  }
+}

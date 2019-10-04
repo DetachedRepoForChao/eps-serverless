@@ -26,6 +26,7 @@ import {EntityUserService} from '../../../entity-store/user/state/entity-user.se
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
+import {AuthService} from '../../../login/auth.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -63,7 +64,8 @@ export class ProfileCardComponent implements OnInit {
               private sanitizer: DomSanitizer,
               private entityUserService: EntityUserService,
               private entityUserQuery: EntityUserQuery,
-              private metricsService: MetricsService ) { }
+              private metricsService: MetricsService,
+              private authService: AuthService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -84,70 +86,9 @@ export class ProfileCardComponent implements OnInit {
       $('#count_message').html(text_remaining + ' remaining');
     });*/
 
-/*    this.entityCurrentUserService.cacheCurrentUser().subscribe(() => {
-      this.entityCurrentUserService.fillRemainingAttributes()
-        .subscribe(result => {
-          if (result === true) {
-            this.currentUserQuery.getCurrentUser()
-              .subscribe((currentUser: any) => {
-                console.log(`${functionFullName}: current user:`);
-                console.log(currentUser);
-                this.metricsService.cacheMetrics().subscribe(() => {
-                });
-              });
-          }
-        });
-    });*/
 
     this.currentUser$ = this.currentUserQuery.getCurrentUser();
-
-/*    if (!this.globals.userDetails) {
-      this.userService.getUserProfile()
-        .subscribe(userDetails => {
-          this.globals.userDetails = userDetails;
-        });
-    } else if (this.globals.userDetails.username !== this.globals.getUsername()) {
-      this.userService.getUserProfile()
-        .subscribe(userDetails => {
-          this.globals.userDetails = userDetails;
-        });
-    }*/
-
-    // const observables: Observable<any>[] = [];
-
-/*    for (let i = 0; i < leaderboardUsers.length; i++) {
-      observables.push(this.avatarService.resolveAvatar(leaderboardUsers[i]));
-    }*/
-
-    // observables.push(this.leaderboardService.getUserPointsLeaderboardRecord(this.globals.getUsername()));
-    // observables.push(this.avatarService.refreshCurrentUserAvatar());
-
-/*    forkJoin(observables)
-      .subscribe(obsResults => {
-        console.log(`${functionFullName}: obsResults:`);
-        console.log(obsResults);
-
-        // Iterate over the returned values from the observables so we can act appropriately on each
-        obsResults.forEach(obsResult => {
-          console.log(`${functionFullName}: obsResult:`);
-          console.log(obsResult);
-
-          // Act on observable value that was returned from leaderboardService.getUserPointsLeaderboardRecord()
-          if (obsResult.avatar) {
-            console.log(`${functionFullName}: obsResult.avatar: ${obsResult.avatar}`);
-            this.userLeaderboardRecord = obsResult;
-          }
-
-        });
-
-        this.isImageLoading = false;
-        this.isCardLoading = false;
-        this.spinner.hide('profile-card-spinner');
-      });*/
-
     this.entityUserService.cacheUsers().subscribe();
-
-
     this.leaderboardUsers$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
@@ -158,69 +99,7 @@ export class ProfileCardComponent implements OnInit {
 
   }
 
-  showGallery() {
-    $('#imageSelectorModal').modal({backdrop: 'static'});
 
-  }
-
-  onImagePreviewLoaded(event) {
-    console.log(event);
-  }
-
-/*  onImageSelected(event) {
-    const functionName = 'onImageSelected';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    console.log(`${functionFullName}: event: ${event}`);
-    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
-
-
-    this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
-      console.log(`${functionFullName}: saveResult: ${saveResult}`);
-      if (saveResult === true) {
-        this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
-          console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
-          if (isTop5Result === true) {
-            console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
-            this.leaderboardService.getPointsLeaderboard()
-              .subscribe(leaderboardData => {
-                console.log(`${functionFullName}: populating leaderboard data`);
-                this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
-                  console.log(`${functionFullName}: leaderboard data populated`);
-                });
-              });
-          }
-        });
-
-        this.feedcardService.refreshPointTransactionAvatars();
-        $('#myModal').modal('hide');
-      }
-
-    });
-  }*/
-
-  encode(data) {
-    const str = data.reduce(function(a, b) { return a + String.fromCharCode(b); }, '');
-    return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
-  }
-
-  fileChangeEvent(event: any): void {
-    this.imageChangedEvent = event;
-  }
-  imageCropped(event: ImageCroppedEvent) {
-    this.croppedImageToShow = event.base64;
-    this.croppedImage = event.file;
-  }
-  imageLoaded() {
-    // show cropper
-  }
-  cropperReady() {
-    // cropper ready
-  }
-  loadImageFailed() {
-    // show message
-  }
 
   avatarClick() {
     $('#avatarModal').modal('show');

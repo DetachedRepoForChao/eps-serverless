@@ -1,0 +1,9 @@
+{
+  "Source": "sender@example.com",
+  "Template": "AwardPointTemplate",
+  "Destination": {
+    "ToAddresses": [ "alejandro.rosalez@example.com"
+    ]
+  },
+  "TemplateData": "{ \"name\":\"Alejandro\", \"favoriteanimal\": \"alligator\" }"
+}

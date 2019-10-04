@@ -161,8 +161,10 @@ export class GiftPointsComponent implements OnInit {
 
           const userPointObject = {
             userId: this.selection.selected[i].userId,
+            pointItemName: this.selectedPointItem.name,
             pointItemId: this.selectedPointItem.itemId,
             amount: this.selectedPointItem.amount,
+            coreValues: this.selectedPointItem.coreValues,
             description: 'Test',
           };
 

@@ -6,7 +6,7 @@ const sqlUserModel = Models.User;
 const sqlPointTransactionModel = Models.PointTransaction;
 const ctrlPointPool = require('./point_pool.controller');
 const ctrlUser = require('./user.controller');
-
+const ctrlNotifications = require('./notification.controller');
 const componentName = 'points.controller';
 
 const getPointItems = function () {
@@ -92,31 +92,40 @@ const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, a
         .then(result => {
           if(!result) {
             console.log(`${functionFullName}: Error updating user points`);
-            return {status: 404, message: 'Error updating user points'};
+            return {status: false, message: 'Error updating user points'};
           } else {
             console.log(`${functionFullName}: User points updated successfully`);
-            return {status: 200, message: 'Success', newPointAmount: newAmount };
+            return {status: true, message: 'Success', newPointAmount: newAmount };
           }
         })
         .catch(err => {
           console.log(`${functionFullName}: Database error`);
           console.log(err);
-          return {status: 500, message: err};
+          return {status: false, message: err};
         });
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      return {status: 500, message: err};
+      return {status: false, message: err};
     });
 };
 
 module.exports.addPointsToEmployee = addPointsToEmployee;
 
-const giftPointsToEmployees = function (sourceUserId, userPointObjectArray) {
+const giftPointsToEmployees = function (sourceUser, userPointObjectArray) {
   const functionName = 'giftPointsToEmployees';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
+
+  const sourceUserId = sourceUser.id;
+  const pointItem = {
+    id: userPointObjectArray[0].pointItemId,
+    name: userPointObjectArray[0].pointItemName,
+    points: userPointObjectArray[0].amount,
+    description: userPointObjectArray[0].description,
+    coreValues: userPointObjectArray[0].coreValues,
+  };
 
   // Calculate total points amount to remove
   let totalPointAmount = 0;
@@ -156,6 +165,19 @@ const giftPointsToEmployees = function (sourceUserId, userPointObjectArray) {
                 newPointAmount: addPointsResultArray[i].newPointAmount,
                 message: addPointsResultArray[i].message
               };
+
+              // If points were added successfully, send user an email notification
+              if (addPointsResultArray[i].status === true) {
+                ctrlNotifications.sendAwardPointsEmail(userPointObjectArray[i].userId, sourceUser, pointItem)
+                  .then(emailResult => {
+                    console.log(`${functionFullName}: award point email result:`);
+                    console.log(emailResult);
+                  })
+                  .catch(err => {
+                    console.log(`${functionFullName}: award point email error:`);
+                    console.log(err);
+                  });
+              }
 
               resultObjectArray.push(resultObject);
             }

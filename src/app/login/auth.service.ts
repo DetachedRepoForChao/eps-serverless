@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import Auth, { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
+import Auth, { CognitoHostedUIIdentityProvider,  } from '@aws-amplify/auth';
 import { Hub, ICredentials } from '@aws-amplify/core';
 import { Subject, Observable } from 'rxjs';
 import { CognitoUser } from 'amazon-cognito-identity-js';
@@ -30,8 +30,8 @@ export interface NewUser {
 export class AuthService {
 
   public loggedIn: boolean;
-  private _authState: Subject<CognitoUser|any> = new Subject<CognitoUser|any>();
-  authState: Observable<CognitoUser|any> = this._authState.asObservable();
+  private _authState: Subject<CognitoUser | any> = new Subject<CognitoUser | any>();
+  authState: Observable<CognitoUser | any> = this._authState.asObservable();
 
   public static SIGN_IN = 'signIn';
   public static SIGN_OUT = 'signOut';
@@ -40,23 +40,23 @@ export class AuthService {
 
   constructor(private globals: Globals) {
     Hub.listen('auth', (data) => {
-      const { channel, payload } = data;
+      const {channel, payload} = data;
       if (channel === 'auth') {
         this._authState.next(payload.event);
       }
     });
   }
 
-/*  ngOnInit(): void {
-    Auth.currentUserInfo()
-      .then((userInfo: any) => {
-        this.globals.cognitoUserId = userInfo.id.split(':')[1];
-        console.log('this.globals.currentUserId');
-        console.log(this.globals.cognitoUserId);
-      });
-  }*/
+  /*  ngOnInit(): void {
+      Auth.currentUserInfo()
+        .then((userInfo: any) => {
+          this.globals.cognitoUserId = userInfo.id.split(':')[1];
+          console.log('this.globals.currentUserId');
+          console.log(this.globals.cognitoUserId);
+        });
+    }*/
 
-  signUp(user: NewUser): Promise<CognitoUser|any> {
+  signUp(user: NewUser): Promise<CognitoUser | any> {
     console.log('NewUser');
     console.log(user);
     return Auth.signUp({
@@ -81,10 +81,10 @@ export class AuthService {
     });
   }
 
-  signIn(username: string, password: string): Promise<CognitoUser|any> {
+  signIn(username: string, password: string): Promise<CognitoUser | any> {
     return new Promise((resolve, reject) => {
       Auth.signIn(username, password)
-        .then((user: CognitoUser|any) => {
+        .then((user: CognitoUser | any) => {
           this.loggedIn = true;
           resolve(user);
         }).catch((error: any) => reject(error));
@@ -104,4 +104,31 @@ export class AuthService {
     return Auth.currentUserInfo();
   }
 
+  verifyEmail() {
+    console.log('verify email');
+    Auth.currentAuthenticatedUser()
+      .then(cognitoUser => {
+        cognitoUser.getAttributeVerificationCode('email', {
+          onSuccess: () => {
+            console.log('success');
+          },
+          onFailure: (err) => {
+            alert(err);
+          },
+          inputVerificationCode: () => {
+            console.log('verifying email');
+            const verificationCode = prompt('Please input verification code: ', '');
+            cognitoUser.verifyAttribute('email', verificationCode, {
+              onSuccess: (success) => {
+                console.log('success: ' + success);
+              },
+              onFailure: (err) => {
+                console.log('error');
+                console.log(err);
+              }
+            });
+          }
+        });
+      });
+  }
 }

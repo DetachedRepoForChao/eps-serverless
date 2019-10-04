@@ -476,9 +476,9 @@ app.post('/items/giftPointsToEmployees', function(req, res) {
       const username = tokenResult.claims['cognito:username'];
       ctrlUser.getUserProfile(username)
         .then(result => {
-          const sourceUserId = result.user.id;
+          const sourceUser = result.user;
           const userPointObjectArray = req.body.userPointObjectArray;
-          ctrlPoints.giftPointsToEmployees(sourceUserId, userPointObjectArray)
+          ctrlPoints.giftPointsToEmployees(sourceUser, userPointObjectArray)
             .then(data => {
               res.json({status: 'post call succeed!', data: data});
             })
@@ -824,7 +824,56 @@ app.post('/items/setNotificationSeenTime', function (req, res) {
   });
 });
 
+// Email routes
+app.post('/items/sendNotificationEmail' , function (req, res) {
+  console.log('starting post sendNotificationEmail');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const targetUserId = req.body.targetUserId;
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(sourceUser => {
+          console.log(sourceUser.user);
+          ctrlNotifications.sendNotificationEmail(targetUserId, sourceUser.user)
+            .then(data => {
+              res.json({ status: 'post call succeed!', data: data });
+            })
+            .catch(err => {
+              res.json({ status: 'post call failed!', error: err });
+            });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
 
+
+app.post('/items/sendAwardPointsEmail' , function (req, res) {
+  console.log('starting post sendAwardPointsEmail');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const targetUserId = req.body.targetUserId;
+      const pointItem = req.body.pointItem;
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(sourceUser => {
+          console.log(sourceUser.user);
+          ctrlNotifications.sendAwardPointsEmail(targetUserId, sourceUser.user, pointItem)
+            .then(data => {
+              res.json({ status: 'post call succeed!', data: data });
+            })
+            .catch(err => {
+              res.json({ status: 'post call failed!', error: err });
+            });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
 
 
 app.get('/items/*', function(req, res) {
