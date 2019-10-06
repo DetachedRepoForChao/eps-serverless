@@ -64,12 +64,12 @@ app.post('/things/sendRequestStoreItemEmail' , function (req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      const sourceUser = req.body.sourceUser;
-      const targetUser = req.body.targetUser;
-      const pointItem = req.body.pointItem;
+      const managerUser = req.body.managerUser;
+      const requestUser = req.body.requestUser;
+      const storeItem = req.body.storeItem;
       // const username = tokenResult.claims['cognito:username'];
 
-      ctrlNotifications.sendRequestStoreItemEmail(targetUser, sourceUser, pointItem)
+      ctrlNotifications.sendRequestStoreItemEmail(managerUser, requestUser, storeItem)
         .then(data => {
           res.json({ status: 'post call succeed!', data: data });
         })

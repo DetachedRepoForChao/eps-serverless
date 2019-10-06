@@ -37,6 +37,7 @@ module.exports = function(sequelize, DataTypes) {
 		id: {
 			type: DataTypes.STRING(255),
 			allowNull: false,
+      primaryKey: true,
 			unique: true,
       autoIncrement: true,
 			field: 'id'

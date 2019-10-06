@@ -14,7 +14,7 @@ const SessionModel = require('./models/session');
 const LikeModel = require('./models/like');
 const StoreItemModel = require('./models/store_item');
 const NotificationModel = require('./models/notification');
-const UserHasStoreItem = require('./models/user_has_store_item');
+const UserHasStoreItemModel = require('./models/user_has_store_item');
 // console.log('starting db.js');
 
 process.env.DB_NAME = "eps-test";
@@ -62,7 +62,7 @@ const Session = SessionModel(sequelize, Sequelize);
 const Like = LikeModel(sequelize,Sequelize);
 const StoreItem = StoreItemModel(sequelize ,Sequelize);
 const Notification = NotificationModel(sequelize ,Sequelize);
-const UserHasStoreItem = NotificationModel(sequelize, Sequelize);
+const UserHasStoreItem = UserHasStoreItemModel(sequelize, Sequelize);
 
 const Models = {
   User,

@@ -14,6 +14,9 @@ import {AuthService} from '../../../login/auth.service';
 import {createEntityUserAvatarModel, EntityUserModel} from '../../user/state/entity-user.model';
 import {store} from '@angular/core/src/render3';
 import {PointItemModel} from '../../point-item/state/point-item.model';
+import {EntityUserQuery} from '../../user/state/entity-user.query';
+import {EntityCurrentUserQuery} from '../../current-user/state/entity-current-user.query';
+import {EntityCurrentUserModel} from '../../current-user/state/entity-current-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +37,9 @@ export class StoreItemService {
   constructor(private storeItemStore: StoreItemStore,
               private storeItemQuery: StoreItemQuery,
               private globals: Globals,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private userQuery: EntityUserQuery,
+              private currentUserQuery: EntityCurrentUserQuery) {
   }
 
   updateFilter(filter: VISIBILITY_FILTER) {
@@ -180,7 +185,7 @@ export class StoreItemService {
     return cacheable(this.storeItemStore, request$);
   }
 
-  sendStoreItemPurchaseRequest(targetUser: any, sourceUser: any, storeItem: StoreItemModel): Observable<any> {
+  sendStoreItemPurchaseRequestEmail(managerUser: EntityUserModel, requestUser: EntityCurrentUserModel, storeItem: StoreItemModel): Observable<any> {
     const functionName = 'sendStoreItemPurchaseRequest';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -193,8 +198,39 @@ export class StoreItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            targetUser: targetUser,
-            sourceUser: sourceUser,
+            managerUser: managerUser,
+            requestUser: requestUser,
+            storeItem: storeItem
+          };
+
+          API.post(this.apiName, this.apiPath2 + '/sendRequestStoreItemEmail', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
+    });
+  }
+
+  submitStoreItemPurchaseRequest(storeItem: StoreItemModel): Observable<any> {
+    const functionName = 'submitStoreItemPurchaseRequest';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    const requestUser = this.currentUserQuery.getAll()[0]; // Retrieve current user info
+    const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            requestUser: requestUser,
+            managerUser: managerUser,
             storeItem: storeItem
           };
 

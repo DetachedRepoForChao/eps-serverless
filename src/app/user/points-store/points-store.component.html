@@ -14,6 +14,14 @@
               <div class="card card-coin card-plain">
                 <div class="card-body">
                   <div class="row">
+                    <div *ngIf="(this.userHasStoreItemQuery.selectAll() | async)?.length > 0">
+                      ** Current Requests **
+                      <div *ngFor="let request of (this.userHasStoreItemQuery.selectAll() | async)">
+                        Item ID: {{request.storeItemId}} Status: {{request.status}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
                     <div class="col-md-12 text-center">
                       <div *ngIf="(this.storeItemQuery.selectLoading() | async) === false; else storeLoading">
                         ** Store **

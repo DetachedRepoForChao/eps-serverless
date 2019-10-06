@@ -787,6 +787,55 @@ app.get('/items/getStoreItems', function(req, res) {
 });
 
 
+app.get('/items/getUserHasStoreItemRecords', function(req, res) {
+  console.log('starting get getUserHasStoreItemRecords');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const requestUser = userResult.user;
+          ctrlStoreItem.getUserHasStoreItemRecords(requestUser)
+            .then(data => {
+              res.json({status: 'get call succeed!', data: data.userHasStoreItemRecords});
+            })
+            .catch(err => {
+              res.json({status: 'get call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/newUserHasStoreItemRecord', function(req, res) {
+  console.log('starting post newUserHasStoreItemRecord');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const requestUser = userResult.user;
+          const storeItemId = req.body.storeItemId;
+          ctrlStoreItem.newUserHasStoreItemRecord(requestUser, storeItemId)
+            .then(data => {
+              res.json({status: 'get call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'get call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 // Notifications Routes
 app.get('/items/getNotifications', function(req, res) {
   console.log('starting get getNotifications');

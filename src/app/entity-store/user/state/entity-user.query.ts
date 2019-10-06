@@ -65,7 +65,7 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
 
   public getDepartmentManager(departmentId: number) {
     const manager = this.getAll({
-      filterBy: userEntity => userEntity.department.Id === departmentId
+      filterBy: userEntity => (userEntity.department.Id === departmentId) && (userEntity.securityRole.Id === 2),
     });
 
     return manager;

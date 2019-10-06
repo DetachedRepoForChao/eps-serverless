@@ -29,10 +29,39 @@ const getStoreItems = function() {
     });
 };
 
-exports.module.getStoreItems = getStoreItems;
+module.exports.getStoreItems = getStoreItems;
 
-const newStoreItemRequest = function (requestUser, storeItemId) {
-  const functionName = 'newStoreItemRequest';
+const getUserHasStoreItemRecords = function (requestUser) {
+  const functionName = 'getUserHasStoreItemRecords';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlUserHasStoreItemModel.findAll({
+    where: {
+      userId: requestUser.id
+    }
+  })
+    .then(result => {
+      if (!result) {
+        console.log(`${functionFullName}: No records found`);
+        return {status: false, message: 'No records found'};
+      } else {
+        console.log(`${functionFullName}: Records found`);
+        console.log(result);
+        return {status: true, userHasStoreItemRecords: result};
+      }
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error retrieving records`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.getUserHasStoreItemRecords = getUserHasStoreItemRecords;
+
+const newUserHasStoreItemRecord = function (requestUser, storeItemId) {
+  const functionName = 'newUserHasStoreItemRecord';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
@@ -41,9 +70,9 @@ const newStoreItemRequest = function (requestUser, storeItemId) {
     userId: requestUser.id,
     storeItemId: storeItemId
   })
-    .then(() => {
+    .then(userHasStoreItemRecord => {
       console.log(`${functionFullName}: New user / store item request created successfully`);
-      return {status: true, message: 'New user / store item request created successfully'};
+      return {status: true, userHasStoreItemRecord: userHasStoreItemRecord};
     })
     .catch( err => {
       console.log(`${functionFullName}: Error creating new user / store item request`);
@@ -52,6 +81,6 @@ const newStoreItemRequest = function (requestUser, storeItemId) {
     });
 };
 
-exports.module.newStoreItemRequest = newStoreItemRequest;
+module.exports.newUserHasStoreItemRecord = newUserHasStoreItemRecord;
 
 
