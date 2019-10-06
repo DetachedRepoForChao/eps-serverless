@@ -62,4 +62,12 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     // console.log(numArray);
     return numArray;
   }
+
+  public getDepartmentManager(departmentId: number) {
+    const manager = this.getAll({
+      filterBy: userEntity => userEntity.department.Id === departmentId
+    });
+
+    return manager;
+  }
 }

@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "CancelItemPurchase",
+    "SubjectPart": "{{name}} cancelled an item request.",
+    "HtmlPart": "<h1>Hello {{managerName}},</h1><p>{{name}} cancelled their request for '{{itemName}}' with the following explanation:</p><p>{{explanation}}</p><p>You do not need to do anything further at this time.</p>",
+    "TextPart": "Hello {{managerName}},\r\n{{name}} cancelled their request for '{{itemName}}' with the following explanation:\r\n{{explanation}}\r\nYou do not need to do anything further at this time."
+  }
+}

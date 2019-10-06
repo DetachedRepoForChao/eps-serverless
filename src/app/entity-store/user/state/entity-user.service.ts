@@ -126,6 +126,7 @@ export class EntityUserService {
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
               const birthdate = usersMerged[i].dateOfBirth;
+              const email = usersMerged[i].email;
               const securityRole: SecurityRole = {
                 Id: +usersMerged[i].securityRoleId,
                 Name: '',
@@ -140,7 +141,7 @@ export class EntityUserService {
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
               const avatar = createEntityUserAvatarModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
-                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal});
+                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email});
               usersArray.push(avatar);
             }
 
@@ -229,40 +230,7 @@ export class EntityUserService {
     });
   }
 
-/*  getUsers(): Observable<any> {
-    const functionName = 'getUsers';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
 
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          API.get(this.apiName, this.apiPath + '/usersPublicDetails', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            console.log(data.data);
-            observer.next(data.data);
-            observer.complete();
-          })
-            .catch(err => {
-              console.log(`${functionFullName}: error retrieving users details from API`);
-              console.log(err);
-              observer.next(err);
-              observer.complete();
-            });
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
-          observer.next(err);
-          observer.complete();
-        });
-    });
-  }*/
 
   getUsers(): Observable<any> {
     const functionName = 'getUsers';

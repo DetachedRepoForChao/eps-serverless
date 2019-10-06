@@ -136,63 +136,75 @@ export class GiftPointsComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-      console.log(`${functionFullName}: this.selectedPointItem:`);
-      console.log(this.selectedPointItem);
+    console.log(`${functionFullName}: this.selectedPointItem:`);
+    console.log(this.selectedPointItem);
 
-      console.log(`${functionFullName}: this.selection.selected:`);
-      console.log(this.selection.selected);
+    console.log(`${functionFullName}: this.selection.selected:`);
+    console.log(this.selection.selected);
 
-      if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
-      } else {
-        const data = {
+    const sourceUser = this.entityCurrentUserQuery.getAll()[0];
+
+    if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
+    } else {
+      const data = {
+        pointItemId: this.selectedPointItem.itemId,
+        amount: this.selectedPointItem.amount,
+      };
+
+      // Create an object array to send to the backend API in one bulk operation
+      const userPointObjectArray = [];
+      let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
+      console.log('selected.length');
+      console.log(this.selection.selected.length);
+      for ( let i = 0; i < this.selection.selected.length; i++) {
+        console.log('gifting points to: ' + this.selection.selected[i].username);
+        totalAmount = totalAmount + this.selectedPointItem.amount;
+
+        const userPointObject = {
+          userId: this.selection.selected[i].userId,
+          pointItemName: this.selectedPointItem.name,
           pointItemId: this.selectedPointItem.itemId,
           amount: this.selectedPointItem.amount,
+          coreValues: this.selectedPointItem.coreValues,
+          description: 'Test',
         };
 
-        // Create an object array to send to the backend API in one bulk operation
-        const userPointObjectArray = [];
-        let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
-        // const pointItems$: Observable<any>[] = [];
-        console.log('selected.length');
-        console.log(this.selection.selected.length);
-        for ( let i = 0; i < this.selection.selected.length; i++) {
-          console.log('gifting points to: ' + this.selection.selected[i].email);
-          totalAmount = totalAmount + this.selectedPointItem.amount;
-
-          const userPointObject = {
-            userId: this.selection.selected[i].userId,
-            pointItemName: this.selectedPointItem.name,
-            pointItemId: this.selectedPointItem.itemId,
-            amount: this.selectedPointItem.amount,
-            coreValues: this.selectedPointItem.coreValues,
-            description: 'Test',
-          };
-
-          userPointObjectArray.push(userPointObject);
-          // pointItems$.push(this.pointItemService.giftPointsToEmployee(this.selection.selected[i].userId, data.pointItemId, 'Test'));
-        }
-
-        // Check if the manager has enough points in his points pool to complete the transaction
-        const currentPointsPool = this.entityCurrentUserQuery.getCurrentUserPointsPool();
-        if (totalAmount > currentPointsPool) {
-          console.log('Not enough points in the points pool to complete transaction. Stopping...');
-        } else {
-          console.log('Sufficient points in the points pool to complete the transaction. Continuing...');
-          console.log(userPointObjectArray);
-          this.pointItemService.awardPointsToEmployees(userPointObjectArray)
-            .subscribe((giftPointsResult: any) => {
-              console.log('giftPointsResult');
-              console.log(giftPointsResult);
-              const newPointPoolAmount = giftPointsResult.newPointPoolAmount;
-              const resultObjectArray = giftPointsResult.resultObjectArray;
-              this.entityCurrentUserService.updatePointPool(+newPointPoolAmount);
-              for (let i = 0; i < resultObjectArray.length; i++) {
-                this.entityUserService.updatePoints(+resultObjectArray[i].targetUserId, +resultObjectArray[i].newPointAmount);
-              }
-              this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length).subscribe();
-            });
-        }
+        userPointObjectArray.push(userPointObject);
       }
+
+      // Check if the manager has enough points in his points pool to complete the transaction
+      const currentPointsPool = this.entityCurrentUserQuery.getCurrentUserPointsPool();
+      if (totalAmount > currentPointsPool) {
+        console.log('Not enough points in the points pool to complete transaction. Stopping...');
+      } else {
+        console.log('Sufficient points in the points pool to complete the transaction. Continuing...');
+        console.log(userPointObjectArray);
+        this.pointItemService.awardPointsToEmployees(userPointObjectArray)
+          .subscribe((giftPointsResult: any) => {
+            console.log('giftPointsResult');
+            console.log(giftPointsResult);
+            const newPointPoolAmount = giftPointsResult.newPointPoolAmount;
+            const resultObjectArray = giftPointsResult.resultObjectArray;
+            this.entityCurrentUserService.updatePointPool(+newPointPoolAmount);
+
+            for (let i = 0; i < resultObjectArray.length; i++) {
+              // If the backend function call returned true, update points for user and send them an email notification
+              if (resultObjectArray[i].status === true) {
+                const targetUser = this.selection.selected.filter(x => x.userId === resultObjectArray[i].targetUserId)[0];
+                this.entityUserService.updatePoints(+resultObjectArray[i].targetUserId, +resultObjectArray[i].newPointAmount);
+                this.pointItemService.sendAwardPointsEmail(targetUser, sourceUser, this.selectedPointItem)
+                  .subscribe(emailResult => {
+                    console.log(`${functionFullName}: email result`);
+                    console.log(emailResult);
+                  });
+              }
+
+            }
+
+            this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length).subscribe();
+          });
+      }
+    }
   }
 
   toggleCoreValueButton(coreValue: string) {
@@ -325,7 +337,7 @@ export class GiftPointsComponent implements OnInit {
     form.resetForm();
   }
 
-clickedUser;
+  clickedUser;
 
   onAvatarClick(user) {
     console.log(user);

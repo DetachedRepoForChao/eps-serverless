@@ -339,58 +339,62 @@ const addPointsToAchievementFamilyProgressByX = function (achievementFamily, use
 
           const amount = incrementAmount;
 
-          return addPointsToAchievementProgress(achievementProgressToIncrement.id, amount)
-            .then(result => {
-              if(result.status !== true) {
-                console.log(`${functionFullName}: Something went wrong incrementing achievement progress`);
-                return {status: false, message: result.message};
-              } else {
-                console.log(`${functionFullName}: Success incrementing achievement progress`);
+          if (achievementProgressToIncrement === false) {
+            return {status: false, message: 'All achievements complete'};
+          } else {
+            return addPointsToAchievementProgress(achievementProgressToIncrement.id, amount)
+              .then(result => {
+                if(result.status !== true) {
+                  console.log(`${functionFullName}: Something went wrong incrementing achievement progress`);
+                  return {status: false, message: result.message};
+                } else {
+                  console.log(`${functionFullName}: Success incrementing achievement progress`);
 
-                // Check if the above transaction completed the achievement level. If so, we need to set the next level
-                // to 'in progress' and add any overflow to it
-                if (result.newAchievementStatus === 'complete') {
-                  console.log(`${functionFullName}: The previous transaction completed the achievement level. Checking if we need to start the next level`);
-                  // Get the next level achievement progress (if there is one)
-                  const newAchievementProgressToIncrement = familyProgressResult.achievementFamilyProgress.find(x => x.level === (achievementProgressToIncrement.level + 1));
-                  console.log(`${functionFullName}: New achievement progress to increment:`);
-                  console.log(newAchievementProgressToIncrement);
+                  // Check if the above transaction completed the achievement level. If so, we need to set the next level
+                  // to 'in progress' and add any overflow to it
+                  if (result.newAchievementStatus === 'complete') {
+                    console.log(`${functionFullName}: The previous transaction completed the achievement level. Checking if we need to start the next level`);
+                    // Get the next level achievement progress (if there is one)
+                    const newAchievementProgressToIncrement = familyProgressResult.achievementFamilyProgress.find(x => x.level === (achievementProgressToIncrement.level + 1));
+                    console.log(`${functionFullName}: New achievement progress to increment:`);
+                    console.log(newAchievementProgressToIncrement);
 
-                  if (newAchievementProgressToIncrement) {
-                    console.log(`${functionFullName}: Starting the next achievement progress level by adding the ` +
-                      `overflow amount of ${result.overflow} to achievement progress id ${newAchievementProgressToIncrement.id}`);
+                    if (newAchievementProgressToIncrement) {
+                      console.log(`${functionFullName}: Starting the next achievement progress level by adding the ` +
+                        `overflow amount of ${result.overflow} to achievement progress id ${newAchievementProgressToIncrement.id}`);
 
-                    return addPointsToAchievementProgress(newAchievementProgressToIncrement.id, result.overflow)
-                      .then(result => {
-                        if (result.status !== true) {
-                          console.log(`${functionFullName}: Something went wrong incrementing NEW achievement progress`);
-                          return {status: false, message: result.message};
-                        } else {
-                          console.log(`${functionFullName}: Success incrementing NEW achievement progress`);
-                          return {status: true, message: 'Success incrementing NEW achievement progress'};
-                        }
-                      })
-                      .catch(err => {
-                        console.log(`${functionFullName}: Error`);
-                        console.log(err);
-                        return {status: false, message: err};
-                      });
-                  } else {
-                    console.log(`${functionFullName}: Unable to find a new achievement progress to increment. ` +
-                      `Looks like the max level achievement was completed. Congratulations!`);
+                      return addPointsToAchievementProgress(newAchievementProgressToIncrement.id, result.overflow)
+                        .then(result => {
+                          if (result.status !== true) {
+                            console.log(`${functionFullName}: Something went wrong incrementing NEW achievement progress`);
+                            return {status: false, message: result.message};
+                          } else {
+                            console.log(`${functionFullName}: Success incrementing NEW achievement progress`);
+                            return {status: true, message: 'Success incrementing NEW achievement progress'};
+                          }
+                        })
+                        .catch(err => {
+                          console.log(`${functionFullName}: Error`);
+                          console.log(err);
+                          return {status: false, message: err};
+                        });
+                    } else {
+                      console.log(`${functionFullName}: Unable to find a new achievement progress to increment. ` +
+                        `Looks like the max level achievement was completed. Congratulations!`);
 
-                    return {status: true, message: 'Max level achievement completed. Congratulations!'};
+                      return {status: true, message: 'Max level achievement completed. Congratulations!'};
+                    }
                   }
-                }
 
-                return {status: true, message: 'Success incrementing achievement progress'};
-              }
-            })
-            .catch(err => {
-              console.log(`${functionFullName}: Error`);
-              console.log(err);
-              return {status: false, message: err};
-            });
+                  return {status: true, message: 'Success incrementing achievement progress'};
+                }
+              })
+              .catch(err => {
+                console.log(`${functionFullName}: Error`);
+                console.log(err);
+                return {status: false, message: err};
+              });
+          }
         }
       }
     })
@@ -419,6 +423,11 @@ const getAchievementProgressToIncrement = function(achievementFamilyProgress) {
   console.log(`${functionFullName}: completedAchievements:`);
   console.log(completedAchievements);
 
+  if ((inProgressAchievement.length === 0) && (notStartedAchievements.length === 0) && (completedAchievements.length === 0)) {
+    // All achievements complete
+    console.log(`${functionFullName}: All achievements complete`);
+    return false;
+  }
   if (inProgressAchievement.length > 0) {
     // Increment the 'in progress' achievement if it exists
     console.log(`${functionFullName}: 'In progress' status achievement: ` +

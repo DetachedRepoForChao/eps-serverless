@@ -163,21 +163,9 @@ const giftPointsToEmployees = function (sourceUser, userPointObjectArray) {
               const resultObject = {
                 targetUserId: userPointObjectArray[i].userId,
                 newPointAmount: addPointsResultArray[i].newPointAmount,
-                message: addPointsResultArray[i].message
+                message: addPointsResultArray[i].message,
+                status: addPointsResultArray[i].status,
               };
-
-              // If points were added successfully, send user an email notification
-              if (addPointsResultArray[i].status === true) {
-                ctrlNotifications.sendAwardPointsEmail(userPointObjectArray[i].userId, sourceUser, pointItem)
-                  .then(emailResult => {
-                    console.log(`${functionFullName}: award point email result:`);
-                    console.log(emailResult);
-                  })
-                  .catch(err => {
-                    console.log(`${functionFullName}: award point email error:`);
-                    console.log(err);
-                  });
-              }
 
               resultObjectArray.push(resultObject);
             }

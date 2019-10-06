@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "FulfillItemPurchase",
+    "SubjectPart": "Item request fulfilled!",
+    "HtmlPart": "<h1>Hello {{requestUserFirstName}},</h1><p>{{managerUserFullName}} has marked your request for '{{itemName}}' as fulfilled.</p><p>The cost of the item ({{cost}}) has been removed from your point total. Your new total is {{newPointTotal}}.</p>",
+    "TextPart": "Hello {{requestUserFirstName}},\r\n{{managerUserFullName}} has marked your purchase for '{{itemName}}' as fulfilled.\r\nThe cost of the item ({{cost}}) has been removed from your point total. Your new total is {{newPointTotal}}."
+  }
+}

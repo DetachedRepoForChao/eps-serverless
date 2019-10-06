@@ -23,6 +23,10 @@ app.use(function(req, res, next) {
   next()
 });
 
+const ctrlNotifications = require('./controllers/notification.controller');
+const jwtVerify = require('./config/decode-verify-jwt');
+const componentName = 'app';
+
 AWS.config.update({
   region: 'us-east-1',
   accessKeyId: 'AKIAZMKSQ5SFC7O3NQUR',
@@ -30,9 +34,81 @@ AWS.config.update({
 });
 
 
-/**********************
- * Example get method *
- **********************/
+app.post('/things/sendAwardPointsEmail' , function (req, res) {
+  console.log('starting post sendAwardPointsEmail');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const sourceUser = req.body.sourceUser;
+      const targetUser = req.body.targetUser;
+      const pointItem = req.body.pointItem;
+      // const username = tokenResult.claims['cognito:username'];
+
+      ctrlNotifications.sendAwardPointsEmail(targetUser, sourceUser, pointItem)
+        .then(data => {
+          res.json({ status: 'post call succeed!', data: data });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+
+app.post('/things/sendRequestStoreItemEmail' , function (req, res) {
+  console.log('starting post sendRequestStoreItemEmail');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const sourceUser = req.body.sourceUser;
+      const targetUser = req.body.targetUser;
+      const pointItem = req.body.pointItem;
+      // const username = tokenResult.claims['cognito:username'];
+
+      ctrlNotifications.sendRequestStoreItemEmail(targetUser, sourceUser, pointItem)
+        .then(data => {
+          res.json({ status: 'post call succeed!', data: data });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+
+app.post('/things/sendFulfillStoreItemEmail' , function (req, res) {
+  console.log('starting post sendFulfillStoreItemEmail');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const sourceUser = req.body.sourceUser;
+      const targetUser = req.body.targetUser;
+      const pointItem = req.body.pointItem;
+      // const username = tokenResult.claims['cognito:username'];
+
+      ctrlNotifications.sendFulfillStoreItemEmail(targetUser, sourceUser, pointItem)
+        .then(data => {
+          res.json({ status: 'post call succeed!', data: data });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+
 app.get('/things/getCognitoUsers', function(req, res) {
   var params = {
     UserPoolId: 'us-east-1_gbzCkWTjI'

@@ -2,11 +2,7 @@ const SqlModel = require('../db');
 const Models = SqlModel().Models;
 const sqlUserModel = Models.User;
 
-// const bcrypt = require('bcryptjs');
-// const passport = require('passport');
 const _ = require('lodash');
-// const jwt = require('jsonwebtoken');
-// const BCRYPT_SALT_ROUNDS = 12;
 
 const ctrlAchievement = require('./achievement.controller');
 const ctrlPointPool = require('./point_pool.controller');
@@ -287,7 +283,7 @@ const getUsersPublicDetails = function () {
 
   return sqlUserModel.findAll({
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'dateOfBirth',
-      'securityRoleId', 'departmentId', 'avatarUrl'],
+      'securityRoleId', 'departmentId', 'avatarUrl', 'email'],
     where: {
       securityRoleId: [1, 2],
     },

@@ -478,11 +478,43 @@ app.post('/items/giftPointsToEmployees', function(req, res) {
         .then(result => {
           const sourceUser = result.user;
           const userPointObjectArray = req.body.userPointObjectArray;
+          const pointItem = {
+            id: userPointObjectArray[0].pointItemId,
+            name: userPointObjectArray[0].pointItemName,
+            points: userPointObjectArray[0].amount,
+            description: userPointObjectArray[0].description,
+            coreValues: userPointObjectArray[0].coreValues,
+          };
+
           ctrlPoints.giftPointsToEmployees(sourceUser, userPointObjectArray)
             .then(data => {
-              res.json({status: 'post call succeed!', data: data});
+              // If points were added successfully, send user an email notification
+              const emailPromises = [];
+              for (let i = 0; i < data.resultObjectArray.length; i++) {
+                if (data.resultObjectArray[i].status === true) {
+                  // emailPromises.push(ctrlNotifications.sendAwardPointsEmail(data.resultObjectArray[i].targetUserId, sourceUser, pointItem));
+                  // emailPromises.push(ctrlNotifications.sendNotificationEmail(data.resultObjectArray[i].targetUserId, sourceUser));
+                }
+              }
+
+              Promise.all(emailPromises)
+                .then(emailResults => {
+                  console.log('email results:');
+                  for (let i = 0; i < emailResults.length; i++) {
+                    console.log(emailResults[i]);
+                  }
+
+                  res.json({status: 'post call succeed!', data: data});
+                })
+                .catch(err => {
+                  console.log('Promise.all error');
+                  console.log(err);
+                  res.json({status: 'post call failed!', error: err});
+                });
             })
             .catch(err => {
+              console.log('giftPointsToEmployees error');
+              console.log(err);
               res.json({status: 'post call failed!', error: err});
             });
         });

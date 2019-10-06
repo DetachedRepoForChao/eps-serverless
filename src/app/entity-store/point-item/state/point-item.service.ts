@@ -22,6 +22,7 @@ export class PointItemService {
   componentName = 'point-item.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
+  apiPath2 = '/things';
   myInit = {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -138,7 +139,7 @@ export class PointItemService {
     });
   }
 
-  sendAwardPointsEmail(targetUserId: number, pointItem: PointItemModel): Observable<any> {
+  sendAwardPointsEmail(targetUser: any, sourceUser: any, pointItem: PointItemModel): Observable<any> {
     const functionName = 'sendAwardPointsEmail';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -151,11 +152,12 @@ export class PointItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            targetUserId: targetUserId,
+            targetUser: targetUser,
+            sourceUser: sourceUser,
             pointItem: pointItem
           };
 
-          API.post(this.apiName, this.apiPath + '/sendAwardPointsEmail', myInit).then(data => {
+          API.post(this.apiName, this.apiPath2 + '/sendAwardPointsEmail', myInit).then(data => {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(data);
             observer.next(data.data);
@@ -163,7 +165,6 @@ export class PointItemService {
           });
         });
     });
-
   }
 
   cachePointItems() {

@@ -13,6 +13,7 @@ import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {createEntityUserAvatarModel, EntityUserModel} from '../../user/state/entity-user.model';
 import {store} from '@angular/core/src/render3';
+import {PointItemModel} from '../../point-item/state/point-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class StoreItemService {
   componentName = 'store-item.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
+  apiPath2 = '/things';
   myInit = {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -176,5 +178,33 @@ export class StoreItemService {
       }));
 
     return cacheable(this.storeItemStore, request$);
+  }
+
+  sendStoreItemPurchaseRequest(targetUser: any, sourceUser: any, storeItem: StoreItemModel): Observable<any> {
+    const functionName = 'sendStoreItemPurchaseRequest';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            targetUser: targetUser,
+            sourceUser: sourceUser,
+            storeItem: storeItem
+          };
+
+          API.post(this.apiName, this.apiPath2 + '/sendStoreItemPurchaseRequest', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
+    });
   }
 }

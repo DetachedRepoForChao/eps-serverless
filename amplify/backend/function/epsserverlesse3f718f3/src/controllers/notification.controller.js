@@ -200,6 +200,15 @@ module.exports.sendNotificationEmail = sendNotificationEmail;
 
 
 const sendAwardPointsEmail = function (targetUserId, sourceUser, pointItem) {
+  const functionName = 'sendAwardPointsEmail';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: targetUserId: ${targetUserId}`);
+  console.log(`${functionFullName}: sourceUser:`);
+  console.log(sourceUser);
+  console.log(`${functionFullName}: pointItem:`);
+  console.log(pointItem);
   // Set the region
   AWS.config.update({region: 'us-east-1'});
 
@@ -214,7 +223,8 @@ const sendAwardPointsEmail = function (targetUserId, sourceUser, pointItem) {
       const targetUserName = targetUser.firstName;
       const targetUserPoints = targetUser.points;
       const managerName = `${sourceUser.firstName} ${sourceUser.lastName}`;
-      const pointItemName = pointItem.pointItemName;
+      const pointItemName = pointItem.name;
+      const points = pointItem.points;
       let description = null;
       if (pointItem.description.length > 0) {
         description = `Manager's comment: ${pointItem.description}`
@@ -229,24 +239,32 @@ const sendAwardPointsEmail = function (targetUserId, sourceUser, pointItem) {
           ]
         },
         Template: 'AwardPointsTemplate',
-        TemplateData: `{\"name\":\"${targetUserName}\", \"managerName\":\"${managerName}\", \"pointItemName\": \"${pointItemName}\", \"description\": \"${description}\"}`,
+        ConfigurationSetName: "Default",
+        TemplateData: `{\"name\":\"${targetUserName}\", \"managerName\":\"${managerName}\", \"points\": \"${points}\", \"pointItemName\": \"${pointItemName}\", \"description\": \"${description}\"}`,
         Source: 'max.bado@gmail.com', /* required */
 
       };
 
       // Create the promise and SES service object
-      var sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(params).promise();
+      const sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendTemplatedEmail(params).promise();
 
       // Handle promise's fulfilled/rejected states
       return sendPromise.then(
         function(data) {
+          console.log(`${functionFullName}: success sending award points email`);
           console.log(data.MessageId);
           return ({status: true, data: data});
         }).catch(
         function(err) {
+          console.log(`${functionFullName}: error sending award points email`);
           console.error(err, err.stack);
           return ({status: false, message: err});
         });
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error retrieving user record`);
+      console.log(err);
+      return ({status: false, message: err});
     })
 };
 

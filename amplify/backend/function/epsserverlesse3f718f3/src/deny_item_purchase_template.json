@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "DenyItemPurchase",
+    "SubjectPart": "Item request cancelled by manager.",
+    "HtmlPart": "<h1>Hello {{name}},</h1><p>{{managerName}} has marked your request for '{{itemName}}' as cancelled with the following explanation:</p><p>{{explanation}}</p><p>The point cost of the item has been refunded to your total.</p>",
+    "TextPart": "Hello {{name}},\r\n{{managerName}} has marked your request for '{{itemName}}' as cancelled with the following explanation:\r\n{{explanation}}\r\nThe point cost of the item has been refunded to your total."
+  }
+}
