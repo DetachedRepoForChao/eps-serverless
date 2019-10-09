@@ -42,7 +42,7 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
 
   // public getUser(username: string): EntityUserAvatarModel {
   public getUser(username: string) {
-    const user = this.getAll({
+    const user$ = this.selectAll({
       filterBy: userEntity => userEntity.username === username
     });
     // const avatars = this.getAll();
@@ -50,7 +50,7 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
 
     // console.log(userAvatar);
     // console.log(this.getAll());
-    return user;
+    return user$;
   }
 
   public getUserCompleteAchievementCount(userId: number) {

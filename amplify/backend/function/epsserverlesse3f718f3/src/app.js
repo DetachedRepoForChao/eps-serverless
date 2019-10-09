@@ -590,6 +590,7 @@ app.post('/items/addLike', function(req, res) {
 
   // const likingUsername = req.body.likingUsername;
   const postId = req.body.postId;
+  const targetUserId = req.body.targetUserId;
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {

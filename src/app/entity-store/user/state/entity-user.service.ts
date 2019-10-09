@@ -128,13 +128,13 @@ export class EntityUserService {
               const birthdate = usersMerged[i].dateOfBirth;
               const email = usersMerged[i].email;
               const securityRole: SecurityRole = {
-                Id: +usersMerged[i].securityRoleId,
-                Name: '',
-                Description: ''
+                Id: +usersMerged[i].securityrole.id,
+                Name: usersMerged[i].securityrole.name,
+                Description: usersMerged[i].securityrole.description
               };
               const department: Department = {
-                Id: +usersMerged[i].departmentId,
-                Name: ''
+                Id: +usersMerged[i].department.id,
+                Name: usersMerged[i].department.name
               };
               const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
@@ -154,7 +154,9 @@ export class EntityUserService {
   }
 
   getAvatarFromStorage(avatarUrl: string): Observable<any> {
-    console.log('Getting item from storage');
+    const functionName = 'getAvatarFromStorage';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
 
@@ -175,7 +177,7 @@ export class EntityUserService {
         identityId: identityId
       })
         .then((result: string) => {
-          console.log(result);
+          console.log(`${functionFullName}: result: ${result}`);
           const data = {
             avatarResolvedUrl: result
           };

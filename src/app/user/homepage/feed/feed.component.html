@@ -52,7 +52,8 @@
           <div class="d-flex justify-content-between align-items-center">
             <div class="mr-2">
               <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                <img class="rounded-circle" width="45" [src]="(entityUserQuery.getUser(pointTransaction.targetUserName))[0].avatarResolvedUrl" alt="">
+                <img class="rounded-circle" width="45" [src]="(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0]?.avatarResolvedUrl" alt="">
+<!--                {{(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0].avatarResolvedUrl}}-->
               </div>
               <!-- Placeholder for loading avatar -->
               <ng-template #avatarLoading >

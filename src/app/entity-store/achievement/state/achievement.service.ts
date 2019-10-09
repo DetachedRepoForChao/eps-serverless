@@ -94,17 +94,28 @@ export class AchievementService {
 
         const achievements: AchievementModel[] = [];
         for (let i = 0; i < achievementsResult.length; i++) {
-          const achievementId = achievementsResult[i].achievementId;
-          const name = achievementsResult[i].achievementName;
-          const description = achievementsResult[i].achievementDescription;
-          const cost = achievementsResult[i].achievementCost;
-          const progress = achievementsResult[i].achievementProgressGoalProgress;
-          const progressId = achievementsResult[i].achievementProgressId;
-          const achievementStatus = achievementsResult[i].achievementStatus;
-          const progressStatus = achievementsResult[i].achievementProgressStatus;
-          const family = achievementsResult[i].achievementFamily;
-          const startAmount = achievementsResult[i].achievementStartAmount;
-          const level = achievementsResult[i].achievementLevel;
+          // const achievementId = achievementsResult[i].achievementId;
+          const achievementId = achievementsResult[i].achievement.id;
+          // const name = achievementsResult[i].achievementName;
+          const name = achievementsResult[i].achievement.name;
+          // const description = achievementsResult[i].achievementDescription;
+          const description = achievementsResult[i].achievement.description;
+          // const cost = achievementsResult[i].achievementCost;
+          const cost = achievementsResult[i].achievement.cost;
+          // const progress = achievementsResult[i].achievementProgressGoalProgress;
+          const progress = achievementsResult[i].goalProgress;
+          // const progressId = achievementsResult[i].achievementProgressId;
+          const progressId = achievementsResult[i].id;
+          // const achievementStatus = achievementsResult[i].achievementStatus;
+          const achievementStatus = achievementsResult[i].achievement.status;
+          // const progressStatus = achievementsResult[i].achievementProgressStatus;
+          const progressStatus = achievementsResult[i].status;
+          // const family = achievementsResult[i].achievementFamily;
+          const family = achievementsResult[i].achievement.achievementFamily;
+          // const startAmount = achievementsResult[i].achievementStartAmount;
+          const startAmount = achievementsResult[i].achievement.startAmount;
+          // const level = achievementsResult[i].achievementLevel;
+          const level = achievementsResult[i].achievement.level;
           const achievement = createEntityAchievementModel({achievementId, name, description, cost, progress, progressId,
             achievementStatus, progressStatus, family, startAmount, level});
           achievements.push(achievement);
@@ -189,9 +200,14 @@ export class AchievementService {
             console.log(data);
             observer.next(data.data);
 
-            // Update achievements with new progress and status
-            this.updateAchievements(data.data.achievementFamilyProgress);
-            observer.complete();
+            // If status returns true, update achievements with new progress and status
+            if (data.data.status === true) {
+              this.updateAchievements(data.data.achievementFamilyProgress);
+              observer.complete();
+            } else {
+              observer.complete();
+            }
+
           });
         });
     });
