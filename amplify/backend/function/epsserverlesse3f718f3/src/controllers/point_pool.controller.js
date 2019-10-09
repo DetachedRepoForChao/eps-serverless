@@ -36,30 +36,6 @@ const getRemainingPointPool = function (managerId) {
 module.exports.getRemainingPointPool = getRemainingPointPool;
 
 
-/*var getRemainingPointPoolLocal = function (managerId) {
-    console.log('getRemainingPointPoolLocal');
-    console.log('managerId: ' + managerId);
-
-    return SqlModel.sequelize.query("SELECT * FROM `point_pool` WHERE `point_pool`.`managerId` = " + managerId + ";",
-        {type: SqlModel.sequelize.QueryTypes.SELECT})
-        .then(pointPool => {
-            //console.log(pointPool);
-            if (!pointPool) {
-                //console.log('fail');
-                return JSON.stringify({status: false, message: 'Unable to find Point Pool record'});
-            } else {
-                return ({status: true, pointsRemaining: pointPool[0].points_remaining});
-            }
-        })
-        .catch(err => {
-            console.log('problem communicating with db');
-            console.log(err);
-            return JSON.stringify({status: false, message: err});
-        });
-};
-
-module.exports.getRemainingPointPoolLocal = getRemainingPointPoolLocal;*/
-
 const removePointsFromPointPool = function (managerId, amount) {
   console.log('removePointsFromPointPoolLocal');
 
@@ -69,8 +45,6 @@ const removePointsFromPointPool = function (managerId, amount) {
       if(remainingPointPool.pointsRemaining < amount) {
         return {status: false, message: 'There is not enough points in the point pool to complete this transaction' };
       } else {
-        // return SqlModel.sequelize.query("UPDATE `point_pool` SET `points_remaining` = `points_remaining` - " + amount + " " +
-        //     "WHERE `point_pool`.`managerId` = " + managerId + ";", {type: SqlModel.sequelize.QueryTypes.UPDATE})
         return sqlPointPoolModel.update({
           pointsRemaining: remainingPointPool.pointsRemaining - amount,
         }, {

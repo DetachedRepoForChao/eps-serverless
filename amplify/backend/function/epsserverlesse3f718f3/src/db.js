@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const UserModel = require('./models/user');
+/*const UserModel = require('./models/user');
 const DepartmentModel = require('./models/department');
 const NodeModel = require('./models/node');
 const SecurityRoleModel = require('./models/securityrole');
@@ -14,7 +14,8 @@ const SessionModel = require('./models/session');
 const LikeModel = require('./models/like');
 const StoreItemModel = require('./models/store_item');
 const NotificationModel = require('./models/notification');
-const UserHasStoreItemModel = require('./models/user_has_store_item');
+const UserHasStoreItemModel = require('./models/user_has_store_item');*/
+const DbModels = require('./models/models');
 // console.log('starting db.js');
 
 process.env.DB_NAME = "eps-test";
@@ -41,13 +42,16 @@ const sequelize = new Sequelize(
     logging: false
   }
 );
+
+
 console.log(process.env.DB_NAME);
 console.log(process.env.DB_USER);
 // console.log(sequelize);
 
 // console.log('created sequelize');
 
-const User = UserModel(sequelize, Sequelize);
+const Models = DbModels(sequelize, Sequelize);
+/*const User = UserModel(sequelize, Sequelize);
 const Department = DepartmentModel(sequelize, Sequelize);
 const Node = NodeModel(sequelize, Sequelize);
 const SecurityRole = SecurityRoleModel(sequelize, Sequelize);
@@ -62,9 +66,9 @@ const Session = SessionModel(sequelize, Sequelize);
 const Like = LikeModel(sequelize,Sequelize);
 const StoreItem = StoreItemModel(sequelize ,Sequelize);
 const Notification = NotificationModel(sequelize ,Sequelize);
-const UserHasStoreItem = UserHasStoreItemModel(sequelize, Sequelize);
+const UserHasStoreItem = UserHasStoreItemModel(sequelize, Sequelize);*/
 
-const Models = {
+/*const Models = {
   User,
   Department,
   Node,
@@ -81,7 +85,7 @@ const Models = {
   StoreItem,
   Notification,
   UserHasStoreItem
-};
+};*/
 const connection = {};
 
 /*

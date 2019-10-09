@@ -89,6 +89,25 @@ app.get('/items/userProfile', function(req, res) {
   });
 });
 
+app.get('/items/userProfile2', function(req, res) {
+  console.log('starting get userProfile');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile2(username)
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data.user});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.get('/items/getUserPoints', function(req, res) {
   console.log('starting get getUserPoints');
 
@@ -147,6 +166,22 @@ app.get('/items/usersPublicDetails2', function(req, res) {
     }
   });
 });
+
+/*
+app.get('/items/usersPublicDetails3', function(req, res) {
+  console.log('starting get usersPublicDetails3');
+  const promises = [];
+  // promises.push(ctrlUser.getUsersPublicDetails());
+  promises.push(ctrlAchievement.getUsersCompleteAchievementTotal());
+  Promise.all(promises)
+    .then(data => {
+      res.json({status: 'get call succeed!', data: data});
+    })
+    .catch(err => {
+      res.json({status: 'get call failed!', error: err});
+    });
+});
+*/
 
 
 app.put('/items/userProfile', function(req, res) {
@@ -764,6 +799,18 @@ app.get('/items/getPointTransaction', function(req, res) {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
   });
+});
+
+app.get('/items/getPointTransaction2', function(req, res) {
+  console.log('starting post getPointTransaction2');
+
+  ctrlPointsTransaction.getPointTransaction()
+    .then(data => {
+      res.json({status: 'post call succeed!', data: data.pointTransactions});
+    })
+    .catch(err => {
+      res.json({status: 'post call failed!', error: err});
+    });
 });
 
 // Store Item Routes

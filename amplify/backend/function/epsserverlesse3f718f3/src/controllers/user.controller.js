@@ -98,34 +98,6 @@ const registerUser = function (user) {
             }
 
             return {status: true, message: 'user created', user: user};
-
-            /*return ctrlAchievement.initializeUserAchievementProgress(user.id)
-              .then(initAchievResult => {
-                if (!initAchievResult) {
-                  console.log(`${functionFullName}: Did not receive achievement initialization result during user creation`);
-                  return {status: false, message: 'Did not receive achievement initialization result during user creation'}
-                } else {
-                  if (initAchievResult.status !== true) {
-                    console.log(`${functionFullName}: Error while initializing achievements for new user`);
-                    return {status: false, message: 'Error while initializing achievements for new user'}
-                  } else {
-                    console.log(`${functionFullName}: achievements initializing for new user successfully`);
-
-                    // If the user is a manager, initialize their points pool
-                    if (user.securityRoleId === 2) {
-                      console.log(`${functionFullName}: initializing manager point pool for new user`);
-                      ctrlPointPool.initializePointPool(user.id);
-                    }
-
-                    return {status: true, message: 'user created', user: user};
-                  }
-                }
-              })
-              .catch(err => {
-                console.log(`${functionFullName}: Database error during achievement initialization during user creation`);
-                console.log(err);
-                return {status: false, message: 'Database error during achievement initialization during user creation'}
-              });*/
           })
           .catch(err => {
             console.log(`${functionFullName}: User creation error`);
@@ -143,52 +115,6 @@ const registerUser = function (user) {
 
 module.exports.registerUser = registerUser;
 
-/*
-module.exports.authenticateUser = (req, res, next) => {
-  const functionName = 'authenticateUser';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  // call for passport authentication
-  passport.authenticate('local', (err, user, info) => {
-    console.log("authenticateUser().user");
-    //console.log(user);
-    console.log("authenticateUser().user.id");
-    console.log(user.id);
-    console.log("authenticateUser().info");
-    console.log(info);
-    // error from passport middleware
-    if (err) return res.status(400).json(err);
-    // registered user
-    else if (user) {
-      //const tempUser = user;
-      //var tempId;
-      //console.log('tempId: ' + tempId);
-      const token = jwt.sign({
-          id: user.id,
-          //username: user.username,
-          //firstName: user.firstName,
-          //lastName: user.lastName,
-          //position: user.position,
-          //points: user.points,
-          //email: user.email,
-          //departmentId: user.departmentId,
-          //securityRoleId: user.securityRoleId
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: process.env.JWT_EXP
-        });
-      console.log('token: ' + token);
-      //return res.status(200).json({ "token": user.generateJwt() });
-      return res.status(200).json({ "token": token });
-    }
-    // unknown user or wrong password
-    else return res.status(404).json(info);
-  })(req, res);
-};*/
-
-
 
 const getUserProfile = function (username) {
   const functionName = 'getUserProfile';
@@ -196,6 +122,16 @@ const getUserProfile = function (username) {
   console.log(`Start ${functionFullName}`);
 
   return sqlUserModel.findOne({
+    include: [
+      {
+        model: Models.Department,
+        attributes: ['id', 'name']
+      },
+      {
+        model: Models.SecurityRole,
+        attributes: ['id', 'name', 'description']
+      }
+    ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
       'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
       'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl'],
@@ -209,6 +145,7 @@ const getUserProfile = function (username) {
         return { status: false, message: 'User record not found.' };
       } else {
         console.log(`${functionFullName}: User record found`);
+        console.log(user);
         return  {status: true, user: user};
       }
     })
@@ -282,6 +219,16 @@ const getUsersPublicDetails = function () {
   console.log(`Start ${functionFullName}`);
 
   return sqlUserModel.findAll({
+    include: [
+      {
+        model: Models.Department,
+        attributes: ['id', 'name']
+      },
+      {
+        model: Models.SecurityRole,
+        attributes: ['id', 'name', 'description']
+      }
+    ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'dateOfBirth',
       'securityRoleId', 'departmentId', 'avatarUrl', 'email'],
     where: {

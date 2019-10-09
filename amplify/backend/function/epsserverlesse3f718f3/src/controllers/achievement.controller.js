@@ -17,7 +17,35 @@ const getUserAchievementsByUserId = function(userId) {
 
   console.log(`${functionFullName}: userId: ${userId}`);
 
-  const sequelize = SqlModel().sequelize;
+  return Models.UserAchievementProgress.findAll({
+    include: [
+      {
+        model: Models.Achievement,
+        attributes: ['id', 'name', 'description', 'status', 'cost', 'achievementFamily', 'level', 'startAmount']
+      }
+    ],
+    where: {
+      userId: userId,
+    },
+    attributes: ['id', 'userId', 'achievementId', 'goalProgress', 'status'],
+  })
+    .then(userAchievements => {
+      if(!userAchievements) {
+        console.log(`${functionFullName}: Records not found`);
+        return {status: 404, message: 'User Achievements not found.'};
+      } else {
+        console.log(`${functionFullName}: User Achievements retrieved successfully`);
+        console.log(userAchievements);
+        return {status: 200, userAchievements: userAchievements };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: database error`);
+      console.log(err);
+      return {status: 500, message: err };
+    });
+
+/*  const sequelize = SqlModel().sequelize;
   return sequelize.query("" +
     "SELECT `user_achievement_progress`.`id` AS `achievementProgressId`, `user_achievement_progress`.`user_id` AS `achievementProgressUserId`, " +
     "`user_achievement_progress`.`achievement_id` AS `achievementProgressAchievementId`, `user_achievement_progress`.`goalProgress` AS `achievementProgressGoalProgress`, " +
@@ -43,7 +71,7 @@ const getUserAchievementsByUserId = function(userId) {
       console.log(`${functionFullName}: database error`);
       console.log(err);
       return {status: 500, message: err };
-    });
+    });*/
 };
 
 module.exports.getUserAchievementsByUserId = getUserAchievementsByUserId;
@@ -536,7 +564,44 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
   console.log(`Start ${functionFullName}`);
 
   // Find user's achievement family progress
-  const sequelize = SqlModel().sequelize;
+  return Models.UserAchievementProgress.findAll({
+    include: [
+      {
+        model: Models.Achievement,
+        attributes: ['id', 'cost', 'achievementFamily', 'level', 'incrementAmount', 'name'],
+        where: {
+          achievementFamily: achievementFamily
+        }
+      }
+    ],
+    where: {
+      userId: userId
+    },
+    attributes: ['id', 'goalProgress', 'status']
+  })
+    .then(achievementFamilyProgress => {
+      if (!achievementFamilyProgress) {
+        //return res.status(404).json({ status: false, message: 'Update failed.' });
+        console.log(`${functionFullName}: Unable to find User / Achievement Family progress`);
+        return {status: false, message: 'Unable to find User / Achievement Family progress.'};
+      } else {
+        console.log(`${functionFullName}: User / Achievement Family progress retrieved successfully`);
+        console.log(achievementFamilyProgress);
+
+        return {status: true, message: 'User / Achievement Family progress retrieved successfully', achievementFamilyProgress: achievementFamilyProgress};
+        // const goalProgress = queryResult[0].goalProgress;
+        // const achievementProgressId = queryResult[0].id;
+        // const achievementId = queryResult[0].achievementId;
+        // const achievementCost = queryResult[0].achievementCost;
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+
+  /*const sequelize = SqlModel().sequelize;
   return sequelize.query("" +
     "SELECT `user_achievement_progress`.`id`, `user_achievement_progress`.`goalProgress`, " +
     "`user_achievement_progress`.`status`, " +
@@ -568,18 +633,54 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
       return {status: false, message: err};
-    });
+    });*/
 };
 
 module.exports.getAchievementFamilyProgress = getAchievementFamilyProgress;
 
 const getUsersCompleteAchievementTotal = function() {
-  const functionName = 'getUserCompleteAchievements';
+  const functionName = 'getUsersCompleteAchievementTotal';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
   const sequelize = SqlModel().sequelize;
-  return sequelize.query("" +
+  return Models.UserAchievementProgress.findAll({
+    attributes: [
+      [
+        sequelize.fn('DISTINCT', sequelize.col('user_id')), 'userId'
+      ],
+      [
+        sequelize.literal('(SELECT COUNT(*) FROM `user_achievement_progress` ' +
+          'WHERE `user_achievement_progress`.`user_id` = `userId` ' +
+          'AND `user_achievement_progress`.`status` like "complete%")'), 'num_complete'
+      ],
+    ],
+    order: [
+      ['userId', 'ASC'],
+    ]
+  })
+    .then(usersCompleteAchievementTotal => {
+      if (!usersCompleteAchievementTotal) {
+        console.log(`${functionFullName}: Unable to find any matching records`);
+        return {status: false, message: 'Unable to find any matching records.'};
+      } else {
+        console.log(`${functionFullName}: Complete achievement total for all users retrieved successfully`);
+        console.log(usersCompleteAchievementTotal);
+
+        return {
+          status: true,
+          message: 'Complete achievement total for all users retrieved successfully',
+          usersCompleteAchievementTotal: usersCompleteAchievementTotal
+        };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+
+  /*return sequelize.query("" +
     "SELECT DISTINCT `user_achievement_progress`.`user_id` AS `userId`, " +
     "(SELECT count(*) FROM `user_achievement_progress` " +
     "   WHERE `user_achievement_progress`.`user_id` = `userId` " +
@@ -606,7 +707,7 @@ const getUsersCompleteAchievementTotal = function() {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
       return {status: false, message: err};
-    });
+    });*/
 };
 
 module.exports.getUsersCompleteAchievementTotal = getUsersCompleteAchievementTotal;
