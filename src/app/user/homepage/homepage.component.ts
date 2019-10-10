@@ -6,6 +6,8 @@ import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
+import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
+import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/state/user-has-store-item.service';
 
 
 @Component({
@@ -50,6 +52,8 @@ export class HomepageComponent implements OnInit {
     private metricsService: MetricsService,
     private currentUserService: EntityCurrentUserService,
     private currentUserQuery: EntityCurrentUserQuery,
+    private storeItemService: StoreItemService,
+    private userHasStoreItemService: UserHasStoreItemService,
     private achievementService: AchievementService) { }
 
   ngOnInit() {
@@ -75,6 +79,15 @@ export class HomepageComponent implements OnInit {
                   this.metricsService.startHomepageTimer();
                 });
               });
+
+            this.storeItemService.cacheStoreItems().subscribe(() => {
+              this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
+                this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
+                  console.log('balance: ' + balance);
+                  this.currentUserService.updatePointsBalance(balance);
+                });
+              });
+            });
           }
         });
     });

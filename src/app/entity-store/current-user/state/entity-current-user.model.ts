@@ -25,6 +25,7 @@ export type EntityCurrentUserModel = {
   gender: string;
   dateOfHire: any;
   points: number;
+  pointsBalance: number;
   pointsPool: number;
   securityRole: SecurityRole;
   department: Department;
@@ -39,8 +40,9 @@ export type EntityCurrentUserModel = {
 
 export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, birthdate,
                                                position, address1, address2, city, state, country, zip, preferredPronoun, sex, gender,
-                                               dateOfHire, points, pointsPool, securityRole, department, email, phone, avatarBase64String,
-                                               avatarPath, avatarResolvedUrl, isCurrentUser }: Partial<EntityCurrentUserModel>) {
+                                               dateOfHire, points, pointsBalance, pointsPool, securityRole, department, email, phone,
+                                               avatarBase64String, avatarPath, avatarResolvedUrl,
+                                               isCurrentUser }: Partial<EntityCurrentUserModel>) {
 
   return {
     id: guid(),
@@ -65,6 +67,7 @@ export function createEntityCurrentUserModel({ userId, username, firstName, last
     gender,
     dateOfHire,
     points,
+    pointsBalance,
     pointsPool,
     securityRole,
     department,

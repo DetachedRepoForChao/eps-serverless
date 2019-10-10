@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { CurrentUserState, CurrentUserStore } from './current-user.store';
 import { EntityCurrentUserModel } from './entity-current-user.model';
 import { QueryEntity } from '@datorama/akita';
-import { combineLatest } from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/current-user-filter.model';
 import { map } from 'rxjs/operators';
+import {StoreItemQuery} from '../../store-item/state/store-item.query';
+import {UserHasStoreItemQuery} from '../../user-has-store-item/state/user-has-store-item.query';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,9 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
   );
 
 
-  constructor(protected store: CurrentUserStore) {
+  constructor(protected store: CurrentUserStore,
+              private storeItemQuery: StoreItemQuery,
+              private userHasStoreItemQuery: UserHasStoreItemQuery) {
     super(store);
   }
 
@@ -49,4 +53,6 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
   public getCurrentUserPointsPool() {
     return this.getAll()[0].pointsPool;
   }
+
+
 }

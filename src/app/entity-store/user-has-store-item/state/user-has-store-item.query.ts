@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { UserHasStoreItemState, UserHasStoreItemStore } from './user-has-store-item.store';
 import { UserHasStoreItemModel } from './user-has-store-item.model';
+import { StoreItemQuery} from '../../store-item/state/store-item.query';
+import { StoreItemStore} from '../../store-item/state/store-item.store';
 import { QueryEntity } from '@datorama/akita';
 import { combineLatest } from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/user-has-store-item-filter.model';
@@ -35,6 +37,14 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
         return storeItems;
     }
   }
+
+  public selectPending() {
+    return this.selectAll({
+      filterBy: entity => entity.status === 'pending'
+    });
+  }
+
+
 
   // public getUser(username: string): EntityUserAvatarModel {
 /*  public getCurrentUser() {

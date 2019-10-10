@@ -18,6 +18,7 @@ import {StoreItemModel} from '../../store-item/state/store-item.model';
 import {EntityCurrentUserModel} from '../../current-user/state/entity-current-user.model';
 import {EntityCurrentUserService} from '../../current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../current-user/state/entity-current-user.query';
+import {StoreItemQuery} from '../../store-item/state/store-item.query';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,7 @@ export class UserHasStoreItemService {
 
   constructor(private userHasStoreItemStore: UserHasStoreItemStore,
               private userHasStoreItemQuery: UserHasStoreItemQuery,
+              private storeItemQuery: StoreItemQuery,
               private globals: Globals,
               private authService: AuthService,
               private currentUserService: EntityCurrentUserService,
@@ -185,5 +187,24 @@ export class UserHasStoreItemService {
     });
   }
 
+  getPendingBalance(): Observable<any> {
+    return new Observable<any>(observer => {
+      const pending$ = this.userHasStoreItemQuery.selectPending();
+      pending$.subscribe(pendingRecords => {
+        let sum = 0;
+
+        for (let i = 0; i < pendingRecords.length; i++) {
+          const storeItem = this.storeItemQuery.getAll({
+            filterBy: entity => entity.itemId === pendingRecords[i].storeItemId
+          })[0];
+
+          sum += storeItem.cost;
+        }
+
+        observer.next(sum);
+        observer.complete();
+      });
+    });
+  }
 
 }

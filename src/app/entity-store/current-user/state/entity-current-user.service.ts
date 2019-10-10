@@ -14,6 +14,8 @@ import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {Department} from '../../../shared/department.model';
 import {SecurityRole} from '../../../shared/securityrole.model';
+import {UserHasStoreItemQuery} from '../../user-has-store-item/state/user-has-store-item.query';
+import {StoreItemQuery} from '../../store-item/state/store-item.query';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +34,8 @@ export class EntityCurrentUserService {
 
   constructor(private currentUserStore: CurrentUserStore,
               private entityCurrentUserQuery: EntityCurrentUserQuery,
+              private userHasStoreItemQuery: UserHasStoreItemQuery,
+              private storeItemQuery: StoreItemQuery,
               private globals: Globals,
               private authService: AuthService) { }
 
@@ -97,6 +101,13 @@ export class EntityCurrentUserService {
       sex: sex,
       gender: gender,
       dateOfHire: dateOfHire,
+    });
+  }
+
+  updatePointsBalance(pointsBalance: number) {
+    console.log('updating points balance with: ' + pointsBalance);
+    this.currentUserStore.update(null, {
+      pointsBalance: pointsBalance
     });
   }
 
@@ -408,4 +419,24 @@ export class EntityCurrentUserService {
   showStore() {
     console.log(this.currentUserStore);
   }
+
+/*  getPendingBalance(): Observable<any> {
+    return new Observable<any>(observer => {
+      const pending$ = this.userHasStoreItemQuery.selectPending();
+      pending$.subscribe(pendingRecords => {
+        let sum = 0;
+
+        for (let i = 0; i < pendingRecords.length; i++) {
+          const storeItem = this.storeItemQuery.getAll({
+            filterBy: entity => entity.itemId === pendingRecords[i].storeItemId
+          })[0];
+
+          sum += storeItem.cost;
+        }
+
+        observer.next(sum);
+        observer.complete();
+      });
+    });
+  }*/
 }

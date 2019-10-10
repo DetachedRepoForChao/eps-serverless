@@ -48,9 +48,16 @@
             </form>-->
       <!-------End of Quote Box----->
       <div class="row text-center mt-4">
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-          <h4 class="mb-0" *ngIf="(currentUserQuery.selectLoading() | async) === false">{{(currentUser$ | async)[0]?.points}}</h4>
+        <div class="col p-2" data-toggle="tooltip" data-placement="top" title="Points: {{(currentUser$ | async)[0]?.points}} Pending Balance: {{(getPendingBalance() | async)}}">
+          <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
+          <h4 class="mb-0" *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
+            {{(currentUser$ | async)[0]?.points}}
+          </h4>
+          <ng-template #pointsWithBalance class="mb-0">
+            <h4 style="color: red" *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance">
+              {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
+            </h4>
+          </ng-template>
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>

@@ -10,7 +10,7 @@ import {GlobalVariableService} from '../../../shared/global-variable.service';
 import {Department} from '../../../shared/department.model';
 import {Storage} from 'aws-amplify';
 import {ImageService} from '../../../shared/image.service';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, observable, Observable} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {UserStore} from '../../../entity-store/user/state/user.store';
@@ -22,6 +22,9 @@ import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/e
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
 import {MetricsQuery} from '../../../entity-store/metrics/state/metrics.query';
+import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
+import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -61,6 +64,9 @@ export class LeaderboardCardComponent implements OnInit {
               public achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               public entityCurrentUserQuery: EntityCurrentUserQuery,
+              private userHasStoreItemQuery: UserHasStoreItemQuery,
+              private entityCurrentUserService: EntityCurrentUserService,
+              private storeItemQuery: StoreItemQuery,
               private pointItemQuery: PointItemQuery,
               private metricsQuery: MetricsQuery) { }
 
@@ -96,7 +102,7 @@ export class LeaderboardCardComponent implements OnInit {
   }
 
   test1() {
-    this.achievementService.cacheAchievements().subscribe();
+    this.entityCurrentUserService.updatePointsBalance(123);
   }
 
   getFirstDigit(number: number) {

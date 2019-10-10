@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import {forkJoin, Observable} from 'rxjs';
@@ -27,6 +27,9 @@ import {EntityUserModel} from '../../../entity-store/user/state/entity-user.mode
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
 import {AuthService} from '../../../login/auth.service';
+import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
+import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -36,21 +39,18 @@ declare var $: any;
   templateUrl: './profile-card.component.html',
   styleUrls: ['./profile-card.component.css']
 })
-export class ProfileCardComponent implements OnInit {
+export class ProfileCardComponent implements OnInit, AfterViewInit{
   componentName = 'profile-card.component';
   isImageLoading: boolean;
-  userLeaderboardRecord;
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
-  croppedImageToShow: any = '';
   leaderboardUsers$: Observable<EntityUserModel[]>;
-  userLeaderboardRecord$;
+
+  pendingBalance$;
   currentUser$;
+  currentUser;
   isCardLoading: boolean;
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
-              // private avatarService: AvatarService,
               private globals: Globals,
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
@@ -64,8 +64,12 @@ export class ProfileCardComponent implements OnInit {
               private sanitizer: DomSanitizer,
               private entityUserService: EntityUserService,
               private entityUserQuery: EntityUserQuery,
+              private userHasStoreItemService: UserHasStoreItemService,
+              private userHasStoreItemQuery: UserHasStoreItemQuery,
+              private storeItemService: StoreItemService,
               private metricsService: MetricsService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -87,19 +91,61 @@ export class ProfileCardComponent implements OnInit {
     });*/
 
 
-    this.currentUser$ = this.currentUserQuery.getCurrentUser();
+    this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
     this.leaderboardUsers$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
 
+/*    this.storeItemService.cacheStoreItems().subscribe(() => {
+      this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
+        this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
+          console.log('balance: ' + balance);
+          this.entityCurrentUserService.updatePointsBalance(balance);
+        });
+      });
+    });*/
+
+    // this.pendingBalance$ = this.entityCurrentUserService.getPendingBalance();
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('profile-card-spinner');
 
   }
 
+  ngAfterViewInit(): void {
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
 
+    $('h4').tooltip();
+  }
+
+  getPendingBalance(): Observable<any> {
+    return new Observable(observer => {
+      this.currentUserQuery.selectAll()
+        .subscribe(user => {
+          if (user[0]) {
+            observer.next(user[0].pointsBalance);
+            observer.complete();
+          } else {
+            observer.complete();
+          }
+
+        });
+    });
+  }
+
+  getPoints(): Observable<any> {
+    return new Observable(observer => {
+      this.currentUserQuery.selectAll()
+        .subscribe(currentUser => {
+
+          observer.next(currentUser[0].points);
+          observer.complete();
+        });
+    });
+  }
 
   avatarClick() {
     $('#avatarModal').modal('show');
