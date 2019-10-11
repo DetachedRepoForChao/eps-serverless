@@ -218,7 +218,58 @@
 					</H1>
 				
 				</div>
-				<div class="card-footer2">		
+				<div class="card-footer2">
+					
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addPonitModel">Add Points</button>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="addPonitModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Point </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+
+      <div class="modal-body">
+<!--       form-->
+      
+      
+      <form>
+  <div class="form-row">
+    <div class="form-group col-md-6" >
+      <label for="inputPoint_Name" class="l2">Point Name </label>
+      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputpoint_Point_amount"class="l2">point amount</label>
+      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputitems_Description" class="l2">Description</label>
+    <input type="text" class="form-control" id="inputDescription" placeholder="Description">
+  </div>
+
+
+
+</form>
+       
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> 
+				
+				
+						
 		<!-- Button trigger modal -->
 <!--
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Point</button>
@@ -299,16 +350,16 @@
       <form>
   <div class="form-row">
     <div class="form-group col-md-6" >
-      <label for="inputitems_Name">Item Name </label>
+      <label for="inputitems_Name" class="l1">Item Name </label>
       <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
     </div>
     <div class="form-group col-md-6">
-      <label for="inputitems_Point_amount">point amount</label>
+      <label for="inputitems_Point_amount"class="l1">point amount</label>
       <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
     </div>
   </div>
   <div class="form-group">
-    <label for="inputitems_Description">Description</label>
+    <label for="inputitems_Description"class="l1">Description</label>
     <input type="text" class="form-control" id="inputDescription" placeholder="Description">
   </div>
 <!--
