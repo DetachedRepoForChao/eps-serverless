@@ -134,10 +134,18 @@ export class UserHasStoreItemService {
         for (let i = 0; i < userHasStoreItemRecords.length; i++) {
           const recordId = userHasStoreItemRecords[i].id;
           const userId = userHasStoreItemRecords[i].userId;
+          const managerId = userHasStoreItemRecords[i].managerUser.id;
+          const managerFirstName = userHasStoreItemRecords[i].managerUser.firstName;
+          const managerLastName = userHasStoreItemRecords[i].managerUser.lastName;
+          const managerEmail = userHasStoreItemRecords[i].managerUser.email;
           const storeItemId = userHasStoreItemRecords[i].storeItemId;
+          const storeItemName = userHasStoreItemRecords[i].storeItem.name;
+          const storeItemDescription = userHasStoreItemRecords[i].storeItem.description;
+          const storeItemCost = userHasStoreItemRecords[i].storeItem.cost;
           const status = userHasStoreItemRecords[i].status;
           const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
-          const userHasStoreItemModel = createStoreItemModel({recordId, userId, storeItemId, status, cancelDescription});
+          const userHasStoreItemModel = createStoreItemModel({recordId, userId, managerId, managerFirstName, managerLastName, managerEmail,
+            storeItemId, storeItemName, storeItemDescription, storeItemCost, status, cancelDescription});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 
@@ -147,7 +155,7 @@ export class UserHasStoreItemService {
     return cacheable(this.userHasStoreItemStore, request$);
   }
 
-  newUserHasStoreItemRecord(storeItemId: number): Observable<any> {
+  newUserHasStoreItemRecord(managerId: number, storeItemId: number): Observable<any> {
     const functionName = 'newUserHasStoreItemRecord';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -160,6 +168,7 @@ export class UserHasStoreItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
+            managerId: managerId,
             storeItemId: storeItemId
           };
 

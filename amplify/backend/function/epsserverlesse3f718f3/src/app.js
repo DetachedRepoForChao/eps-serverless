@@ -869,8 +869,9 @@ app.post('/items/newUserHasStoreItemRecord', function(req, res) {
       ctrlUser.getUserProfile(username)
         .then(userResult => {
           const requestUser = userResult.user;
+          const managerId = req.body.managerId;
           const storeItemId = req.body.storeItemId;
-          ctrlStoreItem.newUserHasStoreItemRecord(requestUser, storeItemId)
+          ctrlStoreItem.newUserHasStoreItemRecord(requestUser, managerId, storeItemId)
             .then(data => {
               res.json({status: 'get call succeed!', data: data});
             })

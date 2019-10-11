@@ -7,19 +7,35 @@ export type UserHasStoreItemModel = {
   id: ID;
   recordId: number;
   userId: number;
+  managerId: number;
+  managerFirstName: string;
+  managerLastName: string;
+  managerEmail: string;
   storeItemId: number;
+  storeItemName: string;
+  storeItemDescription: string;
+  storeItemCost: number;
   status: string;
   cancelDescription: string;
   dateModified: any;
 };
 
-export function createStoreItemModel({ recordId, userId, storeItemId, status, cancelDescription }: Partial<UserHasStoreItemModel>) {
+export function createStoreItemModel({ recordId, userId, managerId, managerFirstName, managerLastName, managerEmail, storeItemId,
+                                       storeItemName, storeItemDescription, storeItemCost, status,
+                                       cancelDescription }: Partial<UserHasStoreItemModel>) {
 
   return {
     id: guid(),
     recordId,
     userId,
+    managerId,
+    managerFirstName,
+    managerLastName,
+    managerEmail,
     storeItemId,
+    storeItemName,
+    storeItemDescription,
+    storeItemCost,
     status,
     cancelDescription,
     dateModified: Date.now()

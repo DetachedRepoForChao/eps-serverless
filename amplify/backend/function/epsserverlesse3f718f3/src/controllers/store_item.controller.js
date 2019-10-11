@@ -37,6 +37,22 @@ const getUserHasStoreItemRecords = function (requestUser) {
   console.log(`Start ${functionFullName}`);
 
   return sqlUserHasStoreItemModel.findAll({
+    include: [
+      {
+        model: Models.User,
+        as: 'requestUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.User,
+        as: 'managerUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost']
+      },
+    ],
     where: {
       userId: requestUser.id
     }
@@ -60,7 +76,7 @@ const getUserHasStoreItemRecords = function (requestUser) {
 
 module.exports.getUserHasStoreItemRecords = getUserHasStoreItemRecords;
 
-const newUserHasStoreItemRecord = function (requestUser, storeItemId) {
+const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId) {
   const functionName = 'newUserHasStoreItemRecord';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -68,6 +84,7 @@ const newUserHasStoreItemRecord = function (requestUser, storeItemId) {
   // Create user_has_store_item record
   return sqlUserHasStoreItemModel.create({
     userId: requestUser.id,
+    managerId: managerId,
     storeItemId: storeItemId
   })
     .then(userHasStoreItemRecord => {

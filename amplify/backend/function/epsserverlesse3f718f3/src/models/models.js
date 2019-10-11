@@ -1093,6 +1093,16 @@ module.exports = function(sequelize, DataTypes) {
       },
       field: 'user_id'
     },
+    managerId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: false,
+      references: {
+        model: 'user',
+        key: 'id'
+      },
+      field: 'manager_id'
+    },
     storeItemId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -1138,9 +1148,11 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'user_has_store_item'
   });
 
-  UserHasStoreItem.belongsTo(User, {foreignKey: 'userId', targetKey: 'id'});
+  UserHasStoreItem.belongsTo(User, {foreignKey: 'userId', targetKey: 'id', as: 'requestUser'});
+  UserHasStoreItem.belongsTo(User, {foreignKey: 'managerId', targetKey: 'id', as: 'managerUser'});
   UserHasStoreItem.belongsTo(StoreItem, {foreignKey: 'storeItemId', targetKey: 'id'});
-  User.hasMany(UserHasStoreItem, {foreignKey: 'userId', sourceKey: 'id'});
+  User.hasMany(UserHasStoreItem, {foreignKey: 'userId', sourceKey: 'id', as: 'requestUser'});
+  User.hasMany(UserHasStoreItem, {foreignKey: 'managerId', sourceKey: 'id', as: 'managerUser'});
   StoreItem.hasMany(UserHasStoreItem, {foreignKey: 'storeItemId', sourceKey: 'id'});
 
   return {
