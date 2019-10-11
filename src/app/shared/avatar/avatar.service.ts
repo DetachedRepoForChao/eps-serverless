@@ -17,6 +17,10 @@ import {EntityUserService} from '../../entity-store/user/state/entity-user.servi
 import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {RequestMethod} from '@angular/http';
+import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
+import { Achievement } from '../achievement/achievement.model';
+
+import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 
 export interface UserAvatarRelationship {
   // userId: number;
@@ -504,5 +508,10 @@ export class AvatarService implements OnInit {
         });
     });
 
+  };
+
+  getCompleteAchievementsById(id:number){
+    return this.getCompleteAchievementsById(id);
   }
+
 }
