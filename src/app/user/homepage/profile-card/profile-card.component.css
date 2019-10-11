@@ -90,3 +90,7 @@ div.card {
 .modal-black {
 
 }
+
+.points-tooltip {
+  white-space: pre-line !important;
+}

@@ -41,7 +41,11 @@
               <div *ngIf="achievement.progressStatus === 'complete'"
                    class="progress-container progress-success"
                    style="cursor: pointer; padding-left: 15px; padding-right: 15px"
-                   [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.description}">
+                   matTooltipPosition="above"
+                   [matTooltip]="achievement.description">
+
+<!--                [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.description}"-->
+
                 <span class="progress-badge glow">{{achievement.name}}</span>
                 <div class="progress">
                   <div class="progress-bar progress-bar-warning"
@@ -64,7 +68,9 @@
               <div *ngIf="achievement.progressStatus === 'in progress'"
                    class="progress-container progress-primary"
                    style="padding-left: 15px; padding-right: 15px"
-                   [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.description}">
+                   matTooltipPosition="above"
+                   [matTooltip]="achievement.description">
+<!--                   [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': achievement.description}">-->
                 <span class="progress-badge">{{achievement.name}}</span>
                 <div class="progress">
                   <div class="progress-bar progress-bar-warning"

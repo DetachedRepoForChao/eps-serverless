@@ -39,7 +39,7 @@ declare var $: any;
   templateUrl: './profile-card.component.html',
   styleUrls: ['./profile-card.component.css']
 })
-export class ProfileCardComponent implements OnInit, AfterViewInit{
+export class ProfileCardComponent implements OnInit {
   componentName = 'profile-card.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
@@ -110,15 +110,21 @@ export class ProfileCardComponent implements OnInit, AfterViewInit{
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('profile-card-spinner');
-
+    this.setPointsTooltip();
   }
 
-  ngAfterViewInit(): void {
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
 
-    $('h4').tooltip();
+  pointsTooltip;
+
+  setPointsTooltip() {
+    const observables = [];
+    observables.push(this.getPendingBalance());
+    observables.push(this.getPoints());
+
+    forkJoin(observables)
+      .subscribe(obsResults => {
+        this.pointsTooltip = `Points: ${obsResults[1]}; Balance: ${obsResults[0]}`;
+      });
   }
 
   getPendingBalance(): Observable<any> {

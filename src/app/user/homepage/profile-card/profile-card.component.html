@@ -35,6 +35,7 @@
         <div class="col-md-12 text-center">
 <!--          <h4 class="text-uppercase">{{globals.getUserAttribute('given_name')}} {{globals.getUserAttribute('family_name')}}</h4>
           <span>{{globals.getUserAttribute('custom:department')}}</span>-->
+          {{pointsTooltip}}
           <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
           <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
           <hr class="line-success">
@@ -48,7 +49,13 @@
             </form>-->
       <!-------End of Quote Box----->
       <div class="row text-center mt-4">
-        <div class="col p-2" data-toggle="tooltip" data-placement="top" title="Points: {{(currentUser$ | async)[0]?.points}} Pending Balance: {{(getPendingBalance() | async)}}">
+<!--        <div class="col p-2" data-toggle="tooltip" data-placement="top" title="123">-->
+        <div class="col p-2"
+             [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
+             matTooltipPosition="above">
+<!--             title="<em>Points:</em> {{(currentUser$ | async)[0]?.points}} <em>Pending Balance:</em> {{(getPendingBalance() | async)}}">-->
+
+<!--          <button mat-raised-button matTooltip="Info">Stuff</button>-->
           <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
           <h4 class="mb-0" *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
             {{(currentUser$ | async)[0]?.points}}
@@ -70,7 +77,7 @@
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
           <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
-            {{(leaderboardUsers$ | async).indexOf(entityUserQuery.getUser(globals.getUsername())[0]) + 1}}
+            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.getUser(globals.getUsername()) | async)[0]) + 1}}
           </h4>
         </div>
       </div>
