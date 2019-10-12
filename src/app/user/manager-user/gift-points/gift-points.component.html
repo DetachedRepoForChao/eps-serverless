@@ -43,14 +43,15 @@
           <div class="col-md-6">
             <form class="form">
 
-              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee" [(ngModel)]="term" />
+              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee" [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
 
             </form>
             <ul id="user-listing">
-              <li *ngFor="let user of users | fresh:term">
+              <li *ngFor="let user of (employees$) | async | fresh:term">
+                {{user}}
                   <div class="single-user">
-                    <span [ngStyle]="{background: user.name}">{{user.name}} name</span>
-                    <h3> {{user.name}}</h3>
+                    <span [ngStyle]="{background: user.firstName}">{{user.firstName}} name</span>
+                    <h3> {{user.firstName | fresh}}</h3>
 
                   </div>
 

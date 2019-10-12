@@ -51,7 +51,6 @@ export interface CoreValueButton {
   selector: 'app-gift-points',
   templateUrl: './gift-points.component.html',
   styleUrls: ['./gift-points.component.scss'],
-  pipes: [FreshPipe]
 })
 export class GiftPointsComponent implements OnInit {
   componentName = 'gift-points.component';
