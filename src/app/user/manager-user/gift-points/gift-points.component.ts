@@ -28,6 +28,7 @@ import {PointItemModel} from '../../../entity-store/point-item/state/point-item.
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 
+
 declare var $: any;
 
 export interface DepartmentEmployee {

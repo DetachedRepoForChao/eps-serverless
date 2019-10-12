@@ -5,52 +5,33 @@
         <h4 class="text-uppercase">Award Employee Points</h4>
         <div class="container">
           <div class="row">
-            <div class="col-sm" >
-              <button type="button"
-                      class="btn btn-primary btn-sm btn-block"
-                      data-toggle="button"
-                      aria-pressed="false"
-                      id="button_happy"
-                      (click)="toggleCoreValueButton('happy')">HAPPY</button>
-<!--                      [ngStyle]="{border: this.isCoreValueButtonToggled('happy') === true ? 'green' : 'red'}"
+            <div class="col-sm">
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                id="button_happy" (click)="toggleCoreValueButton('happy')">HAPPY</button>
+              <!--                      [ngStyle]="{border: this.isCoreValueButtonToggled('happy') === true ? 'green' : 'red'}"
                       (click)="toggleCoreValueButton('happy')">HAPPY</button>-->
             </div>
             <div class="col-sm">
-              <button type="button"
-                      class="btn btn-primary btn-sm btn-block"
-                      data-toggle="button"
-                      aria-pressed="false"
-                      id="button_fun" (click)="toggleCoreValueButton('fun')">FUN</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                id="button_fun" (click)="toggleCoreValueButton('fun')">FUN</button>
             </div>
             <div class="col-sm">
-              <button type="button"
-                      class="btn btn-primary btn-sm btn-block"
-                      data-toggle="button"
-                      aria-pressed="false"
-                      id="button_genuine" (click)="toggleCoreValueButton('genuine')">GENUINE</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                id="button_genuine" (click)="toggleCoreValueButton('genuine')">GENUINE</button>
             </div>
           </div>
           <div class="row">
             <div class="col-sm">
-              <button type="button"
-                      class="btn btn-primary btn-sm btn-block"
-                      data-toggle="button"
-                      aria-pressed="false"
-                      id="button_caring" (click)="toggleCoreValueButton('caring')">CARING</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                id="button_caring" (click)="toggleCoreValueButton('caring')">CARING</button>
             </div>
             <div class="col-sm">
-              <button type="button"
-                      class="btn btn-primary btn-sm btn-block"
-                      data-toggle="button"
-                      aria-pressed="false"
-                      id="button_respect" (click)="toggleCoreValueButton('respect')">RESPECT</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                id="button_respect" (click)="toggleCoreValueButton('respect')">RESPECT</button>
             </div>
             <div class="col-sm">
-              <button type="button"
-                      class="btn btn-primary btn-sm btn-block"
-                      data-toggle="button"
-                      aria-pressed="false"
-                      id="button_honest" (click)="toggleCoreValueButton('honest')">HONEST</button>
+              <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                id="button_honest" (click)="toggleCoreValueButton('honest')">HONEST</button>
             </div>
           </div>
         </div>
@@ -60,23 +41,60 @@
           <div class="col-md-3">
           </div>
           <div class="col-md-6">
-        <form class="form">
+            <form class="form">
 
-            <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee">
+              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee">
 
-        </form>
-      </div>
-      <div class="col-md-3">
+            </form>
+          </div>
+          <div class="col-md-3">
+          </div>
+        <!---- New Table Example ------>
+        <table class="table1">
+            <thead>
+              <tr>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of (employees$ | async)">
+                <td *ngFor="let col of displayedColumns">
+                  <div *ngIf="col === 'select'">
+  
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(user) : null" [checked]="selection.isSelected(user)">
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                 
+                    
+                  <div *ngIf="col === 'avatar'">
+                    <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
+                      <img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
+                    </div>
+               
+                  </div>
+                </tr>
+            
+            </table>
+        
+        </div>
 
         <!------award points----->
-      </div>
-        </div>
-        <form #giftPointsForm="ngForm"  class="form">
+
+        <form #giftPointsForm="ngForm" class="form">
           <div class="row">
             <div class="col-lg" style="height: 100px; overflow-y: auto; overflow-x: hidden">
               <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
-                <label class="form-check-label" [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }" >
-                  <input class="form-check-input" type="radio" name="selectedPointItem" (click)="selectPointItem(pointItem)">
+                <label class="form-check-label"
+                  [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
+                  <input class="form-check-input" type="radio" name="selectedPointItem"
+                    (click)="selectPointItem(pointItem)">
                   {{pointItem.amount}} pts - {{pointItem.name}}
                   <span class="form-check-sign"></span>
                 </label>
@@ -84,142 +102,130 @@
             </div>
           </div>
           <div class="gift-points-container text-center">
-            <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
+            <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award
+              Points</button>
           </div>
         </form>
 
-          <!------User Table------->
+        <!------User Table------->
         <table class="table">
           <thead>
-          <tr>
-            <th *ngFor="let col of displayedColumns">
-              {{col}}
-            </th>
-          </tr>
+            <tr>
+              <th *ngFor="let col of displayedColumns">
+                {{col}}
+              </th>
+            </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of (employees$ | async)">
-            <td *ngFor="let col of displayedColumns">
-              <div *ngIf="col === 'select'">
+            <tr *ngFor="let user of (employees$ | async)">
+              <td *ngFor="let col of displayedColumns">
+                <div *ngIf="col === 'select'">
 
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox"
-                           (click)="$event.stopPropagation()"
-                           (change)="$event ? selection.toggle(user) : null"
-                           [checked]="selection.isSelected(user)">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(user) : null" [checked]="selection.isSelected(user)">
                       <span class="form-check-sign">
-                          <span class="check"></span>
+                        <span class="check"></span>
                       </span>
-                  </label>
+                    </label>
+                  </div>
                 </div>
-              </div>
-<!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>-->
-              <div *ngIf="col === 'avatar'">
-                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                  <img src="{{user.avatarResolvedUrl}}" class="img-row" (click)="onAvatarClick(user)"/>
+                <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>-->
+                <div *ngIf="col === 'avatar'">
+                  <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
+                    <img src="{{user.avatarResolvedUrl}}" class="img-row" (click)="onAvatarClick(user)" />
+                  </div>
                 </div>
-              </div>
 
-              <!-- <ng-template #templateImgRow>
+                <!-- <ng-template #templateImgRow>
                 <img src="{{char[col]}}" class="img-row" >
               </ng-template> -->
-              <!-- <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div> -->
-              <div *ngIf="col === 'name'">{{user['firstName'] + ' ' + user['lastName']}}</div>
-              <div *ngIf="col === 'points'">{{user[col]}}</div>
-              <div *ngIf="col === 'username'">{{user[col]}}</div>
-              <div *ngIf="col === 'email'">{{user[col]}}</div>
+                <!-- <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div> -->
+                <div *ngIf="col === 'name'">{{user['firstName'] + ' ' + user['lastName']}}</div>
+                <div *ngIf="col === 'points'">{{user[col]}}</div>
+                <div *ngIf="col === 'username'">{{user[col]}}</div>
+                <div *ngIf="col === 'email'">{{user[col]}}</div>
 
-
-
-              <!-- <ng-template #templateRow>
+                <!-- <ng-template #templateRow>
                 {{char[col]}}
               </ng-template> -->
-            </td>
-          </tr>
+              </td>
+            </tr>
           </tbody>
         </table>
 
 
       </div>
     </div>
-    <div #giftClickedModal id="giftClickedModal" class="modal fade modal-black" role="dialog" aria-labelledby="giftClickedModal" aria-hidden="true">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title">{{clickedUser?.firstName}}</h4>
+    <div #giftClickedModal id="giftClickedModal" class="modal fade modal-black" role="dialog"
+      aria-labelledby="giftClickedModal" aria-hidden="true">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{clickedUser?.firstName + ' ' + clickedUser?.lastName}}</h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="card">
+              <div class="card card-coin card-plain maxheight">
+                <div class="card-header">
+
+                  <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
+                    <img src="{{clickedUser?.avatarResolvedUrl}}" alt="Place image title"
+                      class="img-center img-fluid rounded-circle" id="avatar">
+                  </div>
+
+                  <ng-template #selectedAvatarLoading>
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                      alt="Loading..." class="img-center img-fluid rounded-circle" id="avatarPlaceholder">
+                  </ng-template>
+
                 </div>
-                <div class="modal-body">
-
-                    <div class="card">
-                      <div class="card card-coin card-plain maxheight">
-                        <div class="card-header">
-
-                          <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
-                            <img src="{{clickedUser?.avatarResolvedUrl}}"
-                                 alt="Place image title"
-                                 class="img-center img-fluid rounded-circle"
-                                 id="avatar">
-                          </div>
-
-                          <ng-template #selectedAvatarLoading >
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                                 alt="Loading..."
-                                 class="img-center img-fluid rounded-circle"
-                                 id="avatarPlaceholder">
-                          </ng-template>
-
-                        </div>
-                        <div class="card-body">
-                          <div class="userDetails"></div>
-                          <div class="row">
-                            <div class="col-md-12 text-center">
-                              <h4 class="text-uppercase">{{selectedRow?.name}}</h4>
-                              <span>{{selectedRow?.department}}</span>
-                              <hr class="line-success">
-                            </div>
-                          </div>
-
-                          <div class="row text-center mt-4">
-                            <div class="col p-2">
-                              <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-                              <h4 class="mb-0">{{clickedUser?.points}}</h4>
-                            </div>
-                            <div class="col p-2">
-                              <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-                              <h4 class="mb-0">23/120</h4>
-                            </div>
-                            <div class="col p-2">
-                              <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-                              <h4 class="mb-0">{{selectedRow?.rank}}</h4>
-                            </div>
-                          </div>
-                          <div class="card-footer text-center">
-                          </div>
-                        </div>
-                      </div>
+                <div class="card-body">
+                  <div class="userDetails"></div>
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <h4 class="text-uppercase">{{selectedRow?.name}}</h4>
+                      <span>{{selectedRow?.department}}</span>
+                      <hr class="line-success">
                     </div>
                   </div>
+
+                  <div class="row text-center mt-4">
+                    <div class="col p-2">
+                      <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
+                      <h4 class="mb-0">{{clickedUser?.points}}</h4>
+                    </div>
+                    <div class="col p-2">
+                      <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
+                      <h4 class="mb-0">23/120</h4>
+                    </div>
+                    <div class="col p-2">
+                      <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
+                      <h4 class="mb-0">{{selectedRow?.rank}}</h4>
+                    </div>
+                  </div>
+                  <div class="card-footer text-center">
+                  </div>
+                </div>
               </div>
+            </div>
           </div>
+        </div>
       </div>
+    </div>
     <ng-template #cardLoading>
       <div class="card-body">
-        <ngx-spinner
-          name="gift-points-spinner"
-          [fullScreen]="false"
-          bdColor="rgba(51,51,51,0.8)"
-          size="medium"
-          color="#fff"
-          type="pacman"
-        >
+        <ngx-spinner name="gift-points-spinner" [fullScreen]="false" bdColor="rgba(51,51,51,0.8)" size="medium"
+          color="#fff" type="pacman">
           <p style="font-size: 20px; color: white">Loading...</p>
         </ngx-spinner>
       </div>
     </ng-template>
 
     <!-- Placeholder for loading avatar -->
-    <ng-template #avatarLoading >
+    <ng-template #avatarLoading>
       <div>
         <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..." class="img-row">
       </div>
@@ -227,5 +233,3 @@
 
   </div>
 </div>
-
-
