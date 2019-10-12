@@ -79,6 +79,7 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
 import { PhonePipe } from './pipe/phone.pipe';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { akitaConfig} from '@datorama/akita';
+import { FreshPipe } from './pipe/fresh.pipe';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -125,7 +126,8 @@ akitaConfig({
     ImageCropperComponent,
     ForgotPasswordComponent,
     PhonePipe,
-    PhoneMaskDirective
+    PhoneMaskDirective,
+    FreshPipe
 
   ],
   imports: [

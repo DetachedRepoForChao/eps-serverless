@@ -43,9 +43,19 @@
           <div class="col-md-6">
             <form class="form">
 
-              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee">
+              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee" [(ngModel)]="term" />
 
             </form>
+            <ul id="user-listing">
+              <li *ngFor="let user of users | fresh:term">
+                  <div class="single-user">
+                    <span [ngStyle]="{background: user.name}">{{user.name}} name</span>
+                    <h3> {{user.name}}</h3>
+
+                  </div>
+
+              </li>
+            </ul>
           </div>
           <div class="col-md-3">
           </div>

@@ -27,6 +27,7 @@ import {PointItemService} from '../../../entity-store/point-item/state/point-ite
 import {PointItemModel} from '../../../entity-store/point-item/state/point-item.model';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
+import {FreshPipe} from '../../../pipe/fresh.pipe';
 
 
 declare var $: any;
@@ -49,7 +50,8 @@ export interface CoreValueButton {
 @Component({
   selector: 'app-gift-points',
   templateUrl: './gift-points.component.html',
-  styleUrls: ['./gift-points.component.scss']
+  styleUrls: ['./gift-points.component.scss'],
+  pipes: [FreshPipe]
 })
 export class GiftPointsComponent implements OnInit {
   componentName = 'gift-points.component';
