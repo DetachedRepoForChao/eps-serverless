@@ -50,7 +50,7 @@
               <li *ngFor="let user of (employees$) | async | fresh:term">
                 {{user}}
                   <div class="single-user">
-                    <span [ngStyle]="{background: user.firstName}">{{user.firstName}} name</span>
+                    <span [ngStyle]="{background: user.firstName}"><img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" /></span>
                     <h3> {{user.firstName | fresh}}</h3>
 
                   </div>

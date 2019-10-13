@@ -11,7 +11,8 @@ export class FreshPipe implements PipeTransform {
     if (term === undefined) return employees$;
     // return updated users array
     return employees$.filter(function(employee){
-      return employee.firstName.toLowerCase().includes(term.toLowerCase());
+      return employee.firstName.toLowerCase().includes(term.toLowerCase())
+      ;
   })
 }
 }
