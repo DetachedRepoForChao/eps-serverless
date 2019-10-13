@@ -42,7 +42,9 @@
   <p style="font-size: 20px; color: white">Loading...</p>
 </ngx-spinner>
 
-<router-outlet></router-outlet>
+<perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+  <router-outlet></router-outlet>
+</perfect-scrollbar>
 <div class="wrapper-user">
   <div class="wrapper-user-body">
   </div>

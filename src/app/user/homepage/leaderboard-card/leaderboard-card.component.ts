@@ -149,5 +149,12 @@ export class LeaderboardCardComponent implements OnInit {
     console.log(this.achievementQuery.getCompleteAchievements());
     console.log(this.achievementQuery.getCompleteAchievementById(1));
 
+    this.achievementQuery.selectAll().subscribe(x => {
+      console.log(x);
+    });
+
+    console.log(this.achievementQuery.getAchievementFamilies());
+    console.log(Object.keys(this.achievementQuery.getAchievementFamilies()));
+
   }
 }

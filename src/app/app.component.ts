@@ -8,4 +8,5 @@ import { NotifierService} from 'angular-notifier';
 })
 export class AppComponent {
   title = 'Employee Points System';
+
 }

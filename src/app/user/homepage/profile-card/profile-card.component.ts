@@ -110,21 +110,6 @@ export class ProfileCardComponent implements OnInit {
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('profile-card-spinner');
-    this.setPointsTooltip();
-  }
-
-
-  pointsTooltip;
-
-  setPointsTooltip() {
-    const observables = [];
-    observables.push(this.getPendingBalance());
-    observables.push(this.getPoints());
-
-    forkJoin(observables)
-      .subscribe(obsResults => {
-        this.pointsTooltip = `Points: ${obsResults[1]}; Balance: ${obsResults[0]}`;
-      });
   }
 
   getPendingBalance(): Observable<any> {
@@ -138,17 +123,6 @@ export class ProfileCardComponent implements OnInit {
             observer.complete();
           }
 
-        });
-    });
-  }
-
-  getPoints(): Observable<any> {
-    return new Observable(observer => {
-      this.currentUserQuery.selectAll()
-        .subscribe(currentUser => {
-
-          observer.next(currentUser[0].points);
-          observer.complete();
         });
     });
   }

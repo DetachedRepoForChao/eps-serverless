@@ -43,8 +43,8 @@ export class SignUpComponent implements OnInit {
     private departmentService: DepartmentService,
     private securityRoleService: SecurityRoleService,
     private amplifyService: AmplifyService,
-    private _authService: AuthService,
-    private _router: Router,
+    private authService: AuthService,
+    private router: Router,
     private globalVariableService: GlobalVariableService,
     private spinner: NgxSpinnerService,
     public formBuilder: FormBuilder) { }
@@ -125,7 +125,7 @@ export class SignUpComponent implements OnInit {
           // setTimeout(() => this.showSuccessMessage = false, 4000);
 
 
-          this._authService.signUp({
+          this.authService.signUp({
             'username': form.value.username,
             'email': form.value.email,
             'password': form.value.password,
@@ -148,7 +148,7 @@ export class SignUpComponent implements OnInit {
               environment.confirm.password = form.value.password;
               environment.confirm.username = form.value.username;
               this.resetForm(form);
-              this._router.navigateByUrl('/confirm');
+              this.router.navigateByUrl('/confirm');
             })
             .catch((error) => console.log(error));
         },
@@ -204,7 +204,7 @@ export class SignUpComponent implements OnInit {
       securityRole: securityRole,
       department: department,
       points: 0,
-      password: 'D@RTHtest911',
+      password: '',
       phone: '+17328597839',
       birthdate: ''
     };

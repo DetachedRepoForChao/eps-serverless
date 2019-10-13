@@ -8,7 +8,7 @@ import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/enti
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/state/user-has-store-item.service';
-
+import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 
 @Component({
   selector: 'app-homepage',
@@ -22,6 +22,7 @@ export class HomepageComponent implements OnInit {
   private codeEntered: EventEmitter<boolean> = new EventEmitter<boolean>();
   private sequence: number[] = [];
   private konamiCode: number[] = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+  public config: PerfectScrollbarConfigInterface = {};
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {

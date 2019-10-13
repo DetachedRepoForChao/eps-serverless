@@ -281,8 +281,8 @@ app.get('/items/currentUserAchievements', function(req, res) {
       // const username = req.body.username;
       ctrlUser.getUserProfile(username)
         .then(result => {
-          const userId = result.user.id;
-          ctrlAchievement.getUserAchievementsByUserId(userId)
+          const user = result.user;
+          ctrlAchievement.getUserAchievementsByUserId(user)
             .then(data => {
               res.json({status: 'post call succeed!', data: data.userAchievements});
             })

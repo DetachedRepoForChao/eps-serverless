@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { AchievementComponent} from './shared/achievement/achievement.component';
-import { ConfirmationDialogComponent } from './user/components/shared/confirmation-dialog/confirmation-dialog.component'
+import { ConfirmationDialogComponent } from './user/components/shared/confirmation-dialog/confirmation-dialog.component';
 // routes
 import { appRoutes } from './app.routes';
 import { UserComponent } from './user/user.component';
@@ -79,12 +79,19 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
 import { PhonePipe } from './pipe/phone.pipe';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { akitaConfig} from '@datorama/akita';
+import { PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
 akitaConfig({
   resettable: true
 });
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   declarations: [
@@ -160,6 +167,7 @@ akitaConfig({
     OverlayModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule.forRoot(),
+    PerfectScrollbarModule
   ],
   providers: [
     {
@@ -178,7 +186,8 @@ akitaConfig({
     UserService,
     Globals,
     AmplifyService,
-    { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }}
+    { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }},
+    { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG}
   ],
   bootstrap: [AppComponent],
   entryComponents: [AwesomeTooltipComponent,

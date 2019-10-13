@@ -97,19 +97,19 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
       const completedList = this.getCompletedAchievements();
       const inProgressList = this.getInProgressAchievements();
 
-      // Add the 'completed' achievements to the filtered achievements list
+      // Add the 'complete' achievements to the filtered achievements list
       for (let i = 0; i < completedList.length; i++) {
-        // console.log(`${functionFullName}: Adding 'completed' achievement ${completedList[i].name} to the filtered list`);
+        // console.log(`${functionFullName}: Adding 'complete' achievement ${completedList[i].name} to the filtered list`);
         filteredList.push(completedList[i]);
       }
 
       // Add the 'in progress' achievements to the filtered achievements list
       for (let i = 0; i < inProgressList.length; i++) {
-        // If there is a 'completed' achievement in the completed achievements list of the same family as this 'in progress'
+        // If there is a 'complete' achievement in the completed achievements list of the same family as this 'in progress'
         // achievement, do not add this achievement to the list
         const sameFamilyAchievementsList = completedList.filter(x => x.family === inProgressList[i].family);
         if (sameFamilyAchievementsList.length > 0) {
-          // There is a 'completed' 'achievement of the same family as this 'in progress' achievement. The 'in progress' achievement
+          // There is a 'complete' achievement of the same family as this 'in progress' achievement. The 'in progress' achievement
           // will not be added to the filtered list until the 'completed' achievement is acknowledged by the user.
           // console.log(`${functionFullName}: There is a 'completed' achievement in the '${inProgressList[i].family}' family. ` +
           //   `Not adding 'in progress' achievement '${inProgressList[i].name}' to the filtered achievement list`);
@@ -119,6 +119,8 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
         }
       }
 
+      // console.log(`${functionFullName}: filteredList:`);
+      // console.log(filteredList);
       observer.next(filteredList);
       observer.complete();
       // return filteredList;
@@ -126,8 +128,34 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
 
   }
 
+  // Returns number of achievements in the achievement family
   getAchievementFamilyCount(achievement: AchievementModel): AchievementModel[] {
     return this.getAll().filter(x => x.family === achievement.family);
+  }
+
+  getAchievementFamilies(): Observable<any> {
+    // groupBy function reference: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
+    // I'm not sure why or how this works...
+    const groupBy = function (xs, key) {
+      return xs.reduce(function(rv, x) {
+        (rv[x[key]] = rv[x[key]] || []).push(x);
+        return rv;
+      }, {});
+    };
+
+    return new Observable<any>(observer => {
+      this.selectAll()
+        .subscribe(result => {
+          const families = groupBy(result, 'family');
+          observer.next(families);
+          observer.complete();
+        });
+    });
+
+
+    // debugger;
+    // console.log(families);
+    // return families;
   }
 
   getCompleteAchievements(): AchievementModel[] {

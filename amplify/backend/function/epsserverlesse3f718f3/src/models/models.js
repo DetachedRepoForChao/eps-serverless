@@ -1155,6 +1155,48 @@ module.exports = function(sequelize, DataTypes) {
   User.hasMany(UserHasStoreItem, {foreignKey: 'managerId', sourceKey: 'id', as: 'managerUser'});
   StoreItem.hasMany(UserHasStoreItem, {foreignKey: 'storeItemId', sourceKey: 'id'});
 
+  // achievement_has_role_audience table
+  const AchievementHasRoleAudience = sequelize.define('achievementHasRoleAudience', {
+    id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      unique: true,
+      autoIncrement: true,
+      field: 'id'
+    },
+    achievementId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      field: 'achievement_id'
+    },
+    roleId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      field: 'role_id'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'createdAt'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'updatedAt'
+    },
+  }, {
+    tableName: 'achievement_has_role_audience',
+    freezeTableName: true
+  });
+
+  Achievement.hasMany(AchievementHasRoleAudience, {foreignKey: 'achievementId', sourceKey: 'id'});
+  SecurityRole.hasMany(AchievementHasRoleAudience, {foreignKey: 'roleId', sourceKey: 'id'});
+
   return {
     Achievement: Achievement,
     AchievementTransaction: AchievementTransaction,
@@ -1171,5 +1213,6 @@ module.exports = function(sequelize, DataTypes) {
     UserAchievementProgress: UserAchievementProgress,
     UserHasNotification: UserHasNotification,
     UserHasStoreItem: UserHasStoreItem,
+    AchievementHasRoleAudience: AchievementHasRoleAudience
   };
 };
