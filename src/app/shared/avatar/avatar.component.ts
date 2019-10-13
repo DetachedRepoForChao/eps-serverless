@@ -131,6 +131,11 @@ export class AvatarComponent implements OnInit {
 
   getCompleteAchievementById(id: number) {
     return this.achievementQuery.getCompleteAchievementById(id);
+  }
 
+  getErrorMessage(){
+    if(this.getCompleteAchievementById(4)==false){
+      return "please complete the achieve {id}"
+    }
   }
 }

@@ -82,6 +82,7 @@ import { akitaConfig} from '@datorama/akita';
 import { PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
+import { FreshPipe } from './pipe/fresh.pipe';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -132,7 +133,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ImageCropperComponent,
     ForgotPasswordComponent,
     PhonePipe,
-    PhoneMaskDirective
+    PhoneMaskDirective,
+    FreshPipe
 
   ],
   imports: [
