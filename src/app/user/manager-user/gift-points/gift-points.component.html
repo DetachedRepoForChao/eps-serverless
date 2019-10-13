@@ -51,7 +51,7 @@
                 {{user}}
                   <div class="single-user">
                     <span [ngStyle]="{background: user.firstName}"><img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" /></span>
-                    <h3> {{user.firstName | fresh}}</h3>
+                    <h3> {{user.firstName + " " + user.lastName | fresh}}</h3>
 
                   </div>
 
@@ -88,7 +88,6 @@
                     <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
                       <img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
                     </div>
-               
                   </div>
                 </tr>
             
