@@ -67,6 +67,7 @@ export class PointsStoreComponent implements OnInit {
           console.log('Not enough points.');
         } else {
           console.log('Enough points. Submitting request');
+          this.submitStoreItemPurchaseRequest(this.selectedStoreItem);
         }
       } else if (result === 'Cancel') {
         console.log('Test567');
@@ -75,11 +76,38 @@ export class PointsStoreComponent implements OnInit {
     });
   }
 
+
+
   selectStoreItem(storeItem) {
     this.selectedStoreItem = storeItem;
     console.log(this.selectedStoreItem);
   }
 
+  submitStoreItemPurchaseRequest(storeItem: StoreItemModel) {
+    const functionName = 'submitStoreItemPurchaseRequest';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    const requestUser = this.currentUserQuery.getAll()[0]; // Retrieve current user info
+    const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
+    console.log(storeItem);
+    this.userHasStoreItemService.newUserHasStoreItemRecord(managerUser.userId, storeItem.itemId)
+      .subscribe((result: any) => {
+        console.log(`${functionFullName}: result:`);
+        console.log(result);
+        if (result.status === true) {
+          // Send the manager an email
+          console.log(`${functionFullName}: Trying to send an email to user's manager:`);
+          console.log(managerUser);
+          this.storeItemService.sendStoreItemPurchaseRequestEmail(managerUser, requestUser, storeItem)
+            .subscribe(emailResult => {
+              console.log(`${functionFullName}: email result:`);
+              console.log(emailResult);
+            });
+        } else {
+          console.log(`${functionFullName}: Something went wrong...`);
+        }
+      });
+  }
 
 
   checkPoints(): boolean {
@@ -110,7 +138,37 @@ export class PointsStoreComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();  
+  }
+
+
+  submitStoreItemRequest(storeItem: StoreItemModel) {
+    const functionName = 'submitStoreItemRequest';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    const requestUser = this.currentUserQuery.getAll()[0]; // Retrieve current user info
+    const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
+    console.log(storeItem);
+
+    this.userHasStoreItemService.newUserHasStoreItemRecord(managerUser.userId, storeItem.itemId)
+      .subscribe((result: any) => {
+        console.log(`${functionFullName}: result:`);
+        console.log(result);
+        if (result.status === true) {
+          // Send the manager an email
+          console.log(`${functionFullName}: Trying to send an email to user's manager:`);
+          console.log(managerUser);
+
+          this.storeItemService.sendStoreItemPurchaseRequestEmail(managerUser, requestUser, storeItem)
+          .subscribe(emailResult => {
+            console.log(`${functionFullName}: email result:`);
+            console.log(emailResult);
+          });
+      } else {
+        console.log(`${functionFullName}: Something went wrong...`);
+      }
+    });
+
   }
 
   listStoreItems() {
