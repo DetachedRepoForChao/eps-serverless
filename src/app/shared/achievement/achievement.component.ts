@@ -1,7 +1,6 @@
 import {Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { Achievement} from './achievement.model';
 import { UserAchievementProgress} from './user-achievement-progress.model';
-import { AchievementService} from './achievement.service';
 import { Globals} from '../../globals';
 import {MatTableDataSource} from '@angular/material';
 import {DepartmentEmployee} from '../../user/manager-user/gift-points/gift-points.component';
@@ -10,6 +9,8 @@ import {Router} from '@angular/router';
 import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {tap} from 'rxjs/operators';
+import {AchievementModel} from '../../entity-store/achievement/state/achievement.model';
+import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 
 
 
@@ -77,6 +78,24 @@ export class AchievementComponent implements OnInit {
       (rv[x[key]] = rv[x[key]] || []).push(x);
       return rv;
     }, {});
+  }
+
+  acknowledgeAchievement(achievement: AchievementModel) {
+    const functionName = 'acknowledgeAchievement';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: Acknowledging completed achievement:`);
+    console.log(achievement);
+
+    this.achievementService.acknowledgeAchievementComplete(achievement.progressId)
+      .subscribe(result => {
+        console.log(`${functionFullName}: Acknowledge result:`);
+        console.log(result);
+
+        // this.achievementService.getUserAchievements().subscribe();
+        // $('#achievementModal').modal('hide');
+      });
   }
 
 }

@@ -251,11 +251,10 @@ const addPointsToAchievementFamilyProgress = function (achievementFamily, userId
           console.log(`${functionFullName}: achievementProgressToIncrement:`);
           console.log(achievementProgressToIncrement);
 
-          const amount = achievementProgressToIncrement.achievement.incrementAmount;
-
           if (achievementProgressToIncrement === false) {
             return {status: false, message: 'All achievements complete'};
           } else {
+            const amount = achievementProgressToIncrement.achievement.incrementAmount;
             return addPointsToAchievementProgress(achievementProgressToIncrement.id, amount)
               .then(result => {
                 if(result.status !== true) {
@@ -556,20 +555,21 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
       {
         model: Models.Achievement,
         attributes: ['id', 'cost', 'achievementFamily', 'level', 'incrementAmount', 'name'],
-        where: {
+/*        where: {
           achievementFamily: achievementFamily
-        },
-        include: [
+        },*/
+/*        include: [
           {
             model: Models.AchievementHasRoleAudience,
           }
-        ]
+        ]*/
       }
     ],
     where: {
-      userId: userId
+      userId: userId,
+      '$achievement.achievement_family$': achievementFamily
     },
-    attributes: ['id', 'goalProgress', 'status']
+    // attributes: ['id', 'goalProgress', 'status']
   })
     .then(achievementFamilyProgress => {
       if (!achievementFamilyProgress) {

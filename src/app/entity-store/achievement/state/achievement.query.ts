@@ -77,11 +77,11 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
   }
 
   public getAchievementFamily(achievementFamily: string) {
-    const familyAchievements = this.getAll({
+    const familyAchievements$ = this.selectAll({
       filterBy: achievement => achievement.family === achievementFamily
     });
 
-    return familyAchievements;
+    return familyAchievements$;
   }
 
   filterAchievements(): Observable<AchievementModel[]> {
@@ -121,6 +121,7 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
 
       // console.log(`${functionFullName}: filteredList:`);
       // console.log(filteredList);
+
       observer.next(filteredList);
       observer.complete();
       // return filteredList;
