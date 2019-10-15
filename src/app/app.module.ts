@@ -83,6 +83,7 @@ import { PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import { FreshPipe } from './pipe/fresh.pipe';
+import { ConfirmItemPurchaseComponent } from './confirm-item-purchase/confirm-item-purchase.component';
 
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -134,7 +135,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ForgotPasswordComponent,
     PhonePipe,
     PhoneMaskDirective,
-    FreshPipe
+    FreshPipe,
+    ConfirmItemPurchaseComponent
 
   ],
   imports: [
