@@ -1161,7 +1161,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
-      unique: true,
       autoIncrement: true,
       field: 'id'
     },
@@ -1197,6 +1196,84 @@ module.exports = function(sequelize, DataTypes) {
   Achievement.hasMany(AchievementHasRoleAudience, {foreignKey: 'achievementId', sourceKey: 'id'});
   SecurityRole.hasMany(AchievementHasRoleAudience, {foreignKey: 'roleId', sourceKey: 'id'});
 
+  // feature table
+  const Feature = sequelize.define('feature', {
+    id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      field: 'id',
+      autoIncrement: true
+    },
+    name: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+      field: 'name'
+    },
+    description: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      field: 'description'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'createdAt'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'updatedAt'
+    },
+  }, {
+    tableName: 'feature'
+  });
+
+  // achievement_unlocks_feature table
+  const AchievementUnlocksFeature = sequelize.define('achievementUnlocksFeature', {
+    id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id'
+    },
+    achievementId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      field: 'achievement_id'
+    },
+    featureId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      field: 'feature_id'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'createdAt'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'updatedAt'
+    },
+  }, {
+    tableName: 'achievement_unlocks_feature',
+  });
+
+  Achievement.hasOne(AchievementUnlocksFeature, {foreignKey: 'achievementId', sourceKey: 'id'});
+  AchievementUnlocksFeature.belongsTo(Achievement, {foreignKey: 'achievementId', targetKey: 'id'});
+  Feature.hasOne(AchievementUnlocksFeature, {foreignKey: 'featureId', sourceKey: 'id'});
+  AchievementUnlocksFeature.belongsTo(Feature, {foreignKey: 'featureId', targetKey: 'id'});
+
+
   return {
     Achievement: Achievement,
     AchievementTransaction: AchievementTransaction,
@@ -1213,6 +1290,8 @@ module.exports = function(sequelize, DataTypes) {
     UserAchievementProgress: UserAchievementProgress,
     UserHasNotification: UserHasNotification,
     UserHasStoreItem: UserHasStoreItem,
-    AchievementHasRoleAudience: AchievementHasRoleAudience
+    AchievementHasRoleAudience: AchievementHasRoleAudience,
+    Feature: Feature,
+    AchievementUnlocksFeature: AchievementUnlocksFeature
   };
 };
