@@ -17,6 +17,7 @@ import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/st
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 
+
 @Component({
   selector: 'app-points-store',
   templateUrl: './points-store.component.html',
@@ -129,6 +130,10 @@ export class PointsStoreComponent implements OnInit {
       console.log(`You have enough points to redeem this item. An email has been sent to your manager for approval`);
       return true;
     }
+  }
+
+  confirmStoreItemPurchaseRequest(): void {
+  console.log(`Received request to purchase store item`);
   }
 
 
