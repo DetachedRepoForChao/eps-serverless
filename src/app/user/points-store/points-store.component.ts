@@ -16,6 +16,7 @@ import { CurrentUserStore } from 'src/app/entity-store/current-user/state/curren
 import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {Router } from '@angular/router';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class PointsStoreComponent implements OnInit {
               private userQuery: EntityUserQuery,
               private authService: AuthService,
               private snackBar: MatSnackBar,
+              private router: Router,
               public dialog: MatDialog ) {}
 
 
@@ -134,7 +136,9 @@ export class PointsStoreComponent implements OnInit {
 
   confirmStoreItemPurchaseRequest(): void {
   console.log(`Received request to purchase store item`);
-  }
+  this.router.navigate(['/confirm-item-purchase']);
+  
+}
 
 
   ngOnInit() {
