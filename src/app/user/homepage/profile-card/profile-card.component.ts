@@ -30,6 +30,7 @@ import {AuthService} from '../../../login/auth.service';
 import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
+import {FeatureService} from '../../../entity-store/feature/state/feature.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -69,7 +70,8 @@ export class ProfileCardComponent implements OnInit {
               private storeItemService: StoreItemService,
               private metricsService: MetricsService,
               private authService: AuthService,
-              private changeDetector: ChangeDetectorRef) { }
+              private changeDetector: ChangeDetectorRef,
+              private featureService: FeatureService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -93,6 +95,7 @@ export class ProfileCardComponent implements OnInit {
 
     this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
+    // this.featureService.cacheFeatures().subscribe().unsubscribe();
     this.leaderboardUsers$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });

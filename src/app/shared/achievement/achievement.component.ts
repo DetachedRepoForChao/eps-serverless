@@ -11,6 +11,8 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {tap} from 'rxjs/operators';
 import {AchievementModel} from '../../entity-store/achievement/state/achievement.model';
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
+import {FeatureService} from '../../entity-store/feature/state/feature.service';
+import {FeatureQuery} from '../../entity-store/feature/state/feature.query';
 
 
 
@@ -30,13 +32,16 @@ export class AchievementComponent implements OnInit {
   achievements$;
   families;
   keys;
+  features$;
   // @ViewChild(PerfectScrollbarComponent, { static: false }) componentRef?: PerfectScrollbarComponent;
   // @ViewChild(PerfectScrollbarDirective, { static: false }) directiveRef?: PerfectScrollbarDirective;
 
   constructor(private globals: Globals,
               private achievementService: AchievementService,
               private router: Router,
-              private achievementQuery: AchievementQuery) { }
+              private achievementQuery: AchievementQuery,
+              private featureService: FeatureService,
+              private featureQuery: FeatureQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -52,6 +57,10 @@ export class AchievementComponent implements OnInit {
         this.families = this.groupBy(result, 'family');
         this.keys = Object.keys(this.families);
       });
+
+    this.featureService.cacheFeatures().subscribe(() => {
+      this.features$ = this.featureQuery.selectAll();
+    });
 
 /*    this.achievementQuery.getAchievementFamilies()
       .pipe(tap(families => {
