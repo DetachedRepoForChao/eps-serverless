@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
-          <div *ngFor="let feature of (features$ | async)">
+          <div *ngFor="let feature of (featureQuery.selectAll() | async)">
             <img *ngIf="feature.achievementId === achievement.achievementId" src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" />
           </div>
         </div>
@@ -82,7 +82,7 @@
           </div>
         </div>
         <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
-          <div *ngFor="let feature of (features$ | async)">
+          <div *ngFor="let feature of (featureQuery.selectAll() | async)">
             <img *ngIf="feature.achievementId === achievement.achievementId" src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" />
           </div>
         </div>
@@ -117,7 +117,7 @@
           </div>
         </div>
         <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
-          <div *ngFor="let feature of (features$ | async)">
+          <div *ngFor="let feature of (featureQuery.selectAll() | async)">
             <img *ngIf="feature.achievementId === achievement.achievementId" src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" />
           </div>
         </div>
@@ -147,7 +147,7 @@
           </div>
         </div>
         <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
-          <div *ngFor="let feature of (features$ | async)" >
+          <div *ngFor="let feature of (featureQuery.selectAll() | async)" >
             <div *ngIf="feature.achievementId === achievement.achievementId"
                  matTooltipPosition="above"
                  [matTooltip]="feature.unlockDescription">

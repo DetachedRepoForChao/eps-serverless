@@ -58,10 +58,11 @@ export class AchievementComponent implements OnInit {
         this.keys = Object.keys(this.families);
       });
 
-    this.featureService.cacheFeatures().subscribe(() => {
-      this.features$ = this.featureQuery.selectAll();
-    });
-
+    this.featureService.cacheFeatures().subscribe();
+/*    this.features$ = this.featureQuery.selectAll();
+    this.features$.subscribe(x => {
+      console.log(x);
+    });*/
 /*    this.achievementQuery.getAchievementFamilies()
       .pipe(tap(families => {
         this.keys = Object.keys(families);
