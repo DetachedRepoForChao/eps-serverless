@@ -1,22 +1,21 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../login/auth.service';
+import { AuthService } from '../../../login/auth.service';
 import { API } from 'aws-amplify';
-import awsconfig from '../../../aws-exports';
+import awsconfig from '../../../../aws-exports';
+import {createNotificationModel, NotificationModel} from './entity-notification.model';
+import {NotificationStore} from './notification.store';
+import {tap} from 'rxjs/operators';
+import {cacheable} from '@datorama/akita';
 
 
-export interface Notification {
-  Name: string;
-  Message: string;
-}
 
 @Injectable({
   providedIn: 'root'
 })
 
-
-export class NotificationService implements OnInit {
+export class NotificationService {
   componentName = 'Notification.service';
 
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
@@ -29,13 +28,11 @@ export class NotificationService implements OnInit {
     }
   };
 
-  ngOnInit(): void {
-
-  }
-  noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
-
   constructor(private http: HttpClient,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private notificationModel: NotificationModel,
+              private notificationStore: NotificationStore) {
+    console.log('notification:' + this.apiName);
 
   }
   /**
@@ -63,6 +60,45 @@ export class NotificationService implements OnInit {
     });
   }
 
+
+  cacheNotifications() {
+    const functionName = 'cacheNotifications';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    const request$ = this.getNotification()
+      .pipe(tap((notifications: any) => {
+        console.log(`${functionFullName}: caching:`);
+        console.log(notifications);
+
+        const notificationItemsArray: NotificationModel[] = [];
+
+        for (let i = 0; i < notifications.length; i++) {
+          // We need to split the core values into an array of strings
+          const coreValues: string[] = notifications[i].coreValues.split(';');
+          for (let j = 0; j < coreValues.length; j++) {
+            coreValues[j] = coreValues[j].trim();
+          }
+          const NotificationId = notifications[i].id;
+          const title = notifications[i].title;
+          const description = notifications[i].description;
+          const event = notifications[i].event;
+          const audience = notifications[i].audience;
+          const createdAt = notifications[i].createdAt;
+          const updatedAt = notifications[i].updatedAt;
+          const timeSeen = notifications[i].timeSeen;
+          const targetUserId = notifications[i].targetUserIdl;
+          const notificationModel = createNotificationModel({NotificationId, title, description, audience,
+            event, createdAt, updatedAt, timeSeen, targetUserId});
+          notificationItemsArray.push(notificationModel);
+
+        }
+
+        this.notificationStore.set(notificationItemsArray);
+      }));
+
+    return cacheable(this.notificationStore, request$);
+  }
 
 
 
@@ -94,5 +130,6 @@ export class NotificationService implements OnInit {
         });
     });
   }
+
 
 }
