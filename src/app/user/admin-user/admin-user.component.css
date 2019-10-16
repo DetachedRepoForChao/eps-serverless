@@ -51,13 +51,20 @@
 }
 
 .l2 {
+	text-align: left;
 	color:#32325d;
 
 }
 .form-row {
+	
 	text-align: left;
 }
 
+
+
+.form-control {
+	color: black;
+}
 
 
 
