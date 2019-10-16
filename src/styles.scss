@@ -21,6 +21,11 @@ select:-webkit-autofill:focus {
   white-space: pre-line !important;
 }
 
+/* Set the tooltip Z index to be above modals */
+.cdk-overlay-container {
+  z-index: 1051 !important;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

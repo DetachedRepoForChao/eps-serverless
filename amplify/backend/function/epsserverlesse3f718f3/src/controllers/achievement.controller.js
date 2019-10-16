@@ -10,6 +10,40 @@ const ctrlUser = require('./user.controller');
 const componentName = 'achievement.controller';
 
 
+const getAchievementUnlocksFeature = function() {
+  const functionName = 'getAchievementUnlocksFeature';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.AchievementUnlocksFeature.findAll({
+    include: [
+      {
+        model: Models.Feature
+      },
+      {
+        model: Models.Achievement
+      }
+    ]
+  })
+    .then(achievementUnlocksFeatureResult => {
+      if(!achievementUnlocksFeatureResult) {
+        console.log(`${functionFullName}: Records not found`);
+        return {status: false, message: 'Achievement Unlocks Feature records not found.'};
+      } else {
+        console.log(`${functionFullName}: User Achievements retrieved successfully`);
+        console.log(achievementUnlocksFeatureResult);
+        return {status: true, achievementUnlocksFeature: achievementUnlocksFeatureResult };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: database error`);
+      console.log(err);
+      return {status: 500, message: err };
+    });
+};
+
+module.exports.getAchievementUnlocksFeature = getAchievementUnlocksFeature;
+
 const getUserAchievementsByUserId = function(user) {
   const functionName = 'getUserAchievementsByUserId';
   const functionFullName = `${componentName} ${functionName}`;
@@ -21,13 +55,26 @@ const getUserAchievementsByUserId = function(user) {
     include: [
       {
         model: Models.Achievement,
-        attributes: ['id', 'name', 'description', 'status', 'cost', 'achievementFamily', 'level', 'startAmount'],
+        attributes: [
+          'id', 'name', 'description', 'status', 'cost', 'achievementFamily', 'level', 'startAmount',
+        ],
         include: [
           {
             model: Models.AchievementHasRoleAudience,
+            attributes: ['id', 'achievementId', 'roleId']
+          },
+          {
+            model: Models.AchievementUnlocksFeature,
+            attributes: ['id', 'achievementId', 'featureId'],
+            include: [
+              {
+                model: Models.Feature,
+                attributes: ['id', 'name', 'description']
+              }
+            ]
           }
         ]
-      }
+      },
     ],
     where: {
       userId: user.id,

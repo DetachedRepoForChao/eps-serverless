@@ -46,6 +46,7 @@
               <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee" [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
 
             </form>
+            <!--
             <ul id="user-listing">
               <li *ngFor="let user of (employees$) | async | fresh:term">
                 {{user}}
@@ -57,6 +58,19 @@
 
               </li>
             </ul>
+          -->
+          <div class="row">
+            <div *ngFor="let user of (employees$) | async | fresh:term" class="col-3 fluid">
+              {{user}}
+                  <div class="single-user">
+                    <span [ngStyle]="{background: user.firstName}">
+                      <img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
+                    </span>
+                    <h5> {{user.firstName + " " + user.lastName | fresh}}</h5>
+
+                  </div>
+            </div>
+          </div>
           </div>
           <div class="col-md-3">
           </div>

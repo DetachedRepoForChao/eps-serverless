@@ -18,6 +18,7 @@ import {Department} from '../../../shared/department.model';
 @Injectable({
   providedIn: 'root'
 })
+
 export class EntityUserService {
   componentName = 'entity-user.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
