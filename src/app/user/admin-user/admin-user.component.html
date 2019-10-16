@@ -25,9 +25,22 @@
 <!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
        
        
-       <button type="button" class="btn btn-icon btn-round" color="white"  (click)="onLogout()">
+       <!-- <button type="button" class="btn btn-icon btn-round" color="white" >
           <i class="tim-icons icon-button-power" title="logout"></i>
-        </button>
+        </button> -->
+
+
+        <div class="dropdown">
+          <button class="btn btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="tim-icons icon-button-power" title="logout"></i>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </div>
+
       </span>
     </div>
   </div>
