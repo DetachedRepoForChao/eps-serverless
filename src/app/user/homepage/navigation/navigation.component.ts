@@ -9,9 +9,13 @@ import {EntityCurrentUserService} from '../../../entity-store/current-user/state
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {resetStores} from '@datorama/akita';
 import {AuthService} from '../../../login/auth.service';
-import { NotificationService } from 'src/app/shared/notifications/notification.service';
+
 import { Globals } from 'src/app/globals';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
+import {NotificationService} from '../../../shared/notifications/notification.service';
+// import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
+
+
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
 declare var blackKit: any;
@@ -94,6 +98,7 @@ export class NavigationComponent implements OnInit {
     this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
        console.log('onSeenNotificationClick');
        if (true) {
+         // tslint:disable-next-line:no-shadowed-variable
          this.notificationService.getNotification().subscribe(result => {
            if (result === '') {
              $('#notification_button').removeClass('btn-danger');
