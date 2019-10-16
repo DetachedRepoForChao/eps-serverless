@@ -30,6 +30,7 @@ import {AuthService} from '../../../login/auth.service';
 import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
+import {FeatureService} from '../../../entity-store/feature/state/feature.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -69,7 +70,8 @@ export class ProfileCardComponent implements OnInit {
               private storeItemService: StoreItemService,
               private metricsService: MetricsService,
               private authService: AuthService,
-              private changeDetector: ChangeDetectorRef) { }
+              private changeDetector: ChangeDetectorRef,
+              private featureService: FeatureService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -93,6 +95,7 @@ export class ProfileCardComponent implements OnInit {
 
     this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
+    // this.featureService.cacheFeatures().subscribe().unsubscribe();
     this.leaderboardUsers$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
@@ -110,21 +113,6 @@ export class ProfileCardComponent implements OnInit {
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('profile-card-spinner');
-    this.setPointsTooltip();
-  }
-
-
-  pointsTooltip;
-
-  setPointsTooltip() {
-    const observables = [];
-    observables.push(this.getPendingBalance());
-    observables.push(this.getPoints());
-
-    forkJoin(observables)
-      .subscribe(obsResults => {
-        this.pointsTooltip = `Points: ${obsResults[1]}; Balance: ${obsResults[0]}`;
-      });
   }
 
   getPendingBalance(): Observable<any> {
@@ -138,17 +126,6 @@ export class ProfileCardComponent implements OnInit {
             observer.complete();
           }
 
-        });
-    });
-  }
-
-  getPoints(): Observable<any> {
-    return new Observable(observer => {
-      this.currentUserQuery.selectAll()
-        .subscribe(currentUser => {
-
-          observer.next(currentUser[0].points);
-          observer.complete();
         });
     });
   }

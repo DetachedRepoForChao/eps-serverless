@@ -25,6 +25,7 @@ import {MetricsQuery} from '../../../entity-store/metrics/state/metrics.query';
 import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
+import {FeatureQuery} from '../../../entity-store/feature/state/feature.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -68,7 +69,8 @@ export class LeaderboardCardComponent implements OnInit {
               private entityCurrentUserService: EntityCurrentUserService,
               private storeItemQuery: StoreItemQuery,
               private pointItemQuery: PointItemQuery,
-              private metricsQuery: MetricsQuery) { }
+              private metricsQuery: MetricsQuery,
+              private featureQuery: FeatureQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -149,5 +151,16 @@ export class LeaderboardCardComponent implements OnInit {
     console.log(this.achievementQuery.getCompleteAchievements());
     console.log(this.achievementQuery.getCompleteAchievementById(1));
 
+    this.achievementQuery.selectAll().subscribe(x => {
+      console.log(x);
+    });
+
+    console.log(this.achievementQuery.getAchievementFamilies());
+    // console.log(Object.keys(this.achievementQuery.getAchievementFamilies()));
+
+    this.featureQuery.selectAll()
+      .subscribe(x => {
+        console.log(x);
+      });
   }
 }

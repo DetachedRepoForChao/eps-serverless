@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Globals} from '../../globals';
 import {AchievementComponent} from '../../shared/achievement/achievement.component';
 import {AchievementService} from '../../shared/achievement/achievement.service';
+import {AuthService} from '../../login/auth.service';
+import {resetStores} from '@datorama/akita';
 
 @Component({
   selector: 'app-admin-user',
@@ -15,20 +17,19 @@ export class AdminUserComponent implements OnInit {
   constructor(public globals: Globals,
               private userService: UserService,
               private router: Router,
-              private achievementService: AchievementService) { }
+              private achievementService: AchievementService,
+              private authService: AuthService) { }
 
   ngOnInit() {
-    this.achievementService.getUserAchievements();
 
   }
 
- onLogout() {
-    this.userService.deleteToken();  
-    localStorage.clear();
-//    resetStores();
-    this.router.navigate(['/login']);
+  onLogout() {
+    this.authService.signOut().then();
+    resetStores();
+    this.router.navigate(['/login']).then();
   }
-	
+
 //uploadFile(event:any){
 // let file = event.target.files[0];
 //let fileName = file.name;

@@ -2,7 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
 import { AchievementComponent} from './shared/achievement/achievement.component';
-import { ConfirmationDialogComponent } from './user/components/shared/confirmation-dialog/confirmation-dialog.component'
+import { ConfirmationDialogComponent } from './user/components/shared/confirmation-dialog/confirmation-dialog.component';
 // routes
 import { appRoutes } from './app.routes';
 import { UserComponent } from './user/user.component';
@@ -79,13 +79,21 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
 import { PhonePipe } from './pipe/phone.pipe';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { akitaConfig} from '@datorama/akita';
+import { PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import { FreshPipe } from './pipe/fresh.pipe';
-
+import { ConfirmItemPurchaseComponent } from 'src/app/user/confirm-item-purchase/confirm-item-purchase.component';
+    const routes: Routes= [ {path: 'confirm-item-purchase', component: ConfirmItemPurchaseComponent }];
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
 akitaConfig({
   resettable: true
 });
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   declarations: [
@@ -111,6 +119,7 @@ akitaConfig({
     FooterComponent,
     FeedComponent,
     ConfirmationDialogComponent,
+    ConfirmItemPurchaseComponent,
     // WebsocketComponent,
     ImageGalleryComponent,
     KeysPipe,
@@ -127,7 +136,8 @@ akitaConfig({
     ForgotPasswordComponent,
     PhonePipe,
     PhoneMaskDirective,
-    FreshPipe
+    FreshPipe,
+    ConfirmItemPurchaseComponent
 
   ],
   imports: [
@@ -160,8 +170,10 @@ akitaConfig({
     ImageCropperModule,
     NgxSpinnerModule,
     OverlayModule,
+    RouterModule.forRoot(routes),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule.forRoot(),
+    PerfectScrollbarModule
   ],
   providers: [
     {
@@ -180,7 +192,8 @@ akitaConfig({
     UserService,
     Globals,
     AmplifyService,
-    { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }}
+    { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }},
+    { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG}
   ],
   bootstrap: [AppComponent],
   entryComponents: [AwesomeTooltipComponent,

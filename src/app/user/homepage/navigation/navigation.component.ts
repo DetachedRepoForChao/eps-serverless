@@ -11,6 +11,7 @@ import {resetStores} from '@datorama/akita';
 import {AuthService} from '../../../login/auth.service';
 import { NotificationService } from 'src/app/shared/notifications/notification.service';
 import { Globals } from 'src/app/globals';
+import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 // We're creating an empty "blackKit" variable to interact with the
 // blackKit variable defined in blk-design-system.js
 declare var blackKit: any;
@@ -26,6 +27,8 @@ declare var $: any;
 export class NavigationComponent implements OnInit {
   componentName = 'navigation.component';
 
+  public config: PerfectScrollbarConfigInterface = {};
+
   Notifications;
   NotificationStatus;
   constructor(private userService: UserService,
@@ -36,13 +39,13 @@ export class NavigationComponent implements OnInit {
               private entityUserAvatarService: EntityUserService,
               private entityUserService: EntityCurrentUserService,
               private storeItemService: StoreItemService,
-              private auth: AuthService,
+              private authService: AuthService,
               private notificationService: NotificationService,
               private globals: Globals
               ) { }
 
   ngOnInit() {
-    
+
     // Initialize the navbar script
     if ($('.navbar[color-on-scroll]').length !== 0) {
       blackKit.checkScrollForTransparentNavbar();
@@ -51,12 +54,12 @@ export class NavigationComponent implements OnInit {
     const targetUserID = this.globals.getUsername();
     this.notificationService.getNotification().subscribe(result => {
       this.Notifications = result;
-      if(result==''){
+      if (result === '') {
         $('#notification_button').addClass('btn-primary');
-      }else{
+      } else {
         $('#notification_button').addClass('btn-danger');
       }
-      console.log("Notification-log click!!!!!!!!!!!!!!!!!!" + this.Notifications);
+      console.log('Notification-log click!!!!!!!!!!!!!!!!!!' + this.Notifications);
     });
 
   }
@@ -71,9 +74,9 @@ export class NavigationComponent implements OnInit {
     this.entityUserAvatarService.reset();
     this.storeItemService.reset();*/
     this.achievementService.incrementAchievement('SignOut').subscribe();
-    this.auth.signOut();
+    this.authService.signOut().then();
     resetStores();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login']).then();
 
   }
 
@@ -86,16 +89,16 @@ export class NavigationComponent implements OnInit {
     // this.router.navigate(['/user']);
   }
 
-  onSeenNotificationClick(notification){
-    console.log("notificationID:" + notification.id);
-    this.notificationService.setNotificationSeenTime(notification.id).subscribe(result =>{
-       console.log("onSeenNotificationClick");
-       if(true){
+  onSeenNotificationClick(notification) {
+    console.log('notificationID:' + notification.id);
+    this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
+       console.log('onSeenNotificationClick');
+       if (true) {
          this.notificationService.getNotification().subscribe(result => {
-           if (result == '') {
+           if (result === '') {
              $('#notification_button').removeClass('btn-danger');
-             if (!$('#notification_button').hasClass('btn-danger')){
-               $('#notification_button').addClass('btn-primary')
+             if (!$('#notification_button').hasClass('btn-danger')) {
+               $('#notification_button').addClass('btn-primary');
              }
            } else {
              $('#notification_button').removeClass('btn-primary');
@@ -103,7 +106,7 @@ export class NavigationComponent implements OnInit {
            this.Notifications = result;
          });
        }
-     })
+     });
   }
 
   navigateHome() {

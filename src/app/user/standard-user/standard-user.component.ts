@@ -21,9 +21,7 @@ export class StandardUserComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private departmentService: DepartmentService,
-    private notifierService: NotifierService,
-    private achievementComponent: AchievementComponent,
-    private achievementService: AchievementService) { }
+    private notifierService: NotifierService) { }
 
   ngOnInit() {
     if ( !localStorage.getItem('departmentName')) {
@@ -31,7 +29,6 @@ export class StandardUserComponent implements OnInit {
     }
 
     this.getUserPoints();
-    this.achievementService.getUserAchievements();
   }
 
 

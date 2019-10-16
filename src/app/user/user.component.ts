@@ -25,6 +25,7 @@ import {GiftPointsService} from './manager-user/gift-points/gift-points.service'
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import 'rxjs/add/operator/takeWhile';
 import {AchievementService} from '../shared/achievement/achievement.service';
+import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 
 declare var $: any;
 
@@ -63,6 +64,8 @@ export class UserComponent implements OnInit, OnDestroy {
   private alive: boolean; // used to unsubscribe from the TimerObservable
                           // when OnDestroy is called.
   private interval: number;
+
+  public config: PerfectScrollbarConfigInterface = {};
 
   constructor(private globals: Globals,
               private userService: UserService,
@@ -359,7 +362,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onSocketTestClick2() {
-    this.achievementService.getUserAchievements().subscribe();
     // this.feedcardService.refreshPointTransactionAvatars();
     // this.socketService.socketTest2();
     // debugger;

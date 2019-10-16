@@ -10,22 +10,75 @@ const ctrlUser = require('./user.controller');
 const componentName = 'achievement.controller';
 
 
-const getUserAchievementsByUserId = function(userId) {
+const getAchievementUnlocksFeature = function() {
+  const functionName = 'getAchievementUnlocksFeature';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.AchievementUnlocksFeature.findAll({
+    include: [
+      {
+        model: Models.Feature
+      },
+      {
+        model: Models.Achievement
+      }
+    ]
+  })
+    .then(achievementUnlocksFeatureResult => {
+      if(!achievementUnlocksFeatureResult) {
+        console.log(`${functionFullName}: Records not found`);
+        return {status: false, message: 'Achievement Unlocks Feature records not found.'};
+      } else {
+        console.log(`${functionFullName}: User Achievements retrieved successfully`);
+        console.log(achievementUnlocksFeatureResult);
+        return {status: true, achievementUnlocksFeature: achievementUnlocksFeatureResult };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: database error`);
+      console.log(err);
+      return {status: 500, message: err };
+    });
+};
+
+module.exports.getAchievementUnlocksFeature = getAchievementUnlocksFeature;
+
+const getUserAchievementsByUserId = function(user) {
   const functionName = 'getUserAchievementsByUserId';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
-  console.log(`${functionFullName}: userId: ${userId}`);
+  console.log(`${functionFullName}: userId: ${user.id}`);
 
   return Models.UserAchievementProgress.findAll({
     include: [
       {
         model: Models.Achievement,
-        attributes: ['id', 'name', 'description', 'status', 'cost', 'achievementFamily', 'level', 'startAmount']
-      }
+        attributes: [
+          'id', 'name', 'description', 'status', 'cost', 'achievementFamily', 'level', 'startAmount',
+        ],
+        include: [
+          {
+            model: Models.AchievementHasRoleAudience,
+            attributes: ['id', 'achievementId', 'roleId']
+          },
+          {
+            model: Models.AchievementUnlocksFeature,
+            attributes: ['id', 'achievementId', 'featureId'],
+            include: [
+              {
+                model: Models.Feature,
+                attributes: ['id', 'name', 'description']
+              }
+            ]
+          }
+        ]
+      },
     ],
     where: {
-      userId: userId,
+      userId: user.id,
+      '$achievement.achievementHasRoleAudiences.role_id$': user.securityRoleId
     },
     attributes: ['id', 'userId', 'achievementId', 'goalProgress', 'status'],
   })
@@ -44,34 +97,6 @@ const getUserAchievementsByUserId = function(userId) {
       console.log(err);
       return {status: 500, message: err };
     });
-
-/*  const sequelize = SqlModel().sequelize;
-  return sequelize.query("" +
-    "SELECT `user_achievement_progress`.`id` AS `achievementProgressId`, `user_achievement_progress`.`user_id` AS `achievementProgressUserId`, " +
-    "`user_achievement_progress`.`achievement_id` AS `achievementProgressAchievementId`, `user_achievement_progress`.`goalProgress` AS `achievementProgressGoalProgress`, " +
-    "`user_achievement_progress`.`status` AS `achievementProgressStatus`, " +
-    "`achievement`.`id` AS `achievementId`, `achievement`.`name` AS `achievementName`, `achievement`.`description` AS `achievementDescription`, " +
-    "`achievement`.`status` AS `achievementStatus`, `achievement`.`cost` AS `achievementCost`, `achievement`.`achievement_family` AS `achievementFamily`, " +
-    "`achievement`.`level` AS `achievementLevel`, `achievement`.`start_amount` AS `achievementStartAmount` " +
-    "FROM `user_achievement_progress` " +
-    "JOIN `achievement` ON `user_achievement_progress`.`achievement_id` = `achievement`.`id` " +
-    "WHERE `user_achievement_progress`.`user_id` = " + userId + " " ,
-    {type: sequelize.QueryTypes.SELECT})
-    .then(userAchievements => {
-      if(!userAchievements) {
-        console.log(`${functionFullName}: Records not found`);
-        return {status: 404, message: 'User Achievements not found.'};
-      } else {
-        console.log(`${functionFullName}: User Achievements retrieved successfully`);
-        console.log(userAchievements);
-        return {status: 200, userAchievements: userAchievements };
-      }
-    })
-    .catch(err => {
-      console.log(`${functionFullName}: database error`);
-      console.log(err);
-      return {status: 500, message: err };
-    });*/
 };
 
 module.exports.getUserAchievementsByUserId = getUserAchievementsByUserId;
@@ -266,67 +291,70 @@ const addPointsToAchievementFamilyProgress = function (achievementFamily, userId
           console.log(familyProgressResult.achievementFamilyProgress);
 
           // Get achievement family max level by sorting by level in descending order and picking first item
-          const achievementFamilyMaxLevel = familyProgressResult.achievementFamilyProgress.sort(function(a, b){return b.level - a.level})[0].level;
+          // const achievementFamilyMaxLevel = familyProgressResult.achievementFamilyProgress.sort(function(a, b){return b.level - a.level})[0].level;
 
           // Determine which achievement progress we need to increment
           const achievementProgressToIncrement = getAchievementProgressToIncrement(familyProgressResult);
           console.log(`${functionFullName}: achievementProgressToIncrement:`);
           console.log(achievementProgressToIncrement);
 
-          const amount = achievementProgressToIncrement.incrementAmount;
+          if (achievementProgressToIncrement === false) {
+            return {status: false, message: 'All achievements complete'};
+          } else {
+            const amount = achievementProgressToIncrement.achievement.incrementAmount;
+            return addPointsToAchievementProgress(achievementProgressToIncrement.id, amount)
+              .then(result => {
+                if(result.status !== true) {
+                  console.log(`${functionFullName}: Something went wrong incrementing achievement progress`);
+                  return {status: false, message: result.message};
+                } else {
+                  console.log(`${functionFullName}: Success incrementing achievement progress`);
 
-          return addPointsToAchievementProgress(achievementProgressToIncrement.id, amount)
-            .then(result => {
-              if(result.status !== true) {
-                console.log(`${functionFullName}: Something went wrong incrementing achievement progress`);
-                return {status: false, message: result.message};
-              } else {
-                console.log(`${functionFullName}: Success incrementing achievement progress`);
+                  // Check if the above transaction completed the achievement level. If so, we need to set the next level
+                  // to 'in progress' and add any overflow to it
+                  if (result.newAchievementStatus === 'complete') {
+                    console.log(`${functionFullName}: The previous transaction completed the achievement level. Checking if we need to start the next level`);
+                    // Get the next level achievement progress (if there is one)
+                    const newAchievementProgressToIncrement = familyProgressResult.achievementFamilyProgress.find(x => x.achievement.level === (achievementProgressToIncrement.achievement.level + 1));
+                    console.log(`${functionFullName}: New achievement progress to increment:`);
+                    console.log(newAchievementProgressToIncrement);
 
-                // Check if the above transaction completed the achievement level. If so, we need to set the next level
-                // to 'in progress' and add any overflow to it
-                if (result.newAchievementStatus === 'complete') {
-                  console.log(`${functionFullName}: The previous transaction completed the achievement level. Checking if we need to start the next level`);
-                  // Get the next level achievement progress (if there is one)
-                  const newAchievementProgressToIncrement = familyProgressResult.achievementFamilyProgress.find(x => x.level === (achievementProgressToIncrement.level + 1));
-                  console.log(`${functionFullName}: New achievement progress to increment:`);
-                  console.log(newAchievementProgressToIncrement);
+                    if (newAchievementProgressToIncrement) {
+                      console.log(`${functionFullName}: Starting the next achievement progress level by adding the ` +
+                        `overflow amount of ${result.overflow} to achievement progress id ${newAchievementProgressToIncrement.id}`);
 
-                  if (newAchievementProgressToIncrement) {
-                    console.log(`${functionFullName}: Starting the next achievement progress level by adding the ` +
-                      `overflow amount of ${result.overflow} to achievement progress id ${newAchievementProgressToIncrement.id}`);
+                      return addPointsToAchievementProgress(newAchievementProgressToIncrement.id, result.overflow)
+                        .then(result => {
+                          if (result.status !== true) {
+                            console.log(`${functionFullName}: Something went wrong incrementing NEW achievement progress`);
+                            return {status: false, message: result.message};
+                          } else {
+                            console.log(`${functionFullName}: Success incrementing NEW achievement progress`);
+                            return {status: true, message: 'Success incrementing NEW achievement progress'};
+                          }
+                        })
+                        .catch(err => {
+                          console.log(`${functionFullName}: Error`);
+                          console.log(err);
+                          return {status: false, message: err};
+                        });
+                    } else {
+                      console.log(`${functionFullName}: Unable to find a new achievement progress to increment. ` +
+                        `Looks like the max level achievement was completed. Congratulations!`);
 
-                    return addPointsToAchievementProgress(newAchievementProgressToIncrement.id, result.overflow)
-                      .then(result => {
-                        if (result.status !== true) {
-                          console.log(`${functionFullName}: Something went wrong incrementing NEW achievement progress`);
-                          return {status: false, message: result.message};
-                        } else {
-                          console.log(`${functionFullName}: Success incrementing NEW achievement progress`);
-                          return {status: true, message: 'Success incrementing NEW achievement progress'};
-                        }
-                      })
-                      .catch(err => {
-                        console.log(`${functionFullName}: Error`);
-                        console.log(err);
-                        return {status: false, message: err};
-                      });
-                  } else {
-                    console.log(`${functionFullName}: Unable to find a new achievement progress to increment. ` +
-                      `Looks like the max level achievement was completed. Congratulations!`);
-
-                    return {status: true, message: 'Max level achievement completed. Congratulations!'};
+                      return {status: true, message: 'Max level achievement completed. Congratulations!'};
+                    }
                   }
-                }
 
-                return {status: true, message: 'Success incrementing achievement progress'};
-              }
-            })
-            .catch(err => {
-              console.log(`${functionFullName}: Error`);
-              console.log(err);
-              return {status: false, message: err};
-            });
+                  return {status: true, message: 'Success incrementing achievement progress'};
+                }
+              })
+              .catch(err => {
+                console.log(`${functionFullName}: Error`);
+                console.log(err);
+                return {status: false, message: err};
+              });
+          }
         }
       }
     })
@@ -358,19 +386,19 @@ const addPointsToAchievementFamilyProgressByX = function (achievementFamily, use
           console.log(familyProgressResult.achievementFamilyProgress);
 
           // Get achievement family max level by sorting by level in descending order and picking first item
-          const achievementFamilyMaxLevel = familyProgressResult.achievementFamilyProgress.sort(function(a, b){return b.level - a.level})[0].level;
+          // const achievementFamilyMaxLevel = familyProgressResult.achievementFamilyProgress.sort(function(a, b){return b.achievement.level - a.achievement.level})[0].achievement.level;
 
           // Determine which achievement progress we need to increment
           const achievementProgressToIncrement = getAchievementProgressToIncrement(familyProgressResult);
           console.log(`${functionFullName}: achievementProgressToIncrement:`);
           console.log(achievementProgressToIncrement);
 
-          const amount = incrementAmount;
+          // const amount = incrementAmount;
 
           if (achievementProgressToIncrement === false) {
             return {status: false, message: 'All achievements complete'};
           } else {
-            return addPointsToAchievementProgress(achievementProgressToIncrement.id, amount)
+            return addPointsToAchievementProgress(achievementProgressToIncrement.id, incrementAmount)
               .then(result => {
                 if(result.status !== true) {
                   console.log(`${functionFullName}: Something went wrong incrementing achievement progress`);
@@ -383,7 +411,7 @@ const addPointsToAchievementFamilyProgressByX = function (achievementFamily, use
                   if (result.newAchievementStatus === 'complete') {
                     console.log(`${functionFullName}: The previous transaction completed the achievement level. Checking if we need to start the next level`);
                     // Get the next level achievement progress (if there is one)
-                    const newAchievementProgressToIncrement = familyProgressResult.achievementFamilyProgress.find(x => x.level === (achievementProgressToIncrement.level + 1));
+                    const newAchievementProgressToIncrement = familyProgressResult.achievementFamilyProgress.find(x => x.achievement.level === (achievementProgressToIncrement.achievement.level + 1));
                     console.log(`${functionFullName}: New achievement progress to increment:`);
                     console.log(newAchievementProgressToIncrement);
 
@@ -447,7 +475,7 @@ const getAchievementProgressToIncrement = function(achievementFamilyProgress) {
   const notStartedAchievements = achievementFamilyProgress.achievementFamilyProgress.filter(x => x.status === 'not started');
   console.log(`${functionFullName}: notStartedAchievements:`);
   console.log(notStartedAchievements);
-  const completedAchievements = achievementFamilyProgress.achievementFamilyProgress.filter(x => x.status === 'completed');
+  const completedAchievements = achievementFamilyProgress.achievementFamilyProgress.filter(x => x.status === 'complete');
   console.log(`${functionFullName}: completedAchievements:`);
   console.log(completedAchievements);
 
@@ -459,17 +487,17 @@ const getAchievementProgressToIncrement = function(achievementFamilyProgress) {
   if (inProgressAchievement.length > 0) {
     // Increment the 'in progress' achievement if it exists
     console.log(`${functionFullName}: 'In progress' status achievement: ` +
-      `id: ${inProgressAchievement[0].id}; name: ${inProgressAchievement[0].achievementName}`);
+      `id: ${inProgressAchievement[0].id}; name: ${inProgressAchievement[0].achievement.name}`);
 
     return inProgressAchievement[0];
   } else {
     // Increment the lowest level 'not started' achievement
     // First, we need to sort by level and pick the lowest one
     const notStartedAchievementToIncrement = notStartedAchievements.sort(function (a, b) {
-      return a.level - b.level
+      return a.achievement.level - b.achievement.level
     })[0];
     console.log(`${functionFullName}: 'Not started' status achievement with the lowest level: ` +
-      `id: ${notStartedAchievementToIncrement.id}; name: ${notStartedAchievementToIncrement.achievementName}`);
+      `id: ${notStartedAchievementToIncrement.id}; name: ${notStartedAchievementToIncrement.achievement.name}`);
 
     return notStartedAchievementToIncrement;
   }
@@ -513,7 +541,12 @@ const getAchievementById = function (id) {
     attributes: ['id','name', 'description', 'status', 'cost', 'incrementAmount', 'achievementFamily', 'level', 'startAmount'],
     where: {
       id: id,
-    }
+    },
+    include: [
+      {
+        model: Models.AchievementHasRoleAudience,
+      }
+    ]
   })
     .then(achievement => {
       if(!achievement) {
@@ -569,15 +602,21 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
       {
         model: Models.Achievement,
         attributes: ['id', 'cost', 'achievementFamily', 'level', 'incrementAmount', 'name'],
-        where: {
+/*        where: {
           achievementFamily: achievementFamily
-        }
+        },*/
+/*        include: [
+          {
+            model: Models.AchievementHasRoleAudience,
+          }
+        ]*/
       }
     ],
     where: {
-      userId: userId
+      userId: userId,
+      '$achievement.achievement_family$': achievementFamily
     },
-    attributes: ['id', 'goalProgress', 'status']
+    // attributes: ['id', 'goalProgress', 'status']
   })
     .then(achievementFamilyProgress => {
       if (!achievementFamilyProgress) {
@@ -601,39 +640,6 @@ const getAchievementFamilyProgress = function(achievementFamily, userId) {
       return {status: false, message: err};
     });
 
-  /*const sequelize = SqlModel().sequelize;
-  return sequelize.query("" +
-    "SELECT `user_achievement_progress`.`id`, `user_achievement_progress`.`goalProgress`, " +
-    "`user_achievement_progress`.`status`, " +
-    "`achievement`.`id` AS `achievementId`, `achievement`.`cost` AS `achievementCost`, " +
-    "`achievement`.`achievement_family` AS `achievementFamily`, `achievement`.`level` AS `level`, " +
-    "`achievement`.`increment_amount` AS `incrementAmount`, `achievement`.`name` AS `achievementName` " +
-    "FROM `user_achievement_progress` " +
-    "JOIN `achievement` ON `user_achievement_progress`.`achievement_id` = `achievement`.`id` " +
-    "WHERE `user_achievement_progress`.`user_id` = " + userId + " " +
-    "AND `achievement`.`achievement_family` = '" + achievementFamily + "'",
-    {type: sequelize.QueryTypes.SELECT})
-    .then(achievementFamilyProgress => {
-      if (!achievementFamilyProgress) {
-        //return res.status(404).json({ status: false, message: 'Update failed.' });
-        console.log(`${functionFullName}: Unable to find User / Achievement Family progress`);
-        return {status: false, message: 'Unable to find User / Achievement Family progress.'};
-      } else {
-        console.log(`${functionFullName}: User / Achievement Family progress retrieved successfully`);
-        console.log(achievementFamilyProgress);
-
-        return {status: true, message: 'User / Achievement Family progress retrieved successfully', achievementFamilyProgress: achievementFamilyProgress};
-        // const goalProgress = queryResult[0].goalProgress;
-        // const achievementProgressId = queryResult[0].id;
-        // const achievementId = queryResult[0].achievementId;
-        // const achievementCost = queryResult[0].achievementCost;
-      }
-    })
-    .catch(err => {
-      console.log(`${functionFullName}: Database error`);
-      console.log(err);
-      return {status: false, message: err};
-    });*/
 };
 
 module.exports.getAchievementFamilyProgress = getAchievementFamilyProgress;
@@ -680,34 +686,6 @@ const getUsersCompleteAchievementTotal = function() {
       return {status: false, message: err};
     });
 
-  /*return sequelize.query("" +
-    "SELECT DISTINCT `user_achievement_progress`.`user_id` AS `userId`, " +
-    "(SELECT count(*) FROM `user_achievement_progress` " +
-    "   WHERE `user_achievement_progress`.`user_id` = `userId` " +
-    "   AND (`user_achievement_progress`.`status` = 'complete' " +
-    "     OR `user_achievement_progress`.`status` = 'complete acknowledged')" +
-    ") AS `num_complete` FROM `user_achievement_progress` ORDER BY `userId` ASC",
-    {type: sequelize.QueryTypes.SELECT})
-    .then(usersCompleteAchievementTotal => {
-      if (!usersCompleteAchievementTotal) {
-        console.log(`${functionFullName}: Unable to find any matching records`);
-        return {status: false, message: 'Unable to find any matching records.'};
-      } else {
-        console.log(`${functionFullName}: Complete achievement total for all users retrieved successfully`);
-        console.log(usersCompleteAchievementTotal);
-
-        return {
-          status: true,
-          message: 'Complete achievement total for all users retrieved successfully',
-          usersCompleteAchievementTotal: usersCompleteAchievementTotal
-        };
-      }
-    })
-    .catch(err => {
-      console.log(`${functionFullName}: Database error`);
-      console.log(err);
-      return {status: false, message: err};
-    });*/
 };
 
 module.exports.getUsersCompleteAchievementTotal = getUsersCompleteAchievementTotal;

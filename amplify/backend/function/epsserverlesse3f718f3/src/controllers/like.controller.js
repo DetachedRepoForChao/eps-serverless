@@ -1,7 +1,7 @@
 
 const SqlModel = require('../db');
 const Models = SqlModel().Models;
-const sqlLikeModel = Models.Like;
+const sqlLikeModel = Models.LikeInfo;
 
 const componentName = 'like.controller';
 

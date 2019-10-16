@@ -50,6 +50,7 @@ export class AchievementService {
               private authService: AuthService) {
 
   }
+/*
 
   // HttpMethods
   getCurrentUserAchievements(): Observable<any> {
@@ -263,6 +264,7 @@ export class AchievementService {
     return this.achievementDataList.filter(x => x.Family === achievement.Family);
   }
 
+*/
 
 
 

@@ -5,6 +5,7 @@ import {AchievementModel} from '../../../entity-store/achievement/state/achievem
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {Observable} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -42,8 +43,10 @@ export class ProgressCardComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.achievementService.cacheAchievements().subscribe();
-    this.filteredAchievements$ = this.achievementQuery.filterAchievements();
+    this.achievementService.cacheAchievements().subscribe(() => {
+      this.filteredAchievements$ = this.achievementQuery.filterAchievements();
+    });
+
     // this.isCardLoading = true;
     // this.spinner.show('progress-card-spinner');
 

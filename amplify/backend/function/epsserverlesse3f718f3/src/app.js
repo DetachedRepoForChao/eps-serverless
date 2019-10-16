@@ -39,6 +39,7 @@ const ctrlAvatar = require('./controllers/avatar.controller');
 const ctrlLeaderboard = require('./controllers/leaderboard.controller');
 const ctrlStoreItem = require('./controllers/store_item.controller');
 const ctrlNotifications = require('./controllers/notification.controller');
+const ctrlFeature = require('./controllers/feature.controller');
 
 const jwtVerify = require('./config/decode-verify-jwt');
 const componentName = 'app';
@@ -256,6 +257,28 @@ app.post('/items/getSecurityRoles', function(req, res) {
     });
 });
 
+// Feature routes
+app.get('/items/features', function(req, res) {
+  const functionName = 'get features';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlFeature.getFeatures()
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data.features});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 // Achievement Routes
 app.post('/items/achievement', function(req, res) {
   console.log('starting post achievement');
@@ -281,8 +304,8 @@ app.get('/items/currentUserAchievements', function(req, res) {
       // const username = req.body.username;
       ctrlUser.getUserProfile(username)
         .then(result => {
-          const userId = result.user.id;
-          ctrlAchievement.getUserAchievementsByUserId(userId)
+          const user = result.user;
+          ctrlAchievement.getUserAchievementsByUserId(user)
             .then(data => {
               res.json({status: 'post call succeed!', data: data.userAchievements});
             })
@@ -317,6 +340,26 @@ app.get('/items/usersCompleteAchievementTotal', function(req, res) {
   });
 });
 
+app.get('/items/achievementUnlocksFeature', function(req, res) {
+  const functionName = 'get achievementUnlocksFeature';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlAchievement.getAchievementUnlocksFeature()
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data.achievementUnlocksFeature});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
 
 
 app.post('/items/acknowledgeAchievementComplete', function(req, res) {
@@ -449,34 +492,6 @@ app.post('/items/incrementAchievementByX', function(req, res) {
   });
 });
 
-/*app.post('/items/achievementFamilyProgress', function(req, res) {
-  const functionName = 'post achievementFamilyProgress';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  const token = req.headers.authorization;
-  jwtVerify.parseToken(token, function(tokenResult) {
-
-    if(tokenResult.message === 'Success') {
-      const username = tokenResult.claims['cognito:username'];
-
-      ctrlUser.getUserProfile(username)
-        .then(result => {
-          const userId = result.user.id;
-          const achievementFamily = req.body.achievementFamily;
-          ctrlAchievementLogic.getAchievementFamilyProgress(achievementFamily, userId)
-            .then(data => {
-              res.json({status: 'post call succeed!', data: data.achievementFamilyProgress});
-            })
-            .catch(err => {
-              res.json({status: 'post call failed!', error: err});
-            });
-        });
-    } else {
-      res.json({status: 'Unauthorized', data: tokenResult.message});
-    }
-  });
-});*/
 
 // Point Routes
 app.get('/items/getPointItems', function(req, res) {
