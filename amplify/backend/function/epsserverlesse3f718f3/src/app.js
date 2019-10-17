@@ -574,6 +574,66 @@ app.post('/items/giftPointsToEmployees', function(req, res) {
   });
 });
 
+app.post('/items/newPointItem', function(req, res) {
+  console.log('starting post newPointItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const pointItem = req.body.pointItem;
+      ctrlPoints.newPointItem(pointItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointItem});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/modifyPointItem', function(req, res) {
+  console.log('starting post modifyPointItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const pointItem = req.body.pointItem;
+      ctrlPoints.modifyPointItem(pointItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointItem});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/deletePointItem', function(req, res) {
+  console.log('starting post deletePointItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const pointItem = req.body.pointItem;
+      ctrlPoints.deletePointItem(pointItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointItem});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 // Point Pool Routes
 app.get('/items/getRemainingPointPool', function(req, res) {
   console.log('starting post getRemainingPointPool');
