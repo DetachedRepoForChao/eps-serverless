@@ -21,11 +21,12 @@ export type EntityUserModel = {
   avatarResolvedUrl: string;
   completeAchievementsTotal: number;
   dateModified: any;
+  active: boolean
 };
 
 export function createEntityUserAvatarModel({ userId, username, firstName, lastName, middleName, position, points, birthdate, securityRole,
                                               department, email, phone, avatarBase64String, avatarPath, avatarResolvedUrl,
-                                              completeAchievementsTotal,
+                                              completeAchievementsTotal, active,
                                             }:
                                               Partial<EntityUserModel>) {
   return {
@@ -46,6 +47,7 @@ export function createEntityUserAvatarModel({ userId, username, firstName, lastN
     avatarPath,
     avatarResolvedUrl,
     completeAchievementsTotal,
+    active,
     dateModified: Date.now(),
   } as EntityUserModel;
 }

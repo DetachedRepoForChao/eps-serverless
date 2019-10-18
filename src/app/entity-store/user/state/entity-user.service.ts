@@ -23,6 +23,7 @@ export class EntityUserService {
   componentName = 'entity-user.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
+  apiPath2 = '/things';
   myInit = {
     headers: {
       'Accept': 'application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -84,6 +85,66 @@ export class EntityUserService {
     });
   }
 
+  update(userId: number, firstName: string, lastName: string, middleName: string, position: string, points: number, birthdate: string,
+         securityRole: SecurityRole, department: Department, email: string, phone: string, active: boolean) {
+    const functionName = 'update';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(`${functionFullName}: update ${firstName} ${lastName}`);
+
+    this.userStore.update((e) => e.userId === userId, {
+      firstName: firstName,
+      lastName: lastName,
+      middleName: middleName,
+      position: position,
+      points: points,
+      birthdate: birthdate,
+      securityRole: securityRole,
+      department: department,
+      email: email,
+      phone: phone,
+      active: active,
+    });
+  }
+
+  updateCognitoAttributes(user): Observable<any> {
+    const functionName = 'updateCognitoAttributes';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            user: user
+          };
+
+          API.get(this.apiName, this.apiPath2 + '/setCognitoUserAttributes', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error setting Cognito attributes`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
+  }
 
   cacheUsers() {
     console.log(`Retrieving all users public details`);
@@ -270,7 +331,63 @@ export class EntityUserService {
     });
   }
 
-  showStore() {
-    console.log(this.userStore);
+
+  modifyUser(user): Observable<any> {
+    const functionName = 'modifyUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            user: user
+          };
+
+          API.post(this.apiName, this.apiPath + '/modifyUser', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status === true) {
+              const userId = data.data.userId;
+              const username = data.data.username;
+              const firstName = data.data.firstName;
+              const lastName = data.data.lastName;
+              const middleName = data.data.middleName;
+              const position = data.data.position;
+              const points = data.data.points;
+              const birthdate = data.data.birthdate;
+              const securityRole: SecurityRole = {
+                Id: data.data.securityRole.id,
+                Name: data.data.securityRole.name,
+                Description: data.data.securityRole.description,
+              };
+              const department: Department = {
+                Id: data.data.department.id,
+                Name: data.data.department.name
+              };
+              const email = data.data.email;
+              const phone = data.data.phone;
+              const active = data.data.active;
+
+              // Update the user in the local Akita store
+              this.update(userId, firstName, lastName, middleName, position, points, birthdate, securityRole, department, email, phone, active);
+
+              // Update the user's Cognito identity
+              this.updateCognitoAttributes(user).subscribe();
+
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
   }
 }
