@@ -80,3 +80,14 @@ input{
 .form-rounded {
   border-radius: 1rem;
   }
+
+  .containers {
+    line-height: 16px;
+    // height: 800px;
+    overflow: hidden;
+  }
+  
+  .show {
+    overflow: visible;
+    height: auto;
+  }

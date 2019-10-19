@@ -59,9 +59,11 @@
               </li>
             </ul>
           -->
-          <div class="row">
-            <div *ngFor="let user of (employees$) | async | fresh:term" class="col-3 fluid">
-              {{user}}
+          <div class="containers" [class.show]="show">
+          <div class="row" >
+            <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="col-3 fluid">
+              <div *ngIf="i <= showLimit">
+                  {{user}}
                   <div class="single-user">
                     <span [ngStyle]="{background: user.firstName}">
                       <img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
@@ -69,7 +71,14 @@
                     <h5> {{user.firstName + " " + user.lastName | fresh}}</h5>
 
                   </div>
+              </div>
+              
+                  
             </div>
+
+          </div>
+          <button (click)="showMore()">{{ showFlag ? 'View less': 'View More' }}</button>
+
           </div>
           </div>
           <div class="col-md-3">

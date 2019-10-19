@@ -4,6 +4,7 @@ import {AvatarService} from './avatar.service';
 import {LeaderboardService} from '../leaderboard.service';
 import {Globals} from '../../globals';
 import {FeedcardService} from '../feedcard/feedcard.service';
+import {MatTableDataSource} from '@angular/material';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 
@@ -133,9 +134,9 @@ export class AvatarComponent implements OnInit {
     return this.achievementQuery.getCompleteAchievementById(id);
   }
 
-  getErrorMessage(){
-    if(this.getCompleteAchievementById(4)==false){
-      return "please complete the achieve {id}"
-    }
+  matfunction(){
+    return "please complete the achievement four"
   }
+
+
 }
