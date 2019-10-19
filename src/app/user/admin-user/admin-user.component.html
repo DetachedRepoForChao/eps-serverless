@@ -189,7 +189,7 @@
           </div>
 
           <!-- Edit User Modal -->
-          <div class="modal fade bd-example-modal-lg" id="editUserModal" tabindex="-1" role="dialog"
+          <div class="modal fade bd-example-modal-lg editUser-modal" id="editUserModal" tabindex="-1" role="dialog"
                aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
@@ -201,75 +201,94 @@
                 </div>
 
 
-                <div class="modal-body">
-                  <!--       form-->
+                  <div class="modal-body editUser-modal-body">
+                    <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+                      <div class="editUser-form-container">
+                        <!--       form-->
+                        <form [formGroup]="editUserForm">
+                          <div class="form-group">
+                            <label for="editUserUsername">Username</label>
+                            <select formControlName="editUserUsername"
+                                    class="form-control"
+                                    id="editUserUsername" name="editUserUsername">
+                              <option *ngFor="let user of (userQuery.selectAll() | async)" [ngValue]="user">
+                                {{user.username}}
+                              </option>
+                            </select>
+                          </div>
+
+<!--                        <form [formGroup]="editUserForm" class="form" (ngSubmit)="onEditUserFormSubmit(editUserForm)">-->
+                          <div class="form-row">
+                            <div class="form-group col-10">
+<!--                              <label for="editUserFirstName">First Name</label>-->
+                              <input class="form-control" id="editUserFirstName" placeholder="First Name" formControlName="editUserFirstName">
+                            </div>
+                            <div class="col-2">
+                              <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false" (click)="toggleRemoveField('editUserFirstName')">Remove</button>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="editUserLastName">Last Name</label>
+                            <input class="form-control" id="editUserLastName" placeholder="Last Name" formControlName="editUserLastName">
+                          </div>
+                          <div class="form-group">
+                            <label for="editUserAddress1">Address 1</label>
+                            <input type="text" class="form-control" id="editUserAddress1" placeholder="Address 1" formControlName="editUserAddress1">
+                          </div>
+                          <div class="form-group">
+                            <label for="editUserAddress2">Address 2</label>
+                            <input type="text" class="form-control" id="editUserAddress2" placeholder="Address 2" formControlName="editUserAddress2">
+                          </div>
+                          <div class="form-group">
+                            <label for="editUserCity">City</label>
+                            <input type="text" class="form-control" id="editUserCity" placeholder="City" formControlName="editUserCity">
+                          </div>
+                          <div class="form-group">
+                            <label for ="editUserState">State</label>
+                            <input type="text" class="form-control" id="editUserState" placeholder="State" formControlName="editUserState">
+                          </div>
+                          <div class="form-group">
+                            <label for ="editUserCountry">Country</label>
+                            <input type="text" class="form-control" id="editUserCountry" placeholder="Country" formControlName="editUserCountry">
+                          </div>
+                          <div class="form-group">
+                            <label for ="editUserZip">Zip</label>
+                            <input type="text" class="form-control" id="editUserZip" placeholder="Zip" formControlName="editUserZip">
+                          </div>
+                          <div class="form-group">
+                            <label for ="editUserBirthdate">Date of Birth</label>
+                            <input type="text" class="form-control" id="editUserBirthdate" placeholder="Date of Birth" formControlName="editUserBirthdate">
+                          </div>
+                          <div class="form-group">
+                            <label for="editUserEmail">Email</label>
+                            <input type="email" class="form-control" id="editUserEmail" placeholder="Email" formControlName="editUserEmail">
+                          </div>
+                          <div class="form-group">
+                            <label for="editUserPhone">Phone</label>
+                            <input class="form-control"
+                                   formControlName="editUserPhone"
+                                   name="phone"
+                                   appPhoneMask
+                                   type="tel"
+                                   maxLength="14"
+                                   [ngClass]="{'invalid-textbox' : editUserForm.dirty && editUserForm.controls.editUserPhone.touched && editUserForm.controls.editUserPhone.invalid}"
+                                   id="editUserPhone">
+                            <div *ngIf="editUserForm.dirty && editUserForm.controls.editUserPhone.touched && phoneValidationError">
+                              <label class="validation-message">{{phoneValidationError}}</label>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
 
 
-                  <form [formGroup]="selectUserForm">
-                    <div class="form-group">
-                      <label for="editUserUsername">Username</label>
-                      <select formControlName="editUserUsername"
-                              class="form-control"
-                              id="editUserUsername" name="editUserUsername">
-                        <option *ngFor="let user of (userQuery.selectAll() | async)" [ngValue]="user">
-                          {{user.username}}
-                        </option>
-                      </select>
-                    </div>
-                  </form>
-                  <form [formGroup]="editUserForm" class="form" (ngSubmit)="onEditUserFormSubmit(editUserForm)">
-                    <div class="form-group">
-                      <label for="editUserFirstName">First Name</label>
-                      <input class="form-control" id="editUserFirstName" placeholder="First Name" formControlName="editUserFirstName">
-                    </div>
-                    <div class="form-group">
-                      <label for="editUserLastName">Last Name</label>
-                      <input class="form-control" id="editUserLastName" placeholder="Last Name" formControlName="editUserLastName">
-                    </div>
-                    <div class="form-group">
-                      <label for="editUserAddress1">Address 1</label>
-                      <input type="text" class="form-control" id="editUserAddress1" placeholder="Address 1" formControlName="editUserAddress1">
-                    </div>
-                    <div class="form-group">
-                      <label for="editUserAddress2">Address 2</label>
-                      <input type="text" class="form-control" id="editUserAddress2" placeholder="Address 2" formControlName="editUserAddress2">
-                    </div>
-                    <div class="form-group">
-                      <label for="editUserCity">City</label>
-                      <input type="text" class="form-control" id="editUserCity" placeholder="City" formControlName="editUserCity">
-                    </div>
-                    <div class="form-group">
-                      <label for ="editUserState">State</label>
-                      <input type="text" class="form-control" id="editUserState" placeholder="State" formControlName="editUserState">
-                    </div>
-                    <div class="form-group">
-                      <label for ="editUserCountry">Country</label>
-                      <input type="text" class="form-control" id="editUserCountry" placeholder="Country" formControlName="editUserCountry">
-                    </div>
-                    <div class="form-group">
-                      <label for ="editUserZip">Zip</label>
-                      <input type="text" class="form-control" id="editUserZip" placeholder="Zip" formControlName="editUserZip">
-                    </div>
-                    <div class="form-group">
-                      <label for ="editUserBirthdate">Date of Birth</label>
-                      <input type="text" class="form-control" id="editUserBirthdate" placeholder="Date of Birth" formControlName="editUserBirthdate">
-                    </div>
-                    <div class="form-group">
-                      <label for="editUserEmail">Email</label>
-                      <input type="email" class="form-control" id="editUserEmail" placeholder="Email" formControlName="editUserEmail">
-                    </div>
-                    <div class="form-group">
-                      <label for="editUserPhone">Email</label>
-                      <input type="phone" class="form-control" id="editUserPhone" placeholder="Phone" formControlName="editUserPhone">
-                    </div>
-                  </form>
 
 
+                    </perfect-scrollbar>
+                  </div>
 
-                </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-primary" (click)="onEditUserFormSubmit(editUserForm)">Save changes</button>
                 </div>
               </div>
             </div>

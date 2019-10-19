@@ -210,8 +210,8 @@ const getUsersPublicDetails = function () {
         attributes: ['id', 'name', 'description']
       }
     ],
-    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'dateOfBirth',
-      'securityRoleId', 'departmentId', 'avatarUrl', 'email'],
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
+      'position', 'points', 'dateOfBirth', 'preferredPronoun', 'securityRoleId', 'departmentId', 'avatarUrl', 'email'],
     where: {
       securityRoleId: [1, 2],
       active: 1,
@@ -256,7 +256,8 @@ const adminGetUsersDetails = function () {
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
       'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
-      'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl'],
+      'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'dateOfTermination', 'phone', 'securityRoleId',
+      'departmentId', 'avatarUrl'],
     order: [
       ['id', 'ASC'],
     ],

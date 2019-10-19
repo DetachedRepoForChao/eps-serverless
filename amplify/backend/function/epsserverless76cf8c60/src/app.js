@@ -173,6 +173,9 @@ app.post('/things/getCognitoUser', function(req, res) {
 app.post('/things/setCognitoUserAttributes', function(req, res) {
   const user = req.body.user;
 
+  const UserAttributes = [];
+  // for (Object.)
+
   const params = {
     UserAttributes: [
       {

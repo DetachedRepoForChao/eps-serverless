@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { VISIBILITY_FILTER } from '../filter/user-filter.model';
 import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
-import {API, Storage} from 'aws-amplify';
+import {API, Auth, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {AvatarService} from '../../../shared/avatar/avatar.service';
@@ -185,8 +185,10 @@ export class EntityUserService {
               const firstName = usersMerged[i].firstName;
               const lastName = usersMerged[i].lastName;
               const middleName = usersMerged[i].middleName;
+              const preferredName = usersMerged[i].preferredName;
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
+              const preferredPronoun = usersMerged[i].preferredPronoun;
               const birthdate = usersMerged[i].dateOfBirth;
               const email = usersMerged[i].email;
               const securityRole: SecurityRole = {
@@ -198,12 +200,29 @@ export class EntityUserService {
                 Id: +usersMerged[i].department.id,
                 Name: usersMerged[i].department.name
               };
+
+              // Properties visible to admins
+              const address1 = (usersMerged[i].address1) ? usersMerged[i].address1 : null;
+              const address2 = (usersMerged[i].address2) ? usersMerged[i].address2 : null;
+              const city = (usersMerged[i].city) ? usersMerged[i].city : null;
+              const state = (usersMerged[i].state) ? usersMerged[i].state : null;
+              const country = (usersMerged[i].country) ? usersMerged[i].country : null;
+              const zip = (usersMerged[i].zip) ? usersMerged[i].zip : null;
+              const dateOfHire = (usersMerged[i].dateOfHire) ? usersMerged[i].dateOfHire : null;
+              const dateOfTermination = (usersMerged[i].dateOfTermination) ? usersMerged[i].dateOfTermination : null;
+              const phone = (usersMerged[i].phone) ? usersMerged[i].phone.substring(2) : null;
+              const active = (usersMerged[i].active) ? usersMerged[i].active : null;
+              const sex = (usersMerged[i].sex) ? usersMerged[i].sex : null;
+              const gender = (usersMerged[i].gender) ? usersMerged[i].gender : null;
+
               const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
               const avatar = createEntityUserAvatarModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
-                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email});
+                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
+                preferredName, preferredPronoun, address1, address2, city, country, state, zip, dateOfHire, dateOfTermination, phone,
+                active, sex, gender});
               usersArray.push(avatar);
             }
 
@@ -304,30 +323,38 @@ export class EntityUserService {
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
+          Auth.currentUserInfo()
+            .then(userAttributes => {
+              let apiCall = '/usersPublicDetails2';
+              if (+userAttributes.attributes['custom:security_role_id'] === 3) {
+                apiCall = '/adminUsersDetails';
+              }
+              const token = user.signInUserSession.idToken.jwtToken;
+              const myInit = this.myInit;
+              myInit.headers['Authorization'] = token;
 
-          API.get(this.apiName, this.apiPath + '/usersPublicDetails2', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            console.log(data.data);
-            observer.next(data.data);
-            observer.complete();
-          })
+              API.get(this.apiName, this.apiPath + apiCall, myInit).then(data => {
+                console.log(`${functionFullName}: successfully retrieved data from API`);
+                console.log(data);
+                console.log(data.data);
+                observer.next(data.data);
+                observer.complete();
+              })
+                .catch(err => {
+                  console.log(`${functionFullName}: error retrieving users details from API`);
+                  console.log(err);
+                  observer.next(err);
+                  observer.complete();
+                });
+            })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving users details from API`);
+              console.log(`${functionFullName}: error getting current authenticated user from auth service`);
               console.log(err);
               observer.next(err);
               observer.complete();
             });
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
-          observer.next(err);
-          observer.complete();
         });
+
     });
   }
 

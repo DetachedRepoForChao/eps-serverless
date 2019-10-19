@@ -9,9 +9,15 @@ export type EntityUserModel = {
   firstName: string;
   lastName: string;
   middleName: string;
+  preferredName: string;
+  prefix: string;
+  suffix: string;
   position: string;
   points: number;
   birthdate: string;
+  preferredPronoun: string;
+  sex: string;
+  gender: string;
   securityRole: SecurityRole;
   department: Department;
   email: string;
@@ -21,14 +27,23 @@ export type EntityUserModel = {
   avatarResolvedUrl: string;
   completeAchievementsTotal: number;
   dateModified: any;
-  active: boolean
+  active: boolean;
+  address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  country: string;
+  zip: number;
+  dateOfHire: string;
+  dateOfTermination: string;
+
 };
 
-export function createEntityUserAvatarModel({ userId, username, firstName, lastName, middleName, position, points, birthdate, securityRole,
-                                              department, email, phone, avatarBase64String, avatarPath, avatarResolvedUrl,
-                                              completeAchievementsTotal, active,
-                                            }:
-                                              Partial<EntityUserModel>) {
+export function createEntityUserAvatarModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, position,
+                                              points, birthdate, preferredPronoun, sex, gender, securityRole, department, email, phone,
+                                              avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, active,
+                                              address1, address2, city, state, country, zip, dateOfHire,
+                                              dateOfTermination}: Partial<EntityUserModel>) {
   return {
     id: guid(),
     userId,
@@ -36,9 +51,15 @@ export function createEntityUserAvatarModel({ userId, username, firstName, lastN
     firstName,
     lastName,
     middleName,
+    preferredName,
+    prefix,
+    suffix,
     position,
     points,
     birthdate,
+    preferredPronoun,
+    sex,
+    gender,
     securityRole,
     department,
     email,
@@ -48,6 +69,14 @@ export function createEntityUserAvatarModel({ userId, username, firstName, lastN
     avatarResolvedUrl,
     completeAchievementsTotal,
     active,
+    address1,
+    address2,
+    city,
+    state,
+    country,
+    zip,
+    dateOfHire,
+    dateOfTermination,
     dateModified: Date.now(),
   } as EntityUserModel;
 }

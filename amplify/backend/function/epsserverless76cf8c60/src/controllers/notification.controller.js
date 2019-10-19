@@ -5,6 +5,8 @@ const componentName = 'notification.controller';
 // Set the region
 AWS.config.update({region: 'us-east-1'});
 
+const sourceEmail = 'eps.hawkware@gmail.com';
+
 const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
   const functionName = 'sendAwardPointsEmail';
   const functionFullName = `${componentName} ${functionName}`;
@@ -40,7 +42,7 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
     Template: 'AwardPointsTemplate',
     ConfigurationSetName: "Default",
     TemplateData: `{\"name\":\"${targetUserName}\", \"managerName\":\"${managerName}\", \"points\": \"${points}\", \"pointItemName\": \"${pointItemName}\", \"description\": \"${description}\"}`,
-    Source: 'max.bado@gmail.com', /* required */
+    Source: sourceEmail, /* required */
 
   };
 
@@ -96,7 +98,7 @@ const sendRequestStoreItemEmail = function (managerUser, requestUser, storeItem)
     Template: 'RequestItemPurchase',
     ConfigurationSetName: "Default",
     TemplateData: `{\"requestUserFullName\":\"${requestUserFullName}\", \"managerUserFirstName\":\"${managerUserFirstName}\", \"requestUserFirstName\":\"${requestUserFirstName}\", \"itemName\": \"${itemName}\", \"itemDescription\": \"${itemDescription}\", \"cost\": \"${cost}\"}`,
-    Source: 'max.bado@gmail.com', /* required */
+    Source: sourceEmail, /* required */
 
   };
 
@@ -154,7 +156,7 @@ const sendFulfillStoreItemEmail = function (managerUser, requestUser, storeItem)
     Template: 'FulfillItemPurchase',
     ConfigurationSetName: "Default",
     TemplateData: `{\"managerUserFullName\":\"${managerUserFullName}\", \"requestUserFirstName\":\"${requestUserFirstName}\", \"itemName\": \"${itemName}\", \"cost\": \"${cost}\", \"newPointTotal\": \"${newPointTotal}\"}`,
-    Source: 'max.bado@gmail.com', /* required */
+    Source: sourceEmail, /* required */
 
   };
 

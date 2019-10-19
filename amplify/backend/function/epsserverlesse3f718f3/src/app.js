@@ -173,9 +173,12 @@ app.get('/items/adminUsersDetails', function(req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      ctrlUser.adminGetUsersDetails()
+      const promises = [];
+      promises.push(ctrlUser.adminGetUsersDetails());
+      promises.push(ctrlAchievement.getUsersCompleteAchievementTotal());
+      Promise.all(promises)
         .then(data => {
-          res.json({status: 'get call succeed!', data: data.users});
+          res.json({status: 'get call succeed!', data: data});
         })
         .catch(err => {
           res.json({status: 'get call failed!', error: err});

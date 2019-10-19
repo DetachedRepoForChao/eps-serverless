@@ -60,7 +60,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "eps-serverless-dev-20190630120450-deployment",
-					"S3Key": "amplify-builds/epsserverlesse3f718f3-467148573536616a5731-build.zip"
+					"S3Key": "amplify-builds/epsserverlesse3f718f3-7251664478316e317a69-build.zip"
 				}
 			}
 		},
