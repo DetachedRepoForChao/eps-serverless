@@ -16,7 +16,7 @@ export interface Notification {
 })
 
 
-export class NotificationService implements OnInit{
+export class NotificationService implements OnInit {
   componentName = 'Notification.service';
 
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
@@ -29,18 +29,18 @@ export class NotificationService implements OnInit{
     }
   };
 
-  ngOnInit():void{
+  ngOnInit(): void {
 
   }
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
 
   constructor(private http: HttpClient,
               private authService: AuthService) {
-     
+
   }
   /**
    * Get notifications by user token, fetch all the notificaions
-   * @param targetUserId 
+   * @param targetUserId
    */
   getNotification(): Observable<any> {
     const functionName = 'getNotifications';
@@ -65,7 +65,7 @@ export class NotificationService implements OnInit{
 
 
 
- 
+
   /**
    * Get the update status of notifications,which was not seen.
    * @param targetUserId

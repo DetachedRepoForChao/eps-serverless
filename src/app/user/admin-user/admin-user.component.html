@@ -25,9 +25,22 @@
 <!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
        
        
-       <button type="button" class="btn btn-icon btn-round" color="white"  (click)="onLogout()">
+       <!-- <button type="button" class="btn btn-icon btn-round" color="white" >
           <i class="tim-icons icon-button-power" title="logout"></i>
-        </button>
+        </button> -->
+
+
+        <div class="dropdown">
+          <button class="btn btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="tim-icons icon-button-power" title="logout"></i>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </div>
+
       </span>
     </div>
   </div>
@@ -209,7 +222,7 @@
 		<div class="col-md-4">
 			<div class="card">
 				<h5 class="card-header2">
-				<img alt="Bootstrap Image Preview" width="165" height="165" src="https://www.clipartmax.com/png/full/282-2822110_finance-flat-icon-png-coin-flat-icon-png.png" class="rounded-circle" />
+				<img alt="Bootstrap Image Preview" width="165" height="165" src="../../../assets/img/point.png" class="rounded-circle" />
 				</h5>
 				<div class="card-body">
 				
@@ -220,10 +233,10 @@
 				</div>
 				<div class="card-footer2">
 					
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addPonitModel">Add Points</button>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addPointModel">Add Points</button>
 
 <!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="addPonitModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="addPointModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -242,16 +255,16 @@
   <div class="form-row">
     <div class="form-group col-md-6" >
       <label for="inputPoint_Name" class="l2">Point Name </label>
-      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
+      <input type="text" class="form-control"  id="inputitem_name" placeholder="Item Name">
     </div>
     <div class="form-group col-md-6">
       <label for="inputpoint_Point_amount"class="l2">point amount</label>
-      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
+      <input type="text" class="form-control"  id="input_point_amount" placeholder="point amount">
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group" style="text-align: left">
     <label for="inputitems_Description" class="l2">Description</label>
-    <input type="text" class="form-control" id="inputDescription" placeholder="Description">
+    <input type="text" class="form-control"  id="inputDescription" placeholder="Description">
   </div>
 
 
@@ -301,7 +314,7 @@
        <button class="btn btn-primary btn-lg">Edit Point</button>      
            
    <br><br>
-       <button class="btn btn-primary btn-lg">Dlete Point</button>  
+       <button class="btn btn-primary btn-lg">Delete Point</button>  
 				</div>
 			</div>
 		</div>
@@ -377,7 +390,7 @@
       <span class="input-group-addon"><i class="icon-image-02" ></i></span>
       <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
       <span class="input-group-btn">
-        <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search" ></i> Browse</button>
+        <button class="browse btn btn-primary input-lg" type="button" onclick=""><i class="glyphicon glyphicon-search" ></i> Browse</button>
       </span>
     </div>
   </div>

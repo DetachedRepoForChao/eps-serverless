@@ -24,6 +24,9 @@ export class AdminUserComponent implements OnInit {
 
   }
 
+ pictureUpload(){
+	
+ }
   onLogout() {
     this.authService.signOut().then();
     resetStores();

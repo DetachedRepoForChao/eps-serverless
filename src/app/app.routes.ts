@@ -15,7 +15,9 @@ import {HomepageComponent} from './user/homepage/homepage.component';
 import {ConfirmCodeComponent} from './login/confirm-code/confirm-code.component';
 import {PointsStoreComponent} from './user/points-store/points-store.component';
 import {ForgotPasswordComponent} from './login/forgot-password/forgot-password.component';
+
 import {User} from './shared/user.model';
+import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
 
 export const appRoutes: Routes = [
   {
@@ -74,6 +76,11 @@ export const appRoutes: Routes = [
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path:'chatroom',
+    component:ChatRoomComponent,
+    canActivate:[AuthGuard],
   },
 
 /*  {
