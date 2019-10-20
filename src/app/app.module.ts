@@ -84,7 +84,7 @@ import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import { FreshPipe } from './pipe/fresh.pipe';
 import { ConfirmItemPurchaseComponent } from 'src/app/user/confirm-item-purchase/confirm-item-purchase.component';
-import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
+//import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
 import { FeedcardFiltersComponent } from './entity-store/feedcard/filter/feedcard-filter.component'
 
 import { from } from 'rxjs';
@@ -142,7 +142,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PhoneMaskDirective,
     FreshPipe,
     ConfirmItemPurchaseComponent,
-    ChatRoomComponent,
+    //ChatRoomComponent,
     FeedcardFiltersComponent
 
   ],
