@@ -85,62 +85,6 @@ export class SignInComponent implements OnInit {
         console.log(`${functionFullName}: Success!`);
         console.log(user);
 
-        // console.log(`${functionFullName}: storeUserDetails`);
-/*        this.userService.getUserProfile()
-          .subscribe((userData: any) => {
-            console.log(userData);
-            const userDetails = userData;
-            localStorage.setItem('userId', userDetails.id);
-            localStorage.setItem('username', userDetails.username);
-            localStorage.setItem('firstName', userDetails.firstName);
-            localStorage.setItem('lastName', userDetails.lastName);
-            localStorage.setItem('points', userDetails.points);
-            localStorage.setItem('email', userDetails.email);
-            localStorage.setItem('securityRoleId', userDetails.securityRoleId);
-            localStorage.setItem('departmentId', userDetails.departmentId);
-
-            this.securityRoleService.getSecurityRoleById(+userDetails.securityRoleId)
-              .subscribe((securityRole: SecurityRole) => {
-                console.log(`${functionFullName}: this.securityRoleService.getSecurityRoleById(userDetails.securityRoleId):`);
-                console.log(securityRole);
-                localStorage.setItem('securityRoleName', securityRole.Name);
-                localStorage.setItem('securityRoleDescription', securityRole.Description);
-              });
-
-            this.departmentService.getDepartmentById(+userDetails.departmentId)
-              .subscribe((department: Department) => {
-                console.log(`${functionFullName}: this.departmentService.getDepartmentById(userDetails.departmentId):`);
-                console.log(department);
-                localStorage.setItem('departmentName', department.Name);
-              });
-
-            // this.achievementService.incrementAchievementSignIn(userDetails.id)
-           this.achievementService.incrementAchievement('SignIn')
-              .subscribe((result: any) => {
-                console.log(`${functionFullName}: incrementAchievementSignIn result:`);
-                console.log(result);
-                if ( !result ) {
-                  console.log(`${functionFullName}: Did not receive response from incrementAchievement: SignIn`);
-                } else {
-                  if ( result.status !== true) {
-                    console.log(`${functionFullName}: Something went wrong...`);
-                    console.log(result.message);
-                  } else {
-                    console.log(`${functionFullName}: Success`);
-                    console.log(result.message);
-                    // this.achievementComponent.getUserAchievements();
-                  }
-                }
-              });
-
-            // this.router.navigate(['/user/' + userDetails.securityRoleId]);
-            // this.sessionService.SetSessionLoggedIn();
-            console.log(`${functionFullName}: Hiding sign-in-onSubmit-spinner`);
-            this.spinner.hide('sign-in-onSubmit-spinner');
-            this.router.navigate(['/user']);
-            // this.router.navigate(['/user/' + userDetails.securityRoleId]);
-          });*/
-
         // this.achievementService.incrementAchievementSignIn(userDetails.id)
         this.achievementService.incrementAchievement('SignIn')
           .subscribe((result: any) => {

@@ -58,6 +58,7 @@ export class SignUpComponent implements OnInit {
     this.spinner.show('signup-spinner');
 
     const observables: Observable<any>[] = [];
+
     const departments$ = this.departmentService.getDepartments()
       .pipe(
         tap((departments: Department[]) => {

@@ -84,10 +84,19 @@
 	color: black;
 }
 
+.validation-message {
+  color: #e14eca;
+  font-size: 14px;
+  font-weight: bold;
+}
 
+.form-label {
+  color: black;
+}
 
-
-
+.editUser-form-control {
+  margin-bottom: 5px !important;
+}
 
 
 

@@ -9,6 +9,15 @@ import {EntityUserService} from '../../entity-store/user/state/entity-user.servi
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
+import {tap} from 'rxjs/operators';
+import {Department} from '../../shared/department.model';
+import {SecurityRole} from '../../shared/securityrole.model';
+import {forkJoin, Observable} from 'rxjs';
+import {DepartmentService} from '../../shared/department.service';
+import {SecurityRoleService} from '../../shared/securityRole.service';
+import {NotifierService} from 'angular-notifier';
+
+declare var $: any;
 
 @Component({
   selector: 'app-admin-user',
@@ -25,7 +34,10 @@ export class AdminUserComponent implements OnInit {
   selectUserForm: FormGroup;
   selectedUser;
   removeFieldArray = [];
-
+  departments;
+  securityRoles;
+  selectedDepartment;
+  selectedSecurityRole;
 
   constructor(public globals: Globals,
               private router: Router,
@@ -33,62 +45,137 @@ export class AdminUserComponent implements OnInit {
               private authService: AuthService,
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private departmentService: DepartmentService,
+              private securityRoleService: SecurityRoleService,
+              private notifierService: NotifierService) { }
 
   ngOnInit() {
     this.userService.cacheUsers().subscribe();
+
+    // Read in the list of departments from the DepartmentService
+    const departments$ = this.departmentService.getDepartments()
+      .pipe(
+        tap((departments: Department[]) => {
+          this.departments = departments;
+        })
+      );
+
+    // Read in the list of security roles from the SecurityRole service
+    const securityRoles$ = this.securityRoleService.getSecurityRoles()
+      .pipe(
+        tap((securityRoles: SecurityRole[]) => {
+          this.securityRoles = securityRoles;
+        })
+      );
+
+    const observables: Observable<any>[] = [];
+    observables.push(departments$);
+    observables.push(securityRoles$);
+
+    forkJoin(observables)
+      .subscribe(() => {
+      });
+
+    // Build the reactive Edit User form
     this.loadEditUserForm();
-    this.loadSelectUserForm();
-/*    this.selectUserForm.valueChanges.subscribe((result) => {
-      console.log(result);
-      this.selectedUser = result;
-      console.log(this.selectedUser.editUserUsername.email);
-    });*/
 
-    this.editUserForm.get('editUserUsername').valueChanges.subscribe(user => {
+    // Subscribe to change events for the 'user' field. Everytime a new user is selected, the correpsonding fields will populate with data
+    this.editUserForm.get('user').valueChanges.subscribe(user => {
       console.log(user);
-      this.editUserForm.patchValue({editUserFirstName: user.firstName});
-      this.editUserForm.patchValue({editUserLastName: user.lastName});
-      this.editUserForm.patchValue({editUserAddress1: user.address1});
-      this.editUserForm.patchValue({editUserAddress2: user.address2});
-      this.editUserForm.patchValue({editUserCity: user.city});
-      this.editUserForm.patchValue({editUserState: user.state});
-      this.editUserForm.patchValue({editUserCountry: user.country});
-      this.editUserForm.patchValue({editUserZip: user.zip});
-      this.editUserForm.patchValue({editUserBirthdate: user.birthdate});
-      this.editUserForm.patchValue({editUserEmail: user.email});
-      this.editUserForm.patchValue({editUserPhone: user.phone});
+
+      const keys = Object.keys(user);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+
+        if (this.editUserForm.get(key)) {
+          // We must take special consideration for selection objects like securityRole and department
+          switch (key) {
+            case 'securityRole': {
+              const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
+              this.editUserForm.patchValue({[key]: securityRole});
+              break;
+            }
+            case 'department': {
+              const department = this.departments.find(x => x.Id === user[keys[i]].Id);
+              this.editUserForm.patchValue({[key]: department});
+              break;
+            }
+            default: {
+              this.editUserForm.patchValue({[key]: user[keys[i]]});
+            }
+          }
+        }
+      }
     });
 
-  }
+    // Load the DatePicker for the birthdate field
+    $('#editUser_birthdate').datetimepicker({
+      format: 'L',
+      viewMode: 'years',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
 
-  private loadSelectUserForm() {
-    this.selectUserForm = this.formBuilder.group({
-      editUserUsername: [null],
+    // Load the DatePicker for the dateOfHire field
+    $('#editUser_dateOfHire').datetimepicker({
+      format: 'L',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
     });
   }
 
+  // Creates the Edit User reactive form
   private loadEditUserForm() {
     this.editUserForm = this.formBuilder.group({
-      editUserUsername: [null, Validators.required],
-      editUserFirstName: [null, Validators.required],
-      editUserLastName: [null, Validators.required],
-      editUserAddress1: [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)])],
-      editUserAddress2: [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(64)])],
-      editUserCity: [null, Validators.compose([Validators.required, Validators.minLength(11), Validators.maxLength(14)])],
-      editUserState: [null],
-      editUserCountry: [null],
-      editUserZip: [null, Validators.compose([Validators.required, Validators.pattern(this.zipPattern)])],
-      editUserBirthdate: [null],
-      editUserEmail: [null, Validators.compose([Validators.required, Validators.email])],
-      editUserPhone: [null, Validators.compose([Validators.required, Validators.maxLength(10)])]
+      user: [null, Validators.required],
+      firstName: [null, Validators.required],
+      middleName: [null],
+      lastName: [null, Validators.required],
+      preferredName: [null],
+      prefix: [null],
+      suffix: [null],
+      position: [null],
+      preferredPronoun: [null],
+      sex: [null],
+      gender: [null],
+      securityRole: [null, Validators.required],
+      department: [null, Validators.required],
+      dateOfHire: [null],
+      address1: [null],
+      address2: [null],
+      city: [null],
+      state: [null],
+      country: [null],
+      zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
+      birthdate: [null],
+      email: [null, Validators.compose([Validators.required, Validators.email])],
+      phone: [null, Validators.required]
     });
   }
 
-  toggleRemoveField(field: string) {
-    if (document.getElementById(field).attributes.getNamedItem('disabled')) {
+/*  toggleRemoveField(field: string) {
+    if (document.getElementById(`editUser_${field}`).attributes.getNamedItem('disabled')) {
       // Remove disabled tag from field
-      document.getElementById(field).attributes.removeNamedItem('disabled');
+      document.getElementById(`editUser_${field}`).attributes.removeNamedItem('disabled');
 
       // Remove field from the removeFieldArray
       const index: number = this.removeFieldArray.indexOf(field);
@@ -97,14 +184,13 @@ export class AdminUserComponent implements OnInit {
       }
     } else {
       // Add disabled tag to field
-      document.getElementById(field).setAttribute('disabled', '');
-
+      document.getElementById(`editUser_${field}`).setAttribute('disabled', '');
       // Add field to the removeFiledArray. We will use this array to determine which fields get cleared
       this.removeFieldArray.push(field);
     }
+  }*/
 
-  }
-
+  // Validates and formats the phone number by stripping out anything except number characters
   validatePhoneNumber(phone: string): (string | null) {
     console.log(phone);
     this.phoneValidationError = null;
@@ -120,10 +206,83 @@ export class AdminUserComponent implements OnInit {
     }
   }
 
-  onEditUserFormSubmit(form) {
+  onEditUserFormSubmit(form: FormGroup) {
     console.log(form);
-    console.log(this.removeFieldArray);
-    const phone = this.validatePhoneNumber(form.controls.editUserPhone.value);
+    const sourceUser = form.controls.user.value;
+    const user = {};
+    const keys = Object.keys(form.controls);
+
+    // Proceed only if the form is valid
+    if (!form.invalid) {
+      // Format the phone number
+      const phone = this.validatePhoneNumber(form.controls.phone.value);
+      form.controls.phone.setValue(phone);
+
+      /*
+      Iterate over the form field keys and add the key/value pair to the user object we'll be passing
+      to the modifyUser function. Any fields that were removed will be replaced with the *REMOVE* string
+      this will let our function know that those fields should be cleared.
+      */
+      for (let i = 0; i < keys.length; i++) {
+        if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
+          console.log(keys[i]);
+          // Special consideration for nested objects like securityRole and department
+          if (sourceUser[keys[i]].Id === form.controls[keys[i]].value.Id) {
+            // No change
+          } else {
+            console.log('Value changed:');
+            console.log(form.controls[keys[i]].value);
+            switch (keys[i]) { // we need to account for securityRole and department objects
+              case 'securityRole': {
+                user['securityRoleId'] = form.controls[keys[i]].value.Id;
+                break;
+              }
+              case 'department': {
+                user['departmentId'] = form.controls[keys[i]].value.Id;
+                break;
+              }
+            }
+          }
+        } else if (keys[i] !== 'user') {
+          if (sourceUser[keys[i]] === form.controls[keys[i]].value) {
+            // Don't add the key/value pair if the new value is the same as the source
+          } else {
+            // If the value has changed, add key/value pair to the user object
+            console.log('Value changed:');
+            console.log(form.controls[keys[i]].value);
+            user[keys[i]] = form.controls[keys[i]].value;
+          }
+        }
+      }
+
+      if (Object.keys(user).length > 0) {
+        // User object changes exist. Add the userId to the user object and invoke modifyUser function
+        user['userId'] = sourceUser.userId;
+        this.userService.modifyUser(user).subscribe(result => {
+          console.log(result);
+          if (result.status !== false) {
+            this.notifierService.notify('success', 'User record updated successfully.');
+          } else {
+            this.notifierService.notify('error', `Submission error: ${result.message}`);
+          }
+        });
+
+      } else {
+        // User object was not changed
+        console.log('There are no changes to the user object');
+        this.notifierService.notify('warning', 'There were no changes made.');
+      }
+
+      console.log(user);
+      // form.controls.user.reset();
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
+
+  onEditUserFormClose(form) {
+    // form.controls.user.reset();
   }
 
   pictureUpload() {

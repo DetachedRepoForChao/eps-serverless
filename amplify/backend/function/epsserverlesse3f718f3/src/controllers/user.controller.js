@@ -288,7 +288,56 @@ const modifyUser = function (user) {
   console.log(`${functionFullName}: Modifying User:`);
   console.log(user);
 
-  return sqlUserModel.update({
+  // Build the user update object
+  const userUpdate = {};
+  const keys = Object.keys(user);
+
+  for (let i = 0; i < keys.length; i++) {
+    let key;
+    switch (keys[i]) {
+      case 'birthdate': {
+        key = 'dateOfBirth';
+        break;
+      }
+      default: {
+        key = keys[i];
+        break;
+      }
+    }
+
+    if (user[keys[i]] === '') {
+      userUpdate[key] = null;
+    } else {
+      userUpdate[key] = user[keys[i]];
+    }
+  }
+
+  return sqlUserModel.update(userUpdate, {
+    include: [
+      {
+        model: Models.Department,
+        attributes: ['id', 'name']
+      },
+      {
+        model: Models.SecurityRole,
+        attributes: ['id', 'name', 'description']
+      }
+    ],
+    where: {
+      id: user.userId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully updated User`);
+      return {status: true, user: user};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+
+/*  return sqlUserModel.update({
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
@@ -335,7 +384,7 @@ const modifyUser = function (user) {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
       return {status: false, message: err};
-    });
+    });*/
 };
 
 module.exports.modifyUser = modifyUser;

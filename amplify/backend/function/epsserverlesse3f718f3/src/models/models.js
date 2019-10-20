@@ -109,12 +109,12 @@ module.exports = function(sequelize, DataTypes) {
       field: 'gender'
     },
     dateOfHire: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
       field: 'dateOfHire'
     },
     dateOfTermination: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
       field: 'dateOfTermination'
     },

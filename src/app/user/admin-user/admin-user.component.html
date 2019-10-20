@@ -200,94 +200,170 @@
                   </button>
                 </div>
 
-
                   <div class="modal-body editUser-modal-body">
                     <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
                       <div class="editUser-form-container">
-                        <!--       form-->
+
                         <form [formGroup]="editUserForm">
-                          <div class="form-group">
-                            <label for="editUserUsername">Username</label>
-                            <select formControlName="editUserUsername"
-                                    class="form-control"
-                                    id="editUserUsername" name="editUserUsername">
-                              <option *ngFor="let user of (userQuery.selectAll() | async)" [ngValue]="user">
-                                {{user.username}}
-                              </option>
-                            </select>
+                          <div class="form-row">
+                            <div class="form-group col-4">
+                              <label for="editUser_user" class="form-label">User to Modify</label>
+                              <select formControlName="user"
+                                      class="form-control editUser-form-control"
+                                      id="editUser_user" name="editUser_user">
+                                <option [ngValue]="null" disabled="true">Select a User</option>
+                                <option *ngFor="let user of (userQuery.selectAll() | async)" [ngValue]="user">
+                                  {{user.username}}
+                                </option>
+                              </select>
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.user.touched && editUserForm.controls.user.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
+                            </div>
                           </div>
 
-<!--                        <form [formGroup]="editUserForm" class="form" (ngSubmit)="onEditUserFormSubmit(editUserForm)">-->
                           <div class="form-row">
-                            <div class="form-group col-10">
-<!--                              <label for="editUserFirstName">First Name</label>-->
-                              <input class="form-control" id="editUserFirstName" placeholder="First Name" formControlName="editUserFirstName">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_firstName" class="form-label">First Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_firstName" placeholder="First Name" formControlName="firstName">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.firstName.touched && editUserForm.controls.firstName.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
                             </div>
-                            <div class="col-2">
-                              <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false" (click)="toggleRemoveField('editUserFirstName')">Remove</button>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_middleName" class="form-label">Middle Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_middleName" placeholder="Middle Name" formControlName="middleName">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_lastName" class="form-label">Last Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_lastName" placeholder="Last Name" formControlName="lastName">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.lastName.touched && editUserForm.controls.lastName.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
                             </div>
                           </div>
-                          <div class="form-group">
-<!--                            <label for="editUserLastName">Last Name</label>-->
-                            <input class="form-control" id="editUserLastName" placeholder="Last Name" formControlName="editUserLastName">
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_preferredName" class="form-label">Preferred Name</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_birthdate" class="form-label">Date of Birth</label>
+                              <input type="text" class="form-control editUser-form-control datepicker" id="editUser_birthdate" placeholder="Date of Birth" formControlName="birthdate">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_dateOfHire" class="form-label">Date of Hire</label>
+                              <input type="text" class="form-control editUser-form-control datepicker" id="editUser_dateOfHire" placeholder="Date of Hire" formControlName="dateOfHire">
+                            </div>
                           </div>
-                          <div class="form-group">
-<!--                            <label for="editUserAddress1">Address 1</label>-->
-                            <input type="text" class="form-control" id="editUserAddress1" placeholder="Address 1" formControlName="editUserAddress1">
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_prefix" class="form-label">Prefix</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_prefix" placeholder="Prefix" formControlName="prefix">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_suffix" class="form-label">Suffix</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_suffix" placeholder="Suffix" formControlName="suffix">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_sex" class="form-label">Sex</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_sex" placeholder="Sex" formControlName="sex">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_gender" class="form-label">Gender</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_gender" placeholder="Gender" formControlName="gender">
+                            </div>
                           </div>
-                          <div class="form-group">
-<!--                            <label for="editUserAddress2">Address 2</label>-->
-                            <input type="text" class="form-control" id="editUserAddress2" placeholder="Address 2" formControlName="editUserAddress2">
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_email" class="form-label">Email</label>
+                              <input type="email" class="form-control editUser-form-control" id="editUser_email" placeholder="Email" formControlName="email">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.email.touched && editUserForm.controls.email.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_phone" class="form-label">Phone</label>
+                              <input class="form-control editUser-form-control"
+                                     placeholder="Phone"
+                                     formControlName="phone"
+                                     name="editUser_phone"
+                                     appPhoneMask
+                                     type="tel"
+                                     maxLength="14"
+                                     [ngClass]="{'invalid-textbox' : editUserForm.dirty && editUserForm.controls.phone.touched && editUserForm.controls.phone.invalid}"
+                                     id="editUser_phone">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.phone.touched && phoneValidationError">
+                                <label class="validation-message">{{phoneValidationError}}</label>
+                              </div>
+                            </div>
                           </div>
-                          <div class="form-group">
-<!--                            <label for="editUserCity">City</label>-->
-                            <input type="text" class="form-control" id="editUserCity" placeholder="City" formControlName="editUserCity">
+
+                          <div class="form-row">
+                            <div class="form-group col-6">
+                              <label for="editUser_address1" class="form-label">Address 1</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_address1" placeholder="Address 1" formControlName="address1">
+                            </div>
+                            <div class="form-group col-6">
+                              <label for="editUser_address2" class="form-label">Address 2</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_address2" placeholder="Address 2" formControlName="address2">
+                            </div>
                           </div>
-                          <div class="form-group">
-<!--                            <label for ="editUserState">State</label>-->
-                            <input type="text" class="form-control" id="editUserState" placeholder="State" formControlName="editUserState">
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_city" class="form-label">City</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_city" placeholder="City" formControlName="city">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_state" class="form-label">State</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_state" placeholder="State" formControlName="state">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_country" class="form-label">Country</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_country" placeholder="Country" formControlName="country">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_zip" class="form-label">Zip</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_zip" placeholder="Zip" formControlName="zip">
+                            </div>
                           </div>
-                          <div class="form-group">
-<!--                            <label for ="editUserCountry">Country</label>-->
-                            <input type="text" class="form-control" id="editUserCountry" placeholder="Country" formControlName="editUserCountry">
-                          </div>
-                          <div class="form-group">
-<!--                            <label for ="editUserZip">Zip</label>-->
-                            <input type="text" class="form-control" id="editUserZip" placeholder="Zip" formControlName="editUserZip">
-                          </div>
-                          <div class="form-group">
-<!--                            <label for ="editUserBirthdate">Date of Birth</label>-->
-                            <input type="text" class="form-control" id="editUserBirthdate" placeholder="Date of Birth" formControlName="editUserBirthdate">
-                          </div>
-                          <div class="form-group">
-<!--                            <label for="editUserEmail">Email</label>-->
-                            <input type="email" class="form-control" id="editUserEmail" placeholder="Email" formControlName="editUserEmail">
-                          </div>
-                          <div class="form-group">
-<!--                            <label for="editUserPhone">Phone</label>-->
-                            <input class="form-control"
-                                   formControlName="editUserPhone"
-                                   name="phone"
-                                   appPhoneMask
-                                   type="tel"
-                                   maxLength="14"
-                                   [ngClass]="{'invalid-textbox' : editUserForm.dirty && editUserForm.controls.editUserPhone.touched && editUserForm.controls.editUserPhone.invalid}"
-                                   id="editUserPhone">
-                            <div *ngIf="editUserForm.dirty && editUserForm.controls.editUserPhone.touched && phoneValidationError">
-                              <label class="validation-message">{{phoneValidationError}}</label>
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_position" class="form-label">Position</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_position" placeholder="Position" formControlName="position">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_securityRole" class="form-label">Security Role</label>
+                              <select formControlName="securityRole" class="form-control editUser-form-control" id="editUser_securityRole" name="editUser_securityRole" >
+                                <option [ngValue]="null" [disabled]="true">Security Role</option>
+                                <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole">
+                                  {{securityRole.Name}}
+                                </option>
+                              </select>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_department" class="form-label">Department</label>
+                              <select formControlName="department" class="form-control editUser-form-control" id="editUser_department" name="editUser_department">
+                                <option [ngValue]="null" [disabled]="true">Department</option>
+                                <option *ngFor="let department of departments" [ngValue]="department">
+                                  {{department.Name}}
+                                </option>
+                              </select>
                             </div>
                           </div>
                         </form>
+
                       </div>
-
-
-
-
                     </perfect-scrollbar>
                   </div>
 
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onEditUserFormClose(editUserForm)">Close</button>
                   <button type="button" class="btn btn-primary" (click)="onEditUserFormSubmit(editUserForm)">Save changes</button>
                 </div>
               </div>
