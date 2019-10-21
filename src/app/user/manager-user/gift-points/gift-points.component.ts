@@ -355,8 +355,11 @@ export class GiftPointsComponent implements OnInit {
   showMore() {
     this.showLimit = 100;
     this.showFlag = true;
-  } else {
-      this.showFlag = false;
-    }
+
+  }
+
+  showLess() {
+    this.showLimit = 7;
+    this.showFlag = false;
   }
 }

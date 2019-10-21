@@ -77,11 +77,17 @@
             </div>
 
           </div>
-          <button (click)="showMore()">{{ showFlag ? 'View less': 'View More' }}</button>
-
+          <div class="row">
+            <div class="col-md-5"></div>
+            <div class="col-md-4">
+          <button class="btn btn-success" style="text-align: center" (click)="showMore()">{{ showFlag ? 'View less': 'View More' }}</button>
+          <button class="btn btn-success" style="text-align: center" (click)="showLess()">{{ showFlag ? 'View less': 'View More' }}</button>
+        </div>
+        <div class="col-md-3"></div>
+        </div>
           </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
           </div>
         <!---- New Table Example ------>
         <table class="table1">
