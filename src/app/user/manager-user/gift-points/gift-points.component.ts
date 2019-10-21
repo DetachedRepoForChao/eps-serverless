@@ -362,5 +362,8 @@ export class GiftPointsComponent implements OnInit {
     this.showLimit = 7;
     this.showFlag = false;
   }
-
+  
+  toggle() {
+    this.showMore(); this.showLess();
+  }
 }
