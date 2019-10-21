@@ -362,4 +362,5 @@ export class GiftPointsComponent implements OnInit {
     this.showLimit = 7;
     this.showFlag = false;
   }
+
 }
