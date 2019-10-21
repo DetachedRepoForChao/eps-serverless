@@ -71,7 +71,7 @@ export class GiftPointsComponent implements OnInit {
   employees$: Observable<EntityUserModel[]>;
   isCardLoading: boolean;
   formSubmitted = false;
-  showLimit = 7;
+  showLimit = 8;
   showFlag = false;
 
   constructor(
@@ -355,5 +355,8 @@ export class GiftPointsComponent implements OnInit {
   showMore() {
     this.showLimit = 100;
     this.showFlag = true;
+  } else {
+      this.showFlag = false;
+    }
   }
 }
