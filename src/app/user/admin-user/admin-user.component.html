@@ -1,33 +1,46 @@
 
 
- 
+
 <!--navbar-->
- 
- <nav class="navbar navbar-expand-lg bg-primary">
+
+<nav class="navbar navbar-expand-lg bg-primary">
   <div class="container">
     <a class="navbar-brand" >The Asbury Admin Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 
-    <span class="navbar-toggler-bar navbar-kebab"></span>
-    <span class="navbar-toggler-bar navbar-kebab"></span>
-    <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
-       
-      
-      
-      
-<!--      icon for logout-->
+
+
+
+
+        <!--      icon for logout-->
       </ul>
       <span class="navbar-text">
-   
+
 <!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
-       
-       
-       <button type="button" class="btn btn-icon btn-round" color="white"  (click)="onLogout()">
-          <i class="tim-icons icon-button-power" title="logout"></i>
-        </button>
+
+
+        <!-- <button type="button" class="btn btn-icon btn-round" color="white" >
+           <i class="tim-icons icon-button-power" title="logout"></i>
+         </button> -->
+
+
+        <div class="dropdown">
+          <button class="btn btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="tim-icons icon-button-power" title="logout"></i>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </div>
+
       </span>
     </div>
   </div>
@@ -39,383 +52,567 @@
 <!--card1-->
 
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-4">
-			<div class="card">
-				<h5 class="card-header2">
-					<img alt="Bootstap Image Preview" width="175" height="175" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXx8hZf4F_P5gYeojzE7yOicnY7E-fwa3UALUYcwQP529XSZxc8Q" class="rounded-circle"/>
-				</h5>
-				<div class="card-body">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <h5 class="card-header2">
+          <img alt="Bootstap Image Preview" width="175" height="175" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXx8hZf4F_P5gYeojzE7yOicnY7E-fwa3UALUYcwQP529XSZxc8Q" class="rounded-circle"/>
+        </h5>
+        <div class="card-body">
           <H1 class="card-text3">
             Users
           </H1>
-				</div>
-				<div class="card-footer3" style="margin-bottom: 20px">
-              <!-- Button trigger modal -->
-              
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModel">Add User</button>
-              <!-- Large modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">ADD Images/Files</button>
+        </div>
+        <div class="card-footer3" style="margin-bottom: 20px">
+          <!-- Button trigger modal -->
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-    <input type="file"
-    name="my file" multiple>
-    </div>
-  </div>
-</div>
-              <!-- Modal -->
-              <div class="modal fade bd-example-modal-lg" id="addUserModel" tabindex="-1" role="dialog"
-                aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Fill in your information </h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModel">Add User</button>
+          <!-- Large modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">ADD Images/Files</button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editUserModal">Edit User</button>
+
+          <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <input type="file"
+                       name="my file" multiple>
+              </div>
+            </div>
+          </div>
+          <!-- Modal -->
+          <div class="modal fade bd-example-modal-lg" id="addUserModel" tabindex="-1" role="dialog"
+               aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Fill in your information </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+
+                <div class="modal-body">
+                  <!--       form-->
+
+
+                  <form>
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                        <label for="inputitems_id">User Name</label>
+                        <input type="Anisha" class="form-control" id="inputEmail4" placeholder="First Name">
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="inputitems_name">First Name</label>
+                        <input type="Anisha" class="form-control" id="inputitem_name" placeholder="Last Name">
+                      </div>
                     </div>
-              
-              
-                    <div class="modal-body">
-                      <!--       form-->
-              
-              
-                      <form>
-                        <div class="form-row">
-                          <div class="form-group col-md-6">
-                            <label for="inputitems_id">User Name</label>
-                            <input type="Anisha" class="form-control" id="inputEmail4" placeholder="First Name">
-                          </div>
-                          <div class="form-group col-md-6">
-                            <label for="inputitems_name">First Name</label>
-                            <input type="Anisha" class="form-control" id="inputitem_name" placeholder="Last Name">
-                          </div>
-                        </div>
-                        
-                        <div class="form-group">
-                          <label for="inputitems_Description">Address1</label>
-                          <input type="text" class="form-control" id="inputAddress" placeholder="Address 1">
-                        </div>
-                        <div class="form-group">
-                          <label for="inputAddress2">Address 2</label>
-                          <input type="text" class="form-control" id="inputAddress2" placeholder="Address2">
-                        </div>
-                        <div class="form-group">
-                          <label for ="inputcity">city</label>
-                          <input type="text" class="form-control" id="city" placeholder="city">
-                        </div>
-                        <div class="form-group">
-                            <label for ="inputcity">state</label>
-                            <input type="text" class="form-control" id="state" placeholder="state">
-                          </div>
-          
-                              <div class="form-group">
-                                  <label for ="inputcity">Country</label>
-                                  <input type="text" class="form-control" id="Country" placeholder="Country">
-                                </div>
-                                <div class="form-group">
-                                    <label for ="inputcity">zip</label>
-                                    <input type="text" class="form-control" id="Zip" placeholder="Zip">
-                                  </div>
-                                  <div class="form-group">
-                                      <label for ="date of birth">date of birth</label>
-                                      <input type="text" class="form-control" id="date of birth" placeholder="date of birth">
-                                    </div>
-                                    <form>
-                                        <div class="form-row">
-                                          <div class="form-group col-md-6">
-                                            <label for="inputEmail4">Email</label>
-                                            <input type="email" class="form-control" id="inputEmail4" placeholder="date of hire">
-                                          </div>
-                                          <div class="form-group col-md-6">
-                                            <label for="inputPassword4">Password</label>
-                                            <input type="password" class="form-control" id="inputPassword4" placeholder="start date">
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="inputAddress">Address</label>
-                                          <input type="text" class="form-control" id="inputAddress" placeholder="Sex/Gender">
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="inputAddress2">Address 2</label>
-                                          <input type="text" class="form-control" id="inputAddress2" placeholder="Phone number">
-                                        </div>
-                                        <div class="form-row">
-                                          <div class="form-group col-md-6">
-                                            <label for="phone number">City</label>
-                                            <input type="text" class="form-control" id="phone number">
-                                          </div>
-                                         
-                                        </div>
-                                        <div class="form-group">
-                                          <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="gridCheck">
-                                            <label class="form-check-label" for="gridCheck">
-                                              Check me out
-                                            </label>
-                                          </div>
-                                        </div>
-                                
-                                      </form>
-              
-                                      
-                      </form>
-              
-              
-              
+
+                    <div class="form-group">
+                      <label for="inputitems_Description">Address1</label>
+                      <input type="text" class="form-control" id="inputAddress" placeholder="Address 1">
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">Save changes</button>
+                    <div class="form-group">
+                      <label for="inputAddress2">Address 2</label>
+                      <input type="text" class="form-control" id="inputAddress2" placeholder="Address2">
                     </div>
-                  </div>
+                    <div class="form-group">
+                      <label for ="inputcity">city</label>
+                      <input type="text" class="form-control" id="city" placeholder="city">
+                    </div>
+                    <div class="form-group">
+                      <label for ="inputcity">state</label>
+                      <input type="text" class="form-control" id="state" placeholder="state">
+                    </div>
+
+                    <div class="form-group">
+                      <label for ="inputcity">Country</label>
+                      <input type="text" class="form-control" id="Country" placeholder="Country">
+                    </div>
+                    <div class="form-group">
+                      <label for ="inputcity">zip</label>
+                      <input type="text" class="form-control" id="Zip" placeholder="Zip">
+                    </div>
+                    <div class="form-group">
+                      <label for ="date of birth">date of birth</label>
+                      <input type="text" class="form-control" id="date of birth" placeholder="date of birth">
+                    </div>
+                    <form>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputEmail4">Email</label>
+                          <input type="email" class="form-control" id="inputEmail4" placeholder="date of hire">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="inputPassword4">Password</label>
+                          <input type="password" class="form-control" id="inputPassword4" placeholder="start date">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress">Address</label>
+                        <input type="text" class="form-control" id="inputAddress" placeholder="Sex/Gender">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputAddress2">Address 2</label>
+                        <input type="text" class="form-control" id="inputAddress2" placeholder="Phone number">
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="phone number">City</label>
+                          <input type="text" class="form-control" id="phone number">
+                        </div>
+
+                      </div>
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="gridCheck">
+                          <label class="form-check-label" for="gridCheck">
+                            Check me out
+                          </label>
+                        </div>
+                      </div>
+
+                    </form>
+
+
+                  </form>
+
+
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
               </div>
-				</div>
-			</div>
-		</div>
+            </div>
+          </div>
 
+          <!-- Edit User Modal -->
+          <div class="modal fade bd-example-modal-lg editUser-modal" id="editUserModal" tabindex="-1" role="dialog"
+               aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editUserModalLabel">Fill in your information </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
 
+                  <div class="modal-body editUser-modal-body">
+                    <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+                      <div class="editUser-form-container">
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-<!--card2-->		
-		
-		
+                        <form [formGroup]="editUserForm">
+                          <div class="form-row">
+                            <div class="form-group col-4">
+                              <label for="editUser_user" class="form-label">User to Modify</label>
+                              <select formControlName="user"
+                                      class="form-control editUser-form-control"
+                                      id="editUser_user" name="editUser_user">
+                                <option [ngValue]="null" disabled="true">Select a User</option>
+                                <option *ngFor="let user of (userQuery.selectAll() | async)" [ngValue]="user">
+                                  {{user.username}}
+                                </option>
+                              </select>
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.user.touched && editUserForm.controls.user.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
+                            </div>
+                          </div>
 
-		<div class="col-md-4">
-			<div class="card">
-				<h5 class="card-header2">
-				<img alt="Bootstrap Image Preview" width="165" height="165" src="https://www.clipartmax.com/png/full/282-2822110_finance-flat-icon-png-coin-flat-icon-png.png" class="rounded-circle" />
-				</h5>
-				<div class="card-body">
-				
-				<H1 class="card-text2">
-						POINT 
-					</H1>
-				
-				</div>
-				<div class="card-footer2">
-					
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addPointModel">Add Points</button>
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_firstName" class="form-label">First Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_firstName" placeholder="First Name" formControlName="firstName">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.firstName.touched && editUserForm.controls.firstName.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_middleName" class="form-label">Middle Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_middleName" placeholder="Middle Name" formControlName="middleName">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_lastName" class="form-label">Last Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_lastName" placeholder="Last Name" formControlName="lastName">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.lastName.touched && editUserForm.controls.lastName.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
+                            </div>
+                          </div>
 
-<!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="addPointModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Point </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_preferredName" class="form-label">Preferred Name</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_birthdate" class="form-label">Date of Birth</label>
+                              <input type="text" class="form-control editUser-form-control datepicker" id="editUser_birthdate" placeholder="Date of Birth" formControlName="birthdate">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_dateOfHire" class="form-label">Date of Hire</label>
+                              <input type="text" class="form-control editUser-form-control datepicker" id="editUser_dateOfHire" placeholder="Date of Hire" formControlName="dateOfHire">
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_prefix" class="form-label">Prefix</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_prefix" placeholder="Prefix" formControlName="prefix">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_suffix" class="form-label">Suffix</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_suffix" placeholder="Suffix" formControlName="suffix">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_sex" class="form-label">Sex</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_sex" placeholder="Sex" formControlName="sex">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_gender" class="form-label">Gender</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_gender" placeholder="Gender" formControlName="gender">
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_email" class="form-label">Email</label>
+                              <input type="email" class="form-control editUser-form-control" id="editUser_email" placeholder="Email" formControlName="email">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.email.touched && editUserForm.controls.email.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_phone" class="form-label">Phone</label>
+                              <input class="form-control editUser-form-control"
+                                     placeholder="Phone"
+                                     formControlName="phone"
+                                     name="editUser_phone"
+                                     appPhoneMask
+                                     type="tel"
+                                     maxLength="14"
+                                     [ngClass]="{'invalid-textbox' : editUserForm.dirty && editUserForm.controls.phone.touched && editUserForm.controls.phone.invalid}"
+                                     id="editUser_phone">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.phone.touched && phoneValidationError">
+                                <label class="validation-message">{{phoneValidationError}}</label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group col-6">
+                              <label for="editUser_address1" class="form-label">Address 1</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_address1" placeholder="Address 1" formControlName="address1">
+                            </div>
+                            <div class="form-group col-6">
+                              <label for="editUser_address2" class="form-label">Address 2</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_address2" placeholder="Address 2" formControlName="address2">
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_city" class="form-label">City</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_city" placeholder="City" formControlName="city">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_state" class="form-label">State</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_state" placeholder="State" formControlName="state">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_country" class="form-label">Country</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_country" placeholder="Country" formControlName="country">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_zip" class="form-label">Zip</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_zip" placeholder="Zip" formControlName="zip">
+                            </div>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_position" class="form-label">Position</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_position" placeholder="Position" formControlName="position">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_securityRole" class="form-label">Security Role</label>
+                              <select formControlName="securityRole" class="form-control editUser-form-control" id="editUser_securityRole" name="editUser_securityRole" >
+                                <option [ngValue]="null" [disabled]="true">Security Role</option>
+                                <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole">
+                                  {{securityRole.Name}}
+                                </option>
+                              </select>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+                              <label for="editUser_department" class="form-label">Department</label>
+                              <select formControlName="department" class="form-control editUser-form-control" id="editUser_department" name="editUser_department">
+                                <option [ngValue]="null" [disabled]="true">Department</option>
+                                <option *ngFor="let department of departments" [ngValue]="department">
+                                  {{department.Name}}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                        </form>
+
+                      </div>
+                    </perfect-scrollbar>
+                  </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onEditUserFormClose(editUserForm)">Close</button>
+                  <button type="button" class="btn btn-primary" (click)="onEditUserFormSubmit(editUserForm)">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END Edit User Modal -->
+        </div>
       </div>
-
-
-      <div class="modal-body">
-<!--       form-->
-      
-      
-      <form>
-  <div class="form-row">
-    <div class="form-group col-md-6" >
-      <label for="inputPoint_Name" class="l2">Point Name </label>
-      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
     </div>
-    <div class="form-group col-md-6">
-      <label for="inputpoint_Point_amount"class="l2">point amount</label>
-      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--card2-->
+
+
+
+    <div class="col-md-4">
+      <div class="card">
+        <h5 class="card-header2">
+          <img alt="Bootstrap Image Preview" width="165" height="165" src="../../../assets/img/point.png" class="rounded-circle" />
+        </h5>
+        <div class="card-body">
+
+          <H1 class="card-text2">
+            POINT
+          </H1>
+
+        </div>
+        <div class="card-footer2">
+
+          <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addPointModel">Add Points</button>
+
+          <!-- Modal -->
+          <div class="modal fade bd-example-modal-lg" id="addPointModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add Point </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+
+                <div class="modal-body">
+                  <!--       form-->
+
+
+                  <form>
+                    <div class="form-row">
+                      <div class="form-group col-md-6" >
+                        <label for="inputPoint_Name" class="l2">Point Name </label>
+                        <input type="text" class="form-control"  id="inputitem_name" placeholder="Item Name">
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="inputpoint_Point_amount"class="l2">point amount</label>
+                        <input type="text" class="form-control"  id="input_point_amount" placeholder="point amount">
+                      </div>
+                    </div>
+                    <div class="form-group" style="text-align: left">
+                      <label for="inputitems_Description" class="l2">Description</label>
+                      <input type="text" class="form-control"  id="inputDescription" placeholder="Description">
+                    </div>
+
+
+
+                  </form>
+
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- Button trigger modal -->
+          <!--
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Point</button>
+
+           Modal
+          <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add Point</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  ...
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          -->
+
+          <br><br>
+          <button class="btn btn-primary btn-lg">Edit Point</button>
+
+          <br><br>
+          <button class="btn btn-primary btn-lg">Delete Point</button>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label for="inputitems_Description" class="l2">Description</label>
-    <input type="text" class="form-control" id="inputDescription" placeholder="Description">
-  </div>
 
 
 
-</form>
-       
-    
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div> 
-				
-				
-						
-		<!-- Button trigger modal -->
-<!--
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Point</button>
-
- Modal 
-<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Point</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-			
--->
-			
-			<br><br>
-       <button class="btn btn-primary btn-lg">Edit Point</button>      
-           
-   <br><br>
-       <button class="btn btn-primary btn-lg">Delete Point</button>  
-				</div>
-			</div>
-		</div>
-		
-		
-		
-		
-		
-		
-<!--card3-->		
-		
-		
-		
-		<div class="col-md-4">
-			<div class="card">
-				<h5 class="card-header3">
-				<img alt="Bootstrap Image Preview" width="165" height="165" src="https://cdn4.iconfinder.com/data/icons/e-commerce-and-shopping-3/500/cart-checked-512.png" class="rounded-circle" />
-				</h5>
-				<div class="card-body">
-					<H1 class="card-text3">
-						STORE ITEMS
-					</H1>
-				</div>
-				<div class="card-footer3">
-   
-   		<!-- Button trigger modal -->
-
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addItemModel">Add Items</button>
-
-<!-- Modal -->
-<div class="modal fade bd-example-modal-lg" id="addItemModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Items </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
 
 
-      <div class="modal-body">
-<!--       form-->
-      
-      
-      <form>
-  <div class="form-row">
-    <div class="form-group col-md-6" >
-      <label for="inputitems_Name" class="l1">Item Name </label>
-      <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputitems_Point_amount"class="l1">point amount</label>
-      <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputitems_Description"class="l1">Description</label>
-    <input type="text" class="form-control" id="inputDescription" placeholder="Description">
-  </div>
-<!--
-  <div class="form-group">
-    <label for="inputAddress2">Address 2</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-  </div>
--->
+
+    <!--card3-->
 
 
-  <div class="form-group">
-   <label for="inputUploadImg">Upload Img </label>
-    <input type="file" name="img[]" class="file">
-    <div class="input-group col-xs-12">
-      <span class="input-group-addon"><i class="icon-image-02" ></i></span>
-      <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
-      <span class="input-group-btn">
-        <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search" ></i> Browse</button>
+
+    <div class="col-md-4">
+      <div class="card">
+        <h5 class="card-header3">
+          <img alt="Bootstrap Image Preview" width="165" height="165" src="https://cdn4.iconfinder.com/data/icons/e-commerce-and-shopping-3/500/cart-checked-512.png" class="rounded-circle" />
+        </h5>
+        <div class="card-body">
+          <H1 class="card-text3">
+            STORE ITEMS
+          </H1>
+        </div>
+        <div class="card-footer3">
+
+          <!-- Button trigger modal -->
+
+          <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addItemModel">Add Items</button>
+
+          <!-- Modal -->
+          <div class="modal fade bd-example-modal-lg" id="addItemModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add Items </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+
+                <div class="modal-body">
+                  <!--       form-->
+
+
+                  <form>
+                    <div class="form-row">
+                      <div class="form-group col-md-6" >
+                        <label for="inputitems_Name" class="l1">Item Name </label>
+                        <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="inputitems_Point_amount"class="l1">point amount</label>
+                        <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="inputitems_Description"class="l1">Description</label>
+                      <input type="text" class="form-control" id="inputDescription" placeholder="Description">
+                    </div>
+                    <!--
+                      <div class="form-group">
+                        <label for="inputAddress2">Address 2</label>
+                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                      </div>
+                    -->
+
+
+                    <div class="form-group">
+                      <label for="inputUploadImg">Upload Img </label>
+                      <input type="file" name="img[]" class="file">
+                      <div class="input-group col-xs-12">
+                        <span class="input-group-addon"><i class="icon-image-02" ></i></span>
+                        <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+                        <span class="input-group-btn">
+        <button class="browse btn btn-primary input-lg" type="button" onclick=""><i class="glyphicon glyphicon-search" ></i> Browse</button>
       </span>
-    </div>
-  </div>
-</form>
-       
-    
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>   
-       
+                      </div>
+                    </div>
+                  </form>
 
-      
-  <br><br>
-       <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Edit Items</button>      
-         
-   <br><br>
-       <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Dlete Items</button>      
-      
-  
-    
-      
-      
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <br><br>
+          <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Edit Items</button>
+
+          <br><br>
+          <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Dlete Items</button>
+
+
+
+
+
+        </div>
+
+      </div>
+
     </div>
+  </div>
+
 
 </div>
 
-  </div>
-</div>	
-			 
-			
-				</div>
-			
-	
+
 
 
 
@@ -528,7 +725,7 @@
 <!--    <a class="navbar-brand" href="#"> <h1 class="display-4">USER</h1></a>-->
 <!--
     <a class="navbar-brand" > <h1 class="display-4"><p class="h1">USER</p></h1></a>
-   
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -572,7 +769,7 @@
 <!--    <a class="navbar-brand" href="#"> <h1 class="display-4">USER</h1></a>-->
 <!--
     <a class="navbar-brand" > <h1 class="display-4"><p class="h1">POINT</p></h1></a>
-   
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-bar navbar-kebab"></span>
     <span class="navbar-toggler-bar navbar-kebab"></span>

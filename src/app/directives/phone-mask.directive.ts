@@ -20,7 +20,9 @@ export class PhoneMaskDirective {
 
 
   onInputChange(event, backspace) {
+    // console.log('initial event: ' + event);
     let newVal = event.replace(/\D/g, '');
+    // console.log('initial newval: ' + newVal);
     if (backspace && newVal.length <= 6) {
       newVal = newVal.substring(0, newVal.length - 1);
     }
@@ -37,5 +39,6 @@ export class PhoneMaskDirective {
       newVal = newVal.replace(/^(\d{0,3})(\d{0,3})(\d{0,4})/, '($1) $2-$3');
     }
     this.ngControl.valueAccessor.writeValue(newVal);
+    // console.log('modified newval: ' + newVal);
   }
 }

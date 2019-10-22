@@ -33,6 +33,7 @@ AWS.config.update({
   secretAccessKey: 'KF6I4C0k4m7IDGDge/oRq/xlxZFrTDivnm9nca6G'
 });
 
+const userPoolId = 'us-east-1_vOg4HSZc8';
 
 app.post('/things/sendAwardPointsEmail' , function (req, res) {
   console.log('starting post sendAwardPointsEmail');
@@ -111,7 +112,7 @@ app.post('/things/sendFulfillStoreItemEmail' , function (req, res) {
 
 app.get('/things/getCognitoUsers', function(req, res) {
   var params = {
-    UserPoolId: 'us-east-1_gbzCkWTjI'
+    UserPoolId: 'us-east-1_vOg4HSZc8'
   };
 
   var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
@@ -134,6 +135,105 @@ app.get('/things/getCognitoUsers', function(req, res) {
   })
 
   // res.json({success: 'post call succeed!', url: req.url, body: req.body})
+});
+
+app.post('/things/getCognitoUser', function(req, res) {
+  const username = req.body.username;
+  console.log(req.body);
+  console.log(username);
+
+  var params = {
+    UserPoolId: 'us-east-1_vOg4HSZc8',
+    Username: username
+  };
+
+  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+  var cognitoidentity = new AWS.CognitoIdentity();
+
+
+  cognitoidentityserviceprovider.adminGetUser(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      // reject(err)
+      res.json({success: 'post call failed!', data: err})
+    }
+    else {
+      console.log("User", data);
+/*      data.Users.forEach(user => {
+        console.log(user.Attributes);
+      });*/
+      // resolve(data)
+      res.json({success: 'post call succeed!', data: data})
+    }
+  })
+
+  // res.json({success: 'post call succeed!', url: req.url, body: req.body})
+});
+
+app.post('/things/setCognitoUserAttributes', function(req, res) {
+  const user = req.body.user;
+
+  const UserAttributes = [];
+  // for (Object.)
+
+  const params = {
+    UserAttributes: [
+      {
+        Name: 'birthdate',
+        Value: user.birthdate
+      },
+      {
+        Name: 'given_name',
+        Value: user.firstName
+      },
+      {
+        Name: 'family_name',
+        Value: user.lastName
+      },
+      {
+        Name: 'name',
+        Value: `${user.firstName} ${user.lastName}`
+      },
+      {
+        Name: 'email',
+        Value: 'mbado@monmouth.edu'
+      },
+      {
+        Name: 'phone',
+        Value: user.phone
+      },
+      {
+        Name: 'custom:department',
+        Value: user.department.Name
+      },
+      {
+        Name: 'custom:department_id',
+        Value: user.department.Id
+      },
+      {
+        Name: 'custom:security_role',
+        Value: user.securityRole.Name
+      },
+      {
+        Name: 'custom:security_role',
+        Value: user.securityRole.Id
+      },
+    ],
+    UserPoolId: userPoolId,
+    Username: user.username
+  };
+
+  const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+
+  cognitoidentityserviceprovider.adminUpdateUserAttributes(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({success: 'post call failed!', data: err})
+    } else {
+      console.log("User", data);
+      res.json({success: 'post call succeed!', data: data})
+    }
+  });
 });
 
 app.get('/things/getCognitoIdentityProviders', function(req, res) {
