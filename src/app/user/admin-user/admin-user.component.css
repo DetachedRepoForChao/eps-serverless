@@ -64,6 +64,7 @@
 }
 
 .l1 {
+	text-align: left;
 	color:#32325d;
 
 }
@@ -81,7 +82,7 @@
 
 
 .form-control {
-	color: black;
+	color: Default;
 }
 
 .validation-message {
@@ -91,7 +92,7 @@
 }
 
 .form-label {
-  color: black;
+  color: Default;
 }
 
 .editUser-form-control {
@@ -100,7 +101,9 @@
 
 
 
-
+.card label {
+	text-align: left;
+}
 
 
 

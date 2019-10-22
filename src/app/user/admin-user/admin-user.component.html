@@ -35,7 +35,7 @@
             <i class="tim-icons icon-button-power" title="logout"></i>
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="javascript:void(null)" (click)="onLogout()">Log Out</a>
             <a class="dropdown-item" href="#">Another action</a>
             <a class="dropdown-item" href="#">Something else here</a>
           </div>
@@ -56,7 +56,7 @@
     <div class="col-md-4">
       <div class="card">
         <h5 class="card-header2">
-          <img alt="Bootstap Image Preview" width="175" height="175" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXx8hZf4F_P5gYeojzE7yOicnY7E-fwa3UALUYcwQP529XSZxc8Q" class="rounded-circle"/>
+          <img alt="Bootstap Image Preview" width="175" height="175" src="../../../assets/img/Userimg.png" class="rounded-circle"/>
         </h5>
         <div class="card-body">
           <H1 class="card-text3">
@@ -68,7 +68,9 @@
 
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModel">Add User</button>
           <!-- Large modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">ADD Images/Files</button>
+          <br><br>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Delete User</button>
+          <br><br>
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editUserModal">Edit User</button>
 
           <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -450,8 +452,25 @@
                       <label for="inputitems_Description" class="l2">Description</label>
                       <input type="text" class="form-control"  id="inputDescription" placeholder="Description">
                     </div>
+                    
+                    
+  <div class="form-group"style="text-align: left">
+    <label for="coreValue" class="l2">Core Values</label>
+    <select class="form-control" id="coreValue" >
+      <option>Happy</option>
+      <option>Fun</option>
+      <option>Genuine</option>
+      <option>Caring</option>
+      <option>Respect</option>
+      <option>Honest</option>
+    </select>
+  </div>
+                    
+   
 
-
+                  
+                  
+                  
 
                   </form>
 
@@ -515,7 +534,7 @@
     <div class="col-md-4">
       <div class="card">
         <h5 class="card-header3">
-          <img alt="Bootstrap Image Preview" width="165" height="165" src="https://cdn4.iconfinder.com/data/icons/e-commerce-and-shopping-3/500/cart-checked-512.png" class="rounded-circle" />
+          <img alt="Bootstrap Image Preview" width="165" height="165" src="../../../assets/img/cart-admin.png" class="rounded-circle" />
         </h5>
         <div class="card-body">
           <H1 class="card-text3">
@@ -555,7 +574,7 @@
                         <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="text-align: left">
                       <label for="inputitems_Description"class="l1">Description</label>
                       <input type="text" class="form-control" id="inputDescription" placeholder="Description">
                     </div>
@@ -565,10 +584,12 @@
                         <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
                       </div>
                     -->
+                    
+             
 
 
-                    <div class="form-group">
-                      <label for="inputUploadImg">Upload Img </label>
+                    <div class="form-group" style="text-align: left">
+                      <label for="inputUploadImg" class="l1">Upload Img </label>
                       <input type="file" name="img[]" class="file">
                       <div class="input-group col-xs-12">
                         <span class="input-group-addon"><i class="icon-image-02" ></i></span>

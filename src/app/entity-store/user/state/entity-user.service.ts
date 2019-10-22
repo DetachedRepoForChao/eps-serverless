@@ -85,27 +85,28 @@ export class EntityUserService {
     });
   }
 
-  update(userId: number, firstName: string, lastName: string, middleName: string, position: string, points: number, birthdate: string,
-         securityRole: SecurityRole, department: Department, email: string, phone: string, active: boolean) {
+  update(user) {
     const functionName = 'update';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: update ${firstName} ${lastName}`);
+    console.log(user);
+    // console.log(`${functionFullName}: update ${user.firstName} ${user.lastName}`);
 
-    this.userStore.update((e) => e.userId === userId, {
-      firstName: firstName,
-      lastName: lastName,
-      middleName: middleName,
-      position: position,
-      points: points,
-      birthdate: birthdate,
-      securityRole: securityRole,
-      department: department,
-      email: email,
-      phone: phone,
-      active: active,
-    });
+    const userUpdate = {};
+    const keys = Object.keys(user);
+
+    for (let i = 0; i < keys.length; i++) {
+      if ((keys[i] === 'phone') && (user[keys[i]].includes('+1'))) {
+        userUpdate[keys[i]] = user[keys[i]].substring(2);
+      } else {
+        userUpdate[keys[i]] = user[keys[i]];
+      }
+    }
+
+    console.log(userUpdate);
+
+    this.userStore.update((e) => e.userId === user.userId, userUpdate);
   }
 
   updateCognitoAttributes(user): Observable<any> {
@@ -124,7 +125,7 @@ export class EntityUserService {
             user: user
           };
 
-          API.get(this.apiName, this.apiPath2 + '/setCognitoUserAttributes', myInit).then(data => {
+          API.post(this.apiName, this.apiPath2 + '/setCognitoUserAttributes', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);
@@ -379,8 +380,8 @@ export class EntityUserService {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(data);
 
-            if (data.data.status === true) {
-              const userId = data.data.userId;
+            if (data.data.status !== false) {
+/*              const userId = data.data.userId;
               const username = data.data.username;
               const firstName = data.data.firstName;
               const lastName = data.data.lastName;
@@ -389,8 +390,8 @@ export class EntityUserService {
               const points = data.data.points;
               const birthdate = data.data.birthdate;
               const securityRole: SecurityRole = {
-                Id: data.data.securityRole.id,
-                Name: data.data.securityRole.name,
+                Id: data.data.securityRole.Id,
+                Name: data.data.securityRole.Name,
                 Description: data.data.securityRole.description,
               };
               const department: Department = {
@@ -399,13 +400,16 @@ export class EntityUserService {
               };
               const email = data.data.email;
               const phone = data.data.phone;
-              const active = data.data.active;
+              const active = data.data.active;*/
 
               // Update the user in the local Akita store
-              this.update(userId, firstName, lastName, middleName, position, points, birthdate, securityRole, department, email, phone, active);
+              this.update(user);
 
               // Update the user's Cognito identity
-              this.updateCognitoAttributes(user).subscribe();
+              this.updateCognitoAttributes(user)
+                .subscribe(cognitoResult => {
+                  console.log(cognitoResult);
+                });
 
               observer.next(data.data);
               observer.complete();

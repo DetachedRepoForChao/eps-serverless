@@ -174,51 +174,78 @@ app.post('/things/setCognitoUserAttributes', function(req, res) {
   const user = req.body.user;
 
   const UserAttributes = [];
-  // for (Object.)
+  const keys = Object.keys(user);
+
+  for (let i = 0; i < keys.length; i++) {
+    switch (keys[i]) {
+      case 'birthdate': {
+        UserAttributes.push({
+          Name: 'birthdate',
+          Value: user.birthdate,
+        });
+        break;
+      }
+      case 'firstName': {
+        UserAttributes.push({
+          Name: 'given_name',
+          Value: user.firstName,
+        });
+        break;
+      }
+      case 'lastName': {
+        UserAttributes.push({
+          Name: 'family_name',
+          Value: user.lastName,
+        });
+        break;
+      }
+      case 'email': {
+        UserAttributes.push({
+          Name: 'email',
+          Value: user.email,
+        });
+        break;
+      }
+      case 'phone': {
+        UserAttributes.push({
+          Name: 'phone_number',
+          Value: user.phone,
+        });
+        break;
+      }
+      case 'departmentName': {
+        UserAttributes.push({
+          Name: 'custom:department',
+          Value: user.departmentName,
+        });
+        break;
+      }
+      case 'departmentId': {
+        UserAttributes.push({
+          Name: 'custom:department_id',
+          Value: `${user.departmentId}`,
+        });
+        break;
+      }
+      case 'securityRoleName': {
+        UserAttributes.push({
+          Name: 'custom:security_role',
+          Value: user.securityRoleName,
+        });
+        break;
+      }
+      case 'securityRoleId': {
+        UserAttributes.push({
+          Name: 'custom:security_role_id',
+          Value: `${user.securityRoleId}`,
+        });
+        break;
+      }
+    }
+  }
 
   const params = {
-    UserAttributes: [
-      {
-        Name: 'birthdate',
-        Value: user.birthdate
-      },
-      {
-        Name: 'given_name',
-        Value: user.firstName
-      },
-      {
-        Name: 'family_name',
-        Value: user.lastName
-      },
-      {
-        Name: 'name',
-        Value: `${user.firstName} ${user.lastName}`
-      },
-      {
-        Name: 'email',
-        Value: 'mbado@monmouth.edu'
-      },
-      {
-        Name: 'phone',
-        Value: user.phone
-      },
-      {
-        Name: 'custom:department',
-        Value: user.department.Name
-      },
-      {
-        Name: 'custom:department_id',
-        Value: user.department.Id
-      },
-      {
-        Name: 'custom:security_role',
-        Value: user.securityRole.Name
-      },
-      {
-        Name: 'custom:security_role',
-        Value: user.securityRole.Id
-      },
-    ],
+    UserAttributes: UserAttributes,
     UserPoolId: userPoolId,
     Username: user.username
   };

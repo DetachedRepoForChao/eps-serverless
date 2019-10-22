@@ -336,55 +336,6 @@ const modifyUser = function (user) {
       console.log(err);
       return {status: false, message: err};
     });
-
-/*  return sqlUserModel.update({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    securityRoleId: user.securityRole.Id,
-    departmentId: user.department.Id,
-    phone: user.phone,
-    dateOfBirth: user.birthdate,
-    points: user.points,
-    middleName: user.middleName,
-    preferredName: user.preferredName,
-    prefix: user.prefix,
-    suffix: user.suffix,
-    position: user.position,
-    address1: user.address1,
-    address2: user.address2,
-    city: user.city,
-    state: user.state,
-    country: user.country,
-    zip: user.zip,
-    preferredPronoun: user.preferredPronoun,
-    sex: user.sex,
-    gender: user.gender,
-    dateOfHire: user.dateOfHire,
-  }, {
-    include: [
-      {
-        model: Models.Department,
-        attributes: ['id', 'name']
-      },
-      {
-        model: Models.SecurityRole,
-        attributes: ['id', 'name', 'description']
-      }
-    ],
-    where: {
-      id: user.userId,
-    }
-  })
-    .then(() => {
-      console.log(`${functionFullName}: Successfully updated User`);
-      return {status: true, user: user};
-    })
-    .catch(err => {
-      console.log(`${functionFullName}: Database error`);
-      console.log(err);
-      return {status: false, message: err};
-    });*/
 };
 
 module.exports.modifyUser = modifyUser;
