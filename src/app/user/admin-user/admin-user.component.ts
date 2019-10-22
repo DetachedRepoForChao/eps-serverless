@@ -215,8 +215,8 @@ export class AdminUserComponent implements OnInit {
     // Proceed only if the form is valid
     if (!form.invalid) {
       // Format the phone number
-      const phone = this.validatePhoneNumber(form.controls.phone.value);
-      form.controls.phone.setValue(phone);
+      const phone = `+1${this.validatePhoneNumber(form.controls.phone.value)}`;
+      // form.controls.phone.setValue(phone);
 
       /*
       Iterate over the form field keys and add the key/value pair to the user object we'll be passing
@@ -235,10 +235,12 @@ export class AdminUserComponent implements OnInit {
             switch (keys[i]) { // we need to account for securityRole and department objects
               case 'securityRole': {
                 user['securityRoleId'] = form.controls[keys[i]].value.Id;
+                user['securityRoleName'] = form.controls[keys[i]].value.Name;
                 break;
               }
               case 'department': {
                 user['departmentId'] = form.controls[keys[i]].value.Id;
+                user['departmentName'] = form.controls[keys[i]].value.Name;
                 break;
               }
             }
@@ -250,7 +252,18 @@ export class AdminUserComponent implements OnInit {
             // If the value has changed, add key/value pair to the user object
             console.log('Value changed:');
             console.log(form.controls[keys[i]].value);
-            user[keys[i]] = form.controls[keys[i]].value;
+
+            switch (keys[i]) {
+              case 'phone': { // special case for phone
+                user[keys[i]] = phone;
+                break;
+              }
+              default: {
+                user[keys[i]] = form.controls[keys[i]].value;
+                break;
+              }
+            }
+
           }
         }
       }
@@ -258,12 +271,13 @@ export class AdminUserComponent implements OnInit {
       if (Object.keys(user).length > 0) {
         // User object changes exist. Add the userId to the user object and invoke modifyUser function
         user['userId'] = sourceUser.userId;
-        this.userService.modifyUser(user).subscribe(result => {
-          console.log(result);
-          if (result.status !== false) {
+        user['username'] = sourceUser.username;
+        this.userService.modifyUser(user).subscribe(modifyResult => {
+          console.log(modifyResult);
+          if (modifyResult.status !== false) {
             this.notifierService.notify('success', 'User record updated successfully.');
           } else {
-            this.notifierService.notify('error', `Submission error: ${result.message}`);
+            this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
           }
         });
 
