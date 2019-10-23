@@ -6,8 +6,8 @@
 }
 
 .card-footer2{
-	
-	text-align: center;	
+
+	text-align: center;
 }
 
 
@@ -20,12 +20,12 @@
 }
 
 .card-footer3{
-	
-	text-align: center;	
+
+	text-align: center;
 }
 
 .form-row{
-	
+
 	color: Default;
 }
 
@@ -41,11 +41,30 @@
   position: absolute;
 }
 
+/*.editUser-modal {*/
+/*  transform: translate(0, 0);*/
+/*}*/
 
-	
+.editUser-modal-body {
+  overflow-scrolling: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 600px;
+  max-height: 600px
+}
 
+.editUser-form-container {
+  /*margin-left: 20px;*/
+  margin-right: 20px;
+}
+
+.removed {
+  text-decoration: line-through;
+  background-color: rgba(155,155,155,0.98);
+}
 
 .l1 {
+	text-align: left;
 	color:#32325d;
 
 }
@@ -56,24 +75,35 @@
 
 }
 .form-row {
-	
+
 	text-align: left;
 }
 
 
 
 .form-control {
-	color: black;
+	color: Default;
+}
+
+.validation-message {
+  color: #e14eca;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-label {
+  color: Default;
+}
+
+.editUser-form-control {
+  margin-bottom: 5px !important;
 }
 
 
 
-
-
-
-
-
-
+.card label {
+	text-align: left;
+}
 
 
 

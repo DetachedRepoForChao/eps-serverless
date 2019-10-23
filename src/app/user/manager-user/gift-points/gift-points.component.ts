@@ -71,6 +71,8 @@ export class GiftPointsComponent implements OnInit {
   employees$: Observable<EntityUserModel[]>;
   isCardLoading: boolean;
   formSubmitted = false;
+  showLimit = 8;
+  showFlag = false;
 
   constructor(
     private departmentService: DepartmentService,
@@ -114,6 +116,8 @@ export class GiftPointsComponent implements OnInit {
 
     this.isCardLoading = false;
     this.spinner.hide('gift-points-spinner');
+
+    this.showLimit = 7;
   }
 
 
@@ -346,5 +350,20 @@ export class GiftPointsComponent implements OnInit {
     this.clickedUser = user;
     $('#giftClickedModal').modal('show');
     console.log(document.getElementById('giftClickedModal'));
+  }
+
+  showMore() {
+    this.showLimit = 100;
+    this.showFlag = true;
+
+  }
+
+  showLess() {
+    this.showLimit = 7;
+    this.showFlag = false;
+  }
+  
+  toggle() {
+    this.showMore(); this.showLess();
   }
 }

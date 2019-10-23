@@ -51,13 +51,13 @@ export class PointItemService {
   }
 
 
-  delete(id: ID) {
+  delete(itemId: number) {
     const functionName = 'delete';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${id}`);
-    this.pointItemStore.remove(id);
+    console.log(`${functionFullName}: delete ${itemId}`);
+    this.pointItemStore.remove(e => e.itemId === itemId);
   }
 
   reset() {
@@ -199,4 +199,122 @@ export class PointItemService {
 
     return cacheable(this.pointItemStore, request$);
   }
+
+  newPointItem(pointItem): Observable<any> {
+    const functionName = 'newPointItem';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            pointItem: pointItem
+          };
+
+          API.post(this.apiName, this.apiPath + '/newPointItem', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status === true) {
+              const itemId = data.data.id;
+              const name = data.data.name;
+              const description = data.data.description;
+              const amount = data.data.amount;
+              const coreValues: string[] = data.data.coreValues.split(';');
+              for (let j = 0; j < coreValues.length; j++) {
+                coreValues[j] = coreValues[j].trim();
+              }
+
+              this.add(itemId, name, description, amount, coreValues);
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  modifyPointItem(pointItem): Observable<any> {
+    const functionName = 'modifyPointItem';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            pointItem: pointItem
+          };
+
+          API.post(this.apiName, this.apiPath + '/modifyPointItem', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status === true) {
+              const itemId = data.data.itemId;
+              const name = data.data.name;
+              const description = data.data.description;
+              const amount = data.data.amount;
+              const coreValues: string[] = data.data.coreValues.split(';');
+              for (let j = 0; j < coreValues.length; j++) {
+                coreValues[j] = coreValues[j].trim();
+              }
+
+              this.update(itemId, name, description, amount, coreValues);
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  deletePointItem(pointItem): Observable<any> {
+    const functionName = 'deletePointItem';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            pointItem: pointItem
+          };
+
+          API.post(this.apiName, this.apiPath + '/deletePointItem', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status === true) {
+              this.delete(data.data.itemId);
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
 }
+

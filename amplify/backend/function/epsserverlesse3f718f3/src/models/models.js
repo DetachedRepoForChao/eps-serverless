@@ -17,11 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       unique: true,
       field: 'username'
     },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      field: 'password'
-    },
     firstName: {
       type: DataTypes.STRING(100),
       allowNull: false,
@@ -114,12 +109,12 @@ module.exports = function(sequelize, DataTypes) {
       field: 'gender'
     },
     dateOfHire: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
       field: 'dateOfHire'
     },
     dateOfTermination: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
       field: 'dateOfTermination'
     },
@@ -152,15 +147,16 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 'public/avatars/placeholder.svg',
       field: 'avatarUrl'
     },
-    saltSecret: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      field: 'saltSecret'
-    },
     phone: {
       type: DataTypes.STRING(45),
       allowNull: true,
       field: 'phone'
+    },
+    active: {
+      type: DataTypes.INTEGER(1),
+      allowNull: false,
+      defaultValue: 1,
+      field: 'active',
     },
     createdAt: {
       type: DataTypes.DATE,

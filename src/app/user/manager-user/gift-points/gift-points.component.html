@@ -43,49 +43,58 @@
           <div class="col-md-6 fluid">
             <form class="form">
 
-              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee" [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
-
+              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
+                [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
             </form>
-            <!--
-            <ul id="user-listing">
-              <li *ngFor="let user of (employees$) | async | fresh:term">
-                {{user}}
-                  <div class="single-user">
-                    <span [ngStyle]="{background: user.firstName}"><img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" /></span>
-                    <h3> {{user.firstName + " " + user.lastName | fresh}}</h3>
-
-                  </div>
-
-              </li>
-            </ul>
-          -->
-          <div class="row">
-            <div *ngFor="let user of (employees$) | async | fresh:term" class="col-3 fluid">
-              {{user}}
-                  <div class="single-user">
-                    <span [ngStyle]="{background: user.firstName}">
-                      <img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
-                    </span>
-                    <h5> {{user.firstName + " " + user.lastName | fresh}}</h5>
-
-                  </div>
-            </div>
-          </div>
           </div>
           <div class="col-md-3">
           </div>
-        <!---- New Table Example ------>
-        <table class="table1">
-            <thead>
-              <tr>
-                
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let user of (employees$ | async)">
-                <td *ngFor="let col of displayedColumns">
-                  <div *ngIf="col === 'select'">
-  
+          <div class="containers" [class.show]="show">
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-8">
+                <div class="row">
+                <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
+                  <div *ngIf="i <= showLimit">
+                    <div class="single-user mx-2 px-1">
+                      <span [ngStyle]="{background: user.firstName}">
+                        <img src="{{user.avatarResolvedUrl}}" class="img-row"
+                          title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
+                      </span>
+                      <span style="text-align: center">
+                        <h5> {{user.firstName + " " + user.lastName | fresh}}</h5>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5"></div>
+              <div class="col-md-4">
+
+                <div *ngIf="!showFlag; else buttonViewLess">
+                  <button class="btn btn-success" style="text-align: center" (click)="showMore()">View More</button>
+                </div>
+                <ng-template #buttonViewLess>
+                  <button class="btn btn-success" style="text-align: center" (click)="showLess()">View Less</button>
+                </ng-template>
+
+              </div>
+              <div class="col-md-3">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+          </div>
+          <!---- Check mark ------>
+
+<!---------
                     <div class="form-check">
                       <label class="form-check-label">
                         <input class="form-check-input" type="checkbox" (click)="$event.stopPropagation()"
@@ -96,18 +105,8 @@
                       </label>
                     </div>
                   </div>
-                 
-                    
-                  <div *ngIf="col === 'avatar'">
-                    <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                      <img src="{{user.avatarResolvedUrl}}" class="img-row" title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
-                    </div>
-                  </div>
-                </tr>
-            
-            </table>
-        
-        </div>
+------>
+
 
         <!------award points----->
 
@@ -189,7 +188,7 @@
       <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
           <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">{{clickedUser?.firstName + ' ' + clickedUser?.lastName}}</h4>
           </div>
           <div class="modal-body">
@@ -210,17 +209,17 @@
 
                 </div>
                 <div class="card-body">
-                  
+
                   <div class="userDetails"></div>
                   <div class="row text-center">
-                      <div class="col-md-3">
-                        </div>
-                        <div class="col-md-6 h-25">
-                          
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-6 h-25">
+
                       <h4><b>{{clickedUser?.firstName + ' ' + clickedUser?.lastName}}</b></h4>
-                        </div>
-                      <div class="col-md-3">
-                        </div>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12 text-center">
@@ -248,25 +247,26 @@
 
                   <!-------Point Selection for Card -------->
                   <div class="card-footer text-center">
-                      <form #giftPointsForm="ngForm" class="form">
-                          <div class="row">
-                            <div class="col-lg" style="height: 200px; overflow-y: auto; overflow-x: hidden">
-                              <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
-                                <label class="form-check-label"
-                                  [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
-                                  <input class="form-check-input" type="radio" name="selectedPointItem"
-                                    (click)="selectPointItem(pointItem)">
-                                  {{pointItem.amount}} pts - {{pointItem.name}}
-                                  <span class="form-check-sign"></span>
-                                </label>
-                              </div>
-                            </div>
+                    <form #giftPointsForm="ngForm" class="form">
+                      <div class="row">
+                        <div class="col-lg" style="height: 200px; overflow-y: auto; overflow-x: hidden">
+                          <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
+                            <label class="form-check-label"
+                              [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
+                              <input class="form-check-input" type="radio" name="selectedPointItem"
+                                (click)="selectPointItem(pointItem)">
+                              {{pointItem.amount}} pts - {{pointItem.name}}
+                              <span class="form-check-sign"></span>
+                            </label>
                           </div>
-                          <div class="gift-points-container text-center">
-                            <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award
-                              Points</button>
-                          </div>
-                        </form>
+                        </div>
+                      </div>
+                      <div class="gift-points-container text-center">
+                        <button type="button" class="btn-lg btn-info btn-round"
+                          (click)="pointItemOnSubmit(giftPointsForm)">Award
+                          Points</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

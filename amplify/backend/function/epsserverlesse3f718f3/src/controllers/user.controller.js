@@ -69,8 +69,6 @@ const registerUser = function (user) {
           departmentId: departmentId,
           phone: phone,
           dateOfBirth: birthdate,
-          // password: password,
-          // saltSecret: saltSecret,
           points: 0,
           middleName: middleName,
           preferredName: preferredName,
@@ -86,7 +84,8 @@ const registerUser = function (user) {
           preferredPronoun: preferredPronoun,
           sex: sex,
           gender: gender,
-          dateOfHire: dateOfHire
+          dateOfHire: dateOfHire,
+          active: 1,
         })
           .then((user) => {
             console.log(`${functionFullName}: user created in db`);
@@ -109,7 +108,7 @@ const registerUser = function (user) {
     .catch(err => {
       console.log(`${functionFullName}: Problem with the database`);
       console.log(err);
-      return {status: false, error: 'Problem with the database: ' + err};
+      return {status: false, message: err};
     });
 };
 
@@ -130,6 +129,10 @@ const getUserProfile = function (username) {
       {
         model: Models.SecurityRole,
         attributes: ['id', 'name', 'description']
+      },
+      {
+        model: Models.PointPool,
+        attributes: ['id', 'managerId', 'pointsRemaining']
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
@@ -137,6 +140,7 @@ const getUserProfile = function (username) {
       'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl'],
     where: {
       username: username,
+      active: 1
     },
   })
     .then(user => {
@@ -157,29 +161,6 @@ const getUserProfile = function (username) {
 };
 
 module.exports.getUserProfile = getUserProfile;
-
-module.exports.setUserProfile = (req, res, next) => {
-  console.log('setUserProfile');
-};
-
-
-var getUserName = function (userid) {
-  const functionName = 'getUserName';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  sqlUserModel.findOne({
-    where: {
-      id: userid,
-    },
-  })
-    .then(user => {
-      if (!user)
-        return res.status(404).json({ status: false, message: 'User record not found.' });
-      else
-        return res.status(200).json({ status: true, user : _.pick(user,['id','username','firstName','lastName','points','email', 'securityRoleId','departmentId']) });
-    });
-};
 
 
 const getUserPoints = function (username) {
@@ -229,10 +210,11 @@ const getUsersPublicDetails = function () {
         attributes: ['id', 'name', 'description']
       }
     ],
-    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'position', 'points', 'dateOfBirth',
-      'securityRoleId', 'departmentId', 'avatarUrl', 'email'],
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
+      'position', 'points', 'dateOfBirth', 'preferredPronoun', 'securityRoleId', 'departmentId', 'avatarUrl', 'email'],
     where: {
       securityRoleId: [1, 2],
+      active: 1,
     },
     order: [
       ['id', 'ASC'],
@@ -255,3 +237,161 @@ const getUsersPublicDetails = function () {
 };
 
 module.exports.getUsersPublicDetails = getUsersPublicDetails;
+
+const adminGetUsersDetails = function () {
+  const functionName = 'adminGetUsersDetails';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlUserModel.findAll({
+    include: [
+      {
+        model: Models.Department,
+        attributes: ['id', 'name']
+      },
+      {
+        model: Models.SecurityRole,
+        attributes: ['id', 'name', 'description']
+      }
+    ],
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
+      'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
+      'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'dateOfTermination', 'phone', 'securityRoleId',
+      'departmentId', 'avatarUrl'],
+    order: [
+      ['id', 'ASC'],
+    ],
+  })
+    .then(usersDetailsResult => {
+      if (!usersDetailsResult) {
+        console.log(`${functionFullName}: No records found`);
+        return { status: false, message: 'No records found' };
+      } else {
+        console.log(`${functionFullName}: User records found`);
+        return  {status: true, users: usersDetailsResult};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Error retrieving user records`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.adminGetUsersDetails = adminGetUsersDetails;
+
+const modifyUser = function (user) {
+  const functionName = 'modifyUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Modifying User:`);
+  console.log(user);
+
+  // Build the user update object
+  const userUpdate = {};
+  const keys = Object.keys(user);
+
+  for (let i = 0; i < keys.length; i++) {
+    let key;
+    switch (keys[i]) {
+      case 'birthdate': {
+        key = 'dateOfBirth';
+        break;
+      }
+      default: {
+        key = keys[i];
+        break;
+      }
+    }
+
+    if (user[keys[i]] === '') {
+      userUpdate[key] = null;
+    } else {
+      userUpdate[key] = user[keys[i]];
+    }
+  }
+
+  return sqlUserModel.update(userUpdate, {
+    include: [
+      {
+        model: Models.Department,
+        attributes: ['id', 'name']
+      },
+      {
+        model: Models.SecurityRole,
+        attributes: ['id', 'name', 'description']
+      }
+    ],
+    where: {
+      id: user.userId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully updated User`);
+      return {status: true, user: user};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.modifyUser = modifyUser;
+
+const terminateUser = function (user) {
+  const functionName = 'terminateUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Terminating User:`);
+  console.log(user);
+
+  return sqlUserModel.update({
+    dateOfTermination: user.dateOfTermination,
+    active: 0,
+  }, {
+    where: {
+      id: user.userId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully terminated User`);
+      return {status: true, user: user};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.terminateUser = terminateUser;
+
+const deleteUser = function (user) {
+  const functionName = 'deleteUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Deleting User:`);
+  console.log(user);
+
+  return sqlUserModel.destroy({
+    where: {
+      id: user.userId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully deleted User`);
+      return {status: true, user: user};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.deleteUser = deleteUser;
+

@@ -168,6 +168,27 @@ app.get('/items/usersPublicDetails2', function(req, res) {
   });
 });
 
+app.get('/items/adminUsersDetails', function(req, res) {
+  console.log('starting get adminUsersDetails');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const promises = [];
+      promises.push(ctrlUser.adminGetUsersDetails());
+      promises.push(ctrlAchievement.getUsersCompleteAchievementTotal());
+      Promise.all(promises)
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 /*
 app.get('/items/usersPublicDetails3', function(req, res) {
   console.log('starting get usersPublicDetails3');
@@ -184,9 +205,61 @@ app.get('/items/usersPublicDetails3', function(req, res) {
 });
 */
 
+app.post('/items/modifyUser', function(req, res) {
+  console.log('starting post modifyUser');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const user = req.body.user;
+      ctrlUser.modifyUser(user)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.user});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
 
-app.put('/items/userProfile', function(req, res) {
-  console.log('starting put userProfile');
+app.post('/items/terminateUser', function(req, res) {
+  console.log('starting post terminateUser');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const user = req.body.user;
+      ctrlUser.terminateUser(user)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.user});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/deleteUser', function(req, res) {
+  console.log('starting post deleteUser');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const user = req.body.user;
+      ctrlUser.deleteUser(user)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.user});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 // Department Routes
@@ -567,6 +640,66 @@ app.post('/items/giftPointsToEmployees', function(req, res) {
               console.log(err);
               res.json({status: 'post call failed!', error: err});
             });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/newPointItem', function(req, res) {
+  console.log('starting post newPointItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const pointItem = req.body.pointItem;
+      ctrlPoints.newPointItem(pointItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointItem});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/modifyPointItem', function(req, res) {
+  console.log('starting post modifyPointItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const pointItem = req.body.pointItem;
+      ctrlPoints.modifyPointItem(pointItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointItem});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/deletePointItem', function(req, res) {
+  console.log('starting post deletePointItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const pointItem = req.body.pointItem;
+      ctrlPoints.deletePointItem(pointItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointItem});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
         });
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});

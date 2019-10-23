@@ -273,9 +273,6 @@ const newPointsTransaction = function (type, sourceUserId, targetUserId, pointIt
   console.log(`${functionFullName}: amount: ${amount}`);
   console.log(`${functionFullName}: description: ${description}`);
 
-  /*    SqlModel.sequelize.query(
-          "INSERT INTO `point_transaction` (`type`, `amount`, `sourceUserId`, `targetUserId`, `description`, `point_item_id`) " +
-          "VALUES ('" + type + "', " + amount + ", " + sourceUserId + ", " + targetUserId + ", '" + description + "', " + pointItemId + ")", { type: SqlModel.sequelize.QueryTypes.INSERT})*/
   sqlPointTransactionModel.create({
     type: type,
     amount: amount,
@@ -296,6 +293,95 @@ const newPointsTransaction = function (type, sourceUserId, targetUserId, pointIt
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      console.log(err);
     });
 };
+
+const newPointItem = function (pointItem) {
+  const functionName = 'newPointItem';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Creating Point Item:`);
+  console.log(pointItem);
+
+  const coreValues = pointItem.coreValues.join(';');
+
+  return sqlPointItemModel.create({
+    name: pointItem.name,
+    description: pointItem.description,
+    amount: pointItem.amount,
+    coreValues: coreValues
+  })
+    .then(newPointItem => {
+      console.log(newPointItem);
+      console.log(`${functionFullName}: Created new Point Item successfully`);
+      return {status: true, pointItem: newPointItem};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.newPointItem = newPointItem;
+
+const modifyPointItem = function (pointItem) {
+  const functionName = 'modifyPointItem';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const coreValues = pointItem.coreValues.join(';');
+
+  console.log(`${functionFullName}: Modifying Point Item:`);
+  console.log(pointItem);
+
+  return sqlPointItemModel.update({
+    name: pointItem.name,
+    description: pointItem.description,
+    amount: pointItem.amount,
+    coreValues: coreValues
+  }, {
+    where: {
+      id: pointItem.itemId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully updated Point Item`);
+      return {status: true, pointItem: pointItem};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.modifyPointItem = modifyPointItem;
+
+
+const deletePointItem = function (pointItem) {
+  const functionName = 'deletePointItem';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Deleting Point Item:`);
+  console.log(pointItem);
+
+  return sqlPointItemModel.destroy({
+    where: {
+      id: pointItem.itemId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully deleted Point Item`);
+      return {status: true, pointItem: pointItem};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.deletePointItem = deletePointItem;
