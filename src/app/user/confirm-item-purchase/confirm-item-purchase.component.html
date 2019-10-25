@@ -22,11 +22,13 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-lg-12" ><h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+                                    <div class="col-lg-12 text-center"> 
+                                      <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+                                      <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
+                                    
                                     </div>
                                 </div>
 
-                                    <div class="col-lg-12" >Department:  </div>
                                     <div class="col-lg-12" >Prize:  </div>
                                     <div class="col-lg-12" >Points:  </div>
 

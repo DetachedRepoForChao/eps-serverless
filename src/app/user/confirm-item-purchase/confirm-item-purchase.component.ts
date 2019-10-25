@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {CurrentUserStore} from '../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
+import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
+
 
 
   import { from } from 'rxjs';
@@ -20,6 +22,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   currentUser;
 
   constructor ( private currentUserStore: CurrentUserStore,
+                private entityUserService: EntityUserService,
                 public currentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
@@ -28,7 +31,8 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
 
-   
+    this.currentUser$ = this.currentUserQuery.selectAll();
+    this.entityUserService.cacheUsers().subscribe();
 
 
   }
