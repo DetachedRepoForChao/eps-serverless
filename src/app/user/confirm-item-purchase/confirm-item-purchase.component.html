@@ -29,6 +29,12 @@
                                 </div>
 
 
+                                <div class="row">
+                                    <button  mat-button (click)="requestedStoreItem(row);"> 
+                                    <div class="container-text">{{row.cost}}pts | {{row.name}}</div></button>
+                              </div>
+
+
                               <div class="container">
                                   <button type="button" class="btn btn-success">Accept</button>
                                   <button type="button" class="btn btn-danger">Decline</button>
