@@ -7,7 +7,9 @@
   border: 0;
 }
 
-
+.heights{
+  height: 50px;
+}
 .h5{
   color: mintcream;
 }
@@ -19,6 +21,15 @@
   top: -0.5rem;
 }
 
+#share-buttons img {
+  width: 50px;
+  padding: 5px;
+  border: 0;
+  box-shadow: 0;
+  display: inline;
+  }
+ 
+  
 /**.icon-blue {color: #0088cc}
 *.icon-grey {color: grey}
 i {
