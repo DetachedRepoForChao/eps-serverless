@@ -26,7 +26,7 @@
 
 .form-row{
 
-	color: Default;
+	color: black;
 }
 
 /*
@@ -82,7 +82,7 @@
 
 
 .form-control {
-	color: Default;
+	color: black;
 }
 
 .validation-message {
@@ -92,7 +92,7 @@
 }
 
 .form-label {
-  color: Default;
+  color: black !important;
 }
 
 .editUser-form-control {

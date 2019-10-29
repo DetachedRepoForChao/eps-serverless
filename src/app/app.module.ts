@@ -88,7 +88,7 @@ import { ConfirmItemPurchaseComponent } from 'src/app/user/confirm-item-purchase
 import { FeedcardFiltersComponent } from './entity-store/feedcard/filter/feedcard-filter.component'
 
 import { from } from 'rxjs';
-    const routes: Routes= [ {path: 'confirm-item-purchase', component: ConfirmItemPurchaseComponent }];
+    // const routes: Routes= [ {path: 'confirm-item-purchase', component: ConfirmItemPurchaseComponent }];
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
 akitaConfig({
@@ -176,7 +176,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ImageCropperModule,
     NgxSpinnerModule,
     OverlayModule,
-    RouterModule.forRoot(routes),
+    // RouterModule.forRoot(routes),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule.forRoot(),
     PerfectScrollbarModule

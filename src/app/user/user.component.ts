@@ -16,7 +16,6 @@ import {Auth, Storage} from 'aws-amplify';
 import * as Amplify from 'aws-amplify';
 // import * as AWS from 'aws-sdk/global';
 // import * as S3 from 'aws-sdk/clients/s3';
-import * as AWS from 'aws-sdk';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {SecurityRole} from '../shared/securityrole.model';
 import {FeedcardService} from '../shared/feedcard/feedcard.service';

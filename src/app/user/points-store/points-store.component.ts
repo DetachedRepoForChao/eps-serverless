@@ -11,7 +11,6 @@ import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/enti
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
 import {MatDialog, MatSnackBar, VERSION } from '@angular/material';
 import { EntityCurrentUserService } from 'src/app/entity-store/current-user/state/entity-current-user.service';
-import { CostExplorer } from 'aws-sdk';
 import { CurrentUserStore } from 'src/app/entity-store/current-user/state/current-user.store';
 import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
@@ -137,7 +136,7 @@ export class PointsStoreComponent implements OnInit {
   confirmStoreItemPurchaseRequest(): void {
   console.log(`Received request to purchase store item`);
   this.router.navigate(['/confirm-item-purchase']);
-  
+
 }
 
 
@@ -147,7 +146,7 @@ export class PointsStoreComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();  
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();
   }
 
 

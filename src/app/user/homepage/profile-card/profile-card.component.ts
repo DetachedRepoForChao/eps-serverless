@@ -10,8 +10,6 @@ import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.s
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {Auth, Storage} from 'aws-amplify';
 import awsconfig from '../../../../aws-exports';
-import * as AWS from 'aws-sdk/global';
-import * as S3 from 'aws-sdk/clients/s3';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 // import {AchievementService} from '../../../shared/achievement/achievement.service';

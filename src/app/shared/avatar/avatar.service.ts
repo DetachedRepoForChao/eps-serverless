@@ -6,8 +6,6 @@ import {ImageService} from '../image.service';
 import Amplify, {API, Auth, Storage} from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
 import {AuthService} from '../../login/auth.service';
-import * as AWS from 'aws-sdk/global';
-import * as S3 from 'aws-sdk/clients/s3';
 import {forkJoin, Observable} from 'rxjs';
 import {LeaderboardUser} from '../leaderboard.service';
 import {FeedcardService} from '../feedcard/feedcard.service';

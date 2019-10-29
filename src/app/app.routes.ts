@@ -17,6 +17,7 @@ import {PointsStoreComponent} from './user/points-store/points-store.component';
 import {ForgotPasswordComponent} from './login/forgot-password/forgot-password.component';
 
 import {User} from './shared/user.model';
+import {ConfirmItemPurchaseComponent} from './user/confirm-item-purchase/confirm-item-purchase.component';
 //import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
 
 export const appRoutes: Routes = [
@@ -117,5 +118,10 @@ export const appRoutes: Routes = [
   },*/
   {
       path: '', redirectTo: '/login', pathMatch: 'full'
+  },
+  {
+    path: 'confirm-item-purchase',
+    component: ConfirmItemPurchaseComponent,
+    canActivate: [AuthGuard],
   }
 ];

@@ -2,7 +2,7 @@
   "Template": {
     "TemplateName": "RequestItemPurchase",
     "SubjectPart": "{{requestUserFullName}} would like to redeem an item!",
-    "HtmlPart": "<h1>Hello {{managerUserFirstName}},</h1><p>{{requestUserFirstName}} would like to redeem the following item:</p><p>Item: {{itemName}}</p><p>Description: {{itemDescription}}</p><p>Cost: {{cost}}</p><p>Once this request has been satisfied, please mark this request as fulfilled within the app.</p>",
-    "TextPart": "Hello {{managerUserFirstName}},\r\n{{requestUserFirstName}} would like to redeem the following item:\r\nItem: {{itemName}}\r\nDescription: {{itemDescription}}\r\nCost: {{cost}}\r\nOnce this request has been satisfied, please mark this request as fulfilled within the app."
+    "HtmlPart": "<h1>Hello {{managerUserFirstName}},</h1><p>{{requestUserFirstName}} would like to redeem the following item:</p><p>Item: {{itemName}}</p><p>Description: {{itemDescription}}</p><p>Cost: {{cost}}</p><p>Once this request has been satisfied, please mark this request as fulfilled within the app. Follow this link to confirm the request: <a href='http://localhost:4200/confirm-item-purchase'>Click Here</a></p>",
+    "TextPart": "Hello {{managerUserFirstName}},\r\n{{requestUserFirstName}} would like to redeem the following item:\r\nItem: {{itemName}}\r\nDescription: {{itemDescription}}\r\nCost: {{cost}}\r\nOnce this request has been satisfied, please mark this request as fulfilled within the app. Follow this link to confirm the request: http://localhost:4200/confirm-item-purchase"
   }
 }
