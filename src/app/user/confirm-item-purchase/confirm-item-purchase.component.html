@@ -22,7 +22,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-lg-12"> 
+                                    <div class="col-lg-12">
                                       <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
                                       <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
                                     </div>
@@ -30,8 +30,22 @@
 
 
                                 <div class="row">
-                                    <button  mat-button (click)="requestStoreItem(row);"> 
-                                      <div class="container-text">{{row.cost}}pts | {{row.name}}</div></button>
+                                    <div *ngFor="let request of (managerRequests$ | async)">
+                                      RecordId {{request.recordId}}
+                                      Requestor UserId {{request.userId}}
+                                      ManagerId {{request.managerId}}
+                                      Manager First Name {{request.managerFirstName}}
+                                      Manager Last Name {{request.managerLastName}}
+                                      Store Item Id {{request.storeItemId}}
+                                      Store Item Name {{request.storeItemName}}
+                                      Store Item Description {{request.storeItemDescription}}
+                                      Store Item Cost {{request.storeItemCost}}
+                                      Status {{request.status}}
+                                      Cancel Description {{request.cancelDescription}}
+
+<!--                                      <div class="container-text">{{request.managerId}} {{request.storeItemCost}}pts | {{request.storeItemName}}</div>-->
+                                    </div>
+
                               </div>
 
 
@@ -55,6 +69,6 @@
             </div>
 
         </section>
-  
+
     </div>
 </div>

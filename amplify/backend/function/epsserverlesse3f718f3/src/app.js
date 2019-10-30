@@ -1007,6 +1007,30 @@ app.get('/items/getUserHasStoreItemRecords', function(req, res) {
   });
 });
 
+app.get('/items/getUserHasStoreItemManagerRecords', function(req, res) {
+  console.log('starting get getUserHasStoreItemManagerRecords');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const managerUser = userResult.user;
+          ctrlStoreItem.getUserHasStoreItemManagerRecords(managerUser)
+            .then(data => {
+              res.json({status: 'get call succeed!', data: data.userHasStoreItemRecords});
+            })
+            .catch(err => {
+              res.json({status: 'get call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.post('/items/newUserHasStoreItemRecord', function(req, res) {
   console.log('starting post newUserHasStoreItemRecord');
 
