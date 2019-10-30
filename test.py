@@ -4,7 +4,7 @@ import datetime;
  
 
 
-for i in range(3):
+for i in range(5):
     ticks = int(time.time())
 
     f1 = open('/Users/wangjinhu/Project/eps-serverless/jinhuchange.js','r+')
@@ -15,7 +15,7 @@ for i in range(3):
 
 
     time.sleep(1)
-    
+
     os.system("git add .")
 
 
