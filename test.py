@@ -14,7 +14,8 @@ for i in range(3):
     f1.close()
 
 
-
+    time.sleep(1)
+    
     os.system("git add .")
 
 
