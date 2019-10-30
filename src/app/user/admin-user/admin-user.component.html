@@ -444,7 +444,7 @@
                         <input type="text" class="form-control"  id="inputitem_name" placeholder="Item Name">
                       </div>
                       <div class="form-group col-md-6">
-                        <label for="inputpoint_Point_amount"class="l2">point amount</label>
+                        <label for="inputpoint_Point_amount"class="l2">point Amount</label>
                         <input type="text" class="form-control"  id="input_point_amount" placeholder="point amount">
                       </div>
                     </div>
@@ -454,39 +454,50 @@
                     </div>
                     
                     
-  <div class="form-group"style="text-align: left">
-    <label for="coreValue" class="l2">Core Values</label>
-    <select class="form-control" id="coreValue" >
-      <option>Happy</option>
-      <option>Fun</option>
-      <option>Genuine</option>
-      <option>Caring</option>
-      <option>Respect</option>
-      <option>Honest</option>
-    </select>
+ 
     
     
-    
-                       <div class="form-check form-check-inline">
-  <label class="form-check-label">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> 1
+    <div class="l2">
+    <div class="form-check form-check-inline">
+  <label class="form-check-label" class="l2">
+    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">Happy
     <span class="form-check-sign"></span>
   </label>
 </div>
 <div class="form-check form-check-inline">
-  <label class="form-check-label">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2"> 2
+  <label class="form-check-label" class="l2">
+    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2"> Fun
     <span class="form-check-sign"></span>
   </label>
 </div>
 <div class="form-check form-check-inline disabled">
-  <label class="form-check-label">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" disabled> 3
+  <label class="form-check-label" class="l2">
+    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3"> Genuine
     <span class="form-check-sign"></span>
   </label>
 </div>
+       <div class="form-check form-check-inline disabled">
+  <label class="form-check-label" class="l2">
+    <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="option4" > Caring
+    <span class="form-check-sign"></span>
+  </label>
+</div>
+       
+       <div class="form-check form-check-inline disabled">
+  <label class="form-check-label" class="l2">
+    <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="option5" > Respect
+    <span class="form-check-sign"></span>
+  </label>
+</div>
+       <div class="form-check form-check-inline disabled">
+  <label class="form-check-label" class="l2">
+    <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="option6" > Honest
+    <span class="form-check-sign"></span>
+  </label>
+</div>
+       </div>
         
-  </div>
+  
                    
             
    
@@ -501,7 +512,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-primary">Save Changes</button>
                 </div>
               </div>
             </div>
@@ -537,7 +548,7 @@
           -->
 
           <br><br>
-          <button class="btn btn-primary btn-lg">Edit Point</button>
+          <button class="btn btn-primary btn-lg">Edit Points</button>
 
           <br><br>
           <button class="btn btn-primary btn-lg">Delete Point</button>
@@ -593,7 +604,7 @@
                         <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
                       </div>
                       <div class="form-group col-md-6">
-                        <label for="inputitems_Point_amount"class="l1">point amount</label>
+                        <label for="inputitems_Point_amount"class="l1">Point Amount</label>
                         <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
                       </div>
                     </div>
@@ -612,7 +623,7 @@
 
 
                     <div class="form-group" style="text-align: left">
-                      <label for="inputUploadImg" class="l1">Upload Img </label>
+                      <label for="inputUploadImg" class="l1">Upload Image </label>
                       <input type="file" name="img[]" class="file">
                       <div class="input-group col-xs-12">
                         <span class="input-group-addon"><i class="icon-image-02" ></i></span>
@@ -640,7 +651,7 @@
           <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Edit Items</button>
 
           <br><br>
-          <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Dlete Items</button>
+          <button type="button" class="btn btn-primary btn-lg"[routerLink]="['/', 'user', 'store']">Delete Items</button>
 
 
 
