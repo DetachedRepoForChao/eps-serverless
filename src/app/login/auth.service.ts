@@ -47,15 +47,6 @@ export class AuthService {
     });
   }
 
-  /*  ngOnInit(): void {
-      Auth.currentUserInfo()
-        .then((userInfo: any) => {
-          this.globals.cognitoUserId = userInfo.id.split(':')[1];
-          console.log('this.globals.currentUserId');
-          console.log(this.globals.cognitoUserId);
-        });
-    }*/
-
   signUp(user: NewUser): Promise<CognitoUser | any> {
     console.log('NewUser');
     console.log(user);
