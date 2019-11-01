@@ -33,6 +33,8 @@ export class AdminUserComponent implements OnInit {
   phoneValidationError: string;
   addUserForm: FormGroup;
   editUserForm: FormGroup;
+  AddItemsForm: FormGroup;
+  editItemsForm: FormGroup;
   selectUserForm: FormGroup;
   selectedUser;
   removeFieldArray = [];
@@ -83,6 +85,9 @@ export class AdminUserComponent implements OnInit {
     this.loadEditUserForm();
 
     this.loadAddUserForm();
+	    this.loadeditItemsForm();
+	   this.loadAddItemsForm();
+	  
 
     // Subscribe to change events for the 'user' field. Everytime a new user is selected, the correpsonding fields will populate with data
     this.editUserForm.get('user').valueChanges.subscribe(user => {
@@ -112,6 +117,45 @@ export class AdminUserComponent implements OnInit {
         }
       }
     });
+	  
+    this.editItemsForm.get('Items').valueChanges.subscribe(Items => {
+      console.log(Items);
+
+      const keys = Object.keys(Items);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+
+        if (this.editItemsForm.get(key)) {
+          // We must take special consideration for selection objects like securityRole and department
+          switch (key) {
+            case 'securityRole': {
+              const securityRole = this.securityRoles.find(x => x.Id === Items [keys[i]].Id);
+              this.editItemsForm.patchValue({[key]: securityRole});
+              break;
+            }
+          
+            default: {
+              this.editItemsForm.patchValue({[key]: Items [keys[i]]});
+            }
+          }
+        }
+      }
+    });	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
 
     // Load the DatePicker for the birthdate field
     $('#editUser_birthdate').datetimepicker({
@@ -233,6 +277,22 @@ export class AdminUserComponent implements OnInit {
       birthdate: [null],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required]
+    });
+  }
+	  private loadAddItemsForm() {
+    this.AddItemsForm = this.formBuilder.group({
+     ItemName: [null, Validators.required],
+      PointAmount: [null, Validators.required],
+      Description: [null, Validators.required],
+	  UploadFile: [null, Validators.required]
+    });
+  }
+	 private loadeditItemsForm() {
+    this.editItemsForm = this.formBuilder.group({
+     ItemName: [null, Validators.required],
+      PointAmount: [null, Validators.required],
+      Description: [null, Validators.required],
+	  UploadFile: [null, Validators.required]
     });
   }
 
@@ -449,9 +509,7 @@ export class AdminUserComponent implements OnInit {
     }*/
   }
 
-  pictureUpload() {
-
-  }
+  
   onLogout() {
     this.authService.signOut().then();
     resetStores();
@@ -462,6 +520,9 @@ export class AdminUserComponent implements OnInit {
     console.log(event.value);
   }
 
+	onSelectItem(event) {
+    console.log(event.value);
+  }
 //uploadFile(event:any){
 // let file = event.target.files[0];
 //let fileName = file.name;

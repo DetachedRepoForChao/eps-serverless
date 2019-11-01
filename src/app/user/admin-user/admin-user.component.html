@@ -772,7 +772,7 @@
                   <!--       form-->
 
 
-                  <form [formGroup]="addItemsForm">
+                  <form [formGroup]="AddItemsForm">
                     <div class="form-row" >
                       <div class="form-group col-md-6" >
                         <label for="addItems_items" class="form-label" class="l1">Item Name </label>
@@ -808,7 +808,7 @@
                       <input type="file" name="img[]" class="file">
                       <div class="input-group col-xs-12">
                         <span class="input-group-addon"><i class="icon-image-02" ></i></span>
-                        <input type="file" (change)="fileChangeEvent($event)" class="form-control input-lg"  placeholder="Upload file">
+                        <input type="file" (change)="fileChangeEvent($event)" class="form-control input-lg"  placeholder="UploadFile">
                         <span class="input-group-btn">
         <button class="browse btn btn-primary input-lg" type="button" onclick=""><i class="glyphicon glyphicon-search" ></i> Browse</button>
       </span>
@@ -865,7 +865,7 @@
                                       class="form-control editItems-form-control"
                                       id="editItems_Items" name="editItems_Items">
                                 <option [ngValue]="null" disabled="true">Select an Item</option>
-                                <option *ngFor="let Items of (itemsQuery.selectAll() | async)" [ngValue]="user">
+                                <option *ngFor="let Items of (itemsQuery.selectAll() | async)" [ngValue]="Items">
                                   {{items.itemsname}}
                                 </option>
                               </select>
@@ -877,23 +877,23 @@
 
                           <div class="form-row">
                             <div class="form-group col-sm-12 col-md-4 col-lg-6">
-                              <label for="editUser_firstName" class="form-label"class="l1">Item Name</label>
-                              <input class="form-control editUser-form-control" id="editUser_firstName" placeholder="First Name" formControlName="firstName">
-                              <div *ngIf="editUserForm.dirty && editUserForm.controls.firstName.touched && editUserForm.controls.firstName.invalid">
+                              <label for="editItems_itemName" class="form-label"class="l1">Item Name</label>
+                              <input class="form-control editItems-form-control" id="editItems_itemName" placeholder="Item Name" formControlName="itemName">
+                              <div *ngIf="editItemsForm.dirty && editItemsForm.controls.itemName.touched && editItemsForm.controls.itemName.invalid">
                                 <label class="validation-message">This field is required.</label>
                               </div>
                             </div>
                             <div class="form-group col-sm-12 col-md-4 col-lg-6">
-                              <label for="editUser_middleName" class="form-label" class="l1">Point Amount</label>
-                              <input class="form-control editUser-form-control" id="editUser_middleName" placeholder="Middle Name" formControlName="middleName">
+                              <label for="editItems_PointAmount" class="form-label" class="l1">Point Amount</label>
+                              <input class="form-control editItems-form-control" id="editItems_PointAmount" placeholder="Point Amount" formControlName="PointAmount">
                             </div>
                            
                           </div>
 
                           <div class="form-row">
                             <div class="form-group col-sm-12 col-md-4 col-lg-12">
-                              <label for="editUser_preferredName" class="form-label"class="l1">Discription</label>
-                              <input type="text" class="form-control editUser-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
+                              <label for="editItems_Discription" class="form-label"class="l1">Discription</label>
+                              <input class="form-control editItems-form-control" id="editItems_Discription" placeholder="Discription" formControlName="discription">
                             </div>
                           </div>
                           
@@ -902,7 +902,7 @@
                       <input type="file" name="img[]" class="file">
                       <div class="input-group col-xs-12">
                         <span class="input-group-addon"><i class="icon-image-02" ></i></span>
-                        <input type="file" (change)="fileChangeEvent($event)" class="form-control input-lg"  placeholder="Upload file">
+                        <input type="file" (change)="fileChangeEvent(imageChangedEvent)" class="form-control input-lg"  placeholder="Upload file">
                         <span class="input-group-btn">
         <button class="browse btn btn-primary input-lg" type="button" onclick=""><i class="glyphicon glyphicon-search" ></i> Browse</button>
       </span>
