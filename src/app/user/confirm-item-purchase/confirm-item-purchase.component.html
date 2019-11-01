@@ -17,7 +17,7 @@
                                 <div class="row">
                                     <div class="col-md-12 text-center">
                                       <h3> Hello there!</h3>
-                                      <span> You have a prize redemption request.</span>
+                                      <span> Confirm Purchase Request</span>
                                     </div>
                                 </div>
 
@@ -31,6 +31,21 @@
                                   <ng-container matColumnDef="userId">
                                     <mat-header-cell *matHeaderCellDef> UserID </mat-header-cell>
                                     <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userId}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef=storeItemName>
+                                    <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="storeItemCost">
+                                    <mat-header-cell *matHeaderCellDef> Item Cost </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="status">
+                                    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
                                   </ng-container>
 
                                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

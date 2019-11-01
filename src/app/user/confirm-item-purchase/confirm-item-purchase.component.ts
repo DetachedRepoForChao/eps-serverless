@@ -30,7 +30,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   rows = [];
   requestedStoreItem;
   managerRequests$;
-  displayedColumns= ['recordId', 'userId']
+  displayedColumns= ['recordId', 'userId', 'storeItemName','storeItemCost','status']
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
