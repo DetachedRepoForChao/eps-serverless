@@ -33,7 +33,6 @@ export class AdminUserComponent implements OnInit {
   phoneValidationError: string;
   addUserForm: FormGroup;
   editUserForm: FormGroup;
-  addUserForm:FormGroup;
   selectUserForm: FormGroup;
   selectedUser;
   removeFieldArray = [];
