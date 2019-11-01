@@ -811,7 +811,6 @@
                      
                      
                     
-                  
                   </form>
 
 
@@ -842,36 +841,80 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-         <div class="modal-body editItems-modal-body">
+          <div class="modal-body editItems-modal-body">
                     <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
                       <div class="editItems-form-container">
 
                         <form [formGroup]="editItemsForm">
                           <div class="form-row">
                             <div class="form-group col-4">
-                              <label for="editItems_user" class="form-label">Items to Modify</label>
-                              <select formControlName="user"
+                              <label for="editItems_Items" class="form-label">Items to Modify</label>
+                              <select formControlName="Items"
                                       class="form-control editItems-form-control"
-                                      id="editItems_user" name="editItems_user">
-                                <option [ngValue]="null" disabled="true">Select a User</option>
-                                <option *ngFor="let user of (ItemsQuery.selectAll() | async)" [ngValue]="user">
-                                  {{Items.username}}
+                                      id="editItems_Items" name="editItems_Items">
+                                <option [ngValue]="null" disabled="true">Select an Item</option>
+                                <option *ngFor="let Items of (itemsQuery.selectAll() | async)" [ngValue]="user">
+                                  {{items.itemsname}}
                                 </option>
                               </select>
-                              <div *ngIf="editItemsForm.dirty && editItemsForm.controls.user.touched && editItemsForm.controls.Items.invalid">
+                              <div *ngIf="editItemsForm.dirty && editItemsForm.controls.Items.touched && editItemsForm.controls.Items.invalid">
                                 <label class="validation-message">This field is required.</label>
                               </div>
                             </div>
                           </div>
-						 
-                            <form>
-                                       
-                             
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_firstName" class="form-label">First Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_firstName" placeholder="First Name" formControlName="firstName">
+                              <div *ngIf="editUserForm.dirty && editUserForm.controls.firstName.touched && editUserForm.controls.firstName.invalid">
+                                <label class="validation-message">This field is required.</label>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_middleName" class="form-label">Middle Name</label>
+                              <input class="form-control editUser-form-control" id="editUser_middleName" placeholder="Middle Name" formControlName="middleName">
+                            </div>
+                           
+                          </div>
+
+                          <div class="form-row">
+                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                              <label for="editUser_preferredName" class="form-label">Preferred Name</label>
+                              <input type="text" class="form-control editUser-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
+                            </div>
+                          </div>
+                
+                        </form>
+
+                      </div>
+                    </perfect-scrollbar>
+                  </div>
+
+                                        
+                                         
+                          
       
       <div class="modal-footer">
          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="button" class="btn btn-primary">Save changes</button>
       </div>
+      
+      
+ 
+
+</div>
+	</div>
+	
+	
+		</div> 
+							
+	 <br><br>						 
+       
+      
+      
+      
+      
     
           
 
