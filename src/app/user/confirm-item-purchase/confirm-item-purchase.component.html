@@ -21,34 +21,24 @@
                                     </div>
                                 </div>
 
-                              <div class="row">
-                                <div *ngFor="let request of (managerRequests$ | async)">
+                              <div>
+                                <mat-table   [dataSource]="managerRequests$">
+                                  <ng-container matColumnDef="recordId">
+                                    <mat-header-cell *matHeaderCellDef>Record ID</mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
+                                  </ng-container>
 
-                                  <table class="table">
-                                    <thead>
-                                    <tr>
-                                      <th scope="col">#</th>
-                                      <th scope="col">First</th>
-                                      <th scope="col">Last</th>
-                                      <th scope="col">Handle</th>
-                                      <th scope="col">Accept</th>
-                                      <th scope="col">Decline</th>
-                                    </tr>
-                                    </thead>
+                                  <ng-container matColumnDef="userId">
+                                    <mat-header-cell *matHeaderCellDef> UserID </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userId}}</mat-cell>
+                                  </ng-container>
 
-                                    <tbody>
-                                      <tr>
-                                        <th scope="row">  RecordId {{request.recordId}} </th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                      </tr>
+                                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-                                    </tbody>
-                                  </table>
-                                </div>
+
+                                </mat-table>
                               </div>
-
 
                                 <<!-- <div class="row">
                                   <div *ngFor="let request of (managerRequests$ | async)">
