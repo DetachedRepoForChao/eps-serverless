@@ -934,33 +934,41 @@
                 </div>
 
 
-                <div class="modal-body">
+                <div class="modal-body addItems-model-body">
+                 <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+                 <div class="addItems-form-container">
                   <!--       form-->
 
 
-                  <form>
-                    <div class="form-row">
+                  <form [formGroup]="addItemsForm">
+                    <div class="form-row" >
                       <div class="form-group col-md-6" >
-                        <label for="inputitems_Name" class="l1">Item Name </label>
-                        <input type="text" class="form-control" id="inputitem_name" placeholder="Item Name">
+                        <label for="addItems_items" class="form-label" class="l1">Item Name </label>
+                        <input class="form-control addItems-form-control" id="addItems_ItemsName" placeholder="Item Name" formControlName="ItemName" style="color: black;">
+                         <!-- <div *ngIf="addUserForm.dirty && addUserForm.controls.user.touched && addUserForm.controls.user.invalid">
+                  <label class="validation-message">This field is required.</label>
+                </div> -->
                       </div>
+                        
                       <div class="form-group col-md-6">
-                        <label for="inputitems_Point_amount"class="l1">Point Amount</label>
-                        <input type="text" class="form-control" id="input_point_amount" placeholder="point amount">
+                        <label for="addItems_pointAmount"class="l1">Point Amount</label>
+                        <input class="form-control addItems-form-control" id="addItems_UserName" placeholder="point amount" formControlName="PointAmount" style="color: black;">
+                         <!-- <div *ngIf="addUserForm.dirty && addUserForm.controls.user.touched && addUserForm.controls.user.invalid">
+                  <label class="validation-message">This field is required.</label>
+                </div> -->
                       </div>
                     </div>
-                    <div class="form-group" style="text-align: left">
-                      <label for="inputitems_Description"class="l1">Description</label>
-                      <input type="text" class="form-control" id="inputDescription" placeholder="Description">
+                    <div class="form-row" >
+                    <div class="form-group col-md-12" >
+                      <label for="addItems_description"class="l1">Description</label>
+                      <input  class="form-control addItems-form-control" id="addItems_Description" placeholder="Description" formControlName="Description" style="color: black;">
+                       <!-- <div *ngIf="addUserForm.dirty && addUserForm.controls.user.touched && addUserForm.controls.user.invalid">
+                  <label class="validation-message">This field is required.</label>
+                </div> -->
                     </div>
-                    <!--
-                      <div class="form-group">
-                        <label for="inputAddress2">Address 2</label>
-                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-                      </div>
-                    -->
-
-
+                </div>
+                     
+    
 
 
                     <div class="form-group" style="text-align: left">
@@ -982,11 +990,15 @@
                   </form>
 
 
-                </div>
+        </div>
+      </perfect-scrollbar>
+    </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
+                </div>
+               
               </div>
             </div>
           </div>
@@ -998,7 +1010,7 @@
 
 
           <!-- Large modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editItemModel">Edit Items</button>
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#editItemModel">Edit Items</button>
 
 <div class="modal fade bd-example-modal-lg" id="editItemModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -1015,8 +1027,8 @@
 
                         <form [formGroup]="editItemsForm">
                           <div class="form-row">
-                            <div class="form-group col-4">
-                              <label for="editItems_Items" class="form-label">Items to Modify</label>
+                            <div class="form-group col-12">
+                              <label for="editItems_Items" class="form-label" class="l1">Items to Modify</label>
                               <select formControlName="Items"
                                       class="form-control editItems-form-control"
                                       id="editItems_Items" name="editItems_Items">
@@ -1032,27 +1044,43 @@
                           </div>
 
                           <div class="form-row">
-                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                              <label for="editUser_firstName" class="form-label">First Name</label>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-6">
+                              <label for="editUser_firstName" class="form-label"class="l1">Item Name</label>
                               <input class="form-control editUser-form-control" id="editUser_firstName" placeholder="First Name" formControlName="firstName">
                               <div *ngIf="editUserForm.dirty && editUserForm.controls.firstName.touched && editUserForm.controls.firstName.invalid">
                                 <label class="validation-message">This field is required.</label>
                               </div>
                             </div>
-                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                              <label for="editUser_middleName" class="form-label">Middle Name</label>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-6">
+                              <label for="editUser_middleName" class="form-label" class="l1">Point Amount</label>
                               <input class="form-control editUser-form-control" id="editUser_middleName" placeholder="Middle Name" formControlName="middleName">
                             </div>
 
                           </div>
 
                           <div class="form-row">
-                            <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                              <label for="editUser_preferredName" class="form-label">Preferred Name</label>
+                            <div class="form-group col-sm-12 col-md-4 col-lg-12">
+                              <label for="editUser_preferredName" class="form-label"class="l1">Discription</label>
                               <input type="text" class="form-control editUser-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
                             </div>
                           </div>
+<<<<<<< HEAD
 
+=======
+                          
+                           <div class="form-group" style="text-align: left">
+                      <label for="inputUploadImg" class="l1">Upload Image </label>
+                      <input type="file" name="img[]" class="file">
+                      <div class="input-group col-xs-12">
+                        <span class="input-group-addon"><i class="icon-image-02" ></i></span>
+                        <input type="file" (change)="fileChangeEvent($event)" class="form-control input-lg"  placeholder="Upload file">
+                        <span class="input-group-btn">
+        <button class="browse btn btn-primary input-lg" type="button" onclick=""><i class="glyphicon glyphicon-search" ></i> Browse</button>
+      </span>
+            </div> 
+                    </div> 
+                
+>>>>>>> 8a7dad3d55ce8aa9e4a3f10192512c8adbcf5b37
                         </form>
 
                       </div>
