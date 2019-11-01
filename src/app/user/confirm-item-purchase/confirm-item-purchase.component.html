@@ -17,38 +17,59 @@
                                 <div class="row">
                                     <div class="col-md-12 text-center">
                                       <h3> Hello there!</h3>
-                                      <span> You have a prize redemption request.</span>
+                                      <span> Confirm Purchase Request</span>
                                     </div>
                                 </div>
 
-                              <div class="row">
-                                <div *ngFor="let request of (managerRequests$ | async)">
+                              <div>
+                                <mat-table   [dataSource]="managerRequests$">
+                                  <ng-container matColumnDef="recordId">
+                                    <mat-header-cell *matHeaderCellDef>Record ID</mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
+                                  </ng-container>
 
-                                  <table class="table">
-                                    <thead>
-                                    <tr>
-                                      <th scope="col">#</th>
-                                      <th scope="col">First</th>
-                                      <th scope="col">Last</th>
-                                      <th scope="col">Handle</th>
-                                      <th scope="col">Accept</th>
-                                      <th scope="col">Decline</th>
-                                    </tr>
-                                    </thead>
+                                  <ng-container matColumnDef="userId">
+                                    <mat-header-cell *matHeaderCellDef> UserID </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userId}}</mat-cell>
+                                  </ng-container>
 
-                                    <tbody>
-                                      <tr>
-                                        <th scope="row">  RecordId {{request.recordId}} </th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                      </tr>
+                                  <ng-container matColumnDef=storeItemName>
+                                    <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
+                                  </ng-container>
 
-                                    </tbody>
-                                  </table>
-                                </div>
+                                  <ng-container matColumnDef="storeItemCost">
+                                    <mat-header-cell *matHeaderCellDef> Item Cost </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="status">
+                                    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="acceptRequest">
+                                    <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="declineRequest">
+                                    <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+                                  </ng-container>
+
+                                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+                                </mat-table>
+                                <mat-paginator
+                                  [length] ="100"
+                                  [pageSize]= "10"
+                                  [pageSizeOptions] ="[5, 10, 25, 100]">
+                                </mat-paginator>
+
                               </div>
-
 
                                 <<!-- <div class="row">
                                   <div *ngFor="let request of (managerRequests$ | async)">

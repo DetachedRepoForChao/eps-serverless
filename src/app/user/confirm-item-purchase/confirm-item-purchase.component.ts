@@ -7,7 +7,7 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-
+import {MatTableModule } from '@angular/material';
 
   import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
@@ -30,6 +30,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   rows = [];
   requestedStoreItem;
   managerRequests$;
+  displayedColumns= ['recordId', 'userId', 'storeItemName','storeItemCost','status','acceptRequest','declineRequest']
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
