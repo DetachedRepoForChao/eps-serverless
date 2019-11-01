@@ -627,12 +627,18 @@
                       <input type="file" name="img[]" class="file">
                       <div class="input-group col-xs-12">
                         <span class="input-group-addon"><i class="icon-image-02" ></i></span>
-                        <input type="text" class="form-control input-lg" disabled placeholder="Upload Image">
+                        <input type="file" (change)="fileChangeEvent($event)" class="form-control input-lg"  placeholder="Upload file">
                         <span class="input-group-btn">
         <button class="browse btn btn-primary input-lg" type="button" onclick=""><i class="glyphicon glyphicon-search" ></i> Browse</button>
       </span>
-                      </div>
-                    </div>
+            </div> 
+                    </div>        
+                     
+      
+                     
+                     
+                    
+                  
                   </form>
 
 
@@ -662,10 +668,8 @@
       </div>
 
     </div>
-  </div>
+ 
 
-
-</div>
 
 
 

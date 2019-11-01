@@ -322,3 +322,29 @@ export class AdminUserComponent implements OnInit {
 // this.examService.uploadAnswer(formData);
 // }
 }
+
+
+// fileChangeEvent(event: any): void {
+//    this.imageChangedEvent = event;
+//  }
+
+//  onImageSelected(event) {
+//    const functionName = 'onImageSelected';
+//    const functionFullName = `${this.componentName} ${functionName}`;
+//    console.log(`Start ${functionFullName}`);
+//
+//    console.log(`${functionFullName}: event: ${event}`);
+//    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
+//
+//
+//    this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
+//      console.log(`${functionFullName}: saveResult: ${saveResult}`);
+//      if (saveResult === true) {
+//        this.avatarUpload = false;
+//        this.avatarPreview = true;
+//        this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
+//      }
+//
+//    });
+//  }
+
