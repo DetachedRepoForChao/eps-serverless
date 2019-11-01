@@ -777,26 +777,26 @@
                       <div class="form-group col-md-6" >
                         <label for="addItems_items" class="form-label" class="l1">Item Name </label>
                         <input class="form-control addItems-form-control" id="addItems_ItemsName" placeholder="Item Name" formControlName="ItemName" style="color: black;">
-                         <!-- <div *ngIf="addUserForm.dirty && addUserForm.controls.user.touched && addUserForm.controls.user.invalid">
+                          <div *ngIf="addItemsForm.dirty && addItemsForm.controls.items.touched && addItemsForm.controls.items.invalid">
                   <label class="validation-message">This field is required.</label>
-                </div> -->
+                </div> 
                       </div>
                         
                       <div class="form-group col-md-6">
                         <label for="addItems_pointAmount"class="l1">Point Amount</label>
                         <input class="form-control addItems-form-control" id="addItems_UserName" placeholder="point amount" formControlName="PointAmount" style="color: black;">
-                         <!-- <div *ngIf="addUserForm.dirty && addUserForm.controls.user.touched && addUserForm.controls.user.invalid">
+                          <div *ngIf="addItemsForm.dirty && addItemsForm.controls.items.touched && addItemsForm.controls.items.invalid">
                   <label class="validation-message">This field is required.</label>
-                </div> -->
+                </div> 
                       </div>
                     </div>
                     <div class="form-row" >
                     <div class="form-group col-md-12" >
                       <label for="addItems_description"class="l1">Description</label>
                       <input  class="form-control addItems-form-control" id="addItems_Description" placeholder="Description" formControlName="Description" style="color: black;">
-                       <!-- <div *ngIf="addUserForm.dirty && addUserForm.controls.user.touched && addUserForm.controls.user.invalid">
+                       <div *ngIf="addItemsForm.dirty && addItemsForm.controls.items.touched && addItemsForm.controls.items.invalid">
                   <label class="validation-message">This field is required.</label>
-                </div> -->
+                </div> 
                     </div>
                 </div>
                      
@@ -902,7 +902,7 @@
                       <input type="file" name="img[]" class="file">
                       <div class="input-group col-xs-12">
                         <span class="input-group-addon"><i class="icon-image-02" ></i></span>
-                        <input type="file" (change)="fileChangeEvent(imageChangedEvent)" class="form-control input-lg"  placeholder="Upload file">
+                        <input type="file" (change)="fileChangeEvent($Event)" class="form-control input-lg"  placeholder="Upload file">
                         <span class="input-group-btn">
         <button class="browse btn btn-primary input-lg" type="button" onclick=""><i class="glyphicon glyphicon-search" ></i> Browse</button>
       </span>
