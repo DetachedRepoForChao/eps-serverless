@@ -32,6 +32,8 @@ export class AdminUserComponent implements OnInit {
   zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
   phoneValidationError: string;
   addUserForm: FormGroup;
+  addItemsForm: FormGroup;
+  editItemsForm: FormGroup;
   editUserForm: FormGroup;
   selectUserForm: FormGroup;
   selectedUser;
@@ -46,7 +48,9 @@ export class AdminUserComponent implements OnInit {
               private achievementService: AchievementService,
               private authService: AuthService,
               private userService: EntityUserService,
+			
               private userQuery: EntityUserQuery,
+			
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
@@ -112,6 +116,31 @@ export class AdminUserComponent implements OnInit {
         }
       }
     });
+	  
+	      this.editItemsForm.get('items').valueChanges.subscribe(items => {
+      console.log(items);
+
+      const keys = Object.keys(items);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+
+        if (this.editItemsForm.get(key)) {
+          // We must take special consideration for selection objects like securityRole and department
+          switch (key) {
+            case 'securityRole': {
+              const securityRole = this.securityRoles.find(x => x.Id === items [keys[i]].Id);
+              this.editItemsForm.patchValue({[key]: securityRole});
+              break;
+            }
+       
+            default: {
+              this.editItemsForm.patchValue({[key]: items [keys[i]]});
+            }
+          }
+        }
+      }
+    });
+	  
 
     // Load the DatePicker for the birthdate field
     $('#editUser_birthdate').datetimepicker({
@@ -235,6 +264,27 @@ export class AdminUserComponent implements OnInit {
       phone: [null, Validators.required]
     });
   }
+	
+	 private loadAddItemsForm() {
+    this.addItemsForm = this.formBuilder.group({
+      ItemName: [null, Validators.required],
+     PointAmount: [null, Validators.required],
+      Description: [null, Validators.required],
+      UploadFile: [null, Validators.required],
+    });
+  }
+	
+
+		 private loadeditItemsForm() {
+    this.editItemsForm = this.formBuilder.group({
+      ItemName: [null, Validators.required],
+     PointAmount: [null, Validators.required],
+      Description: [null, Validators.required],
+		 UploadFile: [null, Validators.required],
+    });
+  }
+	
+
 
 /*  toggleRemoveField(field: string) {
     if (document.getElementById(`editUser_${field}`).attributes.getNamedItem('disabled')) {
@@ -459,6 +509,9 @@ export class AdminUserComponent implements OnInit {
   }
 
   onSelectUser(event) {
+    console.log(event.value);
+  }
+	onSelectItems(event) {
     console.log(event.value);
   }
 
