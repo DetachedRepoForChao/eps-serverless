@@ -419,7 +419,7 @@ export class EntityUserService {
             user: user
           };
 
-          API.post(this.apiName, this.apiPath + '/registerUser', myInit).then(registerUserResult => {
+          API.post(this.apiName, this.apiPath + '/adminRegisterUser', myInit).then(registerUserResult => {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(registerUserResult);
 

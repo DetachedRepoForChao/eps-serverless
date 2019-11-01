@@ -1,9 +1,10 @@
 import {Injectable, OnInit} from '@angular/core';
 import Auth, { CognitoHostedUIIdentityProvider,  } from '@aws-amplify/auth';
-import { Hub, ICredentials } from '@aws-amplify/core';
+import { Hub, ICredentials, } from '@aws-amplify/core';
 import { Subject, Observable } from 'rxjs';
-import { CognitoUser } from 'amazon-cognito-identity-js';
+import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import {Globals} from '../globals';
+import {Router} from '@angular/router';
 
 export interface NewUser {
   username: string;
@@ -38,7 +39,8 @@ export class AuthService {
   public static FACEBOOK = CognitoHostedUIIdentityProvider.Facebook;
   public static GOOGLE = CognitoHostedUIIdentityProvider.Google;
 
-  constructor(private globals: Globals) {
+
+  constructor(private globals: Globals, private router: Router) {
     Hub.listen('auth', (data) => {
       const {channel, payload} = data;
       if (channel === 'auth') {
@@ -72,13 +74,25 @@ export class AuthService {
     });
   }
 
+
+
   signIn(username: string, password: string): Promise<CognitoUser | any> {
     return new Promise((resolve, reject) => {
       Auth.signIn(username, password)
         .then((user: CognitoUser | any) => {
-          this.loggedIn = true;
-          resolve(user);
-        }).catch((error: any) => reject(error));
+          console.log(user);
+          if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+            console.log('new password required');
+            resolve({user: user, status: user.challengeName});
+          } else {
+            this.loggedIn = true;
+            resolve({user: user, status: user.challengeName});
+          }
+
+        }).catch((error: any) => {
+
+          reject(error);
+      });
     });
   }
 

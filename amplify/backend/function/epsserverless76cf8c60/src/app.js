@@ -291,6 +291,24 @@ app.post('/things/addCognitoUser', function(req, res) {
           Name: 'family_name',
           Value: user.lastName,
         });
+        UserAttributes.push({
+          Name: 'name',
+          Value: `${user.firstName} ${user.lastName}`,
+        });
+        break;
+      }
+      case 'middleName': {
+        UserAttributes.push({
+          Name: 'middle_name',
+          Value: user.middleName,
+        });
+        break;
+      }
+      case 'gender': {
+        UserAttributes.push({
+          Name: 'gender',
+          Value: user.gender,
+        });
         break;
       }
       case 'email': {
@@ -337,6 +355,15 @@ app.post('/things/addCognitoUser', function(req, res) {
       }
     }
   }
+
+  UserAttributes.push({
+    Name: 'profile',
+    Value: '',
+  });
+  UserAttributes.push({
+    Name: 'picture',
+    Value: '',
+  });
 
   const params = {
     UserAttributes: UserAttributes,

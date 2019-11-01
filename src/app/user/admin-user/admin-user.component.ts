@@ -31,6 +31,7 @@ export class AdminUserComponent implements OnInit {
   public config: PerfectScrollbarConfigInterface = {};
   zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
   phoneValidationError: string;
+  addUserForm: FormGroup;
   editUserForm: FormGroup;
   selectUserForm: FormGroup;
   selectedUser;
@@ -303,18 +304,43 @@ export class AdminUserComponent implements OnInit {
   onAddUserFormSubmit(form: FormGroup) {
     console.log(form);
 
-    const user = {};
-    const keys = Object.keys(form.controls);
+    // const user = {};
+    // const keys = Object.keys(form.controls);
 
-    // Proceed only if the form is valid
+    const user = {
+      firstName: 'Max',
+      lastName: 'Bado',
+      phone: '+17328597839',
+      email: 'max.bado@gmail.com',
+      securityRoleId: 1,
+      securityRoleName: 'employee',
+      departmentId: 2,
+      departmentName: 'Front Desk',
+      username: 'max-test2',
+      gender: 'Male',
+      middleName: 'R',
+    };
+
+    this.userService.addUser(user).subscribe(addResult => {
+      console.log(addResult);
+      if (addResult.status !== false) {
+        this.notifierService.notify('success', 'User record added successfully.');
+      } else {
+        this.notifierService.notify('error', `Submission error: ${addResult.message}`);
+      }
+    });
+
+    console.log(user);
+
+/*    // Proceed only if the form is valid
     if (!form.invalid) {
       // Format the phone number
       const phone = `+1${this.validatePhoneNumber(form.controls.phone.value)}`;
 
-      /*
+      /!*
       Iterate over the form field keys and add the key/value pair to the user object we'll be passing
       to the addUser function.
-      */
+      *!/
       for (let i = 0; i < keys.length; i++) {
         if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
           console.log(keys[i]);
@@ -358,7 +384,7 @@ export class AdminUserComponent implements OnInit {
     } else {
       console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
-    }
+    }*/
   }
 
   pictureUpload() {

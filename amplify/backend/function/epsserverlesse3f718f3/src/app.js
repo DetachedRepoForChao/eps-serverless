@@ -67,6 +67,26 @@ app.post('/items/registerUser', function(req, res) {
     });
 });
 
+app.post('/items/adminRegisterUser', function(req, res) {
+  console.log('starting post adminRegisterUser');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const user = req.body.user;
+      ctrlUser.adminRegisterUser(user)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 /*app.post('/items/authenticateUser', function(req, res) {
   console.log('starting post authenticateUser');
 });*/

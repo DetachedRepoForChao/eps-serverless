@@ -5,7 +5,7 @@ import {NotifierService} from 'angular-notifier';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-forgot-password',
+  selector: 'app-new-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css']
 })
