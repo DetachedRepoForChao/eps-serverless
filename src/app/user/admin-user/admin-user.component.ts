@@ -16,6 +16,7 @@ import {forkJoin, Observable} from 'rxjs';
 import {DepartmentService} from '../../shared/department.service';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {NotifierService} from 'angular-notifier';
+import {environment} from '../../../environments/environment';
 
 declare var $: any;
 
@@ -30,7 +31,9 @@ export class AdminUserComponent implements OnInit {
   public config: PerfectScrollbarConfigInterface = {};
   zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
   phoneValidationError: string;
+  addUserForm: FormGroup;
   editUserForm: FormGroup;
+  addUserForm:FormGroup;
   selectUserForm: FormGroup;
   selectedUser;
   removeFieldArray = [];
@@ -79,6 +82,8 @@ export class AdminUserComponent implements OnInit {
 
     // Build the reactive Edit User form
     this.loadEditUserForm();
+
+    this.loadAddUserForm();
 
     // Subscribe to change events for the 'user' field. Everytime a new user is selected, the correpsonding fields will populate with data
     this.editUserForm.get('user').valueChanges.subscribe(user => {
@@ -141,10 +146,70 @@ export class AdminUserComponent implements OnInit {
         close: 'fa fa-remove'
       }
     });
+
+    $('#addUser_birthdate').datetimepicker({
+      format: 'L',
+      viewMode: 'years',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
+
+    // Load the DatePicker for the dateOfHire field
+    $('#addUser_dateOfHire').datetimepicker({
+      format: 'L',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
   }
 
   // Creates the Edit User reactive form
   private loadEditUserForm() {
+    this.editUserForm = this.formBuilder.group({
+      user: [null, Validators.required],
+      firstName: [null, Validators.required],
+      middleName: [null],
+      lastName: [null, Validators.required],
+      preferredName: [null],
+      prefix: [null],
+      suffix: [null],
+      position: [null],
+      preferredPronoun: [null],
+      sex: [null],
+      gender: [null],
+      securityRole: [null, Validators.required],
+      department: [null, Validators.required],
+      dateOfHire: [null],
+      address1: [null],
+      address2: [null],
+      city: [null],
+      state: [null],
+      country: [null],
+      zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
+      birthdate: [null],
+      email: [null, Validators.compose([Validators.required, Validators.email])],
+      phone: [null, Validators.required]
+    });
+  }
+
+  private loadAddUserForm() {
     this.editUserForm = this.formBuilder.group({
       user: [null, Validators.required],
       firstName: [null, Validators.required],
@@ -297,6 +362,92 @@ export class AdminUserComponent implements OnInit {
 
   onEditUserFormClose(form) {
     // form.controls.user.reset();
+  }
+
+  onAddUserFormSubmit(form: FormGroup) {
+    console.log(form);
+
+    // const user = {};
+    // const keys = Object.keys(form.controls);
+
+    const user = {
+      firstName: 'Max',
+      lastName: 'Bado',
+      phone: '+17328597839',
+      email: 'max.bado@gmail.com',
+      securityRoleId: 1,
+      securityRoleName: 'employee',
+      departmentId: 2,
+      departmentName: 'Front Desk',
+      username: 'max-test2',
+      gender: 'Male',
+      middleName: 'R',
+    };
+
+    this.userService.addUser(user).subscribe(addResult => {
+      console.log(addResult);
+      if (addResult.status !== false) {
+        this.notifierService.notify('success', 'User record added successfully.');
+      } else {
+        this.notifierService.notify('error', `Submission error: ${addResult.message}`);
+      }
+    });
+
+    console.log(user);
+
+/*    // Proceed only if the form is valid
+    if (!form.invalid) {
+      // Format the phone number
+      const phone = `+1${this.validatePhoneNumber(form.controls.phone.value)}`;
+
+      /!*
+      Iterate over the form field keys and add the key/value pair to the user object we'll be passing
+      to the addUser function.
+      *!/
+      for (let i = 0; i < keys.length; i++) {
+        if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
+          console.log(keys[i]);
+          // Special consideration for nested objects like securityRole and department
+          switch (keys[i]) { // we need to account for securityRole and department objects
+            case 'securityRole': {
+              user['securityRoleId'] = form.controls[keys[i]].value.Id;
+              user['securityRoleName'] = form.controls[keys[i]].value.Name;
+              break;
+            }
+            case 'department': {
+              user['departmentId'] = form.controls[keys[i]].value.Id;
+              user['departmentName'] = form.controls[keys[i]].value.Name;
+              break;
+            }
+          }
+        } else {
+          switch (keys[i]) {
+            case 'phone': { // special case for phone
+              user[keys[i]] = phone;
+              break;
+            }
+            default: {
+              user[keys[i]] = form.controls[keys[i]].value;
+              break;
+            }
+          }
+        }
+      }
+
+      this.userService.addUser(user).subscribe(addResult => {
+        console.log(addResult);
+        if (addResult.status !== false) {
+          this.notifierService.notify('success', 'User record added successfully.');
+        } else {
+          this.notifierService.notify('error', `Submission error: ${addResult.message}`);
+        }
+      });
+
+      console.log(user);
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }*/
   }
 
   pictureUpload() {

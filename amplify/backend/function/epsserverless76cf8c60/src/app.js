@@ -263,6 +263,128 @@ app.post('/things/setCognitoUserAttributes', function(req, res) {
   });
 });
 
+
+app.post('/things/addCognitoUser', function(req, res) {
+  const user = req.body.user;
+
+  const UserAttributes = [];
+  const keys = Object.keys(user);
+
+  for (let i = 0; i < keys.length; i++) {
+    switch (keys[i]) {
+      case 'birthdate': {
+        UserAttributes.push({
+          Name: 'birthdate',
+          Value: user.birthdate,
+        });
+        break;
+      }
+      case 'firstName': {
+        UserAttributes.push({
+          Name: 'given_name',
+          Value: user.firstName,
+        });
+        break;
+      }
+      case 'lastName': {
+        UserAttributes.push({
+          Name: 'family_name',
+          Value: user.lastName,
+        });
+        UserAttributes.push({
+          Name: 'name',
+          Value: `${user.firstName} ${user.lastName}`,
+        });
+        break;
+      }
+      case 'middleName': {
+        UserAttributes.push({
+          Name: 'middle_name',
+          Value: user.middleName,
+        });
+        break;
+      }
+      case 'gender': {
+        UserAttributes.push({
+          Name: 'gender',
+          Value: user.gender,
+        });
+        break;
+      }
+      case 'email': {
+        UserAttributes.push({
+          Name: 'email',
+          Value: user.email,
+        });
+        break;
+      }
+      case 'phone': {
+        UserAttributes.push({
+          Name: 'phone_number',
+          Value: user.phone,
+        });
+        break;
+      }
+      case 'departmentName': {
+        UserAttributes.push({
+          Name: 'custom:department',
+          Value: user.departmentName,
+        });
+        break;
+      }
+      case 'departmentId': {
+        UserAttributes.push({
+          Name: 'custom:department_id',
+          Value: `${user.departmentId}`,
+        });
+        break;
+      }
+      case 'securityRoleName': {
+        UserAttributes.push({
+          Name: 'custom:security_role',
+          Value: user.securityRoleName,
+        });
+        break;
+      }
+      case 'securityRoleId': {
+        UserAttributes.push({
+          Name: 'custom:security_role_id',
+          Value: `${user.securityRoleId}`,
+        });
+        break;
+      }
+    }
+  }
+
+  UserAttributes.push({
+    Name: 'profile',
+    Value: '',
+  });
+  UserAttributes.push({
+    Name: 'picture',
+    Value: '',
+  });
+
+  const params = {
+    UserAttributes: UserAttributes,
+    UserPoolId: userPoolId,
+    Username: user.username
+  };
+
+  const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+
+  cognitoidentityserviceprovider.adminCreateUser(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({success: 'post call failed!', data: err})
+    } else {
+      console.log("User", data);
+      res.json({success: 'post call succeed!', data: data})
+    }
+  });
+});
+
+
 app.get('/things/getCognitoIdentityProviders', function(req, res) {
   var params = {
     MaxResults: 25

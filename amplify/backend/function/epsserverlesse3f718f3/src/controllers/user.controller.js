@@ -115,6 +115,105 @@ const registerUser = function (user) {
 module.exports.registerUser = registerUser;
 
 
+const adminRegisterUser = function (user) {
+  const functionName = 'adminRegisterUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: user:`);
+  console.log(user);
+
+  const username = user.username;
+  const firstName = user.firstName;
+  const lastName = user.lastName;
+  const email = user.email;
+  const securityRoleId = user.securityRoleId;
+  const departmentId = user.departmentId;
+  const phone = user.phone;
+  const birthdate = user.birthdate;
+  const middleName = user.middleName;
+  const preferredName = user.preferredName;
+  const prefix = user.prefix;
+  const suffix = user.suffix;
+  const position = user.position;
+  const address1 = user.address1;
+  const address2 = user.address2;
+  const city = user.city;
+  const state = user.state;
+  const country = user.country;
+  const zip = user.zip;
+  const preferredPronoun = user.preferredPronoun;
+  const sex = user.sex;
+  const gender = user.gender;
+  const dateOfHire = user.dateOfHire;
+
+  return sqlUserModel.findOne({
+    where: {
+      username: username
+    },
+  })
+    .then(userQueryResult => {
+      if (userQueryResult !== null) {
+        console.log(`${functionFullName}: username already taken`);
+        return {status: false, error: 'username already taken'};
+      } else {
+        console.log(`${functionFullName}: user account does not yet exist. Creating...`);
+
+        return sqlUserModel.create({
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          securityRoleId: securityRoleId,
+          departmentId: departmentId,
+          phone: phone,
+          dateOfBirth: birthdate,
+          points: 0,
+          middleName: middleName,
+          preferredName: preferredName,
+          prefix: prefix,
+          suffix: suffix,
+          position: position,
+          address1: address1,
+          address2: address2,
+          city: city,
+          state: state,
+          country: country,
+          zip: zip,
+          preferredPronoun: preferredPronoun,
+          sex: sex,
+          gender: gender,
+          dateOfHire: dateOfHire,
+          active: 1,
+        })
+          .then(newUser => {
+            console.log(`${functionFullName}: user created in db`);
+
+            // If the user is a manager, initialize their points pool
+            if (newUser.securityRoleId === 2) {
+              console.log(`${functionFullName}: initializing manager point pool for new user`);
+              ctrlPointPool.initializePointPool(newUser.id);
+            }
+
+            return {status: true, message: 'user created', newUser: newUser};
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: User creation error`);
+            console.log(err);
+            return {status: false, message: err}
+          });
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Problem with the database`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.adminRegisterUser = adminRegisterUser;
+
+
 const getUserProfile = function (username) {
   const functionName = 'getUserProfile';
   const functionFullName = `${componentName} ${functionName}`;

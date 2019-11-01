@@ -81,32 +81,40 @@ export class SignInComponent implements OnInit {
     this.spinner.show('sign-in-onSubmit-spinner');
     console.log(form.value);
     this.auth.signIn(form.value.username, form.value.password)
-      .then((user: CognitoUser|any) => {
-        console.log(`${functionFullName}: Success!`);
-        console.log(user);
+      .then((signInResult: any) => {
+        if (signInResult.status === 'NEW_PASSWORD_REQUIRED') {
+          this.spinner.hide('sign-in-onSubmit-spinner');
+          console.log(signInResult.user);
+          this.router.navigate(['/newPassword'],
+            {state: {tempPassword: form.value.password, username: form.value.username}});
+        } else {
+          console.log(`${functionFullName}: Success!`);
+          // console.log(user);
 
-        // this.achievementService.incrementAchievementSignIn(userDetails.id)
-        this.achievementService.incrementAchievement('SignIn')
-          .subscribe((result: any) => {
-            console.log(`${functionFullName}: incrementAchievementSignIn result:`);
-            console.log(result);
-            if ( !result ) {
-              console.log(`${functionFullName}: Did not receive response from incrementAchievement: SignIn`);
-            } else {
-              if ( result.status !== true) {
-                console.log(`${functionFullName}: Something went wrong...`);
-                console.log(result.message);
+          // this.achievementService.incrementAchievementSignIn(userDetails.id)
+          this.achievementService.incrementAchievement('SignIn')
+            .subscribe((result: any) => {
+              console.log(`${functionFullName}: incrementAchievementSignIn result:`);
+              console.log(result);
+              if ( !result ) {
+                console.log(`${functionFullName}: Did not receive response from incrementAchievement: SignIn`);
               } else {
-                console.log(`${functionFullName}: Success`);
-                console.log(result.message);
-                // this.achievementComponent.getUserAchievements();
+                if ( result.status !== true) {
+                  console.log(`${functionFullName}: Something went wrong...`);
+                  console.log(result.message);
+                } else {
+                  console.log(`${functionFullName}: Success`);
+                  console.log(result.message);
+                  // this.achievementComponent.getUserAchievements();
+                }
               }
-            }
-          });
+            });
 
-        console.log(`${functionFullName}: Hiding sign-in-onSubmit-spinner`);
-        this.spinner.hide('sign-in-onSubmit-spinner');
-        this.router.navigate(['/user']);
+          console.log(`${functionFullName}: Hiding sign-in-onSubmit-spinner`);
+          this.spinner.hide('sign-in-onSubmit-spinner');
+          this.router.navigate(['/user']);
+        }
+
       })
       .catch((error: any) => {
         // this._loader.hide();

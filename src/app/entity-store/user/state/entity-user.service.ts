@@ -14,6 +14,8 @@ import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {SecurityRole} from '../../../shared/securityrole.model';
 import {Department} from '../../../shared/department.model';
+import {FormGroup} from '@angular/forms';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -381,27 +383,6 @@ export class EntityUserService {
             console.log(data);
 
             if (data.data.status !== false) {
-/*              const userId = data.data.userId;
-              const username = data.data.username;
-              const firstName = data.data.firstName;
-              const lastName = data.data.lastName;
-              const middleName = data.data.middleName;
-              const position = data.data.position;
-              const points = data.data.points;
-              const birthdate = data.data.birthdate;
-              const securityRole: SecurityRole = {
-                Id: data.data.securityRole.Id,
-                Name: data.data.securityRole.Name,
-                Description: data.data.securityRole.description,
-              };
-              const department: Department = {
-                Id: data.data.department.id,
-                Name: data.data.department.name
-              };
-              const email = data.data.email;
-              const phone = data.data.phone;
-              const active = data.data.active;*/
-
               // Update the user in the local Akita store
               this.update(user);
 
@@ -415,6 +396,41 @@ export class EntityUserService {
               observer.complete();
             } else {
               observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  addUser(user): Observable<any> {
+    const functionName = 'addUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            user: user
+          };
+
+          API.post(this.apiName, this.apiPath + '/adminRegisterUser', myInit).then(registerUserResult => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(registerUserResult);
+
+            if (registerUserResult.data.status !== false) {
+              API.post(this.apiName, this.apiPath2 + '/addCognitoUser', myInit).then(addCognitoUserResult => {
+                observer.next(addCognitoUserResult.data);
+                observer.complete();
+              });
+
+            } else {
+              observer.next(registerUserResult.data);
               observer.complete();
             }
           });

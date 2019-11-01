@@ -85,8 +85,8 @@ import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import { FreshPipe } from './pipe/fresh.pipe';
 import { ConfirmItemPurchaseComponent } from 'src/app/user/confirm-item-purchase/confirm-item-purchase.component';
 //import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
-import { FeedcardFiltersComponent } from './entity-store/feedcard/filter/feedcard-filter.component'
-
+import { FeedcardFiltersComponent } from './entity-store/feedcard/filter/feedcard-filter.component';
+import { NewPasswordComponent} from './login/new-password/new-password.component';
 import { from } from 'rxjs';
     // const routes: Routes= [ {path: 'confirm-item-purchase', component: ConfirmItemPurchaseComponent }];
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
@@ -143,7 +143,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FreshPipe,
     ConfirmItemPurchaseComponent,
     //ChatRoomComponent,
-    FeedcardFiltersComponent
+    FeedcardFiltersComponent,
+    NewPasswordComponent
 
   ],
   imports: [
