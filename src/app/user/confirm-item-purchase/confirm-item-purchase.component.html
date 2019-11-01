@@ -48,11 +48,27 @@
                                     <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
                                   </ng-container>
 
+                                  <ng-container matColumnDef="acceptRequest">
+                                    <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="declineRequest">
+                                    <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+                                  </ng-container>
+
                                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
 
                                 </mat-table>
+                                <mat-paginator
+                                  [length] ="100"
+                                  [pageSize]= "10"
+                                  [pageSizeOptions] ="[5, 10, 25, 100]">
+                                </mat-paginator>
+
                               </div>
 
                                 <<!-- <div class="row">

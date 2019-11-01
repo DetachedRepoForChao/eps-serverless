@@ -18,11 +18,13 @@ export type UserHasStoreItemModel = {
   status: string;
   cancelDescription: string;
   dateModified: any;
+  acceptRequest: boolean;
+  declineRequest: boolean;
 };
 
 export function createStoreItemModel({ recordId, userId, managerId, managerFirstName, managerLastName, managerEmail, storeItemId,
                                        storeItemName, storeItemDescription, storeItemCost, status,
-                                       cancelDescription }: Partial<UserHasStoreItemModel>) {
+                                       cancelDescription,acceptRequest, declineRequest }: Partial<UserHasStoreItemModel>) {
 
   return {
     id: guid(),
@@ -38,6 +40,8 @@ export function createStoreItemModel({ recordId, userId, managerId, managerFirst
     storeItemCost,
     status,
     cancelDescription,
+    acceptRequest,
+    declineRequest,
     dateModified: Date.now()
   } as UserHasStoreItemModel;
 }
