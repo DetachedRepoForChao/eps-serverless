@@ -33,6 +33,7 @@ export class AdminUserComponent implements OnInit {
   phoneValidationError: string;
   addUserForm: FormGroup;
   editUserForm: FormGroup;
+  addUserForm:FormGroup;
   selectUserForm: FormGroup;
   selectedUser;
   removeFieldArray = [];
@@ -81,6 +82,8 @@ export class AdminUserComponent implements OnInit {
 
     // Build the reactive Edit User form
     this.loadEditUserForm();
+
+    this.loadAddUserForm();
 
     // Subscribe to change events for the 'user' field. Everytime a new user is selected, the correpsonding fields will populate with data
     this.editUserForm.get('user').valueChanges.subscribe(user => {
@@ -143,10 +146,70 @@ export class AdminUserComponent implements OnInit {
         close: 'fa fa-remove'
       }
     });
+
+    $('#addUser_birthdate').datetimepicker({
+      format: 'L',
+      viewMode: 'years',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
+
+    // Load the DatePicker for the dateOfHire field
+    $('#addUser_dateOfHire').datetimepicker({
+      format: 'L',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
   }
 
   // Creates the Edit User reactive form
   private loadEditUserForm() {
+    this.editUserForm = this.formBuilder.group({
+      user: [null, Validators.required],
+      firstName: [null, Validators.required],
+      middleName: [null],
+      lastName: [null, Validators.required],
+      preferredName: [null],
+      prefix: [null],
+      suffix: [null],
+      position: [null],
+      preferredPronoun: [null],
+      sex: [null],
+      gender: [null],
+      securityRole: [null, Validators.required],
+      department: [null, Validators.required],
+      dateOfHire: [null],
+      address1: [null],
+      address2: [null],
+      city: [null],
+      state: [null],
+      country: [null],
+      zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
+      birthdate: [null],
+      email: [null, Validators.compose([Validators.required, Validators.email])],
+      phone: [null, Validators.required]
+    });
+  }
+
+  private loadAddUserForm() {
     this.editUserForm = this.formBuilder.group({
       user: [null, Validators.required],
       firstName: [null, Validators.required],
