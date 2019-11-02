@@ -49,6 +49,11 @@ table {
   cursor: pointer;
 }
 
+::ng-deep .mat-checkbox .mat-checkbox-frame {
+  border-color: #c5c1d5;
+}
+
+
 /* Style the active class (and buttons on mouse-over) */
 /*.active, .btn:hover {
   background-color: #666;
@@ -86,7 +91,7 @@ input{
     // height: 800px;
     overflow: hidden;
   }
-  
+
   .show {
     overflow: visible;
     height: auto;
@@ -95,7 +100,6 @@ input{
   .button {
     display: flex;
     align-items: center;
-  } 
+  }
 
   //Toggle buttons
-  

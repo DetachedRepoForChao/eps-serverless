@@ -49,7 +49,10 @@
           </div>
           <div class="col-md-3">
              <!-----Toggle button for multi-users-->
-             <input type="checkbox" checked data-toggle="toggle">
+            <mat-slide-toggle class="test" [color]="color"
+                              [checked]="checked"
+                              [disabled]="disabled" (change)="onChange()">Slide Me!</mat-slide-toggle>
+
           </div>
           <div class="containers" [class.show]="show">
             <div class="row">
@@ -57,23 +60,31 @@
               </div>
               <div class="col-md-8">
                 <div class="row">
-                <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
-                  <div *ngIf="i <= showLimit">
-                    <div class="single-user mx-2 px-1">
+                  <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
+                    <div *ngIf="i <= showLimit">
+                      <div class="single-user mx-2 px-1">
                       <span [ngStyle]="{background: user.firstName}">
                         <img src="{{user.avatarResolvedUrl}}" class="img-row"
-                          title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
+                             title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
+
                       </span>
-                      <span style="text-align: center">
-                        <h5> {{user.firstName + " " + user.lastName | fresh}}</h5>
-                      </span>
+                        <div class="row">
+                          <div class="col-2">
+                            <mat-checkbox *ngIf="toggled" [color]="'warn'"></mat-checkbox>
+                          </div>
+                          <div class="col-10" style="text-align: right">
+                            <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
+
                   </div>
-                </div>
                 </div>
               </div>
               <div class="col-md-2">
-                 
+
               </div>
             </div>
             <div class="row">
@@ -127,8 +138,7 @@
             </div>
           </div>
           <div class="gift-points-container text-center">
-            <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award
-              Points</button>
+            <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
           </div>
         </form>
 

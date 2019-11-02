@@ -6,7 +6,7 @@ import { UserService} from '../../../shared/user.service';
 import {User} from '../../../shared/user.model';
 import { Department} from '../../../shared/department.model';
 import {AchievementComponent} from '../../../shared/achievement/achievement.component';
-import {MatTableDataSource} from '@angular/material';
+import {MatTableDataSource, ThemePalette} from '@angular/material';
 
 import {PointItem} from '../../../shared/point-item.model';
 import {NgForm} from '@angular/forms';
@@ -74,6 +74,11 @@ export class GiftPointsComponent implements OnInit {
   showLimit = 8;
   showFlag = false;
 
+  color: ThemePalette = 'warn';
+  checked = false;
+  disabled = false;
+  toggled = false;
+
   constructor(
     private departmentService: DepartmentService,
     private globals: Globals,
@@ -121,6 +126,10 @@ export class GiftPointsComponent implements OnInit {
   }
 
 
+
+  onChange() {
+    this.toggled = !this.toggled;
+  }
 
   populateCoreValueButtonList() {
     const functionName = 'populateCoreValueButtonList';
@@ -362,7 +371,7 @@ export class GiftPointsComponent implements OnInit {
     this.showLimit = 7;
     this.showFlag = false;
   }
-  
+
   toggle() {
     this.showMore(); this.showLess();
   }

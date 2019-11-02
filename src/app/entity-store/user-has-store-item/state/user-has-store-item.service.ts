@@ -155,6 +155,76 @@ export class UserHasStoreItemService {
     return cacheable(this.userHasStoreItemStore, request$);
   }
 
+  getUserHasStoreItemManagerRecords(): Observable<any> {
+    const functionName = 'getUserHasStoreItemManagerRecords';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/getUserHasStoreItemManagerRecords', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving user / store-item records from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
+  }
+
+  cacheUserHasStoreItemManagerRecords() {
+    const functionName = 'cacheUserHasStoreItemManagerRecords';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    const request$ = this.getUserHasStoreItemManagerRecords()
+      .pipe(tap((userHasStoreItemRecords: any) => {
+        console.log(`${functionFullName}: caching:`);
+        console.log(userHasStoreItemRecords);
+
+        const userHasStoreItemRecordsArray: UserHasStoreItemModel[] = [];
+
+        for (let i = 0; i < userHasStoreItemRecords.length; i++) {
+          const recordId = userHasStoreItemRecords[i].id;
+          const userId = userHasStoreItemRecords[i].userId;
+          const managerId = userHasStoreItemRecords[i].managerUser.id;
+          const managerFirstName = userHasStoreItemRecords[i].managerUser.firstName;
+          const managerLastName = userHasStoreItemRecords[i].managerUser.lastName;
+          const managerEmail = userHasStoreItemRecords[i].managerUser.email;
+          const storeItemId = userHasStoreItemRecords[i].storeItemId;
+          const storeItemName = userHasStoreItemRecords[i].storeItem.name;
+          const storeItemDescription = userHasStoreItemRecords[i].storeItem.description;
+          const storeItemCost = userHasStoreItemRecords[i].storeItem.cost;
+          const status = userHasStoreItemRecords[i].status;
+          const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
+          const userHasStoreItemModel = createStoreItemModel({recordId, userId, managerId, managerFirstName, managerLastName, managerEmail,
+            storeItemId, storeItemName, storeItemDescription, storeItemCost, status, cancelDescription});
+          userHasStoreItemRecordsArray.push(userHasStoreItemModel);
+        }
+
+        this.userHasStoreItemStore.set(userHasStoreItemRecordsArray);
+      }));
+
+    return cacheable(this.userHasStoreItemStore, request$);
+  }
+
   newUserHasStoreItemRecord(managerId: number, storeItemId: number): Observable<any> {
     const functionName = 'newUserHasStoreItemRecord';
     const functionFullName = `${this.componentName} ${functionName}`;

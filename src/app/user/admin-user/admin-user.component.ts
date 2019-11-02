@@ -16,6 +16,11 @@ import {forkJoin, Observable} from 'rxjs';
 import {DepartmentService} from '../../shared/department.service';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {NotifierService} from 'angular-notifier';
+import {environment} from '../../../environments/environment';
+import {PointItemService} from '../../entity-store/point-item/state/point-item.service';
+import {PointItemQuery} from '../../entity-store/point-item/state/point-item.query';
+import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
+import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 
 declare var $: any;
 
@@ -30,8 +35,16 @@ export class AdminUserComponent implements OnInit {
   public config: PerfectScrollbarConfigInterface = {};
   zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
   phoneValidationError: string;
+  addUserForm: FormGroup;
   editUserForm: FormGroup;
+  deleteUserForm: FormGroup;
   selectUserForm: FormGroup;
+  addPointItemForm: FormGroup;
+  editPointItemForm: FormGroup;
+  deletePointItemForm: FormGroup;
+  addStoreItemForm: FormGroup;
+  editStoreItemForm: FormGroup;
+  deleteStoreItemForm: FormGroup;
   selectedUser;
   removeFieldArray = [];
   departments;
@@ -45,6 +58,10 @@ export class AdminUserComponent implements OnInit {
               private authService: AuthService,
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
+              private pointItemService: PointItemService,
+              private pointItemQuery: PointItemQuery,
+              private storeItemService: StoreItemService,
+              private storeItemQuery: StoreItemQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
@@ -52,6 +69,8 @@ export class AdminUserComponent implements OnInit {
 
   ngOnInit() {
     this.userService.cacheUsers().subscribe();
+    this.pointItemService.cachePointItems().subscribe();
+    this.storeItemService.cacheStoreItems().subscribe();
 
     // Read in the list of departments from the DepartmentService
     const departments$ = this.departmentService.getDepartments()
@@ -79,8 +98,11 @@ export class AdminUserComponent implements OnInit {
 
     // Build the reactive Edit User form
     this.loadEditUserForm();
+    this.loadAddUserForm();
+    this.loadDeleteUserForm();
+    this.loadDeletePointItemForm();
 
-    // Subscribe to change events for the 'user' field. Everytime a new user is selected, the correpsonding fields will populate with data
+    // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
     this.editUserForm.get('user').valueChanges.subscribe(user => {
       console.log(user);
 
@@ -141,6 +163,38 @@ export class AdminUserComponent implements OnInit {
         close: 'fa fa-remove'
       }
     });
+
+    $('#addUser_birthdate').datetimepicker({
+      format: 'L',
+      viewMode: 'years',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
+
+    // Load the DatePicker for the dateOfHire field
+    $('#addUser_dateOfHire').datetimepicker({
+      format: 'L',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
   }
 
   // Creates the Edit User reactive form
@@ -172,23 +226,63 @@ export class AdminUserComponent implements OnInit {
     });
   }
 
-/*  toggleRemoveField(field: string) {
-    if (document.getElementById(`editUser_${field}`).attributes.getNamedItem('disabled')) {
-      // Remove disabled tag from field
-      document.getElementById(`editUser_${field}`).attributes.removeNamedItem('disabled');
+  private loadAddUserForm() {
+    this.addUserForm = this.formBuilder.group({
+      user: [null, Validators.required],
+      firstName: [null, Validators.required],
+      middleName: [null],
+      lastName: [null, Validators.required],
+      preferredName: [null],
+      prefix: [null],
+      suffix: [null],
+      position: [null],
+      preferredPronoun: [null],
+      sex: [null],
+      gender: [null],
+      securityRole: [null, Validators.required],
+      department: [null, Validators.required],
+      dateOfHire: [null],
+      address1: [null],
+      address2: [null],
+      city: [null],
+      state: [null],
+      country: [null],
+      zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
+      birthdate: [null],
+      email: [null, Validators.compose([Validators.required, Validators.email])],
+      phone: [null, Validators.required]
+    });
+  }
 
-      // Remove field from the removeFieldArray
-      const index: number = this.removeFieldArray.indexOf(field);
-      if (index !== -1) {
-        this.removeFieldArray.splice(index, 1);
+  private loadDeleteUserForm() {
+    this.deleteUserForm = this.formBuilder.group({
+      user: [null, Validators.required],
+    });
+  }
+
+  private loadDeletePointItemForm() {
+    this.deletePointItemForm = this.formBuilder.group({
+      pointItem: [null, Validators.required],
+    });
+  }
+
+  /*  toggleRemoveField(field: string) {
+      if (document.getElementById(`editUser_${field}`).attributes.getNamedItem('disabled')) {
+        // Remove disabled tag from field
+        document.getElementById(`editUser_${field}`).attributes.removeNamedItem('disabled');
+
+        // Remove field from the removeFieldArray
+        const index: number = this.removeFieldArray.indexOf(field);
+        if (index !== -1) {
+          this.removeFieldArray.splice(index, 1);
+        }
+      } else {
+        // Add disabled tag to field
+        document.getElementById(`editUser_${field}`).setAttribute('disabled', '');
+        // Add field to the removeFiledArray. We will use this array to determine which fields get cleared
+        this.removeFieldArray.push(field);
       }
-    } else {
-      // Add disabled tag to field
-      document.getElementById(`editUser_${field}`).setAttribute('disabled', '');
-      // Add field to the removeFiledArray. We will use this array to determine which fields get cleared
-      this.removeFieldArray.push(field);
-    }
-  }*/
+    }*/
 
   // Validates and formats the phone number by stripping out anything except number characters
   validatePhoneNumber(phone: string): (string | null) {
@@ -299,6 +393,92 @@ export class AdminUserComponent implements OnInit {
     // form.controls.user.reset();
   }
 
+  onAddUserFormSubmit(form: FormGroup) {
+    console.log(form);
+
+    // const user = {};
+    // const keys = Object.keys(form.controls);
+
+    const user = {
+      firstName: 'Max',
+      lastName: 'Bado',
+      phone: '+17328597839',
+      email: 'max.bado@gmail.com',
+      securityRoleId: 1,
+      securityRoleName: 'employee',
+      departmentId: 2,
+      departmentName: 'Front Desk',
+      username: 'max-test2',
+      gender: 'Male',
+      middleName: 'R',
+    };
+
+    this.userService.addUser(user).subscribe(addResult => {
+      console.log(addResult);
+      if (addResult.status !== false) {
+        this.notifierService.notify('success', 'User record added successfully.');
+      } else {
+        this.notifierService.notify('error', `Submission error: ${addResult.message}`);
+      }
+    });
+
+    console.log(user);
+
+/*    // Proceed only if the form is valid
+    if (!form.invalid) {
+      // Format the phone number
+      const phone = `+1${this.validatePhoneNumber(form.controls.phone.value)}`;
+
+      /!*
+      Iterate over the form field keys and add the key/value pair to the user object we'll be passing
+      to the addUser function.
+      *!/
+      for (let i = 0; i < keys.length; i++) {
+        if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
+          console.log(keys[i]);
+          // Special consideration for nested objects like securityRole and department
+          switch (keys[i]) { // we need to account for securityRole and department objects
+            case 'securityRole': {
+              user['securityRoleId'] = form.controls[keys[i]].value.Id;
+              user['securityRoleName'] = form.controls[keys[i]].value.Name;
+              break;
+            }
+            case 'department': {
+              user['departmentId'] = form.controls[keys[i]].value.Id;
+              user['departmentName'] = form.controls[keys[i]].value.Name;
+              break;
+            }
+          }
+        } else {
+          switch (keys[i]) {
+            case 'phone': { // special case for phone
+              user[keys[i]] = phone;
+              break;
+            }
+            default: {
+              user[keys[i]] = form.controls[keys[i]].value;
+              break;
+            }
+          }
+        }
+      }
+
+      this.userService.addUser(user).subscribe(addResult => {
+        console.log(addResult);
+        if (addResult.status !== false) {
+          this.notifierService.notify('success', 'User record added successfully.');
+        } else {
+          this.notifierService.notify('error', `Submission error: ${addResult.message}`);
+        }
+      });
+
+      console.log(user);
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }*/
+  }
+
   pictureUpload() {
 
   }
@@ -322,3 +502,29 @@ export class AdminUserComponent implements OnInit {
 // this.examService.uploadAnswer(formData);
 // }
 }
+
+
+// fileChangeEvent(event: any): void {
+//    this.imageChangedEvent = event;
+//  }
+
+//  onImageSelected(event) {
+//    const functionName = 'onImageSelected';
+//    const functionFullName = `${this.componentName} ${functionName}`;
+//    console.log(`Start ${functionFullName}`);
+//
+//    console.log(`${functionFullName}: event: ${event}`);
+//    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
+//
+//
+//    this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
+//      console.log(`${functionFullName}: saveResult: ${saveResult}`);
+//      if (saveResult === true) {
+//        this.avatarUpload = false;
+//        this.avatarPreview = true;
+//        this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
+//      }
+//
+//    });
+//  }
+

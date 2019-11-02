@@ -35,7 +35,7 @@ const getUserHasStoreItemRecords = function (requestUser) {
   const functionName = 'getUserHasStoreItemRecords';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
-
+  console.log(requestUser);
   return sqlUserHasStoreItemModel.findAll({
     include: [
       {
@@ -75,6 +75,52 @@ const getUserHasStoreItemRecords = function (requestUser) {
 };
 
 module.exports.getUserHasStoreItemRecords = getUserHasStoreItemRecords;
+
+const getUserHasStoreItemManagerRecords = function (managerUser) {
+  const functionName = 'getUserHasStoreItemManagerRecords';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+  console.log(managerUser);
+  return sqlUserHasStoreItemModel.findAll({
+    include: [
+      {
+        model: Models.User,
+        as: 'requestUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.User,
+        as: 'managerUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost']
+      },
+    ],
+    where: {
+      managerId: managerUser.id
+    }
+  })
+    .then(result => {
+      if (!result) {
+        console.log(`${functionFullName}: No records found`);
+        return {status: false, message: 'No records found'};
+      } else {
+        console.log(`${functionFullName}: Records found`);
+        console.log(result);
+        return {status: true, userHasStoreItemRecords: result};
+      }
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error retrieving records`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.getUserHasStoreItemManagerRecords = getUserHasStoreItemManagerRecords;
+
 
 const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId) {
   const functionName = 'newUserHasStoreItemRecord';

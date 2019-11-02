@@ -17,31 +17,86 @@
                                 <div class="row">
                                     <div class="col-md-12 text-center">
                                       <h3> Hello there!</h3>
-                                      <span> You have a prize redemption request.</span>
+                                      <span> Confirm Purchase Request</span>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-lg-12"> 
-                                      <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
-                                      <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
-                                    </div>
+                              <div>
+                                <mat-table   [dataSource]="managerRequests$">
+                                  <ng-container matColumnDef="recordId">
+                                    <mat-header-cell *matHeaderCellDef>Record ID</mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="userId">
+                                    <mat-header-cell *matHeaderCellDef> UserID </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userId}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef=storeItemName>
+                                    <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="storeItemCost">
+                                    <mat-header-cell *matHeaderCellDef> Item Cost </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="status">
+                                    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="acceptRequest">
+                                    <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
+                                  </ng-container>
+
+                                  <ng-container matColumnDef="declineRequest">
+                                    <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+                                  </ng-container>
+
+                                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+                                </mat-table>
+
+
+                                <div class="container">
+                                  <button type="button" class="btn btn-success" >Save</button>
+                                  <button type="button" class="btn btn-danger">Cancel</button>
                                 </div>
 
+                                <mat-paginator
+                                  [length] ="100"
+                                  [pageSize]= "10"
+                                  [pageSizeOptions] ="[5, 10, 25, 100]">
+                                </mat-paginator>
 
-                                <div class="row">
-                                    <button  mat-button (click)="requestStoreItem(row);"> 
-                                      <div class="container-text">{{row.cost}}pts | {{row.name}}</div></button>
                               </div>
 
+                                <<!-- <div class="row">
+                                  <div *ngFor="let request of (managerRequests$ | async)">
+                                      RecordId {{request.recordId}}
+                                      Requestor UserId {{request.userId}}
+                                      ManagerId {{request.managerId}}
+                                      Manager First Name {{request.managerFirstName}}
+                                     Manager Last Name {{request.managerLastName}}
+                                    Store Item Id {{request.storeItemId}}
+                                      Store Item Name {{request.storeItemName}}
+                                      Store Item Description {{request.storeItemDescription}}
+                                      Store Item Cost {{request.storeItemCost}}
+                                      Status {{request.status}}
+                                      Cancel Description {{request.cancelDescription}} -->
 
-                              <div class="container">
-                                  <button type="button" class="btn btn-success">Accept</button>
-                                  <button type="button" class="btn btn-danger">Decline</button>
-                              </div>
+<!--                                      <div class="container-text">{{request.managerId}} {{request.storeItemCost}}pts | {{request.storeItemName}}</div>-->
 
 
-                            </div>
+
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -55,6 +110,6 @@
             </div>
 
         </section>
-  
+
     </div>
 </div>

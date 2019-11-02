@@ -46,7 +46,7 @@ export class PointsStoreComponent implements OnInit {
               private authService: AuthService,
               private snackBar: MatSnackBar,
               private router: Router,
-              public dialog: MatDialog ) {}
+              public dialog: MatDialog, ) {}
 
 
   openDialog(): void {
@@ -147,6 +147,7 @@ export class PointsStoreComponent implements OnInit {
 
     this.storeItemService.cacheStoreItems().subscribe();
     this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();
+
   }
 
 

@@ -18,6 +18,7 @@ import {ForgotPasswordComponent} from './login/forgot-password/forgot-password.c
 
 import {User} from './shared/user.model';
 import {ConfirmItemPurchaseComponent} from './user/confirm-item-purchase/confirm-item-purchase.component';
+import {NewPasswordComponent} from './login/new-password/new-password.component';
 //import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
 
 export const appRoutes: Routes = [
@@ -47,6 +48,13 @@ export const appRoutes: Routes = [
     component: LoginComponent,
     children: [
       { path: '', component: ForgotPasswordComponent },
+    ]
+  },
+  {
+    path: 'newPassword',
+    component: LoginComponent,
+    children: [
+      { path: '', component: NewPasswordComponent },
     ]
   },
   {

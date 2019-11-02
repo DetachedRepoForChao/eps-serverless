@@ -67,6 +67,26 @@ app.post('/items/registerUser', function(req, res) {
     });
 });
 
+app.post('/items/adminRegisterUser', function(req, res) {
+  console.log('starting post adminRegisterUser');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const user = req.body.user;
+      ctrlUser.adminRegisterUser(user)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 /*app.post('/items/authenticateUser', function(req, res) {
   console.log('starting post authenticateUser');
 });*/
@@ -994,6 +1014,30 @@ app.get('/items/getUserHasStoreItemRecords', function(req, res) {
         .then(userResult => {
           const requestUser = userResult.user;
           ctrlStoreItem.getUserHasStoreItemRecords(requestUser)
+            .then(data => {
+              res.json({status: 'get call succeed!', data: data.userHasStoreItemRecords});
+            })
+            .catch(err => {
+              res.json({status: 'get call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.get('/items/getUserHasStoreItemManagerRecords', function(req, res) {
+  console.log('starting get getUserHasStoreItemManagerRecords');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const managerUser = userResult.user;
+          ctrlStoreItem.getUserHasStoreItemManagerRecords(managerUser)
             .then(data => {
               res.json({status: 'get call succeed!', data: data.userHasStoreItemRecords});
             })
