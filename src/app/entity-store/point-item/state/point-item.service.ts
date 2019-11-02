@@ -46,7 +46,12 @@ export class PointItemService {
 
 
   add(itemId: number, name: string, description: string, amount: number, coreValues: string[]) {
+    const functionName = 'add';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     const pointItemModel = createPointItemModel({itemId, name, description, amount, coreValues});
+    console.log(pointItemModel);
     this.pointItemStore.add(pointItemModel);
   }
 
@@ -64,19 +69,25 @@ export class PointItemService {
     this.pointItemStore.reset();
   }
 
-  update(itemId: number, name: string, description: string, amount: number, coreValues: string[]) {
+
+  update(pointItem) {
     const functionName = 'update';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: update ${name}`);
-    /** Update All */
-    this.pointItemStore.update((e) => e.itemId === itemId, {
-      name: name,
-      description: description,
-      amount: amount,
-      coreValues: coreValues
-    });
+    console.log(pointItem);
+    // console.log(`${functionFullName}: update ${user.firstName} ${user.lastName}`);
+
+    const pointItemUpdate = {};
+    const keys = Object.keys(pointItem);
+
+    for (let i = 0; i < keys.length; i++) {
+      pointItemUpdate[keys[i]] = pointItem[keys[i]];
+    }
+
+    console.log(pointItemUpdate);
+
+    this.pointItemStore.update((e) => e.itemId === pointItem.itemId, pointItemUpdate);
   }
 
   getPointItems(): Observable<any> {
@@ -220,7 +231,7 @@ export class PointItemService {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(data);
 
-            if (data.data.status === true) {
+            if (data.data.status !== false) {
               const itemId = data.data.id;
               const name = data.data.name;
               const description = data.data.description;
@@ -262,17 +273,10 @@ export class PointItemService {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(data);
 
-            if (data.data.status === true) {
-              const itemId = data.data.itemId;
-              const name = data.data.name;
-              const description = data.data.description;
-              const amount = data.data.amount;
-              const coreValues: string[] = data.data.coreValues.split(';');
-              for (let j = 0; j < coreValues.length; j++) {
-                coreValues[j] = coreValues[j].trim();
-              }
+            if (data.data.status !== false) {
 
-              this.update(itemId, name, description, amount, coreValues);
+              this.update(pointItem);
+
               observer.next(data.data);
               observer.complete();
             } else {
@@ -304,8 +308,8 @@ export class PointItemService {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(data);
 
-            if (data.data.status === true) {
-              this.delete(data.data.itemId);
+            if (data.data.status !== false) {
+              this.delete(pointItem.itemId);
               observer.next(data.data);
               observer.complete();
             } else {
