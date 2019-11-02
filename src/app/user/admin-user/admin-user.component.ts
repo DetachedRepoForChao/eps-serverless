@@ -396,22 +396,22 @@ export class AdminUserComponent implements OnInit {
   onAddUserFormSubmit(form: FormGroup) {
     console.log(form);
 
-    // const user = {};
-    // const keys = Object.keys(form.controls);
+    const user = {};
+    const keys = Object.keys(form.controls);
 
-    const user = {
-      firstName: 'Max',
-      lastName: 'Bado',
-      phone: '+17328597839',
-      email: 'max.bado@gmail.com',
-      securityRoleId: 1,
-      securityRoleName: 'employee',
-      departmentId: 2,
-      departmentName: 'Front Desk',
-      username: 'max-test2',
-      gender: 'Male',
-      middleName: 'R',
-    };
+    // const user = {
+    //   firstName: 'Max',
+    //   lastName: 'Bado',
+    //   phone: '+17328597839',
+    //   email: 'max.bado@gmail.com',
+    //   securityRoleId: 1,
+    //   securityRoleName: 'employee',
+    //   departmentId: 2,
+    //   departmentName: 'Front Desk',
+    //   username: 'max-test2',
+    //   gender: 'Male',
+    //   middleName: 'R',
+    // };
 
     this.userService.addUser(user).subscribe(addResult => {
       console.log(addResult);
@@ -424,15 +424,15 @@ export class AdminUserComponent implements OnInit {
 
     console.log(user);
 
-/*    // Proceed only if the form is valid
+    // Proceed only if the form is valid
     if (!form.invalid) {
       // Format the phone number
       const phone = `+1${this.validatePhoneNumber(form.controls.phone.value)}`;
 
-      /!*
-      Iterate over the form field keys and add the key/value pair to the user object we'll be passing
-      to the addUser function.
-      *!/
+      // /!*
+      // Iterate over the form field keys and add the key/value pair to the user object we'll be passing
+      // to the addUser function.
+      // *!/
       for (let i = 0; i < keys.length; i++) {
         if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
           console.log(keys[i]);
@@ -476,7 +476,7 @@ export class AdminUserComponent implements OnInit {
     } else {
       console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
-    }*/
+    }
   }
 
   pictureUpload() {
@@ -491,40 +491,6 @@ export class AdminUserComponent implements OnInit {
   onSelectUser(event) {
     console.log(event.value);
   }
-
-//uploadFile(event:any){
-// let file = event.target.files[0];
-//let fileName = file.name;
-// console.log(file)
-// console.log(fileName)
-// let formData = new FormData();
-// formData.append('file',file);
-// this.examService.uploadAnswer(formData);
-// }
 }
 
-
-// fileChangeEvent(event: any): void {
-//    this.imageChangedEvent = event;
-//  }
-
-//  onImageSelected(event) {
-//    const functionName = 'onImageSelected';
-//    const functionFullName = `${this.componentName} ${functionName}`;
-//    console.log(`Start ${functionFullName}`);
-//
-//    console.log(`${functionFullName}: event: ${event}`);
-//    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
-//
-//
-//    this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
-//      console.log(`${functionFullName}: saveResult: ${saveResult}`);
-//      if (saveResult === true) {
-//        this.avatarUpload = false;
-//        this.avatarPreview = true;
-//        this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
-//      }
-//
-//    });
-//  }
 
