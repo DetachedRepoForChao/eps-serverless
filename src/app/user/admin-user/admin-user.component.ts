@@ -17,6 +17,10 @@ import {DepartmentService} from '../../shared/department.service';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {NotifierService} from 'angular-notifier';
 import {environment} from '../../../environments/environment';
+import {PointItemService} from '../../entity-store/point-item/state/point-item.service';
+import {PointItemQuery} from '../../entity-store/point-item/state/point-item.query';
+import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
+import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 
 declare var $: any;
 
@@ -35,7 +39,12 @@ export class AdminUserComponent implements OnInit {
   editUserForm: FormGroup;
   deleteUserForm: FormGroup;
   selectUserForm: FormGroup;
-  deletepointForm: FormGroup;
+  addPointItemForm: FormGroup;
+  editPointItemForm: FormGroup;
+  deletePointItemForm: FormGroup;
+  addStoreItemForm: FormGroup;
+  editStoreItemForm: FormGroup;
+  deleteStoreItemForm: FormGroup;
   selectedUser;
   removeFieldArray = [];
   departments;
@@ -49,6 +58,10 @@ export class AdminUserComponent implements OnInit {
               private authService: AuthService,
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
+              private pointItemService: PointItemService,
+              private pointItemQuery: PointItemQuery,
+              private storeItemService: StoreItemService,
+              private storeItemQuery: StoreItemQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
@@ -56,6 +69,8 @@ export class AdminUserComponent implements OnInit {
 
   ngOnInit() {
     this.userService.cacheUsers().subscribe();
+    this.pointItemService.cachePointItems().subscribe();
+    this.storeItemService.cacheStoreItems().subscribe();
 
     // Read in the list of departments from the DepartmentService
     const departments$ = this.departmentService.getDepartments()
@@ -83,10 +98,11 @@ export class AdminUserComponent implements OnInit {
 
     // Build the reactive Edit User form
     this.loadEditUserForm();
-
     this.loadAddUserForm();
+    this.loadDeleteUserForm();
+    this.loadDeletePointItemForm();
 
-    // Subscribe to change events for the 'user' field. Everytime a new user is selected, the correpsonding fields will populate with data
+    // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
     this.editUserForm.get('user').valueChanges.subscribe(user => {
       console.log(user);
 
@@ -211,7 +227,7 @@ export class AdminUserComponent implements OnInit {
   }
 
   private loadAddUserForm() {
-    this.editUserForm = this.formBuilder.group({
+    this.addUserForm = this.formBuilder.group({
       user: [null, Validators.required],
       firstName: [null, Validators.required],
       middleName: [null],
@@ -238,23 +254,35 @@ export class AdminUserComponent implements OnInit {
     });
   }
 
-/*  toggleRemoveField(field: string) {
-    if (document.getElementById(`editUser_${field}`).attributes.getNamedItem('disabled')) {
-      // Remove disabled tag from field
-      document.getElementById(`editUser_${field}`).attributes.removeNamedItem('disabled');
+  private loadDeleteUserForm() {
+    this.deleteUserForm = this.formBuilder.group({
+      user: [null, Validators.required],
+    });
+  }
 
-      // Remove field from the removeFieldArray
-      const index: number = this.removeFieldArray.indexOf(field);
-      if (index !== -1) {
-        this.removeFieldArray.splice(index, 1);
+  private loadDeletePointItemForm() {
+    this.deletePointItemForm = this.formBuilder.group({
+      pointItem: [null, Validators.required],
+    });
+  }
+
+  /*  toggleRemoveField(field: string) {
+      if (document.getElementById(`editUser_${field}`).attributes.getNamedItem('disabled')) {
+        // Remove disabled tag from field
+        document.getElementById(`editUser_${field}`).attributes.removeNamedItem('disabled');
+
+        // Remove field from the removeFieldArray
+        const index: number = this.removeFieldArray.indexOf(field);
+        if (index !== -1) {
+          this.removeFieldArray.splice(index, 1);
+        }
+      } else {
+        // Add disabled tag to field
+        document.getElementById(`editUser_${field}`).setAttribute('disabled', '');
+        // Add field to the removeFiledArray. We will use this array to determine which fields get cleared
+        this.removeFieldArray.push(field);
       }
-    } else {
-      // Add disabled tag to field
-      document.getElementById(`editUser_${field}`).setAttribute('disabled', '');
-      // Add field to the removeFiledArray. We will use this array to determine which fields get cleared
-      this.removeFieldArray.push(field);
-    }
-  }*/
+    }*/
 
   // Validates and formats the phone number by stripping out anything except number characters
   validatePhoneNumber(phone: string): (string | null) {
