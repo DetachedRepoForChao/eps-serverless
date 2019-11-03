@@ -22,7 +22,6 @@ import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
 
-declare var $: any;
 
 export function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
   return function validate (formGroup: FormGroup) {

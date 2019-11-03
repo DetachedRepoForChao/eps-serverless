@@ -298,17 +298,31 @@ app.post('/things/addCognitoUser', function(req, res) {
         break;
       }
       case 'middleName': {
-        UserAttributes.push({
-          Name: 'middle_name',
-          Value: user.middleName,
-        });
+        if (user.gender) {
+          UserAttributes.push({
+            Name: 'middle_name',
+            Value: user.middleName,
+          });
+        } else {
+          UserAttributes.push({
+            Name: 'middle_name',
+            Value: '',
+          });
+        }
         break;
       }
       case 'gender': {
-        UserAttributes.push({
-          Name: 'gender',
-          Value: user.gender,
-        });
+        if (user.gender) {
+          UserAttributes.push({
+            Name: 'gender',
+            Value: user.gender,
+          });
+        } else {
+          UserAttributes.push({
+            Name: 'gender',
+            Value: '',
+          });
+        }
         break;
       }
       case 'email': {

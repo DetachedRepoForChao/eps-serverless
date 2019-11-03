@@ -1,0 +1,186 @@
+.card-text2{
+  text-align: center;
+}
+.card-header2{
+  text-align: center;
+}
+
+.card-footer2{
+
+  text-align: center;
+}
+
+
+
+.card-text3{
+  text-align: center;
+}
+.card-header3{
+  text-align: center;
+}
+
+.card-footer3{
+
+  text-align: center;
+}
+
+.form-row{
+
+  color: black;
+}
+
+/*
+
+.btn{
+	color: white;
+}
+*/
+
+.file {
+  visibility: hidden;
+  position: absolute;
+}
+
+/*.editUser-modal {*/
+/*  transform: translate(0, 0);*/
+/*}*/
+
+.user-modal-body {
+  overflow-scrolling: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 600px;
+  max-height: 600px
+}
+
+.user-form-container {
+  /*margin-left: 20px;*/
+  margin-right: 20px;
+  /*overflow-scrolling: auto;*/
+  /*overflow-y: auto;*/
+  /*overflow-x: hidden;*/
+  /*min-height: 500px;*/
+  /*max-height: 500px*/
+}
+
+.removed {
+  text-decoration: line-through;
+  background-color: rgba(155,155,155,0.98);
+}
+
+.l1 {
+  text-align: left;
+  color:#32325d;
+
+}
+
+.l2 {
+  text-align: left;
+  color:#32325d;
+
+}
+.form-row {
+
+  text-align: left;
+}
+
+
+
+.form-control {
+  color: black;
+}
+
+.validation-message {
+  color: #e14eca;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-label {
+  color: black !important;
+}
+
+.user-form-control {
+  margin-bottom: 5px !important;
+}
+
+
+
+.card label {
+  text-align: left;
+}
+
+
+.form-control input-lg{
+  font-size: 60;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+#user-profile-container {
+  width:700px;
+  overflow: auto;
+  clear: both;
+
+  padding-bottom: 20px;
+}
+
+#profile-card-container {
+  padding-top: 20px;
+}
+
+#user-profile-card {
+  width:700px;
+  clear: both;
+}
+
+.profile-card {
+  width: 300px;
+  float: left;
+
+
+  margin-bottom: 10px;
+
+  background-color: floralwhite;
+}
+
+#achievement-container {
+  width: 300px;
+  float: right;
+
+}
+
+#gift-points {
+  width: 600px;
+  position: absolute;
+  top: 500px;
+  padding: 20px;
+}
+
+#register-user-container {
+  width: 94%;
+  clear: both;
+  padding-left: 3%;
+  padding-right: 3%;
+}
+*/

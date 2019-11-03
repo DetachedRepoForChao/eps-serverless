@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Globals} from '../../../globals';
 import {AchievementComponent} from '../../../shared/achievement/achievement.component';
@@ -33,15 +33,13 @@ export class UsersCardComponent implements OnInit {
     zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
     phoneValidationError: string;
     addUserForm: FormGroup;
+    addUserFormSubmitted = false;
     editUserForm: FormGroup;
+    editUserFormSubmitted = false;
     deleteUserForm: FormGroup;
-    selectUserForm: FormGroup;
-    selectedUser;
-    removeFieldArray = [];
+    deleteUserFormSubmitted = false;
     departments;
     securityRoles;
-    selectedDepartment;
-    selectedSecurityRole;
 
   constructor(public globals: Globals,
               private router: Router,
@@ -115,71 +113,6 @@ export class UsersCardComponent implements OnInit {
         }
       }
     });
-
-    // Load the DatePicker for the birthdate field
-    $('#editUser_birthdate').datetimepicker({
-      format: 'L',
-      viewMode: 'years',
-      icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-      }
-    });
-
-    // Load the DatePicker for the dateOfHire field
-    $('#editUser_dateOfHire').datetimepicker({
-      format: 'L',
-      icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-      }
-    });
-
-    $('#addUser_birthdate').datetimepicker({
-      format: 'L',
-      viewMode: 'years',
-      icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-      }
-    });
-
-    // Load the DatePicker for the dateOfHire field
-    $('#addUser_dateOfHire').datetimepicker({
-      format: 'L',
-      icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: 'fa fa-chevron-left',
-        next: 'fa fa-chevron-right',
-        today: 'fa fa-screenshot',
-        clear: 'fa fa-trash',
-        close: 'fa fa-remove'
-      }
-    });
   }
 
 // Creates the Edit User reactive form
@@ -205,7 +138,7 @@ export class UsersCardComponent implements OnInit {
       state: [null],
       country: [null],
       zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
-      birthdate: [null],
+      birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required]
     });
@@ -213,7 +146,7 @@ export class UsersCardComponent implements OnInit {
 
   private loadAddUserForm() {
     this.addUserForm = this.formBuilder.group({
-      user: [null, Validators.required],
+      username: [null, Validators.required],
       firstName: [null, Validators.required],
       middleName: [null],
       lastName: [null, Validators.required],
@@ -233,7 +166,7 @@ export class UsersCardComponent implements OnInit {
       state: [null],
       country: [null],
       zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
-      birthdate: [null],
+      birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required]
     });
@@ -245,24 +178,6 @@ export class UsersCardComponent implements OnInit {
     });
   }
 
-
-  toggleRemoveField(field: string) {
-      if (document.getElementById(`editUser_${field}`).attributes.getNamedItem('disabled')) {
-        // Remove disabled tag from field
-        document.getElementById(`editUser_${field}`).attributes.removeNamedItem('disabled');
-
-        // Remove field from the removeFieldArray
-        const index: number = this.removeFieldArray.indexOf(field);
-        if (index !== -1) {
-          this.removeFieldArray.splice(index, 1);
-        }
-      } else {
-        // Add disabled tag to field
-        document.getElementById(`editUser_${field}`).setAttribute('disabled', '');
-        // Add field to the removeFiledArray. We will use this array to determine which fields get cleared
-        this.removeFieldArray.push(field);
-      }
-    }
 
 // Validates and formats the phone number by stripping out anything except number characters
   validatePhoneNumber(phone: string): (string | null) {
@@ -282,6 +197,8 @@ export class UsersCardComponent implements OnInit {
 
   onEditUserFormSubmit(form: FormGroup) {
     console.log(form);
+    this.editUserFormSubmitted = true;
+
     const sourceUser = form.controls.user.value;
     const user = {};
     const keys = Object.keys(form.controls);
@@ -319,6 +236,17 @@ export class UsersCardComponent implements OnInit {
               }
             }
           }
+        } else if ((keys[i] === 'birthdate') || (keys[i] === 'dateOfHire')) {
+          const date = new Date(form.controls[keys[i]].value);
+          const dateString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+          if (sourceUser[keys[i]] === form.controls[keys[i]].value) {
+            // Don't add the key/value pair if the new value is the same as the source
+          } else {
+            console.log('Date value changed:');
+            console.log(`Old value: ${sourceUser[keys[i]]}; New value: ${dateString}`);
+
+            user[keys[i]] = dateString;
+          }
         } else if (keys[i] !== 'user') {
           if (sourceUser[keys[i]] === form.controls[keys[i]].value) {
             // Don't add the key/value pair if the new value is the same as the source
@@ -337,7 +265,6 @@ export class UsersCardComponent implements OnInit {
                 break;
               }
             }
-
           }
         }
       }
@@ -350,6 +277,7 @@ export class UsersCardComponent implements OnInit {
           console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.notifierService.notify('success', 'User record updated successfully.');
+            this.editUserFormSubmitted = false;
           } else {
             this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
           }
@@ -359,6 +287,7 @@ export class UsersCardComponent implements OnInit {
         // User object was not changed
         console.log('There are no changes to the user object');
         this.notifierService.notify('warning', 'There were no changes made.');
+        this.editUserFormSubmitted = false;
       }
 
       console.log(user);
@@ -375,32 +304,10 @@ export class UsersCardComponent implements OnInit {
 
   onAddUserFormSubmit(form: FormGroup) {
     console.log(form);
+    this.addUserFormSubmitted = true;
 
     const user = {};
     const keys = Object.keys(form.controls);
-
-    // const user = {
-    //   firstName: 'Max',
-    //   lastName: 'Bado',
-    //   phone: '+17328597839',
-    //   email: 'max.bado@gmail.com',
-    //   securityRoleId: 1,
-    //   securityRoleName: 'employee',
-    //   departmentId: 2,
-    //   departmentName: 'Front Desk',
-    //   username: 'max-test2',
-    //   gender: 'Male',
-    //   middleName: 'R',
-    // };
-
-    this.userService.addUser(user).subscribe(addResult => {
-      console.log(addResult);
-      if (addResult.status !== false) {
-        this.notifierService.notify('success', 'User record added successfully.');
-      } else {
-        this.notifierService.notify('error', `Submission error: ${addResult.message}`);
-      }
-    });
 
     console.log(user);
 
@@ -428,6 +335,10 @@ export class UsersCardComponent implements OnInit {
               break;
             }
           }
+        } else if ((keys[i] === 'birthdate') || (keys[i] === 'dateOfHire')) {
+          const date = new Date(form.controls[keys[i]].value);
+          const dateString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+          user[keys[i]] = dateString;
         } else {
           switch (keys[i]) {
             case 'phone': { // special case for phone
@@ -446,6 +357,7 @@ export class UsersCardComponent implements OnInit {
         console.log(addResult);
         if (addResult.status !== false) {
           this.notifierService.notify('success', 'User record added successfully.');
+          this.addUserFormSubmitted = false;
         } else {
           this.notifierService.notify('error', `Submission error: ${addResult.message}`);
         }
