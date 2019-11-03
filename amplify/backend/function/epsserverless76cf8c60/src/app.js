@@ -399,6 +399,75 @@ app.post('/things/addCognitoUser', function(req, res) {
 });
 
 
+app.post('/things/deleteCognitoUser', function(req, res) {
+  const username = req.body.user.username;
+  console.log(req.body);
+  console.log(username);
+
+  var params = {
+    UserPoolId: userPoolId,
+    Username: username
+  };
+
+  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+
+  cognitoidentityserviceprovider.adminDeleteUser(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({success: 'post call failed!', status: false, data: err})
+    } else {
+      console.log("Deleted user", data);
+      res.json({success: 'post call succeed!', data: data})
+    }
+  });
+});
+
+app.post('/things/disableCognitoUser', function(req, res) {
+  const username = req.body.user.username;
+  console.log(req.body);
+  console.log(username);
+
+  var params = {
+    UserPoolId: userPoolId,
+    Username: username
+  };
+
+  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+
+  cognitoidentityserviceprovider.adminDisableUser(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({success: 'post call failed!', status: false, data: err})
+    } else {
+      console.log("Disabled user", data);
+      res.json({success: 'post call succeed!', data: data})
+    }
+  });
+});
+
+app.post('/things/enableCognitoUser', function(req, res) {
+  const username = req.body.user.username;
+  console.log(req.body);
+  console.log(username);
+
+  var params = {
+    UserPoolId: userPoolId,
+    Username: username
+  };
+
+  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+
+  cognitoidentityserviceprovider.adminEnableUser(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.json({success: 'post call failed!', status: false, data: err})
+    } else {
+      console.log("Enabled user", data);
+      res.json({success: 'post call succeed!', data: data})
+    }
+  });
+});
+
 app.get('/things/getCognitoIdentityProviders', function(req, res) {
   var params = {
     MaxResults: 25
@@ -534,4 +603,4 @@ app.listen(3000, function() {
 // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from
 // this file
-module.exports = app
+module.exports = app;

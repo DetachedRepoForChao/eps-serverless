@@ -38,6 +38,8 @@ export class UsersCardComponent implements OnInit {
     editUserFormSubmitted = false;
     deleteUserForm: FormGroup;
     deleteUserFormSubmitted = false;
+    activateUserForm: FormGroup;
+    activateUserFormSubmitted = false;
     departments;
     securityRoles;
 
@@ -78,13 +80,11 @@ export class UsersCardComponent implements OnInit {
       .subscribe(() => {
       });
 
-    // Build the reactive User form
+    // load reactive forms
     this.loadEditUserForm();
-
     this.loadAddUserForm();
-
     this.loadDeleteUserForm();
-
+    this.loadActivateUserForm();
     // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
     this.editUserForm.get('user').valueChanges.subscribe(user => {
       console.log(user);
@@ -178,6 +178,11 @@ export class UsersCardComponent implements OnInit {
     });
   }
 
+  private loadActivateUserForm() {
+    this.activateUserForm = this.formBuilder.group({
+      user: [null, Validators.required],
+    });
+  }
 
 // Validates and formats the phone number by stripping out anything except number characters
   validatePhoneNumber(phone: string): (string | null) {
@@ -370,4 +375,87 @@ export class UsersCardComponent implements OnInit {
     }
   }
 
+
+  onDeleteUserFormSubmit(form: FormGroup) {
+    console.log(form);
+    this.deleteUserFormSubmitted = true;
+
+    let user = {};
+
+    console.log(user);
+
+    if (!form.invalid) {
+      user = form.controls.user.value;
+      this.userService.deleteUser(user).subscribe(deleteResult => {
+        console.log(deleteResult);
+        if (deleteResult.status !== false) {
+          this.notifierService.notify('success', 'User record deleted successfully.');
+          this.deleteUserFormSubmitted = false;
+        } else {
+          this.notifierService.notify('error', `Submission error: ${deleteResult.message}`);
+        }
+      });
+
+      console.log(user);
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
+
+  onDeactivateUserFormSubmit(form: FormGroup) {
+    console.log(form);
+    this.deleteUserFormSubmitted = true;
+
+    let user = {};
+
+    console.log(user);
+
+    if (!form.invalid) {
+      user = form.controls.user.value;
+      this.userService.deactivateUser(user).subscribe(deactivateResult => {
+        console.log(deactivateResult);
+        if (deactivateResult.status !== false) {
+          this.notifierService.notify('success', 'User record deactivated successfully.');
+          this.deleteUserFormSubmitted = false;
+          form.reset();
+        } else {
+          this.notifierService.notify('error', `Submission error: ${deactivateResult.message}`);
+        }
+      });
+
+      console.log(user);
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
+
+  onActivateUserFormSubmit(form: FormGroup) {
+    console.log(form);
+    this.activateUserFormSubmitted = true;
+
+    let user = {};
+
+    console.log(user);
+
+    if (!form.invalid) {
+      user = form.controls.user.value;
+      this.userService.activateUser(user).subscribe(activateResult => {
+        console.log(activateResult);
+        if (activateResult.status !== false) {
+          this.notifierService.notify('success', 'User record activated successfully.');
+          this.activateUserFormSubmitted = false;
+          form.reset();
+        } else {
+          this.notifierService.notify('error', `Submission error: ${activateResult.message}`);
+        }
+      });
+
+      console.log(user);
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
 }

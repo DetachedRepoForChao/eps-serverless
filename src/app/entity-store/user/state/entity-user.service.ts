@@ -59,9 +59,9 @@ export class EntityUserService {
   }
 
 
-  delete(id: ID) {
-    console.log(`entity-user-avatar.service: delete ${id}`);
-    this.userStore.remove(id);
+  delete(userId: number) {
+    console.log(`entity-user-avatar.service: delete ${userId}`);
+    this.userStore.remove((e) => e.userId === userId);
   }
 
   reset() {
@@ -109,6 +109,18 @@ export class EntityUserService {
     console.log(userUpdate);
 
     this.userStore.update((e) => e.userId === user.userId, userUpdate);
+  }
+
+  setActive(userId: number) {
+    this.userStore.update((e) => e.userId === userId, {
+      active: true
+    });
+  }
+
+  setInactive(userId: number) {
+    this.userStore.update((e) => e.userId === userId, {
+      active: false
+    });
   }
 
   updateCognitoAttributes(user): Observable<any> {
@@ -425,12 +437,130 @@ export class EntityUserService {
 
             if (registerUserResult.data.status !== false) {
               API.post(this.apiName, this.apiPath2 + '/addCognitoUser', myInit).then(addCognitoUserResult => {
+
+                this.userStore.reset();
+                this.cacheUsers().subscribe();
+
                 observer.next(addCognitoUserResult.data);
                 observer.complete();
               });
 
             } else {
               observer.next(registerUserResult.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  deleteUser(user): Observable<any> {
+    const functionName = 'deleteUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            user: user
+          };
+
+          API.post(this.apiName, this.apiPath + '/deleteUser', myInit).then(deleteUserResult => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(deleteUserResult);
+
+            if (deleteUserResult.data.status !== false) {
+              API.post(this.apiName, this.apiPath2 + '/deleteCognitoUser', myInit).then(deleteCognitoUserResult => {
+
+                this.delete(user.userId);
+
+                observer.next(deleteCognitoUserResult.data);
+                observer.complete();
+              });
+
+            } else {
+              observer.next(deleteUserResult.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  deactivateUser(user): Observable<any> {
+    const functionName = 'deactivateUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            user: user
+          };
+
+          API.post(this.apiName, this.apiPath + '/terminateUser', myInit).then(deactivateUserResult => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(deactivateUserResult);
+
+            if (deactivateUserResult.data.status !== false) {
+              API.post(this.apiName, this.apiPath2 + '/disableCognitoUser', myInit).then(disableCognitoUserResult => {
+
+                this.setInactive(user.userId);
+
+                observer.next(disableCognitoUserResult.data);
+                observer.complete();
+              });
+
+            } else {
+              observer.next(deactivateUserResult.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  activateUser(user): Observable<any> {
+    const functionName = 'activateUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            user: user
+          };
+
+          API.post(this.apiName, this.apiPath + '/reinstateUser', myInit).then(activateUserResult => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(activateUserResult);
+
+            if (activateUserResult.data.status !== false) {
+              API.post(this.apiName, this.apiPath2 + '/enableCognitoUser', myInit).then(enableCognitoUserResult => {
+
+                this.setActive(user.userId);
+
+                observer.next(enableCognitoUserResult.data);
+                observer.complete();
+              });
+
+            } else {
+              observer.next(activateUserResult.data);
               observer.complete();
             }
           });

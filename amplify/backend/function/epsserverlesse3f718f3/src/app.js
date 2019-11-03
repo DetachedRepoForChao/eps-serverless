@@ -263,6 +263,25 @@ app.post('/items/terminateUser', function(req, res) {
   });
 });
 
+app.post('/items/reinstateUser', function(req, res) {
+  console.log('starting post reinstateUser');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const user = req.body.user;
+      ctrlUser.reinstateUser(user)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.user});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.post('/items/deleteUser', function(req, res) {
   console.log('starting post deleteUser');
   const token = req.headers.authorization;

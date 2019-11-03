@@ -53,6 +53,12 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     return user$;
   }
 
+  public getDeactivatedUsers() {
+    return this.selectAll({
+      filterBy: userEntity => !(userEntity.active)
+    });
+  }
+
   public getUserCompleteAchievementCount(userId: number) {
     const user = this.getAll({
       filterBy: x => x.userId === userId

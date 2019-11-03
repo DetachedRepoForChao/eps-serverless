@@ -310,7 +310,8 @@ const getUsersPublicDetails = function () {
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
-      'position', 'points', 'dateOfBirth', 'preferredPronoun', 'securityRoleId', 'departmentId', 'avatarUrl', 'email'],
+      'position', 'points', 'dateOfBirth', 'preferredPronoun', 'securityRoleId', 'departmentId', 'avatarUrl',
+      'email', 'active'],
     where: {
       securityRoleId: [1, 2],
       active: 1,
@@ -356,7 +357,7 @@ const adminGetUsersDetails = function () {
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
       'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
       'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'dateOfTermination', 'phone', 'securityRoleId',
-      'departmentId', 'avatarUrl'],
+      'departmentId', 'avatarUrl', 'active'],
     order: [
       ['id', 'ASC'],
     ],
@@ -468,6 +469,36 @@ const terminateUser = function (user) {
 
 module.exports.terminateUser = terminateUser;
 
+const reinstateUser = function (user) {
+  const functionName = 'reinstateUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Reinstating User:`);
+  console.log(user);
+
+  return sqlUserModel.update({
+    dateOfTermination: '',
+    active: 1,
+  }, {
+    where: {
+      id: user.userId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully reinstated user`);
+      return {status: true, user: user};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.reinstateUser = reinstateUser;
+
+
 const deleteUser = function (user) {
   const functionName = 'deleteUser';
   const functionFullName = `${componentName} ${functionName}`;
@@ -482,7 +513,7 @@ const deleteUser = function (user) {
     }
   })
     .then(() => {
-      console.log(`${functionFullName}: Successfully deleted User`);
+      console.log(`${functionFullName}: Successfully deleted user`);
       return {status: true, user: user};
     })
     .catch(err => {
