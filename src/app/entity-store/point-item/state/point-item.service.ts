@@ -165,7 +165,7 @@ export class PointItemService {
           myInit['body'] = {
             targetUser: targetUser,
             sourceUser: sourceUser,
-            pointItem: pointItem
+            storeItem: pointItem
           };
 
           API.post(this.apiName, this.apiPath2 + '/sendAwardPointsEmail', myInit).then(data => {
@@ -224,7 +224,7 @@ export class PointItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            pointItem: pointItem
+            storeItem: pointItem
           };
 
           API.post(this.apiName, this.apiPath + '/newPointItem', myInit).then(data => {
@@ -266,7 +266,7 @@ export class PointItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            pointItem: pointItem
+            storeItem: pointItem
           };
 
           API.post(this.apiName, this.apiPath + '/modifyPointItem', myInit).then(data => {
@@ -301,7 +301,7 @@ export class PointItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            pointItem: pointItem
+            storeItem: pointItem
           };
 
           API.post(this.apiName, this.apiPath + '/deletePointItem', myInit).then(data => {

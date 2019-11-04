@@ -54,7 +54,7 @@ const getPointItem = function (pointItemId) {
         return { status: false, message : 'Point Item record not found' }
       } else {
         console.log(`${functionFullName}: Retrieved point item record successfully`);
-        return { status: true, pointItem : pointItem };
+        return { status: true, storeItem : pointItem };
       }
     })
     .catch(err => {
@@ -315,7 +315,7 @@ const newPointItem = function (pointItem) {
     .then(newPointItem => {
       console.log(newPointItem);
       console.log(`${functionFullName}: Created new Point Item successfully`);
-      return {status: true, pointItem: newPointItem};
+      return {status: true, storeItem: newPointItem};
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
@@ -348,7 +348,7 @@ const modifyPointItem = function (pointItem) {
   })
     .then(() => {
       console.log(`${functionFullName}: Successfully updated Point Item`);
-      return {status: true, pointItem: pointItem};
+      return {status: true, storeItem: pointItem};
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
@@ -375,7 +375,7 @@ const deletePointItem = function (pointItem) {
   })
     .then(() => {
       console.log(`${functionFullName}: Successfully deleted Point Item`);
-      return {status: true, pointItem: pointItem};
+      return {status: true, storeItem: pointItem};
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);

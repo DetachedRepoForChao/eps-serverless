@@ -146,4 +146,87 @@ const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId)
 
 module.exports.newUserHasStoreItemRecord = newUserHasStoreItemRecord;
 
+const newStoreItem = function (storeItem) {
+  const functionName = 'newStoreItem';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
 
+  console.log(`${functionFullName}: Creating Store Item:`);
+  console.log(storeItem);
+
+  return sqlStoreItemModel.create({
+    name: storeItem.name,
+    description: storeItem.description,
+    cost: storeItem.cost,
+    imagePath: storeItem.imagePath,
+  })
+    .then(newStoreItem => {
+      console.log(newStoreItem);
+      console.log(`${functionFullName}: Created new Store Item successfully`);
+      return {status: true, storeItem: newStoreItem};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.newStoreItem = newStoreItem;
+
+const modifyStoreItem = function (storeItem) {
+  const functionName = 'modifyStoreItem';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Modifying Store Item:`);
+  console.log(storeItem);
+
+  return sqlStoreItemModel.update({
+    name: storeItem.name,
+    description: storeItem.description,
+    cost: storeItem.cost,
+    imagePath: storeItem.imagePath,
+  }, {
+    where: {
+      id: storeItem.itemId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully updated Store Item`);
+      return {status: true, storeItem: storeItem};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.modifyStoreItem = modifyStoreItem;
+
+const deleteStoreItem = function (storeItem) {
+  const functionName = 'deleteStoreItem';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Deleting Point Item:`);
+  console.log(storeItem);
+
+  return sqlStoreItemModel.destroy({
+    where: {
+      id: storeItem.itemId,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully deleted Store Item`);
+      return {status: true, storeItem: storeItem};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.deleteStoreItem = deleteStoreItem;

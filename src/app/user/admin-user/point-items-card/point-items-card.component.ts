@@ -53,13 +53,14 @@ export function requireCheckboxesToBeCheckedValidator(minRequired = 1): Validato
 
 export class PointItemsCardComponent implements OnInit {
 
-  componentName = 'point-item-card.component';
+  componentName = 'point-items-card.component';
   public config: PerfectScrollbarConfigInterface = {};
   addPointItemForm: FormGroup;
+  addPointItemFormSubmitted = false;
   editPointItemForm: FormGroup;
+  editPointItemFormSubmitted = false;
   deletePointItemForm: FormGroup;
-  departments;
-  securityRoles;
+  deletePointItemFormSubmitted = false;
 
   constructor(public globals: Globals,
               private router: Router,
@@ -118,14 +119,11 @@ export class PointItemsCardComponent implements OnInit {
         }
       }
     });
-
   }
-
-
 
   private loadEditPointItemForm() {
     this.editPointItemForm = this.formBuilder.group({
-      pointItem: [null, Validators.required],
+      storeItem: [null, Validators.required],
       name: [null, Validators.required],
       description: [null],
       amount: [null, Validators.required],
@@ -158,13 +156,14 @@ export class PointItemsCardComponent implements OnInit {
 
   private loadDeletePointItemForm() {
     this.deletePointItemForm = this.formBuilder.group({
-      pointItem: [null, Validators.required],
+      storeItem: [null, Validators.required],
     });
   }
 
   onEditPointItemFormSubmit(form: FormGroup) {
     console.log(form);
-    const sourcePointItem = form.controls.pointItem.value;
+    this.editPointItemFormSubmitted = true;
+    const sourcePointItem = form.controls.storeItem.value;
     const pointItem = {};
     let newCoreValues = [];
     const oldCoreValues = sourcePointItem['coreValues'].slice(0).sort();
@@ -227,6 +226,7 @@ export class PointItemsCardComponent implements OnInit {
           console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.notifierService.notify('success', 'Point item record updated successfully.');
+            this.editPointItemFormSubmitted = false;
           } else {
             this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
           }
@@ -235,6 +235,7 @@ export class PointItemsCardComponent implements OnInit {
         // Point Item object was not changed
         console.log('There are no changes to the point item object');
         this.notifierService.notify('warning', 'There were no changes made.');
+        this.editPointItemFormSubmitted = false;
       }
 
       console.log(pointItem);
@@ -246,6 +247,7 @@ export class PointItemsCardComponent implements OnInit {
 
   onAddPointItemFormSubmit(form: FormGroup) {
     console.log(form);
+    this.addPointItemFormSubmitted = true;
     const pointItem = {};
     let coreValues = [];
     const keys = Object.keys(form.controls);
@@ -285,6 +287,7 @@ export class PointItemsCardComponent implements OnInit {
         console.log(addResult);
         if (addResult.status !== false) {
           this.notifierService.notify('success', 'Point item record added successfully.');
+          this.addPointItemFormSubmitted = false;
         } else {
           this.notifierService.notify('error', `Submission error: ${addResult.message}`);
         }
@@ -299,15 +302,16 @@ export class PointItemsCardComponent implements OnInit {
 
   onDeletePointItemFormSubmit(form: FormGroup) {
     console.log(form);
-
+    this.deletePointItemFormSubmitted = true;
     let pointItem = {};
 
     if (!form.invalid) {
-      pointItem = form.controls.pointItem.value;
+      pointItem = form.controls.storeItem.value;
       this.pointItemService.deletePointItem(pointItem).subscribe(deleteResult => {
         console.log(deleteResult);
         if (deleteResult.status !== false) {
           this.notifierService.notify('success', 'Point item record deleted successfully.');
+          this.deletePointItemFormSubmitted = false;
         } else {
           this.notifierService.notify('error', `Submission error: ${deleteResult.message}`);
         }

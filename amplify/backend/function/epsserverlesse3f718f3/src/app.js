@@ -1021,6 +1021,65 @@ app.get('/items/getStoreItems', function(req, res) {
   });
 });
 
+app.post('/items/newStoreItem', function(req, res) {
+  console.log('starting post newStoreItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const storeItem = req.body.storeItem;
+      ctrlStoreItem.newStoreItem(storeItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/modifyStoreItem', function(req, res) {
+  console.log('starting post modifyStoreItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const storeItem = req.body.storeItem;
+      ctrlStoreItem.modifyStoreItem(storeItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/deleteStoreItem', function(req, res) {
+  console.log('starting post deleteStoreItem');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const storeItem = req.body.storeItem;
+      ctrlStoreItem.deleteStoreItem(storeItem)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
 
 app.get('/items/getUserHasStoreItemRecords', function(req, res) {
   console.log('starting get getUserHasStoreItemRecords');

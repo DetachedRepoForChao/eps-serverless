@@ -57,13 +57,13 @@ export class StoreItemService {
   }
 
 
-  delete(id: ID) {
+  delete(itemId: number) {
     const functionName = 'delete';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${id}`);
-    this.storeItemStore.remove(id);
+    console.log(`${functionFullName}: delete ${itemId}`);
+    this.storeItemStore.remove((e) => e.itemId === itemId);
   }
 
   reset() {
@@ -243,4 +243,173 @@ export class StoreItemService {
         });
     });
   }
+
+  newStoreItem(storeItem): Observable<any> {
+    const functionName = 'newStoreItem';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            storeItem: storeItem
+          };
+
+          API.post(this.apiName, this.apiPath + '/newStoreItem', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status !== false) {
+              // If new Store Item database record created successfully, upload the store item image
+              this.uploadStoreItemImage(storeItem)
+                .subscribe(uploadResult => {
+                  console.log('upload result');
+                  console.log(uploadResult);
+                  this.storeItemStore.reset();
+                  this.cacheStoreItems().subscribe();
+
+                  observer.next(data.data);
+                  observer.complete();
+                });
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  modifyStoreItem(storeItem): Observable<any> {
+    const functionName = 'modifyStoreItem';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            storeItem: storeItem
+          };
+
+          API.post(this.apiName, this.apiPath + '/modifyStoreItem', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status !== false) {
+              // If new Store Item database record created successfully, upload the store item image
+              this.uploadStoreItemImage(storeItem)
+                .subscribe(uploadResult => {
+                  console.log('upload result');
+                  console.log(uploadResult);
+                  this.storeItemStore.reset();
+                  this.cacheStoreItems().subscribe();
+
+                  observer.next(data.data);
+                  observer.complete();
+                });
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  deleteStoreItem(storeItem): Observable<any> {
+    const functionName = 'deletePointItem';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            storeItem: storeItem
+          };
+
+          API.post(this.apiName, this.apiPath + '/deleteStoreItem', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status !== false) {
+              this.delete(storeItem.itemId);
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+
+  // Uploads new Store Item image and returns the resolved URL
+  uploadStoreItemImage(storeItem): Observable<boolean> {
+    const functionName = 'uploadStoreItemImage';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+
+    // const fileDir = 'store';
+    // const fileName = 'store_item_' + storeItem.itemId + '.png';
+    const image = storeItem.image;
+    const filePath = storeItem.imagePath;
+    console.log(`${functionFullName}: filePath: ${filePath}`);
+
+    const level = 'public';
+
+    return new Observable<boolean>(observer => {
+      // Save the new Store Item image
+      Storage.put(filePath, image, {
+        level: level,
+        contentType: `image/png`,
+      })
+        .then((result: any) => {
+          console.log(`${functionFullName}: result:`);
+          console.log(result);
+
+          Storage.get(result.key, {
+            level: level
+          })
+            .then((resultImage: any) => {
+              console.log(`${functionFullName}: resultImage:`);
+              console.log(resultImage);
+
+              observer.next(resultImage);
+              observer.complete();
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: Error retrieving item from storage`);
+              console.log(err);
+              observer.next(false);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Error:`);
+          console.log(err);
+          observer.next(false);
+          observer.complete();
+        });
+    });
+  }
+
+
 }
