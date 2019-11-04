@@ -98,7 +98,7 @@
                         <span class="form-check-sign"></span>
                       </label>
                     </div>
-                    <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls['coreValuesGroup'].errors.requireCheckboxesToBeChecked) || (addPointItemForm.dirty && addPointItemForm.controls['coreValuesGroup'].errors && addPointItemForm.controls['coreValuesGroup'].errors.requireCheckboxesToBeChecked)">
+                    <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (addPointItemForm.dirty && addPointItemForm.controls['coreValuesGroup'].errors && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
                       <label class="validation-message">Please select at least one Core Value.</label>
                     </div>
                   </div>
@@ -143,7 +143,7 @@
                       {{pointItem.name}} {{pointItem.amount}}pts
                     </option>
                   </select>
-                  <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.storeItem.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.storeItem.touched && editPointItemForm.controls.storeItem.invalid)">
+                  <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.pointItem.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.pointItem.touched && editPointItemForm.controls.pointItem.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </div>
                 </div>
@@ -211,7 +211,7 @@
                         <span class="form-check-sign"></span>
                       </label>
                     </div>
-                    <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls['coreValuesGroup'].errors.requireCheckboxesToBeChecked) || (editPointItemForm.dirty && editPointItemForm.controls['coreValuesGroup'].errors && editPointItemForm.controls['coreValuesGroup'].errors.requireCheckboxesToBeChecked)">
+                    <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (editPointItemForm.dirty && editPointItemForm.controls['coreValuesGroup'].errors && editPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
                       <label class="validation-message">Please select at least one Core Value.</label>
                     </div>
                   </div>
@@ -255,7 +255,7 @@
                       {{pointItem.name}} {{pointItem.amount}}pts
                     </option>
                   </select>
-                  <div *ngIf="(deletePointItemFormSubmitted && deletePointItemForm.controls.storeItem.invalid) || (deletePointItemForm.dirty && deletePointItemForm.controls.storeItem.touched && deletePointItemForm.controls.storeItem.invalid)">
+                  <div *ngIf="(deletePointItemFormSubmitted && deletePointItemForm.controls.pointItem.invalid) || (deletePointItemForm.dirty && deletePointItemForm.controls.pointItem.touched && deletePointItemForm.controls.pointItem.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </div>
                 </div>

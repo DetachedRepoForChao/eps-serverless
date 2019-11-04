@@ -19,8 +19,6 @@ import {NotifierService} from 'angular-notifier';
 import {environment} from '../../../../environments/environment';
 import {PointItemService} from '../../../entity-store/point-item/state/point-item.service';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
-import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
-import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
 
 
 export function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
@@ -70,8 +68,6 @@ export class PointItemsCardComponent implements OnInit {
               private userQuery: EntityUserQuery,
               private pointItemService: PointItemService,
               private pointItemQuery: PointItemQuery,
-              private storeItemService: StoreItemService,
-              private storeItemQuery: StoreItemQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
@@ -123,7 +119,7 @@ export class PointItemsCardComponent implements OnInit {
 
   private loadEditPointItemForm() {
     this.editPointItemForm = this.formBuilder.group({
-      storeItem: [null, Validators.required],
+      pointItem: [null, Validators.required],
       name: [null, Validators.required],
       description: [null],
       amount: [null, Validators.required],
@@ -156,14 +152,14 @@ export class PointItemsCardComponent implements OnInit {
 
   private loadDeletePointItemForm() {
     this.deletePointItemForm = this.formBuilder.group({
-      storeItem: [null, Validators.required],
+      pointItem: [null, Validators.required],
     });
   }
 
   onEditPointItemFormSubmit(form: FormGroup) {
     console.log(form);
     this.editPointItemFormSubmitted = true;
-    const sourcePointItem = form.controls.storeItem.value;
+    const sourcePointItem = form.controls.pointItem.value;
     const pointItem = {};
     let newCoreValues = [];
     const oldCoreValues = sourcePointItem['coreValues'].slice(0).sort();
@@ -306,7 +302,7 @@ export class PointItemsCardComponent implements OnInit {
     let pointItem = {};
 
     if (!form.invalid) {
-      pointItem = form.controls.storeItem.value;
+      pointItem = form.controls.pointItem.value;
       this.pointItemService.deletePointItem(pointItem).subscribe(deleteResult => {
         console.log(deleteResult);
         if (deleteResult.status !== false) {
