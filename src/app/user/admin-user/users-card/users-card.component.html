@@ -30,7 +30,7 @@
       </div>
 
       <div class="modal-body user-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="true">
           <div class="user-form-container">
             <form [formGroup]="addUserForm">
               <div class="form-row">
@@ -164,11 +164,11 @@
               </div>
 
               <div class="form-row">
-                <div class="form-group col-6">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="addUser_address1" class="form-label">Address 1</label>
                   <input type="text" class="form-control user-form-control" id="addUser_address1" placeholder="Address 1" formControlName="address1" style="color: black;">
                 </div>
-                <div class="form-group col-6">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="addUser_address2" class="form-label">Address 2</label>
                   <input type="text" class="form-control user-form-control" id="addUser_address2" placeholder="Address 2" formControlName="address2" style="color: black;">
                 </div>
@@ -227,7 +227,7 @@
       <div class="modal-body user-modal-body">
         <form [formGroup]="deleteUserForm">
           <div class="form-row">
-            <div class="form-group col-4">
+            <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <label for="deleteUser_user" class="form-label">User to Delete</label>
               <select formControlName="user"
                       class="form-control user-form-control"
@@ -267,7 +267,7 @@
       <div class="modal-body user-modal-body">
         <form [formGroup]="activateUserForm">
           <div class="form-row">
-            <div class="form-group col-4">
+            <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <label for="activateUser_user" class="form-label">User to Activate</label>
               <select formControlName="user"
                       class="form-control user-form-control"
@@ -305,7 +305,7 @@
       </div>
 
       <div class="modal-body user-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="true">
           <div class="user-form-container">
 
             <form [formGroup]="editUserForm">
@@ -449,11 +449,11 @@
               </div>
 
               <div class="form-row">
-                <div class="form-group col-6">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="editUser_address1" class="form-label">Address 1</label>
                   <input type="text" class="form-control user-form-control" id="editUser_address1" placeholder="Address 1" formControlName="address1">
                 </div>
-                <div class="form-group col-6">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="editUser_address2" class="form-label">Address 2</label>
                   <input type="text" class="form-control user-form-control" id="editUser_address2" placeholder="Address 2" formControlName="address2">
                 </div>

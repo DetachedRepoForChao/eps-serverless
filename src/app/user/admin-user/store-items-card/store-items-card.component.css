@@ -29,21 +29,28 @@
   color: black;
 }
 
-/*
-
-.btn{
-	color: white;
-}
-*/
-
 .file {
   visibility: hidden;
   position: absolute;
 }
 
-/*.editUser-modal {*/
-/*  transform: translate(0, 0);*/
-/*}*/
+@media (max-width: 575.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
 
 .storeItem-modal-body {
   overflow-scrolling: auto;
@@ -53,13 +60,8 @@
 }
 
 .storeItem-form-container {
-  /*margin-left: 20px;*/
   margin-right: 20px;
-  /*overflow-scrolling: auto;*/
-  /*overflow-y: auto;*/
-  /*overflow-x: hidden;*/
-  /*min-height: 500px;*/
-  /*max-height: 500px*/
+
 }
 
 .l1 {

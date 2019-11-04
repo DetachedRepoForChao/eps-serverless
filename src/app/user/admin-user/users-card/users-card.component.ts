@@ -19,29 +19,26 @@ import {NotifierService} from 'angular-notifier';
 import {environment} from '../../../../environments/environment';
 
 
-declare var $: any;
-
-
 @Component({
   selector: 'app-users-card',
   templateUrl: './users-card.component.html',
   styleUrls: ['./users-card.component.css']
 })
 export class UsersCardComponent implements OnInit {
-    componentName = 'users-card.component';
-    public config: PerfectScrollbarConfigInterface = {};
-    zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
-    phoneValidationError: string;
-    addUserForm: FormGroup;
-    addUserFormSubmitted = false;
-    editUserForm: FormGroup;
-    editUserFormSubmitted = false;
-    deleteUserForm: FormGroup;
-    deleteUserFormSubmitted = false;
-    activateUserForm: FormGroup;
-    activateUserFormSubmitted = false;
-    departments;
-    securityRoles;
+  componentName = 'users-card.component';
+  public config: PerfectScrollbarConfigInterface = {};
+  zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
+  phoneValidationError: string;
+  addUserForm: FormGroup;
+  addUserFormSubmitted = false;
+  editUserForm: FormGroup;
+  editUserFormSubmitted = false;
+  deleteUserForm: FormGroup;
+  deleteUserFormSubmitted = false;
+  activateUserForm: FormGroup;
+  activateUserFormSubmitted = false;
+  departments;
+  securityRoles;
 
   constructor(public globals: Globals,
               private router: Router,

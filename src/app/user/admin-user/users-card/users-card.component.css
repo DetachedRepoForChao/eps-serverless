@@ -45,6 +45,24 @@
 /*  transform: translate(0, 0);*/
 /*}*/
 
+@media (max-width: 575.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
 .user-modal-body {
   overflow-scrolling: auto;
   overflow-y: auto;
@@ -53,18 +71,7 @@
 }
 
 .user-form-container {
-  /*margin-left: 20px;*/
   margin-right: 20px;
-  /*overflow-scrolling: auto;*/
-  /*overflow-y: auto;*/
-  /*overflow-x: hidden;*/
-  /*min-height: 500px;*/
-  /*max-height: 500px*/
-}
-
-.removed {
-  text-decoration: line-through;
-  background-color: rgba(155,155,155,0.98);
 }
 
 .l1 {
@@ -79,11 +86,8 @@
 
 }
 .form-row {
-
   text-align: left;
 }
-
-
 
 .form-control {
   color: black;
@@ -102,8 +106,6 @@
 .user-form-control {
   margin-bottom: 5px !important;
 }
-
-
 
 .card label {
   text-align: left;

@@ -10,8 +10,6 @@
   text-align: center;
 }
 
-
-
 .card-text3{
   text-align: center;
 }
@@ -25,25 +23,31 @@
 }
 
 .form-row{
-
   color: black;
 }
-
-/*
-
-.btn{
-	color: white;
-}
-*/
 
 .file {
   visibility: hidden;
   position: absolute;
 }
 
-/*.editUser-modal {*/
-/*  transform: translate(0, 0);*/
-/*}*/
+@media (max-width: 575.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
 
 .pointItem-modal-body {
   overflow-scrolling: auto;
@@ -53,7 +57,6 @@
 }
 
 .pointItem-form-container {
-  /*margin-left: 20px;*/
   margin-right: 20px;
 }
 
@@ -73,12 +76,11 @@
   color:#32325d;
 
 }
+
 .form-row {
 
   text-align: left;
 }
-
-
 
 .form-control {
   color: black;
@@ -101,7 +103,6 @@
 .pointItem-form-control {
   margin-bottom: 5px !important;
 }
-
 
 .card label {
   text-align: left;

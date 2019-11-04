@@ -36,14 +36,14 @@
           <div class="pointItem-form-container">
             <form [formGroup]="addPointItemForm">
               <div class="form-row">
-                <div class="form-group col-md-6" >
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6" >
                   <label for="addPointItem_name">Point Item Name</label>
                   <input type="text" class="form-control pointItem-form-control" formControlName="name"  id="addPointItem_name" placeholder="Point Item Name">
                   <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.name.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.name.touched && addPointItemForm.controls.name.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </div>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="addPointItem_amount">Point Amount</label>
                   <input type="text" class="form-control pointItem-form-control" formControlName="amount" id="addPointItem_amount" placeholder="Point Amount">
                   <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.amount.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.amount.touched && addPointItemForm.controls.amount.invalid)">
@@ -149,14 +149,14 @@
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-6" >
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6" >
                   <label for="editPointItem_name" class="l2">Point Item Name</label>
                   <input type="text" class="form-control pointItem-form-control" formControlName="name"  id="editPointItem_name" placeholder="Point Item Name">
                   <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.name.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.name.touched && editPointItemForm.controls.name.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </div>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="editPointItem_amount" class="l2">Point Amount</label>
                   <input type="text" class="form-control pointItem-form-control" formControlName="amount" id="editPointItem_amount" placeholder="Point Amount">
                   <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.amount.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.amount.touched && editPointItemForm.controls.amount.invalid)">
@@ -245,7 +245,7 @@
           <div class="pointItem-form-container">
             <form [formGroup]="deletePointItemForm">
               <div class="form-row">
-                <div class="form-group col-6">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="deletePointItem_pointItem" class="form-label">Select a Point Item to Delete</label>
                   <select formControlName="pointItem"
                           class="form-control pointItem-form-control"
