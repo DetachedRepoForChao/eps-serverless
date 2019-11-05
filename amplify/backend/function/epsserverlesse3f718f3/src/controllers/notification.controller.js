@@ -22,6 +22,10 @@ const getNotifications = function (targetUserId) {
       where: {
         targetUserId: targetUserId,
       },
+      'order': [
+        ['createdAt', 'DESC'],
+        ['updatedAt', 'DESC']
+      ] 
     })
       .then(notificationsResult => {
         if(!notificationsResult) {

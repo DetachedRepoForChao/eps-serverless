@@ -52,7 +52,7 @@
                         </div>
                     <!-- Dropdown header -->
                     <div class="px-3 py-3">
-                      <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">{{notificationNums}} &nbsp;</strong>unread notifications.</h6>
+                      <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">&nbsp; {{notificationNums}} &nbsp;</strong>unread notifications.</h6>
                     </div>
                     <!-- List group -->
                     <div class="list-group list-group-flush">
@@ -69,11 +69,11 @@
                                   <h4 class="mb-0 text-sm" style="color: black;">John Snow</h4>
                                 </div>
                                 <div class="text-right text-muted">
-                                  <small>{{notification.createdAt | date:'HH:mm:ss'}}</small>
+                                  <small>{{notification.createdAt | timeAgo}}</small>
                                   <!-- <small>{{notification.createdAt}}</small> -->
                                 </div>
                               </div>
-                              <p class="text-sm mb-0" style="color:darkgray">{{notification.title}}</p>
+                              <p class="text-sm mb-0" style="color:black">{{notification.title}}</p>
                             </div>
                           </div>
                         </a>
