@@ -73,11 +73,13 @@ export class GiftPointsComponent implements OnInit {
   formSubmitted = false;
   showLimit = 8;
   showFlag = false;
+  clickedUser;
 
   color: ThemePalette = 'warn';
   checked = false;
   disabled = false;
   toggled = false;
+
 
   constructor(
     private departmentService: DepartmentService,
@@ -191,6 +193,7 @@ export class GiftPointsComponent implements OnInit {
       const currentPointsPool = this.entityCurrentUserQuery.getCurrentUserPointsPool();
       if (totalAmount > currentPointsPool) {
         console.log('Not enough points in the points pool to complete transaction. Stopping...');
+        this.selection.clear();
       } else {
         console.log('Sufficient points in the points pool to complete the transaction. Continuing...');
         console.log(userPointObjectArray);
@@ -217,6 +220,7 @@ export class GiftPointsComponent implements OnInit {
             }
 
             this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length).subscribe();
+            this.selection.clear();
           });
       }
     }
@@ -352,13 +356,18 @@ export class GiftPointsComponent implements OnInit {
     form.resetForm();
   }
 
-  clickedUser;
+
 
   onAvatarClick(user) {
     console.log(user);
     this.clickedUser = user;
     $('#giftClickedModal').modal('show');
     console.log(document.getElementById('giftClickedModal'));
+    if (!this.toggled) {
+      this.selection.clear();
+    }
+    this.selection.toggle(user);
+    this.selection.isSelected(user);
   }
 
   showMore() {

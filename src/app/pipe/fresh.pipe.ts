@@ -6,13 +6,13 @@ import { async } from '@angular/core/testing';
 })
 export class FreshPipe implements PipeTransform {
 
-  transform(employees$ : any, term: string): any {
+  transform(employees$: any, term: string): any {
     // check if search term is undefined
-    if (term === undefined) return employees$;
+    if (term === undefined) { return employees$; }
     // return updated users array
-    return employees$.filter(function(employee){
+    return employees$.filter(function(employee) {
       return employee.firstName.toLowerCase().includes(term.toLowerCase()) ||
-       employee.lastName.toLowerCase().includes(term.toLowerCase());
-  })
-}
+        employee.lastName.toLowerCase().includes(term.toLowerCase());
+    });
+  }
 }

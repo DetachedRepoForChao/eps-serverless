@@ -91,6 +91,7 @@ import { from } from 'rxjs';
 import { UsersCardComponent } from './user/admin-user/users-card/users-card.component';
 import { PointItemsCardComponent } from './user/admin-user/point-items-card/point-items-card.component';
 import { StoreItemsCardComponent } from './user/admin-user/store-items-card/store-items-card.component';
+import { PointItemPipe } from './pipe/point-item.pipe';
     // const routes: Routes= [ {path: 'confirm-item-purchase', component: ConfirmItemPurchaseComponent }];
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
@@ -150,7 +151,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NewPasswordComponent,
     UsersCardComponent,
     PointItemsCardComponent,
-    StoreItemsCardComponent
+    StoreItemsCardComponent,
+    PointItemPipe
 
   ],
   imports: [

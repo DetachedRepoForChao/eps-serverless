@@ -7,279 +7,353 @@
           <div class="row">
             <div class="col-sm">
               <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
-                id="button_happy" (click)="toggleCoreValueButton('happy')">HAPPY</button>
+                      id="button_happy" (click)="toggleCoreValueButton('happy')">HAPPY</button>
               <!--                      [ngStyle]="{border: this.isCoreValueButtonToggled('happy') === true ? 'green' : 'red'}"
                       (click)="toggleCoreValueButton('happy')">HAPPY</button>-->
             </div>
             <div class="col-sm">
               <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
-                id="button_fun" (click)="toggleCoreValueButton('fun')">FUN</button>
+                      id="button_fun" (click)="toggleCoreValueButton('fun')">FUN</button>
             </div>
             <div class="col-sm">
               <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
-                id="button_genuine" (click)="toggleCoreValueButton('genuine')">GENUINE</button>
+                      id="button_genuine" (click)="toggleCoreValueButton('genuine')">GENUINE</button>
             </div>
           </div>
           <div class="row">
             <div class="col-sm">
               <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
-                id="button_caring" (click)="toggleCoreValueButton('caring')">CARING</button>
+                      id="button_caring" (click)="toggleCoreValueButton('caring')">CARING</button>
             </div>
             <div class="col-sm">
               <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
-                id="button_respect" (click)="toggleCoreValueButton('respect')">RESPECT</button>
+                      id="button_respect" (click)="toggleCoreValueButton('respect')">RESPECT</button>
             </div>
             <div class="col-sm">
               <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
-                id="button_honest" (click)="toggleCoreValueButton('honest')">HONEST</button>
+                      id="button_honest" (click)="toggleCoreValueButton('honest')">HONEST</button>
             </div>
           </div>
         </div>
 
         <!------- Search form -------->
-        <div class="form-row">
-          <div class="col-md-3">
+        <div class="row" style="height: 100px">
+          <div *ngIf="!toggled; else search1" class="col-md-3">
           </div>
-          <div class="col-md-6 fluid">
+          <div *ngIf="!toggled; else search2" class="col-md-6 fluid">
             <form class="form py-4">
 
               <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
-                [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
+                     [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
             </form>
           </div>
-          <div class="col-md-3">
-             <!-----Toggle button for multi-users-->
+
+          <ng-template #search1>
+            <div class="col-md-4">
+              <form class="form py-4">
+
+                <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Point Items"
+                       [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
+              </form>
+            </div>
+          </ng-template>
+          <ng-template #search2>
+            <div class="col-md-5 fluid">
+              <form class="form py-4">
+
+                <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
+                       [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
+              </form>
+            </div>
+          </ng-template>
+
+          <div class="col-md-3" style="padding-top: 35px; text-align: left">
+            <!-----Toggle button for multi-users-->
             <mat-slide-toggle class="test" [color]="color"
-                              [checked]="checked"
-                              [disabled]="disabled" (change)="onChange()">Slide Me!</mat-slide-toggle>
+                              [checked]="toggled"
+                              [disabled]="disabled" (change)="onChange()">Select Multiple Employees
+            </mat-slide-toggle>
 
           </div>
-          <div class="containers" [class.show]="show">
-            <div class="row">
-              <div class="col-md-2">
-              </div>
-              <div class="col-md-8">
-                <div class="row">
-                  <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
-                    <div *ngIf="i <= showLimit">
-                      <div class="single-user mx-2 px-1">
+
+        </div>
+        <div *ngIf="!toggled; else selectMultiple">
+
+
+          <div class="row">
+            <div class="container" [class.show]="show">
+              <div class="row">
+                <div class="col-md-2">
+
+                </div>
+                <div class="col-md-8">
+                  <div class="row">
+                    <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
+                      <div *ngIf="i <= showLimit">
+                        <div class="single-user mx-2 px-1">
                       <span [ngStyle]="{background: user.firstName}">
                         <img src="{{user.avatarResolvedUrl}}" class="img-row"
                              title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
 
                       </span>
-                        <div class="row">
-                          <div class="col-2">
-                            <mat-checkbox *ngIf="toggled" [color]="'warn'"></mat-checkbox>
-                          </div>
-                          <div class="col-10" style="text-align: right">
-                            <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
+                          <div class="row" style="max-width: 180px; overflow: hidden">
+                            <div class="col-2">
+                              <mat-checkbox *ngIf="toggled" [color]="'warn'"></mat-checkbox>
+                            </div>
+                            <div class="col-10" style="text-align: right">
+                              <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
+                            </div>
                           </div>
                         </div>
                       </div>
+
+
                     </div>
-
-
                   </div>
                 </div>
+                <div class="col-md-2"></div>
               </div>
-              <div class="col-md-2">
+              <div class="row">
+                <div class="col-md-4"></div>
 
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-5"></div>
-              <div class="col-md-4">
-
-                <div *ngIf="!showFlag; else buttonViewLess">
-                  <button class="btn btn-success" style="text-align: center" (click)="showMore()">View More</button>
+                <div class="col-md-4 text-center">
+                  <div *ngIf="!showFlag; else buttonViewLess">
+                    <button class="btn btn-success" style="text-align: center" (click)="showMore()">View More</button>
+                  </div>
+                  <ng-template #buttonViewLess>
+                    <button class="btn btn-success" style="text-align: center" (click)="showLess()">View Less</button>
+                  </ng-template>
                 </div>
-                <ng-template #buttonViewLess>
-                  <button class="btn btn-success" style="text-align: center" (click)="showLess()">View Less</button>
-                </ng-template>
 
-              </div>
-              <div class="col-md-3">
+                <div class="col-md-4"></div>
               </div>
             </div>
           </div>
-          <div class="col-md-4">
-          </div>
-          <!---- Check mark ------>
 
-<!---------
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(user) : null" [checked]="selection.isSelected(user)">
-                        <span class="form-check-sign">
-                          <span class="check"></span>
-                        </span>
+          <!--<div class="row">
+            <div class="col-2"></div>
+
+            <div class="col-8">
+              <div class="container text-center">
+                <form #giftPointsForm="ngForm" class="form text-left">
+                  <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden">
+                    <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
+                      <label class="form-check-label"
+                             [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
+                        <input class="form-check-input" type="radio" name="selectedPointItem"
+                               (click)="selectPointItem(pointItem)">
+                        {{pointItem.amount}} pts - {{pointItem.name}}
+                        <span class="form-check-sign"></span>
                       </label>
                     </div>
                   </div>
------->
-
-
-        <!------award points----->
-
-        <form #giftPointsForm="ngForm" class="form">
-          <div class="row">
-            <div class="col-lg" style="height: 100px; overflow-y: auto; overflow-x: hidden">
-              <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
-                <label class="form-check-label"
-                  [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
-                  <input class="form-check-input" type="radio" name="selectedPointItem"
-                    (click)="selectPointItem(pointItem)">
-                  {{pointItem.amount}} pts - {{pointItem.name}}
-                  <span class="form-check-sign"></span>
-                </label>
+                  <div class="gift-points-container text-center">
+                    <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
+                  </div>
+                </form>
               </div>
+
             </div>
-          </div>
-          <div class="gift-points-container text-center">
-            <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
-          </div>
-        </form>
-
-        <!------User Table------->
-        <table class="table">
-          <thead>
-            <tr>
-              <th *ngFor="let col of displayedColumns">
-                {{col}}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of (employees$ | async)">
-              <td *ngFor="let col of displayedColumns">
-                <div *ngIf="col === 'select'">
-
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input class="form-check-input" type="checkbox" (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(user) : null" [checked]="selection.isSelected(user)">
-                      <span class="form-check-sign">
-                        <span class="check"></span>
-                      </span>
-                    </label>
-                  </div>
-                </div>
-                <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row" ></div>-->
-                <div *ngIf="col === 'avatar'">
-                  <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                    <img src="{{user.avatarResolvedUrl}}" class="img-row" (click)="onAvatarClick(user)" />
-                  </div>
-                </div>
-
-                <!-- <ng-template #templateImgRow>
-                <img src="{{char[col]}}" class="img-row" >
-              </ng-template> -->
-                <!-- <div *ngIf="col === 'rank'" class="text-center">{{user[col]}}</div> -->
-                <div *ngIf="col === 'name'">{{user['firstName'] + ' ' + user['lastName']}}</div>
-                <div *ngIf="col === 'points'">{{user[col]}}</div>
-                <div *ngIf="col === 'username'">{{user[col]}}</div>
-                <div *ngIf="col === 'email'">{{user[col]}}</div>
-
-                <!-- <ng-template #templateRow>
-                {{char[col]}}
-              </ng-template> -->
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <div class="col-2"></div>
+          </div>-->
+        </div>
 
 
-      </div>
-    </div>
-
-    <!-----User Modal----->
-    <div #giftClickedModal id="giftClickedModal" class="modal fade modal-black" role="dialog"
-      aria-labelledby="giftClickedModal" aria-hidden="true">
-      <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">{{clickedUser?.firstName + ' ' + clickedUser?.lastName}}</h4>
-          </div>
-          <div class="modal-body">
-
-            <div class="card">
-              <div class="card card-coin card-plain maxheight">
-                <div class="card-header">
-
-                  <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
-                    <img src="{{clickedUser?.avatarResolvedUrl}}" alt="Place image title"
-                      class="img-center img-fluid rounded-circle" id="avatar">
-                  </div>
-
-                  <ng-template #selectedAvatarLoading>
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                      alt="Loading..." class="img-center img-fluid rounded-circle" id="avatarPlaceholder">
-                  </ng-template>
-
-                </div>
-                <div class="card-body">
-
-                  <div class="userDetails"></div>
-                  <div class="row text-center">
-                    <div class="col-md-3">
-                    </div>
-                    <div class="col-md-6 h-25">
-
-                      <h4><b>{{clickedUser?.firstName + ' ' + clickedUser?.lastName}}</b></h4>
-                    </div>
-                    <div class="col-md-3">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12 text-center">
-                      <h4 class="text-uppercase">{{selectedRow?.name}}</h4>
-                      <span>{{selectedRow?.department}}</span>
-                      <hr class="line-success">
-                    </div>
-                  </div>
-
-                  <!-------Rankings--------->
-                  <div class="row text-center mt-4">
-                    <div class="col p-2">
-                      <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-                      <h4 class="mb-0">{{clickedUser?.points}}</h4>
-                    </div>
-                    <div class="col p-2">
-                      <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-                      <h4 class="mb-0">23/120</h4>
-                    </div>
-                    <div class="col p-2">
-                      <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-                      <h4 class="mb-0">{{selectedRow?.rank}}</h4>
-                    </div>
-                  </div>
-
-                  <!-------Point Selection for Card -------->
-                  <div class="card-footer text-center">
-                    <form #giftPointsForm="ngForm" class="form">
-                      <div class="row">
-                        <div class="col-lg" style="height: 200px; overflow-y: auto; overflow-x: hidden">
-                          <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
-                            <label class="form-check-label"
-                              [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
-                              <input class="form-check-input" type="radio" name="selectedPointItem"
-                                (click)="selectPointItem(pointItem)">
-                              {{pointItem.amount}} pts - {{pointItem.name}}
-                              <span class="form-check-sign"></span>
-                            </label>
-                          </div>
+        <ng-template #selectMultiple>
+          <div class="row">
+            <div class="container" [class.show]="show">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="container text-center">
+                    <form #giftPointsForm="ngForm" class="form text-left">
+                      <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden">
+                        <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async | pointItem:term2)">
+                          <label class="form-check-label"
+                                 [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
+                            <input class="form-check-input" type="radio" name="selectedPointItem"
+                                   (click)="selectPointItem(pointItem)">
+                            {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
+                            <span class="form-check-sign"></span>
+                          </label>
                         </div>
                       </div>
                       <div class="gift-points-container text-center">
-                        <button type="button" class="btn-lg btn-info btn-round"
-                          (click)="pointItemOnSubmit(giftPointsForm)">Award
-                          Points</button>
+                        <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
                       </div>
                     </form>
                   </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="row">
+                    <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
+                      <div *ngIf="i <= showLimit">
+                        <div class="single-user mx-2 px-1">
+                      <span [ngStyle]="{background: user.firstName}">
+                        <img src="{{user.avatarResolvedUrl}}" class="img-row"
+                             title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
+
+                      </span>
+                          <div class="row" style="max-width: 180px; overflow: hidden">
+                            <div class="col-2">
+                              <mat-checkbox *ngIf="toggled" [color]="'warn'" (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(user) : null" [checked]="selection.isSelected(user)"></mat-checkbox>
+                            </div>
+                            <div class="col-10" style="text-align: right">
+                              <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+                <!--              <div class="col-md-1"></div>-->
+              </div>
+              <div class="row">
+                <div class="col-md-4"></div>
+
+                <div class="col-md-4 text-center">
+                  <div *ngIf="!showFlag; else buttonViewLess">
+                    <button class="btn btn-success" style="text-align: center" (click)="showMore()">View More</button>
+                  </div>
+                  <ng-template #buttonViewLess>
+                    <button class="btn btn-success" style="text-align: center" (click)="showLess()">View Less</button>
+                  </ng-template>
+                </div>
+
+                <div class="col-md-4"></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+      </div>
+
+
+      <ng-template #cardLoading>
+        <div class="card-body">
+          <ngx-spinner name="gift-points-spinner" [fullScreen]="false" bdColor="rgba(51,51,51,0.8)" size="medium"
+                       color="#fff" type="pacman">
+            <p style="font-size: 20px; color: white">Loading...</p>
+          </ngx-spinner>
+        </div>
+      </ng-template>
+
+      <!-- Placeholder for loading avatar -->
+      <ng-template #avatarLoading>
+        <div>
+          <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..." class="img-row">
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+</div>
+
+<!-----User Modal----->
+<div #giftClickedModal id="giftClickedModal" class="modal fade modal-black" role="dialog"
+     aria-labelledby="giftClickedModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{clickedUser?.firstName + ' ' + clickedUser?.lastName}}</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="card">
+          <div class="card card-coin card-plain card-custom">
+            <div class="card-header">
+
+              <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
+                <img src="{{clickedUser?.avatarResolvedUrl}}" alt="Place image title"
+                     class="img-center img-fluid rounded-circle" id="avatar">
+              </div>
+
+              <ng-template #selectedAvatarLoading>
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                     alt="Loading..." class="img-center img-fluid rounded-circle" id="avatarPlaceholder">
+              </ng-template>
+
+            </div>
+            <div class="card-body">
+
+              <div class="userDetails"></div>
+              <div class="row text-center">
+                <div class="col-md-3">
+                </div>
+                <div class="col-md-6 h-25">
+
+                  <h4><b>{{clickedUser?.firstName + ' ' + clickedUser?.lastName}}</b></h4>
+                </div>
+                <div class="col-md-3">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 text-center">
+<!--                  <h4 class="text-uppercase">{{clickedUser?.name}}</h4>-->
+                  <span>{{clickedUser?.department.Name}}</span>
+                  <hr class="line-success">
+                </div>
+              </div>
+
+              <!-------Rankings--------->
+              <div class="row text-center mt-4">
+                <div class="col p-2">
+                  <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
+                  <h4 class="mb-0">{{clickedUser?.points}}</h4>
+                </div>
+<!--                <div class="col p-2">
+                  <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
+                  <h4 class="mb-0">23/120</h4>
+                </div>-->
+                <div class="col p-2">
+                  <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
+                  <h4 class="mb-0">{{(employees$ | async)?.indexOf(clickedUser) + 1}}</h4>
+                </div>
+              </div>
+
+              <!-------Point Selection for Card -------->
+              <div class="card-footer text-center">
+               <!-- <form #giftPointsForm="ngForm" class="form">
+                  <div class="row">
+                    <div class="col-lg" style="height: 200px; overflow-y: auto; overflow-x: hidden">
+                      <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
+                        <label class="form-check-label"
+                               [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
+                          <input class="form-check-input" type="radio" name="selectedPointItem"
+                                 (click)="selectPointItem(pointItem)">
+                          {{pointItem.amount}} pts - {{pointItem.name}}
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="gift-points-container text-center">
+                    <button type="button" class="btn-lg btn-info btn-round"
+                            (click)="pointItemOnSubmit(giftPointsForm)">Award Points
+                    </button>
+                  </div>
+                </form>-->
+                <div *ngIf="!toggled" class="container text-center">
+                  <form #giftPointsForm="ngForm" class="form text-left">
+                    <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden">
+                      <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
+                        <label class="form-check-label"
+                               [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
+                          <input class="form-check-input" type="radio" name="selectedPointItem"
+                                 (click)="selectPointItem(pointItem)">
+                          {{pointItem.amount}} pts - {{pointItem.name}}
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="gift-points-container text-center">
+                      <button type="button" class="btn-lg btn-info btn-round" (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -287,21 +361,5 @@
         </div>
       </div>
     </div>
-    <ng-template #cardLoading>
-      <div class="card-body">
-        <ngx-spinner name="gift-points-spinner" [fullScreen]="false" bdColor="rgba(51,51,51,0.8)" size="medium"
-          color="#fff" type="pacman">
-          <p style="font-size: 20px; color: white">Loading...</p>
-        </ngx-spinner>
-      </div>
-    </ng-template>
-
-    <!-- Placeholder for loading avatar -->
-    <ng-template #avatarLoading>
-      <div>
-        <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..." class="img-row">
-      </div>
-    </ng-template>
-
   </div>
 </div>
