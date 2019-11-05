@@ -23,8 +23,7 @@ const getNotifications = function (targetUserId) {
         targetUserId: targetUserId,
       },
       'order': [
-        ['createdAt', 'DESC'],
-        ['updatedAt', 'DESC']
+        ['id', 'DESC'],
       ] 
     })
       .then(notificationsResult => {

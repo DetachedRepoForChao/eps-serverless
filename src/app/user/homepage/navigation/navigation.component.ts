@@ -33,11 +33,11 @@ export class NavigationComponent implements OnInit {
   componentName = 'navigation.component';
 
   public config: PerfectScrollbarConfigInterface = {};
-
   Notifications;
   NotificationStatus;
-
+  Detail;
   notificationNums;
+  showDetail;
   
   constructor(private userService: UserService,
               private globalVariableService: GlobalVariableService,
@@ -61,9 +61,18 @@ export class NavigationComponent implements OnInit {
     }
     const targetUserID = this.globals.getUsername();
     this.notificationService.getNotification().subscribe(result => {
-      this.notificationNums = result.length;
-      this.Notifications = result;
-     
+      let size = 0;
+      let template: Array<number> = new Array<number>();
+      for (let notification of result){
+        if(notification.timeSeen==null){
+          size++;
+          template.push(notification)
+        }
+      }
+      this.Detail  = template[0];
+      this.Notifications = template;
+      this.notificationNums = size;
+      this.showDetail = false;
       if (result === '') {
         $('#notification_button').addClass('btn-primary');
       } else {
@@ -72,6 +81,13 @@ export class NavigationComponent implements OnInit {
       console.log('Notification-log Initial' + this.Notifications);
     });
 
+  }
+
+  onShowAll(){
+    this.notificationService.getNotification().subscribe(result => {
+      this.Notifications = result;
+      console.log('Notification-log Initial' + this.Notifications);
+    });
   }
 
   onLogout() {
@@ -121,8 +137,25 @@ export class NavigationComponent implements OnInit {
   }
 
 
-  onClickNotificationDetail(){
-
+  onClickNotificationDetail(notification){
+    let numsofUnread = this.notificationNums;
+        console.log('onClickNotificationDetail:' + notification.id);
+        if(notification.timeSeen==null){
+          this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
+            console.log('onSeenNotificationClick');
+            if (true) {
+              numsofUnread-=1;
+              this.notificationNums = numsofUnread;
+            }
+          });
+        }
+        let id = notification.id;
+        for (let temp of this.Notifications){
+          if(temp.id === id){
+                this.Detail = temp;
+                console.log('onClickNotificationDetail:' + notification.id);
+          }
+        }
   }
 
   navigateHome() {
