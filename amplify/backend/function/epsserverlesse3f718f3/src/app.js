@@ -1190,9 +1190,10 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
 
       const title = req.body.title;
       const event = req.body.event;
+      const sourceUserId = req.body.sourceUserId;
       const description = req.body.description;
 
-      ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, event)
+      ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, event, sourceUserId)
         .then(data => {
           res.json({ status: 'get call succeed!', data: data.notifications });
         })
