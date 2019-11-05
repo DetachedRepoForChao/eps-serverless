@@ -59,14 +59,17 @@ export class NavigationComponent implements OnInit {
       blackKit.checkScrollForTransparentNavbar();
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
-    const targetUserID = this.globals.getUsername();
     this.notificationService.getNotification().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
       for (let notification of result){
-        if(notification.timeSeen==null){
-          size++;
-          template.push(notification)
+        if(size<5){
+          if (notification.timeSeen == null) {
+            size++;
+            template.push(notification)
+          }
+        }else{
+          break;
         }
       }
       this.Detail  = template[0];
@@ -85,9 +88,45 @@ export class NavigationComponent implements OnInit {
 
   onShowAll(){
     this.notificationService.getNotification().subscribe(result => {
-      this.Notifications = result;
+      let size = this.notificationNums+5;
+      size = Math.min(size,result.length);
+      this.Notifications = result.slice(0,size);
       console.log('Notification-log Initial' + this.Notifications);
+      this.notificationNums = size;
     });
+  }
+
+  close(){
+
+    this.notificationService.getNotification().subscribe(result => {
+
+      let size = 0;
+      let template: Array<number> = new Array<number>();
+      for (let notification of result) {
+        if (size < 5) {
+          if (notification.timeSeen == null) {
+            size++;
+            template.push(notification)
+          }
+        } else {
+          break;
+        }
+      }
+
+      this.Notifications = template;
+      this.notificationNums = size;
+
+      if (size === 0) {
+        $('#notification_button').removeClass('btn-danger');
+        if (!$('#notification_button').hasClass('btn-danger')) {
+          $('#notification_button').addClass('btn-primary');
+        }
+      } else {
+        $('#notification_button').removeClass('btn-primary');
+      }
+    });
+
+
   }
 
   onLogout() {
