@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AgGridModule } from 'ag-grid-angular';
+
 
 // components
 import { AppComponent } from './app.component';
@@ -19,7 +21,9 @@ import { UserComponent } from './user/user.component';
 import { SignInComponent } from './login/sign-in/sign-in.component';
 import { UserService } from './shared/user.service';
 // other
-
+// tslint:disable-next-line: import-spacing
+import { EventCardComponent }from './user/admin-user/event-card/event-card.component';
+import { ReportComponent } from './user/admin-user/event-card/report/report.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {RoleGuardService} from './auth/role-guard.service';
@@ -109,6 +113,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   declarations: [
+    EventCardComponent,
+    ReportComponent,
     AppComponent,
     LoginComponent,
     SignUpComponent,
@@ -193,7 +199,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     // RouterModule.forRoot(routes),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule.forRoot(),
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    AgGridModule.withComponents([]),
+
   ],
   providers: [
     {

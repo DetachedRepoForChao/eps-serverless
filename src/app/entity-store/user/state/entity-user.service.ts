@@ -32,6 +32,7 @@ export class EntityUserService {
       'Content-Type': 'application/json;charset=UTF-8'
     }
   };
+  user$: any;
 
   constructor(private userStore: UserStore,
               private entityUserAvatarQuery: EntityUserQuery,
@@ -371,6 +372,12 @@ export class EntityUserService {
         });
 
     });
+  }
+
+  getuserName():string []{
+    this.user$= this.getUsers().subscribe()
+    const username:string [] = this.user$.username
+    return username;
   }
 
 

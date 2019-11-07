@@ -49,3 +49,7 @@ select:-webkit-autofill:focus {
 /*.mat-tooltip.tooltip {
   font-size: 20px;
 }*/
+
+/* for report */
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
