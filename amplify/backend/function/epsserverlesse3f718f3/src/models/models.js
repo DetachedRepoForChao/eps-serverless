@@ -1139,7 +1139,17 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
       field: 'cancel_description'
-    }
+    },
+    accepted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      field: 'accepted'
+    },
+    declined: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      field: 'declined'
+    },
   }, {
     tableName: 'user_has_store_item'
   });
