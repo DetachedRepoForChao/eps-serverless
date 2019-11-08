@@ -95,6 +95,10 @@ import { PointItemPipe } from './pipe/point-item.pipe';
     // const routes: Routes= [ {path: 'confirm-item-purchase', component: ConfirmItemPurchaseComponent }];
 // const config: SocketIoConfig = {url: 'http://localhost:3000'};
 
+
+// import notification times ago
+import { TimeAgoPipe } from 'time-ago-pipe'
+
 akitaConfig({
   resettable: true
 });
@@ -152,7 +156,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     UsersCardComponent,
     PointItemsCardComponent,
     StoreItemsCardComponent,
-    PointItemPipe
+    PointItemPipe,
+    TimeAgoPipe
 
   ],
   imports: [

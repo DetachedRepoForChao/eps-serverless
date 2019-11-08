@@ -50,8 +50,14 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING(20),
             allowNull:false,
             field: 'targetUserId'
+        },
+        sourceUserId: {
+            type: DataTypes.STRING(20),
+            allowNull: false,
+            field: 'sourceUserId'
         }
     }, {
             tableName: 'notification'
+
         });
 };

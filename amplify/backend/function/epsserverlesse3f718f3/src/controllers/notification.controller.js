@@ -1,6 +1,5 @@
 const SqlModel = require('../db');
 const Models = SqlModel().Models;
-const sqlNotificationModel = Models.Notification;
 const sqlUserModel = Models.User;
 const sqlAchievementModel = Models.Achievement;
 const sqlAchievementTransactionModel = Models.AchievementTransaction;
@@ -22,9 +21,10 @@ const getNotifications = function (targetUserId) {
     return sqlNotification.findAll({
       where: {
         targetUserId: targetUserId,
-        timeSeen:null,
       },
-      // attributes: ['id', 'title', 'description', 'timeSeen', 'audience', 'event']
+      'order': [
+        ['id', 'DESC'],
+      ] 
     })
       .then(notificationsResult => {
         if(!notificationsResult) {
@@ -51,7 +51,7 @@ module.exports.getNotifications = getNotifications;
  * Only Manager can send noticiations
  *
  */
-const setNotificationsToPerson = function (targetUserId,title,event, description,event){
+const setNotificationsToPerson = function (targetUserId, title, event, description, event, sourceUserId){
       const functionName = 'setNotificationsToPerson';
       const functionFullName = `${componentName} ${functionName}`;
       console.log(`Start ${functionFullName}`);
@@ -62,6 +62,7 @@ const setNotificationsToPerson = function (targetUserId,title,event, description
             audience:'Group',
             event:event,
             timeSeen:null,
+            sourceUserId: sourceUserId,
       }).then((notifications)=>{
           console.log(`${functionFullName}: notification created in the db`);
           return {status:true,message:'notification created',noticiations:notifications}
@@ -77,7 +78,7 @@ exports.setNotificationsToPerson = setNotificationsToPerson;
 
 
 
-const setNotificationsToGroup = function (group, title, event, description, event) {
+const setNotificationsToGroup = function (group, title, event, description, event, sourceUserId) {
   const functionName = 'setNotificationsToPerson';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -88,6 +89,7 @@ const setNotificationsToGroup = function (group, title, event, description, even
     audience: 'Group',
     event: event,
     timeSeen: null,
+    sourceUserId: sourceUserId,
   }).then((notifications) => {
     console.log(`${functionFullName}: notification created in the db`);
     return { status: true, message: 'notification created', noticiations: notifications }

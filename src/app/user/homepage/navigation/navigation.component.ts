@@ -13,6 +13,7 @@ import {AuthService} from '../../../login/auth.service';
 import { Globals } from 'src/app/globals';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {NotificationService} from '../../../shared/notifications/notification.service';
+import { ConsoleLogger } from '@aws-amplify/core';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -32,9 +33,12 @@ export class NavigationComponent implements OnInit {
   componentName = 'navigation.component';
 
   public config: PerfectScrollbarConfigInterface = {};
-
   Notifications;
   NotificationStatus;
+  Detail;
+  notificationNums;
+  showDetail;
+  
   constructor(private userService: UserService,
               private globalVariableService: GlobalVariableService,
               private router: Router,
@@ -55,16 +59,73 @@ export class NavigationComponent implements OnInit {
       blackKit.checkScrollForTransparentNavbar();
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
-    const targetUserID = this.globals.getUsername();
     this.notificationService.getNotification().subscribe(result => {
-      this.Notifications = result;
+      let size = 0;
+      let template: Array<number> = new Array<number>();
+      for (let notification of result){
+        if(size<5){
+          if (notification.timeSeen == null) {
+            size++;
+            template.push(notification)
+          }
+        }else{
+          break;
+        }
+      }
+      this.Detail  = template[0];
+      this.Notifications = template;
+      this.notificationNums = size;
+      this.showDetail = false;
       if (result === '') {
         $('#notification_button').addClass('btn-primary');
       } else {
         $('#notification_button').addClass('btn-danger');
       }
-      console.log('Notification-log click!!!!!!!!!!!!!!!!!!' + this.Notifications);
+      console.log('Notification-log Initial' + this.Notifications);
     });
+
+  }
+
+  onShowAll(){
+    this.notificationService.getNotification().subscribe(result => {
+      let size = this.notificationNums+5;
+      size = Math.min(size,result.length);
+      this.Notifications = result.slice(0,size);
+      console.log('Notification-log Initial' + this.Notifications);
+      this.notificationNums = size;
+    });
+  }
+
+  close(){
+
+    this.notificationService.getNotification().subscribe(result => {
+
+      let size = 0;
+      let template: Array<number> = new Array<number>();
+      for (let notification of result) {
+        if (size < 5) {
+          if (notification.timeSeen == null) {
+            size++;
+            template.push(notification)
+          }
+        } else {
+          break;
+        }
+      }
+
+      this.Notifications = template;
+      this.notificationNums = size;
+
+      if (size === 0) {
+        $('#notification_button').removeClass('btn-danger');
+        if (!$('#notification_button').hasClass('btn-danger')) {
+          $('#notification_button').addClass('btn-primary');
+        }
+      } else {
+        $('#notification_button').removeClass('btn-primary');
+      }
+    });
+
 
   }
 
@@ -114,6 +175,28 @@ export class NavigationComponent implements OnInit {
      });
   }
 
+
+  onClickNotificationDetail(notification){
+    let numsofUnread = this.notificationNums;
+        console.log('onClickNotificationDetail:' + notification.id);
+        if(notification.timeSeen==null){
+          this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
+            console.log('onSeenNotificationClick');
+            if (true) {
+              numsofUnread-=1;
+              this.notificationNums = numsofUnread;
+            }
+          });
+        }
+        let id = notification.id;
+        for (let temp of this.Notifications){
+          if(temp.id === id){
+                this.Detail = temp;
+                console.log('onClickNotificationDetail:' + notification.id);
+          }
+        }
+  }
+
   navigateHome() {
     const functionName = 'navigateHome';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -144,6 +227,53 @@ export class NavigationComponent implements OnInit {
         break;
       }
     }
+  }
+
+  timeago(dateTimeStamp) {  
+    var result;
+    var minute = 1000 * 60;     
+    var hour = minute * 60;
+    var day = hour * 24;
+    var week = day * 7;
+    var halfamonth = day * 15;
+    var month = day * 30;
+    var now = new Date().getTime();   
+    console.log(now)
+    var diffValue = now - dateTimeStamp;
+
+    if (diffValue < 0) {
+      return;
+    }
+    var minC = diffValue / minute;  
+    var hourC = diffValue / hour;
+    var dayC = diffValue / day;
+    var weekC = diffValue / week;
+    var monthC = diffValue / month;
+    if (monthC >= 1 && monthC <= 3) {
+      result = " " + 1 + "月前"
+    } else if (weekC >= 1 && weekC <= 3) {
+      result = " " + 1 + "周前"
+    } else if (dayC >= 1 && dayC <= 6) {
+      result = " " + 1 + "天前"
+    } else if (hourC >= 1 && hourC <= 23) {
+      result = " " + 1 + "小时前"
+    } else if (minC >= 1 && minC <= 59) {
+      result = " " + 1 + "分钟前"
+    } else if (diffValue >= 0 && diffValue <= minute) {
+      result = "刚刚"
+    } else {
+      var datetime = new Date();
+      datetime.setTime(dateTimeStamp);
+      var Nyear = datetime.getFullYear();
+      var Nmonth = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+      var Ndate = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+      var Nhour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+      var Nminute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+      var Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+      result = Nyear + "-" + Nmonth + "-" + Ndate
+    }
+    console.log("Notification:TimeAgo"+result);
+    return result;
   }
 
 }

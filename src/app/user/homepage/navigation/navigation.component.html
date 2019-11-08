@@ -47,127 +47,90 @@
                     <div class="modal-dialog tweet">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <button type="button" class="close" data-dismiss="modal" (click)="close()">&times;</button>
                           <h4 class="modal-title"><b>Notifications</b></h4>
                         </div>
                     <!-- Dropdown header -->
                     <div class="px-3 py-3">
-                      <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">13</strong> notifications.</h6>
+                      <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">&nbsp; {{notificationNums}} &nbsp;</strong>unread notifications.</h6>
                     </div>
                     <!-- List group -->
                     <div class="list-group list-group-flush">
-                      <a href="#!" class="list-group-item list-group-item-action">
-                        <div class="row align-items-center">
-                          <div class="col-auto">
-                            <!-- Avatar -->
-                            <img alt="Image placeholder" src="../../assets/img/theme/team-1.jpg"
-                              tppabs="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-1.jpg"
-                              class="avatar rounded-circle">
-                          </div>
-                          <div class="col ml--2">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div>
-                                <h4 class="mb-0 text-sm">John Snow</h4>
+                      <div *ngFor="let notification of Notifications">
+                          <a  class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(notification)">
+                            <div class="row align-items-center">
+                              <div class="col-auto">
+                                <!-- Avatar -->
+                                <img alt="Image placeholder"
+                                  src="https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/protected/us-east-1%3A5a135992-7645-404d-8799-a743811ff20c/avatar_s45h46eo8rk0ejv64x.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAZMKSQ5SFNW6RDU4Y%2F20191105%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20191105T194030Z&X-Amz-Expires=900&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEEwaCXVzLWVhc3QtMSJGMEQCIAK6%2B4zasynWTtr4HugTu4udsOmCJCkdkGUx2gh8F8ajAiA0z4E1uXE6iPgbqF1TM2PRpc7acB%2BnoxelwvVtf3jjHyqRAwhlEAEaDDY0NDk1NTA0MDkwNiIMwgWw2iCQgfFUPiyKKu4Ca8bqfnH0g4KIuq25topNWa5SYXnYoMGFpp5qdgHFDgfhcVQU2uOXihG7qA6rokSgsj5h%2BfN2Hfy2ZBZne6MDdZ8xs0hDPfUicJlNxZfqtJ2MwBDPuinQ2fjAFQlf7x2F%2BFV4nfISqc0ZS%2BUuOj8FFigHBD7k8%2BUlT9W%2Bj8VtZSO8SVPiLEOq5aU7w218OjKvO%2BITNmMZ6xGaenT%2FqUrbCrsb%2BH%2FUvC9i731Jyv5PJ%2FjD8embmBYesbc3FvoFhYk71aw4LAIQ8yMsQzRNP12PsCJuqbAolCbZN81SeDZqFMOuKzAtdFIPI9gl5zlJcDCRiCrkLx4nar6uZqzMaESvcrcHQXMyCYU1rZC8P%2FL0nMluE7M7WdVdtV7UgyDlTVGOxgs8cgYxJL3DHhPpAb%2FtpbxPjjnla8bjzcYgyCyormH9y%2Bgp2ZriMJ7FYBTuSeseANL8aVFESOtmCGctjO1tiQ7F1SEj96wmHgiH6XFNMK6gh%2B4FOrkDTKzbnRBmPFumB6SAfiH637vLVWQ3%2BkP%2F%2BdO1pTxkRVoWkFdNI1%2Bx6lw9Ibhnz6OIcseCywOJe6zUWTO1zSO2RBb51tbAhR2mS%2Fp%2FUfaoYEqZ8CewY%2BkwXfFmv%2FalbToLi%2BMRGpqWLTeyirqGarq4Tal3KMfIzipFN8op06LAGrXDwyxj1MOSw7FPjfrBEqvkgbvjFU0zDtLSkai%2BRGsY%2F3RGJnHAgdRsd%2BrblaPe9Zl13vDzvrMGcJRgLZi887jccU0DSfPNMvIH3DpzWhAZUWo8gZN%2BXPMF4a8T2hJjzypzXnOm%2BZwYDl9f%2FTGncnSkPKTWfcS%2Bx36WfA7xpXlDH0TP67K%2BsXzzrWbkijrc%2BOaaRwsFuTaVG0bbSaEdmHP2WPdjNTBQCqyRnQKVn3mF13prsykd2J%2FfJFzv87B7%2BeNRDXmvgLIm%2BmHsf2dRE493ZONMmaKkHEbfpNSPDLI75nyIOjcXMXxKV3BWC%2BtSB4Vrh0jnZ8IeFhXby%2FctUC%2FUPfKJ9EZf4SvN4veBuHHLVNStiY9dt42zGp0qKfHOB0BiUlUfDhJj1iusnFBVFYoZ%2B3HwUuC%2FnXFc&X-Amz-Signature=cff30f2bcbe9954f952bdf8e67b6c4e962306ea9cad6708f6e29d43c6e2425a8&X-Amz-SignedHeaders=host"
+                                  width="48px" class="rounded-circle">
                               </div>
-                              <div class="text-right text-muted">
-                                <small>2 hrs ago</small>
-                              </div>
-                            </div>
-                            <p class="text-sm mb-0">Let's meet at Starbucks at 11:30. Wdyt?</p>
-                          </div>
-                        </div>
-                      </a>
-                      <a href="#!" class="list-group-item list-group-item-action">
-                        <div class="row align-items-center">
-                          <div class="col-auto">
-                            <!-- Avatar -->
-                            <img alt="Image placeholder" src="../../assets/img/theme/team-2.jpg"
-                              tppabs="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-2.jpg"
-                              class="avatar rounded-circle">
-                          </div>
-                          <div class="col ml--2">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div>
-                                <h4 class="mb-0 text-sm">John Snow</h4>
-                              </div>
-                              <div class="text-right text-muted">
-                                <small>3 hrs ago</small>
+                              <div class="col ml--2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <div>
+                                    <h4 class="mb-0 text-sm" style="color: black;">Kitchen</h4>
+                                  </div>
+                                  <div class="text-right text-muted">
+                                    <small>{{notification.createdAt | timeAgo}}</small>
+                                    <!-- <small>{{notification.createdAt}}</small> -->
+                                  </div>
+                                </div>
+                                <p class="text-sm mb-0" style="color:black">{{notification.title}}</p>
                               </div>
                             </div>
-                            <p class="text-sm mb-0">A new issue has been reported for Argon.</p>
-                          </div>
-                        </div>
-                      </a>
-                      <a href="#!" class="list-group-item list-group-item-action">
-                        <div class="row align-items-center">
-                          <div class="col-auto">
-                            <!-- Avatar -->
-                            <img alt="Image placeholder" src="../../assets/img/theme/team-3.jpg"
-                              tppabs="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-3.jpg"
-                              class="avatar rounded-circle">
-                          </div>
-                          <div class="col ml--2">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div>
-                                <h4 class="mb-0 text-sm">John Snow</h4>
-                              </div>
-                              <div class="text-right text-muted">
-                                <small>5 hrs ago</small>
-                              </div>
-                            </div>
-                            <p class="text-sm mb-0">Your posts have been liked a lot.</p>
-                          </div>
-                        </div>
-                      </a>
-                      <a href="#!" class="list-group-item list-group-item-action">
-                        <div class="row align-items-center">
-                          <div class="col-auto">
-                            <!-- Avatar -->
-                            <img alt="Image placeholder" src="../../assets/img/theme/team-4.jpg"
-                              tppabs="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"
-                              class="avatar rounded-circle">
-                          </div>
-                          <div class="col ml--2">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div>
-                                <h4 class="mb-0 text-sm">John Snow</h4>
-                              </div>
-                              <div class="text-right text-muted">
-                                <small>2 hrs ago</small>
-                              </div>
-                            </div>
-                            <p class="text-sm mb-0">Let's meet at Starbucks at 11:30. Wdyt?</p>
-                          </div>
-                        </div>
-                      </a>
-                      <a href="#!" class="list-group-item list-group-item-action">
-                        <div class="row align-items-center">
-                          <div class="col-auto">
-                            <!-- Avatar -->
-                            <img alt="Image placeholder" src="../../assets/img/theme/team-5.jpg"
-                              tppabs="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-5.jpg"
-                              class="avatar rounded-circle">
-                          </div>
-                          <div class="col ml--2">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <div>
-                                <h4 class="mb-0 text-sm">John Snow</h4>
-                              </div>
-                              <div class="text-right text-muted">
-                                <small>3 hrs ago</small>
-                              </div>
-                            </div>
-                            <p class="text-sm mb-0">A new issue has been reported for Argon.</p>
-                          </div>
-                        </div>
-                      </a>
+                          </a>
+                      </div>
                     </div>
                     <!-- View all -->
-                    <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+                    <a (click)="onShowAll()" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
                   </div>
                   </div>
        
         </div>
+
+
+        <!-- Modal
+        <div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{Detail.title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">{{Detail.createdAt | date:'HH:mm:ss'}}</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                    {{Detail.description}}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+
+        <div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">{{Detail.title}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="color: black;">
+                {{Detail.description}}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
 
 <!-- Notifications Change Old version -->
