@@ -134,7 +134,12 @@ export class UserHasStoreItemService {
         for (let i = 0; i < userHasStoreItemRecords.length; i++) {
           const recordId = userHasStoreItemRecords[i].id;
           const userId = userHasStoreItemRecords[i].userId;
+          const userUsername = userHasStoreItemRecords[i].requestUser.username;
+          const userFirstName = userHasStoreItemRecords[i].requestUser.firstName;
+          const userLastName = userHasStoreItemRecords[i].requestUser.lastName;
+          const userEmail = userHasStoreItemRecords[i].requestUser.email;
           const managerId = userHasStoreItemRecords[i].managerUser.id;
+          const managerUsername = userHasStoreItemRecords[i].managerUser.username;
           const managerFirstName = userHasStoreItemRecords[i].managerUser.firstName;
           const managerLastName = userHasStoreItemRecords[i].managerUser.lastName;
           const managerEmail = userHasStoreItemRecords[i].managerUser.email;
@@ -144,8 +149,11 @@ export class UserHasStoreItemService {
           const storeItemCost = userHasStoreItemRecords[i].storeItem.cost;
           const status = userHasStoreItemRecords[i].status;
           const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
-          const userHasStoreItemModel = createStoreItemModel({recordId, userId, managerId, managerFirstName, managerLastName, managerEmail,
-            storeItemId, storeItemName, storeItemDescription, storeItemCost, status, cancelDescription});
+          const acceptRequest = userHasStoreItemRecords[i].accepted;
+          const declineRequest = userHasStoreItemRecords[i].declined;
+          const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
+            managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
+            storeItemCost, status, cancelDescription, acceptRequest, declineRequest});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 
@@ -204,7 +212,12 @@ export class UserHasStoreItemService {
         for (let i = 0; i < userHasStoreItemRecords.length; i++) {
           const recordId = userHasStoreItemRecords[i].id;
           const userId = userHasStoreItemRecords[i].userId;
+          const userUsername = userHasStoreItemRecords[i].requestUser.username;
+          const userFirstName = userHasStoreItemRecords[i].requestUser.firstName;
+          const userLastName = userHasStoreItemRecords[i].requestUser.lastName;
+          const userEmail = userHasStoreItemRecords[i].requestUser.email;
           const managerId = userHasStoreItemRecords[i].managerUser.id;
+          const managerUsername = userHasStoreItemRecords[i].managerUser.username;
           const managerFirstName = userHasStoreItemRecords[i].managerUser.firstName;
           const managerLastName = userHasStoreItemRecords[i].managerUser.lastName;
           const managerEmail = userHasStoreItemRecords[i].managerUser.email;
@@ -214,8 +227,11 @@ export class UserHasStoreItemService {
           const storeItemCost = userHasStoreItemRecords[i].storeItem.cost;
           const status = userHasStoreItemRecords[i].status;
           const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
-          const userHasStoreItemModel = createStoreItemModel({recordId, userId, managerId, managerFirstName, managerLastName, managerEmail,
-            storeItemId, storeItemName, storeItemDescription, storeItemCost, status, cancelDescription});
+          const acceptRequest = userHasStoreItemRecords[i].accepted;
+          const declineRequest = userHasStoreItemRecords[i].declined;
+          const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
+            managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
+            storeItemCost, status, cancelDescription, acceptRequest, declineRequest});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 

@@ -62,7 +62,7 @@ import { ProfileCardManagerComponent } from './user/homepage/profile-card-manage
 import { TrophyComponent } from './shared/trophy/trophy.component';
 // import {SocketService} from './shared/socket.service';
 
-import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
+// import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
 import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
 import { RequestCacheService} from './shared/request-cache.service';
 import { CachingInterceptorService} from './shared/caching-interceptor.service';
@@ -191,7 +191,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatDialogModule,
     MatInputModule,
     MatListModule,
-    AmplifyAngularModule,
     ReactiveFormsModule,
     ImageCropperModule,
     NgxSpinnerModule,
@@ -219,7 +218,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     RoleGuardService,
     UserService,
     Globals,
-    AmplifyService,
     { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }},
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG}
   ],

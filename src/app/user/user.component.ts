@@ -95,6 +95,14 @@ export class UserComponent implements OnInit, OnDestroy {
     this.securityRoleName = this.globals.getUserAttribute('custom:security_role');
 
     this.navigateHome();
+/*    if (this.router.url.includes('homepage')) {
+      this.navigateHome();
+    }*/
+    // console.log(this.router);
+    // console.log(this.route);
+    // console.log(this.route.children);
+
+    // this.navigateHome();
 
     this.isComponentLoading = false;
 
