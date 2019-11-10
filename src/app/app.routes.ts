@@ -72,7 +72,14 @@ export const appRoutes: Routes = [
       {
         path: 'homepage', component: HomepageComponent
       },
-      {path: 'admin-user', component: AdminUserComponent},
+      {
+        path: 'admin-user', component: AdminUserComponent
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+      },
       {
         path: 'store',
         component: PointsStoreComponent,
@@ -81,11 +88,11 @@ export const appRoutes: Routes = [
     ]
   },
 
-  {
+/*  {
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
-  },
+  },*/
   // {
   //   path:'chatroom',
   //   component:ChatRoomComponent,

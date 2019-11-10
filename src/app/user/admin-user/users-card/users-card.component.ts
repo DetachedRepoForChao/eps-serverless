@@ -112,7 +112,7 @@ export class UsersCardComponent implements OnInit {
     });
   }
 
-// Creates the Edit User reactive form
+  // Creates the Edit User reactive form
   private loadEditUserForm() {
     this.editUserForm = this.formBuilder.group({
       user: [null, Validators.required],
