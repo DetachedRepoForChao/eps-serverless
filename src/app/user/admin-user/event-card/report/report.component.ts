@@ -9,20 +9,19 @@ import { Globals } from 'src/app/globals';
 import { EntityUserModel } from 'src/app/entity-store/user/state/entity-user.model';
 import { Observable } from 'rxjs';
 
+
 @Component({
     selector: 'app-report',
     templateUrl: './report.component.html',
     styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit {
-  public user:  String;
+
+  public user:  EntityUserModel;
+
 
   ngOnInit() {
-    this.entityuserService.cacheUsers().subscribe();
-    this.user = this.globals.getUsername();
-    console.log(this.user)
-    this.rowData.value = [this.user.toString()]
-
+    this.rowData = this.http.get('https://api.myjson.com/bins/15psn9');
   }
 
   constructor(
@@ -31,12 +30,18 @@ export class ReportComponent implements OnInit {
     public achievementQuery: AchievementQuery,
     public entityuserService: EntityUserService,
     public entityuserQuery: EntityUserQuery,
+    private http: HttpClient
   ) {}
 
   title = 'app';
 
   columnDefs = [
-      {headerName: 'UserName', field: 'UserName' , sortable: true, filter: true },
-  ];
+    {headerName: 'Make', field: 'make', sortable: true, filter: true},
+    {headerName: 'Model', field: 'model', sortable: true, filter: true},
+    {headerName: 'Price', field: 'price', sortable: true, filter: true}
+];
+
   rowData: any;
+
+
 }
