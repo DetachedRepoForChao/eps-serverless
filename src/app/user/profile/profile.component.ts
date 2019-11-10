@@ -48,6 +48,8 @@ export class ProfileComponent implements OnInit {
   phoneValidationError: string;
   editUserForm: FormGroup;
   editUserFormSubmitted = false;
+  emailConfirmed = false;
+  phoneConfirmed = false;
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
@@ -92,7 +94,12 @@ export class ProfileComponent implements OnInit {
           $('#count_message').html(text_remaining + ' remaining');
         });*/
 
-
+    this.authService.currentUserInfo()
+      .then(userInfo => {
+        console.log(userInfo);
+        this.emailConfirmed = userInfo.attributes['email_verified'];
+        this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
+      });
 
     this.userService.cacheUsers().subscribe();
 

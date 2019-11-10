@@ -6,7 +6,7 @@ import {DepartmentService} from '../../shared/department.service';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {Department} from '../../shared/department.model';
 import {map, tap} from 'rxjs/operators';
-import {AmplifyService} from 'aws-amplify-angular';
+// import {AmplifyService} from 'aws-amplify-angular';
 import {AuthService} from '../auth.service';
 import { environment } from 'src/environments/environment';
 import {Router} from '@angular/router';
@@ -42,7 +42,6 @@ export class SignUpComponent implements OnInit {
     public userService: UserService,
     private departmentService: DepartmentService,
     private securityRoleService: SecurityRoleService,
-    private amplifyService: AmplifyService,
     private authService: AuthService,
     private router: Router,
     private globalVariableService: GlobalVariableService,

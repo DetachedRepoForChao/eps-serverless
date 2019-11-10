@@ -158,18 +158,37 @@
                               <div class="col-3" style="align-content: center">
                                 <label for="editUser_email" class="form-label">Email</label>
                               </div>
-                              <div class="col-7">
+                              <div class="confirm-col col-1">
+                                <div *ngIf="emailConfirmed; else emailUnconfirmed">
+                                  <i class="fas fa-check confirmed"></i>
+                                </div>
+                                <ng-template #emailUnconfirmed>
+                                  <i class="fas fa-times unconfirmed"></i>
+                                </ng-template>
+                              </div>
+                              <div class="col-6">
                                 <input type="email" class="form-control user-form-control" id="editUser_email" placeholder="Email" formControlName="email">
                                 <div *ngIf="(editUserFormSubmitted && editUserForm.controls.email.invalid) || (editUserForm.dirty && editUserForm.controls.email.touched && editUserForm.controls.email.invalid)">
                                   <label class="validation-message">This field is required.</label>
                                 </div>
+                              </div>
+                              <div *ngIf="!emailConfirmed;" class="col-2">
+                                <button class="btn-primary btn-sm">Confirm</button>
                               </div>
                             </div>
                             <div class="form-row">
                               <div class="col-3" style="align-content: center">
                                 <label for="editUser_phone" class="form-label">Phone</label>
                               </div>
-                              <div class="col-7">
+                              <div class="confirm-col col-1">
+                                <div *ngIf="phoneConfirmed; else phoneUnconfirmed">
+                                  <i class="fas fa-check confirmed"></i>
+                                </div>
+                                <ng-template #phoneUnconfirmed>
+                                  <i class="fas fa-times unconfirmed"></i>
+                                </ng-template>
+                              </div>
+                              <div class="col-6">
                                 <input class="form-control user-form-control"
                                        placeholder="Phone"
                                        formControlName="phone"
@@ -184,6 +203,10 @@
                                   <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
                                 </div>
                               </div>
+                              <div *ngIf="!phoneConfirmed;" class="col-2">
+                                <button class="btn-primary btn-sm">Confirm</button>
+                              </div>
+
                             </div>
                             <div class="form-row">
                               <div class="col-3" style="align-content: center">
