@@ -3,8 +3,8 @@
     <div class="card-header">
 
 <!--      <div *ngIf="(this.currentUserQuery.selectLoading() | async) === false; else avatarLoading">-->
-      <div *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarLoading">
-        <img [src]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"
+      <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
+        <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
              alt="Avatar"
              class="img-center img-fluid rounded-circle"
              id="avatar"
@@ -185,8 +185,8 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"></app-avatar>
+      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
+        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"></app-avatar>
       </div>
       <ng-template #avatarModalLoading>
 

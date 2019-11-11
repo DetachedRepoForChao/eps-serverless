@@ -1,6 +1,6 @@
 import { UserStore } from './user.store';
 import { EntityUserQuery} from './entity-user.query';
-import { createEntityUserAvatarModel, EntityUserModel } from './entity-user.model';
+import { createEntityUserModel, EntityUserModel } from './entity-user.model';
 import { Injectable } from '@angular/core';
 import { VISIBILITY_FILTER } from '../filter/user-filter.model';
 import {guid, ID} from '@datorama/akita';
@@ -34,7 +34,7 @@ export class EntityUserService {
   };
 
   constructor(private userStore: UserStore,
-              private entityUserAvatarQuery: EntityUserQuery,
+              private entityUserQuery: EntityUserQuery,
               private authService: AuthService) { }
 
   updateFilter(filter: VISIBILITY_FILTER) {
@@ -54,13 +54,13 @@ export class EntityUserService {
 
 
   add(username: string, avatarBase64String: string, avatarPath: string, avatarResolvedUrl: string) {
-    const userAvatar = createEntityUserAvatarModel({ username, avatarBase64String, avatarPath, avatarResolvedUrl });
-    this.userStore.add(userAvatar);
+    const user = createEntityUserModel({ username, avatarBase64String, avatarPath, avatarResolvedUrl });
+    this.userStore.add(user);
   }
 
 
   delete(userId: number) {
-    console.log(`entity-user-avatar.service: delete ${userId}`);
+    console.log(`entity-user.service: delete ${userId}`);
     this.userStore.remove((e) => e.userId === userId);
   }
 
@@ -234,7 +234,7 @@ export class EntityUserService {
               const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
-              const avatar = createEntityUserAvatarModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
+              const avatar = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
                 preferredName, preferredPronoun, address1, address2, city, country, state, zip, dateOfHire, dateOfTermination, phone,
                 active, sex, gender});
@@ -252,7 +252,7 @@ export class EntityUserService {
   getAvatarFromStorage(avatarUrl: string): Observable<any> {
     const functionName = 'getAvatarFromStorage';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
 
@@ -273,7 +273,7 @@ export class EntityUserService {
         identityId: identityId
       })
         .then((result: string) => {
-          console.log(`${functionFullName}: result: ${result}`);
+          // console.log(`${functionFullName}: result: ${result}`);
           const data = {
             avatarResolvedUrl: result
           };

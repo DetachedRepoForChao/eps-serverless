@@ -15,7 +15,7 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
   selectVisibilityFilter$ = this.select(state => state.ui.filter);
 
 
-  selectVisibleUserAvatars$ = combineLatest(
+  selectVisibleUsers$ = combineLatest(
     this.selectVisibilityFilter$,
     this.selectAll(),
     this.getVisibleUser
@@ -29,24 +29,22 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
   }
 
 
-  private getVisibleUser(filter, userAvatars): EntityCurrentUserModel[] {
+  private getVisibleUser(filter, users): EntityCurrentUserModel[] {
     switch (filter) {
       case VISIBILITY_FILTER.SHOW_COMPLETED:
-        return userAvatars.filter(t => t.completed);
+        return users.filter(t => t.completed);
       case VISIBILITY_FILTER.SHOW_ACTIVE:
-        return userAvatars.filter(t => !t.completed);
+        return users.filter(t => !t.completed);
       default:
-        return userAvatars;
+        return users;
     }
   }
 
-  // public getUser(username: string): EntityUserAvatarModel {
-  public getCurrentUserAvatar() {
-    const currentUserAvatar = this.getAll();
-    return currentUserAvatar;
+  public getCurrentUser() {
+    return this.getAll();
   }
 
-  public getCurrentUser() {
+  public selectCurrentUser() {
     return this.selectAll();
   }
 

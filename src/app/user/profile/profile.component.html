@@ -28,7 +28,7 @@
 
                 <div class="card-body" *ngIf="!isCardLoading; else cardLoading" >
                   <ngx-spinner
-                    name="profile-card-spinner"
+                    name="profile-spinner"
                     [fullScreen]="false"
                     bdColor="rgba(51,51,51,0.8)"
                     size="medium"
@@ -45,10 +45,10 @@
                           Edit Profile
                         </li>
                         <li>
-                          Edit Something Else
+                          Reset Password
                         </li>
                         <li>
-                          Edit Another Thing
+                          Privacy Settings
                         </li>
                       </ul>
                     </div>
@@ -63,8 +63,8 @@
 
                         </div>
                         <div class="col-4 text-left" style="padding: 0px">
-                          <div *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarLoading">
-                            <img [src]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"
+                          <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
+                            <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
                                  alt="Avatar"
                                  class="img-center img-fluid rounded-circle"
                                  id="avatar"
@@ -126,147 +126,181 @@
                       </div>
                       <div class="row">
                         <div class="user-form-container col-12">
-
                           <form [formGroup]="editUserForm">
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_preferredName" class="form-label">Preferred Name</label>
+                            <div *ngIf="isUserDataRetrieved; else placeholderForm">
+                              <div class="form-row">
+                                <div class="col-3" style="align-content: center">
+                                  <label for="editUser_preferredName" class="form-label">Preferred Name</label>
+                                </div>
+                                <div class="col-7">
+                                  <input type="text" class="form-control user-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
+                                </div>
                               </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
-                              </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col-3">
-                                <label for="editUser_birthdate" class="form-label">Date of Birth</label>
-                              </div>
-                              <div class="col-7">
-                                <input type="text" [matDatepicker]="editUser_birthdate"
-                                       (click)="editUser_birthdate.open()"
-                                       placeholder="Date of Birth"
-                                       formControlName="birthdate"
-                                       class="form-control user-form-control datepicker"
-                                       id="editUser_birthdate">
+                              <div class="form-row">
+                                <div class="col-3">
+                                  <label for="editUser_birthdate" class="form-label">Date of Birth</label>
+                                </div>
+                                <div class="col-7">
+                                  <input type="text" [matDatepicker]="editUser_birthdate"
+                                         (click)="editUser_birthdate.open()"
+                                         placeholder="Date of Birth"
+                                         formControlName="birthdate"
+                                         class="form-control user-form-control datepicker"
+                                         id="editUser_birthdate">
 
-                                <mat-datepicker #editUser_birthdate [startView]="'year'"></mat-datepicker>
-                                <div *ngIf="(editUserFormSubmitted && editUserForm.controls.birthdate.invalid) || (editUserForm.dirty && editUserForm.controls.birthdate.touched && editUserForm.controls.birthdate.invalid)">
-                                  <label class="validation-message">This field is required.</label>
+                                  <mat-datepicker #editUser_birthdate [startView]="'year'"></mat-datepicker>
+                                  <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.birthdate.invalid) || (editUserForm?.dirty && editUserForm?.controls.birthdate.touched && editUserForm?.controls.birthdate.invalid)">
+                                    <label class="validation-message">This field is required.</label>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_email" class="form-label">Email</label>
-                              </div>
-                              <div class="confirm-col col-1">
-                                <div *ngIf="emailConfirmed; else emailUnconfirmed">
-                                  <i class="fas fa-check confirmed"></i>
+
+                              <div class="form-row">
+                                <div class="col-2" style="align-content: center">
+                                  <label class="form-label">Email</label>
                                 </div>
-                                <ng-template #emailUnconfirmed>
-                                  <i class="fas fa-times unconfirmed"></i>
+                                <div class="confirm-col text-right col-1">
+                                  <div *ngIf="emailConfirmed; else emailUnconfirmedIcon">
+                                    <i class="fas fa-check confirmed"></i>
+                                  </div>
+                                  <ng-template #emailUnconfirmedIcon>
+                                    <i class="fas fa-times unconfirmed"></i>
+                                  </ng-template>
+                                </div>
+                                <div *ngIf="emailConfirmed; else emailUnconfirmedInput" class="col-7">
+                                  <input type="email" class="form-control user-form-control" id="editUser_confirmedEmail" placeholder="Email" formControlName="email">
+                                  <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
+                                    <label class="validation-message">This field is required.</label>
+                                  </div>
+                                </div>
+                                <ng-template #emailUnconfirmedInput class="col-5">
+                                  <div class="col-5">
+                                    <input type="email" class="form-control user-form-control" id="editUser_unconfirmedEmail" placeholder="Email" formControlName="email">
+                                    <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
+                                      <label class="validation-message">This field is required.</label>
+                                    </div>
+                                  </div>
                                 </ng-template>
-                              </div>
-                              <div class="col-6">
-                                <input type="email" class="form-control user-form-control" id="editUser_email" placeholder="Email" formControlName="email">
-                                <div *ngIf="(editUserFormSubmitted && editUserForm.controls.email.invalid) || (editUserForm.dirty && editUserForm.controls.email.touched && editUserForm.controls.email.invalid)">
-                                  <label class="validation-message">This field is required.</label>
+                                <div *ngIf="!emailConfirmed" class="confirm-col col-2">
+                                  <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmEmailModal" (click)="onEmailConfirmClick()">Confirm</button>
                                 </div>
                               </div>
-                              <div *ngIf="!emailConfirmed;" class="col-2">
-                                <button class="btn-primary btn-sm">Confirm</button>
-                              </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_phone" class="form-label">Phone</label>
-                              </div>
-                              <div class="confirm-col col-1">
-                                <div *ngIf="phoneConfirmed; else phoneUnconfirmed">
-                                  <i class="fas fa-check confirmed"></i>
+
+                              <div class="form-row">
+                                <div class="col-2" style="align-content: center">
+                                  <label class="form-label">Phone</label>
                                 </div>
-                                <ng-template #phoneUnconfirmed>
-                                  <i class="fas fa-times unconfirmed"></i>
+                                <div class="confirm-col text-right col-1">
+                                  <div *ngIf="phoneConfirmed; else phoneUnconfirmedIcon">
+                                    <i class="fas fa-check confirmed"></i>
+                                  </div>
+                                  <ng-template #phoneUnconfirmedIcon>
+                                    <i class="fas fa-times unconfirmed"></i>
+                                  </ng-template>
+                                </div>
+                                <div *ngIf="phoneConfirmed; else phoneUnconfirmedInput" class="col-7">
+                                  <input class="form-control user-form-control"
+                                         placeholder="Phone"
+                                         formControlName="phone"
+                                         name="editUser_confirmedPhone"
+                                         appPhoneMask
+                                         type="tel"
+                                         maxLength="14"
+                                         [ngClass]="{'invalid-textbox' : editUserForm?.dirty && editUserForm?.controls.phone.touched && editUserForm?.controls.phone.invalid}"
+                                         id="editUser_confirmedPhone">
+                                  <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
+                                    <label class="validation-message">This field is required.</label>
+                                    <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
+                                  </div>
+                                </div>
+                                <ng-template #phoneUnconfirmedInput class="col-5">
+                                  <div class="col-5">
+                                    <input class="form-control user-form-control"
+                                           placeholder="Phone"
+                                           formControlName="phone"
+                                           name="editUser_unconfirmedPhone"
+                                           appPhoneMask
+                                           type="tel"
+                                           maxLength="14"
+                                           [ngClass]="{'invalid-textbox' : editUserForm?.dirty && editUserForm?.controls.phone.touched && editUserForm?.controls.phone.invalid}"
+                                           id="editUser_unconfirmedPhone">
+                                    <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
+                                      <label class="validation-message">This field is required.</label>
+                                      <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
+                                    </div>
+                                  </div>
                                 </ng-template>
-                              </div>
-                              <div class="col-6">
-                                <input class="form-control user-form-control"
-                                       placeholder="Phone"
-                                       formControlName="phone"
-                                       name="editUser_phone"
-                                       appPhoneMask
-                                       type="tel"
-                                       maxLength="14"
-                                       [ngClass]="{'invalid-textbox' : editUserForm.dirty && editUserForm.controls.phone.touched && editUserForm.controls.phone.invalid}"
-                                       id="editUser_phone">
-                                <div *ngIf="(editUserFormSubmitted && editUserForm.controls.phone.invalid) || (editUserForm.dirty && editUserForm.controls.phone.touched && phoneValidationError)">
-                                  <label class="validation-message">This field is required.</label>
-                                  <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
+                                <div *ngIf="!phoneConfirmed" class="confirm-col col-2">
+                                  <button class="btn-primary btn-sm">Confirm</button>
                                 </div>
                               </div>
-                              <div *ngIf="!phoneConfirmed;" class="col-2">
-                                <button class="btn-primary btn-sm">Confirm</button>
+                              <div class="form-row">
+                                <div class="col-3" style="align-content: center">
+                                  <label for="editUser_gender" class="form-label">Gender</label>
+                                </div>
+                                <div class="col-7">
+                                  <input type="text" class="form-control user-form-control" id="editUser_gender" placeholder="Gender" formControlName="gender">
+                                </div>
                               </div>
 
                             </div>
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_gender" class="form-label">Gender</label>
-                              </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_gender" placeholder="Gender" formControlName="gender">
-                              </div>
-                            </div>
 
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_address1" class="form-label">Address 1</label>
+                            <ng-template #placeholderForm>
+                              <div class="form-row">
+                                <div class="col-3" style="align-content: center">
+                                  <label for="editUser_phPreferredName" class="form-label">Preferred Name</label>
+                                </div>
+                                <div class="col-7">
+                                  <input type="text" class="form-control user-form-control" id="editUser_phPreferredName" placeholder="Preferred Name">
+                                </div>
                               </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_address1" placeholder="Address 1" formControlName="address1">
+                              <div class="form-row">
+                                <div class="col-3">
+                                  <label for="editUser_phBirthdate" class="form-label">Date of Birth</label>
+                                </div>
+                                <div class="col-7">
+                                  <input type="text"
+                                         placeholder="Date of Birth"
+                                         class="form-control user-form-control datepicker"
+                                         id="editUser_phBirthdate">
+                                </div>
                               </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_address2" class="form-label">Address 2</label>
-                              </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_address2" placeholder="Address 2" formControlName="address2">
-                              </div>
-                            </div>
 
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_city" class="form-label">City</label>
+                              <div class="form-row">
+                                <div class="col-3" style="align-content: center">
+                                  <label class="form-label">Email</label>
+                                </div>
+                                <div class="col-7">
+                                  <input type="email" class="form-control user-form-control" id="editUser_phConfirmedEmail" placeholder="Email">
+                                </div>
+
                               </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_city" placeholder="City" formControlName="city">
+
+                              <div class="form-row">
+                                <div class="col-3" style="align-content: center">
+                                  <label class="form-label">Phone</label>
+                                </div>
+                                <div class="col-7">
+                                  <input class="form-control user-form-control"
+                                         placeholder="Phone"
+                                         appPhoneMask
+                                         type="tel"
+                                         maxLength="14"
+                                         id="editUser_phConfirmedPhone">
+                                </div>
                               </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_state" class="form-label">State</label>
+                              <div class="form-row">
+                                <div class="col-3" style="align-content: center">
+                                  <label for="editUser_phGender" class="form-label">Gender</label>
+                                </div>
+                                <div class="col-7">
+                                  <input type="text" class="form-control user-form-control" id="editUser_phGender" placeholder="Gender">
+                                </div>
                               </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_state" placeholder="State" formControlName="state">
-                              </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_country" class="form-label">Country</label>
-                              </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_country" placeholder="Country" formControlName="country">
-                              </div>
-                            </div>
-                            <div class="form-row">
-                              <div class="col-3" style="align-content: center">
-                                <label for="editUser_zip" class="form-label">Zip</label>
-                              </div>
-                              <div class="col-7">
-                                <input type="text" class="form-control user-form-control" id="editUser_zip" placeholder="Zip" formControlName="zip">
-                              </div>
-                            </div>
+                            </ng-template>
+
                           </form>
+                          <button type="button" class="btn btn-primary" (click)="onEditUserFormSubmit(editUserForm)">Save Changes</button>
 
                         </div>
                       </div>
@@ -294,7 +328,7 @@
               <ng-template #cardLoading>
                 <div class="card-body">
                   <ngx-spinner
-                    name="profile-card-spinner"
+                    name="profile-spinner"
                     [fullScreen]="false"
                     bdColor="rgba(51,51,51,0.8)"
                     size="medium"
@@ -330,8 +364,8 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"></app-avatar>
+      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
+        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"></app-avatar>
       </div>
       <ng-template #avatarModalLoading>
 
@@ -342,6 +376,52 @@
   </div>
 </div>
 
+<div class="modal fade bd-example" id="confirmEmailModal" role="dialog" tabindex="-1" aria-labelledby="confirmEmailModal" aria-hidden="true" >
+  <div class="modal-dialog modal-lg" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirm Your Email</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body">
+
+        <form #codeForm="ngForm" class="form">
+          <div class="form-group">
+
+            <label for="code" class="modal-form-label">Please enter the confirmation code that was sent to {{email}}. If you didn't receive a code, click the "Resend Code" button.</label>
+            <input type="text" id="code" name="code" #code="ngModel" class="form-control modal-form-control" [(ngModel)]="confirmEmailForm.value.code" required>
+            <div *ngIf="codeForm.submitted && !code.valid">
+              <label class="validation-message">This field is required.</label>
+            </div>
+
+<!--            <div *ngIf="emailConfirmationCodeSent; else emailConfirmationCodeNotSent">
+              <label for="code" class="modal-form-label">Please enter the confirmation code that was sent to {{email}}. If you didn't receive a code, click the "Resend Code" button.</label>
+              <input type="text" id="code" name="code" #code="ngModel" class="form-control" [(ngModel)]="confirmEmailForm.value.code" required>
+              <div *ngIf="codeForm.submitted && !code.valid">
+                <label class="validation-message">This field is required.</label>
+              </div>
+            </div>
+            <ng-template #emailConfirmationCodeNotSent>
+              <label for="code" class="modal-form-label"></label>
+            </ng-template>-->
+          </div>
+
+          <div class="modal-footer">
+            <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
+            <button type="submit" class="btn btn-primary btn-lg">Confirm</button>
+            <button class="btn btn-info btn-lg" (click)="sendAgain()">Resend Code</button>
+          </div>
+        </form>
+
+
+      </div>
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+</div>
 
 
 

@@ -45,7 +45,7 @@ export class AvatarComponent implements OnInit {
 
 
   ngOnInit() {
-    this.croppedImageToShow = this.userQuery.getCurrentUserAvatar()[0].avatarResolvedUrl;
+    this.croppedImageToShow = this.userQuery.getCurrentUser()[0].avatarResolvedUrl;
     console.log('croppedImageToShow:');
     console.log(this.croppedImageToShow);
   }

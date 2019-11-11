@@ -11,7 +11,7 @@ import {tap} from 'rxjs/operators';
 import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
-import {createEntityUserAvatarModel, EntityUserModel} from '../../user/state/entity-user.model';
+import {createEntityUserModel, EntityUserModel} from '../../user/state/entity-user.model';
 import {store} from '@angular/core/src/render3';
 import {PointItemModel} from '../../point-item/state/point-item.model';
 import {StoreItemModel} from '../../store-item/state/store-item.model';

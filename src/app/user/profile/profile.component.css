@@ -92,7 +92,8 @@ li:hover {
 }
 
 .confirm-col {
-  padding-top: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .confirmed {
@@ -101,4 +102,12 @@ li:hover {
 
 .unconfirmed {
   color: #e418c4;
+}
+
+.modal-form-label {
+  color: black !important;
+}
+
+.modal-form-control {
+  color: black;
 }

@@ -16,6 +16,7 @@ import {Department} from '../../../shared/department.model';
 import {SecurityRole} from '../../../shared/securityrole.model';
 import {UserHasStoreItemQuery} from '../../user-has-store-item/state/user-has-store-item.query';
 import {StoreItemQuery} from '../../store-item/state/store-item.query';
+import {CognitoUser, CognitoUserAttribute, ICognitoUserAttributeData} from 'amazon-cognito-identity-js';
 
 @Injectable({
   providedIn: 'root'
@@ -54,9 +55,32 @@ export class EntityCurrentUserService {
     this.currentUserStore.add(userAvatar);
   }*/
 
+  update(user) {
+    const functionName = 'update';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(user);
+    // console.log(`${functionFullName}: update ${user.firstName} ${user.lastName}`);
+
+    const userUpdate = {};
+    const keys = Object.keys(user);
+
+    for (let i = 0; i < keys.length; i++) {
+      if ((keys[i] === 'phone') && (user[keys[i]].includes('+1'))) {
+        userUpdate[keys[i]] = user[keys[i]].substring(2);
+      } else {
+        userUpdate[keys[i]] = user[keys[i]];
+      }
+    }
+
+    console.log(userUpdate);
+
+    this.currentUserStore.update((e) => e.userId === user.userId, userUpdate);
+  }
 
   delete(id: ID) {
-    console.log(`entity-user-avatar.service: delete ${id}`);
+    console.log(`entity-user.service: delete ${id}`);
     this.currentUserStore.remove(id);
   }
 
@@ -112,7 +136,7 @@ export class EntityCurrentUserService {
   }
 
   cacheCurrentUser() {
-    console.log(`Retrieving current user avatar`);
+    console.log(`Retrieving current user`);
     // this.userStore.setLoading(true);  // this is the initial state before doing anything
     const request$ = this.getCurrentUser()
       .pipe(tap((userDataResult: any) => {
@@ -126,7 +150,7 @@ export class EntityCurrentUserService {
         const birthdate = userDataResult.birthdate;
         const department = userDataResult.department;
         const securityRole = userDataResult.securityRole;
-        const phone = userDataResult.phone;
+        const phone = userDataResult.phone.substring(2);
         const avatarPath = userDataResult.userPicture;
         const points = +userDataResult.points;
         const pointsPool = +userDataResult.pointsPool;
@@ -417,27 +441,125 @@ export class EntityCurrentUserService {
     });
   }
 
-  showStore() {
-    console.log(this.currentUserStore);
+  modifyUser(user): Observable<any> {
+    const functionName = 'modifyUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          this.updateCognitoAttributes(user)
+            .subscribe(updateResult => {
+              console.log(updateResult);
+
+              if (updateResult === 'SUCCESS') {
+                
+              }
+
+              observer.next(updateResult);
+              observer.complete();
+            });
+
+          /*const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            user: user
+          };
+
+          API.post(this.apiName, this.apiPath + '/modifyUser', myInit).then(data => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(data);
+
+            if (data.data.status !== false) {
+              // Update the user in the local Akita store
+              this.update(user);
+
+              // Update the user's Cognito identity
+              this.updateCognitoAttributes(user)
+                .subscribe(cognitoResult => {
+                  console.log(cognitoResult);
+                });
+
+              observer.next(data.data);
+              observer.complete();
+            } else {
+              observer.next(data.data);
+              observer.complete();
+            }
+          });*/
+        });
+    });
   }
 
-/*  getPendingBalance(): Observable<any> {
+  updateCognitoAttributes(user): Observable<any> {
+    const functionName = 'updateCognitoAttributes';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     return new Observable<any>(observer => {
-      const pending$ = this.userHasStoreItemQuery.selectPending();
-      pending$.subscribe(pendingRecords => {
-        let sum = 0;
+      this.authService.currentAuthenticatedUser()
+        .then((currentUser: CognitoUser) => {
+          const attributeList = [];
+          const keys = Object.keys(user);
 
-        for (let i = 0; i < pendingRecords.length; i++) {
-          const storeItem = this.storeItemQuery.getAll({
-            filterBy: entity => entity.itemId === pendingRecords[i].storeItemId
-          })[0];
+          for (let i = 0; i < keys.length; i++) {
+            switch (keys[i]) {
+              case 'birthdate': {
+                attributeList.push({
+                  Name: 'birthdate',
+                  Value: user.birthdate,
+                });
+                break;
+              }
+              case 'preferredName': {
+                attributeList.push({
+                  Name: 'name',
+                  Value: user.preferredName,
+                });
+                break;
+              }
+              case 'email': {
+                attributeList.push({
+                  Name: 'email',
+                  Value: user.email,
+                });
+                break;
+              }
+              case 'phone': {
+                attributeList.push({
+                  Name: 'phone_number',
+                  Value: user.phone,
+                });
+                break;
+              }
+            }
+          }
 
-          sum += storeItem.cost;
-        }
+          // const attributeObj = new CognitoUserAttribute(attribute);
+          // attributeList.push(attributeObj);
 
-        observer.next(sum);
-        observer.complete();
-      });
+          currentUser.updateAttributes(attributeList, function(err, result) {
+            if (err) {
+              alert(err);
+              observer.next(err);
+              observer.complete();
+              return;
+            }
+            console.log('call result: ' + result);
+            observer.next(result);
+            observer.complete();
+          });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
     });
-  }*/
+  }
+
 }

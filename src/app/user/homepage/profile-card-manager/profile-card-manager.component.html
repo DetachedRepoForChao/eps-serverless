@@ -2,7 +2,7 @@
   <div class="card card-coin card-plain card-custom">
     <div class="card-header">
 
-      <img [src]="this.entityCurrentUserQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"
+      <img [src]="this.entityCurrentUserQuery.getCurrentUser()[0].avatarResolvedUrl"
            alt="Avatar"
            *ngIf="(this.entityCurrentUserQuery.selectLoading() | async) === false; else avatarLoading"
            class="img-center img-fluid rounded-circle"
@@ -92,8 +92,8 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" *ngIf="this.entityCurrentUserQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.entityCurrentUserQuery.getCurrentUserAvatar()[0].avatarResolvedUrl"></app-avatar>
+      <div class="modal-body" *ngIf="this.entityCurrentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
+        <app-avatar [avatarUrl]="this.entityCurrentUserQuery.getCurrentUser()[0].avatarResolvedUrl"></app-avatar>
       </div>
       <ng-template #avatarModalLoading>
 

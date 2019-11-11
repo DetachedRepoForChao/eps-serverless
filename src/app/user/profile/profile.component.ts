@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 import {HttpClient} from '@angular/common/http';
 import {ImageService} from '../../shared/image.service';
@@ -22,9 +22,11 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
 import {AuthService} from '../../login/auth.service';
 import {FeatureService} from '../../entity-store/feature/state/feature.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 // import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {NotifierService} from 'angular-notifier';
+import Auth from '@aws-amplify/auth';
+import {CognitoUser} from 'amazon-cognito-identity-js';
 
 declare var $: any;
 
@@ -40,7 +42,6 @@ export class ProfileComponent implements OnInit {
 
   pendingBalance$;
   currentUser$;
-  currentUser;
   isCardLoading: boolean;
 
   // public config: PerfectScrollbarConfigInterface = {};
@@ -48,21 +49,26 @@ export class ProfileComponent implements OnInit {
   phoneValidationError: string;
   editUserForm: FormGroup;
   editUserFormSubmitted = false;
-  emailConfirmed = false;
-  phoneConfirmed = false;
+  emailConfirmed;
+  phoneConfirmed;
+  isUserDataRetrieved = false;
+  emailConfirmationCodeSent = false;
+  email;
+  phone;
+
+  confirmEmailForm: FormGroup = new FormGroup({
+    email: new FormControl({value: this.email, disabled: true}),
+    code: new FormControl('', [ Validators.required, Validators.min(3) ])
+  });
 
   constructor(private http: HttpClient,
-              private imageService: ImageService,
-              private globals: Globals,
-              private leaderboardService: LeaderboardService,
-              private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
+              private globals: Globals,
               private achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               private currentUserStore: CurrentUserStore,
               public currentUserQuery: EntityCurrentUserQuery,
-              private entityCurrentUserService: EntityCurrentUserService,
-              private sanitizer: DomSanitizer,
+              private currentUserService: EntityCurrentUserService,
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
               private userHasStoreItemService: UserHasStoreItemService,
@@ -82,7 +88,7 @@ export class ProfileComponent implements OnInit {
 
     this.isCardLoading = true;
     this.isImageLoading = true;
-    this.spinner.show('profile-card-spinner');
+    this.spinner.show('profile-spinner');
 
     /*      const text_max = 200;
         $('#count_message').html(text_max + ' remaining');
@@ -94,29 +100,52 @@ export class ProfileComponent implements OnInit {
           $('#count_message').html(text_remaining + ' remaining');
         });*/
 
+
     this.authService.currentUserInfo()
       .then(userInfo => {
         console.log(userInfo);
         this.emailConfirmed = userInfo.attributes['email_verified'];
         this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
+        this.isUserDataRetrieved = true;
       });
 
-    this.userService.cacheUsers().subscribe();
+    const observables: Observable<any>[] = [];
+    observables.push(
+      this.currentUserService.cacheCurrentUser(),
+      this.userService.cacheUsers(),
+      this.achievementService.cacheAchievements()
+    );
+    // this.entityCurrentUserService.cacheCurrentUser().subscribe();
+    // this.userService.cacheUsers().subscribe();
+    // this.achievementService.cacheAchievements().subscribe();
 
-    this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
+    forkJoin(observables)
+      .subscribe(() => {
+        this.leaderboardUsers$ = this.userQuery.selectAll({
+          filterBy: userEntity => userEntity.securityRole.Id === 1,
+        });
 
-    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });
-    // load reactive forms
-    this.loadEditUserForm();
+        this.currentUser$ = this.currentUserQuery.selectAll({
+          limitTo: 1
+        });
 
+        this.loadEditUserForm();
+        this.populateFormData();
+
+        this.isImageLoading = false;
+        this.isCardLoading = false;
+        this.spinner.hide('profile-spinner');
+      });
+  }
+
+  populateFormData() {
+    const functionName = 'populateFormData';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
     this.currentUser$.subscribe(currentUser => {
       const user = currentUser[0];
       console.log(user);
-
+      this.editUserForm.patchValue({user: user});
       const keys = Object.keys(user);
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -124,6 +153,16 @@ export class ProfileComponent implements OnInit {
         if (this.editUserForm.get(key)) {
           // We must take special consideration for selection objects like securityRole and department
           switch (key) {
+            case 'email': {
+              this.editUserForm.patchValue({[key]: user[keys[i]]});
+              this.email = user[keys[i]];
+              break;
+            }
+            case 'phone': {
+              this.editUserForm.patchValue({[key]: user[keys[i]]});
+              this.phone = user[keys[i]];
+              break;
+            }
             case 'preferredName': {
               this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
               console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
@@ -136,10 +175,10 @@ export class ProfileComponent implements OnInit {
         }
       }
     });
+  }
 
-    this.isImageLoading = false;
-    this.isCardLoading = false;
-    this.spinner.hide('profile-card-spinner');
+  onConfirmEmailClick() {
+    this.authService.verifyEmail();
   }
 
   getPendingBalance(): Observable<any> {
@@ -163,6 +202,9 @@ export class ProfileComponent implements OnInit {
 
   // Creates the Edit User reactive form
   private loadEditUserForm() {
+    const functionName = 'loadEditUserForm';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
     this.editUserForm = this.formBuilder.group({
       user: [null, Validators.required],
       preferredName: [null],
@@ -170,16 +212,8 @@ export class ProfileComponent implements OnInit {
       suffix: [null],
       position: [null],
       preferredPronoun: [null],
-      sex: [null],
       gender: [null],
-      dateOfHire: [null],
-      address1: [null],
-      address2: [null],
-      city: [null],
-      state: [null],
-      country: [null],
-      zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
-      birthdate: [null, Validators.required],
+      birthdate: [null],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required]
     });
@@ -222,28 +256,7 @@ export class ProfileComponent implements OnInit {
       this will let our function know that those fields should be cleared.
       */
       for (let i = 0; i < keys.length; i++) {
-        if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
-          console.log(keys[i]);
-          // Special consideration for nested objects like securityRole and department
-          if (sourceUser[keys[i]].Id === form.controls[keys[i]].value.Id) {
-            // No change
-          } else {
-            console.log('Value changed:');
-            console.log(form.controls[keys[i]].value);
-            switch (keys[i]) { // we need to account for securityRole and department objects
-              case 'securityRole': {
-                user['securityRoleId'] = form.controls[keys[i]].value.Id;
-                user['securityRoleName'] = form.controls[keys[i]].value.Name;
-                break;
-              }
-              case 'department': {
-                user['departmentId'] = form.controls[keys[i]].value.Id;
-                user['departmentName'] = form.controls[keys[i]].value.Name;
-                break;
-              }
-            }
-          }
-        } else if ((keys[i] === 'birthdate') || (keys[i] === 'dateOfHire')) {
+        if ((keys[i] === 'birthdate')) {
           const date = new Date(form.controls[keys[i]].value);
           const dateString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
           if (sourceUser[keys[i]] === form.controls[keys[i]].value) {
@@ -280,7 +293,14 @@ export class ProfileComponent implements OnInit {
         // User object changes exist. Add the userId to the user object and invoke modifyUser function
         user['userId'] = sourceUser.userId;
         user['username'] = sourceUser.username;
-        this.userService.modifyUser(user).subscribe(modifyResult => {
+        this.currentUserService.modifyUser(user)
+          .subscribe(modifyResult => {
+            console.log(modifyResult);
+            this.editUserFormSubmitted = false;
+            this.emailConfirmationCodeSent = true;
+          });
+
+/*        this.userService.modifyUser(user).subscribe(modifyResult => {
           console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.notifierService.notify('success', 'User record updated successfully.');
@@ -288,7 +308,7 @@ export class ProfileComponent implements OnInit {
           } else {
             this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
           }
-        });
+        });*/
 
       } else {
         // User object was not changed
@@ -304,4 +324,42 @@ export class ProfileComponent implements OnInit {
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
+
+/*  sendEmailConfirmationCode() {
+    Auth.at
+  }*/
+
+  onEmailConfirmClick() {
+    this.email = this.editUserForm.controls.email.value;
+  }
+
+  sendAgain() {
+    console.log(this.email);
+    Auth.currentAuthenticatedUser()
+      .then((currentUser: CognitoUser) => {
+        currentUser.getAttributeVerificationCode('email', {
+          onSuccess: () => {
+            console.log('success!');
+          },
+          onFailure: (err) => {
+            console.log('an error occurred');
+            console.log(err); },
+          inputVerificationCode: (data: string) => { console.log(data); }
+        });
+        /*currentUser.resendConfirmationCode((error, success) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          console.log(success);
+        });*/
+      });
+    /*Auth.resendSignUp(this.email)
+      .then(() => this.notifierService.notify('Success', 'A code has been emailed to you'))
+      .catch((err) => {
+        console.log(err);
+        this.notifierService.notify('Error', 'An error occurred')
+      });*/
+  }
+
 }
