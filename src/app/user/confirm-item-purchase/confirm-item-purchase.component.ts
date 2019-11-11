@@ -32,6 +32,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   managerRequests$;
   displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest','declineRequest'];
 
+
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
                 private userHasStoreItemService: UserHasStoreItemService,
