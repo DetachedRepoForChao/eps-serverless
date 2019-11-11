@@ -24,7 +24,7 @@
                               <div>
                                 <mat-table   [dataSource]="managerRequests$">
                                   <ng-container matColumnDef="recordId">
-                                    <mat-header-cell *matHeaderCellDef>Record ID</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef>Request ID</mat-header-cell>
                                     <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
                                   </ng-container>
 
@@ -50,7 +50,7 @@
 
                                   <ng-container matColumnDef="acceptRequest">
                                     <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox [(ngModel)]="UserHasStoreItemModel.acceptRequest"></mat-checkbox> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
                                   </ng-container>
 
                                   <ng-container matColumnDef="declineRequest">
