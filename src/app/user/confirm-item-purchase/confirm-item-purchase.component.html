@@ -24,13 +24,13 @@
                               <div>
                                 <mat-table   [dataSource]="managerRequests$">
                                   <ng-container matColumnDef="recordId">
-                                    <mat-header-cell *matHeaderCellDef>Record ID</mat-header-cell>
+                                    <mat-header-cell *matHeaderCellDef>Request ID</mat-header-cell>
                                     <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
                                   </ng-container>
 
-                                  <ng-container matColumnDef="userId">
-                                    <mat-header-cell *matHeaderCellDef> UserID </mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userId}}</mat-cell>
+                                  <ng-container matColumnDef="userUsername">
+                                    <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userUsername}}</mat-cell>
                                   </ng-container>
 
                                   <ng-container matColumnDef=storeItemName>
@@ -50,12 +50,12 @@
 
                                   <ng-container matColumnDef="acceptRequest">
                                     <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox [(ngModel)]="UserHasStoreItemModel.acceptRequest"></mat-checkbox> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
                                   </ng-container>
 
                                   <ng-container matColumnDef="declineRequest">
                                     <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
                                   </ng-container>
 
                                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -77,24 +77,6 @@
                                 </mat-paginator>
 
                               </div>
-
-                                <<!-- <div class="row">
-                                  <div *ngFor="let request of (managerRequests$ | async)">
-                                      RecordId {{request.recordId}}
-                                      Requestor UserId {{request.userId}}
-                                      ManagerId {{request.managerId}}
-                                      Manager First Name {{request.managerFirstName}}
-                                     Manager Last Name {{request.managerLastName}}
-                                    Store Item Id {{request.storeItemId}}
-                                      Store Item Name {{request.storeItemName}}
-                                      Store Item Description {{request.storeItemDescription}}
-                                      Store Item Cost {{request.storeItemCost}}
-                                      Status {{request.status}}
-                                      Cancel Description {{request.cancelDescription}} -->
-
-<!--                                      <div class="container-text">{{request.managerId}} {{request.storeItemCost}}pts | {{request.storeItemName}}</div>-->
-
-
 
                           </div>
                           </div>
