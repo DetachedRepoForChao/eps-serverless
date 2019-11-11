@@ -55,7 +55,7 @@
 
                                   <ng-container matColumnDef="declineRequest">
                                     <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
                                   </ng-container>
 
                                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
