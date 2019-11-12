@@ -111,3 +111,13 @@ li:hover {
 .modal-form-control {
   color: black;
 }
+
+.modal-form-label2 {
+  color: black;
+  margin-top: auto;
+  font-size: 16px;
+}
+
+.modal-validation-message {
+  color: black;
+}

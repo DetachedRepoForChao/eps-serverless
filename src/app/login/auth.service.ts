@@ -118,7 +118,7 @@ export class AuthService {
             console.log('success');
           },
           onFailure: (err) => {
-            alert(err);
+            console.log(err);
           },
           inputVerificationCode: () => {
             console.log('verifying email');

@@ -61,7 +61,6 @@ export class EntityCurrentUserService {
     console.log(`Start ${functionFullName}`);
 
     console.log(user);
-    // console.log(`${functionFullName}: update ${user.firstName} ${user.lastName}`);
 
     const userUpdate = {};
     const keys = Object.keys(user);
@@ -76,7 +75,7 @@ export class EntityCurrentUserService {
 
     console.log(userUpdate);
 
-    this.currentUserStore.update((e) => e.userId === user.userId, userUpdate);
+    this.currentUserStore.update((e) => e.username === user.username, userUpdate);
   }
 
   delete(id: ID) {
@@ -454,42 +453,47 @@ export class EntityCurrentUserService {
               console.log(updateResult);
 
               if (updateResult === 'SUCCESS') {
-                
+                const token = currentUser.signInUserSession.idToken.jwtToken;
+                const myInit = this.myInit;
+                myInit.headers['Authorization'] = token;
+
+                myInit['body'] = {
+                  user: user
+                };
+
+                API.post(this.apiName, this.apiPath + '/modifyUser', myInit)
+                  .then(data => {
+                    console.log(`${functionFullName}: data retrieved from API`);
+                    console.log(data);
+
+                    if (data.data.status !== false) {
+                      // Update the user in the local Akita store
+                      this.update(user);
+
+                      observer.next(data.data);
+                      observer.complete();
+                    } else {
+                      observer.next(data.data);
+                      observer.complete();
+                    }
+                  })
+                  .catch(err => {
+                    console.log(`${functionFullName}: error making API call`);
+                    console.log(err);
+                    observer.next(err);
+                    observer.complete();
+                  });
               }
 
               observer.next(updateResult);
               observer.complete();
             });
-
-          /*const token = currentUser.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          myInit['body'] = {
-            user: user
-          };
-
-          API.post(this.apiName, this.apiPath + '/modifyUser', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
-
-            if (data.data.status !== false) {
-              // Update the user in the local Akita store
-              this.update(user);
-
-              // Update the user's Cognito identity
-              this.updateCognitoAttributes(user)
-                .subscribe(cognitoResult => {
-                  console.log(cognitoResult);
-                });
-
-              observer.next(data.data);
-              observer.complete();
-            } else {
-              observer.next(data.data);
-              observer.complete();
-            }
-          });*/
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
         });
     });
   }
@@ -535,15 +539,24 @@ export class EntityCurrentUserService {
                 });
                 break;
               }
+              case 'gender': {
+                attributeList.push({
+                  Name: 'gender',
+                  Value: user.gender,
+                });
+                break;
+              }
             }
           }
 
           // const attributeObj = new CognitoUserAttribute(attribute);
           // attributeList.push(attributeObj);
+          console.log('attributeList:');
+          console.log(attributeList);
 
           currentUser.updateAttributes(attributeList, function(err, result) {
             if (err) {
-              alert(err);
+              console.log(err);
               observer.next(err);
               observer.complete();
               return;

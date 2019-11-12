@@ -22,11 +22,12 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
 import {AuthService} from '../../login/auth.service';
 import {FeatureService} from '../../entity-store/feature/state/feature.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 // import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {NotifierService} from 'angular-notifier';
 import Auth from '@aws-amplify/auth';
 import {CognitoUser} from 'amazon-cognito-identity-js';
+import {environment} from '../../../environments/environment';
 
 declare var $: any;
 
@@ -55,10 +56,14 @@ export class ProfileComponent implements OnInit {
   emailConfirmationCodeSent = false;
   email;
   phone;
+  populateFormSubscription;
+  confirmEmailFormSubmitted;
+/*  confirmEmailForm: FormGroup = new FormGroup({
+    code: new FormControl('', [ Validators.required, Validators.min(6) ])
+  });*/
 
-  confirmEmailForm: FormGroup = new FormGroup({
-    email: new FormControl({value: this.email, disabled: true}),
-    code: new FormControl('', [ Validators.required, Validators.min(3) ])
+  confirmEmailForm = this.formBuilder.group({
+    code: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])]
   });
 
   constructor(private http: HttpClient,
@@ -115,9 +120,6 @@ export class ProfileComponent implements OnInit {
       this.userService.cacheUsers(),
       this.achievementService.cacheAchievements()
     );
-    // this.entityCurrentUserService.cacheCurrentUser().subscribe();
-    // this.userService.cacheUsers().subscribe();
-    // this.achievementService.cacheAchievements().subscribe();
 
     forkJoin(observables)
       .subscribe(() => {
@@ -129,20 +131,50 @@ export class ProfileComponent implements OnInit {
           limitTo: 1
         });
 
-        this.loadEditUserForm();
-        this.populateFormData();
+        this.currentUserService.fillRemainingAttributes().subscribe(() => {
+          this.storeItemService.cacheStoreItems().subscribe(() => {
+            this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
+              this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
+                console.log('balance: ' + balance);
+                this.currentUserService.updatePointsBalance(balance);
+              });
+            });
+          });
 
-        this.isImageLoading = false;
-        this.isCardLoading = false;
-        this.spinner.hide('profile-spinner');
+          this.loadEditUserForm();
+          this.populateFormData();
+
+          this.isImageLoading = false;
+          this.isCardLoading = false;
+          this.spinner.hide('profile-spinner');
+        });
       });
+
+    /*this.currentUserService.cacheCurrentUser().subscribe(() => {
+      this.currentUserService.fillRemainingAttributes()
+        .subscribe(result => {
+          if (result === true) {
+            this.currentUserQuery.selectCurrentUser()
+              .subscribe((currentUser: any) => {
+                console.log(`${functionFullName}: current user:`);
+                console.log(currentUser);
+                this.metricsService.cacheMetrics().subscribe(() => {
+                  this.metricsService.startHomepageTimer();
+                });
+              });
+
+
+          }
+        });
+    });*/
+
   }
 
   populateFormData() {
     const functionName = 'populateFormData';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-    this.currentUser$.subscribe(currentUser => {
+    this.populateFormSubscription = this.currentUser$.subscribe(currentUser => {
       const user = currentUser[0];
       console.log(user);
       this.editUserForm.patchValue({user: user});
@@ -153,6 +185,19 @@ export class ProfileComponent implements OnInit {
         if (this.editUserForm.get(key)) {
           // We must take special consideration for selection objects like securityRole and department
           switch (key) {
+            case 'gender': {
+              console.log('gender');
+              console.log(user[keys[i]]);
+              if (((user[keys[i]] !== 'Male') && (user[keys[i]] !== 'Female') && (user[keys[i]] !== 'Prefer Not to Say')) && (user[keys[i]])) {
+                console.log('test1');
+                this.editUserForm.patchValue({[key]: 'Custom'});
+                this.editUserForm.patchValue({genderCustom: user[keys[i]]});
+              } else {
+                console.log('test2');
+                this.editUserForm.patchValue({[key]: user[keys[i]]});
+              }
+              break;
+            }
             case 'email': {
               this.editUserForm.patchValue({[key]: user[keys[i]]});
               this.email = user[keys[i]];
@@ -164,8 +209,12 @@ export class ProfileComponent implements OnInit {
               break;
             }
             case 'preferredName': {
-              this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
-              console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
+              if (user[keys[i]]) {
+                this.editUserForm.patchValue({[key]: user[keys[i]]});
+              } else {
+                this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
+                console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
+              }
               break;
             }
             default: {
@@ -213,6 +262,7 @@ export class ProfileComponent implements OnInit {
       position: [null],
       preferredPronoun: [null],
       gender: [null],
+      genderCustom: [null],
       birthdate: [null],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required]
@@ -221,7 +271,7 @@ export class ProfileComponent implements OnInit {
 
 
 // Validates and formats the phone number by stripping out anything except number characters
-  validatePhoneNumber(phone: string): (string | null) {
+  validateFormPhoneNumber(phone: string): (string | null) {
     console.log(phone);
     this.phoneValidationError = null;
     // Strip out all characters except numbers
@@ -229,9 +279,29 @@ export class ProfileComponent implements OnInit {
     console.log (newVal);
     if (newVal.length === 10) {
       return newVal;
+    } else if (newVal.length > 10) {
+      // The phone number value ended up getting an extra digit because of the quirk with the way the
+      // phoneMask works... Prompt the user to retype the phone number.
+      console.log(`Phone validation error. Phone length: ${newVal.length}`);
+      this.phoneValidationError = 'There was an error processing the phone number. Please retype the phone number.';
+      this.editUserForm.controls.phone.reset();
+      return null;
     } else {
       console.log(`Phone validation error. Phone length: ${newVal.length}`);
       this.phoneValidationError = 'The phone number must be 10 digits long.';
+      return null;
+    }
+  }
+
+  validatePhoneNumber(phone: string): (string | null) {
+    console.log(phone);
+    // Strip out all characters except numbers
+    const newVal = phone.replace(/\D+/g, '');
+    console.log (newVal);
+    if (newVal.length === 10) {
+      return newVal;
+    } else {
+      console.log(`Phone validation error. Phone length: ${newVal.length}`);
       return null;
     }
   }
@@ -247,7 +317,16 @@ export class ProfileComponent implements OnInit {
     // Proceed only if the form is valid
     if (!form.invalid) {
       // Format the phone number
-      const phone = `+1${this.validatePhoneNumber(form.controls.phone.value)}`;
+      let phone = this.validateFormPhoneNumber(form.controls.phone.value);
+      console.log(phone);
+      if (!phone) {
+        // Phone number validation failed.
+        console.log('The form submission is invalid');
+        this.notifierService.notify('error', 'Please fix the errors and try again.');
+        return;
+      } else {
+        phone = `+1${this.validatePhoneNumber(form.controls.phone.value)}`;
+      }
       // form.controls.phone.setValue(phone);
 
       /*
@@ -267,24 +346,37 @@ export class ProfileComponent implements OnInit {
 
             user[keys[i]] = dateString;
           }
-        } else if (keys[i] !== 'user') {
+        } else if (keys[i] === 'phone') {
+          const sourcePhone = `+1${this.validatePhoneNumber(sourceUser['phone'])}`;
+          if (phone === sourcePhone) {
+            // Don't add the key/value pair if the new value is the same as the source
+          } else {
+            console.log(`${keys[i]} value changed from ${sourcePhone} to ${phone}`);
+            user[keys[i]] = phone;
+          }
+        } else if (keys[i] === 'gender') {
+          if (form.controls[keys[i]].value === 'Custom') {
+            if ((sourceUser[keys[i]] === form.controls['genderCustom'].value) || (form.controls['genderCustom'].value.length === 0)) {
+              // Don't add the key/value pair if the new value is the same as the source or empty
+            } else {
+              console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['genderCustom'].value}`);
+              user[keys[i]] = form.controls['genderCustom'].value;
+            }
+          } else {
+            if ((sourceUser[keys[i]] === form.controls['gender'].value) || (form.controls['gender'].value.length === 0)) {
+              // Don't add the key/value pair if the new value is the same as the source or empty
+            } else {
+              console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['gender'].value}`);
+              user[keys[i]] = form.controls['gender'].value;
+            }
+          }
+        } else if ((keys[i] !== 'user') && (keys[i] !== 'genderCustom')) {
           if (sourceUser[keys[i]] === form.controls[keys[i]].value) {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
             // If the value has changed, add key/value pair to the user object
-            console.log('Value changed:');
-            console.log(form.controls[keys[i]].value);
-
-            switch (keys[i]) {
-              case 'phone': { // special case for phone
-                user[keys[i]] = phone;
-                break;
-              }
-              default: {
-                user[keys[i]] = form.controls[keys[i]].value;
-                break;
-              }
-            }
+            console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls[keys[i]].value}`);
+            user[keys[i]] = form.controls[keys[i]].value;
           }
         }
       }
@@ -296,20 +388,23 @@ export class ProfileComponent implements OnInit {
         this.currentUserService.modifyUser(user)
           .subscribe(modifyResult => {
             console.log(modifyResult);
-            this.editUserFormSubmitted = false;
-            this.emailConfirmationCodeSent = true;
+            if (modifyResult.status !== false) {
+              this.editUserFormSubmitted = false;
+              // this.emailConfirmationCodeSent = true;
+              this.notifierService.notify('success', 'User record updated successfully.');
+
+              // Retrieve user's new Cognito attributes
+              this.authService.currentUserInfo()
+                .then(userInfo => {
+                  console.log(userInfo);
+                  this.emailConfirmed = userInfo.attributes['email_verified'];
+                  this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
+                  this.isUserDataRetrieved = true;
+                });
+            } else {
+              this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
+            }
           });
-
-/*        this.userService.modifyUser(user).subscribe(modifyResult => {
-          console.log(modifyResult);
-          if (modifyResult.status !== false) {
-            this.notifierService.notify('success', 'User record updated successfully.');
-            this.editUserFormSubmitted = false;
-          } else {
-            this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
-          }
-        });*/
-
       } else {
         // User object was not changed
         console.log('There are no changes to the user object');
@@ -343,23 +438,50 @@ export class ProfileComponent implements OnInit {
           },
           onFailure: (err) => {
             console.log('an error occurred');
-            console.log(err); },
+            console.log(err);
+          },
           inputVerificationCode: (data: string) => { console.log(data); }
         });
-        /*currentUser.resendConfirmationCode((error, success) => {
-          if (error) {
-            console.log(error);
-            return;
-          }
-          console.log(success);
-        });*/
       });
-    /*Auth.resendSignUp(this.email)
-      .then(() => this.notifierService.notify('Success', 'A code has been emailed to you'))
-      .catch((err) => {
-        console.log(err);
-        this.notifierService.notify('Error', 'An error occurred')
-      });*/
   }
 
+  onConfirmEmailForm(form: FormGroup) {
+    console.log(form);
+    this.confirmEmailFormSubmitted = true;
+    if (!form.invalid) {
+      Auth.currentAuthenticatedUser()
+        .then((currentUser: CognitoUser) => {
+          currentUser.verifyAttribute('email', form.value.code, {
+            onSuccess: () => {
+              console.log('success!');
+              this.notifierService.notify('success', 'Email verified successfully');
+              this.confirmEmailFormSubmitted = false;
+              $('#confirmEmailModal').modal('hide');
+
+              // Retrieve user's new Cognito attributes
+              this.authService.currentUserInfo()
+                .then(userInfo => {
+                  console.log(userInfo);
+                  this.emailConfirmed = userInfo.attributes['email_verified'];
+                  this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
+                  this.isUserDataRetrieved = true;
+                });
+            },
+            onFailure: (err) => {
+              console.log('an error occurred');
+              console.log(err);
+              this.notifierService.notify('error', err.message);
+            }
+          });
+        })
+        .catch(err => {
+          console.log('an error occurred retrieving current authenticated user');
+          console.log(err);
+          this.notifierService.notify('error', err);
+        });
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
 }

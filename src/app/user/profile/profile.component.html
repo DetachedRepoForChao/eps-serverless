@@ -54,11 +54,17 @@
                     </div>
                     <div class="col-8">
                       <div class="row">
-                        <div class="col-3 text-center" style="margin-top: 30px">
+                        <div class="col-3 text-left" style="margin-top: 30px">
                           <div>
-                            <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+                            <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
+                              <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.preferredName}}</h4>
+                            </div>
+                            <ng-template #noPreferredName>
+                              <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+                            </ng-template>
+
                             <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
-                            <hr class="line-success">
+
                           </div>
 
                         </div>
@@ -77,6 +83,7 @@
                                  class="img-center img-fluid rounded-circle"
                                  id="avatarPlaceholder">
                           </ng-template>
+                          <hr class="line-success">
                         </div>
                         <div class="col-5" style="margin-top: 30px; font-size: 16px">
                           <div [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
@@ -239,7 +246,18 @@
                                   <label for="editUser_gender" class="form-label">Gender</label>
                                 </div>
                                 <div class="col-7">
-                                  <input type="text" class="form-control user-form-control" id="editUser_gender" placeholder="Gender" formControlName="gender">
+                                  <select formControlName="gender" class="form-control user-form-control" id="editUser_gender" name="editUser_gender">
+                                    <option [ngValue]="null" [disabled]="true">Gender</option>
+                                    <option style="color: black;">Male</option>
+                                    <option style="color: black;">Female</option>
+                                    <option style="color: black;">Custom</option>
+                                    <option style="color: black;">Prefer Not to Say</option>
+                                  </select>
+                                  <div *ngIf="editUserForm.controls.gender.value === 'Custom'" class="row">
+                                    <div class="col-12">
+                                      <input type="text" class="form-control user-form-control" id="editUser_customGender" placeholder="Gender" formControlName="genderCustom">
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
 
@@ -377,7 +395,7 @@
 </div>
 
 <div class="modal fade bd-example" id="confirmEmailModal" role="dialog" tabindex="-1" aria-labelledby="confirmEmailModal" aria-hidden="true" >
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog" role="document">
 
     <!-- Modal content-->
     <div class="modal-content">
@@ -386,35 +404,39 @@
       </div>
       <!---modal body---->
       <div class="modal-body">
-
-        <form #codeForm="ngForm" class="form">
+        <form [formGroup]="confirmEmailForm" class="form">
           <div class="form-group">
 
-            <label for="code" class="modal-form-label">Please enter the confirmation code that was sent to {{email}}. If you didn't receive a code, click the "Resend Code" button.</label>
-            <input type="text" id="code" name="code" #code="ngModel" class="form-control modal-form-control" [(ngModel)]="confirmEmailForm.value.code" required>
-            <div *ngIf="codeForm.submitted && !code.valid">
-              <label class="validation-message">This field is required.</label>
-            </div>
-
-<!--            <div *ngIf="emailConfirmationCodeSent; else emailConfirmationCodeNotSent">
-              <label for="code" class="modal-form-label">Please enter the confirmation code that was sent to {{email}}. If you didn't receive a code, click the "Resend Code" button.</label>
-              <input type="text" id="code" name="code" #code="ngModel" class="form-control" [(ngModel)]="confirmEmailForm.value.code" required>
-              <div *ngIf="codeForm.submitted && !code.valid">
-                <label class="validation-message">This field is required.</label>
+            <label for="code" class="modal-form-label">Please enter the confirmation code that was sent to <b>{{email}}</b>.</label>
+            <label for="code" class="modal-form-label">If you didn't receive a code, click the <b>Resend Code</b> button.</label>
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-5">
+                <label for="code" class="modal-form-label2">Confirmation Code</label>
+              </div>
+              <div class="col-5">
+                <input type="text"
+                       placeholder="######"
+                       id="code"
+                       name="code"
+                       class="form-control modal-form-control"
+                       formControlName="code"
+                       required>
+                <div *ngIf="(confirmEmailFormSubmitted && confirmEmailForm.controls.code.invalid) || (confirmEmailForm.dirty && confirmEmailForm.controls.code.touched && confirmEmailForm.controls.code.invalid)">
+                  <label class="modal-validation-message">This field is required.</label>
+                  <label class="modal-validation-message">The Confirmation Code must be 6 digits long.</label>
+                </div>
               </div>
             </div>
-            <ng-template #emailConfirmationCodeNotSent>
-              <label for="code" class="modal-form-label"></label>
-            </ng-template>-->
-          </div>
-
-          <div class="modal-footer">
-            <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
-            <button type="submit" class="btn btn-primary btn-lg">Confirm</button>
-            <button class="btn btn-info btn-lg" (click)="sendAgain()">Resend Code</button>
           </div>
         </form>
 
+        <div class="modal-footer">
+          <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
+          <button class="btn btn-primary btn-lg" (click)="onConfirmEmailForm(confirmEmailForm)">Confirm</button>
+          <button class="btn btn-info btn-lg" (click)="sendAgain()">Resend Code</button>
+        </div>
 
       </div>
       <!----End Mod Bod---->
