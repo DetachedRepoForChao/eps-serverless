@@ -54,15 +54,21 @@ export class ProfileComponent implements OnInit {
   phoneConfirmed;
   isUserDataRetrieved = false;
   emailConfirmationCodeSent = false;
+  phoneConfirmationCodeSent = false;
   email;
   phone;
   populateFormSubscription;
-  confirmEmailFormSubmitted;
+  confirmEmailFormSubmitted = false;
+  confirmPhoneFormSubmitted = false;
 /*  confirmEmailForm: FormGroup = new FormGroup({
     code: new FormControl('', [ Validators.required, Validators.min(6) ])
   });*/
 
   confirmEmailForm = this.formBuilder.group({
+    code: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])]
+  });
+
+  confirmPhoneForm = this.formBuilder.group({
     code: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])]
   });
 
@@ -428,7 +434,11 @@ export class ProfileComponent implements OnInit {
     this.email = this.editUserForm.controls.email.value;
   }
 
-  sendAgain() {
+  onPhoneConfirmClick() {
+    this.phone = this.editUserForm.controls.phone.value;
+  }
+
+  sendEmailCodeAgain() {
     console.log(this.email);
     Auth.currentAuthenticatedUser()
       .then((currentUser: CognitoUser) => {
@@ -445,7 +455,24 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  onConfirmEmailForm(form: FormGroup) {
+  sendPhoneCodeAgain() {
+    console.log(this.phone);
+    Auth.currentAuthenticatedUser()
+      .then((currentUser: CognitoUser) => {
+        currentUser.getAttributeVerificationCode('phone_number', {
+          onSuccess: () => {
+            console.log('success!');
+          },
+          onFailure: (err) => {
+            console.log('an error occurred');
+            console.log(err);
+          },
+          inputVerificationCode: (data: string) => { console.log(data); }
+        });
+      });
+  }
+
+  onConfirmEmailFormSubmit(form: FormGroup) {
     console.log(form);
     this.confirmEmailFormSubmitted = true;
     if (!form.invalid) {
@@ -484,4 +511,46 @@ export class ProfileComponent implements OnInit {
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
+
+  onConfirmPhoneFormSubmit(form: FormGroup) {
+    console.log(form);
+    this.confirmPhoneFormSubmitted = true;
+    if (!form.invalid) {
+      Auth.currentAuthenticatedUser()
+        .then((currentUser: CognitoUser) => {
+          currentUser.verifyAttribute('phone_number', form.value.code, {
+            onSuccess: () => {
+              console.log('success!');
+              this.notifierService.notify('success', 'Phone verified successfully');
+              this.confirmPhoneFormSubmitted = false;
+              $('#confirmPhoneModal').modal('hide');
+
+              // Retrieve user's new Cognito attributes
+              this.authService.currentUserInfo()
+                .then(userInfo => {
+                  console.log(userInfo);
+                  this.emailConfirmed = userInfo.attributes['email_verified'];
+                  this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
+                  this.isUserDataRetrieved = true;
+                });
+            },
+            onFailure: (err) => {
+              console.log('an error occurred');
+              console.log(err);
+              this.notifierService.notify('error', err.message);
+            }
+          });
+        })
+        .catch(err => {
+          console.log('an error occurred retrieving current authenticated user');
+          console.log(err);
+          this.notifierService.notify('error', err);
+        });
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
 }
+
+

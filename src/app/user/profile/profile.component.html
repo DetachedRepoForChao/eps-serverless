@@ -238,7 +238,7 @@
                                   </div>
                                 </ng-template>
                                 <div *ngIf="!phoneConfirmed" class="confirm-col col-2">
-                                  <button class="btn-primary btn-sm">Confirm</button>
+                                  <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmPhoneModal" (click)="onPhoneConfirmClick()">Confirm</button>
                                 </div>
                               </div>
                               <div class="form-row">
@@ -407,19 +407,19 @@
         <form [formGroup]="confirmEmailForm" class="form">
           <div class="form-group">
 
-            <label for="code" class="modal-form-label">Please enter the confirmation code that was sent to <b>{{email}}</b>.</label>
-            <label for="code" class="modal-form-label">If you didn't receive a code, click the <b>Resend Code</b> button.</label>
+            <label for="emailCode" class="modal-form-label">Please enter the confirmation code that was sent to <b>{{email}}</b>.</label>
+            <label for="emailCode" class="modal-form-label">If you didn't receive a code, click the <b>Resend Code</b> button.</label>
             <br>
             <br>
             <div class="row">
               <div class="col-5">
-                <label for="code" class="modal-form-label2">Confirmation Code</label>
+                <label for="emailCode" class="modal-form-label2">Confirmation Code</label>
               </div>
               <div class="col-5">
                 <input type="text"
                        placeholder="######"
-                       id="code"
-                       name="code"
+                       id="emailCode"
+                       name="emailCode"
                        class="form-control modal-form-control"
                        formControlName="code"
                        required>
@@ -434,8 +434,59 @@
 
         <div class="modal-footer">
           <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
-          <button class="btn btn-primary btn-lg" (click)="onConfirmEmailForm(confirmEmailForm)">Confirm</button>
-          <button class="btn btn-info btn-lg" (click)="sendAgain()">Resend Code</button>
+          <button class="btn btn-primary btn-lg" (click)="onConfirmEmailFormSubmit(confirmEmailForm)">Confirm</button>
+          <button class="btn btn-info btn-lg" (click)="sendEmailCodeAgain()">Resend Code</button>
+        </div>
+
+      </div>
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bd-example" id="confirmPhoneModal" role="dialog" tabindex="-1" aria-labelledby="confirmPhoneModal" aria-hidden="true" >
+  <div class="modal-dialog" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirm Your Phone Number</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body">
+        <form [formGroup]="confirmPhoneForm" class="form">
+          <div class="form-group">
+
+            <label for="phoneCode" class="modal-form-label">Please enter the confirmation code that was sent to <b>{{phone}}</b>.</label>
+            <label for="phoneCode" class="modal-form-label">If you didn't receive a code, click the <b>Resend Code</b> button.</label>
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-5">
+                <label for="phoneCode" class="modal-form-label2">Confirmation Code</label>
+              </div>
+              <div class="col-5">
+                <input type="text"
+                       placeholder="######"
+                       id="phoneCode"
+                       name="phoneCode"
+                       class="form-control modal-form-control"
+                       formControlName="code"
+                       required>
+                <div *ngIf="(confirmPhoneFormSubmitted && confirmPhoneForm.controls.code.invalid) || (confirmPhoneForm.dirty && confirmPhoneForm.controls.code.touched && confirmPhoneForm.controls.code.invalid)">
+                  <label class="modal-validation-message">This field is required.</label>
+                  <label class="modal-validation-message">The Confirmation Code must be 6 digits long.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="modal-footer">
+          <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
+          <button class="btn btn-primary btn-lg" (click)="onConfirmPhoneFormSubmit(confirmPhoneForm)">Confirm</button>
+          <button class="btn btn-info btn-lg" (click)="sendPhoneCodeAgain()">Resend Code</button>
         </div>
 
       </div>
