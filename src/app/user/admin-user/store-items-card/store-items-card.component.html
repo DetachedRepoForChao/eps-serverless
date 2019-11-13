@@ -7,7 +7,7 @@
       Manage Store Items
     </H1>
   </div>
-  <div class="card-footer3" style="margin-bottom: 20px">
+  <div class="card-footer3 marginbottom">
 
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addStoreItemModal">Add Store Item</button>
     <br><br>
@@ -58,7 +58,7 @@
               </div>
 
               <div class="form-row">
-                <div class="col-md-12 text-center" style="margin: 0; padding: 0;">
+                <div class="col-md-12 text-center zeropadding">
                   <div class="form-group">
                     <div class="btn btn-primary">
                       <span>Select Store Item Image</span>
@@ -69,7 +69,7 @@
                              placeholder="Upload Store Item Image">
                     </div>
                   </div>
-                  <div style="text-align: center">
+                  <div class="textc">
                     <div *ngIf="addStoreItemFormSubmitted && !addItemCroppedImage">
                       <label class="validation-message">Please select an image.</label>
                     </div>
@@ -164,7 +164,7 @@
 
               <div class="form-row">
 
-                <div class="col-md-12 text-center" style="margin: 0; padding: 0;">
+                <div class="col-md-12 text-center zeropadding">
                   <div *ngIf="editStoreItemForm.controls.storeItem?.value" class="form-group col-12">
                     <div class="btn btn-primary">
                       <span>Change Store Item Image</span>
@@ -177,7 +177,7 @@
                     <div *ngIf="editStoreItemFormSubmitted && !editStoreItemForm.controls.image?.value && !editItemCroppedImage">
                       <label class="validation-message">Please select an image.</label>
                     </div>
-                    <div style="text-align: center">
+                    <div class="textc">
                       <image-cropper
                         [imageChangedEvent]="editItemImageChangedEvent"
                         [resizeToWidth]="400"
