@@ -76,11 +76,7 @@ export const appRoutes: Routes = [
       {
         path: 'admin-user', component: AdminUserComponent
       },
-      {
-        path: 'profile',
-        component: ProfileComponent,
-        canActivate: [AuthGuard],
-      },
+
       {
         path: 'store',
         component: PointsStoreComponent,
@@ -88,7 +84,11 @@ export const appRoutes: Routes = [
       },
     ]
   },
-
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
+  },
 /*  {
     path: 'profile',
     component: ProfileComponent,

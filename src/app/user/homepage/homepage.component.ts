@@ -72,7 +72,7 @@ export class HomepageComponent implements OnInit {
       this.currentUserService.fillRemainingAttributes()
         .subscribe(result => {
           if (result === true) {
-            this.currentUserQuery.getCurrentUser()
+            this.currentUserQuery.selectCurrentUser()
               .subscribe((currentUser: any) => {
                 console.log(`${functionFullName}: current user:`);
                 console.log(currentUser);

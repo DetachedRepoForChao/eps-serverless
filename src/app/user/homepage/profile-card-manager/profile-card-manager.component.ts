@@ -60,7 +60,7 @@ export class ProfileCardManagerComponent implements OnInit {
     this.spinner.show('profile-card-manager-spinner');
 
     this.entityUserService.cacheCurrentUser().subscribe();
-    this.currentUser$ = this.entityCurrentUserQuery.getCurrentUser();
+    this.currentUser$ = this.entityCurrentUserQuery.selectCurrentUser();
 
     if (!this.globals.userDetails) {
       this.userService.getUserProfile()

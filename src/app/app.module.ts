@@ -102,7 +102,10 @@ import { PointItemPipe } from './pipe/point-item.pipe';
 
 
 // import notification times ago
-import { TimeAgoPipe } from 'time-ago-pipe'
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { EditProfileComponent } from './user/profile/edit-profile/edit-profile.component';
+import { ResetPasswordComponent } from './user/profile/reset-password/reset-password.component';
+import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component'
 
 akitaConfig({
   resettable: true
@@ -165,7 +168,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PointItemsCardComponent,
     StoreItemsCardComponent,
     PointItemPipe,
-    TimeAgoPipe
+    TimeAgoPipe,
+    EditProfileComponent,
+    ResetPasswordComponent,
+    PrivacySettingsComponent
 
   ],
   imports: [

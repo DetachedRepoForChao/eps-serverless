@@ -7,7 +7,7 @@
       Manage Users
     </H1>
   </div>
-  <div class="card-footer3" style="margin-bottom: 20px">
+  <div class="card-footer3 marginbottom">
 
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addUserModal">Add User</button>
     <br><br>
@@ -43,9 +43,9 @@
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="addUser_securityRole" class="form-label">Security Role</label>
-                  <select formControlName="securityRole" class="form-control user-form-control" id="addUser_securityRole" name="addUser_securityRole" style="color: black;">
+                  <select formControlName="securityRole" class="form-control user-form-control black" id="addUser_securityRole" name="addUser_securityRole">
                     <option [ngValue]="null" [disabled]="true">Security Role</option>
-                    <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole" style="color: black;">
+                    <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole" class="black">
                       {{securityRole.Name}}
                     </option>
                   </select>
@@ -55,9 +55,9 @@
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="addUser_department" class="form-label">Department</label>
-                  <select formControlName="department" class="form-control user-form-control" id="addUser_department" name="addUser_department" style="color: black;">
+                  <select formControlName="department" class="form-control user-form-control black" id="addUser_department" name="addUser_department">
                     <option [ngValue]="null" [disabled]="true">Department</option>
-                    <option *ngFor="let department of departments" [ngValue]="department" style="color: black;">
+                    <option *ngFor="let department of departments" [ngValue]="department" class="black">
                       {{department.Name}}
                     </option>
                   </select>
@@ -91,7 +91,7 @@
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="addUser_preferredName" class="form-label">Preferred Name</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_preferredName" placeholder="Preferred Name" formControlName="preferredName" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="addUser_birthdate" class="form-label">Date of Birth</label>
@@ -121,33 +121,33 @@
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_prefix" class="form-label">Prefix</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_prefix" placeholder="Prefix" formControlName="prefix" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_prefix" placeholder="Prefix" formControlName="prefix" >
                 </div>
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_suffix" class="form-label">Suffix</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_suffix" placeholder="Suffix" formControlName="suffix" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_suffix" placeholder="Suffix" formControlName="suffix" >
                 </div>
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_sex" class="form-label">Sex</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_sex" placeholder="Sex" formControlName="sex" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_sex" placeholder="Sex" formControlName="sex" >
                 </div>
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_gender" class="form-label">Gender</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_gender" placeholder="Gender" formControlName="gender" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_gender" placeholder="Gender" formControlName="gender" >
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="addUser_email" class="form-label">Email</label>
-                  <input type="email" class="form-control user-form-control" id="addUser_email" placeholder="Email" formControlName="email" style="color: black;">
+                  <input type="email" class="form-control user-form-control black" id="addUser_email" placeholder="Email" formControlName="email" >
                   <div *ngIf="(addUserFormSubmitted && addUserForm.controls.email.invalid) || (addUserForm.dirty && addUserForm.controls.email.touched && addUserForm.controls.email.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </div>
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="addUser_phone" class="form-label">Phone</label>
-                  <input class="form-control user-form-control"
+                  <input class="form-control user-form-control black"
                          placeholder="Phone"
                          formControlName="phone"
                          name="addUser_phone"
@@ -155,7 +155,7 @@
                          type="tel"
                          maxLength="14"
                          id="addUser_phone"
-                         style="color: black;">
+                        >
                   <div *ngIf="(addUserFormSubmitted && addUserForm.controls.phone.invalid) || (addUserForm.dirty && addUserForm.controls.phone.touched && phoneValidationError)">
                     <label class="validation-message">This field is required.</label>
                     <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
@@ -166,37 +166,37 @@
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="addUser_address1" class="form-label">Address 1</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_address1" placeholder="Address 1" formControlName="address1" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_address1" placeholder="Address 1" formControlName="address1" >
                 </div>
                 <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
                   <label for="addUser_address2" class="form-label">Address 2</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_address2" placeholder="Address 2" formControlName="address2" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_address2" placeholder="Address 2" formControlName="address2" >
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_city" class="form-label">City</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_city" placeholder="City" formControlName="city" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_city" placeholder="City" formControlName="city" >
                 </div>
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_state" class="form-label">State</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_state" placeholder="State" formControlName="state" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_state" placeholder="State" formControlName="state" >
                 </div>
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_country" class="form-label">Country</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_country" placeholder="Country" formControlName="country" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_country" placeholder="Country" formControlName="country" >
                 </div>
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_zip" class="form-label">Zip</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_zip" placeholder="Zip" formControlName="zip" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_zip" placeholder="Zip" formControlName="zip" >
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-3 col-lg-3">
                   <label for="addUser_position" class="form-label">Position</label>
-                  <input type="text" class="form-control user-form-control" id="addUser_position" placeholder="Position" formControlName="position" style="color: black;">
+                  <input type="text" class="form-control user-form-control black" id="addUser_position" placeholder="Position" formControlName="position" >
                 </div>
               </div>
             </form>

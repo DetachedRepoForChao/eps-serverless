@@ -92,7 +92,8 @@ li:hover {
 }
 
 .confirm-col {
-  padding-top: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .confirmed {
@@ -101,4 +102,59 @@ li:hover {
 
 .unconfirmed {
   color: #e418c4;
+}
+
+.modal-form-label {
+  color: black !important;
+}
+
+.modal-form-control {
+  color: black;
+}
+
+.modal-form-label2 {
+  color: black;
+  margin-top: auto;
+  font-size: 16px;
+}
+
+.modal-validation-message {
+  color: black;
+}
+
+.wrapperwidth{
+  max-width: 935px;
+}
+
+.loadingstyle{
+  font-size: 20px;
+  color: white;
+}
+
+.textl{
+  text-align: left;
+}
+
+.aligncentercontent{
+  align-content: center;
+}
+
+.margintop{
+  margin-top: 30px;
+}
+
+.zeropadding{
+  padding: 0px;
+}
+
+.avatarstyle{
+  margin-top: 30px;
+  font-size: 16px;
+}
+.red{
+  color: red;
+}
+
+.black{
+  color: black;
 }

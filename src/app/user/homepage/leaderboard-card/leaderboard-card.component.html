@@ -44,16 +44,16 @@
                   <img src="{{user?.avatarResolvedUrl}}"/>
                   <div *ngIf="user?.username === globals.getUsername(); else otherUser">
                     <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
-                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" style="color: rgba(255,239,19,1);"></i>
-                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" style="color: rgba(43,255,198,1);"></i>
-                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" style="color: rgb(254,49,255);"></i>
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" class="yellow"></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" class="teal"></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" class="pink"></i>
                     </span>
                   </div>
                   <ng-template #otherUser>
                     <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
-                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" style="color: rgba(255,239,19,1);"></i>
-                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" style="color: rgba(43,255,198,1);"></i>
-                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" style="color: rgb(254,49,255);"></i>
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" class="yellow"></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" class="teal"></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" class="pink" ></i>
                     </span>
                   </ng-template>
                 </div>
@@ -158,7 +158,7 @@
       color="#fff"
       type="pacman"
     >
-      <p style="font-size: 20px; color: white">Loading...</p>
+      <p class="loadingstyle">Loading...</p>
     </ngx-spinner>
   </div>
 </ng-template>
