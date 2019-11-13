@@ -156,7 +156,7 @@ const deleteDepartment = function (department) {
 
   return sqlDepartmentModel.destroy({
     where: {
-      id: department.id,
+      id: department.departmentName.Id,
     }
   })
     .then(() => {

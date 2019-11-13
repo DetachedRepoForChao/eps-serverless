@@ -121,11 +121,14 @@ export class EventCardComponent implements OnInit {
                 this.deleteDepartmentFormSubmitted = true;
 
                 let department = {};
+                const keys = Object.keys(form.controls);
 
                 console.log(department);
 
                 if (!form.invalid) {
-                  department = form.controls.department.value;
+                  for (let i = 0; i < keys.length; i++) {
+                    department[keys[i]] = form.controls[keys[i]].value;
+                  }
                   this.EntitydepartmentService.deleteDepartment(department).subscribe(deleteResult => {
                     console.log(deleteResult);
                     if (deleteResult.status !== false) {

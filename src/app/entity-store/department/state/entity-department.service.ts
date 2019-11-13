@@ -148,7 +148,9 @@ export class EntityDepartmentService {
             console.log(deleteDepartmentResult);
 
             if (deleteDepartmentResult.data.status !== false) {
-              this.delete(department.departmentId);
+
+              const id = deleteDepartmentResult.data.department.departmentId;
+              this.delete(id);
               observer.next(deleteDepartmentResult.data);
               observer.complete();
             } else {
