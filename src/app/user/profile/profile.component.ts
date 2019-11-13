@@ -60,6 +60,9 @@ export class ProfileComponent implements OnInit {
   populateFormSubscription;
   confirmEmailFormSubmitted = false;
   confirmPhoneFormSubmitted = false;
+  phoneChanged = false;
+  emailChanged = false;
+  confirmPromptMessage;
 /*  confirmEmailForm: FormGroup = new FormGroup({
     code: new FormControl('', [ Validators.required, Validators.min(6) ])
   });*/
@@ -315,10 +318,13 @@ export class ProfileComponent implements OnInit {
   onEditUserFormSubmit(form: FormGroup) {
     console.log(form);
     this.editUserFormSubmitted = true;
+    this.phoneChanged = false;
+    this.emailChanged = false;
 
     const sourceUser = form.controls.user.value;
     const user = {};
     const keys = Object.keys(form.controls);
+
 
     // Proceed only if the form is valid
     if (!form.invalid) {
@@ -352,12 +358,21 @@ export class ProfileComponent implements OnInit {
 
             user[keys[i]] = dateString;
           }
+        } else if (keys[i] === 'email') {
+          if (sourceUser[keys[i]] === form.controls['email'].value) {
+            // Don't add the key/value pair if the new value is the same as the source
+          } else {
+            console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['email'].value}`);
+            this.emailChanged = true;
+            user[keys[i]] = form.controls['email'].value;
+          }
         } else if (keys[i] === 'phone') {
           const sourcePhone = `+1${this.validatePhoneNumber(sourceUser['phone'])}`;
           if (phone === sourcePhone) {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
             console.log(`${keys[i]} value changed from ${sourcePhone} to ${phone}`);
+            this.phoneChanged = true;
             user[keys[i]] = phone;
           }
         } else if (keys[i] === 'gender') {
@@ -406,7 +421,14 @@ export class ProfileComponent implements OnInit {
                   this.emailConfirmed = userInfo.attributes['email_verified'];
                   this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
                   this.isUserDataRetrieved = true;
+                })
+                .catch(err => {
+
                 });
+
+              if (this.phoneChanged || this.emailChanged) {
+                $('#confirmPromptModal').modal('show');
+              }
             } else {
               this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
             }
