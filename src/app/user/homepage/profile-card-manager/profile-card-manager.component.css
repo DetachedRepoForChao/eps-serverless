@@ -112,6 +112,7 @@ div.card {
   border: 2px solid rgba(15, 117, 27, 0);
 }*/
 
-.modal-black {
-
+.loadingstyle{
+  font-size: 20px;
+  color: white;
 }
