@@ -3,7 +3,7 @@
   <div class="wrapper">
     <section class="section section-lg section-coins">
       <img src="../../../assets/img/path3.png" class="path">
-      <div class="container align-items-center" style="max-width: 935px;">
+      <div class="container align-items-center wrapperwidth">
         <div class="row" >
           <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="profile">
 
@@ -35,11 +35,11 @@
                     color="#fff"
                     type="pacman"
                   >
-                    <p style="font-size: 20px; color: white">Loading...</p>
+                    <p class="loadingstyle">Loading...</p>
                   </ngx-spinner>
 
                   <div class="row">
-                    <div class="col-4" style="text-align: left">
+                    <div class="col-4 textl">
                       <ul class="nobullets">
                         <li>
                           Edit Profile
@@ -54,7 +54,7 @@
                     </div>
                     <div class="col-8">
                       <div class="row">
-                        <div class="col-3 text-left" style="margin-top: 30px">
+                        <div class="col-3 text-left margintop">
                           <div>
                             <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
                               <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.preferredName}}</h4>
@@ -68,7 +68,7 @@
                           </div>
 
                         </div>
-                        <div class="col-4 text-left" style="padding: 0px">
+                        <div class="col-4 text-left zeropadding">
                           <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
                             <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
                                  alt="Avatar"
@@ -85,7 +85,7 @@
                           </ng-template>
                           <hr class="line-success">
                         </div>
-                        <div class="col-5" style="margin-top: 30px; font-size: 16px">
+                        <div class="col-5 avatarstyle">
                           <div [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
                                matTooltipPosition="above">
                             <div class="row">
@@ -98,8 +98,8 @@
                                 </div>
                                 <ng-template #pointsWithBalance >
                                   <div *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance"
-                                       class="mb-0"
-                                       style="color: red">
+                                       class="mb-0 red"
+                                       >
                                     {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
                                   </div>
 
@@ -136,7 +136,7 @@
                           <form [formGroup]="editUserForm">
                             <div *ngIf="isUserDataRetrieved; else placeholderForm">
                               <div class="form-row">
-                                <div class="col-3" style="align-content: center">
+                                <div class="col-3 aligncentercontent">
                                   <label for="editUser_preferredName" class="form-label">Preferred Name</label>
                                 </div>
                                 <div class="col-7">
@@ -163,7 +163,7 @@
                               </div>
 
                               <div class="form-row">
-                                <div class="col-2" style="align-content: center">
+                                <div class="col-2 aligncentercontent">
                                   <label class="form-label">Email</label>
                                 </div>
                                 <div class="confirm-col text-right col-1">
@@ -194,7 +194,7 @@
                               </div>
 
                               <div class="form-row">
-                                <div class="col-2" style="align-content: center">
+                                <div class="col-2 aligncentercontent">
                                   <label class="form-label">Phone</label>
                                 </div>
                                 <div class="confirm-col text-right col-1">
@@ -242,16 +242,16 @@
                                 </div>
                               </div>
                               <div class="form-row">
-                                <div class="col-3" style="align-content: center">
+                                <div class="col-3 aligncentercontent">
                                   <label for="editUser_gender" class="form-label">Gender</label>
                                 </div>
                                 <div class="col-7">
                                   <select formControlName="gender" class="form-control user-form-control" id="editUser_gender" name="editUser_gender">
                                     <option [ngValue]="null" [disabled]="true">Gender</option>
-                                    <option style="color: black;">Male</option>
-                                    <option style="color: black;">Female</option>
-                                    <option style="color: black;">Custom</option>
-                                    <option style="color: black;">Prefer Not to Say</option>
+                                    <option class="black">Male</option>
+                                    <option class="black">Female</option>
+                                    <option class="black">Custom</option>
+                                    <option class="black">Prefer Not to Say</option>
                                   </select>
                                   <div *ngIf="editUserForm.controls.gender.value === 'Custom'" class="row">
                                     <div class="col-12">
@@ -265,7 +265,7 @@
 
                             <ng-template #placeholderForm>
                               <div class="form-row">
-                                <div class="col-3" style="align-content: center">
+                                <div class="col-3 aligncentercontent">
                                   <label for="editUser_phPreferredName" class="form-label">Preferred Name</label>
                                 </div>
                                 <div class="col-7">
@@ -285,7 +285,7 @@
                               </div>
 
                               <div class="form-row">
-                                <div class="col-3" style="align-content: center">
+                                <div class="col-3 aligncentercontent">
                                   <label class="form-label">Email</label>
                                 </div>
                                 <div class="col-7">
@@ -295,7 +295,7 @@
                               </div>
 
                               <div class="form-row">
-                                <div class="col-3" style="align-content: center">
+                                <div class="col-3 aligncentercontent">
                                   <label class="form-label">Phone</label>
                                 </div>
                                 <div class="col-7">
@@ -308,7 +308,7 @@
                                 </div>
                               </div>
                               <div class="form-row">
-                                <div class="col-3" style="align-content: center">
+                                <div class="col-3 aligncentercontent">
                                   <label for="editUser_phGender" class="form-label">Gender</label>
                                 </div>
                                 <div class="col-7">
@@ -353,7 +353,7 @@
                     color="#fff"
                     type="pacman"
                   >
-                    <p style="font-size: 20px; color: white">Loading...</p>
+                    <p class="loadingstyle">Loading...</p>
                   </ngx-spinner>
                 </div>
               </ng-template>
