@@ -77,6 +77,7 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 import { UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
 import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
+import { DepartmentFilterComponent } from './entity-store/department/filter/department-filter.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
@@ -113,6 +114,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   declarations: [
+    DepartmentFilterComponent,
     EventCardComponent,
     ReportComponent,
     AppComponent,

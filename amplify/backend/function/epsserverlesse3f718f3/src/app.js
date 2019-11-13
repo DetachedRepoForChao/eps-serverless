@@ -302,6 +302,46 @@ app.post('/items/deleteUser', function(req, res) {
 });
 
 // Department Routes
+app.get('/items/departments', function(req, res) {
+  const functionName = 'get departments';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlDepartment.getDepartments()
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data.departments});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/addDepartments',function(req,res){
+    console.log('starting post Departments');
+    const token = req.headers.authorization;
+    jwtVerify.parseToken(token, function(tokenResult) {
+          if(tokenResult.message === 'Success') {
+            const department = req.body.department;
+            ctrlDepartment.addDepartment(department)
+              .then(data => {
+                res.json({status: 'post call succeed!', data: data});
+              })
+              .catch(err => {
+                res.json({status: 'post call failed!', error: err});
+              });
+          } else {
+            res.json({status: 'Unauthorized', data: tokenResult.message});
+          }
+        });
+})
+
 app.get('/items/getDepartments', function(req, res) {
   // Add your code here
   console.log('starting get getDepartments');
@@ -318,7 +358,7 @@ app.post('/items/getDepartments', function(req, res) {
   console.log('starting post getDepartments');
   ctrlDepartment.getDepartmentById(req)
     .then(data => {
-      res.json({status: 'get call succeed!', data: data.department});
+      res.json({status: 'get call succeed!', data: data.departments});
     })
     .catch(err => {
       res.json({status: 'get call failed!', error: err});
@@ -335,6 +375,25 @@ app.post('/items/getEmployeesByDepartmentId', function(req, res) {
       ctrlDepartment.getEmployeesByDepartmentId(departmentId)
         .then(data => {
           res.json({status: 'post call succeed!', data: data.users});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/deleteDepartment', function(req, res) {
+  console.log('starting post deleteDepartment');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const department = req.body.department;
+      ctrlDepartment.deleteDepartment(department)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.department});
         })
         .catch(err => {
           res.json({status: 'post call failed!', error: err});
