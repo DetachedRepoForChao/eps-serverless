@@ -166,7 +166,12 @@ const deleteDepartment = function (department) {
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      return {status: false, message: err};
+      if (err.original.sqlState === '45000') {
+        console.log(`Error Message: ${err.original.sqlMessage}`);
+        return {status: false, message: err.original.sqlMessage};
+      } else {
+        return {status: false, message: err};
+      }
     });
 };
 
