@@ -93,8 +93,8 @@ export class ProfileComponent implements OnInit {
     this.currentView = 'editProfile';
   }
 
-  onResetPasswordClick() {
-    this.currentView = 'resetPassword';
+  onChangePasswordClick() {
+    this.currentView = 'changePassword';
   }
 
   onPrivacySettingsClick() {

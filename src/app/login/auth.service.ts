@@ -136,4 +136,23 @@ export class AuthService {
         });
       });
   }
+
+  changePassword(oldPassword: string, newPassword: string): Promise<any> {
+    console.log('change password');
+    return new Promise<any>((resolve, reject) => {
+      Auth.currentAuthenticatedUser()
+        .then(cognitoUser => {
+          cognitoUser.changePassword(oldPassword, newPassword, (err, result) => {
+            if (err) {
+              console.log('error');
+              console.log(err);
+              reject(err);
+            }
+            console.log('success');
+            console.log(result);
+            resolve(result);
+          });
+        });
+    });
+  }
 }

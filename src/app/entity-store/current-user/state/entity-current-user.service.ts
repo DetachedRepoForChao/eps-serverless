@@ -244,23 +244,6 @@ export class EntityCurrentUserService {
 
               this.getCurrentUserFromDb()
                 .subscribe(currentUser => {
-/*                  const username = userAttributes['username'];
-                  const firstName = userAttributes.attributes['given_name'];
-                  const lastName = userAttributes.attributes['family_name'];
-                  const email = userAttributes.attributes['email'];
-                  const birthdate = userAttributes.attributes['birthdate'];
-                  const department: Department = {
-                    Id: +userAttributes.attributes['custom:department_id'], // Need the '+' to cast string to number
-                    Name: userAttributes.attributes['custom:department'],
-                  };
-                  const securityRole: SecurityRole = {
-                    Id: +userAttributes.attributes['custom:security_role_id'], // Need the '+' to cast string to number
-                    Name: userAttributes.attributes['custom:security_role'],
-                    Description: null
-                  };
-                  const phone = userAttributes.attributes['phone_number'];
-                  const userPicture = userAttributes.attributes['picture'];*/
-
                   const userId = currentUser.id;
                   const username = currentUser.username;
                   const firstName = currentUser.firstName;
@@ -288,10 +271,6 @@ export class EntityCurrentUserService {
                   const gender = currentUser.gender;
                   const dateOfHire = currentUser.dateOfHire;
                   const phone = currentUser.phone;
-                  // const securityRoleId = currentUser.securityRoleId;
-                  // const securityRoleName = currentUser.SecurityRole.name;
-                  // const departmentId = currentUser.departmentId;
-                  // const departmentName = currentUser.Department.name;
                   const department: Department = {
                     Id: currentUser.departmentId,
                     Name: currentUser.department.name,
@@ -338,72 +317,7 @@ export class EntityCurrentUserService {
 
                   observer.next(data);
                   observer.complete();
-
-/*                  if (securityRole.Id === 1) {
-                    this.getCurrentUserPoints()
-                      .subscribe(pointsResult => {
-                        data.points = pointsResult;
-
-                        // console.log('userData:');
-                        // console.log(data);
-                        if (userPicture) {
-                          console.log(`${functionFullName}: user picture: ${userPicture}`);
-
-                          data.userPicture = userPicture;
-
-                          observer.next(data);
-                          observer.complete();
-                        } else {
-                          console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                          const token = user.signInUserSession.idToken.jwtToken;
-                          const myInit = this.myInit;
-                          myInit.headers['Authorization'] = token;
-
-                          API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
-                            console.log(`${functionFullName}: successfully retrieved data from API`);
-                            console.log(currentUserResult);
-
-                            data.userPicture = currentUserResult.data.avatarUrl;
-
-                            observer.next(data);
-                            observer.complete();
-                          });
-                        }
-                      });
-                  } else if (securityRole.Id === 2) {
-                    this.getCurrentUserPointsPool()
-                      .subscribe(pointsPoolResult => {
-                        data.pointsPool = pointsPoolResult;
-
-                        // console.log('userData:');
-                        // console.log(data);
-                        if (userPicture) {
-                          console.log(`${functionFullName}: user picture: ${userPicture}`);
-
-                          data.userPicture = userPicture;
-
-                          observer.next(data);
-                          observer.complete();
-                        } else {
-                          console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                          const token = user.signInUserSession.idToken.jwtToken;
-                          const myInit = this.myInit;
-                          myInit.headers['Authorization'] = token;
-
-                          API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
-                            console.log(`${functionFullName}: successfully retrieved data from API`);
-                            console.log(currentUserResult);
-
-                            data.userPicture = currentUserResult.data.avatarUrl;
-
-                            observer.next(data);
-                            observer.complete();
-                          });
-                        }
-                      });
-                  }*/
                 });
-
 
             });
         });

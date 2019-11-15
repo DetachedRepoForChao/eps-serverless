@@ -28,8 +28,8 @@
                         <li (click)="onEditProfileClick()">
                           Edit Profile
                         </li>
-                        <li (click)="onResetPasswordClick()">
-                          Reset Password
+                        <li (click)="onChangePasswordClick()">
+                          Change Password
                         </li>
                         <li (click)="onPrivacySettingsClick()">
                           Privacy Settings
@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-8">
                       <app-edit-profile *ngIf="currentView === 'editProfile'"></app-edit-profile>
-                      <app-reset-password *ngIf="currentView === 'resetPassword'"></app-reset-password>
+                      <app-change-password *ngIf="currentView === 'changePassword'"></app-change-password>
                       <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>
                     </div>
 
