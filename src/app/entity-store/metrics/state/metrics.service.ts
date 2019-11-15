@@ -133,6 +133,7 @@ export class MetricsService {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+
     const request$ = this.currentUserQuery.selectCurrentUser()
       .pipe(tap((currentUser: any) => {
         console.log(`${functionFullName}: caching:`);
