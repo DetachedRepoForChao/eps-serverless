@@ -142,24 +142,41 @@ export class EntityCurrentUserService {
         console.log(`caching:`);
         console.log(userDataResult);
 
+        const userId = userDataResult.id;
         const username = userDataResult.username;
         const firstName = userDataResult.firstName;
+        const middleName = userDataResult.middleName;
         const lastName = userDataResult.lastName;
+        const preferredName = userDataResult.preferredName;
+        const prefix = userDataResult.prefix;
+        const suffix = userDataResult.suffix;
+        const position = userDataResult.position;
+        const points = +userDataResult.points;
+        const pointsPool = +userDataResult.pointsPool;
         const email = userDataResult.email;
+        const address1 = userDataResult.address1;
+        const address2 = userDataResult.address2;
+        const city = userDataResult.city;
+        const state = userDataResult.state;
+        const country = userDataResult.country;
+        const zip = userDataResult.zip;
         const birthdate = userDataResult.birthdate;
+        const preferredPronoun = userDataResult.preferredPronoun;
+        const sex = userDataResult.sex;
+        const gender = userDataResult.gender;
+        const dateOfHire = userDataResult.dateOfHire;
         const department = userDataResult.department;
         const securityRole = userDataResult.securityRole;
         const phone = userDataResult.phone.substring(2);
-        const avatarPath = userDataResult.userPicture;
-        const points = +userDataResult.points;
-        const pointsPool = +userDataResult.pointsPool;
+        const avatarPath = userDataResult.avatarPath;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
             const avatarBase64String = '';
             const avatarResolvedUrl = result.avatarResolvedUrl;
-            const currentUser = createEntityCurrentUserModel({username, firstName, lastName, email, birthdate, avatarBase64String,
-              avatarPath, avatarResolvedUrl, department, securityRole, phone, points, pointsPool});
+            const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, prefix,
+              suffix, position, points, pointsPool, email, address1, address2, city, state, country, zip, birthdate, preferredPronoun, sex,
+              gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -224,103 +241,167 @@ export class EntityCurrentUserService {
             .then(userAttributes => {
               console.log('userAttributes:');
               console.log(userAttributes);
-              const username = userAttributes['username'];
-              const firstName = userAttributes.attributes['given_name'];
-              const lastName = userAttributes.attributes['family_name'];
-              const email = userAttributes.attributes['email'];
-              const birthdate = userAttributes.attributes['birthdate'];
-              const department: Department = {
-                Id: +userAttributes.attributes['custom:department_id'], // Need the '+' to cast string to number
-                Name: userAttributes.attributes['custom:department'],
-              };
-              const securityRole: SecurityRole = {
-                Id: +userAttributes.attributes['custom:security_role_id'], // Need the '+' to cast string to number
-                Name: userAttributes.attributes['custom:security_role'],
-                Description: null
-              };
-              const phone = userAttributes.attributes['phone_number'];
-              const userPicture = userAttributes.attributes['picture'];
 
-              const data = {
-                username: username,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                birthdate: birthdate,
-                department: department,
-                securityRole: securityRole,
-                phone: phone,
-                points: 0,
-                pointsPool: 0,
-                userPicture: ''
-              };
+              this.getCurrentUserFromDb()
+                .subscribe(currentUser => {
+/*                  const username = userAttributes['username'];
+                  const firstName = userAttributes.attributes['given_name'];
+                  const lastName = userAttributes.attributes['family_name'];
+                  const email = userAttributes.attributes['email'];
+                  const birthdate = userAttributes.attributes['birthdate'];
+                  const department: Department = {
+                    Id: +userAttributes.attributes['custom:department_id'], // Need the '+' to cast string to number
+                    Name: userAttributes.attributes['custom:department'],
+                  };
+                  const securityRole: SecurityRole = {
+                    Id: +userAttributes.attributes['custom:security_role_id'], // Need the '+' to cast string to number
+                    Name: userAttributes.attributes['custom:security_role'],
+                    Description: null
+                  };
+                  const phone = userAttributes.attributes['phone_number'];
+                  const userPicture = userAttributes.attributes['picture'];*/
 
-              console.log('userData:');
-              console.log(data);
+                  const userId = currentUser.id;
+                  const username = currentUser.username;
+                  const firstName = currentUser.firstName;
+                  const lastName = currentUser.lastName;
+                  const middleName = currentUser.middleName;
+                  const preferredName = currentUser.preferredName;
+                  const prefix = currentUser.prefix;
+                  const suffix = currentUser.suffix;
+                  const position = currentUser.position;
+                  const points = currentUser.points;
+                  const pointsPool = (currentUser.pointPool.pointsRemaining) ? currentUser.pointPool.pointsRemaining : null;
+                  const email = currentUser.email;
+                  const address1 = currentUser.address1;
+                  const address2 = currentUser.address2;
+                  const city = currentUser.city;
+                  const state = currentUser.state;
+                  const country = currentUser.country;
+                  const zip = currentUser.zip;
+                  const dateOfBirth = currentUser.dateOfBirth;
+                  const preferredPronoun = currentUser.preferredPronoun;
+                  const sex = currentUser.sex;
+                  const gender = currentUser.gender;
+                  const dateOfHire = currentUser.dateOfHire;
+                  const phone = currentUser.phone;
+                  // const securityRoleId = currentUser.securityRoleId;
+                  // const securityRoleName = currentUser.SecurityRole.name;
+                  // const departmentId = currentUser.departmentId;
+                  // const departmentName = currentUser.Department.name;
+                  const department: Department = {
+                    Id: currentUser.departmentId,
+                    Name: currentUser.department.name,
+                  };
+                  const securityRole: SecurityRole = {
+                    Id: currentUser.securityRoleId,
+                    Name: currentUser.securityRole.name,
+                    Description: currentUser.securityRole.description
+                  };
+                  const avatarUrl = currentUser.avatarUrl;
 
-              if (securityRole.Id === 1) {
-                this.getCurrentUserPoints()
-                  .subscribe(pointsResult => {
-                    data.points = pointsResult;
+                  const data = {
+                    userId: userId,
+                    username: username,
+                    firstName: firstName,
+                    middleName: middleName,
+                    lastName: lastName,
+                    preferredName: preferredName,
+                    prefix: prefix,
+                    suffix: suffix,
+                    position: position,
+                    points: points,
+                    pointsPool: pointsPool,
+                    email: email,
+                    address1: address1,
+                    address2: address2,
+                    city: city,
+                    state: state,
+                    country: country,
+                    zip: zip,
+                    birthdate: dateOfBirth,
+                    preferredPronoun: preferredPronoun,
+                    sex: sex,
+                    gender: gender,
+                    dateOfHire: dateOfHire,
+                    phone: phone,
+                    department: department,
+                    securityRole: securityRole,
+                    avatarPath: avatarUrl,
+                  };
 
-                    // console.log('userData:');
-                    // console.log(data);
-                    if (userPicture) {
-                      console.log(`${functionFullName}: user picture: ${userPicture}`);
+                  console.log('userData:');
+                  console.log(data);
 
-                      data.userPicture = userPicture;
+                  observer.next(data);
+                  observer.complete();
 
-                      observer.next(data);
-                      observer.complete();
-                    } else {
-                      console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                      const token = user.signInUserSession.idToken.jwtToken;
-                      const myInit = this.myInit;
-                      myInit.headers['Authorization'] = token;
+/*                  if (securityRole.Id === 1) {
+                    this.getCurrentUserPoints()
+                      .subscribe(pointsResult => {
+                        data.points = pointsResult;
 
-                      API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
-                        console.log(`${functionFullName}: successfully retrieved data from API`);
-                        console.log(currentUserResult);
+                        // console.log('userData:');
+                        // console.log(data);
+                        if (userPicture) {
+                          console.log(`${functionFullName}: user picture: ${userPicture}`);
 
-                        data.userPicture = currentUserResult.data.avatarUrl;
+                          data.userPicture = userPicture;
 
-                        observer.next(data);
-                        observer.complete();
+                          observer.next(data);
+                          observer.complete();
+                        } else {
+                          console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
+                          const token = user.signInUserSession.idToken.jwtToken;
+                          const myInit = this.myInit;
+                          myInit.headers['Authorization'] = token;
+
+                          API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
+                            console.log(`${functionFullName}: successfully retrieved data from API`);
+                            console.log(currentUserResult);
+
+                            data.userPicture = currentUserResult.data.avatarUrl;
+
+                            observer.next(data);
+                            observer.complete();
+                          });
+                        }
                       });
-                    }
-                  });
-              } else if (securityRole.Id === 2) {
-                this.getCurrentUserPointsPool()
-                  .subscribe(pointsPoolResult => {
-                    data.pointsPool = pointsPoolResult;
+                  } else if (securityRole.Id === 2) {
+                    this.getCurrentUserPointsPool()
+                      .subscribe(pointsPoolResult => {
+                        data.pointsPool = pointsPoolResult;
 
-                    // console.log('userData:');
-                    // console.log(data);
-                    if (userPicture) {
-                      console.log(`${functionFullName}: user picture: ${userPicture}`);
+                        // console.log('userData:');
+                        // console.log(data);
+                        if (userPicture) {
+                          console.log(`${functionFullName}: user picture: ${userPicture}`);
 
-                      data.userPicture = userPicture;
+                          data.userPicture = userPicture;
 
-                      observer.next(data);
-                      observer.complete();
-                    } else {
-                      console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                      const token = user.signInUserSession.idToken.jwtToken;
-                      const myInit = this.myInit;
-                      myInit.headers['Authorization'] = token;
+                          observer.next(data);
+                          observer.complete();
+                        } else {
+                          console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
+                          const token = user.signInUserSession.idToken.jwtToken;
+                          const myInit = this.myInit;
+                          myInit.headers['Authorization'] = token;
 
-                      API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
-                        console.log(`${functionFullName}: successfully retrieved data from API`);
-                        console.log(currentUserResult);
+                          API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
+                            console.log(`${functionFullName}: successfully retrieved data from API`);
+                            console.log(currentUserResult);
 
-                        data.userPicture = currentUserResult.data.avatarUrl;
+                            data.userPicture = currentUserResult.data.avatarUrl;
 
-                        observer.next(data);
-                        observer.complete();
+                            observer.next(data);
+                            observer.complete();
+                          });
+                        }
                       });
-                    }
-                  });
-              }
+                  }*/
+                });
+
+
             });
         });
     });

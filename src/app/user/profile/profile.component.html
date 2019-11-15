@@ -9,25 +9,9 @@
 
             <div class="card">
               <div class="card card-coin card-plain card-custom">
-<!--                <div class="card-header">
-                  <div *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarLoading">
-                    <img [src]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"
-                         alt="Avatar"
-                         class="img-center img-fluid rounded-circle"
-                         id="avatar"
-                         (click)="avatarClick()">
-                  </div>
 
-                  <ng-template #avatarLoading >
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                         alt="Loading..."
-                         class="img-center img-fluid rounded-circle"
-                         id="avatarPlaceholder">
-                  </ng-template>
-                </div>-->
-
-                <div class="card-body" *ngIf="!isCardLoading; else cardLoading" >
-                  <ngx-spinner
+                <div class="card-body" >
+                  <!--<ngx-spinner
                     name="profile-spinner"
                     [fullScreen]="false"
                     bdColor="rgba(51,51,51,0.8)"
@@ -36,294 +20,26 @@
                     type="pacman"
                   >
                     <p class="loadingstyle">Loading...</p>
-                  </ngx-spinner>
+                  </ngx-spinner>-->
 
                   <div class="row">
                     <div class="col-4 textl">
                       <ul class="nobullets">
-                        <li>
+                        <li (click)="onEditProfileClick()">
                           Edit Profile
                         </li>
-                        <li>
+                        <li (click)="onResetPasswordClick()">
                           Reset Password
                         </li>
-                        <li>
+                        <li (click)="onPrivacySettingsClick()">
                           Privacy Settings
                         </li>
                       </ul>
                     </div>
                     <div class="col-8">
-                      <div class="row">
-                        <div class="col-3 text-left margintop">
-                          <div>
-                            <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
-                              <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.preferredName}}</h4>
-                            </div>
-                            <ng-template #noPreferredName>
-                              <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
-                            </ng-template>
-
-                            <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
-
-                          </div>
-
-                        </div>
-                        <div class="col-4 text-left zeropadding">
-                          <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
-                            <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
-                                 alt="Avatar"
-                                 class="img-center img-fluid rounded-circle"
-                                 id="avatar"
-                                 (click)="avatarClick()">
-                          </div>
-
-                          <ng-template #avatarLoading >
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                                 alt="Loading..."
-                                 class="img-center img-fluid rounded-circle"
-                                 id="avatarPlaceholder">
-                          </ng-template>
-                          <hr class="line-success">
-                        </div>
-                        <div class="col-5 avatarstyle">
-                          <div [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
-                               matTooltipPosition="above">
-                            <div class="row">
-                              <div class="col-5">
-                                <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
-                              </div>
-                              <div class="col-4">
-                                <div *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
-                                  <div class="mb-0">{{(currentUser$ | async)[0]?.points}}</div>
-                                </div>
-                                <ng-template #pointsWithBalance >
-                                  <div *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance"
-                                       class="mb-0 red"
-                                       >
-                                    {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
-                                  </div>
-
-                                </ng-template>
-                              </div>
-                            </div>
-
-                          </div>
-                          <div class="row">
-                            <div class="col-5">
-                              <div class="mb-1 line-height-3 font-weight-200">Trophies:</div>
-                            </div>
-                            <div class="col-4">
-                              <div class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
-                                {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-5">
-                              <div class="mb-1 line-height-3 font-weight-200">Rank:</div>
-                            </div>
-                            <div class="col-4">
-                              <div class="mb-0" *ngIf="(userQuery.selectLoading() | async) === false">
-                                {{(leaderboardUsers$ | async).indexOf((userQuery.getUser(globals.getUsername()) | async)[0]) + 1}}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-                      <div class="row">
-                        <div class="user-form-container col-12">
-                          <form [formGroup]="editUserForm">
-                            <div *ngIf="isUserDataRetrieved; else placeholderForm">
-                              <div class="form-row">
-                                <div class="col-3 aligncentercontent">
-                                  <label for="editUser_preferredName" class="form-label">Preferred Name</label>
-                                </div>
-                                <div class="col-7">
-                                  <input type="text" class="form-control user-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
-                                </div>
-                              </div>
-                              <div class="form-row">
-                                <div class="col-3">
-                                  <label for="editUser_birthdate" class="form-label">Date of Birth</label>
-                                </div>
-                                <div class="col-7">
-                                  <input type="text" [matDatepicker]="editUser_birthdate"
-                                         (click)="editUser_birthdate.open()"
-                                         placeholder="Date of Birth"
-                                         formControlName="birthdate"
-                                         class="form-control user-form-control datepicker"
-                                         id="editUser_birthdate">
-
-                                  <mat-datepicker #editUser_birthdate [startView]="'year'"></mat-datepicker>
-                                  <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.birthdate.invalid) || (editUserForm?.dirty && editUserForm?.controls.birthdate.touched && editUserForm?.controls.birthdate.invalid)">
-                                    <label class="validation-message">This field is required.</label>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="form-row">
-                                <div class="col-2 aligncentercontent">
-                                  <label class="form-label">Email</label>
-                                </div>
-                                <div class="confirm-col text-right col-1">
-                                  <div *ngIf="emailConfirmed; else emailUnconfirmedIcon">
-                                    <i class="fas fa-check confirmed"></i>
-                                  </div>
-                                  <ng-template #emailUnconfirmedIcon>
-                                    <i class="fas fa-times unconfirmed"></i>
-                                  </ng-template>
-                                </div>
-                                <div *ngIf="emailConfirmed; else emailUnconfirmedInput" class="col-7">
-                                  <input type="email" class="form-control user-form-control" id="editUser_confirmedEmail" placeholder="Email" formControlName="email">
-                                  <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
-                                    <label class="validation-message">This field is required.</label>
-                                  </div>
-                                </div>
-                                <ng-template #emailUnconfirmedInput class="col-5">
-                                  <div class="col-5">
-                                    <input type="email" class="form-control user-form-control" id="editUser_unconfirmedEmail" placeholder="Email" formControlName="email">
-                                    <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
-                                      <label class="validation-message">This field is required.</label>
-                                    </div>
-                                  </div>
-                                </ng-template>
-                                <div *ngIf="!emailConfirmed" class="confirm-col col-2">
-                                  <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmEmailModal" (click)="onEmailConfirmClick()">Confirm</button>
-                                </div>
-                              </div>
-
-                              <div class="form-row">
-                                <div class="col-2 aligncentercontent">
-                                  <label class="form-label">Phone</label>
-                                </div>
-                                <div class="confirm-col text-right col-1">
-                                  <div *ngIf="phoneConfirmed; else phoneUnconfirmedIcon">
-                                    <i class="fas fa-check confirmed"></i>
-                                  </div>
-                                  <ng-template #phoneUnconfirmedIcon>
-                                    <i class="fas fa-times unconfirmed"></i>
-                                  </ng-template>
-                                </div>
-                                <div *ngIf="phoneConfirmed; else phoneUnconfirmedInput" class="col-7">
-                                  <input class="form-control user-form-control"
-                                         placeholder="Phone"
-                                         formControlName="phone"
-                                         name="editUser_confirmedPhone"
-                                         appPhoneMask
-                                         type="tel"
-                                         maxLength="14"
-                                         [ngClass]="{'invalid-textbox' : editUserForm?.dirty && editUserForm?.controls.phone.touched && editUserForm?.controls.phone.invalid}"
-                                         id="editUser_confirmedPhone">
-                                  <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
-                                    <label class="validation-message">This field is required.</label>
-                                    <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
-                                  </div>
-                                </div>
-                                <ng-template #phoneUnconfirmedInput class="col-5">
-                                  <div class="col-5">
-                                    <input class="form-control user-form-control"
-                                           placeholder="Phone"
-                                           formControlName="phone"
-                                           name="editUser_unconfirmedPhone"
-                                           appPhoneMask
-                                           type="tel"
-                                           maxLength="14"
-                                           [ngClass]="{'invalid-textbox' : editUserForm?.dirty && editUserForm?.controls.phone.touched && editUserForm?.controls.phone.invalid}"
-                                           id="editUser_unconfirmedPhone">
-                                    <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
-                                      <label class="validation-message">This field is required.</label>
-                                      <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
-                                    </div>
-                                  </div>
-                                </ng-template>
-                                <div *ngIf="!phoneConfirmed" class="confirm-col col-2">
-                                  <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmPhoneModal" (click)="onPhoneConfirmClick()">Confirm</button>
-                                </div>
-                              </div>
-                              <div class="form-row">
-                                <div class="col-3 aligncentercontent">
-                                  <label for="editUser_gender" class="form-label">Gender</label>
-                                </div>
-                                <div class="col-7">
-                                  <select formControlName="gender" class="form-control user-form-control" id="editUser_gender" name="editUser_gender">
-                                    <option [ngValue]="null" [disabled]="true">Gender</option>
-                                    <option class="black">Male</option>
-                                    <option class="black">Female</option>
-                                    <option class="black">Custom</option>
-                                    <option class="black">Prefer Not to Say</option>
-                                  </select>
-                                  <div *ngIf="editUserForm.controls.gender.value === 'Custom'" class="row">
-                                    <div class="col-12">
-                                      <input type="text" class="form-control user-form-control" id="editUser_customGender" placeholder="Gender" formControlName="genderCustom">
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                            </div>
-
-                            <ng-template #placeholderForm>
-                              <div class="form-row">
-                                <div class="col-3 aligncentercontent">
-                                  <label for="editUser_phPreferredName" class="form-label">Preferred Name</label>
-                                </div>
-                                <div class="col-7">
-                                  <input type="text" class="form-control user-form-control" id="editUser_phPreferredName" placeholder="Preferred Name">
-                                </div>
-                              </div>
-                              <div class="form-row">
-                                <div class="col-3">
-                                  <label for="editUser_phBirthdate" class="form-label">Date of Birth</label>
-                                </div>
-                                <div class="col-7">
-                                  <input type="text"
-                                         placeholder="Date of Birth"
-                                         class="form-control user-form-control datepicker"
-                                         id="editUser_phBirthdate">
-                                </div>
-                              </div>
-
-                              <div class="form-row">
-                                <div class="col-3 aligncentercontent">
-                                  <label class="form-label">Email</label>
-                                </div>
-                                <div class="col-7">
-                                  <input type="email" class="form-control user-form-control" id="editUser_phConfirmedEmail" placeholder="Email">
-                                </div>
-
-                              </div>
-
-                              <div class="form-row">
-                                <div class="col-3 aligncentercontent">
-                                  <label class="form-label">Phone</label>
-                                </div>
-                                <div class="col-7">
-                                  <input class="form-control user-form-control"
-                                         placeholder="Phone"
-                                         appPhoneMask
-                                         type="tel"
-                                         maxLength="14"
-                                         id="editUser_phConfirmedPhone">
-                                </div>
-                              </div>
-                              <div class="form-row">
-                                <div class="col-3 aligncentercontent">
-                                  <label for="editUser_phGender" class="form-label">Gender</label>
-                                </div>
-                                <div class="col-7">
-                                  <input type="text" class="form-control user-form-control" id="editUser_phGender" placeholder="Gender">
-                                </div>
-                              </div>
-                            </ng-template>
-
-                          </form>
-                          <button type="button" class="btn btn-primary" (click)="onEditUserFormSubmit(editUserForm)">Save Changes</button>
-
-                        </div>
-                      </div>
-
-
+                      <app-edit-profile *ngIf="currentView === 'editProfile'"></app-edit-profile>
+                      <app-reset-password *ngIf="currentView === 'resetPassword'"></app-reset-password>
+                      <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>
                     </div>
 
                   </div>
@@ -341,8 +57,9 @@
               </div>
 
 
+<!--
 
-              <!-- Blank card to display while loading -->
+              &lt;!&ndash; Blank card to display while loading &ndash;&gt;
               <ng-template #cardLoading>
                 <div class="card-body">
                   <ngx-spinner
@@ -357,6 +74,7 @@
                   </ngx-spinner>
                 </div>
               </ng-template>
+-->
 
             </div>
 
@@ -372,166 +90,4 @@
     </section>
   </div>
 </div>
-
-<div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-lg" role="document">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Choose Your Avatar</h4>
-      </div>
-      <!---modal body---->
-      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"></app-avatar>
-      </div>
-      <ng-template #avatarModalLoading>
-
-      </ng-template>
-      <!----End Mod Bod---->
-
-    </div>
-  </div>
-</div>
-
-<div class="modal fade bd-example" id="confirmEmailModal" role="dialog" tabindex="-1" aria-labelledby="confirmEmailModal" aria-hidden="true" >
-  <div class="modal-dialog" role="document">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Confirm Your Email</h4>
-      </div>
-      <!---modal body---->
-      <div class="modal-body">
-        <form [formGroup]="confirmEmailForm" class="form">
-          <div class="form-group">
-
-            <label for="emailCode" class="modal-form-label">Please enter the confirmation code that was sent to <b>{{email}}</b>.</label>
-            <label for="emailCode" class="modal-form-label">If you didn't receive a code, click the <b>Resend Code</b> button.</label>
-            <br>
-            <br>
-            <div class="row">
-              <div class="col-5">
-                <label for="emailCode" class="modal-form-label2">Confirmation Code</label>
-              </div>
-              <div class="col-5">
-                <input type="text"
-                       placeholder="######"
-                       id="emailCode"
-                       name="emailCode"
-                       class="form-control modal-form-control"
-                       formControlName="code"
-                       required>
-                <div *ngIf="(confirmEmailFormSubmitted && confirmEmailForm.controls.code.invalid) || (confirmEmailForm.dirty && confirmEmailForm.controls.code.touched && confirmEmailForm.controls.code.invalid)">
-                  <label class="modal-validation-message">This field is required.</label>
-                  <label class="modal-validation-message">The Confirmation Code must be 6 digits long.</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-
-        <div class="modal-footer">
-          <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
-          <button class="btn btn-primary btn-lg" (click)="onConfirmEmailFormSubmit(confirmEmailForm)">Confirm</button>
-          <button class="btn btn-info btn-lg" (click)="sendEmailCodeAgain()">Resend Code</button>
-        </div>
-
-      </div>
-      <!----End Mod Bod---->
-
-    </div>
-  </div>
-</div>
-
-<div class="modal fade bd-example" id="confirmPhoneModal" role="dialog" tabindex="-1" aria-labelledby="confirmPhoneModal" aria-hidden="true" >
-  <div class="modal-dialog" role="document">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Confirm Your Phone Number</h4>
-      </div>
-      <!---modal body---->
-      <div class="modal-body">
-        <form [formGroup]="confirmPhoneForm" class="form">
-          <div class="form-group">
-
-            <label for="phoneCode" class="modal-form-label">Please enter the confirmation code that was sent to <b>{{phone}}</b>.</label>
-            <label for="phoneCode" class="modal-form-label">If you didn't receive a code, click the <b>Resend Code</b> button.</label>
-            <br>
-            <br>
-            <div class="row">
-              <div class="col-5">
-                <label for="phoneCode" class="modal-form-label2">Confirmation Code</label>
-              </div>
-              <div class="col-5">
-                <input type="text"
-                       placeholder="######"
-                       id="phoneCode"
-                       name="phoneCode"
-                       class="form-control modal-form-control"
-                       formControlName="code"
-                       required>
-                <div *ngIf="(confirmPhoneFormSubmitted && confirmPhoneForm.controls.code.invalid) || (confirmPhoneForm.dirty && confirmPhoneForm.controls.code.touched && confirmPhoneForm.controls.code.invalid)">
-                  <label class="modal-validation-message">This field is required.</label>
-                  <label class="modal-validation-message">The Confirmation Code must be 6 digits long.</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-
-        <div class="modal-footer">
-          <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
-          <button class="btn btn-primary btn-lg" (click)="onConfirmPhoneFormSubmit(confirmPhoneForm)">Confirm</button>
-          <button class="btn btn-info btn-lg" (click)="sendPhoneCodeAgain()">Resend Code</button>
-        </div>
-
-      </div>
-      <!----End Mod Bod---->
-
-    </div>
-  </div>
-</div>
-
-<div class="modal fade bd-example" id="confirmPromptModal" role="dialog" tabindex="-1" aria-labelledby="confirmPromptModal" aria-hidden="true" >
-  <div class="modal-dialog" role="document">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Please Verify Your Changes</h4>
-      </div>
-      <!---modal body---->
-      <div class="modal-body">
-        <div *ngIf="phoneChanged && !emailChanged">
-          <label class="modal-form-label">Looks like you just changed your phone number.</label>
-          <label class="modal-form-label">Please click the <b>Confirm</b> button next to the phone field to confirm the new number.</label>
-        </div>
-
-        <div *ngIf="emailChanged && !phoneChanged">
-          <label class="modal-form-label">Looks like you just changed your email address.</label>
-          <label class="modal-form-label">Please click the <b>Confirm</b> button next to the email field to confirm the new email address.</label>
-        </div>
-
-        <div *ngIf="phoneChanged && emailChanged">
-          <label class="modal-form-label">Looks like you just changed your phone number and email address.</label>
-          <label class="modal-form-label">Please click the <b>Confirm</b> button next to each field to confirm the changes.</label>
-        </div>
-
-        <div class="modal-footer">
-          <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
-          <button class="btn btn-primary btn-lg" data-dismiss="modal">OK</button>
-        </div>
-
-      </div>
-      <!----End Mod Bod---->
-
-    </div>
-  </div>
-</div>
-
-
 
