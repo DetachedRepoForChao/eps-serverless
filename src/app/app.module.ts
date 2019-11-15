@@ -97,7 +97,8 @@ import { PointItemPipe } from './pipe/point-item.pipe';
 
 
 // import notification times ago
-import { TimeAgoPipe } from 'time-ago-pipe'
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { NotificationCardComponent } from './src/app/user/admin-user/notification-card/notification-card.component'
 
 akitaConfig({
   resettable: true
@@ -157,7 +158,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PointItemsCardComponent,
     StoreItemsCardComponent,
     PointItemPipe,
-    TimeAgoPipe
+    TimeAgoPipe,
+    NotificationCardComponent
 
   ],
   imports: [
