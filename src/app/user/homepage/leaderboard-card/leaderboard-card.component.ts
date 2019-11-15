@@ -61,7 +61,7 @@ export class LeaderboardCardComponent implements OnInit {
               private spinner: NgxSpinnerService,
               private entityUserService: EntityUserService,
               private userStore: UserStore,
-              private entityUserQuery: EntityUserQuery,
+              public entityUserQuery: EntityUserQuery,
               public achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               public entityCurrentUserQuery: EntityCurrentUserQuery,

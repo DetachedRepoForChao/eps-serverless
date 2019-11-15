@@ -1,0 +1,101 @@
+<div class="card">
+  <h5 class="card-header4">
+    <img alt="Bootstap Image Preview" width="165" height="165" src="../../../assets/img/Userimg.png" class="rounded-circle"/>
+  </h5>
+  <div class="card-body">
+    <H1 class="card-text4">
+      Manage events
+    </H1>
+  </div>
+  <div class="card-footer4" style="margin-bottom: 20px">
+
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addDepartmentModal">Add Department</button>
+    <br><br>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deleteDepartmentModal">Delete Department</button>
+    <br><br>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#renameDepartmentModal">Rename Department</button>
+    <!-- get report -->
+    <br><br>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" [routerLink]="['/report']" routerLinkActive="router-link-active" >report</button>
+
+  </div>
+</div>
+
+<!-- Add Departname -->
+<!-- <div class="modal fade bd-example-modal-lg" id="addDepartmentModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDepartmentModalLabel">Add a new departmenmt</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body department-modal-body">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+          <div class="department-form-container">
+            <form [formGroup]="addDepartmentForm">
+              <div class="form-row">
+                <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                  <label for="addDepartment_DepartmentName" class="form-label">Department name</label>
+                  <input class="form-control department-form-control" id="addDepartment_DepartmentNam" placeholder="Department name" formControlName="departmentName">
+                  <div *ngIf="(addDepartmentFormSubmitted && addDepartmentForm.controls.Departmentname.invalid) || (addDepartmentForm.dirty && addDepartmentForm.controls.Departmentname.touched && addDepartmentForm.controls.Departmentname.invalid)">
+                    <label class="validation-message">This field is required.</label>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </perfect-scrollbar>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+        <button type="button" class="btn btn-primary" (click)="onAddDepartmentFormSubmit(addDepartmentForm)">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Delete Department -->
+<div class="modal fade bd-example-modal-lg deleteDepartment-modal" id="deleteDepartmentModal" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteDepartmentModalLabel">Select a departmenmt to delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body department-modal-body">
+        <form [formGroup]="deleteDepartmentForm">
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
+              <label for="deleteDepartment_department" class="form-label">department to Delete</label>
+              <select formControlName="departmentName"
+                      class="form-control department-form-control"
+                      id="deleteDepartment_department" name="deleteDepartment_Department">
+                    <option [ngValue]="null" [disabled]="true">Department</option>
+                    <option *ngFor="let department of departments" [ngValue]="department" style="color: black;">
+                        {{department.Name}}
+                    </option>
+              </select>
+              <!-- <div *ngIf="(deleteDepartmentFormSubmitted && deleteDepartmentForm.controls.departmenmt.invalid) || (deleteDepartmentForm.dirty && deleteDepartmentForm.controls.departmenmt.touched && deleteDepartmentForm.controls.departmenmt.invalid)">
+                <label class="validation-message">This field is required.</label>
+              </div> -->
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="onDeleteDepartmentFormSubmit(deleteDepartmentForm)">Delete Department</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

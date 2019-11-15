@@ -19,7 +19,7 @@ import {ForgotPasswordComponent} from './login/forgot-password/forgot-password.c
 import {User} from './shared/user.model';
 import {ConfirmItemPurchaseComponent} from './user/confirm-item-purchase/confirm-item-purchase.component';
 import {NewPasswordComponent} from './login/new-password/new-password.component';
-//import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
+import { ReportComponent } from './user/admin-user/event-card/report/report.component';
 
 export const appRoutes: Routes = [
   {
@@ -70,6 +70,11 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+      },
+      {
         path: 'homepage', component: HomepageComponent
       },
       {
@@ -83,11 +88,7 @@ export const appRoutes: Routes = [
       },
     ]
   },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuard],
-  },
+
 /*  {
     path: 'profile',
     component: ProfileComponent,
@@ -138,5 +139,9 @@ export const appRoutes: Routes = [
     path: 'confirm-item-purchase',
     component: ConfirmItemPurchaseComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path:'report',
+    component:ReportComponent,
   }
 ];

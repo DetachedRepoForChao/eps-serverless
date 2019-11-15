@@ -53,6 +53,8 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     return user$;
   }
 
+
+
   public getDeactivatedUsers() {
     return this.selectAll({
       filterBy: userEntity => !(userEntity.active)

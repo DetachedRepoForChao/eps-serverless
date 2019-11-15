@@ -32,6 +32,7 @@ export class EntityUserService {
       'Content-Type': 'application/json;charset=UTF-8'
     }
   };
+  user$: any;
 
   constructor(private userStore: UserStore,
               private entityUserQuery: EntityUserQuery,
@@ -207,9 +208,9 @@ export class EntityUserService {
               const birthdate = usersMerged[i].dateOfBirth;
               const email = usersMerged[i].email;
               const securityRole: SecurityRole = {
-                Id: +usersMerged[i].securityrole.id,
-                Name: usersMerged[i].securityrole.name,
-                Description: usersMerged[i].securityrole.description
+                Id: +usersMerged[i].securityRole.id,
+                Name: usersMerged[i].securityRole.name,
+                Description: usersMerged[i].securityRole.description
               };
               const department: Department = {
                 Id: +usersMerged[i].department.id,
@@ -371,6 +372,12 @@ export class EntityUserService {
         });
 
     });
+  }
+
+  getuserName():string []{
+    this.user$= this.getUsers().subscribe()
+    const username:string [] = this.user$.username
+    return username;
   }
 
 

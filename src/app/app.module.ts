@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AgGridModule } from 'ag-grid-angular';
+
 
 // components
 import { AppComponent } from './app.component';
@@ -19,7 +21,9 @@ import { UserComponent } from './user/user.component';
 import { SignInComponent } from './login/sign-in/sign-in.component';
 import { UserService } from './shared/user.service';
 // other
-
+// tslint:disable-next-line: import-spacing
+import { EventCardComponent }from './user/admin-user/event-card/event-card.component';
+import { ReportComponent } from './user/admin-user/event-card/report/report.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {RoleGuardService} from './auth/role-guard.service';
@@ -73,6 +77,7 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 import { UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
 import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
+import { DepartmentFilterComponent } from './entity-store/department/filter/department-filter.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
@@ -98,7 +103,13 @@ import { PointItemPipe } from './pipe/point-item.pipe';
 
 // import notification times ago
 import { TimeAgoPipe } from 'time-ago-pipe';
+<<<<<<< HEAD
 import { NotificationCardComponent } from './src/app/user/admin-user/notification-card/notification-card.component'
+=======
+import { EditProfileComponent } from './user/profile/edit-profile/edit-profile.component';
+import { ChangePasswordComponent } from './user/profile/change-password/change-password.component';
+import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component'
+>>>>>>> d83fc276f35c85c5d7b37a853a8a1023c900abb6
 
 akitaConfig({
   resettable: true
@@ -110,6 +121,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   declarations: [
+    DepartmentFilterComponent,
+    EventCardComponent,
+    ReportComponent,
     AppComponent,
     LoginComponent,
     SignUpComponent,
@@ -159,7 +173,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     StoreItemsCardComponent,
     PointItemPipe,
     TimeAgoPipe,
+<<<<<<< HEAD
     NotificationCardComponent
+=======
+    EditProfileComponent,
+    ChangePasswordComponent,
+    PrivacySettingsComponent
+>>>>>>> d83fc276f35c85c5d7b37a853a8a1023c900abb6
 
   ],
   imports: [
@@ -194,7 +214,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     // RouterModule.forRoot(routes),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule.forRoot(),
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    AgGridModule.withComponents([]),
+
   ],
   providers: [
     {
