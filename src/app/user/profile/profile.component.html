@@ -25,13 +25,13 @@
                   <div class="row">
                     <div class="col-4 textl">
                       <ul class="nobullets">
-                        <li (click)="onEditProfileClick()">
+                        <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile">
                           Edit Profile
                         </li>
-                        <li (click)="onChangePasswordClick()">
+                        <li (click)="onViewItemClick('changePassword')" id="viewItem_changePassword">
                           Change Password
                         </li>
-                        <li (click)="onPrivacySettingsClick()">
+                        <li (click)="onViewItemClick('privacySettings')" id="viewItem_privacySettings">
                           Privacy Settings
                         </li>
                       </ul>

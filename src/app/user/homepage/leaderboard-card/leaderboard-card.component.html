@@ -44,22 +44,29 @@
                   <img src="{{user?.avatarResolvedUrl}}"/>
                   <div *ngIf="user?.username === globals.getUsername(); else otherUser">
                     <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
-                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" class="yellow"></i>
-                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" class="teal"></i>
-                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" class="pink"></i>
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal"></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
                     </span>
                   </div>
                   <ng-template #otherUser>
                     <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
-                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}}" class="yellow"></i>
-                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}}" class="teal"></i>
-                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}}" class="pink" ></i>
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow" ></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal" ></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
                     </span>
                   </ng-template>
                 </div>
               </div>
               <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>
-              <div *ngIf="col === 'name'">{{user['firstName'] + ' ' + user['lastName']}}</div>
+              <div *ngIf="col === 'name'">
+                <div *ngIf="user['preferredName']; else noPreferredName">
+                  <div>{{user['preferredName']}}</div>
+                </div>
+                <ng-template #noPreferredName>
+                  <div>{{user['firstName'] + ' ' + user['lastName']}}</div>
+                </ng-template>
+              </div>
               <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
 
             </td>
@@ -83,11 +90,11 @@
                 <div class="modal-body">
 
                   <div class="card">
-                    <div class="card card-coin card-plain maxheight">
+                    <div class="card card-coin card-plain card-custom">
                       <div class="card-header">
 
                         <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
-                          <img src="{{(entityUserQuery.getUser(selectedRow.username))[0].avatarResolvedUrl}}"
+                          <img src="{{(entityUserQuery.selectUser(selectedRow.username) | async)[0]?.avatarResolvedUrl}}"
                                alt="Place image title"
                                class="img-center img-fluid rounded-circle"
                                id="avatar">
@@ -105,8 +112,13 @@
                         <div class="userDetails"></div>
                         <div class="row">
                           <div class="col-md-12 text-center">
-                            <h4 class="text-uppercase">{{selectedRow.name}}</h4>
-                            <span>{{selectedRow.department}}</span>
+                            <div *ngIf="selectedRow?.preferredName; else noPreferredNameModal">
+                              <h4 class="text-uppercase">{{selectedRow.preferredName}}</h4>
+                            </div>
+                            <ng-template #noPreferredNameModal>
+                              <h4 class="text-uppercase">{{selectedRow?.firstName}} {{selectedRow.lastName}}</h4>
+                            </ng-template>
+                            <span>{{selectedRow?.department.Name}}</span>
                             <hr class="line-success">
                           </div>
                         </div>
@@ -118,11 +130,11 @@
                           </div>
                           <div class="col p-2">
                             <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-                            <h4 class="mb-0">23/120</h4>
+                            <h4 class="mb-0">{{entityUserQuery.getUserCompleteAchievementCount(selectedRow?.userId).length}} / {{achievementQuery.getAll().length}}</h4>
                           </div>
                           <div class="col p-2">
                             <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-                            <h4 class="mb-0">{{selectedRow.rank}}</h4>
+                            <h4 class="mb-0">{{(leaderboardUsers$ | async).indexOf(selectedRow) + 1}}</h4>
                           </div>
                         </div>
                         <div class="card-footer text-center">

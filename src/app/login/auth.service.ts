@@ -141,15 +141,42 @@ export class AuthService {
     console.log('change password');
     return new Promise<any>((resolve, reject) => {
       Auth.currentAuthenticatedUser()
-        .then(cognitoUser => {
+        .then((cognitoUser: CognitoUser) => {
           cognitoUser.changePassword(oldPassword, newPassword, (err, result) => {
             if (err) {
               console.log('error');
               console.log(err);
               reject(err);
+              return;
             }
             console.log('success');
             console.log(result);
+            resolve(result);
+          });
+        });
+    });
+  }
+
+  test(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      Auth.currentAuthenticatedUser()
+        .then((currentUser: CognitoUser) => {
+          const attributeList = [];
+          attributeList.push({
+            Name: 'email_verified',
+            Value: 'false',
+          });
+          attributeList.push({
+            Name: 'phone_number_verified',
+            Value: 'false',
+          });
+          currentUser.updateAttributes(attributeList, function(err, result) {
+            if (err) {
+              console.log(err);
+              reject(err);
+              return;
+            }
+            console.log('call result: ' + result);
             resolve(result);
           });
         });
