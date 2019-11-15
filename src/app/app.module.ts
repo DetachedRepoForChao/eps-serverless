@@ -33,6 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CustomMaterialModule } from './core/material.module';
 import { StandardUserComponent } from './user/standard-user/standard-user.component';
 import { AdminUserComponent } from './user/admin-user/admin-user.component';
+import { NotificationCardComponent } from './user/admin-user/notification-card/notification-card.component'
 import { Globals } from './globals';
 import { ManagerUserComponent } from './user/manager-user/manager-user.component';
 import { GiftPointsComponent } from './user/manager-user/gift-points/gift-points.component';
@@ -106,11 +107,9 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 import { EditProfileComponent } from './user/profile/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './user/profile/change-password/change-password.component';
 import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component'
-
 akitaConfig({
   resettable: true
 });
-
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -167,12 +166,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     UsersCardComponent,
     PointItemsCardComponent,
     StoreItemsCardComponent,
+    NotificationCardComponent,
     PointItemPipe,
     TimeAgoPipe,
     EditProfileComponent,
     ChangePasswordComponent,
     PrivacySettingsComponent
-
   ],
   imports: [
     BrowserModule,
