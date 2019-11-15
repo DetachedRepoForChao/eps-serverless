@@ -199,7 +199,7 @@
                 <option class="black">Custom</option>
                 <option class="black">Prefer Not to Say</option>
               </select>
-              <div *ngIf="editUserForm.controls.gender.value === 'Custom'" class="row">
+              <div *ngIf="editUserForm.controls.gender.value === 'Custom'" class="row gender-custom-row">
                 <div class="col-12">
                   <input type="text" class="form-control user-form-control" id="editUser_customGender" placeholder="Gender" formControlName="genderCustom">
                 </div>

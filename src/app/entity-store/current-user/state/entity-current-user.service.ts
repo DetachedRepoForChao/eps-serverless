@@ -271,7 +271,10 @@ export class EntityCurrentUserService {
                   const suffix = currentUser.suffix;
                   const position = currentUser.position;
                   const points = currentUser.points;
-                  const pointsPool = (currentUser.pointPool.pointsRemaining) ? currentUser.pointPool.pointsRemaining : null;
+                  let pointsPool = null;
+                  if (currentUser.pointPool) {
+                    pointsPool = (currentUser.pointPool.pointsRemaining) ? currentUser.pointPool.pointsRemaining : null;
+                  }
                   const email = currentUser.email;
                   const address1 = currentUser.address1;
                   const address2 = currentUser.address2;

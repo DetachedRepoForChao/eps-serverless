@@ -116,7 +116,6 @@ export class EditProfileComponent implements OnInit {
 
     this.loadEditUserForm();
 
-
     this.authService.currentUserInfo()
       .then(userInfo => {
         console.log(userInfo);
@@ -133,44 +132,13 @@ export class EditProfileComponent implements OnInit {
       limitTo: 1
     });
 
+    this.currentUser$.subscribe(() => {
+      this.populateFormData();
+    });
+
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('edit-profile-spinner');
-
-    /*const observables: Observable<any>[] = [];
-    observables.push(
-      this.currentUserService.cacheCurrentUser(),
-      this.userService.cacheUsers(),
-      this.achievementService.cacheAchievements()
-    );
-
-    forkJoin(observables)
-      .subscribe(() => {
-        this.leaderboardUsers$ = this.userQuery.selectAll({
-          filterBy: userEntity => userEntity.securityRole.Id === 1,
-        });
-
-        this.currentUser$ = this.currentUserQuery.selectAll({
-          limitTo: 1
-        });
-
-        this.currentUserService.fillRemainingAttributes().subscribe(() => {
-          this.storeItemService.cacheStoreItems().subscribe(() => {
-            this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
-              this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-                console.log('balance: ' + balance);
-                this.currentUserService.updatePointsBalance(balance);
-              });
-            });
-          });
-
-          this.populateFormData();
-
-          this.isImageLoading = false;
-          this.isCardLoading = false;
-          this.spinner.hide('edit-profile-spinner');
-        });
-      });*/
   }
 
   populateFormData() {
