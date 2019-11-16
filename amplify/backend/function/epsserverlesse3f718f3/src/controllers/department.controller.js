@@ -70,21 +70,24 @@ const getEmployeesByDepartmentId = function (departmentId) {
 
   const data = {
     departmentId: departmentId,
-    securityRoleId: 1 // Role ID that corresponds with the Employee Role
+    //securityRoleId: 1 // Role ID that corresponds with the Employee Role
   };
 
   return sqlUserModel.findAll({
     attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'position', 'securityRoleId', 'points', 'avatarUrl'],
     where: {
       departmentId: data.departmentId,
-      securityRoleId: data.securityRoleId
+      // securityRoleId: data.securityRoleId
     }
   })
     .then( users => {
       if(!users) {
-        return {status: 404, message: 'Did not find any users with that Department Id.' };
+        return [];
+        //return {status: 404, message: 'Did not find any users with that Department Id.' };
       } else {
-        return {status: 200, users: users};
+        return users;
+        // console.log(users)
+        //return {status: 200, users: users};
       }
     })
     .catch(err => {

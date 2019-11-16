@@ -1206,6 +1206,35 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
   });
 });
 
+app.post('/items/setNotificationsToGroup', function (req, res) {
+  console.log('starting get setNotificationsToGroup');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      console.log(tokenResult.claims)
+      const sourceUserId = tokenResult.claims['cognito:username'];
+      console.log("cognito:username:" + sourceUserId)
+
+      const title = req.body.title;
+      const event = req.body.event;
+      // const sourceUserId = req.body.sourceUserId;
+      const description = req.body.description;
+      const GroupId  = req.body.groupid;
+      const status = req.body.status;
+
+      ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, event, sourceUserId,status)
+        .then(data => {
+          res.json({ status: 'get call succeed!', data: data.notifications });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
 app.post('/items/setNotificationSeenTime', function (req, res) {
   console.log('starting get getNotifications');
   const token = req.headers.authorization;
