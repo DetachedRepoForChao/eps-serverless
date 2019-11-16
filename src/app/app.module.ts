@@ -90,7 +90,7 @@ import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import { FreshPipe } from './pipe/fresh.pipe';
 import { ConfirmItemPurchaseComponent } from 'src/app/user/confirm-item-purchase/confirm-item-purchase.component';
-//import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
+
 import { FeedcardFiltersComponent } from './entity-store/feedcard/filter/feedcard-filter.component';
 import { NewPasswordComponent} from './login/new-password/new-password.component';
 import { from } from 'rxjs';
@@ -106,7 +106,8 @@ import { PointItemPipe } from './pipe/point-item.pipe';
 import { TimeAgoPipe } from 'time-ago-pipe';
 import { EditProfileComponent } from './user/profile/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './user/profile/change-password/change-password.component';
-import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component'
+import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component';
+import {GoogleChartsModule} from 'angular-google-charts';
 akitaConfig({
   resettable: true
 });
@@ -160,7 +161,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PhoneMaskDirective,
     FreshPipe,
     ConfirmItemPurchaseComponent,
-    //ChatRoomComponent,
     FeedcardFiltersComponent,
     NewPasswordComponent,
     UsersCardComponent,
@@ -207,7 +207,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AkitaNgRouterStoreModule.forRoot(),
     PerfectScrollbarModule,
     AgGridModule.withComponents([]),
-
+    GoogleChartsModule.forRoot(),
   ],
   providers: [
     {

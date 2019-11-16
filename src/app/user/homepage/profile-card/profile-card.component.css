@@ -11,6 +11,7 @@
   /*margin-bottom: 0;*/
   border: 0;
   min-height: 600px;
+  max-height: 600px;
   /*margin-top: 80px;*/
 }
 
@@ -91,11 +92,15 @@ div.card {
   white-space: pre-line !important;
 }
 
-.loadingstyle{
+.loadingstyle {
   font-size: 20px;
   color: white;
 }
 
-.red{
+.red {
   color: red;
+}
+
+.chart-row {
+  margin-top: -25px;
 }

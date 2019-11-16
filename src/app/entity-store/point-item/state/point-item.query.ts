@@ -36,9 +36,5 @@ export class PointItemQuery extends QueryEntity<PointItemState, PointItemModel> 
     }
   }
 
-  // public getUser(username: string): EntityUserAvatarModel {
-/*  public getCurrentUser() {
-    const currentUserAvatar = this.getAll();
-    return currentUserAvatar;
-  }*/
+
 }

@@ -2,17 +2,25 @@
   <div class="card card-coin card-plain card-custom">
 
 
-    <div class="card-header">
+    <div class="card-header progress-card-header">
       <div class="img-center img-fluid">
         <div class="positionrelative">
-          <div class="c100 p74 big">
+          <div class="row chart-row" >
+            <google-chart #chart
+              [type]="'PieChart'"
+              [data]="coreValueData$ | async"
+              [columnNames]="myColumnNames"
+              [options]="options">
+            </google-chart>
+          </div>
+<!--          <div class="c100 p74 big">
             <span class="font-family-Avenir font-size-super">74%</span>
             <div class="slice">
               <div class="bar"></div>
               <div class="fill"></div>
             </div>
             <p class="complete-text font-family-primary font-weight-regular"></p>
-          </div>
+          </div>-->
         </div>
       </div>
       <!--       <div class="col-md-4 col-md-offset-4">-->
@@ -24,7 +32,6 @@
       <div class="row">
         <div class="col-md-12 text-center">
           <h4 class="text-uppercase">Progress</h4>
-          <span>You need to complete these bars to get a star</span>
           <hr class="line-info">
         </div>
       </div>

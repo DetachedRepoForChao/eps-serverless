@@ -8,7 +8,7 @@ export type FeedcardModel={
   description:string;
 }
 
-export function CreateFeedcardModel({ feedcardId, createAt, createUser, description }: Partial<FeedcardModel>) {
+export function createFeedcardModel({ feedcardId, createAt, createUser, description }: Partial<FeedcardModel>) {
 
   return {
     id: guid(),
