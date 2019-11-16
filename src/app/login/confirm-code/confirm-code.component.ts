@@ -62,9 +62,4 @@ export class ConfirmCodeComponent implements OnInit {
         this._notification.show(error.message);
       });
   }
-
-
-
-
-
 }

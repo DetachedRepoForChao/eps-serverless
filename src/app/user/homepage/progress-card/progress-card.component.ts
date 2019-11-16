@@ -49,7 +49,11 @@ export class ProgressCardComponent implements OnInit {
 
     },
     tooltip: {
-      text: 'value'
+      text: 'value',
+      textStyle: {
+        fontSize: 16,
+        fontName: 'Poppins'
+      }
     }
   };
 

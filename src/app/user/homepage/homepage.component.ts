@@ -1,5 +1,4 @@
 import {Component, EventEmitter, HostListener, OnInit} from '@angular/core';
-import {SocketService} from '../../shared/socket.service';
 import {NotifierService} from 'angular-notifier';
 import {Globals} from '../../globals';
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
@@ -50,7 +49,6 @@ export class HomepageComponent implements OnInit {
   }
 
   constructor(
-    private socketService: SocketService,
     private notifierService: NotifierService,
     public globals: Globals,
     private metricsService: MetricsService,

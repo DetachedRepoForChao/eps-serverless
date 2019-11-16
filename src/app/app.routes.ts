@@ -141,7 +141,7 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path:'report',
-    component:ReportComponent,
+    path: 'report',
+    component: ReportComponent,
   }
 ];

@@ -7,7 +7,6 @@ import { Department } from './department.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material';
 import {forkJoin, Observable} from 'rxjs';
-import {GlobalVariableService} from './global-variable.service';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
@@ -60,7 +59,6 @@ export class LeaderboardService {
   public currentUserLeaderboardRecord;
 
   constructor(private http: HttpClient,
-              private globalVariableService: GlobalVariableService,
               private departmentService: DepartmentService,
               private authService: AuthService,
               private avatarService: AvatarService,

@@ -4,7 +4,6 @@ import { SecurityRole } from './securityrole.model';
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
 import {Department} from './department.model';
-import {GlobalVariableService} from './global-variable.service';
 import {forEach} from '@angular/router/src/utils/collection';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
@@ -30,7 +29,6 @@ export class DepartmentService {
   // private departmentList;
 
   constructor(private http: HttpClient,
-              private globalVariableService: GlobalVariableService,
               private authService: AuthService,
               private globals: Globals) {
   }

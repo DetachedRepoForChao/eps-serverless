@@ -85,10 +85,4 @@ export class ForgotPasswordComponent implements OnInit {
     this.codeSent = true;
   }
 
-
-
-  notify(type: string) {
-    this.notifierService.notify(type, 'Test');
-  }
-
 }

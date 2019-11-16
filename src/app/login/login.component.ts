@@ -18,9 +18,7 @@ declare var event: any;
 })
 export class LoginComponent implements OnInit {
 
-  constructor(// private socketService: SocketService,
-              private avatarService: AvatarService,
-              private router: Router) { }
+  constructor() { }
 
   ngOnInit() {
     const squares1 = document.getElementById('square1');
@@ -56,33 +54,5 @@ export class LoginComponent implements OnInit {
 
       });
     }
-  }
-
-  onSocketTestClick1() {
-    // this.socketService.socketTest1();
-    this.avatarService.getAvatars()
-      .subscribe(result => {
-        console.log(result);
-    });
-  }
-
-  onSocketTestClick2() {
-    // this.socketService.socketTest2();
-    // debugger;
-    // console.log(this.socketService.socket);
-  }
-
-  onSignUpClick() {
-    // this.socketService.socketTest2();
-    // debugger;
-    this.router.navigateByUrl('signup');
-  }
-
-  onConfirmClick() {
-    // this.socketService.socketTest2();
-    // debugger;
-    // environment.confirm.email = '';
-    // environment.confirm.password = '';
-    this.router.navigateByUrl('confirm');
   }
 }
