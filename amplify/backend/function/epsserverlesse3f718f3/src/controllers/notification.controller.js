@@ -7,6 +7,8 @@ const sqlUserAchievementProgressModel = Models.UserAchievementProgress;
 const ctrlAchievement = require('./achievement.controller');
 const sqlNotification = Models.Notification;
 const AWS = require('aws-sdk');
+const ctrlDepartment = require('./department.controller');
+
 
 const componentName = 'notification.controller';
 /**
@@ -51,10 +53,11 @@ module.exports.getNotifications = getNotifications;
  * Only Manager can send noticiations
  *
  */
-const setNotificationsToPerson = function (targetUserId, title, event, description, event, sourceUserId){
+const setNotificationsToPerson = function (targetUserId, title, event, description, event, sourceUserId,status){
       const functionName = 'setNotificationsToPerson';
       const functionFullName = `${componentName} ${functionName}`;
       console.log(`Start ${functionFullName}`);
+  console.log('statusstatus--------------------------------------------------'+sourceUserId);
       return sqlNotification.create({
             targetUserId: targetUserId,
             title:title,
@@ -62,6 +65,7 @@ const setNotificationsToPerson = function (targetUserId, title, event, descripti
             audience:'Group',
             event:event,
             timeSeen:null,
+            status:1,
             sourceUserId: sourceUserId,
       }).then((notifications)=>{
           console.log(`${functionFullName}: notification created in the db`);
@@ -78,26 +82,26 @@ exports.setNotificationsToPerson = setNotificationsToPerson;
 
 
 
-const setNotificationsToGroup = function (group, title, event, description, event, sourceUserId) {
-  const functionName = 'setNotificationsToPerson';
+const setNotificationsToGroup = function (groupID, title, event, description, event, sourceUserId,status) {
+  const functionName = 'setNotificationsToGroup';
   const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-  return sqlNotification.create({
-    targetUserId: targetUserId,
-    title: title,
-    description: description,
-    audience: 'Group',
-    event: event,
-    timeSeen: null,
-    sourceUserId: sourceUserId,
-  }).then((notifications) => {
-    console.log(`${functionFullName}: notification created in the db`);
-    return { status: true, message: 'notification created', noticiations: notifications }
-  }).catch(err => {
-    console.log(`${functionFullName}: Problem with the database`);
-    console.log(err);
-    return { status: false, error: 'Problem with the database: ' + err };
-  })
+
+  // get the userList by department ID
+
+    ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList =>{
+      for (let user of userList) {
+            setNotificationsToPerson(user.id, title, event, description, event, sourceUserId, status);
+       }
+      return { status: 200, message: 'success' };
+    }).catch(err => {
+      console.log('Database error');
+      console.log(err);
+      return { status: 500, message: err };
+    });
+  // console.log(`Start ${functionFullName}`);
+  // for (let user of UserList.users){
+  //   setNotificationsToPerson(user.id, title, event, description, event, sourceUserId, status);
+  // }
 }
 
 module.exports.setNotificationsToGroup = setNotificationsToGroup;
