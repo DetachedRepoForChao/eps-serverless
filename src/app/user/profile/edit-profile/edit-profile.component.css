@@ -1,0 +1,164 @@
+#avatar {
+  margin-right: 25px;
+  margin-left: 25px;
+}
+
+.card-coin {
+  border: 0;
+  min-height: 600px;
+}
+
+div.card.card-coin.card-plain.card-custom {
+  background-color: #674ba580;
+}
+
+div.card {
+  background-color: rgba(167,53,43,0)
+}
+
+@media (max-width: 575.98px) {
+  /*  .section-coins {
+      margin-top: 100px !important;
+    }*/
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  /*  .section-coins {
+      margin-top: 100px !important;
+    }*/
+
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  /*  .section-coins {
+      margin-top: 100px;
+    }*/
+  .card.card-coin {
+    /*margin-top: 0px;*/
+    margin-bottom: 0px;
+  }
+}
+
+.user-form-container {
+  margin-top: 30px;
+  margin-right: 20px;
+}
+
+.form-label {
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+.form-row {
+  padding: 5px;
+}
+
+.points-tooltip {
+  white-space: pre-line !important;
+}
+
+ul.nobullets {
+  font-size: 20px;
+  font-weight: 200;
+  padding: 0px;
+  list-style-type: none;
+}
+
+li {
+  padding-top: 10px;
+  padding-left: 20px;
+}
+
+li:hover {
+  background-color: rgba(0, 0, 0, 0.11);
+}
+
+.confirm-col {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.confirmed {
+  color: #00f2c3;
+}
+
+.unconfirmed {
+  color: #e418c4;
+}
+
+.modal-form-label {
+  color: black !important;
+}
+
+.modal-form-control {
+  color: black;
+}
+
+.modal-form-label2 {
+  color: black;
+  margin-top: auto;
+  font-size: 16px;
+}
+
+.modal-validation-message {
+  color: black;
+}
+
+.wrapperwidth{
+  max-width: 935px;
+}
+
+.loadingstyle{
+  font-size: 20px;
+  color: white;
+}
+
+.textl{
+  text-align: left;
+}
+
+.aligncentercontent{
+  align-content: center;
+}
+
+.margintop{
+  margin-top: 30px;
+}
+
+.zeropadding{
+  padding: 0px;
+}
+
+.avatarstyle{
+  margin-top: 30px;
+  font-size: 16px;
+}
+.red{
+  color: red;
+}
+
+.black{
+  color: black;
+}
+
+.gender-custom-row {
+  padding-top: 10px;
+}

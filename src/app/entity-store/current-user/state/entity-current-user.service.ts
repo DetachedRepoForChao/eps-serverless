@@ -16,13 +16,14 @@ import {Department} from '../../../shared/department.model';
 import {SecurityRole} from '../../../shared/securityrole.model';
 import {UserHasStoreItemQuery} from '../../user-has-store-item/state/user-has-store-item.query';
 import {StoreItemQuery} from '../../store-item/state/store-item.query';
+import {CognitoUser, CognitoUserAttribute, ICognitoUserAttributeData} from 'amazon-cognito-identity-js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EntityCurrentUserService {
 
-  componentName = 'entity-user.service';
+  componentName = 'entity-current-user.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
   myInit = {
@@ -54,9 +55,31 @@ export class EntityCurrentUserService {
     this.currentUserStore.add(userAvatar);
   }*/
 
+  update(user) {
+    const functionName = 'update';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(user);
+
+    const userUpdate = {};
+    const keys = Object.keys(user);
+
+    for (let i = 0; i < keys.length; i++) {
+      if ((keys[i] === 'phone') && (user[keys[i]].includes('+1'))) {
+        userUpdate[keys[i]] = user[keys[i]].substring(2);
+      } else {
+        userUpdate[keys[i]] = user[keys[i]];
+      }
+    }
+
+    console.log(userUpdate);
+
+    this.currentUserStore.update((e) => e.username === user.username, userUpdate);
+  }
 
   delete(id: ID) {
-    console.log(`entity-user-avatar.service: delete ${id}`);
+    console.log(`entity-user.service: delete ${id}`);
     this.currentUserStore.remove(id);
   }
 
@@ -112,31 +135,48 @@ export class EntityCurrentUserService {
   }
 
   cacheCurrentUser() {
-    console.log(`Retrieving current user avatar`);
+    console.log(`Retrieving current user`);
     // this.userStore.setLoading(true);  // this is the initial state before doing anything
     const request$ = this.getCurrentUser()
       .pipe(tap((userDataResult: any) => {
         console.log(`caching:`);
         console.log(userDataResult);
 
+        const userId = userDataResult.userId;
         const username = userDataResult.username;
         const firstName = userDataResult.firstName;
+        const middleName = userDataResult.middleName;
         const lastName = userDataResult.lastName;
-        const email = userDataResult.email;
-        const birthdate = userDataResult.birthdate;
-        const department = userDataResult.department;
-        const securityRole = userDataResult.securityRole;
-        const phone = userDataResult.phone;
-        const avatarPath = userDataResult.userPicture;
+        const preferredName = userDataResult.preferredName;
+        const prefix = userDataResult.prefix;
+        const suffix = userDataResult.suffix;
+        const position = userDataResult.position;
         const points = +userDataResult.points;
         const pointsPool = +userDataResult.pointsPool;
+        const email = userDataResult.email;
+        const address1 = userDataResult.address1;
+        const address2 = userDataResult.address2;
+        const city = userDataResult.city;
+        const state = userDataResult.state;
+        const country = userDataResult.country;
+        const zip = userDataResult.zip;
+        const birthdate = userDataResult.birthdate;
+        const preferredPronoun = userDataResult.preferredPronoun;
+        const sex = userDataResult.sex;
+        const gender = userDataResult.gender;
+        const dateOfHire = userDataResult.dateOfHire;
+        const department = userDataResult.department;
+        const securityRole = userDataResult.securityRole;
+        const phone = userDataResult.phone.substring(2);
+        const avatarPath = userDataResult.avatarPath;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
             const avatarBase64String = '';
             const avatarResolvedUrl = result.avatarResolvedUrl;
-            const currentUser = createEntityCurrentUserModel({username, firstName, lastName, email, birthdate, avatarBase64String,
-              avatarPath, avatarResolvedUrl, department, securityRole, phone, points, pointsPool});
+            const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, prefix,
+              suffix, position, points, pointsPool, email, address1, address2, city, state, country, zip, birthdate, preferredPronoun, sex,
+              gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -201,103 +241,84 @@ export class EntityCurrentUserService {
             .then(userAttributes => {
               console.log('userAttributes:');
               console.log(userAttributes);
-              const username = userAttributes['username'];
-              const firstName = userAttributes.attributes['given_name'];
-              const lastName = userAttributes.attributes['family_name'];
-              const email = userAttributes.attributes['email'];
-              const birthdate = userAttributes.attributes['birthdate'];
-              const department: Department = {
-                Id: +userAttributes.attributes['custom:department_id'], // Need the '+' to cast string to number
-                Name: userAttributes.attributes['custom:department'],
-              };
-              const securityRole: SecurityRole = {
-                Id: +userAttributes.attributes['custom:security_role_id'], // Need the '+' to cast string to number
-                Name: userAttributes.attributes['custom:security_role'],
-                Description: null
-              };
-              const phone = userAttributes.attributes['phone_number'];
-              const userPicture = userAttributes.attributes['picture'];
 
-              const data = {
-                username: username,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                birthdate: birthdate,
-                department: department,
-                securityRole: securityRole,
-                phone: phone,
-                points: 0,
-                pointsPool: 0,
-                userPicture: ''
-              };
+              this.getCurrentUserFromDb()
+                .subscribe(currentUser => {
+                  const userId = currentUser.id;
+                  const username = currentUser.username;
+                  const firstName = currentUser.firstName;
+                  const lastName = currentUser.lastName;
+                  const middleName = currentUser.middleName;
+                  const preferredName = currentUser.preferredName;
+                  const prefix = currentUser.prefix;
+                  const suffix = currentUser.suffix;
+                  const position = currentUser.position;
+                  const points = currentUser.points;
+                  let pointsPool = null;
+                  if (currentUser.pointPool) {
+                    pointsPool = (currentUser.pointPool.pointsRemaining) ? currentUser.pointPool.pointsRemaining : null;
+                  }
+                  const email = currentUser.email;
+                  const address1 = currentUser.address1;
+                  const address2 = currentUser.address2;
+                  const city = currentUser.city;
+                  const state = currentUser.state;
+                  const country = currentUser.country;
+                  const zip = currentUser.zip;
+                  const dateOfBirth = currentUser.dateOfBirth;
+                  const preferredPronoun = currentUser.preferredPronoun;
+                  const sex = currentUser.sex;
+                  const gender = currentUser.gender;
+                  const dateOfHire = currentUser.dateOfHire;
+                  const phone = currentUser.phone;
+                  const department: Department = {
+                    Id: currentUser.departmentId,
+                    Name: currentUser.department.name,
+                  };
+                  const securityRole: SecurityRole = {
+                    Id: currentUser.securityRoleId,
+                    Name: currentUser.securityRole.name,
+                    Description: currentUser.securityRole.description
+                  };
+                  const avatarUrl = currentUser.avatarUrl;
 
-              console.log('userData:');
-              console.log(data);
+                  const data = {
+                    userId: userId,
+                    username: username,
+                    firstName: firstName,
+                    middleName: middleName,
+                    lastName: lastName,
+                    preferredName: preferredName,
+                    prefix: prefix,
+                    suffix: suffix,
+                    position: position,
+                    points: points,
+                    pointsPool: pointsPool,
+                    email: email,
+                    address1: address1,
+                    address2: address2,
+                    city: city,
+                    state: state,
+                    country: country,
+                    zip: zip,
+                    birthdate: dateOfBirth,
+                    preferredPronoun: preferredPronoun,
+                    sex: sex,
+                    gender: gender,
+                    dateOfHire: dateOfHire,
+                    phone: phone,
+                    department: department,
+                    securityRole: securityRole,
+                    avatarPath: avatarUrl,
+                  };
 
-              if (securityRole.Id === 1) {
-                this.getCurrentUserPoints()
-                  .subscribe(pointsResult => {
-                    data.points = pointsResult;
+                  console.log('userData:');
+                  console.log(data);
 
-                    // console.log('userData:');
-                    // console.log(data);
-                    if (userPicture) {
-                      console.log(`${functionFullName}: user picture: ${userPicture}`);
+                  observer.next(data);
+                  observer.complete();
+                });
 
-                      data.userPicture = userPicture;
-
-                      observer.next(data);
-                      observer.complete();
-                    } else {
-                      console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                      const token = user.signInUserSession.idToken.jwtToken;
-                      const myInit = this.myInit;
-                      myInit.headers['Authorization'] = token;
-
-                      API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
-                        console.log(`${functionFullName}: successfully retrieved data from API`);
-                        console.log(currentUserResult);
-
-                        data.userPicture = currentUserResult.data.avatarUrl;
-
-                        observer.next(data);
-                        observer.complete();
-                      });
-                    }
-                  });
-              } else if (securityRole.Id === 2) {
-                this.getCurrentUserPointsPool()
-                  .subscribe(pointsPoolResult => {
-                    data.pointsPool = pointsPoolResult;
-
-                    // console.log('userData:');
-                    // console.log(data);
-                    if (userPicture) {
-                      console.log(`${functionFullName}: user picture: ${userPicture}`);
-
-                      data.userPicture = userPicture;
-
-                      observer.next(data);
-                      observer.complete();
-                    } else {
-                      console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                      const token = user.signInUserSession.idToken.jwtToken;
-                      const myInit = this.myInit;
-                      myInit.headers['Authorization'] = token;
-
-                      API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(currentUserResult => {
-                        console.log(`${functionFullName}: successfully retrieved data from API`);
-                        console.log(currentUserResult);
-
-                        data.userPicture = currentUserResult.data.avatarUrl;
-
-                        observer.next(data);
-                        observer.complete();
-                      });
-                    }
-                  });
-              }
             });
         });
     });
@@ -417,27 +438,139 @@ export class EntityCurrentUserService {
     });
   }
 
-  showStore() {
-    console.log(this.currentUserStore);
+  modifyUser(user): Observable<any> {
+    const functionName = 'modifyUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          this.updateCognitoAttributes(user)
+            .subscribe(updateResult => {
+              console.log(updateResult);
+
+              if (updateResult === 'SUCCESS') {
+                const token = currentUser.signInUserSession.idToken.jwtToken;
+                const myInit = this.myInit;
+                myInit.headers['Authorization'] = token;
+
+                myInit['body'] = {
+                  user: user
+                };
+
+                API.post(this.apiName, this.apiPath + '/modifyUser', myInit)
+                  .then(data => {
+                    console.log(`${functionFullName}: data retrieved from API`);
+                    console.log(data);
+
+                    if (data.data.status !== false) {
+                      // Update the user in the local Akita store
+                      this.update(user);
+
+                      observer.next(data.data);
+                      observer.complete();
+                    } else {
+                      observer.next(data.data);
+                      observer.complete();
+                    }
+                  })
+                  .catch(err => {
+                    console.log(`${functionFullName}: error making API call`);
+                    console.log(err);
+                    observer.next(err);
+                    observer.complete();
+                  });
+              }
+
+              observer.next(updateResult);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
   }
 
-/*  getPendingBalance(): Observable<any> {
+  updateCognitoAttributes(user): Observable<any> {
+    const functionName = 'updateCognitoAttributes';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
     return new Observable<any>(observer => {
-      const pending$ = this.userHasStoreItemQuery.selectPending();
-      pending$.subscribe(pendingRecords => {
-        let sum = 0;
+      this.authService.currentAuthenticatedUser()
+        .then((currentUser: CognitoUser) => {
+          const attributeList = [];
+          const keys = Object.keys(user);
 
-        for (let i = 0; i < pendingRecords.length; i++) {
-          const storeItem = this.storeItemQuery.getAll({
-            filterBy: entity => entity.itemId === pendingRecords[i].storeItemId
-          })[0];
+          for (let i = 0; i < keys.length; i++) {
+            switch (keys[i]) {
+              case 'birthdate': {
+                attributeList.push({
+                  Name: 'birthdate',
+                  Value: user.birthdate,
+                });
+                break;
+              }
+              case 'preferredName': {
+                attributeList.push({
+                  Name: 'name',
+                  Value: user.preferredName,
+                });
+                break;
+              }
+              case 'email': {
+                attributeList.push({
+                  Name: 'email',
+                  Value: user.email,
+                });
+                break;
+              }
+              case 'phone': {
+                attributeList.push({
+                  Name: 'phone_number',
+                  Value: user.phone,
+                });
+                break;
+              }
+              case 'gender': {
+                attributeList.push({
+                  Name: 'gender',
+                  Value: user.gender,
+                });
+                break;
+              }
+            }
+          }
 
-          sum += storeItem.cost;
-        }
+          // const attributeObj = new CognitoUserAttribute(attribute);
+          // attributeList.push(attributeObj);
+          console.log('attributeList:');
+          console.log(attributeList);
 
-        observer.next(sum);
-        observer.complete();
-      });
+          currentUser.updateAttributes(attributeList, function(err, result) {
+            if (err) {
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+              return;
+            }
+            console.log('call result: ' + result);
+            observer.next(result);
+            observer.complete();
+          });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
     });
-  }*/
+  }
+
 }

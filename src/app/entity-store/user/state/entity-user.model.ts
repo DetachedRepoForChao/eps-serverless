@@ -39,7 +39,7 @@ export type EntityUserModel = {
 
 };
 
-export function createEntityUserAvatarModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, position,
+export function createEntityUserModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, position,
                                               points, birthdate, preferredPronoun, sex, gender, securityRole, department, email, phone,
                                               avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, active,
                                               address1, address2, city, state, country, zip, dateOfHire,

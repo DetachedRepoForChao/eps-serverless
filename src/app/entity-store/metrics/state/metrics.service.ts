@@ -11,7 +11,7 @@ import {tap} from 'rxjs/operators';
 import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
-import {createEntityUserAvatarModel, EntityUserModel} from '../../user/state/entity-user.model';
+import {createEntityUserModel, EntityUserModel} from '../../user/state/entity-user.model';
 import {store} from '@angular/core/src/render3';
 import {EntityCurrentUserQuery} from '../../current-user/state/entity-current-user.query';
 import {TimerObservable} from 'rxjs-compat/observable/TimerObservable';
@@ -133,7 +133,8 @@ export class MetricsService {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const request$ = this.currentUserQuery.getCurrentUser()
+
+    const request$ = this.currentUserQuery.selectCurrentUser()
       .pipe(tap((currentUser: any) => {
         console.log(`${functionFullName}: caching:`);
         console.log(currentUser[0]);

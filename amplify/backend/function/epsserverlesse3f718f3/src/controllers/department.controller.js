@@ -3,6 +3,8 @@ const Models = SqlModel().Models;
 const sqlDepartmentModel = Models.Department;
 const sqlUserModel = Models.User;
 
+const componentName = 'department.controller';
+
 const getDepartments = function () {
   console.log('start function getDepartments');
   try {
@@ -98,6 +100,85 @@ const getEmployeesByDepartmentId = function (departmentId) {
 };
 
 module.exports.getEmployeesByDepartmentId = getEmployeesByDepartmentId;
+
+// addDepartment
+const addDepartment = function (department) {
+  const functionName = 'addDepartment';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: department:`);
+  console.log(department);
+
+  const name = department.departmentName;
+
+
+  return sqlDepartmentModel.findOne({
+    where: {
+      name: name
+    },
+  })
+    .then(departmentQueryResult => {
+      if (departmentQueryResult !== null) {
+        console.log(`${functionFullName}: departmentname already taken`);
+        return {status: false, error: 'departmentname already taken'};
+      } else {
+        console.log(`${functionFullName}: department does not yet exist. Creating...`);
+
+        return sqlDepartmentModel.create({
+          name: name,
+        })
+          .then(newDepartment => {
+            console.log(`${functionFullName}: department created in db`);
+            return {status: true, message: 'department created', newDepartment: newDepartment};
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: Department creation error`);
+            console.log(err);
+            return {status: false, message: err}
+          });
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Problem with the database`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.addDepartment = addDepartment;
+
+// delete apartments
+const deleteDepartment = function (department) {
+  const functionName = 'deleteDepartment';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: Deleting department:`);
+  console.log(department);
+
+  return sqlDepartmentModel.destroy({
+    where: {
+      id: department.departmentName.Id,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Successfully deleted department`);
+      return {status: true, department: department};
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      if (err.original.sqlState === '45000') {
+        console.log(`Error Message: ${err.original.sqlMessage}`);
+        return {status: false, message: err.original.sqlMessage};
+      } else {
+        return {status: false, message: err};
+      }
+    });
+};
+
+module.exports.deleteDepartment = deleteDepartment;
 
 /*
 module.exports.getDepartmentById = (req, res, next) =>{

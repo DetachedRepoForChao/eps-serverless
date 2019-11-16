@@ -3,8 +3,8 @@
     <div class="card-header">
 
 <!--      <div *ngIf="(this.currentUserQuery.selectLoading() | async) === false; else avatarLoading">-->
-      <div *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarLoading">
-        <img [src]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"
+      <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
+        <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
              alt="Avatar"
              class="img-center img-fluid rounded-circle"
              id="avatar"
@@ -28,14 +28,19 @@
         color="#fff"
         type="pacman"
       >
-        <p style="font-size: 20px; color: white">Loading...</p>
+        <p class="loadingstyle">Loading...</p>
       </ngx-spinner>
 
       <div class="row">
         <div class="col-md-12 text-center">
 <!--          <h4 class="text-uppercase">{{globals.getUserAttribute('given_name')}} {{globals.getUserAttribute('family_name')}}</h4>
           <span>{{globals.getUserAttribute('custom:department')}}</span>-->
-          <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+          <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
+            <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.preferredName}}</h4>
+          </div>
+          <ng-template #noPreferredName>
+            <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+          </ng-template>
           <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
           <hr class="line-success">
         </div>
@@ -60,7 +65,7 @@
             {{(currentUser$ | async)[0]?.points}}
           </h4>
           <ng-template #pointsWithBalance class="mb-0">
-            <h4 style="color: red" *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance">
+            <h4 class="red" *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance">
               {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
             </h4>
           </ng-template>
@@ -76,7 +81,7 @@
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
           <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
-            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.getUser(globals.getUsername()) | async)[0]) + 1}}
+            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.selectUser(globals.getUsername()) | async)[0]) + 1}}
           </h4>
         </div>
       </div>
@@ -149,7 +154,7 @@
         color="#fff"
         type="pacman"
       >
-        <p style="font-size: 20px; color: white">Loading...</p>
+        <p class="loadingstyle">Loading...</p>
       </ngx-spinner>
     </div>
   </ng-template>
@@ -185,8 +190,8 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUserAvatar()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUserAvatar()[0]?.avatarResolvedUrl"></app-avatar>
+      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
+        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"></app-avatar>
       </div>
       <ng-template #avatarModalLoading>
 

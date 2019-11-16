@@ -54,7 +54,7 @@
             <div class="mr-2">
               <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
                 <img class="rounded-circle" width="45"
-                  [src]="(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0]?.avatarResolvedUrl"
+                  [src]="(entityUserQuery.selectUser(pointTransaction.targetUserName) | async)[0]?.avatarResolvedUrl"
                   alt="">
                 <!--                {{(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0].avatarResolvedUrl}}-->
               </div>
@@ -135,7 +135,7 @@
             <span class="row heights">
                 <div class="col-lg-3 col-md-3 col-sm-4 col-4">
             <!---- FACEBOOK SHARE------->
-            <script>
+<!--            <script>
               window.fbAsyncInit = function () {
                 FB.init({
                   appId: 'your-app-id',
@@ -145,12 +145,12 @@
                 });
               };
 
-            </script>
-            <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+            </script>-->
+<!--            <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>-->
 
             <div id="fb-root"></div>
-            <script async defer crossorigin="anonymous"
-              src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0"></script>
+<!--            <script async defer crossorigin="anonymous"
+              src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0"></script>-->
 
             <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
               data-layout="button_count" data-size="small"><a target="_blank"
@@ -159,12 +159,13 @@
               </div>
               <div class="col-lg-3 col-md-3 col-sm-4 col-4">
            <!--TWITTER-->
-           <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+           <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a>
+<!--                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>-->
           </div>
           </span>
-          
+
           </div>
-        
+
           <!--          <div class="col-4">
 
           </div>-->
@@ -232,7 +233,7 @@
   <div class="card-body">
     <ngx-spinner name="feed-card-spinner" [fullScreen]="false" bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff"
       type="pacman">
-      <p style="font-size: 20px; color: white">Loading...</p>
+      <p class="loadingstyle">Loading...</p>
     </ngx-spinner>
   </div>
 </ng-template>

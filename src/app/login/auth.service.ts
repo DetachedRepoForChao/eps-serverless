@@ -118,7 +118,7 @@ export class AuthService {
             console.log('success');
           },
           onFailure: (err) => {
-            alert(err);
+            console.log(err);
           },
           inputVerificationCode: () => {
             console.log('verifying email');
@@ -135,5 +135,51 @@ export class AuthService {
           }
         });
       });
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Promise<any> {
+    console.log('change password');
+    return new Promise<any>((resolve, reject) => {
+      Auth.currentAuthenticatedUser()
+        .then((cognitoUser: CognitoUser) => {
+          cognitoUser.changePassword(oldPassword, newPassword, (err, result) => {
+            if (err) {
+              console.log('error');
+              console.log(err);
+              reject(err);
+              return;
+            }
+            console.log('success');
+            console.log(result);
+            resolve(result);
+          });
+        });
+    });
+  }
+
+  test(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      Auth.currentAuthenticatedUser()
+        .then((currentUser: CognitoUser) => {
+          const attributeList = [];
+          attributeList.push({
+            Name: 'email_verified',
+            Value: 'false',
+          });
+          attributeList.push({
+            Name: 'phone_number_verified',
+            Value: 'false',
+          });
+          currentUser.updateAttributes(attributeList, function(err, result) {
+            if (err) {
+              console.log(err);
+              reject(err);
+              return;
+            }
+            console.log('call result: ' + result);
+            resolve(result);
+          });
+        });
+    });
   }
 }

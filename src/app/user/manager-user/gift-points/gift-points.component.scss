@@ -103,3 +103,35 @@ input{
   }
 
   //Toggle buttons
+  .textr {
+    text-align: right;
+  }
+
+  .textc {
+    text-align: center;
+  }
+
+  .loading {
+    font-size: 20px;
+    color: white;
+  }
+
+  .selection{
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .search{
+    padding-top: 35px;
+    text-align: left;
+  }
+
+  .togstyle {
+    max-width: 180px;
+    overflow: hidden;
+  }
+
+  .heighted {
+    height: 100px;
+  }

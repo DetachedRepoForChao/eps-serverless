@@ -37,7 +37,7 @@
         </div>
 
         <!------- Search form -------->
-        <div class="row" style="height: 100px">
+        <div class="row heighted">
           <div *ngIf="!toggled; else search1" class="col-md-3">
           </div>
           <div *ngIf="!toggled; else search2" class="col-md-6 fluid">
@@ -67,7 +67,7 @@
             </div>
           </ng-template>
 
-          <div class="col-md-3" style="padding-top: 35px; text-align: left">
+          <div class="col-md-3 search">
             <!-----Toggle button for multi-users-->
             <mat-slide-toggle class="test" [color]="color"
                               [checked]="toggled"
@@ -96,11 +96,11 @@
                              title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
 
                       </span>
-                          <div class="row" style="max-width: 180px; overflow: hidden">
+                          <div class="row togstyle">
                             <div class="col-2">
                               <mat-checkbox *ngIf="toggled" [color]="'warn'"></mat-checkbox>
                             </div>
-                            <div class="col-10" style="text-align: right">
+                            <div class="col-10 textr">
                               <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
                             </div>
                           </div>
@@ -118,10 +118,10 @@
 
                 <div class="col-md-4 text-center">
                   <div *ngIf="!showFlag; else buttonViewLess">
-                    <button class="btn btn-success" style="text-align: center" (click)="showMore()">View More</button>
+                    <button class="btn btn-success textc"  (click)="showMore()">View More</button>
                   </div>
                   <ng-template #buttonViewLess>
-                    <button class="btn btn-success" style="text-align: center" (click)="showLess()">View Less</button>
+                    <button class="btn btn-success textc"  (click)="showLess()">View Less</button>
                   </ng-template>
                 </div>
 
@@ -166,7 +166,7 @@
                 <div class="col-md-4">
                   <div class="container text-center">
                     <form #giftPointsForm="ngForm" class="form text-left">
-                      <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden">
+                      <div class="selection">
                         <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async | pointItem:term2)">
                           <label class="form-check-label"
                                  [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
@@ -193,12 +193,12 @@
                              title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
 
                       </span>
-                          <div class="row" style="max-width: 180px; overflow: hidden">
+                          <div class="row togstyle">
                             <div class="col-2">
                               <mat-checkbox *ngIf="toggled" [color]="'warn'" (click)="$event.stopPropagation()"
                                             (change)="$event ? selection.toggle(user) : null" [checked]="selection.isSelected(user)"></mat-checkbox>
                             </div>
-                            <div class="col-10" style="text-align: right">
+                            <div class="col-10 textr">
                               <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
                             </div>
                           </div>
@@ -216,10 +216,10 @@
 
                 <div class="col-md-4 text-center">
                   <div *ngIf="!showFlag; else buttonViewLess">
-                    <button class="btn btn-success" style="text-align: center" (click)="showMore()">View More</button>
+                    <button class="btn btn-success textc" (click)="showMore()">View More</button>
                   </div>
                   <ng-template #buttonViewLess>
-                    <button class="btn btn-success" style="text-align: center" (click)="showLess()">View Less</button>
+                    <button class="btn btn-success textc" (click)="showLess()">View Less</button>
                   </ng-template>
                 </div>
 
@@ -236,7 +236,7 @@
         <div class="card-body">
           <ngx-spinner name="gift-points-spinner" [fullScreen]="false" bdColor="rgba(51,51,51,0.8)" size="medium"
                        color="#fff" type="pacman">
-            <p style="font-size: 20px; color: white">Loading...</p>
+            <p class="loading">Loading...</p>
           </ngx-spinner>
         </div>
       </ng-template>
@@ -339,7 +339,7 @@
                 </form>-->
                 <div *ngIf="!toggled" class="container text-center">
                   <form #giftPointsForm="ngForm" class="form text-left">
-                    <div style="max-height: 400px; overflow-y: auto; overflow-x: hidden">
+                    <div class="selection">
                       <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItemList$ | async)">
                         <label class="form-check-label"
                                [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">

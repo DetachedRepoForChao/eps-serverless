@@ -18,7 +18,10 @@ const awsmobile = {
     "aws_content_delivery_bucket_region": "us-east-1",
     "aws_content_delivery_url": "https://d1dwxwawmw0ih7.cloudfront.net",
     "aws_user_files_s3_bucket": "eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev",
-    "aws_user_files_s3_bucket_region": "us-east-1"
+    "aws_user_files_s3_bucket_region": "us-east-1",
+    "recorder": {
+        "enable": false
+    }
 };
 
 

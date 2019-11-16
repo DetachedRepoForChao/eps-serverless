@@ -19,5 +19,26 @@
                 "epsserverless76cf8c60": {}
             }
         }
+    },
+    "test": {
+        "awscloudformation": {
+            "AuthRoleName": "eps-serverless-test-20191112210524-authRole",
+            "UnauthRoleArn": "arn:aws:iam::644955040906:role/eps-serverless-test-20191112210524-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::644955040906:role/eps-serverless-test-20191112210524-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "eps-serverless-test-20191112210524-deployment",
+            "UnauthRoleName": "eps-serverless-test-20191112210524-unauthRole",
+            "StackName": "eps-serverless-test-20191112210524",
+            "StackId": "arn:aws:cloudformation:us-east-1:644955040906:stack/eps-serverless-test-20191112210524/0eecb030-05ba-11ea-bd5f-0ac97ebd7097"
+        },
+        "categories": {
+            "auth": {
+                "epsserverlessbb13247f": {}
+            },
+            "function": {
+                "epsserverlesse3f718f3": {},
+                "epsserverless76cf8c60": {}
+            }
+        }
     }
 }

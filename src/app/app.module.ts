@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AgGridModule } from 'ag-grid-angular';
+
 
 // components
 import { AppComponent } from './app.component';
@@ -19,7 +21,9 @@ import { UserComponent } from './user/user.component';
 import { SignInComponent } from './login/sign-in/sign-in.component';
 import { UserService } from './shared/user.service';
 // other
-
+// tslint:disable-next-line: import-spacing
+import { EventCardComponent }from './user/admin-user/event-card/event-card.component';
+import { ReportComponent } from './user/admin-user/event-card/report/report.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {RoleGuardService} from './auth/role-guard.service';
@@ -29,6 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CustomMaterialModule } from './core/material.module';
 import { StandardUserComponent } from './user/standard-user/standard-user.component';
 import { AdminUserComponent } from './user/admin-user/admin-user.component';
+import { NotificationCardComponent } from './user/admin-user/notification-card/notification-card.component'
 import { Globals } from './globals';
 import { ManagerUserComponent } from './user/manager-user/manager-user.component';
 import { GiftPointsComponent } from './user/manager-user/gift-points/gift-points.component';
@@ -58,7 +63,7 @@ import { ProfileCardManagerComponent } from './user/homepage/profile-card-manage
 import { TrophyComponent } from './shared/trophy/trophy.component';
 // import {SocketService} from './shared/socket.service';
 
-import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
+// import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
 import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
 import { RequestCacheService} from './shared/request-cache.service';
 import { CachingInterceptorService} from './shared/caching-interceptor.service';
@@ -73,6 +78,7 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 import { UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
 import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
+import { DepartmentFilterComponent } from './entity-store/department/filter/department-filter.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
@@ -97,18 +103,22 @@ import { PointItemPipe } from './pipe/point-item.pipe';
 
 
 // import notification times ago
-import { TimeAgoPipe } from 'time-ago-pipe'
-
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { EditProfileComponent } from './user/profile/edit-profile/edit-profile.component';
+import { ChangePasswordComponent } from './user/profile/change-password/change-password.component';
+import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component'
 akitaConfig({
   resettable: true
 });
-
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
 
 @NgModule({
   declarations: [
+    DepartmentFilterComponent,
+    EventCardComponent,
+    ReportComponent,
     AppComponent,
     LoginComponent,
     SignUpComponent,
@@ -156,9 +166,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     UsersCardComponent,
     PointItemsCardComponent,
     StoreItemsCardComponent,
+    NotificationCardComponent,
     PointItemPipe,
-    TimeAgoPipe
-
+    TimeAgoPipe,
+    EditProfileComponent,
+    ChangePasswordComponent,
+    PrivacySettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -185,7 +198,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatDialogModule,
     MatInputModule,
     MatListModule,
-    AmplifyAngularModule,
     ReactiveFormsModule,
     ImageCropperModule,
     NgxSpinnerModule,
@@ -193,7 +205,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     // RouterModule.forRoot(routes),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule.forRoot(),
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    AgGridModule.withComponents([]),
+
   ],
   providers: [
     {
@@ -211,7 +225,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     RoleGuardService,
     UserService,
     Globals,
-    AmplifyService,
     { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }},
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG}
   ],

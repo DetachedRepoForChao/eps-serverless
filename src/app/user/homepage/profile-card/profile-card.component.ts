@@ -131,37 +131,4 @@ export class ProfileCardComponent implements OnInit {
   avatarClick() {
     $('#avatarModal').modal('show');
   }
-
-
-  Debug() {
-
-    // const avatarPath = this.globals.getUserAttribute('picture');
-    // const level = avatarPath.split('/')[0];
-    // const cognitoIdentityId = avatarPath.split('/')[1];
-    // const key = avatarPath.split('/')[2];
-
-    // this.entityUserService.showStore();
-
-/*    console.log('avatarPath');
-    console.log(avatarPath);
-
-    Auth.currentUserInfo().then(result => console.log(result));
-
-    Storage.get(key, {
-      level: level,
-      identityId: cognitoIdentityId
-    })
-      .then(result => {
-        console.log(result);
-        this.avatarService.userAvatarUrl = result;
-      })
-      .catch(err => {
-        console.log('Error');
-        console.log(err);
-      });*/
-  }
-
-  test() {
-
-  }
 }

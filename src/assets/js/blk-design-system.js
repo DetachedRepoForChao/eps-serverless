@@ -46,7 +46,7 @@ var $html = $('html');
 
 
 
-    $html.addClass('perfect-scrollbar-on');
+    // $html.addClass('perfect-scrollbar-on');
   } else {
     $html.addClass('perfect-scrollbar-off');
   }
