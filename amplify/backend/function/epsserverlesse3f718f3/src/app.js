@@ -1276,7 +1276,7 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
       const sourceUserId = req.body.sourceUserId;
       const description = req.body.description;
 
-      ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, event, sourceUserId)
+      ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, sourceUserId)
         .then(data => {
           res.json({ status: 'get call succeed!', data: data.notifications });
         })
@@ -1305,7 +1305,7 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
       const GroupId  = req.body.groupid;
       const status = req.body.status;
 
-      ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, event, sourceUserId,status)
+      ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
         .then(data => {
           res.json({ status: 'get call succeed!', data: data.notifications });
         })

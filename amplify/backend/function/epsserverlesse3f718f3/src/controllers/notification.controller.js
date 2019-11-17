@@ -26,7 +26,7 @@ const getNotifications = function (targetUserId) {
       },
       'order': [
         ['id', 'DESC'],
-      ] 
+      ]
     })
       .then(notificationsResult => {
         if(!notificationsResult) {
@@ -53,7 +53,7 @@ module.exports.getNotifications = getNotifications;
  * Only Manager can send noticiations
  *
  */
-const setNotificationsToPerson = function (targetUserId, title, event, description, event, sourceUserId,status){
+const setNotificationsToPerson = function (targetUserId, title, event, description, sourceUserId,status){
       const functionName = 'setNotificationsToPerson';
       const functionFullName = `${componentName} ${functionName}`;
       console.log(`Start ${functionFullName}`);
@@ -69,7 +69,7 @@ const setNotificationsToPerson = function (targetUserId, title, event, descripti
             sourceUserId: sourceUserId,
       }).then((notifications)=>{
           console.log(`${functionFullName}: notification created in the db`);
-          return {status:true,message:'notification created',noticiations:notifications}
+          return {status:true,message:'notification created', notifications:notifications}
       }).catch(err=>{
         console.log(`${functionFullName}: Problem with the database`);
         console.log(err);
@@ -82,15 +82,15 @@ exports.setNotificationsToPerson = setNotificationsToPerson;
 
 
 
-const setNotificationsToGroup = function (groupID, title, event, description, event, sourceUserId,status) {
+const setNotificationsToGroup = function (groupID, title, event, description, sourceUserId,status) {
   const functionName = 'setNotificationsToGroup';
   const functionFullName = `${componentName} ${functionName}`;
 
   // get the userList by department ID
 
-    ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList =>{
+    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList =>{
       for (let user of userList) {
-            setNotificationsToPerson(user.id, title, event, description, event, sourceUserId, status);
+            setNotificationsToPerson(user.id, title, event, description, sourceUserId, status);
        }
       return { status: 200, message: 'success' };
     }).catch(err => {

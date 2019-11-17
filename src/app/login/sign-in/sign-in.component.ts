@@ -67,7 +67,7 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    const functionName = 'ngOnInit';
+    const functionName = 'onSubmit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
