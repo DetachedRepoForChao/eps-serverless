@@ -33,6 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CustomMaterialModule } from './core/material.module';
 import { StandardUserComponent } from './user/standard-user/standard-user.component';
 import { AdminUserComponent } from './user/admin-user/admin-user.component';
+import { NotificationCardComponent } from './user/admin-user/notification-card/notification-card.component'
 import { Globals } from './globals';
 import { ManagerUserComponent } from './user/manager-user/manager-user.component';
 import { GiftPointsComponent } from './user/manager-user/gift-points/gift-points.component';
@@ -48,7 +49,6 @@ import { TwitterCardComponent } from './user/homepage/twitter-card/twitter-card.
 import { NotesCardComponent } from './user/homepage/notes-card/notes-card.component';
 import { FooterComponent } from './user/homepage/footer/footer.component';
 import { FeedComponent } from './user/homepage/feed/feed.component';
-// import { WebsocketComponent } from './websocket/websocket.component';
 import { UserIdleModule } from 'angular-user-idle';
 import { NgxImageGalleryModule} from 'ngx-image-gallery';
 import { ImageGalleryComponent } from './shared/image-gallery/image-gallery.component';
@@ -60,12 +60,7 @@ import {
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { ProfileCardManagerComponent } from './user/homepage/profile-card-manager/profile-card-manager.component';
 import { TrophyComponent } from './shared/trophy/trophy.component';
-// import {SocketService} from './shared/socket.service';
-
-// import {AmplifyAngularModule, AmplifyService} from 'aws-amplify-angular';
 import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
-import { RequestCacheService} from './shared/request-cache.service';
-import { CachingInterceptorService} from './shared/caching-interceptor.service';
 import { ImageCropperModule} from 'ngx-image-cropper';
 import { NgxSpinnerModule} from 'ngx-spinner';
 import { AwesomeTooltipDirectiveDirective } from './shared/awesome-tooltip/awesome-tooltip-directive.directive';
@@ -89,28 +84,22 @@ import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import { FreshPipe } from './pipe/fresh.pipe';
 import { ConfirmItemPurchaseComponent } from 'src/app/user/confirm-item-purchase/confirm-item-purchase.component';
-//import { ChatRoomComponent } from './shared/chatroom/chatroom.component';
 import { FeedcardFiltersComponent } from './entity-store/feedcard/filter/feedcard-filter.component';
 import { NewPasswordComponent} from './login/new-password/new-password.component';
-import { from } from 'rxjs';
 import { UsersCardComponent } from './user/admin-user/users-card/users-card.component';
 import { PointItemsCardComponent } from './user/admin-user/point-items-card/point-items-card.component';
 import { StoreItemsCardComponent } from './user/admin-user/store-items-card/store-items-card.component';
 import { PointItemPipe } from './pipe/point-item.pipe';
-    // const routes: Routes= [ {path: 'confirm-item-purchase', component: ConfirmItemPurchaseComponent }];
-// const config: SocketIoConfig = {url: 'http://localhost:3000'};
-
 
 // import notification times ago
 import { TimeAgoPipe } from 'time-ago-pipe';
 import { EditProfileComponent } from './user/profile/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './user/profile/change-password/change-password.component';
-import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component'
-
+import { PrivacySettingsComponent } from './user/profile/privacy-settings/privacy-settings.component';
+import {GoogleChartsModule} from 'angular-google-charts';
 akitaConfig({
   resettable: true
 });
-
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -143,7 +132,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FeedComponent,
     ConfirmationDialogComponent,
     ConfirmItemPurchaseComponent,
-    // WebsocketComponent,
     ImageGalleryComponent,
     KeysPipe,
     ProfileCardManagerComponent,
@@ -161,18 +149,17 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PhoneMaskDirective,
     FreshPipe,
     ConfirmItemPurchaseComponent,
-    //ChatRoomComponent,
     FeedcardFiltersComponent,
     NewPasswordComponent,
     UsersCardComponent,
     PointItemsCardComponent,
     StoreItemsCardComponent,
+    NotificationCardComponent,
     PointItemPipe,
     TimeAgoPipe,
     EditProfileComponent,
     ChangePasswordComponent,
     PrivacySettingsComponent
-
   ],
   imports: [
     BrowserModule,
@@ -188,8 +175,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     // and `ping` is 120 (2 minutes).
     UserIdleModule.forRoot({idle: 600, timeout: 300, ping: 20}),
-    // UserIdleModule.forRoot({idle: 10, timeout: 10, ping: 5}),
-    // SocketIoModule.forRoot(config)
     NgxImageGalleryModule,
     FlexLayoutModule,
     MatIconModule,
@@ -203,12 +188,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ImageCropperModule,
     NgxSpinnerModule,
     OverlayModule,
-    // RouterModule.forRoot(routes),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule.forRoot(),
     PerfectScrollbarModule,
     AgGridModule.withComponents([]),
-
+    GoogleChartsModule.forRoot(),
   ],
   providers: [
     {
@@ -216,12 +200,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       useClass: AuthInterceptor,
       multi: true
     },
-    /*    RequestCacheService,
-        {
-          provide: HTTP_INTERCEPTORS,
-          useClass: CachingInterceptorService,
-          multi: true
-        },*/
     AuthGuard,
     RoleGuardService,
     UserService,

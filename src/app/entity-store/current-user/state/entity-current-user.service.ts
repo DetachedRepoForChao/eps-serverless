@@ -23,7 +23,7 @@ import {CognitoUser, CognitoUserAttribute, ICognitoUserAttributeData} from 'amaz
 })
 export class EntityCurrentUserService {
 
-  componentName = 'entity-user.service';
+  componentName = 'entity-current-user.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
   myInit = {
@@ -142,7 +142,7 @@ export class EntityCurrentUserService {
         console.log(`caching:`);
         console.log(userDataResult);
 
-        const userId = userDataResult.id;
+        const userId = userDataResult.userId;
         const username = userDataResult.username;
         const firstName = userDataResult.firstName;
         const middleName = userDataResult.middleName;

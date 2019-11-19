@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserState, UserStore } from './user.store';
 import { EntityUserModel } from './entity-user.model';
 import {QueryConfig, QueryEntity, Order} from '@datorama/akita';
-import { combineLatest } from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/user-filter.model';
 import { map } from 'rxjs/operators';
 
@@ -41,7 +41,7 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
   }
 
   // public getUser(username: string): EntityUserAvatarModel {
-  public getUser(username: string) {
+  public selectUser(username: string) {
     const user$ = this.selectAll({
       filterBy: userEntity => userEntity.username === username
     });
@@ -69,6 +69,20 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     const numArray = Array(user.completeAchievementsTotal).map((x, i) => i);
     // console.log(numArray);
     return numArray;
+  }
+
+  public selectUserCompleteAchievementCount(userId: number): Observable<any> {
+    return new Observable<any>(observer => {
+      this.selectAll({
+        filterBy: x => x.userId === userId
+      })
+        .subscribe(user => {
+
+          const numArray = Array(user[0].completeAchievementsTotal).map((x, i) => i);
+          observer.next(numArray);
+          observer.complete();
+        });
+    });
   }
 
   public getDepartmentManager(departmentId: number) {

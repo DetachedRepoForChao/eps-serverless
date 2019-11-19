@@ -1,6 +1,6 @@
 import { FeedcardStore } from './feedcard.store';
 import { FeedcardQuery} from './feedcard.query';
-import { CreateFeedcardModel, FeedcardModel } from './feedcard.model';
+import { createFeedcardModel, FeedcardModel } from './feedcard.model';
 import { Injectable } from '@angular/core';
 import { VISIBILITY_FILTER } from '../filter/feedcard-filter.model';
 import {guid, ID} from '@datorama/akita';
@@ -28,24 +28,24 @@ export class FeedcardService {
   };
 
   constructor(
-    private feedcardstore: FeedcardStore,
-    private feedcardquery: FeedcardQuery,
+    private feedcardStore: FeedcardStore,
+    private feedcardQuery: FeedcardQuery,
     private globals: Globals,
-    private authService: AuthService
-  )
-  {};
+    private authService: AuthService) {
+
+  }
 
   updateFilter(filter: VISIBILITY_FILTER) {
-    this.feedcardstore.update({
+    this.feedcardStore.update({
       ui: {
         filter
       }
     });
   }
 
-  add(feedcardId : number,createAt:any,createUser:string,description:string){
-    const feedcard = CreateFeedcardModel({feedcardId,createAt,createUser,description})
-  };
+  add(feedcardId: number, createAt: any, createUser: string, description: string) {
+    const feedcard = createFeedcardModel({feedcardId, createAt, createUser, description});
+  }
 
   // delete(id: ID) {
   //   const functionName = 'delete';
@@ -61,11 +61,11 @@ export class FeedcardService {
     const functionFullName = '${this.componentName} ${functionName}';
     console.log('start ${functionFullName}');
     console.log(`${functionFullName}: delete ${id}`);
-    this.feedcardstore.remove(id);
+    this.feedcardStore.remove(id);
   }
 
   reset() {
-    this.feedcardstore.reset();
+    this.feedcardStore.reset();
   }
 
   modify(feedcardId:number,description:string,createAt:string,createUser:string){
@@ -74,7 +74,7 @@ export class FeedcardService {
     console.log('start ${functionFullName}');
     console.log(`${functionFullName}: update ${feedcardId}`);
 
-    this.feedcardstore.update((e)=>e.feedcardID==feedcardId,{
+    this.feedcardStore.update((e)=>e.feedcardID==feedcardId,{
       description:description,
       createAt:create,
       createUser:createUser
@@ -132,14 +132,14 @@ export class FeedcardService {
           const description = feedcards[i].feedcard.description;
           const createAt = feedcards[i].feedcard.id;
           const createUser = feedcards[i].createUser;
-          const feedcard = CreateFeedcardModel({feedcardId,description,createAt,createUser});
+          const feedcard = createFeedcardModel({feedcardId,description,createAt,createUser});
           feedcardsArray.push(feedcard);
         }
 
-        this.feedcardstore.set(feedcardsArray);
+        this.feedcardStore.set(feedcardsArray);
       }));
 
-    return cacheable(this.feedcardstore, request$);
+    return cacheable(this.feedcardStore, request$);
   }
 
 

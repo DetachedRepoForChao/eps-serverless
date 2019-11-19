@@ -35,7 +35,12 @@
         <div class="col-md-12 text-center">
 <!--          <h4 class="text-uppercase">{{globals.getUserAttribute('given_name')}} {{globals.getUserAttribute('family_name')}}</h4>
           <span>{{globals.getUserAttribute('custom:department')}}</span>-->
-          <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+          <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
+            <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.preferredName}}</h4>
+          </div>
+          <ng-template #noPreferredName>
+            <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+          </ng-template>
           <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
           <hr class="line-success">
         </div>
@@ -76,10 +81,18 @@
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
           <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
-            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.getUser(globals.getUsername()) | async)[0]) + 1}}
+            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.selectUser(globals.getUsername()) | async)[0]) + 1}}
           </h4>
         </div>
       </div>
+<!--      <div class="row chart-row" >
+        <google-chart
+          [type]="'PieChart'"
+          [data]="coreValueData$ | async"
+          [columnNames]="myColumnNames"
+          [options]="options">
+        </google-chart>
+      </div>-->
 
     </div>
     <div class="card-footer text-center">

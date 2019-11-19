@@ -6,7 +6,6 @@ import { SecurityRoleService} from '../shared/securityRole.service';
 import {map} from 'rxjs/operators';
 import { Globals } from '../globals';
 // import {SocketService} from '../shared/socket.service';
-import {GlobalVariableService} from '../shared/global-variable.service';
 // import {SessionService} from '../shared/session.service';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
@@ -14,8 +13,7 @@ import {forkJoin, Observable, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Auth, Storage} from 'aws-amplify';
 import * as Amplify from 'aws-amplify';
-// import * as AWS from 'aws-sdk/global';
-// import * as S3 from 'aws-sdk/clients/s3';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {SecurityRole} from '../shared/securityrole.model';
 import {FeedcardService} from '../shared/feedcard/feedcard.service';
@@ -23,8 +21,10 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {GiftPointsService} from './manager-user/gift-points/gift-points.service';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import 'rxjs/add/operator/takeWhile';
-import {AchievementService} from '../shared/achievement/achievement.service';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
+import {resetStores} from '@datorama/akita';
+import {AchievementService} from '../entity-store/achievement/state/achievement.service';
+import {CognitoUser} from 'amazon-cognito-identity-js';
 
 declare var $: any;
 
@@ -71,9 +71,6 @@ export class UserComponent implements OnInit, OnDestroy {
               private router: Router,
               private securityRoleService: SecurityRoleService,
               private route: ActivatedRoute,
-              // private socketService: SocketService,
-              private globalVariableService: GlobalVariableService,
-              // private sessionService: SessionService,
               private userIdle: UserIdleService,
               private departmentService: DepartmentService,
               private http: HttpClient,
@@ -229,152 +226,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
 
   onLogout() {
-    // const sessionId = localStorage.getItem('socketSessionId');
-    this.userService.deleteToken();
-    this.globalVariableService.resetAllVariables();
-    // this.socketService.removeAlListeners();
-    // this.socketService.destroySession(sessionId);
-    // this.socketService.logoutSession();
-    // this.sessionService.LogoutSession();
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    this.feedcardService.clearPointTransactionCache();
+    this.achievementService.incrementAchievement('SignOut').subscribe();
+    this.authService.signOut().then();
+    resetStores();
+    this.router.navigate(['/login']).then();
   }
-
-  onCognitoLogout() {
-    this.authService.signOut();
-  }
-
-  publicImage: any;
-  privateImage: any;
-
-  onTestClick3() {
-    // console.log(Storage);
-/*    Storage.get('aquaman@3x.png', )
-    // Storage.list('')
-      .then(result => {
-
-        console.log(result);
-      });*/
-
-
-
-    Storage.get('pic-7.png')
-    // Storage.list('')
-      .then(result => {
-        console.log('storage get public result:');
-        console.log(result);
-
-        this.http.get(result.toString(), {
-          responseType: 'blob'
-        })
-          .subscribe(res => {
-            console.log('http get publicImage:');
-            console.log(res);
-
-            const reader = new FileReader();
-            reader.addEventListener('load', () => {
-              this.publicImage = reader.result;
-              console.log(reader.result);
-            }, false);
-
-            reader.readAsDataURL(res);
-
-          });
-      })
-      .catch(err => {
-        console.log('public error:');
-        console.log(err);
-      });
-
-    Storage.get('pic-7.png', {
-      level: 'private'
-    })
-    // Storage.list('')
-      .then(result => {
-        console.log('storage get private result:');
-        console.log(result);
-
-        this.http.get(result.toString(), {
-          responseType: 'blob'
-        })
-          .subscribe(res => {
-            console.log('http get privateImage:');
-            console.log(res);
-
-            const reader = new FileReader();
-            reader.addEventListener('load', () => {
-              this.privateImage = reader.result;
-              console.log(reader.result);
-            }, false);
-
-            reader.readAsDataURL(res);
-          });
-      })
-      .catch(err => {
-        console.log('public error:');
-        console.log(err);
-      });
-  }
-
-/*  createImageFromBlob(image: Blob) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      this.userAvatarImageToShow = reader.result;
-      console.log(reader.result);
-    }, false);
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }*/
-
-  encode(data) {
-    const str = data.reduce(function(a, b) { return a + String.fromCharCode(b); }, '');
-    return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
-  }
-
-  onTestClick4() {
-    Storage.list('', {
-      level: 'protected'
-    }).then(result => {
-      console.log(result);
-    });
-
-
-  }
-
-  onProfileClick() {
-    this.router.navigate(['/profile']);
-  }
-
-  spinnerOn = false;
-
-  onSocketTestClick1() {
-/*    console.log('TestClick1');
-    console.log(Storage);
-    console.log(Amplify);*/
-/*    if (this.spinnerOn) {
-      this.spinner.hide('profile-card-spinner');
-      this.spinnerOn = false;
-    } else {
-      this.spinner.show('profile-card-spinner');
-      this.spinnerOn = true;
-    }*/
-    this.giftPointsService.populateEmployeeDataSource().subscribe((result) => {
-
-      console.log(`setting isCardLoading to false: ${result}`);
-      // this.isCardLoading = false;
-      // this.spinner.hide('gift-points-spinner');
-    });
-  }
-
-  onSocketTestClick2() {
-    // this.feedcardService.refreshPointTransactionAvatars();
-    // this.socketService.socketTest2();
-    // debugger;
-    // console.log(this.socketService.sessionHash);
-    // console.log(this.socketService.socket);
-    // this.sessionService.getServerIo().subscribe(() => {});
-  }
-
 }

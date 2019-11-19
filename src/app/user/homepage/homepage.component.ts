@@ -1,5 +1,4 @@
 import {Component, EventEmitter, HostListener, OnInit} from '@angular/core';
-import {SocketService} from '../../shared/socket.service';
 import {NotifierService} from 'angular-notifier';
 import {Globals} from '../../globals';
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
@@ -10,6 +9,7 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {PointItemTransactionService} from '../../entity-store/point-item-transaction/state/point-item-transaction.service';
 
 @Component({
   selector: 'app-homepage',
@@ -49,7 +49,6 @@ export class HomepageComponent implements OnInit {
   }
 
   constructor(
-    private socketService: SocketService,
     private notifierService: NotifierService,
     public globals: Globals,
     private metricsService: MetricsService,
@@ -58,7 +57,8 @@ export class HomepageComponent implements OnInit {
     private storeItemService: StoreItemService,
     private userHasStoreItemService: UserHasStoreItemService,
     private userHasStoreItemQuery: UserHasStoreItemQuery,
-    private achievementService: AchievementService) { }
+    private achievementService: AchievementService,
+    private pointItemTransactionService: PointItemTransactionService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -83,9 +83,6 @@ export class HomepageComponent implements OnInit {
     });
 
     this.currentUserService.cacheCurrentUser().subscribe(() => {
-
-
-
       this.storeItemService.cacheStoreItems().subscribe(() => {
         this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
 /*          this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
@@ -104,6 +101,8 @@ export class HomepageComponent implements OnInit {
         });
       }
     });
+
+    this.pointItemTransactionService.cachePointItemTransactions().subscribe();
   }
 
   private isKonamiCode(): boolean {

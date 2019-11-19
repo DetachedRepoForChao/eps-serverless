@@ -672,6 +672,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       field: 'event'
     },
+    status: {
+      type: DataTypes.INTEGER(2),
+      allowNull: false,
+      field: 'status'
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

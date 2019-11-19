@@ -35,6 +35,12 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true,
             field: 'description'
         },
+        // 1 for inmportant 0 for not important
+        status: {
+            type: DataTypes.INTEGER(2),
+            allowNull: false,
+            field: 'status'
+        },
         updatedAt: {
             type: DataTypes.DATE,
             allowNull: false,
@@ -58,6 +64,5 @@ module.exports = function (sequelize, DataTypes) {
         }
     }, {
             tableName: 'notification'
-
         });
 };

@@ -25,7 +25,7 @@ import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/
 // import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {NotifierService} from 'angular-notifier';
 import Auth from '@aws-amplify/auth';
-import {CognitoUser} from 'amazon-cognito-identity-js';
+import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
 import {tap} from 'rxjs/operators';
 
 
@@ -47,6 +47,14 @@ export class ChangePasswordComponent implements OnInit {
   changePasswordForm: FormGroup;
   changePasswordFormSubmitted = false;
 
+  getResetCodeSubmitted = false;
+  resetCodeSent = false;
+  resetPasswordForm: FormGroup;
+  resetPasswordFormSubmitted = false;
+  emailConfirmed;
+  phoneConfirmed;
+  email;
+  phone;
   isUserDataRetrieved = false;
 
   constructor(private http: HttpClient,
@@ -78,7 +86,18 @@ export class ChangePasswordComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('change-password-spinner');
 
+    this.authService.currentUserInfo()
+      .then(userInfo => {
+        console.log(userInfo);
+        this.emailConfirmed = userInfo.attributes['email_verified'];
+        this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
+        this.email = userInfo.attributes['email'];
+        this.phone = userInfo.attributes['phone_number'];
+        this.isUserDataRetrieved = true;
+      });
+
     this.loadChangePasswordForm();
+    this.loadResetPasswordForm();
 
     this.leaderboardUsers$ = this.userQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
@@ -125,7 +144,6 @@ export class ChangePasswordComponent implements OnInit {
     };
   }
 
-  // Creates the Edit User reactive form
   private loadChangePasswordForm() {
     const functionName = 'loadChangePasswordForm';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -135,7 +153,84 @@ export class ChangePasswordComponent implements OnInit {
       newPassword: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.pattern(/^[\S]+.*[\S]+$/)])],
       confirmPassword: [null, Validators.required],
     }, {validators: this.matchingPasswords('newPassword', 'confirmPassword')});
+  }
 
+  private loadResetPasswordForm() {
+    const functionName = 'loadResetPasswordForm';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    this.resetPasswordForm = this.formBuilder.group({
+      resetCode: [null, Validators.compose([Validators.required, Validators.minLength(6)])],
+      newPassword: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.pattern(/^[\S]+.*[\S]+$/)])],
+      confirmPassword: [null, Validators.required],
+    }, {validators: this.matchingPasswords('newPassword', 'confirmPassword')});
+  }
+
+  onGetResetCodeSubmit() {
+    this.getResetCodeSubmitted = true;
+    Auth.currentUserInfo()
+      .then((userInfo: any) => {
+        console.log(userInfo);
+        const username = userInfo['username'];
+
+        Auth.forgotPassword(username)
+          .then((data: any) => {
+            console.log(data);
+            this.resetCodeSent = true;
+            $('#getResetCodeModal').modal('hide');
+            $('#resetPasswordModal').modal('show');
+            this.getResetCodeSubmitted = false;
+            this.notifierService.notify('success', 'Reset code sent successfully.');
+          })
+          .catch(err => {
+            console.log('An error occurred');
+            console.log(err);
+            this.notifierService.notify('error', err.message);
+          });
+      });
+  }
+
+  sendResetCodeAgain() {
+    Auth.currentUserInfo()
+      .then((userInfo: any) => {
+        const username = userInfo['username'];
+        Auth.forgotPassword(username)
+          .then(() => this.notifierService.notify('success', 'Reset code sent successfully.'))
+          .catch(() => this.notifierService.notify('error', 'An error occurred'));
+      });
+  }
+
+  alreadyHaveCodeClick() {
+    this.resetCodeSent = true;
+    $('#getResetCodeModal').modal('hide');
+    $('#resetPasswordModal').modal('show');
+  }
+
+  onResetPasswordFormSubmit(form: FormGroup) {
+    this.resetPasswordFormSubmitted = true;
+    console.log(form);
+    if (!form.invalid) {
+      Auth.currentUserInfo()
+        .then((userInfo: any) => {
+          const username = userInfo['username'];
+
+          Auth.forgotPasswordSubmit(username, form.controls.resetCode.value, form.controls.newPassword.value)
+            .then(() => {
+              this.resetPasswordFormSubmitted = false;
+              form.reset();
+              $('#resetPasswordModal').modal('hide');
+              this.notifierService.notify('success', 'Password reset successful!');
+            })
+            .catch(err => {
+              console.log('An error occurred');
+              console.log(err);
+              this.notifierService.notify('error', err.message);
+            });
+        });
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
   }
 
   onChangePasswordFormSubmit(form: FormGroup) {
@@ -150,6 +245,7 @@ export class ChangePasswordComponent implements OnInit {
           console.log('password change success:');
           console.log(result);
           this.changePasswordFormSubmitted = false;
+          form.reset();
           this.notifierService.notify('success', 'Password changed successfully!');
         })
         .catch(err => {
@@ -165,6 +261,10 @@ export class ChangePasswordComponent implements OnInit {
       console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
+  }
+
+  test() {
+    this.authService.test();
   }
 }
 

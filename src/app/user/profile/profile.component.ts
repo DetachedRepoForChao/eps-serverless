@@ -46,7 +46,12 @@ export class ProfileComponent implements OnInit {
   isCardLoading: boolean;
   email;
   phone;
-  currentView = 'editProfile';
+  currentView;
+  viewItems = [
+    'editProfile',
+    'changePassword',
+    'privacySettings',
+  ];
 
   constructor(private http: HttpClient,
               private spinner: NgxSpinnerService,
@@ -85,8 +90,25 @@ export class ProfileComponent implements OnInit {
       this.currentUserService.updatePointsBalance(balance);
     });
 
+    this.onViewItemClick('editProfile');
+
     this.isImageLoading = false;
     this.isCardLoading = false;
+  }
+
+  onViewItemClick(clickedItem: string) {
+    if (this.currentView === clickedItem) {
+      // Already there, do nothing.
+    } else {
+      for (const item of this.viewItems) {
+        if (item === clickedItem) {
+          this.currentView = clickedItem;
+          document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className += ' toggled';
+        } else {
+          document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className.replace('toggled', '').trim();
+        }
+      }
+    }
   }
 
   onEditProfileClick() {

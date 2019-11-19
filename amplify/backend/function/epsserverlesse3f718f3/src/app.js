@@ -6,7 +6,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-const AWS = require('aws-sdk');
+// const AWS = require('aws-sdk');
 var express = require('express');
 var bodyParser = require('body-parser');
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
@@ -1030,17 +1030,17 @@ app.get('/items/getPointsLeaderboard', function(req, res) {
 
 // Point Transaction Routes
 app.get('/items/getPointTransaction', function(req, res) {
-  console.log('starting post getPointTransaction');
+  console.log('starting get getPointTransaction');
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
       ctrlPointsTransaction.getPointTransaction()
         .then(data => {
-          res.json({status: 'post call succeed!', data: data.pointTransactions});
+          res.json({status: 'get call succeed!', data: data.pointTransactions});
         })
         .catch(err => {
-          res.json({status: 'post call failed!', error: err});
+          res.json({status: 'get call failed!', error: err});
         });
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
@@ -1049,15 +1049,39 @@ app.get('/items/getPointTransaction', function(req, res) {
 });
 
 app.get('/items/getPointTransaction2', function(req, res) {
-  console.log('starting post getPointTransaction2');
+  console.log('starting get getPointTransaction2');
 
   ctrlPointsTransaction.getPointTransaction()
     .then(data => {
-      res.json({status: 'post call succeed!', data: data.pointTransactions});
+      res.json({status: 'get call succeed!', data: data.pointTransactions});
     })
     .catch(err => {
-      res.json({status: 'post call failed!', error: err});
+      res.json({status: 'get call failed!', error: err});
     });
+});
+
+app.get('/items/getUserPointTransactions', function(req, res) {
+  console.log('starting get getUserPointTransactions');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const userId = userResult.user.id;
+          ctrlPointsTransaction.getUserPointTransactions(userId)
+            .then(data => {
+              res.json({status: 'get call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'get call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
 });
 
 // Store Item Routes
@@ -1252,7 +1276,36 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
       const sourceUserId = req.body.sourceUserId;
       const description = req.body.description;
 
-      ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, event, sourceUserId)
+      ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, sourceUserId)
+        .then(data => {
+          res.json({ status: 'get call succeed!', data: data.notifications });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+app.post('/items/setNotificationsToGroup', function (req, res) {
+  console.log('starting get setNotificationsToGroup');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      console.log(tokenResult.claims)
+      const sourceUserId = tokenResult.claims['cognito:username'];
+      console.log("cognito:username:" + sourceUserId)
+
+      const title = req.body.title;
+      const event = req.body.event;
+      // const sourceUserId = req.body.sourceUserId;
+      const description = req.body.description;
+      const GroupId  = req.body.groupid;
+      const status = req.body.status;
+
+      ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
         .then(data => {
           res.json({ status: 'get call succeed!', data: data.notifications });
         })

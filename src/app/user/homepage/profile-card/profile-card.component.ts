@@ -29,6 +29,10 @@ import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/s
 import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {FeatureService} from '../../../entity-store/feature/state/feature.service';
+import {PointItemService} from '../../../entity-store/point-item/state/point-item.service';
+import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
+import {PointItemTransactionService} from '../../../entity-store/point-item-transaction/state/point-item-transaction.service';
+import {PointItemTransactionQuery} from '../../../entity-store/point-item-transaction/state/point-item-transaction.query';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -42,10 +46,41 @@ export class ProfileCardComponent implements OnInit {
   componentName = 'profile-card.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
+  myData = [
+    ['happy', 5],
+    ['fun', 7],
+    ['genuine', 3],
+    ['caring', 5],
+    ['respect', 3],
+    ['honest', 4]
+  ];
+  coreValueData$: Observable<any[]>;
+  coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
+  myColumnNames = ['Core Value', 'Amount'];
+  options = {
+    width: 350,
+    height: 350,
+    colors: ['#dd97e0', '#8762e6', '#d528ec', '#8129f3', '#f6c7b6', '#4fdef3'],
+    backgroundColor: 'transparent',
+    legend: 'none',
+    pieSliceText: 'label',
+    pieSliceTextStyle: {
+      color: 'black'
+    },
+    pieSliceBorderColor: 'transparent',
+/*    slices: {
+      1: {offset: 0.1},
+      2: {offset: 0.1},
+      3: {offset: 0.1},
+      4: {offset: 0.1},
+      5: {offset: 0.1}
+    }*/
+  };
 
   pendingBalance$;
   currentUser$;
   currentUser;
+  pointItemTransactions$;
   isCardLoading: boolean;
 
   constructor(private http: HttpClient,
@@ -69,7 +104,12 @@ export class ProfileCardComponent implements OnInit {
               private metricsService: MetricsService,
               private authService: AuthService,
               private changeDetector: ChangeDetectorRef,
-              private featureService: FeatureService) { }
+              private featureService: FeatureService,
+              private pointItemService: PointItemService,
+              private pointItemQuery: PointItemQuery,
+              private pointItemTransactionQuery: PointItemTransactionQuery,
+              private pointItemTransactionService: PointItemTransactionService
+              ) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -98,19 +138,61 @@ export class ProfileCardComponent implements OnInit {
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
 
-/*    this.storeItemService.cacheStoreItems().subscribe(() => {
-      this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
-        this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-          console.log('balance: ' + balance);
-          this.entityCurrentUserService.updatePointsBalance(balance);
-        });
-      });
-    });*/
+    this.pointItemService.cachePointItems().subscribe();
+    this.pointItemTransactionService.cachePointItemTransactions().subscribe();
+
+    this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll();
+    this.pointItemTransactions$.subscribe(() => {
+      this.coreValueData$ = this.getCoreValues();
+    });
+
+
+
 
     // this.pendingBalance$ = this.entityCurrentUserService.getPendingBalance();
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('profile-card-spinner');
+  }
+
+  populateCoreValueData() {
+    // this.pointItemQuery.sele
+  }
+
+  getCoreValues(): Observable<any[]> {
+    const coreValueArray = [
+      ['happy', 1],
+      ['fun', 1],
+      ['genuine', 1],
+      ['caring', 1],
+      ['respect', 1],
+      ['honest', 1]
+    ];
+
+    return new Observable<any[]>(observer => {
+      this.pointItemTransactionQuery.selectAll()
+        .subscribe(transactions => {
+          for (const transaction of transactions) {
+            console.log(transaction);
+            this.pointItemQuery.selectAll({
+              filterBy: (e => e.itemId === transaction.pointItemId)
+            })
+              .subscribe(pointItem => {
+                const coreValues = pointItem[0].coreValues;
+                for (const coreValue of coreValues) {
+                  const coreValueItem = coreValueArray.find(x => x[0] === coreValue);
+                  coreValueItem[1] = +coreValueItem[1] + 1;
+                }
+              });
+          }
+
+          // coreValueArray = coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; });
+          console.log(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
+          observer.next(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
+          observer.complete();
+        });
+    });
+
   }
 
   getPendingBalance(): Observable<any> {
