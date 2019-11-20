@@ -12,6 +12,9 @@
         <div class="row">
           <!-- Profile Card -->
           <div class="col-lg-4 col-md-6 col-sm-12 ml-auto mr-auto" id="profile-card">
+            <div *ngIf="!(this.currentUserQuery.selectAll() | async)[0]">
+              <app-placeholder-card></app-placeholder-card>
+            </div>
             <div *ngIf="(this.currentUserQuery.selectAll() | async)[0]?.securityRole.Id === 1">
               <app-profile-card></app-profile-card>
             </div>
