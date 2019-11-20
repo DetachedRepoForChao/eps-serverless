@@ -1,0 +1,101 @@
+
+
+
+.card-text5{
+  text-align: center;
+}
+.card-header5{
+  text-align: center;
+}
+
+.card-footer5{
+
+  text-align: center;
+}
+
+.form-row{
+
+  color: black;
+}
+
+/*
+
+.btn{
+	color: white;
+}
+*/
+
+.file {
+  visibility: hidden;
+  position: absolute;
+}
+
+/*.editUser-modal {*/
+/*  transform: translate(0, 0);*/
+/*}*/
+
+@media (max-width: 575.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .modal.show .modal-dialog {
+    transform: translate(0, 0) !important;
+  }
+}
+
+.user-modal-body {
+  overflow-scrolling: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 600px
+}
+
+.user-form-container {
+  margin-right: 20px;
+}
+
+.l1 {
+  text-align: left;
+  color:#32325d;
+
+}
+
+.l2 {
+  text-align: left;
+  color:#32325d;
+
+}
+.form-row {
+  text-align: left;
+}
+
+.form-control {
+  color: black;
+}
+
+.validation-message {
+  color: #e14eca;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-label {
+  color: black !important;
+}
+
+.user-form-control {
+  margin-bottom: 5px !important;
+}
+
+.card label {
+  text-align: left;
+}
