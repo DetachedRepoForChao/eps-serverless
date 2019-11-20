@@ -68,9 +68,6 @@ div.card {
   }
 }
 
-.avatar-container {
-
-}
 
 /*td img {
   display: block;
@@ -136,3 +133,20 @@ td div.avatar-container {
 .deg315 { transform: rotate(315deg) translate(30px) rotate(-315deg); }
 .deg360{ transform: rotate(360deg) translate(30px) rotate(-360deg); }
 .deg405{ transform: rotate(405deg) translate(30px) rotate(-405deg); }
+
+.yellow{
+  color: rgba(255,239,19,1);
+}
+
+.teal{
+  color: rgba(43,255,198,1);
+}
+
+.pink{
+  color: rgb(254,49,255);
+}
+
+.loadingstyle{
+  font-size: 20px;
+  color: white;
+}

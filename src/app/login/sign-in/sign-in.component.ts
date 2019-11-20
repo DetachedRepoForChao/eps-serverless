@@ -3,7 +3,6 @@ import { NgForm } from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import { UserService } from '../../shared/user.service';
-// import { AchievementService} from '../../shared/achievement/achievement.service';
 import {Department} from '../../shared/department.model';
 import {promise} from 'selenium-webdriver';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
@@ -11,9 +10,6 @@ import { NotifierService} from 'angular-notifier';
 import {AchievementComponent} from '../../shared/achievement/achievement.component';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {DepartmentService} from '../../shared/department.service';
-import {GlobalVariableService} from '../../shared/global-variable.service';
-// import {SessionService} from '../../shared/session.service';
-// import {AmplifyService} from 'aws-amplify-angular';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import { AuthService } from '../auth.service';
 import { environment } from 'src/environments/environment';
@@ -41,7 +37,6 @@ export class SignInComponent implements OnInit {
               private achievementComponent: AchievementComponent,
               private securityRoleService: SecurityRoleService,
               private departmentService: DepartmentService,
-              // private sessionService: SessionService,
               public auth: AuthService,
               private spinner: NgxSpinnerService,
               private globals: Globals) { }
@@ -72,7 +67,7 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    const functionName = 'ngOnInit';
+    const functionName = 'onSubmit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -138,29 +133,4 @@ export class SignInComponent implements OnInit {
         }
       });
   }
-
-/*  navigateToHome() {
-    const functionName = 'navigateToHome';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    console.log(`${functionFullName}: sign-in navigateToHome:`);
-    const userRole = this.userDetails.securityRole;
-    console.log('userRole: ' + userRole);
-    console.log(userRole);
-  }*/
-
-  test() {
-    const CloudFrontUrl = 'https://d1bfmzcw9hc4v9.cloudfront.net/';
-    const imageRequest = JSON.stringify({
-      bucket: 'image-manipulation-test-mbado',
-      key: '2019-07-24 23_27_35-Window.png',
-      edits: {
-        grayscale: true
-      }
-    });
-    const url = `${CloudFrontUrl}/${btoa(imageRequest)}`;
-    console.log(url);
-  }
-
 }

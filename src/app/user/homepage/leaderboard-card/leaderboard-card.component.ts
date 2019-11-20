@@ -6,7 +6,6 @@ import {DepartmentEmployee} from '../../manager-user/gift-points/gift-points.com
 import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {Globals} from '../../../globals';
 import {DepartmentService} from '../../../shared/department.service';
-import {GlobalVariableService} from '../../../shared/global-variable.service';
 import {Department} from '../../../shared/department.model';
 import {Storage} from 'aws-amplify';
 import {ImageService} from '../../../shared/image.service';
@@ -61,7 +60,7 @@ export class LeaderboardCardComponent implements OnInit {
               private spinner: NgxSpinnerService,
               private entityUserService: EntityUserService,
               private userStore: UserStore,
-              private entityUserQuery: EntityUserQuery,
+              public entityUserQuery: EntityUserQuery,
               public achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
               public entityCurrentUserQuery: EntityCurrentUserQuery,

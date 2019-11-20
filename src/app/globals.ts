@@ -9,10 +9,6 @@ export class Globals {
 
   departments: Department[] = [];
   securityRoles: SecurityRole[] = [];
-  userAvatarHash: UserAvatarRelationship[] = [];
-
-  cognitoUserId: string = null;
-
   userDetails: any = null;
 
   constructor() {}

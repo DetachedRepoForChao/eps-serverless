@@ -9,28 +9,27 @@
 
 <!--    </div>-->
 <!--    <div class="card-body">-->
-<div class="container" style="min-height: 400px">
+<div class="container min-height">
   <div>
     <div class="row">
       <div class="col-md-12 text-center">
         <button type="button"
-          class="btn btn-success"
+          class="btn btn-success paddingright"
           (click)="toggleAvatarUpload()"
-          style="padding-right: 10px; padding-left: 10px"
           matTooltipPosition="above"
           [matTooltipDisabled]="getCompleteAchievementById(4)"
           [matTooltip]="matfunction()"
-          [disabled]="!getCompleteAchievementById(1)"
+          [disabled]="!getCompleteAchievementById(4)"
           >
         upload avatar</button>
-        <button type="button" class="btn btn-danger" (click)="toggleAvatarSelect()" style="padding-right: 10px; padding-left: 10px">Superhero Avatar</button>
-        <button type="button" class="btn btn-primary" (click)="generateRandomAvatar()" style="padding-right: 10px; padding-left: 10px">Random Avatar</button>
+        <button type="button" class="btn btn-danger paddingright" (click)="toggleAvatarSelect()" >Superhero Avatar</button>
+        <button type="button" class="btn btn-primary paddingright" (click)="generateRandomAvatar()" >Random Avatar</button>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12 text-center" style="margin: 0; padding: 0;">
-        <div *ngIf="avatarUpload" style="text-align: center">
+      <div class="col-md-12 text-center marginzero">
+        <div *ngIf="avatarUpload textc">
           <!--        <app-image-cropper></app-image-cropper>-->
           <input type="file" (change)="fileChangeEvent($event)" />
           <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>

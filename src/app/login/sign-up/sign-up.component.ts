@@ -6,11 +6,9 @@ import {DepartmentService} from '../../shared/department.service';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {Department} from '../../shared/department.model';
 import {map, tap} from 'rxjs/operators';
-// import {AmplifyService} from 'aws-amplify-angular';
 import {AuthService} from '../auth.service';
 import { environment } from 'src/environments/environment';
 import {Router} from '@angular/router';
-import {GlobalVariableService} from '../../shared/global-variable.service';
 import {User} from '../../shared/user.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Observable, forkJoin} from 'rxjs';
@@ -44,7 +42,6 @@ export class SignUpComponent implements OnInit {
     private securityRoleService: SecurityRoleService,
     private authService: AuthService,
     private router: Router,
-    private globalVariableService: GlobalVariableService,
     private spinner: NgxSpinnerService,
     public formBuilder: FormBuilder) { }
 
@@ -121,9 +118,6 @@ export class SignUpComponent implements OnInit {
     const phone = this.validatePhoneNumber(form.controls.phone.value);
     this.userService.postUser(form.value)
       .subscribe(res => {
-          // this.showSuccessMessage = true;
-          // setTimeout(() => this.showSuccessMessage = false, 4000);
-
 
           this.authService.signUp({
             'username': form.value.username,
@@ -160,60 +154,6 @@ export class SignUpComponent implements OnInit {
           }
         }
       );
-  }
-
-  /*
-  signUp() {
-
-    this._authService.signUp({
-      "email": this.emailInput.value,
-      "password": this.passwordInput.value,
-      "firstName": this.fnameInput.value,
-      "lastName": this.lnameInput.value
-    })
-      .then((data) => {
-        environment.confirm.email = this.emailInput.value;
-        environment.confirm.password = this.passwordInput.value;
-        this._router.navigate(['auth/confirm']);
-      })
-      .catch((error) => console.log(error));
-  }
-  */
-
-  testRegister() {
-    const functionName = 'testRegister';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    const securityRole: SecurityRole = {
-      Id: 1,
-      Name: 'employee',
-      Description: 'Standard employee'
-    };
-
-    const department: Department = {
-      Id: 1,
-      Name: 'Kitchen',
-    };
-
-    const testUser: User = {
-      username: 'mbado',
-      firstName: 'Max',
-      lastName: 'Bado',
-      email: 'max.bado@gmail.com',
-      securityRole: securityRole,
-      department: department,
-      points: 0,
-      password: '',
-      phone: '+17328597839',
-      birthdate: ''
-    };
-
-    this.userService.postUser(testUser)
-      .subscribe(result => {
-        console.log(`${functionFullName}: Register User result:`);
-        console.log(result);
-      });
   }
 
   resetForm(form: FormGroup) {

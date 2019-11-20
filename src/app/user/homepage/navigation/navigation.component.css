@@ -38,3 +38,12 @@ color:	rgba(75, 68, 68, 0.774);
   overflow: hidden;
   overflow-y: hidden;
 }
+
+.modalclass{
+  overflow-scrolling: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.black{
+  color: black;
+}

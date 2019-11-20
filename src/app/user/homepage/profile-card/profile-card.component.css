@@ -11,6 +11,7 @@
   /*margin-bottom: 0;*/
   border: 0;
   min-height: 600px;
+  max-height: 600px;
   /*margin-top: 80px;*/
 }
 
@@ -87,10 +88,19 @@ div.card {
   border: 2px solid rgba(15, 117, 27, 0);
 }*/
 
-.modal-black {
-
-}
-
 .points-tooltip {
   white-space: pre-line !important;
+}
+
+.loadingstyle {
+  font-size: 20px;
+  color: white;
+}
+
+.red {
+  color: red;
+}
+
+.chart-row {
+  margin-top: -25px;
 }

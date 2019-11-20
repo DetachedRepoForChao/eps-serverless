@@ -131,7 +131,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       references: {
-        model: 'securityrole',
+        model: 'securityRole',
         key: 'id'
       },
       field: 'securityRoleId'
@@ -209,7 +209,7 @@ module.exports = function(sequelize, DataTypes) {
   User.belongsTo(Department, {foreignKey: 'departmentId', targetKey: 'id'});
 
   // securityrole table
-  const SecurityRole = sequelize.define('securityrole', {
+  const SecurityRole = sequelize.define('securityRole', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -671,6 +671,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(100),
       allowNull: false,
       field: 'event'
+    },
+    status: {
+      type: DataTypes.INTEGER(2),
+      allowNull: false,
+      field: 'status'
     },
     createdAt: {
       type: DataTypes.DATE,

@@ -68,14 +68,14 @@
                               <div class="col ml--2">
                                 <div class="d-flex justify-content-between align-items-center">
                                   <div>
-                                    <h4 class="mb-0 text-sm" style="color: black;">Kitchen</h4>
+                                    <h4 class="mb-0 text-sm black" >Kitchen</h4>
                                   </div>
                                   <div class="text-right text-muted">
                                     <small>{{notification?.createdAt | timeAgo}}</small>
                                     <!-- <small>{{notification.createdAt}}</small> -->
                                   </div>
                                 </div>
-                                <p class="text-sm mb-0" style="color:black">{{notification?.title}}</p>
+                                <p class="text-sm mb-0 black">{{notification?.title}}</p>
                               </div>
                             </div>
                           </a>
@@ -121,7 +121,7 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body" style="color: black;">
+              <div class="modal-body black" >
                 {{Detail?.description}}
               </div>
               <div class="modal-footer">
@@ -383,7 +383,7 @@
         <h4 class="modal-title">Your Achievements</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" style="overflow-scrolling: auto; overflow-y: auto; overflow-x: hidden">
+      <div class="modal-body modalclass">
         <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
           <app-achievement></app-achievement>
         </perfect-scrollbar>

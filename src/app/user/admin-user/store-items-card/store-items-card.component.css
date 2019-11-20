@@ -103,3 +103,15 @@
 .card label {
   text-align: left;
 }
+
+.marginbottom{
+  margin-bottom: 20px
+}
+
+.zeropadding{
+  margin: 0;
+  padding: 0;
+}
+.textc{
+  text-align: center;
+}

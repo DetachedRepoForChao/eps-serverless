@@ -33,6 +33,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest','declineRequest'];
 
 
+
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
                 private userHasStoreItemService: UserHasStoreItemService,
@@ -70,8 +71,14 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
 
   }
+
+  approvalToggle(){
+    console.log ("some")
+  }
+
   test() {
 
   }
+
 
 }

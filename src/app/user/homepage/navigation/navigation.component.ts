@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../shared/user.service';
-import {GlobalVariableService} from '../../../shared/global-variable.service';
 import {Router} from '@angular/router';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
@@ -38,9 +37,8 @@ export class NavigationComponent implements OnInit {
   Detail;
   notificationNums;
   showDetail;
-  
+
   constructor(private userService: UserService,
-              private globalVariableService: GlobalVariableService,
               private router: Router,
               private feedcardService: FeedcardService,
               private achievementService: AchievementService,
@@ -130,19 +128,11 @@ export class NavigationComponent implements OnInit {
   }
 
   onLogout() {
-    // this.userService.deleteToken();
-    // this.globalVariableService.resetAllVariables();
     this.feedcardService.clearPointTransactionCache();
-    // localStorage.clear();
-/*    this.achievementService.reset();
-    this.entityUserService.reset();
-    this.entityUserAvatarService.reset();
-    this.storeItemService.reset();*/
     this.achievementService.incrementAchievement('SignOut').subscribe();
     this.authService.signOut().then();
     resetStores();
     this.router.navigate(['/login']).then();
-
   }
 
   onStoreClick() {
@@ -229,22 +219,22 @@ export class NavigationComponent implements OnInit {
     }
   }
 
-  timeago(dateTimeStamp) {  
+  timeago(dateTimeStamp) {
     var result;
-    var minute = 1000 * 60;     
+    var minute = 1000 * 60;
     var hour = minute * 60;
     var day = hour * 24;
     var week = day * 7;
     var halfamonth = day * 15;
     var month = day * 30;
-    var now = new Date().getTime();   
+    var now = new Date().getTime();
     console.log(now)
     var diffValue = now - dateTimeStamp;
 
     if (diffValue < 0) {
       return;
     }
-    var minC = diffValue / minute;  
+    var minC = diffValue / minute;
     var hourC = diffValue / hour;
     var dayC = diffValue / day;
     var weekC = diffValue / week;

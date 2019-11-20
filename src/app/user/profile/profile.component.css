@@ -85,10 +85,18 @@ ul.nobullets {
 li {
   padding-top: 10px;
   padding-left: 20px;
+  cursor: pointer;
+  border-left: transparent;
+  border-left-style: solid;
 }
 
 li:hover {
   background-color: rgba(0, 0, 0, 0.11);
+}
+
+li.toggled {
+  border-left: #e418c4;
+  border-left-style: solid;
 }
 
 .confirm-col {
@@ -119,5 +127,42 @@ li:hover {
 }
 
 .modal-validation-message {
+  color: black;
+}
+
+.wrapperwidth{
+  max-width: 935px;
+}
+
+.loadingstyle{
+  font-size: 20px;
+  color: white;
+}
+
+.textl{
+  text-align: left;
+}
+
+.aligncentercontent{
+  align-content: center;
+}
+
+.margintop{
+  margin-top: 30px;
+}
+
+.zeropadding{
+  padding: 0px;
+}
+
+.avatarstyle{
+  margin-top: 30px;
+  font-size: 16px;
+}
+.red{
+  color: red;
+}
+
+.black{
   color: black;
 }
