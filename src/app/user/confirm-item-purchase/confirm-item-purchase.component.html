@@ -22,7 +22,7 @@
                                 </div>
 
                               <div>
-                                <mat-table  #requestTable [dataSource]="managerRequests$">
+                                <mat-table  [dataSource]="managerRequests$">
                                   <ng-container matColumnDef="recordId">
                                     <mat-header-cell *matHeaderCellDef>Request ID</mat-header-cell>
                                     <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
@@ -50,12 +50,12 @@
 
                                   <ng-container matColumnDef="acceptRequest">
                                     <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> <mat-checkbox (change)="$event ? approvalToggle() : null" [(ngModel)]="row.acceptRequest"></mat-checkbox> {{row.acceptRequest}}</mat-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox [(ngModel)]="UserHasStoreItemModel.acceptRequest"></mat-checkbox> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
                                   </ng-container>
 
                                   <ng-container matColumnDef="declineRequest">
                                     <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> <mat-checkbox [(ngModel)]="row.declineRequest"></mat-checkbox> {{row.declineRequest}}</mat-cell>
+                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
                                   </ng-container>
 
                                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
