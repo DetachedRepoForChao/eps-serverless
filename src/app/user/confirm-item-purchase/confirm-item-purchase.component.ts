@@ -9,10 +9,10 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
 import {MatTableModule } from '@angular/material';
 
-  import { from } from 'rxjs';
+import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 
-  declare var $: any;
+declare var $: any;
 
 @Component({
   selector: 'app-confirm-item-purchase',
@@ -82,3 +82,4 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
 
 }
+
