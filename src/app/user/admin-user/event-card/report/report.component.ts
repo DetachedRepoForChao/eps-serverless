@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, TestabilityRegistry} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EntityUserService } from '../../../../entity-store/user/state/entity-user.service';
 import { User } from 'src/app/shared/user.model';
@@ -18,9 +18,14 @@ import { Observable } from 'rxjs';
 export class ReportComponent implements OnInit {
 
   public user:  EntityUserModel;
-  reportUsers$: Observable<EntityUserModel[]>;
+  public userEntity: string;
+  reportUsers$: any
 
   ngOnInit() {
+    // this.reportUsers$ = this.entityuserQuery.selectAll().subscribe(reportUsers=>{
+    //   this.userEntity = reportUsers.map.toString()
+    //   console.log(this.userEntity)
+    // })
 
 
 
