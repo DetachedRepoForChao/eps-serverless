@@ -10,7 +10,6 @@ import {forkJoin, Observable} from 'rxjs';
 import {LeaderboardUser} from '../leaderboard.service';
 import {FeedcardService} from '../feedcard/feedcard.service';
 import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
-import {Globals} from '../../globals';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
 import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
@@ -53,7 +52,6 @@ export class AvatarService implements OnInit {
   constructor(private http: HttpClient,
               private imageService: ImageService,
               private authService: AuthService,
-              private globals: Globals,
               private entityCurrentUserService: EntityCurrentUserService,
               private entityUserService: EntityUserService
               ) { }
@@ -61,13 +59,13 @@ export class AvatarService implements OnInit {
   ngOnInit(): void {
 
   }
+/*
 
   getCurrentUserAvatar(): Observable<any> {
     const functionName = 'getCurrentUserAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    // const username = this.globals.getUsername();
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -100,7 +98,7 @@ export class AvatarService implements OnInit {
             });
 
 
-          /*Auth.userAttributes(user)
+          /!*Auth.userAttributes(user)
             .then((userAttributes: CognitoUserAttribute[]) => {
               const userPicture = userAttributes.find(x => x.getName() === 'picture');
               if (userPicture) {
@@ -125,10 +123,11 @@ export class AvatarService implements OnInit {
                   observer.complete();
                 });
               }
-            });*/
+            });*!/
         });
     });
   }
+*/
 
   // Saves new avatar image and deletes old
   saveUserAvatar(image): Observable<boolean> {
@@ -194,25 +193,19 @@ export class AvatarService implements OnInit {
                       console.log(`${functionFullName}: obsResults:`);
                       console.log(obsResults);
 
-                      this.refreshCurrentUserAvatar()
-                        .subscribe(refreshResult => {
-                          console.log(`${functionFullName}: refreshResult: ${refreshResult}`);
-                          if (refreshResult === true) {
-                            // Delete old Avatar image if there was one
-                            if (oldAvatarKey) {
-                              Storage.remove(oldAvatarKey, {
-                                level: oldAvatarLevel,
-                                identityId: oldAvatarCognitoIdentityId
-                              }).then(removeResult => {
-                                console.log(`${functionFullName}: Deleted old avatar file:`);
-                                console.log(removeResult);
-                              });
-                            }
-
-                            observer.next(true);
-                            observer.complete();
-                          }
+// Delete old Avatar image if there was one
+                      if (oldAvatarKey) {
+                        Storage.remove(oldAvatarKey, {
+                          level: oldAvatarLevel,
+                          identityId: oldAvatarCognitoIdentityId
+                        }).then(removeResult => {
+                          console.log(`${functionFullName}: Deleted old avatar file:`);
+                          console.log(removeResult);
                         });
+                      }
+
+                      observer.next(true);
+                      observer.complete();
                     });
                 })
                 .catch(err => {
@@ -264,6 +257,7 @@ export class AvatarService implements OnInit {
         });
     });
   }
+/*
 
   refreshCurrentUserAvatar(): Observable<boolean> {
     const functionName = 'refreshCurrentUserAvatar';
@@ -294,7 +288,7 @@ export class AvatarService implements OnInit {
             observer.next(true);
             observer.complete();
 
-/*            Storage.get(key, {
+/!*            Storage.get(key, {
               level: level,
               identityId: cognitoIdentityId
             })
@@ -318,11 +312,12 @@ export class AvatarService implements OnInit {
                   observer.next(true);
                   observer.complete();
                 });*!/
-              });*/
+              });*!/
           }
         });
     });
   }
+*/
 
   getAvatarFromStorage(avatarUrl: string): Observable<any> {
     console.log('Getting item from storage');

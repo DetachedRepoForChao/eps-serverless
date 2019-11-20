@@ -81,7 +81,7 @@
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
           <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
-            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.selectUser(globals.getUsername()) | async)[0]) + 1}}
+            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.selectUser((currentUserQuery.selectAll() | async)[0]?.username) | async)[0]) + 1}}
           </h4>
         </div>
       </div>

@@ -3,8 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import {forkJoin, Observable} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
-import {Globals} from '../../../globals';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {PointItemService} from '../../../shared/point-item.service';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -37,8 +35,6 @@ export class ProfileCardManagerComponent implements OnInit {
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
-              public avatarService: AvatarService,
-              public globals: Globals,
               private leaderboardService: LeaderboardService,
               public pointItemService: PointItemService,
               private spinner: NgxSpinnerService,
@@ -62,7 +58,7 @@ export class ProfileCardManagerComponent implements OnInit {
     this.entityUserService.cacheCurrentUser().subscribe();
     this.currentUser$ = this.entityCurrentUserQuery.selectCurrentUser();
 
-    if (!this.globals.userDetails) {
+/*    if (!this.globals.userDetails) {
       this.userService.getUserProfile()
         .subscribe(userDetails => {
           this.globals.userDetails = userDetails;
@@ -72,7 +68,7 @@ export class ProfileCardManagerComponent implements OnInit {
         .subscribe(userDetails => {
           this.globals.userDetails = userDetails;
         });
-    }
+    }*/
 
     const observables: Observable<any>[] = [];
 

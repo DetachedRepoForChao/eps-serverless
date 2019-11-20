@@ -9,10 +9,8 @@ import {StoreItemService} from '../../../entity-store/store-item/state/store-ite
 import {resetStores} from '@datorama/akita';
 import {AuthService} from '../../../login/auth.service';
 
-import { Globals } from 'src/app/globals';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {NotificationService} from '../../../shared/notifications/notification.service';
-import { ConsoleLogger } from '@aws-amplify/core';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -47,7 +45,6 @@ export class NavigationComponent implements OnInit {
               private storeItemService: StoreItemService,
               private authService: AuthService,
               private notificationService: NotificationService,
-              private globals: Globals
               ) { }
 
   ngOnInit() {
@@ -192,31 +189,36 @@ export class NavigationComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    switch (this.globals.getUserAttribute('custom:security_role')) {
-      case 'employee': {
-        console.log(`${functionFullName}: navigating to standard-user`);
-        // this.router.navigate(['standard-user']);
-        console.log(this.router);
-        console.log(this.router.getCurrentNavigation());
-        // console.log(this.router.)
-        this.router.navigate(['user', 'homepage']);
-        // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
-        break;
-      }
-      case 'manager': {
-        console.log(`${functionFullName}: navigating to manager-user`);
-        // this.router.navigate(['manager-user']);
-        this.router.navigate(['user', 'homepage']);
-        // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
-        break;
-      }
-      case 'admin': {
-        console.log(`${functionFullName}: navigating to admin-user`);
-        this.router.navigate(['user', 'admin-user']);
-        // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
-        break;
-      }
-    }
+    this.authService.currentUserInfo()
+      .then(currentUser => {
+        const securityRole = currentUser.attributes['custom:security_role'];
+        switch (securityRole) {
+          case 'employee': {
+            console.log(`${functionFullName}: navigating to standard-user`);
+            // this.router.navigate(['standard-user']);
+            console.log(this.router);
+            console.log(this.router.getCurrentNavigation());
+            // console.log(this.router.)
+            this.router.navigate(['user', 'homepage']);
+            // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
+            break;
+          }
+          case 'manager': {
+            console.log(`${functionFullName}: navigating to manager-user`);
+            // this.router.navigate(['manager-user']);
+            this.router.navigate(['user', 'homepage']);
+            // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
+            break;
+          }
+          case 'admin': {
+            console.log(`${functionFullName}: navigating to admin-user`);
+            this.router.navigate(['user', 'admin-user']);
+            // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
+            break;
+          }
+        }
+      });
+
   }
 
   timeago(dateTimeStamp) {

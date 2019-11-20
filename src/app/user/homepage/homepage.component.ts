@@ -1,6 +1,5 @@
 import {Component, EventEmitter, HostListener, OnInit} from '@angular/core';
 import {NotifierService} from 'angular-notifier';
-import {Globals} from '../../globals';
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
@@ -50,7 +49,6 @@ export class HomepageComponent implements OnInit {
 
   constructor(
     private notifierService: NotifierService,
-    public globals: Globals,
     private metricsService: MetricsService,
     private currentUserService: EntityCurrentUserService,
     private currentUserQuery: EntityCurrentUserQuery,

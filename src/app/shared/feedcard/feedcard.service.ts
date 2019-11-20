@@ -6,8 +6,6 @@ import awsconfig from '../../../aws-exports';
 import {AuthService} from '../../login/auth.service';
 import {Observable} from 'rxjs';
 import {LeaderboardUser} from '../leaderboard.service';
-import {AvatarService} from '../avatar/avatar.service';
-import {Globals} from '../../globals';
 
 export interface PointTransaction {
   id: number;
@@ -77,9 +75,7 @@ export class FeedcardService implements OnInit {
   };
 
   constructor(private http: HttpClient,
-              private authService: AuthService,
-              private avatarService: AvatarService,
-              private globals: Globals) { }
+              private authService: AuthService) { }
 
   ngOnInit(): void {
   }
@@ -168,27 +164,27 @@ export class FeedcardService implements OnInit {
 
             // sourceUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].sourceUserName);
 
-/*            if (sourceUserAvatarEntry) {
-              console.log(`${functionFullName}: Retrieved cached user avatar entry for source user ${result[i].sourceUserName}`);
-              sourceUserAvatarUrl = sourceUserAvatarEntry.avatarResolvedUrl;
-              sourceUserAvatarCached = true;
-            } else {
-              console.log(`${functionFullName}: Unable to find cached user avatar entry for source user ${result[i].sourceUserName}`);
-            }
+            /*            if (sourceUserAvatarEntry) {
+                          console.log(`${functionFullName}: Retrieved cached user avatar entry for source user ${result[i].sourceUserName}`);
+                          sourceUserAvatarUrl = sourceUserAvatarEntry.avatarResolvedUrl;
+                          sourceUserAvatarCached = true;
+                        } else {
+                          console.log(`${functionFullName}: Unable to find cached user avatar entry for source user ${result[i].sourceUserName}`);
+                        }
 
-            let targetUserAvatarEntry = null;
-            let targetUserAvatarUrl = null;
-            let targetUserAvatarCached = false;
+                        let targetUserAvatarEntry = null;
+                        let targetUserAvatarUrl = null;
+                        let targetUserAvatarCached = false;
 
-            targetUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].targetUserName);
+                        targetUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].targetUserName);
 
-            if (targetUserAvatarEntry) {
-              console.log(`${functionFullName}: Retrieved cached user avatar entry for target user ${result[i].targetUserName}`);
-              targetUserAvatarUrl = targetUserAvatarEntry.avatarResolvedUrl;
-              targetUserAvatarCached = true;
-            } else {
-              console.log(`${functionFullName}: Unable to find cached user avatar entry for target user ${result[i].targetUserName}`);
-            }*/
+                        if (targetUserAvatarEntry) {
+                          console.log(`${functionFullName}: Retrieved cached user avatar entry for target user ${result[i].targetUserName}`);
+                          targetUserAvatarUrl = targetUserAvatarEntry.avatarResolvedUrl;
+                          targetUserAvatarCached = true;
+                        } else {
+                          console.log(`${functionFullName}: Unable to find cached user avatar entry for target user ${result[i].targetUserName}`);
+                        }*/
 
             const pointTransaction: PointTransaction = {
               id: result[i].id,
@@ -196,12 +192,12 @@ export class FeedcardService implements OnInit {
               // sourceUserAvatarPath: result[i].sourceUserAvatarUrl,
               // sourceUserAvatarUrl: sourceUserAvatarUrl,
               // sourceUserAvatarCached: sourceUserAvatarCached,
-/*              sourceUserEmail: result[i].sourceUserEmail,
-              sourceUserFirstName: result[i].sourceUserFirstName,
-              sourceUserLastName: result[i].sourceUserLastName,
-              sourceUserId: result[i].sourceUserId,
-              sourceUserName: result[i].sourceUserName,
-              sourceUserPoints: result[i].sourceUserPoints,*/
+              /*              sourceUserEmail: result[i].sourceUserEmail,
+                            sourceUserFirstName: result[i].sourceUserFirstName,
+                            sourceUserLastName: result[i].sourceUserLastName,
+                            sourceUserId: result[i].sourceUserId,
+                            sourceUserName: result[i].sourceUserName,
+                            sourceUserPoints: result[i].sourceUserPoints,*/
               sourceUserEmail: result[i].sourceUser.email,
               sourceUserFirstName: result[i].sourceUser.firstName,
               sourceUserLastName: result[i].sourceUser.lastName,
@@ -211,12 +207,12 @@ export class FeedcardService implements OnInit {
               // targetUserAvatarPath: result[i].targetUserAvatarUrl,
               // targetUserAvatarUrl: targetUserAvatarUrl,
               // targetUserAvatarCached: targetUserAvatarCached,
-/*              targetUserEmail: result[i].targetUserEmail,
-              targetUserFirstName: result[i].targetUserFirstName,
-              targetUserLastName: result[i].targetUserLastName,
-              targetUserId: result[i].targetUserId,
-              targetUserName: result[i].targetUserName,
-              targetUserPoints: result[i].targetUserPoints,*/
+              /*              targetUserEmail: result[i].targetUserEmail,
+                            targetUserFirstName: result[i].targetUserFirstName,
+                            targetUserLastName: result[i].targetUserLastName,
+                            targetUserId: result[i].targetUserId,
+                            targetUserName: result[i].targetUserName,
+                            targetUserPoints: result[i].targetUserPoints,*/
               targetUserEmail: result[i].targetUser.email,
               targetUserFirstName: result[i].targetUser.firstName,
               targetUserLastName: result[i].targetUser.lastName,
@@ -226,8 +222,8 @@ export class FeedcardService implements OnInit {
               type: result[i].type,
               createdAt: result[i].createdAt,
               description: result[i].description,
-/*              pointItemName: result[i].pointItemName,
-              pointItemCoreValues: result[i].pointItemCoreValues,*/
+              /*              pointItemName: result[i].pointItemName,
+                            pointItemCoreValues: result[i].pointItemCoreValues,*/
               pointItemName: result[i].pointItem.name,
               pointItemCoreValues: result[i].pointItem.coreValues,
               sourceUser: sourceUser,
@@ -275,12 +271,17 @@ export class FeedcardService implements OnInit {
                     }
 
                     // Check if post has been liked by the current user
-                    if (likeData[i].username === this.globals.getUsername()) {
-                      correspondingPost.likedByCurrentUser = true;
-                    } else {
-                      console.log(`${functionFullName}: like ${likeData[i].id} by user ${likeData[i].username}` +
-                        ` is not liked by user ${this.globals.getUsername()}`);
-                    }
+                    this.authService.currentUserInfo()
+                      .then(currentUser => {
+                        const username = currentUser.username;
+                        if (likeData[i].username === username) {
+                          correspondingPost.likedByCurrentUser = true;
+                        } else {
+                          console.log(`${functionFullName}: like ${likeData[i].id} by user ${likeData[i].username}` +
+                            ` is not liked by user ${username}`);
+                        }
+                      });
+
                   }
                 }
 
@@ -298,79 +299,82 @@ export class FeedcardService implements OnInit {
     });
   }
 
-/*  updatePointTransactionAvatar(targetUsername: string, avatarResolvedUrl: string) {
-    const functionName = 'updatePointTransactionAvatar';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+  /*  updatePointTransactionAvatar(targetUsername: string, avatarResolvedUrl: string) {
+      const functionName = 'updatePointTransactionAvatar';
+      const functionFullName = `${this.componentName} ${functionName}`;
+      console.log(`Start ${functionFullName}`);
 
 
-    for (let i = 0; i < this.pointTransactions.length; i++) {
-      if (this.pointTransactions[i].targetUserName === targetUsername) {
-        this.pointTransactions[i].targetUserAvatarUrl = avatarResolvedUrl;
+      for (let i = 0; i < this.pointTransactions.length; i++) {
+        if (this.pointTransactions[i].targetUserName === targetUsername) {
+          this.pointTransactions[i].targetUserAvatarUrl = avatarResolvedUrl;
+        }
       }
-    }
-  }*/
+    }*/
 
   addLike(targetUserId: number, postId: number): Observable<any> {
     const functionName = 'addLike';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-
-    const likingUsername = this.globals.getUsername();
-    console.log(`${functionFullName}: likingUsername: ${likingUsername}; targetUserId: ${targetUserId}; postId: ${postId}`);
     // Add Like to database
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-          myInit['body'] = {
-            targetUserId: targetUserId,
-            postId: postId
-          };
+          this.authService.currentUserInfo()
+            .then(currentUser => {
+              const likingUsername = currentUser.username;
+              console.log(`${functionFullName}: likingUsername: ${likingUsername}; targetUserId: ${targetUserId}; postId: ${postId}`);
+              const token = user.signInUserSession.idToken.jwtToken;
+              const myInit = this.myInit;
+              myInit.headers['Authorization'] = token;
+              myInit['body'] = {
+                targetUserId: targetUserId,
+                postId: postId
+              };
 
-          API.post(this.apiName, this.apiPath + '/addLike', myInit)
-            .then(data => {
-              console.log(`${functionFullName}: successfully retrieved data from API`);
-              console.log(data);
-              if (data.data.status !== false) {
-                // Add Like to the local point transactions list
-                const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
-                const newLike: Like = {
-                  id: data.data.likeId,
-                  postId: postId,
-                  // userId: likingUserId,
-                  username: this.globals.getUsername(),
-                  departmentId: +this.globals.getUserAttribute('custom:department_id'),
-                  departmentName: this.globals.getUserAttribute('custom:department'),
-                };
+              API.post(this.apiName, this.apiPath + '/addLike', myInit)
+                .then(data => {
+                  console.log(`${functionFullName}: successfully retrieved data from API`);
+                  console.log(data);
+                  if (data.data.status !== false) {
+                    // Add Like to the local point transactions list
+                    const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
+                    const newLike: Like = {
+                      id: data.data.likeId,
+                      postId: postId,
+                      // userId: likingUserId,
+                      username: user.username,
+                      departmentId: +user.attributes['custom:department_id'],
+                      departmentName: user.attributes['custom:department'],
+                    };
 
-                targetPointTransaction.likeData.push(newLike);
-                targetPointTransaction.likedByCurrentUser = true;
+                    targetPointTransaction.likeData.push(newLike);
+                    targetPointTransaction.likedByCurrentUser = true;
 
-                observer.next(data.data);
-                observer.complete();
-              } else {
-                console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
-                console.log(data.data.likeRecord);
-                observer.next(data.data);
-                observer.complete();
-              }
+                    observer.next(data.data);
+                    observer.complete();
+                  } else {
+                    console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
+                    console.log(data.data.likeRecord);
+                    observer.next(data.data);
+                    observer.complete();
+                  }
+                })
+                .catch(err => {
+                  console.log(`${functionFullName}: error making API call`);
+                  console.log(err);
+                  observer.next(err);
+                  observer.complete();
+                });
             })
             .catch(err => {
-              console.log(`${functionFullName}: error making API call`);
+              console.log(`${functionFullName}: error getting authenticated user`);
               console.log(err);
               observer.next(err);
               observer.complete();
             });
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: error getting authenticated user`);
-          console.log(err);
-          observer.next(err);
-          observer.complete();
-        });
+            });
+
     });
   }
 
@@ -379,36 +383,41 @@ export class FeedcardService implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const likingUsername = this.globals.getUsername();
     // Remove Like from database
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-          myInit['body'] = {
-            postId: postId
-          };
+          this.authService.currentUserInfo()
+            .then(currentUser => {
+              const likingUsername = currentUser.username;
+              const token = user.signInUserSession.idToken.jwtToken;
+              const myInit = this.myInit;
+              myInit.headers['Authorization'] = token;
+              myInit['body'] = {
+                postId: postId
+              };
 
-          API.post(this.apiName, this.apiPath + '/removeLike', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            if (data.data.status !== false) {
-              // Remove Like from the local point transactions list
-              const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
-              targetPointTransaction.likeData = targetPointTransaction.likeData.filter(x => x.username !== likingUsername);
-              targetPointTransaction.likedByCurrentUser = false;
+              API.post(this.apiName, this.apiPath + '/removeLike', myInit).then(data => {
+                console.log(`${functionFullName}: successfully retrieved data from API`);
+                console.log(data);
+                if (data.data.status !== false) {
+                  // Remove Like from the local point transactions list
+                  const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
+                  targetPointTransaction.likeData = targetPointTransaction.likeData.filter(x => x.username !== likingUsername);
+                  targetPointTransaction.likedByCurrentUser = false;
 
-              observer.next(data.data);
-              observer.complete();
-            } else {
-              console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
-              observer.next(data.data);
-              observer.complete();
-            }
-          });
-        });
+                  observer.next(data.data);
+                  observer.complete();
+                } else {
+                  console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
+                  observer.next(data.data);
+                  observer.complete();
+                }
+              });
+            });
+            });
+
+
     });
   }
 
@@ -440,37 +449,4 @@ export class FeedcardService implements OnInit {
     });
   }
 
-/*  refreshPointTransactionAvatars() {
-    const functionName = 'refreshPointTransactionAvatars';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    // Select distinct target usernames from the pointTransactions array
-    const distinctTargetUsers = Array.from(new Set(this.pointTransactions.map(x => x.targetUserName)))
-      .map(targetUserName => {
-        return {
-          targetUserName: targetUserName,
-          targetUserAvatarPath: this.pointTransactions.find(x => x.targetUserName === targetUserName).targetUserAvatarPath
-        };
-      });
-
-    console.log(distinctTargetUsers);
-
-    distinctTargetUsers.forEach(distinctTargetUser => {
-      const userAvatarHashEntry = this.avatarService.userAvatarHash.find(x => x.username === distinctTargetUser.targetUserName);
-      if (userAvatarHashEntry) {
-        if (userAvatarHashEntry.avatarPath === distinctTargetUser.targetUserAvatarPath) {
-          // Urls match
-        } else {
-        console.log(`${functionFullName}: Avatar paths don't match for point transaction targetUser ${distinctTargetUser.targetUserName}`);
-          for (let i = 0; i < this.pointTransactions.length; i++) {
-            if (this.pointTransactions[i].targetUserName === distinctTargetUser.targetUserName) {
-              console.log(`${functionFullName}: Setting avatar for point transaction targetUser ${distinctTargetUser.targetUserName}`);
-              this.pointTransactions[i].targetUserAvatarUrl = userAvatarHashEntry.avatarResolvedUrl;
-            }
-          }
-        }
-      }
-    });
-  }*/
 }

@@ -3,9 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import {forkJoin, Observable} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {GALLERY_IMAGE} from 'ngx-image-gallery';
-import {Globals} from '../../../globals';
 import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.service';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {Auth, Storage} from 'aws-amplify';
@@ -85,7 +83,6 @@ export class ProfileCardComponent implements OnInit {
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
-              private globals: Globals,
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,

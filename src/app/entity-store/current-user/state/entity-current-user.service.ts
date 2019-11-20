@@ -8,8 +8,6 @@ import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
 import {first, tap} from 'rxjs/operators';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
-import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {Department} from '../../../shared/department.model';
@@ -37,7 +35,6 @@ export class EntityCurrentUserService {
               private entityCurrentUserQuery: EntityCurrentUserQuery,
               private userHasStoreItemQuery: UserHasStoreItemQuery,
               private storeItemQuery: StoreItemQuery,
-              private globals: Globals,
               private authService: AuthService) { }
 
   updateFilter(filter: VISIBILITY_FILTER) {
