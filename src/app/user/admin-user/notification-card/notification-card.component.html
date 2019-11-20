@@ -1,3 +1,64 @@
-<p>
-  notification-card works!
-</p>
+<div class="card">
+  <h5 class="card-header5">
+    <img alt="Bootstap Image Preview" width="165" height="165" src="../../../assets/img/notification-flat.png" class="rounded-circle"/>
+  </h5>
+  <div class="card-body">
+    <H1 class="card-text5">
+      Send Notification
+    </H1>
+  </div>
+  <div class="card-footer5" style="margin-bottom: 20px">
+
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#notificationModal">Send Notification</button>
+    <br><br>
+    <br><br>
+     <br><br>
+      <br><br>
+       <br><br>
+      <br><br>
+  </div>
+</div>
+
+<!-- Send Notification -->
+<div class="modal fade bd-example-modal-lg" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="notificationModalLabel"> Send Notification </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body department-modal-body">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+          <div class="notification-form-container">
+            <form [formGroup]="sendNotificationForm">
+              <div class="form-row">
+                <div class="form-group col-sm-12 col-md-4 col-lg-8">
+                  <label for="notification_notificationTitle" class="form-label">Notification Title</label>
+                  <input class="form-control notification-form-control" id="_Notificationtitle" placeholder="Notification title" formControlName="sendNotification_notificationTitle">
+     
+                </div>
+                           <div class="form-group col-md-4 col-lg-12">
+    <label for="exampleFormControlTextarea1">Notification Content</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+              </div>
+            </form>
+
+          </div>
+        </perfect-scrollbar>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="onAddDepartmentFormSubmit(addDepartmentForm)">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+   
+
+
