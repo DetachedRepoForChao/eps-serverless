@@ -22,10 +22,10 @@ export class ReportComponent implements OnInit {
   reportUsers$: any
 
   ngOnInit() {
-    // this.reportUsers$ = this.entityuserQuery.selectAll().subscribe(reportUsers=>{
-    //   this.userEntity = reportUsers.map.toString()
-    //   console.log(this.userEntity)
-    // })
+    this.reportUsers$ = this.entityuserQuery.selectAll().subscribe(reportUsers=>{
+      this.userEntity = reportUsers.map.toString()
+      console.log(this.userEntity)
+    })
 
 
 
