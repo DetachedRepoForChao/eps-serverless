@@ -225,7 +225,6 @@ export class EntityCurrentUserService {
     });
   }
 
-  // TODO: Rework this function to not rely on Cognito attributes
   getCurrentUser(): Observable<any> {
     const functionName = 'getCurrentUser';
     const functionFullName = `${this.componentName} ${functionName}`;

@@ -102,6 +102,10 @@ export class UserComponent implements OnInit, OnDestroy {
     this.timeout = this.userIdle.getConfigValue().timeout;
     this.ping = this.userIdle.getConfigValue().ping;
 
+/*    this.idle = 10;
+    this.timeout = 10;
+    this.ping = 1;*/
+
     this.onStartWatching();
 
     // this.startAchievementPolling();
@@ -196,10 +200,14 @@ export class UserComponent implements OnInit, OnDestroy {
 
     // Start watch when time is up.
     this.timeoutSubscription = this.userIdle.onTimeout()
-      .subscribe(() => this.timeIsUp = true);
+      .subscribe(() => {
+        this.timeIsUp = true;
+      });
 
     this.pingSubscription = this.userIdle.ping$
-      .subscribe(value => this.lastPing = `#${value} at ${new Date().toString()}`);
+      .subscribe(value => {
+        this.lastPing = `#${value} at ${new Date().toString()}`;
+      });
   }
 
   onStopWatching() {

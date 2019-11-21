@@ -924,7 +924,7 @@ app.post('/items/setUserAvatar', function(req, res) {
       const username = tokenResult.claims['cognito:username'];
       ctrlAvatar.setUserAvatar(username, avatarUrl)
         .then(data => {
-          res.json({status: 'post call succeed!', data: data.points});
+          res.json({status: 'post call succeed!', data: data.avatarUrl});
         })
         .catch(err => {
           res.json({status: 'post call failed!', error: err});

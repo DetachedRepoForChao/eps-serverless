@@ -1,6 +1,13 @@
 <div class="index-page">
   <app-navigation></app-navigation>
+
+  <div class="profile-header">
+    <app-profile-header></app-profile-header>
+  </div>
+
   <div class="wrapper">
+
+
     <section class="section section-lg section-coins">
       <img src="../../../assets/img/path3.png" class="path">
       <div class="container align-items-center wrapperwidth">
@@ -57,24 +64,24 @@
               </div>
 
 
-<!--
+              <!--
 
-              &lt;!&ndash; Blank card to display while loading &ndash;&gt;
-              <ng-template #cardLoading>
-                <div class="card-body">
-                  <ngx-spinner
-                    name="profile-spinner"
-                    [fullScreen]="false"
-                    bdColor="rgba(51,51,51,0.8)"
-                    size="medium"
-                    color="#fff"
-                    type="pacman"
-                  >
-                    <p class="loadingstyle">Loading...</p>
-                  </ngx-spinner>
-                </div>
-              </ng-template>
--->
+                            &lt;!&ndash; Blank card to display while loading &ndash;&gt;
+                            <ng-template #cardLoading>
+                              <div class="card-body">
+                                <ngx-spinner
+                                  name="profile-spinner"
+                                  [fullScreen]="false"
+                                  bdColor="rgba(51,51,51,0.8)"
+                                  size="medium"
+                                  color="#fff"
+                                  type="pacman"
+                                >
+                                  <p class="loadingstyle">Loading...</p>
+                                </ngx-spinner>
+                              </div>
+                            </ng-template>
+              -->
 
             </div>
 
@@ -88,6 +95,8 @@
         </div>
       </div>
     </section>
+
+
   </div>
 </div>
 

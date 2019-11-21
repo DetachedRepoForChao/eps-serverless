@@ -28,6 +28,7 @@ import {NotifierService} from 'angular-notifier';
 import Auth from '@aws-amplify/auth';
 import {CognitoUser} from 'amazon-cognito-identity-js';
 import {environment} from '../../../environments/environment';
+import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 
 declare var $: any;
 
@@ -42,7 +43,7 @@ export class ProfileComponent implements OnInit {
   leaderboardUsers$: Observable<EntityUserModel[]>;
 
   pendingBalance$;
-  currentUser$;
+  currentUser$: Observable<EntityCurrentUserModel[]>;
   isCardLoading: boolean;
   email;
   phone;
@@ -85,6 +86,14 @@ export class ProfileComponent implements OnInit {
 
       });
 
+    this.leaderboardUsers$ = this.userQuery.selectAll({
+      filterBy: userEntity => userEntity.securityRole.Id === 1,
+    });
+
+    this.currentUser$ = this.currentUserQuery.selectAll({
+      limitTo: 1
+    });
+
     this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
       console.log('balance: ' + balance);
       this.currentUserService.updatePointsBalance(balance);
@@ -122,6 +131,26 @@ export class ProfileComponent implements OnInit {
   onPrivacySettingsClick() {
     this.currentView = 'privacySettings';
   }
+
+  getPendingBalance(): Observable<any> {
+    return new Observable(observer => {
+      this.currentUserQuery.selectAll()
+        .subscribe(user => {
+          if (user[0]) {
+            observer.next(user[0].pointsBalance);
+            observer.complete();
+          } else {
+            observer.complete();
+          }
+
+        });
+    });
+  }
+
+  avatarClick() {
+    $('#avatarModal').modal('show');
+  }
+
 
 }
 
