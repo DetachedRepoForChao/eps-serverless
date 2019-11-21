@@ -130,7 +130,7 @@ export class AvatarService implements OnInit {
 */
 
   // Saves new avatar image and deletes old
-  saveUserAvatar(image): Observable<boolean> {
+  saveUserAvatar(image): Observable<any> {
     const functionName = 'saveUserAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -160,7 +160,7 @@ export class AvatarService implements OnInit {
 
     const level = 'protected';
 
-    return new Observable<boolean>(observer => {
+    return new Observable<any>(observer => {
       // Save the new avatar image
       Storage.put(fileName, image, {
         level: level,
@@ -180,13 +180,35 @@ export class AvatarService implements OnInit {
               Auth.currentUserInfo()
                 .then(userInfo => {
                   const cognitoIdentityIdValue = userInfo.id;
+                  const newAvatarPath = `${level}/${cognitoIdentityIdValue}/${result.key}`;
+                  console.log(`${functionFullName}: new avatar path:`);
+                  console.log(newAvatarPath);
                   const observables: Observable<any>[] = [];
 
                   // Record new Avatar path in the database
-                  observables.push(this.setUserAvatar(`${level}/${cognitoIdentityIdValue}/${result.key}`));
+                  this.setUserAvatar(newAvatarPath)
+                    .subscribe(saveResult => {
+                      console.log(`${functionFullName}: save result:`);
+                      console.log(saveResult);
+                      this.setCognitoPictureAttribute(newAvatarPath).subscribe();
+                      this.entityCurrentUserService.updateAvatar(newAvatarPath);
+                      if (oldAvatarKey) {
+                        Storage.remove(oldAvatarKey, {
+                          level: oldAvatarLevel,
+                          identityId: oldAvatarCognitoIdentityId
+                        }).then(removeResult => {
+                          console.log(`${functionFullName}: Deleted old avatar file:`);
+                          console.log(removeResult);
+                        });
+                      }
+
+                      observer.next(newAvatarPath);
+                      observer.complete();
+                    });
+                  /*observables.push(this.setUserAvatar(newAvatarPath));
 
                   // Set new Avatar path in the picture attribute within Cognito profile
-                  observables.push(this.setCognitoPictureAttribute(`${level}/${cognitoIdentityIdValue}/${result.key}`));
+                  observables.push(this.setCognitoPictureAttribute(newAvatarPath));
 
                   forkJoin(observables)
                     .subscribe(obsResults => {
@@ -206,7 +228,7 @@ export class AvatarService implements OnInit {
 
                       observer.next(true);
                       observer.complete();
-                    });
+                    });*/
                 })
                 .catch(err => {
                   console.log(`${functionFullName}: Error retrieving current user info`);

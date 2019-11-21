@@ -48,7 +48,7 @@ module.exports = async () => {
 }
 */
 
-module.exports = async () => {
+module.exports = () => {
   if (connection.isConnected) {
     console.log('=> Using existing connection.');
     return {
