@@ -313,8 +313,8 @@ const getUsersPublicDetails = function () {
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
       'position', 'points', 'dateOfBirth', 'preferredPronoun', 'securityRoleId', 'departmentId', 'avatarUrl',
-      'email', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic', 'pointAwardsPublic',
-      'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
+      'email', 'gender', 'phone', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
+      'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
     where: {
       securityRoleId: [1, 2],
       active: 1,
