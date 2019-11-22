@@ -85,6 +85,7 @@
           </h4>
         </div>
       </div>
+
       <div *ngIf="(currentUser$ | async)[0]?.quote" class="row">
         <div class="col-2 quote-box-quotation-mark" >
           <div>&ldquo;</div>
@@ -98,16 +99,7 @@
         <div class="col-2">
 
         </div>
-<!--        &rdquo;-->
       </div>
-<!--      <div class="row chart-row" >
-        <google-chart
-          [type]="'PieChart'"
-          [data]="coreValueData$ | async"
-          [columnNames]="myColumnNames"
-          [options]="options">
-        </google-chart>
-      </div>-->
 
     </div>
     <div class="card-footer text-center">

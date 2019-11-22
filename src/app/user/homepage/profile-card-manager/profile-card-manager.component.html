@@ -51,6 +51,23 @@
           </h4>
         </div>
       </div>
+
+
+      <div *ngIf="(currentUser$ | async)[0]?.quote" class="row">
+        <div class="col-2 quote-box-quotation-mark" >
+          <div>&ldquo;</div>
+        </div>
+        <div class="col-8 quote-box-text">
+          <div>
+            {{(currentUser$ | async)[0]?.quote}}
+          </div>
+
+        </div>
+        <div class="col-2">
+
+        </div>
+      </div>
+
     </div>
     <div class="card-footer text-center">
       <!-----Button----->

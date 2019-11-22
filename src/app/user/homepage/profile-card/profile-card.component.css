@@ -107,7 +107,8 @@ div.card {
 
 .quote-box-quotation-mark {
   font-size: 100px;
-  padding: 0;
+  padding-left: 0;
+  padding-right: 15px;
   text-align: right;
   font-style: italic;
 }
