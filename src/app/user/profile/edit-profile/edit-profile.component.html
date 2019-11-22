@@ -194,6 +194,21 @@
           </div>
           <div class="form-row">
             <div class="col-3 aligncentercontent">
+              <label for="editUser_quote" class="form-label">Favorite Quote</label>
+            </div>
+            <div class="col-7">
+              <textarea rows="5" class="form-control user-form-control" id="editUser_quote" placeholder="Favorite Quote" formControlName="quote"></textarea>
+              <div *ngIf="editUserForm?.controls.quote.value && editUserForm?.controls.quote.valid">
+                <label class="validation-message" id="quote-length-message">{{quoteLengthMax - editUserForm?.controls.quote.value.length}} characters remaining.</label>
+              </div>
+
+              <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.quote.invalid) || (editUserForm?.controls.quote.touched && editUserForm?.controls.quote.invalid)">
+                <label class="validation-message">Your quote must be 1000 characters or fewer in length.</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-3 aligncentercontent">
               <label for="editUser_gender" class="form-label">Gender</label>
             </div>
             <div class="col-7">

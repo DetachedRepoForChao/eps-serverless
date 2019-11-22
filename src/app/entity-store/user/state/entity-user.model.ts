@@ -36,6 +36,7 @@ export type EntityUserModel = {
   zip: number;
   dateOfHire: string;
   dateOfTermination: string;
+  quote: string;
 
 };
 
@@ -43,7 +44,7 @@ export function createEntityUserModel({ userId, username, firstName, lastName, m
                                               points, birthdate, preferredPronoun, sex, gender, securityRole, department, email, phone,
                                               avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, active,
                                               address1, address2, city, state, country, zip, dateOfHire,
-                                              dateOfTermination}: Partial<EntityUserModel>) {
+                                              dateOfTermination, quote}: Partial<EntityUserModel>) {
   return {
     id: guid(),
     userId,
@@ -77,6 +78,7 @@ export function createEntityUserModel({ userId, username, firstName, lastName, m
     zip,
     dateOfHire,
     dateOfTermination,
+    quote,
     dateModified: Date.now(),
   } as EntityUserModel;
 }

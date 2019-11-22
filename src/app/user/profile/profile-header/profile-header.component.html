@@ -4,13 +4,18 @@
     <div class="card card-coin card-plain card-custom">
       <div class="card-body">
         <div class="row profile-body">
-          <div class="col-2 text-left avatar-col">
+          <div class="col-2 text-left avatar-col circle-container">
             <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
               <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
                    alt="Avatar"
                    class="img-center img-fluid rounded-circle"
-                   id="avatar"
-                   (click)="avatarClick()">
+                   id="avatar">
+
+              <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal"></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
+              </span>
             </div>
 
             <ng-template #avatarLoading >
@@ -19,6 +24,7 @@
                    class="img-center img-fluid rounded-circle"
                    id="avatarPlaceholder">
             </ng-template>
+
 
           </div>
           <div class="col-5 text-left profile-details">

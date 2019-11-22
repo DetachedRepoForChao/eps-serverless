@@ -214,6 +214,7 @@ export class EntityUserService {
                 Id: +usersMerged[i].department.id,
                 Name: usersMerged[i].department.name
               };
+              const quote = usersMerged[i].quote;
 
               // Properties visible to admins
               const address1 = (usersMerged[i].address1) ? usersMerged[i].address1 : null;
@@ -233,11 +234,11 @@ export class EntityUserService {
               const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
-              const avatar = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
+              const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
                 preferredName, preferredPronoun, address1, address2, city, country, state, zip, dateOfHire, dateOfTermination, phone,
-                active, sex, gender});
-              usersArray.push(avatar);
+                active, sex, gender, quote});
+              usersArray.push(userModel);
             }
 
             this.userStore.set(usersArray);

@@ -62,10 +62,8 @@ export class EditProfileComponent implements OnInit {
   confirmPhoneFormSubmitted = false;
   phoneChanged = false;
   emailChanged = false;
-  confirmPromptMessage;
-  /*  confirmEmailForm: FormGroup = new FormGroup({
-      code: new FormControl('', [ Validators.required, Validators.min(6) ])
-    });*/
+  quoteLengthMax = 1000;
+  quoteText: string = null;
 
   confirmEmailForm = this.formBuilder.group({
     code: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])]
@@ -103,16 +101,6 @@ export class EditProfileComponent implements OnInit {
     this.isCardLoading = true;
     this.isImageLoading = true;
     this.spinner.show('edit-profile-spinner');
-
-    /*      const text_max = 200;
-        $('#count_message').html(text_max + ' remaining');
-
-        $('#text').keyup(function() {
-          const text_length = $('#text').val().length;
-          const text_remaining = text_max - text_length;
-
-          $('#count_message').html(text_remaining + ' remaining');
-        });*/
 
     this.loadEditUserForm();
 
@@ -160,11 +148,9 @@ export class EditProfileComponent implements OnInit {
               console.log('gender');
               console.log(user[keys[i]]);
               if (((user[keys[i]] !== 'Male') && (user[keys[i]] !== 'Female') && (user[keys[i]] !== 'Prefer Not to Say')) && (user[keys[i]])) {
-                console.log('test1');
                 this.editUserForm.patchValue({[key]: 'Custom'});
                 this.editUserForm.patchValue({genderCustom: user[keys[i]]});
               } else {
-                console.log('test2');
                 this.editUserForm.patchValue({[key]: user[keys[i]]});
               }
               break;
@@ -186,6 +172,13 @@ export class EditProfileComponent implements OnInit {
                 this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
                 console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
               }
+              break;
+            }
+            case 'quote': {
+              console.log('quote: ');
+              console.log(key);
+              console.log(user[keys[i]]);
+              this.editUserForm.patchValue({[key]: user[keys[i]]});
               break;
             }
             default: {
@@ -236,7 +229,8 @@ export class EditProfileComponent implements OnInit {
       genderCustom: [null],
       birthdate: [null],
       email: [null, Validators.compose([Validators.required, Validators.email])],
-      phone: [null, Validators.required]
+      phone: [null, Validators.required],
+      quote: [null, Validators.compose([Validators.maxLength(this.quoteLengthMax)])],
     });
   }
 

@@ -85,6 +85,21 @@
           </h4>
         </div>
       </div>
+      <div *ngIf="(currentUser$ | async)[0]?.quote" class="row">
+        <div class="col-2 quote-box-quotation-mark" >
+          <div>&ldquo;</div>
+        </div>
+        <div class="col-8 quote-box-text">
+          <div>
+            {{(currentUser$ | async)[0]?.quote}}
+          </div>
+
+        </div>
+        <div class="col-2">
+
+        </div>
+<!--        &rdquo;-->
+      </div>
 <!--      <div class="row chart-row" >
         <google-chart
           [type]="'PieChart'"
@@ -99,6 +114,7 @@
       <!-----Button----->
       <div class="container">
         <div class="row">
+
           <!--          <button type="button" (click)="Debug()">Debug</button>
                     <div class="col-sm-6 col-md-6 col-lg-6 col-6">
                       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>

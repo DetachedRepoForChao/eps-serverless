@@ -79,4 +79,9 @@ export class ProfileHeaderComponent implements OnInit {
   avatarClick() {
     $('#avatarModal').modal('show');
   }
+
+  getFirstDigit(number: number) {
+    const one = String(number).charAt(0);
+    return Number(one);
+  }
 }
