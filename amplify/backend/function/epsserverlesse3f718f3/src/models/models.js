@@ -158,6 +158,11 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 1,
       field: 'active',
     },
+    quote: {
+      type: DataTypes.STRING(1000),
+      allowNull: true,
+      field: 'quote',
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
