@@ -237,7 +237,8 @@ const getUserProfile = function (username) {
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
       'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
       'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl',
-      'quote'],
+      'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic', 'pointAwardsPublic',
+      'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
     where: {
       username: username,
       active: 1
@@ -312,7 +313,8 @@ const getUsersPublicDetails = function () {
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
       'position', 'points', 'dateOfBirth', 'preferredPronoun', 'securityRoleId', 'departmentId', 'avatarUrl',
-      'email', 'active', 'quote'],
+      'email', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic', 'pointAwardsPublic',
+      'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
     where: {
       securityRoleId: [1, 2],
       active: 1,
@@ -358,7 +360,8 @@ const adminGetUsersDetails = function () {
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
       'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
       'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'dateOfTermination', 'phone', 'securityRoleId',
-      'departmentId', 'avatarUrl', 'active', 'quote'],
+      'departmentId', 'avatarUrl', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
+      'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
     order: [
       ['id', 'ASC'],
     ],
