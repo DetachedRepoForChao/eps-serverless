@@ -56,6 +56,7 @@ export class PrivacySettingsComponent implements OnInit {
     sharePointAwards: true,
     achievementsVisible: true,
     pointsVisible: true,
+    coreValuesVisible: true,
   };
 
   constructor(private http: HttpClient,
@@ -189,6 +190,7 @@ export class PrivacySettingsComponent implements OnInit {
       sharePointAwards: [null],
       achievementsVisible: [null],
       pointsVisible: [null],
+      coreValuesVisible: [null],
     });
   }
 

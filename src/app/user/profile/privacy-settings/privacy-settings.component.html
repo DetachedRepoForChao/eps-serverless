@@ -89,6 +89,16 @@
               </mat-slide-toggle>
             </div>
           </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_coreValues_visible" class="form-label">Others can view your Core Values</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.coreValuesVisible" name="privacy_achievements_visible" (change)="toggle('coreValuesVisible')" id="privacy_coreValues_visible" [color]="color">
+                <div *ngIf="!fieldPrivacyList.coreValuesVisible; else toggledYes">No</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
         </div>
 
         <ng-template #placeholderForm>
@@ -170,6 +180,16 @@
           <div class="form-row">
             <div class="col-8 aligncentercontent">
               <label for="privacy_achievements_visible" class="form-label">Others can view your achievements</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Yes</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_coreValues_visible" class="form-label">Others can view your Core Values</label>
             </div>
             <div class="col-2 toggle-col">
               <mat-slide-toggle [color]="color">

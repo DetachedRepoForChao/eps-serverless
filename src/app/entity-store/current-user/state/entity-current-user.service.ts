@@ -145,6 +145,14 @@ export class EntityCurrentUserService {
         const phone = userDataResult.phone.substring(2);
         const avatarPath = userDataResult.avatarPath;
         const quote = userDataResult.quote;
+        const phonePublic = userDataResult.phonePublic;
+        const emailPublic = userDataResult.emailPublic;
+        const genderPublic = userDataResult.genderPublic;
+        const birthdatePublic = userDataResult.birthdatePublic;
+        const pointAwardsPublic = userDataResult.pointAwardsPublic;
+        const achievementsPublic = userDataResult.achievementsPublic;
+        const pointsPublic = userDataResult.pointsPublic;
+        const coreValuesPublic = userDataResult.coreValuesPublic;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
@@ -152,7 +160,8 @@ export class EntityCurrentUserService {
             const avatarResolvedUrl = result.avatarResolvedUrl;
             const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, prefix,
               suffix, position, points, pointsPool, email, address1, address2, city, state, country, zip, birthdate, preferredPronoun, sex,
-              gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl, quote});
+              gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl, quote, phonePublic,
+              emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -257,6 +266,14 @@ export class EntityCurrentUserService {
                   };
                   const avatarUrl = currentUser.avatarUrl;
                   const quote = currentUser.quote;
+                  const phonePublic = currentUser.phonePublic;
+                  const emailPublic = currentUser.emailPublic;
+                  const genderPublic = currentUser.genderPublic;
+                  const birthdatePublic = currentUser.birthdatePublic;
+                  const pointAwardsPublic = currentUser.pointAwardsPublic;
+                  const achievementsPublic = currentUser.achievementsPublic;
+                  const pointsPublic = currentUser.pointsPublic;
+                  const coreValuesPublic = currentUser.coreValuesPublic;
 
                   const data = {
                     userId: userId,
@@ -287,6 +304,14 @@ export class EntityCurrentUserService {
                     securityRole: securityRole,
                     avatarPath: avatarUrl,
                     quote: quote,
+                    phonePublic: phonePublic,
+                    emailPublic: emailPublic,
+                    genderPublic: genderPublic,
+                    birthdatePublic: birthdatePublic,
+                    pointAwardsPublic: pointAwardsPublic,
+                    achievementsPublic: achievementsPublic,
+                    pointsPublic: pointsPublic,
+                    coreValuesPublic: coreValuesPublic,
                   };
 
                   console.log('userData:');
