@@ -1060,8 +1060,8 @@ app.get('/items/getPointTransaction2', function(req, res) {
     });
 });
 
-app.get('/items/getUserPointTransactions', function(req, res) {
-  console.log('starting get getUserPointTransactions');
+app.get('/items/getCurrentUserPointTransactions', function(req, res) {
+  console.log('starting get getCurrentUserPointTransactions');
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
@@ -1078,6 +1078,27 @@ app.get('/items/getUserPointTransactions', function(req, res) {
               res.json({status: 'get call failed!', error: err});
             });
         });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/getUserPointTransactions', function(req, res) {
+  console.log('starting post getUserPointTransactions');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const userId = req.body.userId;
+      ctrlPointsTransaction.getUserPointTransactions(userId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }
