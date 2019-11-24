@@ -15,8 +15,8 @@
               <label for="privacy_email" class="form-label">Email</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.email" name="privacy_email" (change)="toggle('email')" id="privacy_email" [color]="color">
-                <div *ngIf="!fieldPrivacyList.email; else toggledPublic">Private</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.emailPublic" name="privacy_email" (change)="toggleFieldPrivacy('emailPublic')" id="privacy_email" [color]="color">
+                <div *ngIf="!fieldPrivacyList.emailPublic; else toggledPublic">Private</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -25,8 +25,8 @@
               <label for="privacy_phone" class="form-label">Phone</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.phone" name="privacy_phone" (change)="toggle('phone')" id="privacy_phone" [color]="color">
-                <div *ngIf="!fieldPrivacyList.phone; else toggledPublic">Private</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.phonePublic" name="privacy_phone" (change)="toggleFieldPrivacy('phonePublic')" id="privacy_phone" [color]="color">
+                <div *ngIf="!fieldPrivacyList.phonePublic; else toggledPublic">Private</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -35,8 +35,8 @@
               <label for="privacy_birthdate" class="form-label">Date of Birth</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.birthdate" name="privacy_birthdate" (change)="toggle('birthdate')" id="privacy_birthdate" [color]="color">
-                <div *ngIf="!fieldPrivacyList.birthdate; else toggledPublic">Private</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.birthdatePublic" name="privacy_birthdate" (change)="toggleFieldPrivacy('birthdatePublic')" id="privacy_birthdate" [color]="color">
+                <div *ngIf="!fieldPrivacyList.birthdatePublic; else toggledPublic">Private</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -45,8 +45,8 @@
               <label for="privacy_gender" class="form-label">Gender</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.gender" name="privacy_gender" (change)="toggle('gender')" id="privacy_gender" [color]="color">
-                <div *ngIf="!fieldPrivacyList.gender; else toggledPublic">Private</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.genderPublic" name="privacy_gender" (change)="toggleFieldPrivacy('genderPublic')" id="privacy_gender" [color]="color">
+                <div *ngIf="!fieldPrivacyList.genderPublic; else toggledPublic">Private</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -64,8 +64,8 @@
               <label for="privacy_share_point_awards" class="form-label">Point awards shared in the app's feed</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.sharePointAwards" name="privacy_share_point_awards" (change)="toggle('sharePointAwards')" id="privacy_share_point_awards" [color]="color">
-                <div *ngIf="!fieldPrivacyList.sharePointAwards; else toggledYes">No</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.pointAwardsPublic" name="privacy_share_point_awards" (change)="toggleFieldPrivacy('pointAwardsPublic')" id="privacy_share_point_awards" [color]="color">
+                <div *ngIf="!fieldPrivacyList.pointAwardsPublic; else toggledYes">No</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -74,8 +74,8 @@
               <label for="privacy_points_visible" class="form-label">Others can view your awarded points</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.pointsVisible" name="privacy_points_visible" (change)="toggle('pointsVisible')" id="privacy_points_visible" [color]="color">
-                <div *ngIf="!fieldPrivacyList.pointsVisible; else toggledYes">No</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.pointsPublic" name="privacy_points_visible" (change)="toggleFieldPrivacy('pointsPublic')" id="privacy_points_visible" [color]="color">
+                <div *ngIf="!fieldPrivacyList.pointsPublic; else toggledYes">No</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -84,8 +84,8 @@
               <label for="privacy_achievements_visible" class="form-label">Others can view your achievements</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.achievementsVisible" name="privacy_achievements_visible" (change)="toggle('achievementsVisible')" id="privacy_achievements_visible" [color]="color">
-                <div *ngIf="!fieldPrivacyList.achievementsVisible; else toggledYes">No</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.achievementsPublic" name="privacy_achievements_visible" (change)="toggleFieldPrivacy('achievementsPublic')" id="privacy_achievements_visible" [color]="color">
+                <div *ngIf="!fieldPrivacyList.achievementsPublic; else toggledYes">No</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -94,8 +94,8 @@
               <label for="privacy_coreValues_visible" class="form-label">Others can view your Core Values</label>
             </div>
             <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.coreValuesVisible" name="privacy_achievements_visible" (change)="toggle('coreValuesVisible')" id="privacy_coreValues_visible" [color]="color">
-                <div *ngIf="!fieldPrivacyList.coreValuesVisible; else toggledYes">No</div>
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.coreValuesPublic" name="privacy_achievements_visible" (change)="toggleFieldPrivacy('coreValuesPublic')" id="privacy_coreValues_visible" [color]="color">
+                <div *ngIf="!fieldPrivacyList.coreValuesPublic; else toggledYes">No</div>
               </mat-slide-toggle>
             </div>
           </div>
@@ -200,7 +200,7 @@
         </ng-template>
 
       </form>
-      <button type="button" class="btn btn-primary" (click)="onFieldPrivacyFormSubmit(fieldPrivacyForm)">Save Changes</button>
+      <button type="button" class="btn btn-primary" (click)="onFieldPrivacyListSubmit()">Save Changes</button>
 
     </div>
   </div>

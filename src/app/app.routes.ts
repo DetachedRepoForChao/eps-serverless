@@ -70,7 +70,7 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'profile',
+        path: 'profile/:username',
         component: ProfileComponent,
         canActivate: [AuthGuard],
       },

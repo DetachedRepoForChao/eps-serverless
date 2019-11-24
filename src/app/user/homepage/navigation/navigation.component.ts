@@ -11,6 +11,7 @@ import {AuthService} from '../../../login/auth.service';
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {NotificationService} from '../../../shared/notifications/notification.service';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -32,6 +33,7 @@ export class NavigationComponent implements OnInit {
   public config: PerfectScrollbarConfigInterface = {};
   Notifications;
   NotificationStatus;
+  currentUser$;
   Detail;
   notificationNums;
   showDetail;
@@ -41,7 +43,8 @@ export class NavigationComponent implements OnInit {
               private feedcardService: FeedcardService,
               private achievementService: AchievementService,
               private entityUserAvatarService: EntityUserService,
-              private entityUserService: EntityCurrentUserService,
+              private entityCurrentUserService: EntityCurrentUserService,
+              private currentUserQuery: EntityCurrentUserQuery,
               private storeItemService: StoreItemService,
               private authService: AuthService,
               private notificationService: NotificationService,
@@ -54,6 +57,10 @@ export class NavigationComponent implements OnInit {
       blackKit.checkScrollForTransparentNavbar();
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
+
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();
+    this.currentUser$ = this.currentUserQuery.selectAll();
+
     this.notificationService.getNotification().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();

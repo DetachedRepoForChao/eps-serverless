@@ -333,7 +333,7 @@
           <i class="fas fa-shopping-cart" title="store"></i>
         </button>
         <!----- Settings---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile']">
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', (currentUser$ | async)[0]?.username]">
           <i class="tim-icons icon-settings-gear-63" title="settings"></i>
         </button>
 <!--        <div class="modal fade" id="settingsModal" role="dialog">

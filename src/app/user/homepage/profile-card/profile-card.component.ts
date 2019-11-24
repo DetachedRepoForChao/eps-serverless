@@ -44,14 +44,6 @@ export class ProfileCardComponent implements OnInit {
   componentName = 'profile-card.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
-  myData = [
-    ['happy', 5],
-    ['fun', 7],
-    ['genuine', 3],
-    ['caring', 5],
-    ['respect', 3],
-    ['honest', 4]
-  ];
   coreValueData$: Observable<any[]>;
   coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
   myColumnNames = ['Core Value', 'Amount'];

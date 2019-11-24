@@ -99,6 +99,7 @@ import { PrivacySettingsComponent } from './user/profile/privacy-settings/privac
 import {GoogleChartsModule} from 'angular-google-charts';
 import { PlaceholderCardComponent } from './user/homepage/placeholder-card/placeholder-card.component';
 import { ProfileHeaderComponent } from './user/profile/profile-header/profile-header.component';
+import { OtherUserComponent } from './user/profile/other-user/other-user.component';
 akitaConfig({
   resettable: true
 });
@@ -163,7 +164,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ChangePasswordComponent,
     PrivacySettingsComponent,
     PlaceholderCardComponent,
-    ProfileHeaderComponent
+    ProfileHeaderComponent,
+    OtherUserComponent
   ],
   imports: [
     BrowserModule,

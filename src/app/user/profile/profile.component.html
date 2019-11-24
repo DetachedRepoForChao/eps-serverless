@@ -1,102 +1,111 @@
 <div class="index-page">
   <app-navigation></app-navigation>
 
-  <div class="profile-header">
-    <app-profile-header></app-profile-header>
-  </div>
+  <div *ngIf="(currentUserQuery.selectLoading() | async) === false && user$">
+    <div *ngIf="(currentUserQuery.selectAll() | async)[0]?.username !== (user$ | async)[0]?.username; else currentUserPage">
+      <app-other-user></app-other-user>
+    </div>
 
-  <div class="wrapper">
-
-
-    <section class="section section-lg section-coins">
-      <img src="../../../assets/img/path3.png" class="path">
-      <div class="container align-items-center wrapperwidth">
-        <div class="row" >
-          <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="profile">
-
-            <div class="card">
-              <div class="card card-coin card-plain card-custom">
-
-                <div class="card-body" >
-                  <!--<ngx-spinner
-                    name="profile-spinner"
-                    [fullScreen]="false"
-                    bdColor="rgba(51,51,51,0.8)"
-                    size="medium"
-                    color="#fff"
-                    type="pacman"
-                  >
-                    <p class="loadingstyle">Loading...</p>
-                  </ngx-spinner>-->
-
-                  <div class="row">
-                    <div class="col-4 textl">
-                      <ul class="nobullets">
-                        <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile">
-                          Edit Profile
-                        </li>
-                        <li (click)="onViewItemClick('changePassword')" id="viewItem_changePassword">
-                          Change Password
-                        </li>
-                        <li (click)="onViewItemClick('privacySettings')" id="viewItem_privacySettings">
-                          Privacy Settings
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="col-8">
-                      <app-edit-profile *ngIf="currentView === 'editProfile'"></app-edit-profile>
-                      <app-change-password *ngIf="currentView === 'changePassword'"></app-change-password>
-                      <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>
-                    </div>
-
-                  </div>
-
-
-                </div>
-                <div class="card-footer text-center">
-                  <!-----Button----->
-                  <div class="container">
-                    <div class="row">
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <!--
-
-                            &lt;!&ndash; Blank card to display while loading &ndash;&gt;
-                            <ng-template #cardLoading>
-                              <div class="card-body">
-                                <ngx-spinner
-                                  name="profile-spinner"
-                                  [fullScreen]="false"
-                                  bdColor="rgba(51,51,51,0.8)"
-                                  size="medium"
-                                  color="#fff"
-                                  type="pacman"
-                                >
-                                  <p class="loadingstyle">Loading...</p>
-                                </ngx-spinner>
-                              </div>
-                            </ng-template>
-              -->
-
-            </div>
-
-
-
-
-
-
-
-          </div>
-        </div>
+    <ng-template #currentUserPage>
+      <div class="profile-header">
+        <app-profile-header></app-profile-header>
       </div>
-    </section>
+
+      <div class="wrapper">
+
+        <section class="section section-lg section-coins">
+          <img src="../../../assets/img/path3.png" class="path">
+          <div class="container align-items-center wrapperwidth">
+            <div class="row" >
+              <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="profile">
+
+                <div class="card">
+                  <div class="card card-coin card-plain card-custom">
+
+                    <div class="card-body" >
+                      <!--<ngx-spinner
+                        name="profile-spinner"
+                        [fullScreen]="false"
+                        bdColor="rgba(51,51,51,0.8)"
+                        size="medium"
+                        color="#fff"
+                        type="pacman"
+                      >
+                        <p class="loadingstyle">Loading...</p>
+                      </ngx-spinner>-->
+
+                      <div class="row">
+                        <div class="col-4 textl">
+                          <ul class="nobullets">
+                            <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile" class="toggled">
+                              Edit Profile
+                            </li>
+                            <li (click)="onViewItemClick('changePassword')" id="viewItem_changePassword">
+                              Change Password
+                            </li>
+                            <li (click)="onViewItemClick('privacySettings')" id="viewItem_privacySettings">
+                              Privacy Settings
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col-8">
+                          <app-edit-profile *ngIf="currentView === 'editProfile'"></app-edit-profile>
+                          <app-change-password *ngIf="currentView === 'changePassword'"></app-change-password>
+                          <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>
+                        </div>
+
+                      </div>
 
 
+                    </div>
+                    <div class="card-footer text-center">
+                      <!-----Button----->
+                      <div class="container">
+                        <div class="row">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--
+
+                                &lt;!&ndash; Blank card to display while loading &ndash;&gt;
+                                <ng-template #cardLoading>
+                                  <div class="card-body">
+                                    <ngx-spinner
+                                      name="profile-spinner"
+                                      [fullScreen]="false"
+                                      bdColor="rgba(51,51,51,0.8)"
+                                      size="medium"
+                                      color="#fff"
+                                      type="pacman"
+                                    >
+                                      <p class="loadingstyle">Loading...</p>
+                                    </ngx-spinner>
+                                  </div>
+                                </ng-template>
+                  -->
+
+                </div>
+
+
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+      </div>
+    </ng-template>
   </div>
+
+
 </div>
 

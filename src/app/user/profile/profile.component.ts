@@ -29,6 +29,8 @@ import Auth from '@aws-amplify/auth';
 import {CognitoUser} from 'amazon-cognito-identity-js';
 import {environment} from '../../../environments/environment';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {switchMap} from 'rxjs-compat/operator/switchMap';
 
 declare var $: any;
 
@@ -41,13 +43,15 @@ export class ProfileComponent implements OnInit {
   componentName = 'profile.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
-
+  otherUser: false;
+  user$: Observable<any> = null;
+  otherUserId: null;
   pendingBalance$;
   currentUser$: Observable<EntityCurrentUserModel[]>;
   isCardLoading: boolean;
   email;
   phone;
-  currentView;
+  currentView = 'editProfile';
   viewItems = [
     'editProfile',
     'changePassword',
@@ -55,6 +59,8 @@ export class ProfileComponent implements OnInit {
   ];
 
   constructor(private http: HttpClient,
+              private route: ActivatedRoute,
+              private router: Router,
               private spinner: NgxSpinnerService,
               private globals: Globals,
               private achievementService: AchievementService,
@@ -71,6 +77,20 @@ export class ProfileComponent implements OnInit {
     const functionName = 'ngOnInit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
+
+    console.log('route');
+    console.log(this.route);
+
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      console.log(params);
+      this.user$ = this.userQuery.selectAll({
+          filterBy: e => e.username === params.get('username')
+        });
+
+      this.user$.subscribe(user => {
+        console.log(user);
+      });
+    });
 
     const observables: Observable<any>[] = [];
     observables.push(
@@ -99,11 +119,15 @@ export class ProfileComponent implements OnInit {
       this.currentUserService.updatePointsBalance(balance);
     });
 
-    this.onViewItemClick('editProfile');
-
     this.isImageLoading = false;
     this.isCardLoading = false;
   }
+
+/*
+
+  ngAfterViewInit(): void {
+    this.onViewItemClick('editProfile');
+  }*/
 
   onViewItemClick(clickedItem: string) {
     if (this.currentView === clickedItem) {

@@ -77,8 +77,8 @@ export class PointItemTransactionService {
     this.pointItemTransactionStore.update((e) => e.transactionId === pointItemTransaction.transactionId, pointItemTransactionUpdate);
   }
 
-  getPointItemTransactions(): Observable<any> {
-    const functionName = 'getPointItemTransactions';
+  getCurrentUserPointItemTransactions(): Observable<any> {
+    const functionName = 'getCurrentUserPointItemTransactions';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -89,7 +89,44 @@ export class PointItemTransactionService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
 
-          API.get(this.apiName, this.apiPath + '/getUserPointTransactions', myInit).then(data => {
+          API.get(this.apiName, this.apiPath + '/getCurrentUserPointTransactions', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data.pointTransactions);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving features data from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
+  }
+
+  getUserPointItemTransactions(userId: number): Observable<any> {
+    const functionName = 'getUserPointItemTransactions';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            userId: userId
+          };
+
+          API.post(this.apiName, this.apiPath + '/getUserPointTransactions', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data.pointTransactions);
@@ -116,7 +153,7 @@ export class PointItemTransactionService {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const request$ = this.getPointItemTransactions()
+    const request$ = this.getCurrentUserPointItemTransactions()
       .pipe(tap((pointItemTransactions: any) => {
         console.log(`${functionFullName}: caching:`);
         console.log(pointItemTransactions);

@@ -85,8 +85,18 @@ export class UserComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    console.log('route');
+    console.log(this.route);
+    console.log('this.route.snapshot');
+    console.log(this.route.snapshot);
 
-    this.navigateHome();
+    if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
+      console.log('this.route.snapshot.children[0].url[0].path');
+      console.log(this.route.snapshot.children[0].url[0].path);
+    } else {
+      this.navigateHome();
+    }
+
 /*    if (this.router.url.includes('homepage')) {
       this.navigateHome();
     }*/
