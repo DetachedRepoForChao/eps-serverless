@@ -97,24 +97,12 @@ export class UserComponent implements OnInit, OnDestroy {
       this.navigateHome();
     }
 
-/*    if (this.router.url.includes('homepage')) {
-      this.navigateHome();
-    }*/
-    // console.log(this.router);
-    // console.log(this.route);
-    // console.log(this.route.children);
-
-    // this.navigateHome();
-
     this.isComponentLoading = false;
 
     this.idle = this.userIdle.getConfigValue().idle;
     this.timeout = this.userIdle.getConfigValue().timeout;
     this.ping = this.userIdle.getConfigValue().ping;
 
-/*    this.idle = 10;
-    this.timeout = 10;
-    this.ping = 1;*/
 
     this.onStartWatching();
 
@@ -133,25 +121,17 @@ export class UserComponent implements OnInit, OnDestroy {
         switch (securityRoleName) {
           case 'employee': {
             console.log(`${functionFullName}: navigating to standard-user`);
-            // this.router.navigate(['standard-user']);
-            console.log(this.router);
-            console.log(this.router.getCurrentNavigation());
-            // console.log(this.router.)
-            this.router.navigate(['user', 'homepage']);
-            // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
+            this.router.navigate(['/', 'user', 'homepage']);
             break;
           }
           case 'manager': {
             console.log(`${functionFullName}: navigating to manager-user`);
-            // this.router.navigate(['manager-user']);
-            this.router.navigate(['user', 'homepage']);
-            // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
+            this.router.navigate(['/', 'user', 'homepage']);
             break;
           }
           case 'admin': {
             console.log(`${functionFullName}: navigating to admin-user`);
-            this.router.navigate(['user', 'admin-user']);
-            // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
+            this.router.navigate(['/', 'user', 'admin-user']);
             break;
           }
         }

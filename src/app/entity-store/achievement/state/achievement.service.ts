@@ -94,8 +94,8 @@ export class AchievementService {
 
         const achievements: AchievementModel[] = [];
         for (let i = 0; i < achievementsResult.length; i++) {
-          console.log(achievementsResult[i]);
-          console.log(achievementsResult[i].achievement);
+          // console.log(achievementsResult[i]);
+          // console.log(achievementsResult[i].achievement);
 
           const achievementId = achievementsResult[i].achievementId;
           const name = achievementsResult[i].achievement.name;

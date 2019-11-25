@@ -49,7 +49,7 @@
                           </ul>
                         </div>
                         <div class="col-8">
-                          <app-edit-profile *ngIf="currentView === 'editProfile'"></app-edit-profile>
+                          <app-edit-profile *ngIf="currentView === 'editProfile'" [option]="option" (clearOption)="clearOption($event)"></app-edit-profile>
                           <app-change-password *ngIf="currentView === 'changePassword'"></app-change-password>
                           <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>
                         </div>

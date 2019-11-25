@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../shared/user.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
@@ -40,6 +40,7 @@ export class NavigationComponent implements OnInit {
 
   constructor(private userService: UserService,
               private router: Router,
+              private route: ActivatedRoute,
               private feedcardService: FeedcardService,
               private achievementService: AchievementService,
               private entityUserAvatarService: EntityUserService,
@@ -202,25 +203,17 @@ export class NavigationComponent implements OnInit {
         switch (securityRole) {
           case 'employee': {
             console.log(`${functionFullName}: navigating to standard-user`);
-            // this.router.navigate(['standard-user']);
-            console.log(this.router);
-            console.log(this.router.getCurrentNavigation());
-            // console.log(this.router.)
-            this.router.navigate(['user', 'homepage']);
-            // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
+            this.router.navigate(['/', 'user', 'homepage']);
             break;
           }
           case 'manager': {
             console.log(`${functionFullName}: navigating to manager-user`);
-            // this.router.navigate(['manager-user']);
-            this.router.navigate(['user', 'homepage']);
-            // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
+            this.router.navigate(['/', 'user', 'homepage']);
             break;
           }
           case 'admin': {
             console.log(`${functionFullName}: navigating to admin-user`);
-            this.router.navigate(['user', 'admin-user']);
-            // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
+            this.router.navigate(['/', 'user', 'admin-user']);
             break;
           }
         }

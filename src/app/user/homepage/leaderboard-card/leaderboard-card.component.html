@@ -37,7 +37,7 @@
           </thead>
           <tbody>
 
-          <tr *ngFor="let user of (leaderboardUsers$ | async).slice(0, 4)" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
+          <tr *ngFor="let user of (leaderboardUsers$ | async).slice(0, 4)" class="leaderboard-table-row" [routerLink]="['/', 'user', 'profile', user.username]">
             <td *ngFor="let col of this.displayedColumns" >
               <div *ngIf="col === 'avatar'" class="avatar-container">
                 <div class="circle-container ">

@@ -40,6 +40,7 @@ const ctrlLeaderboard = require('./controllers/leaderboard.controller');
 const ctrlStoreItem = require('./controllers/store_item.controller');
 const ctrlNotifications = require('./controllers/notification.controller');
 const ctrlFeature = require('./controllers/feature.controller');
+const ctrlCoreValues = require('./controllers/core_values.controller');
 
 const jwtVerify = require('./config/decode-verify-jwt');
 const componentName = 'app';
@@ -1092,6 +1093,28 @@ app.post('/items/getUserPointTransactions', function(req, res) {
     if(tokenResult.message === 'Success') {
       const userId = req.body.userId;
       ctrlPointsTransaction.getUserPointTransactions(userId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+// Core Values Routes
+app.post('/items/getUserCoreValues', function(req, res) {
+  console.log('starting post getUserCoreValues');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const userId = req.body.userId;
+      ctrlCoreValues.getUserCoreValues(userId)
         .then(data => {
           res.json({status: 'post call succeed!', data: data});
         })

@@ -132,7 +132,7 @@ export class StoreItemService {
         level: 'public'
       })
         .then((result: string) => {
-          console.log(result);
+          // console.log(result);
           const data = {
             itemId: storeItemData.id,
             name: storeItemData.name,

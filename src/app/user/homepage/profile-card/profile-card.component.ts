@@ -31,6 +31,7 @@ import {PointItemService} from '../../../entity-store/point-item/state/point-ite
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {PointItemTransactionService} from '../../../entity-store/point-item-transaction/state/point-item-transaction.service';
 import {PointItemTransactionQuery} from '../../../entity-store/point-item-transaction/state/point-item-transaction.query';
+import {Router} from '@angular/router';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -44,28 +45,6 @@ export class ProfileCardComponent implements OnInit {
   componentName = 'profile-card.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
-  coreValueData$: Observable<any[]>;
-  coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
-  myColumnNames = ['Core Value', 'Amount'];
-  options = {
-    width: 350,
-    height: 350,
-    colors: ['#dd97e0', '#8762e6', '#d528ec', '#8129f3', '#f6c7b6', '#4fdef3'],
-    backgroundColor: 'transparent',
-    legend: 'none',
-    pieSliceText: 'label',
-    pieSliceTextStyle: {
-      color: 'black'
-    },
-    pieSliceBorderColor: 'transparent',
-/*    slices: {
-      1: {offset: 0.1},
-      2: {offset: 0.1},
-      3: {offset: 0.1},
-      4: {offset: 0.1},
-      5: {offset: 0.1}
-    }*/
-  };
 
   pendingBalance$;
   currentUser$;
@@ -74,6 +53,7 @@ export class ProfileCardComponent implements OnInit {
   isCardLoading: boolean;
 
   constructor(private http: HttpClient,
+              private router: Router,
               private imageService: ImageService,
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
@@ -109,17 +89,6 @@ export class ProfileCardComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('profile-card-spinner');
 
-/*      const text_max = 200;
-    $('#count_message').html(text_max + ' remaining');
-
-    $('#text').keyup(function() {
-      const text_length = $('#text').val().length;
-      const text_remaining = text_max - text_length;
-
-      $('#count_message').html(text_remaining + ' remaining');
-    });*/
-
-
     this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
     // this.featureService.cacheFeatures().subscribe().unsubscribe();
@@ -128,60 +97,11 @@ export class ProfileCardComponent implements OnInit {
     });
 
     this.pointItemService.cachePointItems().subscribe();
-    this.pointItemTransactionService.cachePointItemTransactions().subscribe();
-
-    this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll();
-    this.pointItemTransactions$.subscribe(() => {
-      this.coreValueData$ = this.getCoreValues();
-    });
-
-
-
 
     // this.pendingBalance$ = this.entityCurrentUserService.getPendingBalance();
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('profile-card-spinner');
-  }
-
-  populateCoreValueData() {
-    // this.pointItemQuery.sele
-  }
-
-  getCoreValues(): Observable<any[]> {
-    const coreValueArray = [
-      ['happy', 1],
-      ['fun', 1],
-      ['genuine', 1],
-      ['caring', 1],
-      ['respect', 1],
-      ['honest', 1]
-    ];
-
-    return new Observable<any[]>(observer => {
-      this.pointItemTransactionQuery.selectAll()
-        .subscribe(transactions => {
-          for (const transaction of transactions) {
-            console.log(transaction);
-            this.pointItemQuery.selectAll({
-              filterBy: (e => e.itemId === transaction.pointItemId)
-            })
-              .subscribe(pointItem => {
-                const coreValues = pointItem[0].coreValues;
-                for (const coreValue of coreValues) {
-                  const coreValueItem = coreValueArray.find(x => x[0] === coreValue);
-                  coreValueItem[1] = +coreValueItem[1] + 1;
-                }
-              });
-          }
-
-          // coreValueArray = coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; });
-          console.log(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
-          observer.next(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
-          observer.complete();
-        });
-    });
-
   }
 
   getPendingBalance(): Observable<any> {
@@ -201,5 +121,12 @@ export class ProfileCardComponent implements OnInit {
 
   avatarClick() {
     $('#avatarModal').modal('show');
+  }
+
+  onSetQuoteClick() {
+    this.currentUserQuery.selectAll()
+      .subscribe(currentUser => {
+        this.router.navigate(['user', 'profile', currentUser[0].username], {state: {option: 'quote'}});
+      }).unsubscribe();
   }
 }

@@ -58,6 +58,8 @@ export class ProfileComponent implements OnInit {
     'privacySettings',
   ];
 
+  public option;
+
   constructor(private http: HttpClient,
               private route: ActivatedRoute,
               private router: Router,
@@ -71,7 +73,12 @@ export class ProfileComponent implements OnInit {
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
               private storeItemService: StoreItemService,
-              private userHasStoreItemService: UserHasStoreItemService) { }
+              private userHasStoreItemService: UserHasStoreItemService) {
+    console.log(this.router.getCurrentNavigation().extras);
+    if (this.router.getCurrentNavigation().extras.state) {
+      this.option = this.router.getCurrentNavigation().extras.state.option;
+    }
+  }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -91,6 +98,8 @@ export class ProfileComponent implements OnInit {
         console.log(user);
       });
     });
+
+
 
     const observables: Observable<any>[] = [];
     observables.push(
@@ -144,36 +153,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  onEditProfileClick() {
-    this.currentView = 'editProfile';
+  clearOption(event) {
+    this.option = null;
   }
 
-  onChangePasswordClick() {
-    this.currentView = 'changePassword';
-  }
-
-  onPrivacySettingsClick() {
-    this.currentView = 'privacySettings';
-  }
-
-  getPendingBalance(): Observable<any> {
-    return new Observable(observer => {
-      this.currentUserQuery.selectAll()
-        .subscribe(user => {
-          if (user[0]) {
-            observer.next(user[0].pointsBalance);
-            observer.complete();
-          } else {
-            observer.complete();
-          }
-
-        });
-    });
-  }
-
-  avatarClick() {
-    $('#avatarModal').modal('show');
-  }
 
 
 }
