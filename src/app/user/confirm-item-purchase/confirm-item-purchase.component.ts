@@ -73,11 +73,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     console.log(row);
     console.log('event:');
     console.log(event);
-    // console.log ("some");
-/*    this.managerRequests$.subscribe(managerRequests => {
-      // console.log(managerRequests);
-      const rowIndex = event.source.id.split('-');
-    });*/
+
   }
 
   declineToggle(event) {

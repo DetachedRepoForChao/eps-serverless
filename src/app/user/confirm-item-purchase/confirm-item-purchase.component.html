@@ -50,12 +50,10 @@
 
                       <ng-container matColumnDef="acceptRequest">
                         <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
-<!--                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.acceptRequest"></mat-checkbox> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>-->
                         <mat-cell *matCellDef="let UserHasStoreItemModel">
                           <mat-radio-button *ngFor="let approveOption of approveOptions" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="UserHasStoreItemModel.acceptRequest" [value]="approveOption">
                           {{approveOption}}
                         </mat-radio-button> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
-<!--                        </mat-radio-button> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>-->
 
                       </ng-container>
 
