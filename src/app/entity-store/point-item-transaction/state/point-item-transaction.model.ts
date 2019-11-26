@@ -9,12 +9,13 @@ export type PointItemTransactionModel = {
   targetUserId: number;
   pointItemId: number;
   description: string;
+  coreValues: string[];
   createdAt: any;
   dateModified: any;
 };
 
 export function createPointItemTransactionModel({ transactionId, type, amount, sourceUserId, targetUserId, pointItemId,
-                                     description, createdAt }: Partial<PointItemTransactionModel>) {
+                                     description, coreValues, createdAt }: Partial<PointItemTransactionModel>) {
 
   return {
     id: guid(),
@@ -25,6 +26,7 @@ export function createPointItemTransactionModel({ transactionId, type, amount, s
     targetUserId,
     pointItemId,
     description,
+    coreValues,
     createdAt,
     dateModified: Date.now()
   } as PointItemTransactionModel;

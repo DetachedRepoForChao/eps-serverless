@@ -120,7 +120,7 @@ export class AvatarComponent implements OnInit {
           console.log(base64data);
           console.log(data.avatarUrl);
           currentFn.avatarUrl = base64data.toString();
-          currentFn.entityCurrentUserService.updateAvatar(data.avatarUrl);
+          // currentFn.entityCurrentUserService.updateAvatar(data.avatarUrl);
           currentFn.avatarService.saveUserAvatar(data.result).subscribe((saveResult) => {
             if (saveResult === true) {
               currentFn.achievementService.incrementAchievement('ChangeAvatar').subscribe();

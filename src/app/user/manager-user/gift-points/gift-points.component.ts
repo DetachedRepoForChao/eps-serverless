@@ -75,7 +75,7 @@ export class GiftPointsComponent implements OnInit {
   showFlag = false;
   clickedUser;
 
-  color: ThemePalette = 'warn';
+  color: ThemePalette = 'primary';
   checked = false;
   disabled = false;
   toggled = false;

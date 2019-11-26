@@ -21,7 +21,6 @@ export class ImageCropperComponent implements OnInit {
 
   constructor(private avatarService: AvatarService,
               private leaderboardService: LeaderboardService,
-              private globals: Globals,
               private feedcardService: FeedcardService,
               private entityUserService: EntityCurrentUserService,
               public userQuery: EntityCurrentUserQuery) { }

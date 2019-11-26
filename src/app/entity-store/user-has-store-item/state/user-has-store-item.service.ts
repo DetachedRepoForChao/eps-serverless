@@ -293,7 +293,9 @@ export class UserHasStoreItemService {
             filterBy: entity => entity.itemId === pendingRecords[i].storeItemId
           })[0];
 
-          sum += storeItem.cost;
+          if (storeItem) {
+            sum += storeItem.cost;
+          }
         }
 
         observer.next(sum);

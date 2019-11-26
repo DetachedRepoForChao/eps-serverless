@@ -299,7 +299,7 @@ async function checkSessionHeartbeat(socketId) {
         var timeDiffMs = timeNowMs - heartbeatAtMs;
 
         if (timeDiffMs >= 30000) {
-            console.log('checkSessionHeartbeat: The session has not received a heartbeat updateAvatar in over 30000 ms. Ending session');
+            console.log('checkSessionHeartbeat: The session has not received a heartbeat update in over 30000 ms. Ending session');
 
             // Send notification of session disconnection
             socketSession.emit('sessionDisconnected', {sessionId: socketId, reason: 'Session idle for ' + timeDiffMs + 'ms'});
@@ -316,7 +316,7 @@ async function checkSessionHeartbeat(socketId) {
             // Recreate connection
 
         } else {
-            console.log('checkSessionHeartbeat: The session has received a heartbeat updateAvatar the past 30000 ms. Continuing');
+            console.log('checkSessionHeartbeat: The session has received a heartbeat update the past 30000 ms. Continuing');
             if(hashMatch.loggedIn === true) {
                 socketSession.emit('checkSessionHeartbeat');
                 setTimeout(function () {

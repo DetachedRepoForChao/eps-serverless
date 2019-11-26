@@ -1,0 +1,114 @@
+
+<div class="container align-items-center wrapperwidth">
+  <div class="card">
+    <div class="card card-coin card-plain card-custom">
+      <div class="card-body">
+        <div class="row profile-body">
+          <div class="col-2 text-left avatar-col circle-container">
+            <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
+              <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
+                   alt="Avatar"
+                   class="img-center img-fluid rounded-circle"
+                   id="avatar">
+
+              <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
+                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
+                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal"></i>
+                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
+              </span>
+            </div>
+
+            <ng-template #avatarLoading >
+              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                   alt="Loading..."
+                   class="img-center img-fluid rounded-circle"
+                   id="avatarPlaceholder">
+            </ng-template>
+
+
+          </div>
+          <div class="col-5 text-left profile-details">
+            <div class="row">
+              <div class="col-4">
+                <div class="mb-1 line-height-3 font-weight-200">Name:</div>
+              </div>
+              <div class="col-8">
+                <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
+                  <div>{{(currentUser$ | async)[0]?.preferredName}}</div>
+                </div>
+                <ng-template #noPreferredName>
+                  <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
+                </ng-template>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <div class="mb-1 line-height-3 font-weight-200">Username:</div>
+              </div>
+              <div class="col-8">
+                <div>{{(currentUser$ | async)[0]?.username}}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <div class="mb-1 line-height-3 font-weight-200">Department:</div>
+              </div>
+              <div class="col-8">
+                <div>{{(currentUser$ | async)[0]?.department.Name}}</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-3 profile-points-section">
+            <div [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
+                 matTooltipPosition="above">
+              <div class="row">
+                <div class="col-6">
+                  <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
+                </div>
+                <div class="col-4">
+                  <div *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
+                    <div class="mb-0">{{(currentUser$ | async)[0]?.points}}</div>
+                  </div>
+                  <ng-template #pointsWithBalance >
+                    <div *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance"
+                         class="mb-0 red"
+                    >
+                      {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
+                    </div>
+
+                  </ng-template>
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="mb-1 line-height-3 font-weight-200">Trophies:</div>
+              </div>
+              <div class="col-4">
+                <div class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
+                  {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="mb-1 line-height-3 font-weight-200">Rank:</div>
+              </div>
+              <div class="col-4">
+                <div class="mb-0" *ngIf="(userQuery.selectLoading() | async) === false">
+                  {{(leaderboardUsers$ | async).indexOf((userQuery.selectUser((currentUserQuery.selectAll() | async)[0]?.username) | async)[0]) + 1}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer"></div>
+
+    </div>
+
+  </div>
+</div>

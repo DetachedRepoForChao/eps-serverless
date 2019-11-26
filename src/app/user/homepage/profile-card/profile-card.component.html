@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card card-coin card-plain card-custom">
-    <div class="card-header">
+    <div class="card-header profile-card-header">
 
 <!--      <div *ngIf="(this.currentUserQuery.selectLoading() | async) === false; else avatarLoading">-->
       <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
@@ -33,8 +33,6 @@
 
       <div class="row">
         <div class="col-md-12 text-center">
-<!--          <h4 class="text-uppercase">{{globals.getUserAttribute('given_name')}} {{globals.getUserAttribute('family_name')}}</h4>
-          <span>{{globals.getUserAttribute('custom:department')}}</span>-->
           <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
             <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.preferredName}}</h4>
           </div>
@@ -45,21 +43,10 @@
           <hr class="line-success">
         </div>
       </div>
-      <!-------Quote Box------>
-      <!--      <form accept-charset="UTF-8" action="" method="POST">
-              <textarea class="form-control" id="text" name="text" placeholder="Type in your message" rows="5"></textarea>
-              <h6 class="pull-right" id="count_message"></h6>
-              <button class="btn btn-info" type="submit">Post New Message</button>
-            </form>-->
-      <!-------End of Quote Box----->
       <div class="row text-center mt-4">
-<!--        <div class="col p-2" data-toggle="tooltip" data-placement="top" title="123">-->
         <div class="col p-2"
              [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
              matTooltipPosition="above">
-<!--             title="<em>Points:</em> {{(currentUser$ | async)[0]?.points}} <em>Pending Balance:</em> {{(getPendingBalance() | async)}}">-->
-
-<!--          <button mat-raised-button matTooltip="Info">Stuff</button>-->
           <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
           <h4 class="mb-0" *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
             {{(currentUser$ | async)[0]?.points}}
@@ -72,8 +59,6 @@
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-<!--          <h4 class="mb-0" *ngIf="achievementService.completeAchievements && achievementService.achievementDataList">
-            {{achievementService.completeAchievements.length}} / {{achievementService.achievementDataList.length}}-->
           <h4 class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
             {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
           </h4>
@@ -81,75 +66,39 @@
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
           <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
-            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.selectUser(globals.getUsername()) | async)[0]) + 1}}
+            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.selectUser((currentUserQuery.selectAll() | async)[0]?.username) | async)[0]) + 1}}
           </h4>
         </div>
       </div>
-<!--      <div class="row chart-row" >
-        <google-chart
-          [type]="'PieChart'"
-          [data]="coreValueData$ | async"
-          [columnNames]="myColumnNames"
-          [options]="options">
-        </google-chart>
-      </div>-->
+
+      <div class="row">
+        <div class="col-2 quote-box-quotation-mark" >
+          <div>&ldquo;</div>
+        </div>
+        <div class="col-8 quote-box-text">
+          <div *ngIf="(currentUser$ | async)[0]?.quote; else noQuote">
+            <h4 class="user-attribute">{{(currentUser$ | async)[0]?.quote}}</h4>
+          </div>
+          <ng-template #noQuote>
+            <h4 class="user-attribute">Nothing here yet...</h4>
+            <a href="javascript:void(0)" (click)="onSetQuoteClick()" class="user-attribute">Click here to set a favorite quote!</a>
+          </ng-template>
+
+        </div>
+        <div class="col-2">
+
+        </div>
+      </div>
 
     </div>
     <div class="card-footer text-center">
       <!-----Button----->
       <div class="container">
         <div class="row">
-          <!--          <button type="button" (click)="Debug()">Debug</button>
-                    <div class="col-sm-6 col-md-6 col-lg-6 col-6">
-                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-6 col-6">
-                      <button type="button" class="btn btn-danger" (click)="showGallery()" style="padding-right: 10px; padding-left: 10px">Select Avatar</button>
-                    </div>-->
-<!--          <div class="col-sm-6 col-md-6 col-lg-6 col-6">
-            <button type="button" class="btn btn-danger" (click)="authService.verifyEmail()" style="padding-right: 10px; padding-left: 10px">Verify Email</button>
-          </div>-->
         </div>
       </div>
     </div>
   </div>
-
-  <!--<div class="modal fade modal-black" id="myModal" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-      &lt;!&ndash; Modal content&ndash;&gt;
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Settings</h4>
-        </div>
-        &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
-        <div class="modal-body" style="text-align: center">
-          <input type="file" (change)="fileChangeEvent($event)" />
-          <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>
-
-          <image-cropper
-            [imageChangedEvent]="imageChangedEvent"
-            format="png"
-            outputType="both"
-            (imageCropped)="imageCropped($event)"
-            (imageLoaded)="imageLoaded()"
-            (cropperReady)="cropperReady()"
-            (loadImageFailed)="loadImageFailed()"
-          ></image-cropper>
-
-          <div>
-            <img [src]="croppedImageToShow" style="max-width: 150px"/>
-          </div>
-        </div>
-
-        &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
-        <div class="modal-footer">
-&lt;!&ndash;          <button type="button" class="btn btn-success">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>&ndash;&gt;
-        </div>
-      </div>
-    </div>
-  </div>-->
 
   <!-- Blank card to display while loading -->
   <ng-template #cardLoading>
@@ -168,26 +117,7 @@
   </ng-template>
 
 </div>
-<!--<div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-sm" role="document">
 
-    &lt;!&ndash; Modal content&ndash;&gt;
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Choose Your Avatar</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
-      <div class="modal-body">
-        <app-image-gallery></app-image-gallery>
-      </div>
-      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
-
-    </div>
-  </div>
-</div>-->
 
 <div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg" role="document">

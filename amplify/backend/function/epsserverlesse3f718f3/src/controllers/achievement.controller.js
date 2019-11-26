@@ -44,8 +44,8 @@ const getAchievementUnlocksFeature = function() {
 
 module.exports.getAchievementUnlocksFeature = getAchievementUnlocksFeature;
 
-const getUserAchievementsByUserId = function(user) {
-  const functionName = 'getUserAchievementsByUserId';
+const getUserAchievements = function(user) {
+  const functionName = 'getUserAchievements';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
@@ -56,7 +56,7 @@ const getUserAchievementsByUserId = function(user) {
       {
         model: Models.Achievement,
         attributes: [
-          'id', 'name', 'description', 'status', 'cost', 'achievementFamily', 'level', 'startAmount',
+          'id', 'name', 'description', 'status', 'cost', 'achievementFamily', 'level', 'startAmount'
         ],
         include: [
           {
@@ -80,7 +80,7 @@ const getUserAchievementsByUserId = function(user) {
       userId: user.id,
       '$achievement.achievementHasRoleAudiences.role_id$': user.securityRoleId
     },
-    attributes: ['id', 'userId', 'achievementId', 'goalProgress', 'status'],
+    attributes: ['id', 'userId', 'achievementId', 'goalProgress', 'status', 'updatedAt'],
   })
     .then(userAchievements => {
       if(!userAchievements) {
@@ -99,7 +99,7 @@ const getUserAchievementsByUserId = function(user) {
     });
 };
 
-module.exports.getUserAchievementsByUserId = getUserAchievementsByUserId;
+module.exports.getUserAchievements = getUserAchievements;
 
 
 const newAchievementTransaction = function(userAchievementId, amount, type, description) {
@@ -708,7 +708,7 @@ const acknowledgeAchievementComplete = function (achievementProgressId, userId) 
     .then(updateResult => {
       if (!updateResult) {
         console.log(`${functionFullName}: Something went wrong during the Achievement Progress Status update`);
-        return {status: false, message: 'Something went wrong during the Achievement Progress Status updateAvatar.'};
+        return {status: false, message: 'Something went wrong during the Achievement Progress Status update.'};
       } else {
         console.log(`${functionFullName}: Status updated successfully`);
         return {status: true, message: 'Status updated successfully'};

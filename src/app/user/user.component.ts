@@ -4,9 +4,6 @@ import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router'
 import { DepartmentService } from '../shared/department.service';
 import { SecurityRoleService} from '../shared/securityRole.service';
 import {map} from 'rxjs/operators';
-import { Globals } from '../globals';
-// import {SocketService} from '../shared/socket.service';
-// import {SessionService} from '../shared/session.service';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
 import {forkJoin, Observable, Subscription} from 'rxjs';
@@ -66,8 +63,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   public config: PerfectScrollbarConfigInterface = {};
 
-  constructor(private globals: Globals,
-              private userService: UserService,
+  constructor(private userService: UserService,
               private router: Router,
               private securityRoleService: SecurityRoleService,
               private route: ActivatedRoute,
@@ -89,23 +85,24 @@ export class UserComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.securityRoleName = this.globals.getUserAttribute('custom:security_role');
+    console.log('route');
+    console.log(this.route);
+    console.log('this.route.snapshot');
+    console.log(this.route.snapshot);
 
-    this.navigateHome();
-/*    if (this.router.url.includes('homepage')) {
+    if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
+      console.log('this.route.snapshot.children[0].url[0].path');
+      console.log(this.route.snapshot.children[0].url[0].path);
+    } else {
       this.navigateHome();
-    }*/
-    // console.log(this.router);
-    // console.log(this.route);
-    // console.log(this.route.children);
-
-    // this.navigateHome();
+    }
 
     this.isComponentLoading = false;
 
     this.idle = this.userIdle.getConfigValue().idle;
     this.timeout = this.userIdle.getConfigValue().timeout;
     this.ping = this.userIdle.getConfigValue().ping;
+
 
     this.onStartWatching();
 
@@ -118,31 +115,28 @@ export class UserComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    switch (this.securityRoleName) {
-      case 'employee': {
-        console.log(`${functionFullName}: navigating to standard-user`);
-        // this.router.navigate(['standard-user']);
-        console.log(this.router);
-        console.log(this.router.getCurrentNavigation());
-        // console.log(this.router.)
-        this.router.navigate(['user', 'homepage']);
-        // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
-        break;
-      }
-      case 'manager': {
-        console.log(`${functionFullName}: navigating to manager-user`);
-        // this.router.navigate(['manager-user']);
-        this.router.navigate(['user', 'homepage']);
-        // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
-        break;
-      }
-      case 'admin': {
-        console.log(`${functionFullName}: navigating to admin-user`);
-        this.router.navigate(['user', 'admin-user']);
-        // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
-        break;
-      }
-    }
+    this.authService.currentUserInfo()
+      .then(currentUser => {
+        const securityRoleName = currentUser.attributes['custom:security_role'];
+        switch (securityRoleName) {
+          case 'employee': {
+            console.log(`${functionFullName}: navigating to standard-user`);
+            this.router.navigate(['/', 'user', 'homepage']);
+            break;
+          }
+          case 'manager': {
+            console.log(`${functionFullName}: navigating to manager-user`);
+            this.router.navigate(['/', 'user', 'homepage']);
+            break;
+          }
+          case 'admin': {
+            console.log(`${functionFullName}: navigating to admin-user`);
+            this.router.navigate(['/', 'user', 'admin-user']);
+            break;
+          }
+        }
+      });
+
   }
 
   ngOnDestroy() {
@@ -196,10 +190,14 @@ export class UserComponent implements OnInit, OnDestroy {
 
     // Start watch when time is up.
     this.timeoutSubscription = this.userIdle.onTimeout()
-      .subscribe(() => this.timeIsUp = true);
+      .subscribe(() => {
+        this.timeIsUp = true;
+      });
 
     this.pingSubscription = this.userIdle.ping$
-      .subscribe(value => this.lastPing = `#${value} at ${new Date().toString()}`);
+      .subscribe(value => {
+        this.lastPing = `#${value} at ${new Date().toString()}`;
+      });
   }
 
   onStopWatching() {

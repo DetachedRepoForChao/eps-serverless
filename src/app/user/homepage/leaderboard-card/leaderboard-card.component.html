@@ -37,12 +37,13 @@
           </thead>
           <tbody>
 
-          <tr *ngFor="let user of (leaderboardUsers$ | async).slice(0, 4)" data-toggle="modal" data-target="#leaderboardUserModal" (click)="onRowClick(user)">
+          <tr *ngFor="let user of (leaderboardUsers$ | async).slice(0, 4)" class="leaderboard-table-row" [routerLink]="['/', 'user', 'profile', user.username]">
             <td *ngFor="let col of this.displayedColumns" >
               <div *ngIf="col === 'avatar'" class="avatar-container">
                 <div class="circle-container ">
                   <img src="{{user?.avatarResolvedUrl}}"/>
-                  <div *ngIf="user?.username === globals.getUsername(); else otherUser">
+                  <div *ngIf="user?.username === (entityCurrentUserQuery.selectAll() | async)[0]?.username; else otherUser">
+
                     <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
                         <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
                         <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal"></i>
@@ -153,7 +154,7 @@
     </div>
     <div class="card-footer text-center">
       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#leaderboardModal">More</button>
-<!--            <button type="button" class="btn btn-success" (click)="test1()">Test1</button>-->
+      <!--            <button type="button" class="btn btn-success" (click)="test1()">Test1</button>-->
       <button type="button" class="btn btn-success" (click)="test2()">Test2</button>
     </div>
   </div>
