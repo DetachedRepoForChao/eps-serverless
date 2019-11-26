@@ -238,7 +238,7 @@ export class EntityUserService {
               const gender = (usersMerged[i].gender || usersMerged[i].genderPublic) ? usersMerged[i].gender : null;
 
 
-              const completeAchievementsTotal = (usersMerged[i].achievementsPublic) ? usersMerged[i].completeAchievementsTotal : null;
+              const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;

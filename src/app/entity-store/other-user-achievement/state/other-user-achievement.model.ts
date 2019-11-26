@@ -1,7 +1,8 @@
 import { ID, guid } from '@datorama/akita';
 
-export type AchievementModel = {
+export type OtherUserAchievementModel = {
   id: ID;
+  userId: number;
   achievementId: number;
   name: string;
   description: string;
@@ -18,11 +19,13 @@ export type AchievementModel = {
   dateModified: any;
 };
 
-export function createEntityAchievementModel({ achievementId, name, description, cost, progress, progressId, achievementStatus,
-                                               progressStatus, family, startAmount, level, roles, updatedAt}: Partial<AchievementModel>) {
+export function createEntityOtherUserAchievementModel({ userId, achievementId, name, description, cost, progress, progressId,
+                                                        achievementStatus, progressStatus, family, startAmount, level, roles,
+                                                        updatedAt}: Partial<OtherUserAchievementModel>) {
 
   return {
     id: guid(),
+    userId,
     achievementId,
     name,
     description,
@@ -37,5 +40,5 @@ export function createEntityAchievementModel({ achievementId, name, description,
     roles,
     updatedAt,
     dateModified: Date.now(),
-  } as AchievementModel;
+  } as OtherUserAchievementModel;
 }

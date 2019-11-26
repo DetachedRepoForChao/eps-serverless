@@ -10,12 +10,12 @@
             <div class="card card-coin card-plain card-custom">
 
               <div class="card-body" >
-                <div class="row">
+                <div *ngIf="user; else cardLoading" class="row">
                   <div class="col-4">
                     <div class="row">
                       <div class="col-12">
-                        <div *ngIf="this.user$; else avatarLoading">
-                          <img [src]="(this.user$ | async)[0]?.avatarResolvedUrl"
+                        <div *ngIf="user$; else avatarLoading">
+                          <img [src]="(user$ | async)[0]?.avatarResolvedUrl"
                                alt="Avatar"
                                class="img-center img-fluid rounded-circle"
                                id="avatar">
@@ -29,7 +29,7 @@
                         </ng-template>
                       </div>
                     </div>
-                    <div class="row">
+                    <div *ngIf="user$" class="row">
                       <div class="col-md-12 text-center">
                         <div *ngIf="(user$ | async)[0]?.preferredName; else noPreferredName">
                           <h4 class="text-uppercase">{{(user$ | async)[0]?.preferredName}}</h4>
@@ -56,57 +56,37 @@
                     </div>
                     <div class="row core-value-row">
                       <div class="col-12">
-
-                        <div *ngIf="coreValueData && (coreValueData)?.length > 0; else coreValueChartPlaceholder" class="img-center img-fluid">
-                          <div class="positionrelative">
-                            <div class="row text-center">
-                              <h3 class="mb-1 line-height-5 font-weight-bold x-margin-auto">Core Values</h3>
-                            </div>
-                            <div class="row chart-row" >
-                              <google-chart class="x-margin-auto" #chart
-                                            [type]="'PieChart'"
-                                            [data]="coreValueData"
-                                            [columnNames]="myColumnNames"
-                                            [options]="options">
-                              </google-chart>
+                        <div *ngIf="(user$ | async)[0]?.genderPublic; else chartPrivate">
+                          <div *ngIf="coreValueData && (coreValueData)?.length > 0; else coreValueChartPlaceholder" class="img-center img-fluid">
+                            <div class="positionrelative">
+                              <div class="row text-center">
+                                <h3 class="mb-1 line-height-5 font-weight-bold x-margin-auto">Core Values</h3>
+                              </div>
+                              <div class="row chart-row" >
+                                <google-chart class="x-margin-auto" #chart
+                                              [type]="'PieChart'"
+                                              [data]="coreValueData"
+                                              [columnNames]="myColumnNames"
+                                              [options]="options">
+                                </google-chart>
+                              </div>
                             </div>
                           </div>
+                          <ng-template #coreValueChartPlaceholder>
+                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                 alt="Loading..."
+                                 class="img-center img-fluid rounded-circle"
+                                 id="coreValueChartPlaceholder">
+                          </ng-template>
                         </div>
-                        <ng-template #coreValueChartPlaceholder>
-                          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                               alt="Loading..."
-                               class="img-center img-fluid rounded-circle"
-                               id="coreValueChartPlaceholder">
-                        </ng-template>
                       </div>
                     </div>
                   </div>
 
                   <div class="col-8">
 
-                    <div class="row attributes-row">
+                    <div *ngIf="user$" class="row attributes-row">
                       <div class="user-form-container col-12">
-<!--                        <div class="form-row">
-                          <div class="col-5 aligncentercontent">
-                            <label class="form-label">Name</label>
-                          </div>
-                          <div class="col-7">
-                            <div *ngIf="(user$ | async)[0]?.preferredName; else noPreferredName">
-                              <h4 class="user-attribute">{{(user$ | async)[0]?.preferredName}}</h4>
-                            </div>
-                            <ng-template #noPreferredName>
-                              <h4 class="user-attribute">{{(user$ | async)[0]?.firstName}} {{(user$ | async)[0]?.lastName}}</h4>
-                            </ng-template>
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div class="col-5">
-                            <label class="form-label">Department</label>
-                          </div>
-                          <div class="col-7">
-                            <h4 class="user-attribute">{{(user$ | async)[0]?.department.Name}}</h4>
-                          </div>
-                        </div>-->
                         <div class="form-row">
                           <div class="col-3">
                             <label class="form-label">Email</label>
@@ -149,7 +129,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row quote-row">
+                    <div *ngIf="user$" class="row quote-row">
                       <div class="col-1 quote-box-quotation-mark" >
                         <div>&ldquo;</div>
                       </div>
@@ -166,96 +146,143 @@
 
                       </div>
                     </div>
-                    <div class="form-row y-padding-0 margin-top-10">
+                    <div *ngIf="user$ && pointItemTransactions" class="form-row y-padding-0 margin-top-10">
                       <div class="col-12">
                         <div class="form-row y-padding-0">
                           <div class="col-8">
                             <label class="form-label">Latest points award...</label>
                           </div>
-                          <div class="col-2 y-margin-auto textr">
+                          <div *ngIf="(user$ | async)[0]?.pointsPublic" class="col-2 y-margin-auto textr">
                             <a href="javascript:void(0)">...view all</a>
                           </div>
-
                         </div>
-                        <div class="form-row y-padding-0 margin-top--10">
-                          <div class="col-8">
-                            <h5 class="user-attribute italics">Did some stuff? 400 points for Gryffindor! Test Test Test Test Test Test</h5>
+                        <div *ngIf="(user$ | async)[0]?.pointsPublic; else fieldPrivate2">
+                          <div *ngIf="pointItemTransactions[0]; else noPointItemTransactions">
+                            <div class="form-row y-padding-0 margin-top--10">
+                              <div class="col-8">
+                                <h5 class="user-attribute italics">{{pointItemTransactions[0]?.description}}</h5>
+                              </div>
+                              <div class="col-2 textr">
+                                <h5 class="user-attribute">{{pointItemTransactions[0]?.amount}}pts</h5>
+                              </div>
+                            </div>
+                            <div class="form-row y-padding-0 margin-top--10">
+                              <div class="col-12">
+                                <h5 class="user-attribute">- Awarded by {{(userQuery.selectUserByUserId(pointItemTransactions[0]?.sourceUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(pointItemTransactions[0]?.sourceUserId) | async)[0]?.lastName}} on {{pointItemTransactions[0]?.createdAt | date:'longDate'}}</h5>
+                              </div>
+                            </div>
                           </div>
-                          <div class="col-2 textr">
-                            <h5 class="user-attribute">...400pts</h5>
-                          </div>
-                        </div>
-                        <div class="form-row y-padding-0 margin-top--10">
-                          <div class="col-12">
-                            <h5 class="user-attribute">- Awarded by Max Bado on 03/07/2019</h5>
-                          </div>
+                          <ng-template #noPointItemTransactions>
+                            <div class="form-row y-padding-0 margin-top--10">
+                              <div class="col-8">
+                                <h5 class="user-attribute font-italic">No points awards yet...</h5>
+                              </div>
+                            </div>
+                          </ng-template>
                         </div>
                       </div>
-
                     </div>
-                    <div class="form-row y-padding-0 margin-top-30">
+
+                    <div *ngIf="user$ && achievements && completedAchievements" class="form-row y-padding-0 margin-top-30">
                       <div class="col-12">
                         <div class="form-row y-padding-0">
                           <div class="col-8">
                             <label class="form-label">Latest completed achievement...</label>
                           </div>
-                          <div class="col-2 y-margin-auto textr">
+                          <div *ngIf="(user$ | async)[0]?.achievementsPublic" class="col-2 y-margin-auto textr">
                             <a href="javascript:void(0)">...view all</a>
                           </div>
 
                         </div>
-                        <div class="form-row y-padding-0 margin-top--10">
-                          <div class="col-8">
-                            <h5 class="user-attribute italics">Took a shower this morning. Yay.</h5>
-                          </div>
-                          <div class="col-2 y-margin-auto textr">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                          </div>
+                        <div *ngIf="(user$ | async)[0]?.achievementsPublic; else fieldPrivate2">
+                          <div *ngIf="completedAchievements[0]; else noCompletedAchievements">
+                            <div class="form-row y-padding-0 margin-top--10">
+                              <div class="col-8">
+                                <h5 class="user-attribute font-italic font-weight-bold ">{{completedAchievements[0]?.name}}</h5>
+                                <h5 class="user-attribute font-italic">{{completedAchievements[0]?.description}}</h5>
+                              </div>
+                              <div class="col-2 y-margin-auto textr">
+                            <span *ngFor="let star of achievementQuery.getAchievementFamilyCount(completedAchievements[0])">
+                              <i *ngIf="star.progressStatus === 'complete' || star.progressStatus === 'complete acknowledged'" class="fas fa-star"></i>
+                              <i *ngIf="star.progressStatus === 'in progress' || star.progressStatus === 'not started'" class="far fa-star"></i>
+                            </span>
+                              </div>
 
+                            </div>
+                            <div class="form-row y-padding-0 margin-top--10">
+                              <div class="col-12">
+                                <h5 class="user-attribute">- Completed on {{completedAchievements[0]?.updatedAt | date:'longDate'}}</h5>
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noCompletedAchievements>
+                            <div class="form-row y-padding-0 margin-top--10">
+                              <div class="col-8">
+                                <h5 class="user-attribute font-italic">No completed achievements yet...</h5>
+                              </div>
+                            </div>
+                          </ng-template>
                         </div>
-                        <div class="form-row y-padding-0 margin-top--10">
-                          <div class="col-12">
-                            <h5 class="user-attribute">- Completed on 03/20/2019</h5>
-                          </div>
-                        </div>
-
-
                       </div>
-
                     </div>
                   </div>
-
                 </div>
-
-
               </div>
+
               <div class="card-footer text-center">
-                <!-----Button----->
                 <div class="container">
                   <div class="row">
 
                   </div>
                 </div>
               </div>
+
             </div>
-
           </div>
-
-
-
-
-
-
-
         </div>
       </div>
     </div>
   </section>
-
-
 </div>
 
 <ng-template #fieldPrivate>
-  <h4 class="user-attribute">Private</h4>
+  <h4 class="user-attribute">This information has been set private</h4>
+</ng-template>
+<ng-template #fieldPrivate2>
+  <div class="form-row y-padding-0 margin-top--10">
+    <div class="col-8">
+      <h4 class="user-attribute">This information has been set private</h4>
+    </div>
+  </div>
+</ng-template>
+<ng-template #chartPrivate>
+  <div class="img-center img-fluid">
+    <div class="positionrelative">
+      <div class="row text-center">
+        <h3 class="mb-1 line-height-5 font-weight-bold x-margin-auto">Core Values</h3>
+      </div>
+      <div class="row chart-row" >
+        <google-chart class="x-margin-auto" #chart
+                      [type]="'PieChart'"
+                      [data]="privateCoreValueData"
+                      [columnNames]="myColumnNames"
+                      [options]="privateOptions">
+        </google-chart>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #cardLoading>
+  <div class="card-body">
+    <ngx-spinner
+      name="other-user-spinner"
+      [fullScreen]="false"
+      bdColor="rgba(51,51,51,0.8)"
+      size="medium"
+      color="#fff"
+      type="pacman"
+    >
+      <p class="loadingstyle">Loading...</p>
+    </ngx-spinner>
+  </div>
 </ng-template>

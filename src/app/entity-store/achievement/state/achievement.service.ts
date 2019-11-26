@@ -109,8 +109,9 @@ export class AchievementService {
           const startAmount = achievementsResult[i].achievement.startAmount;
           const level = achievementsResult[i].achievement.level;
           const roles = achievementsResult[i].achievement.achievementHasRoleAudiences;
+          const updatedAt = achievementsResult[i].updatedAt;
           const achievement = createEntityAchievementModel({achievementId, name, description, cost, progress, progressId,
-            achievementStatus, progressStatus, family, startAmount, level, roles});
+            achievementStatus, progressStatus, family, startAmount, level, roles, updatedAt});
           achievements.push(achievement);
 
         }
@@ -239,11 +240,5 @@ export class AchievementService {
           });
         });
     });
-  }
-
-
-
-  showStore() {
-    console.log(this.achievementStore);
   }
 }

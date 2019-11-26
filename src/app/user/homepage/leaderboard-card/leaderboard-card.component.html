@@ -42,7 +42,7 @@
               <div *ngIf="col === 'avatar'" class="avatar-container">
                 <div class="circle-container ">
                   <img src="{{user?.avatarResolvedUrl}}"/>
-                    <div *ngIf="user?.username === (entityCurrentUserQuery.selectAll() | async)[0]?.username; else otherUser">
+                  <div *ngIf="user?.username === (entityCurrentUserQuery.selectAll() | async)[0]?.username; else otherUser">
 
                     <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
                         <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
@@ -154,7 +154,7 @@
     </div>
     <div class="card-footer text-center">
       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#leaderboardModal">More</button>
-<!--            <button type="button" class="btn btn-success" (click)="test1()">Test1</button>-->
+      <!--            <button type="button" class="btn btn-success" (click)="test1()">Test1</button>-->
       <button type="button" class="btn btn-success" (click)="test2()">Test2</button>
     </div>
   </div>
