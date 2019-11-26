@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { NotificationService } from 'src/app/shared/notifications/notification.service';
+
 
 @Component({
   selector: 'app-notification-card',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NotificationCardComponent implements OnInit {
 
-  constructor() { }
+  userForm = new FormGroup({
+    title: new FormControl(),
+    content: new FormControl()
+  }); 
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit() {
+  }
+
+  sendNotification(){
+      console.log(this.userForm.value)
+      
   }
 
 }
