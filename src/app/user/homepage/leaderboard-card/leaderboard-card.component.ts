@@ -3,8 +3,6 @@ import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.s
 import {MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {DepartmentEmployee} from '../../manager-user/gift-points/gift-points.component';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
-import {Globals} from '../../../globals';
 import {DepartmentService} from '../../../shared/department.service';
 import {Department} from '../../../shared/department.model';
 import {Storage} from 'aws-amplify';
@@ -25,6 +23,7 @@ import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/s
 import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {FeatureQuery} from '../../../entity-store/feature/state/feature.query';
+import {AuthService} from '../../../login/auth.service';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -53,8 +52,6 @@ export class LeaderboardCardComponent implements OnInit {
   selectedRow;
 
   constructor(public leaderboardService: LeaderboardService,
-              private avatarService: AvatarService,
-              private globals: Globals,
               private departmentService: DepartmentService,
               private imageService: ImageService,
               private spinner: NgxSpinnerService,
@@ -69,7 +66,8 @@ export class LeaderboardCardComponent implements OnInit {
               private storeItemQuery: StoreItemQuery,
               private pointItemQuery: PointItemQuery,
               private metricsQuery: MetricsQuery,
-              private featureQuery: FeatureQuery) { }
+              private featureQuery: FeatureQuery,
+              private authService: AuthService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';

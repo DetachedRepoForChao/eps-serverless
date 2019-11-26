@@ -40,6 +40,7 @@ const ctrlLeaderboard = require('./controllers/leaderboard.controller');
 const ctrlStoreItem = require('./controllers/store_item.controller');
 const ctrlNotifications = require('./controllers/notification.controller');
 const ctrlFeature = require('./controllers/feature.controller');
+const ctrlCoreValues = require('./controllers/core_values.controller');
 
 const jwtVerify = require('./config/decode-verify-jwt');
 const componentName = 'app';
@@ -466,22 +467,17 @@ app.get('/items/currentUserAchievements', function(req, res) {
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
-
-    // console.log("tokenResult"+tokenResult.claims)
-
-
     if(tokenResult.message === 'Success') {
       const username = tokenResult.claims['cognito:username'];
-      // const username = req.body.username;
       ctrlUser.getUserProfile(username)
         .then(result => {
           const user = result.user;
-          ctrlAchievement.getUserAchievementsByUserId(user)
+          ctrlAchievement.getUserAchievements(user)
             .then(data => {
-              res.json({status: 'post call succeed!', data: data.userAchievements});
+              res.json({status: 'get call succeed!', data: data.userAchievements});
             })
             .catch(err => {
-              res.json({status: 'post call failed!', error: err});
+              res.json({status: 'get call failed!', error: err});
             });
         });
     } else {
@@ -490,20 +486,25 @@ app.get('/items/currentUserAchievements', function(req, res) {
   });
 });
 
-app.get('/items/usersCompleteAchievementTotal', function(req, res) {
-  const functionName = 'get usersCompleteAchievementTotal';
+app.post('/items/userAchievements', function(req, res) {
+  const functionName = 'post userAchievements';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      ctrlAchievement.getUserAchievementsByUserId()
-        .then(data => {
-          res.json({status: 'get call succeed!', data: data.usersCompleteAchievementTotal});
-        })
-        .catch(err => {
-          res.json({status: 'get call failed!', error: err});
+      const user = req.body.user;
+      ctrlUser.getUserProfile(user.username)
+        .then(result => {
+          const user = result.user;
+          ctrlAchievement.getUserAchievements(user)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data.userAchievements});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
         });
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
@@ -924,7 +925,7 @@ app.post('/items/setUserAvatar', function(req, res) {
       const username = tokenResult.claims['cognito:username'];
       ctrlAvatar.setUserAvatar(username, avatarUrl)
         .then(data => {
-          res.json({status: 'post call succeed!', data: data.points});
+          res.json({status: 'post call succeed!', data: data.avatarUrl});
         })
         .catch(err => {
           res.json({status: 'post call failed!', error: err});
@@ -1060,8 +1061,8 @@ app.get('/items/getPointTransaction2', function(req, res) {
     });
 });
 
-app.get('/items/getUserPointTransactions', function(req, res) {
-  console.log('starting get getUserPointTransactions');
+app.get('/items/getCurrentUserPointTransactions', function(req, res) {
+  console.log('starting get getCurrentUserPointTransactions');
 
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
@@ -1078,6 +1079,49 @@ app.get('/items/getUserPointTransactions', function(req, res) {
               res.json({status: 'get call failed!', error: err});
             });
         });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/getUserPointTransactions', function(req, res) {
+  console.log('starting post getUserPointTransactions');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const userId = req.body.userId;
+      ctrlPointsTransaction.getUserPointTransactions(userId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+// Core Values Routes
+app.post('/items/getUserCoreValues', function(req, res) {
+  console.log('starting post getUserCoreValues');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const userId = req.body.userId;
+      ctrlCoreValues.getUserCoreValues(userId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }

@@ -8,8 +8,6 @@ import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
 import {first, tap} from 'rxjs/operators';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
-import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {Department} from '../../../shared/department.model';
@@ -37,7 +35,6 @@ export class EntityCurrentUserService {
               private entityCurrentUserQuery: EntityCurrentUserQuery,
               private userHasStoreItemQuery: UserHasStoreItemQuery,
               private storeItemQuery: StoreItemQuery,
-              private globals: Globals,
               private authService: AuthService) { }
 
   updateFilter(filter: VISIBILITY_FILTER) {
@@ -104,28 +101,6 @@ export class EntityCurrentUserService {
     });
   }
 
-  updateExtraAttributes(userId: number, middleName: string, preferredName: string, prefix: string, suffix: string, position: string,
-                        address1: string, address2: string, city: string, state: string, country: string, zip: number,
-                        preferredPronoun: string, sex: string, gender: string, dateOfHire: any) {
-    this.currentUserStore.update(null, {
-      userId: userId,
-      middleName: middleName,
-      preferredName: preferredName,
-      prefix: prefix,
-      suffix: suffix,
-      position: position,
-      address1: address1,
-      address2: address2,
-      city: city,
-      state: state,
-      country: country,
-      zip: zip,
-      preferredPronoun: preferredPronoun,
-      sex: sex,
-      gender: gender,
-      dateOfHire: dateOfHire,
-    });
-  }
 
   updatePointsBalance(pointsBalance: number) {
     console.log('updating points balance with: ' + pointsBalance);
@@ -169,6 +144,15 @@ export class EntityCurrentUserService {
         const securityRole = userDataResult.securityRole;
         const phone = userDataResult.phone.substring(2);
         const avatarPath = userDataResult.avatarPath;
+        const quote = userDataResult.quote;
+        const phonePublic = userDataResult.phonePublic;
+        const emailPublic = userDataResult.emailPublic;
+        const genderPublic = userDataResult.genderPublic;
+        const birthdatePublic = userDataResult.birthdatePublic;
+        const pointAwardsPublic = userDataResult.pointAwardsPublic;
+        const achievementsPublic = userDataResult.achievementsPublic;
+        const pointsPublic = userDataResult.pointsPublic;
+        const coreValuesPublic = userDataResult.coreValuesPublic;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
@@ -176,7 +160,8 @@ export class EntityCurrentUserService {
             const avatarResolvedUrl = result.avatarResolvedUrl;
             const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, prefix,
               suffix, position, points, pointsPool, email, address1, address2, city, state, country, zip, birthdate, preferredPronoun, sex,
-              gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl});
+              gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl, quote, phonePublic,
+              emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -228,7 +213,6 @@ export class EntityCurrentUserService {
     });
   }
 
-  // TODO: Rework this function to not rely on Cognito attributes
   getCurrentUser(): Observable<any> {
     const functionName = 'getCurrentUser';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -281,6 +265,15 @@ export class EntityCurrentUserService {
                     Description: currentUser.securityRole.description
                   };
                   const avatarUrl = currentUser.avatarUrl;
+                  const quote = currentUser.quote;
+                  const phonePublic = currentUser.phonePublic;
+                  const emailPublic = currentUser.emailPublic;
+                  const genderPublic = currentUser.genderPublic;
+                  const birthdatePublic = currentUser.birthdatePublic;
+                  const pointAwardsPublic = currentUser.pointAwardsPublic;
+                  const achievementsPublic = currentUser.achievementsPublic;
+                  const pointsPublic = currentUser.pointsPublic;
+                  const coreValuesPublic = currentUser.coreValuesPublic;
 
                   const data = {
                     userId: userId,
@@ -310,6 +303,15 @@ export class EntityCurrentUserService {
                     department: department,
                     securityRole: securityRole,
                     avatarPath: avatarUrl,
+                    quote: quote,
+                    phonePublic: phonePublic,
+                    emailPublic: emailPublic,
+                    genderPublic: genderPublic,
+                    birthdatePublic: birthdatePublic,
+                    pointAwardsPublic: pointAwardsPublic,
+                    achievementsPublic: achievementsPublic,
+                    pointsPublic: pointsPublic,
+                    coreValuesPublic: coreValuesPublic,
                   };
 
                   console.log('userData:');
@@ -320,50 +322,6 @@ export class EntityCurrentUserService {
                 });
 
             });
-        });
-    });
-  }
-
-  getCurrentUserPoints() {
-    const functionName = 'getCurrentUserPoints';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          API.get(this.apiName, this.apiPath + '/getUserPoints', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
-            observer.next(data.data);
-            observer.complete();
-          });
-        });
-    });
-  }
-
-  getCurrentUserPointsPool() {
-    const functionName = 'getCurrentUserPointPool';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          API.get(this.apiName, this.apiPath + '/getRemainingPointPool', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
-            observer.next(data.data);
-            observer.complete();
-          });
         });
     });
   }
@@ -402,41 +360,6 @@ export class EntityCurrentUserService {
     });
   }
 
-  fillRemainingAttributes(): Observable<any> {
-    const functionName = 'fillRemainingAttributes';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.getCurrentUserFromDb()
-        .subscribe(userResult => {
-          console.log(`${functionFullName}: userResult:`);
-          console.log(userResult);
-          const userId = userResult.id;
-          const middleName = userResult.middleName;
-          const preferredName = userResult.preferredName;
-          const prefix = userResult.prefix;
-          const suffix = userResult.suffix;
-          const position = userResult.position;
-          const address1 = userResult.address1;
-          const address2 = userResult.address2;
-          const city = userResult.city;
-          const state = userResult.state;
-          const country = userResult.country;
-          const zip = userResult.zip;
-          const preferredPronoun = userResult.preferredPronoun;
-          const sex = userResult.sex;
-          const gender = userResult.gender;
-          const dateOfHire = userResult.dateOfHire;
-
-          this.updateExtraAttributes(userId, middleName, preferredName, prefix, suffix, position, address1, address2, city, state, country,
-            +zip, preferredPronoun, sex, gender, dateOfHire);
-
-          observer.next(true);
-          observer.complete();
-        });
-    });
-  }
 
   modifyUser(user): Observable<any> {
     const functionName = 'modifyUser';

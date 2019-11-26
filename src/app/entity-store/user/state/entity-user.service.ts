@@ -8,8 +8,6 @@ import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
-import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {SecurityRole} from '../../../shared/securityrole.model';
@@ -205,8 +203,8 @@ export class EntityUserService {
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
               const preferredPronoun = usersMerged[i].preferredPronoun;
-              const birthdate = usersMerged[i].dateOfBirth;
-              const email = usersMerged[i].email;
+              const birthdate = (usersMerged[i].birthdatePublic) ? usersMerged[i].dateOfBirth : null;
+              const email = (usersMerged[i].emailPublic) ? usersMerged[i].email : null;
               const securityRole: SecurityRole = {
                 Id: +usersMerged[i].securityRole.id,
                 Name: usersMerged[i].securityRole.name,
@@ -216,7 +214,15 @@ export class EntityUserService {
                 Id: +usersMerged[i].department.id,
                 Name: usersMerged[i].department.name
               };
-
+              const quote = usersMerged[i].quote;
+              const phonePublic = usersMerged[i].phonePublic;
+              const emailPublic = usersMerged[i].emailPublic;
+              const genderPublic = usersMerged[i].genderPublic;
+              const birthdatePublic = usersMerged[i].birthdatePublic;
+              const pointAwardsPublic = usersMerged[i].pointAwardsPublic;
+              const achievementsPublic = usersMerged[i].achievementsPublic;
+              const pointsPublic = usersMerged[i].pointsPublic;
+              const coreValuesPublic = usersMerged[i].coreValuesPublic;
               // Properties visible to admins
               const address1 = (usersMerged[i].address1) ? usersMerged[i].address1 : null;
               const address2 = (usersMerged[i].address2) ? usersMerged[i].address2 : null;
@@ -226,20 +232,22 @@ export class EntityUserService {
               const zip = (usersMerged[i].zip) ? usersMerged[i].zip : null;
               const dateOfHire = (usersMerged[i].dateOfHire) ? usersMerged[i].dateOfHire : null;
               const dateOfTermination = (usersMerged[i].dateOfTermination) ? usersMerged[i].dateOfTermination : null;
-              const phone = (usersMerged[i].phone) ? usersMerged[i].phone.substring(2) : null;
+              const phone = (usersMerged[i].phone || usersMerged[i].phonePublic) ? usersMerged[i].phone.substring(2) : null;
               const active = (usersMerged[i].active) ? usersMerged[i].active : null;
               const sex = (usersMerged[i].sex) ? usersMerged[i].sex : null;
-              const gender = (usersMerged[i].gender) ? usersMerged[i].gender : null;
+              const gender = (usersMerged[i].gender || usersMerged[i].genderPublic) ? usersMerged[i].gender : null;
+
 
               const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
-              const avatar = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
+              const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
                 preferredName, preferredPronoun, address1, address2, city, country, state, zip, dateOfHire, dateOfTermination, phone,
-                active, sex, gender});
-              usersArray.push(avatar);
+                active, sex, gender, quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic,
+                pointsPublic, coreValuesPublic});
+              usersArray.push(userModel);
             }
 
             this.userStore.set(usersArray);

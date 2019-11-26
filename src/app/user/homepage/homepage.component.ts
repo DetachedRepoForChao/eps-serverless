@@ -1,6 +1,5 @@
 import {Component, EventEmitter, HostListener, OnInit} from '@angular/core';
 import {NotifierService} from 'angular-notifier';
-import {Globals} from '../../globals';
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
@@ -10,11 +9,12 @@ import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/st
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {PointItemTransactionService} from '../../entity-store/point-item-transaction/state/point-item-transaction.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
-  // styleUrls: ['./homepage.component.css']
+  styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
   componentName = 'homepage.component';
@@ -50,7 +50,6 @@ export class HomepageComponent implements OnInit {
 
   constructor(
     private notifierService: NotifierService,
-    public globals: Globals,
     private metricsService: MetricsService,
     private currentUserService: EntityCurrentUserService,
     private currentUserQuery: EntityCurrentUserQuery,
@@ -58,7 +57,9 @@ export class HomepageComponent implements OnInit {
     private userHasStoreItemService: UserHasStoreItemService,
     private userHasStoreItemQuery: UserHasStoreItemQuery,
     private achievementService: AchievementService,
-    private pointItemTransactionService: PointItemTransactionService) { }
+    private pointItemTransactionService: PointItemTransactionService,
+    private router: Router,
+    private route: ActivatedRoute) {  }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -102,7 +103,7 @@ export class HomepageComponent implements OnInit {
       }
     });
 
-    this.pointItemTransactionService.cachePointItemTransactions().subscribe();
+    // this.pointItemTransactionService.cacheCurrentUserPointItemTransactions().subscribe();
   }
 
   private isKonamiCode(): boolean {

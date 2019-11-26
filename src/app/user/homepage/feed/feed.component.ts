@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {Pointtransaction} from '../../../shared/feedcard/pointtransaction';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {PointTransaction} from '../../../shared/feedcard/feedcard.service';
 import {User} from '../../../shared/user.model';
 import {LeaderboardUser} from '../../../shared/leaderboard.service';
@@ -24,7 +23,6 @@ export class FeedComponent implements OnInit {
   // pointTransactions: PointTransaction[] = [];
 
   constructor(public feedcardService: FeedcardService,
-              private avatarService: AvatarService,
               private spinner: NgxSpinnerService,
               private globals: Globals,
               private entityUserService: EntityUserService,
@@ -71,7 +69,7 @@ export class FeedComponent implements OnInit {
       this.achievementService.incrementAchievement('UnlikePost').subscribe();
     });
   }
-  
+
   function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;

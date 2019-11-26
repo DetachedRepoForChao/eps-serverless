@@ -36,14 +36,24 @@ export type EntityUserModel = {
   zip: number;
   dateOfHire: string;
   dateOfTermination: string;
+  quote: string;
+  phonePublic: boolean;
+  emailPublic: boolean;
+  genderPublic: boolean;
+  birthdatePublic: boolean;
+  pointAwardsPublic: boolean;
+  achievementsPublic: boolean;
+  pointsPublic: boolean;
+  coreValuesPublic: boolean;
 
 };
 
 export function createEntityUserModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, position,
-                                              points, birthdate, preferredPronoun, sex, gender, securityRole, department, email, phone,
-                                              avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, active,
-                                              address1, address2, city, state, country, zip, dateOfHire,
-                                              dateOfTermination}: Partial<EntityUserModel>) {
+                                        points, birthdate, preferredPronoun, sex, gender, securityRole, department, email, phone,
+                                        avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, active,
+                                        address1, address2, city, state, country, zip, dateOfHire, dateOfTermination, quote,
+                                        phonePublic,  emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic,
+                                        pointsPublic, coreValuesPublic}: Partial<EntityUserModel>) {
   return {
     id: guid(),
     userId,
@@ -77,6 +87,15 @@ export function createEntityUserModel({ userId, username, firstName, lastName, m
     zip,
     dateOfHire,
     dateOfTermination,
+    quote,
+    phonePublic,
+    emailPublic,
+    genderPublic,
+    birthdatePublic,
+    pointAwardsPublic,
+    achievementsPublic,
+    pointsPublic,
+    coreValuesPublic,
     dateModified: Date.now(),
   } as EntityUserModel;
 }

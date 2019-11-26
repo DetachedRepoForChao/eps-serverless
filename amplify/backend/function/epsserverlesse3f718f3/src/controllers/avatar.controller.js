@@ -109,12 +109,12 @@ const setUserAvatar = function(username, avatarUrl) {
   })
     .then(() => {
       console.log(`${functionFullName}: Successfully updated user avatar`);
-      return {status: 200, avatarUrl: avatarUrl};
+      return {status: true, avatarUrl: avatarUrl};
     })
     .catch(err => {
       console.log(`${functionFullName}: Error updating user avatar`);
       console.log(err);
-      return {status: 500, error: err};
+      return {status: false, error: err};
     });
 };
 

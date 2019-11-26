@@ -11,7 +11,6 @@ import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
 import {DepartmentService} from './department.service';
-import {AvatarService} from './avatar/avatar.service';
 import {EntityUserService} from '../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../entity-store/user/state/entity-user.query';
 
@@ -61,7 +60,6 @@ export class LeaderboardService {
   constructor(private http: HttpClient,
               private departmentService: DepartmentService,
               private authService: AuthService,
-              private avatarService: AvatarService,
               private entityUserService: EntityUserService,
               private entityUserQuery: EntityUserQuery) { }
 

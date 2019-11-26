@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router} from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '../shared/user.service';
-import { Router } from '@angular/router';
 import { User } from '../shared/user.model';
 import decode from 'jwt-decode';
 import {AuthService} from '../login/auth.service';
@@ -18,28 +17,21 @@ export class AuthGuard implements CanActivate {
               private authService: AuthService) {
 
   }
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const functionName = 'canActivate';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    const localStorageItems = [];
-    for ( let i = 0; i < localStorage.length; i++) {
-      localStorageItems.push(localStorage.key(i));
-    }
-
-    const accessTokenName = localStorageItems.find((x: string) => x.includes('accessToken') === true);
-    const accessTokenValue = localStorage.getItem(accessTokenName);
-
-    if (!accessTokenValue) {
-      console.warn(`${functionFullName}: user not logged in`);
-      this.router.navigateByUrl('/login');
-      this.userService.deleteToken();
-      return false;
-    } else {
-      console.log(`${functionFullName}: user is logged in`);
-      return true;
-    }
+    return this.authService.isLoggedIn()
+      .then(result => {
+        // console.log(result);
+        if (result) {
+          return true;
+        } else {
+          this.router.navigateByUrl('/login').then();
+          this.authService.signOut().then();
+          return false;
+        }
+      });
   }
+
 }

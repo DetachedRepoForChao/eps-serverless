@@ -150,3 +150,7 @@ td div.avatar-container {
   font-size: 20px;
   color: white;
 }
+
+.leaderboard-table-row {
+  cursor: pointer;
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../shared/user.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
@@ -9,10 +9,9 @@ import {StoreItemService} from '../../../entity-store/store-item/state/store-ite
 import {resetStores} from '@datorama/akita';
 import {AuthService} from '../../../login/auth.service';
 
-import { Globals } from 'src/app/globals';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {NotificationService} from '../../../shared/notifications/notification.service';
-import { ConsoleLogger } from '@aws-amplify/core';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -34,20 +33,22 @@ export class NavigationComponent implements OnInit {
   public config: PerfectScrollbarConfigInterface = {};
   Notifications;
   NotificationStatus;
+  currentUser$;
   Detail;
   notificationNums;
   showDetail;
 
   constructor(private userService: UserService,
               private router: Router,
+              private route: ActivatedRoute,
               private feedcardService: FeedcardService,
               private achievementService: AchievementService,
               private entityUserAvatarService: EntityUserService,
-              private entityUserService: EntityCurrentUserService,
+              private entityCurrentUserService: EntityCurrentUserService,
+              private currentUserQuery: EntityCurrentUserQuery,
               private storeItemService: StoreItemService,
               private authService: AuthService,
               private notificationService: NotificationService,
-              private globals: Globals
               ) { }
 
   ngOnInit() {
@@ -57,6 +58,10 @@ export class NavigationComponent implements OnInit {
       blackKit.checkScrollForTransparentNavbar();
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
+
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();
+    this.currentUser$ = this.currentUserQuery.selectAll();
+
     this.notificationService.getNotification().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
@@ -192,31 +197,28 @@ export class NavigationComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    switch (this.globals.getUserAttribute('custom:security_role')) {
-      case 'employee': {
-        console.log(`${functionFullName}: navigating to standard-user`);
-        // this.router.navigate(['standard-user']);
-        console.log(this.router);
-        console.log(this.router.getCurrentNavigation());
-        // console.log(this.router.)
-        this.router.navigate(['user', 'homepage']);
-        // this.router.navigate([{ outlets: { 'user-page': ['user/homepage']}}]);
-        break;
-      }
-      case 'manager': {
-        console.log(`${functionFullName}: navigating to manager-user`);
-        // this.router.navigate(['manager-user']);
-        this.router.navigate(['user', 'homepage']);
-        // this.router.navigate([{ outlets: { 'user-page': ['homepage']}}]);
-        break;
-      }
-      case 'admin': {
-        console.log(`${functionFullName}: navigating to admin-user`);
-        this.router.navigate(['user', 'admin-user']);
-        // this.router.navigate([{ outlets: { 'user-page': ['admin-user']}}]);
-        break;
-      }
-    }
+    this.authService.currentUserInfo()
+      .then(currentUser => {
+        const securityRole = currentUser.attributes['custom:security_role'];
+        switch (securityRole) {
+          case 'employee': {
+            console.log(`${functionFullName}: navigating to standard-user`);
+            this.router.navigate(['/', 'user', 'homepage']);
+            break;
+          }
+          case 'manager': {
+            console.log(`${functionFullName}: navigating to manager-user`);
+            this.router.navigate(['/', 'user', 'homepage']);
+            break;
+          }
+          case 'admin': {
+            console.log(`${functionFullName}: navigating to admin-user`);
+            this.router.navigate(['/', 'user', 'admin-user']);
+            break;
+          }
+        }
+      });
+
   }
 
   timeago(dateTimeStamp) {

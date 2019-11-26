@@ -58,7 +58,7 @@ div.card {
 }
 
 .user-form-container {
-  margin-top: 30px;
+  /*margin-top: 30px;*/
   margin-right: 20px;
 }
 
@@ -161,4 +161,48 @@ li:hover {
 
 .gender-custom-row {
   padding-top: 10px;
+}
+
+textarea {
+  resize: vertical;
+  max-height: none;
+  height: 60px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #2b3553;
+  border-radius: 0.4285rem;
+  padding: 0.5rem 0.7rem;
+}
+
+textarea.form-control:focus {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0.4285rem;
+  border-color: #e14eca;
+}
+
+textarea.form-control:active {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0.4285rem;
+  border-color: #e14eca;
+}
+
+.glow {
+  font-size: 16px;
+  color: #fff;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
 }

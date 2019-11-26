@@ -11,10 +11,8 @@ import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {DepartmentService} from '../../../shared/department.service';
-import {AvatarService} from '../../../shared/avatar/avatar.service';
 import {DepartmentEmployee} from './gift-points.component';
 import {LeaderboardUser} from '../../../shared/leaderboard.service';
-import {Globals} from '../../../globals';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -56,72 +54,7 @@ export class GiftPointsService {
 
   constructor(private http: HttpClient,
               private departmentService: DepartmentService,
-              private authService: AuthService,
-              private avatarService: AvatarService,
-              private globals: Globals) { }
-
-  populateEmployeeDataSource(): Observable<any> {
-    const functionName = 'populateEmployeeDataSource';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      let departmentEmployees: DepartmentEmployee[] = [];
-
-      if (this.globals.getUserAttribute('custom:department_id')) {
-        this.departmentService.getEmployeesByDepartmentId(+this.globals.getUserAttribute('custom:department_id'))
-          .subscribe(res => {
-            console.log(res);
-
-            console.log(`${functionFullName}: employee list for department id ${+this.globals.getUserAttribute('custom:department_id')}`);
+              private authService: AuthService) { }
 
 
-            for ( let i = 0; i < res.length; i++) {
-              console.log(res[i]);
-              const userData = {
-                id: res[i].id,
-                username: res[i].username,
-                firstName: res[i].firstName,
-                lastName: res[i].lastName,
-                email: res[i].email,
-                position: res[i].position,
-                securityRoleId: res[i].securityRoleId,
-                points: res[i].points,
-                avatarUrl: res[i].avatarUrl,
-              };
-
-              const departmentEmployee: DepartmentEmployee = {
-                id: userData.id,
-                avatar: userData.avatarUrl,
-                name: userData.firstName + ' ' + userData.lastName,
-                username: userData.username,
-                email: userData.email,
-                position: userData.position,
-                points: userData.points,
-              };
-
-              console.log(departmentEmployee);
-
-              departmentEmployees = departmentEmployees.concat(departmentEmployee);
-            }
-
-
-            console.log(`${functionFullName}: departmentEmployees`);
-            console.log(departmentEmployees);
-            this.departmentEmployees = departmentEmployees;
-            this.dataSource.data = this.departmentEmployees;
-            observer.next(true);
-            observer.complete();
-
-
-          });
-      } else {
-        console.log(`${functionFullName}: departmentId does not exist in local storage`);
-        observer.next(false);
-        observer.complete();
-      }
-
-      // observer.complete();
-    });
-  }
 }

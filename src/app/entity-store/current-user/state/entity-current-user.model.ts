@@ -36,13 +36,23 @@ export type EntityCurrentUserModel = {
   avatarResolvedUrl: string;
   dateModified: any;
   isCurrentUser: boolean;
+  quote: string;
+  phonePublic: boolean;
+  emailPublic: boolean;
+  genderPublic: boolean;
+  birthdatePublic: boolean;
+  pointAwardsPublic: boolean;
+  achievementsPublic: boolean;
+  pointsPublic: boolean;
+  coreValuesPublic: boolean;
 };
 
 export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, birthdate,
                                                position, address1, address2, city, state, country, zip, preferredPronoun, sex, gender,
                                                dateOfHire, points, pointsBalance, pointsPool, securityRole, department, email, phone,
-                                               avatarBase64String, avatarPath, avatarResolvedUrl,
-                                               isCurrentUser }: Partial<EntityCurrentUserModel>) {
+                                               avatarBase64String, avatarPath, avatarResolvedUrl, isCurrentUser, quote, phonePublic,
+                                               emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic,
+                                               pointsPublic, coreValuesPublic }: Partial<EntityCurrentUserModel>) {
 
   return {
     id: guid(),
@@ -76,6 +86,15 @@ export function createEntityCurrentUserModel({ userId, username, firstName, last
     avatarBase64String,
     avatarPath,
     avatarResolvedUrl,
+    quote,
+    phonePublic,
+    emailPublic,
+    genderPublic,
+    birthdatePublic,
+    pointAwardsPublic,
+    achievementsPublic,
+    pointsPublic,
+    coreValuesPublic,
     dateModified: Date.now(),
     isCurrentUser
   } as EntityCurrentUserModel;

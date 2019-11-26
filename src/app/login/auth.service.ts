@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import Auth, { CognitoHostedUIIdentityProvider,  } from '@aws-amplify/auth';
 import { Hub, ICredentials, } from '@aws-amplify/core';
 import { Subject, Observable } from 'rxjs';
-import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import {CognitoUser, AuthenticationDetails, CognitoUserSession} from 'amazon-cognito-identity-js';
 import {Globals} from '../globals';
 import {Router} from '@angular/router';
 
@@ -40,7 +40,7 @@ export class AuthService {
   public static GOOGLE = CognitoHostedUIIdentityProvider.Google;
 
 
-  constructor(private globals: Globals, private router: Router) {
+  constructor() {
     Hub.listen('auth', (data) => {
       const {channel, payload} = data;
       if (channel === 'auth') {
@@ -155,6 +155,27 @@ export class AuthService {
           });
         });
     });
+  }
+
+  isLoggedIn() {
+    return Auth.currentSession()
+      .then((session: CognitoUserSession) => {
+        console.log(session);
+        this.loggedIn = true;
+        return session.isValid();
+      })
+      .catch(err => {
+        console.log(err);
+        this.loggedIn = false;
+        return false;
+      });
+  }
+
+  getUsername() {
+    return Auth.currentAuthenticatedUser()
+      .then(currentUser => {
+        return currentUser.username;
+      });
   }
 
   test(): Promise<any> {

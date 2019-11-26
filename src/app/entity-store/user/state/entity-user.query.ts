@@ -53,7 +53,11 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     return user$;
   }
 
-
+  public selectUserByUserId(userId: number) {
+    return this.selectAll({
+      filterBy: e => e.userId === userId
+    });
+  }
 
   public getDeactivatedUsers() {
     return this.selectAll({
@@ -66,9 +70,7 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
       filterBy: x => x.userId === userId
     })[0];
 
-    const numArray = Array(user.completeAchievementsTotal).map((x, i) => i);
-    // console.log(numArray);
-    return numArray;
+    return Array(user.completeAchievementsTotal).map((x, i) => i);
   }
 
   public selectUserCompleteAchievementCount(userId: number): Observable<any> {
