@@ -52,11 +52,12 @@
                         <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel">
                           <mat-radio-group [ngModel]="approveOptions">
-                          <mat-radio-button *ngFor="let approveOption of approveOptions" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="UserHasStoreItemModel.acceptRequest" [value]="approveOption">
-                          {{approveOption}}
+                          <mat-radio-button *ngFor="let approveOption of approveOptions" [checked]="approveOption.checked" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="approveOption" [value]="approveOption">
+                          {{approveOption.name}}
                         </mat-radio-button>
                           </mat-radio-group>
-                            {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
+<!--                            {{UserHasStoreItemModel.acceptRequest}}-->
+                        </mat-cell>
                       </ng-container>
 
                       <!--                      <ng-container matColumnDef="declineRequest">
@@ -74,7 +75,7 @@
 
 
                     <div class="container">
-                      <button type="button" class="btn btn-success" >Save</button>
+                      <button type="button" class="btn btn-success" (click)="onSaveClick()" >Save</button>
                       <button type="button" class="btn btn-danger">Cancel</button>
                     </div>
 

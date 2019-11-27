@@ -31,7 +31,13 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   requestedStoreItem;
   managerRequests$;
   displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest'];
-  approveOptions: string[] = ['Approve', 'Decline'];
+  approveOptions = [
+    {name: 'Approve', checked: false},
+    {name: 'Decline', checked: false},
+    {name: 'Pending', checked: true}
+  ];
+
+  approveList = [];
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
@@ -69,6 +75,21 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     console.log(row);
     console.log('event:');
     console.log(event);
+    const approveItem = {
+      item: row,
+      approveAction: event.value.name
+    };
+
+    if (this.approveList.find(x => x.item === row)) {
+      console.log(`Record ID ${row.recordId} already exists in the approveList`);
+      console.log(this.approveList.find(x => x.item === row));
+      this.approveList.find(x => x.item === row).approveAction = event.value.name;
+    } else {
+      this.approveList.push(approveItem);
+    }
+
+    console.log(this.approveList);
+
 
   }
 
@@ -81,4 +102,18 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   }
 
 
+  onSaveClick() {
+    console.log(this.approveList);
+    const approvedItems = this.approveList.filter(x => x.approveAction === 'Approve');
+    const declinedItems = this.approveList.filter(x => x.approveAction === 'Decline');
+    console.log('Approved Items:');
+    console.log(approvedItems);
+    console.log('Declined Items:');
+    console.log(declinedItems);
+
+    // Do something with the approved items
+
+    // Do something the declined items
+
+  }
 }
