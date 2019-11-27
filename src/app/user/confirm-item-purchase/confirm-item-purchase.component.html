@@ -49,20 +49,22 @@
                       </ng-container>
 
                       <ng-container matColumnDef="acceptRequest">
-                        <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel">
+                          <mat-radio-group [ngModel]="approveOptions">
                           <mat-radio-button *ngFor="let approveOption of approveOptions" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="UserHasStoreItemModel.acceptRequest" [value]="approveOption">
                           {{approveOption}}
-                        </mat-radio-button> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
-
+                        </mat-radio-button>
+                          </mat-radio-group>
+                            {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
                       </ng-container>
 
-<!--                      <ng-container matColumnDef="declineRequest">
-                        <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-&lt;!&ndash;                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>&ndash;&gt;
-                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-radio-button (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-radio-button> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+                      <!--                      <ng-container matColumnDef="declineRequest">
+                                              <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
+                      &lt;!&ndash;                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>&ndash;&gt;
+                                              <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-radio-button (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-radio-button> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
 
-                      </ng-container>-->
+                                            </ng-container>-->
 
                       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                       <mat-row *matRowDef="let UserHasStoreItemModel; columns: displayedColumns;"></mat-row>

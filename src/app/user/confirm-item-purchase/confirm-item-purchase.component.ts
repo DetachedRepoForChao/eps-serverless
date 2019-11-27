@@ -31,8 +31,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   requestedStoreItem;
   managerRequests$;
   displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest'];
-  approveOptions = ['Approve', 'Decline'];
-
+  approveOptions: string[] = ['Approve', 'Decline'];
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
@@ -42,9 +41,6 @@ export class ConfirmItemPurchaseComponent implements OnInit {
                 private storeItemService: StoreItemService,
                 public currentUserQuery: EntityCurrentUserQuery,
                 private userHasStoreItemQuery: UserHasStoreItemQuery) { }
-
-
-
 
 
   requestStoreItem(storeItem) {
@@ -86,4 +82,3 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
 
 }
-
