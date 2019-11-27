@@ -102,6 +102,7 @@ import { ProfileHeaderComponent } from './user/profile/profile-header/profile-he
 import { OtherUserComponent } from './user/profile/other-user/other-user.component';
 import { NotificationComponent } from './user/notification/notification.component';
 import { AlertCardComponent } from './user/homepage/alert-card/alert-card.component';
+import {PointItemComponent} from './shared/point-item/point-item.component';
 akitaConfig({
   resettable: true
 });
@@ -168,6 +169,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PlaceholderCardComponent,
     ProfileHeaderComponent,
     OtherUserComponent,
+    AlertCardComponent,
+    PointItemComponent
   ],
   imports: [
     BrowserModule,
