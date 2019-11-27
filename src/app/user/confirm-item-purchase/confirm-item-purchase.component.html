@@ -22,29 +22,29 @@
                   </div>
 
                   <div>
-                    <mat-table  #requestTable [dataSource]="managerRequests$">
+                    <mat-table  #requestTable [dataSource]="managerRequests$" matSort>
                       <ng-container matColumnDef="recordId">
-                        <mat-header-cell *matHeaderCellDef>Request ID</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Request ID </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="userUsername">
-                        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Username </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userUsername}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef=storeItemName>
-                        <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Item </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="storeItemCost">
-                        <mat-header-cell *matHeaderCellDef> Item Cost </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Item Cost </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="status">
-                        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
                       </ng-container>
 
