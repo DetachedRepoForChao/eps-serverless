@@ -100,7 +100,8 @@ import {GoogleChartsModule} from 'angular-google-charts';
 import { PlaceholderCardComponent } from './user/homepage/placeholder-card/placeholder-card.component';
 import { ProfileHeaderComponent } from './user/profile/profile-header/profile-header.component';
 import { OtherUserComponent } from './user/profile/other-user/other-user.component';
-import { PointItemComponent } from './shared/point-item/point-item.component';
+import { NotificationComponent } from './user/notification/notification.component';
+import { AlertCardComponent } from './user/homepage/alert-card/alert-card.component';
 akitaConfig({
   resettable: true
 });
@@ -167,7 +168,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PlaceholderCardComponent,
     ProfileHeaderComponent,
     OtherUserComponent,
-    PointItemComponent
   ],
   imports: [
     BrowserModule,

@@ -20,7 +20,10 @@ export class NotificationCardComponent implements OnInit {
   }
 
   sendNotification(){
-      console.log(this.userForm.value)
+     
+     
+     console.log(this.userForm.value);
+
       
   }
 
