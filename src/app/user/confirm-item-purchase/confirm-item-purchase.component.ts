@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {CurrentUserStore} from '../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
@@ -7,7 +7,7 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatTableModule } from '@angular/material';
+import {MatSort, MatTableModule, MatTableDataSource} from '@angular/material';
 
 import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
@@ -31,8 +31,15 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   requestedStoreItem;
   managerRequests$;
   displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest'];
-  approveOptions = ['Approve', 'Decline'];
+  approveOptions = [
+    {name: 'Approve', checked: false},
+    {name: 'Decline', checked: false},
+    {name: 'Pending', checked: true}
+  ];
 
+  approveList = [];
+
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
@@ -42,8 +49,6 @@ export class ConfirmItemPurchaseComponent implements OnInit {
                 private storeItemService: StoreItemService,
                 public currentUserQuery: EntityCurrentUserQuery,
                 private userHasStoreItemQuery: UserHasStoreItemQuery) { }
-
-
 
 
 
@@ -66,18 +71,31 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
 
+      this.dataSource.sort = this.sort;
   }
+
 
   approvalToggle(row, event){
     console.log('row:');
     console.log(row);
     console.log('event:');
     console.log(event);
-    // console.log ("some");
-/*    this.managerRequests$.subscribe(managerRequests => {
-      // console.log(managerRequests);
-      const rowIndex = event.source.id.split('-');
-    });*/
+    const approveItem = {
+      item: row,
+      approveAction: event.value.name
+    };
+
+    if (this.approveList.find(x => x.item === row)) {
+      console.log(`Record ID ${row.recordId} already exists in the approveList`);
+      console.log(this.approveList.find(x => x.item === row));
+      this.approveList.find(x => x.item === row).approveAction = event.value.name;
+    } else {
+      this.approveList.push(approveItem);
+    }
+
+    console.log(this.approveList);
+
+
   }
 
   declineToggle(event) {
@@ -89,5 +107,19 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   }
 
 
-}
+  onSaveClick() {
+    console.log(this.approveList);
+    const approvedItems = this.approveList.filter(x => x.approveAction === 'Approve');
+    const declinedItems = this.approveList.filter(x => x.approveAction === 'Decline');
+    console.log('Approved Items:');
+    console.log(approvedItems);
+    console.log('Declined Items:');
+    console.log(declinedItems);
 
+    // Do something with the approved items
+
+
+    // Do something the declined items
+
+  }
+}

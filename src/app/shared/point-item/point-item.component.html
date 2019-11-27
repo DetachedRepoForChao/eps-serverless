@@ -1,0 +1,58 @@
+<div class="container align-items-center" style="min-height: 600px; max-height: 600px">
+
+  <div class="row justify-content-md-center">
+    <div *ngFor="let transaction of (pointItemTransactions$ | async); let i = index" class="col-10 achievlist">
+      <div class="row">
+        <div class="col-2 text-left avatar-col circle-container">
+          <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
+            <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
+                 alt="Avatar"
+                 class="img-center img-fluid rounded-circle"
+                 id="avatar">
+
+          </div>
+
+          <ng-template #avatarLoading >
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                 alt="Loading..."
+                 class="img-center img-fluid rounded-circle"
+                 id="avatarPlaceholder">
+          </ng-template>
+
+
+        </div>
+        <div class="col-8 text-left">
+            <div class="form-row y-padding-0 margin-top--10">
+              <div class="col-8">
+                <h5 class="user-attribute italics">{{transaction?.description}}</h5>
+              </div>
+              <div class="col-2 textr">
+                <h5 class="user-attribute">{{transaction?.amount}}pts</h5>
+              </div>
+            </div>
+            <div class="form-row y-padding-0 margin-top--10">
+              <div class="col-12">
+                <h5 class="user-attribute">- Awarded by {{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.lastName}} on {{transaction?.createdAt | date:'longDate'}}</h5>
+              </div>
+            </div>
+
+        </div>
+      </div>
+<!--      transactionId {{transaction.transactionId}}
+      type {{transaction.type}}
+      amount {{transaction.amount}}
+      sourceUserId {{transaction.sourceUserId}}
+      targetUserId {{transaction.targetUserId}}
+      pointItemId {{transaction.pointItemId}}
+      description {{transaction.description}}
+      coreValues {{transaction.coreValues}}
+      createdAt {{transaction.createdAt}}-->
+      <br>
+    </div>
+  </div>
+
+
+
+
+
+</div>

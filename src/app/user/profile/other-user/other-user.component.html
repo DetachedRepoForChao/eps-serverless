@@ -153,7 +153,7 @@
                             <label class="form-label">Latest points award...</label>
                           </div>
                           <div *ngIf="(user$ | async)[0]?.pointsPublic" class="col-2 y-margin-auto textr">
-                            <a href="javascript:void(0)">...view all</a>
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#pointsModal">...view all</a>
                           </div>
                         </div>
                         <div *ngIf="(user$ | async)[0]?.pointsPublic; else fieldPrivate2">
@@ -286,3 +286,26 @@
     </ngx-spinner>
   </div>
 </ng-template>
+
+<div class="modal fade modal-black" id="pointsModal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h4 class="modal-title">Your Point Item Awards</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body modalclass">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+          <app-point-item [inputUser]="user"></app-point-item>
+        </perfect-scrollbar>
+      </div>
+
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+
+
+</div>
