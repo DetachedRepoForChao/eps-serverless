@@ -1,5 +1,9 @@
-export class Hero {
-    constructor(
-        public Title: String,
-        public Content: string) { }
+export class Notification {
+    Title: String;
+    Description: String;
+    audience: String;
+    targetUserId: String;
+    sourceUserId: String;
+    status: String;
 }
+

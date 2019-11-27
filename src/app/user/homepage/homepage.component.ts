@@ -70,6 +70,8 @@ export class HomepageComponent implements OnInit {
     //  console.log(this.socketService.onSessionCreate());
     //  this.notifierService.notify('success', 'Session created!');
     // }
+    
+
 
     this.currentUser$ = this.currentUserQuery.selectAll({
       limitTo: 1
