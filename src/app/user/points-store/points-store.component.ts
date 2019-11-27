@@ -14,6 +14,7 @@ import { EntityCurrentUserService } from 'src/app/entity-store/current-user/stat
 import { CurrentUserStore } from 'src/app/entity-store/current-user/state/current-user.store';
 import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
+import {CurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {Router } from '@angular/router';
 
@@ -112,6 +113,7 @@ export class PointsStoreComponent implements OnInit {
   }
 
 
+
   checkPoints(): boolean {
     const userPoints = this.currentUserQuery.getAll()[0].points;
     const itemCost = this.selectedStoreItem.cost;
@@ -138,6 +140,8 @@ export class PointsStoreComponent implements OnInit {
   this.router.navigate(['/confirm-item-purchase']);
 
 }
+
+
 
 
   ngOnInit() {
