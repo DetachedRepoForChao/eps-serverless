@@ -54,7 +54,7 @@ import { NgxImageGalleryModule} from 'ngx-image-gallery';
 import { ImageGalleryComponent } from './shared/image-gallery/image-gallery.component';
 import { KeysPipe } from './pipe/keys.pipe';
 import {
-  MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatListModule,
+  MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatListModule, MatSortModule, MatTableModule,
   MatToolbarModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -192,6 +192,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatDialogModule,
     MatInputModule,
     MatListModule,
+    MatSortModule,
+    MatTableModule,
     ReactiveFormsModule,
     ImageCropperModule,
     NgxSpinnerModule,

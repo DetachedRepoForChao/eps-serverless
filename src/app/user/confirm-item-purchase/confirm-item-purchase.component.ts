@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {CurrentUserStore} from '../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
@@ -7,7 +7,7 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatTableModule } from '@angular/material';
+import {MatSort, MatTableModule, MatTableDataSource} from '@angular/material';
 
 import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
@@ -39,6 +39,8 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
   approveList = [];
 
+  @ViewChild(MatSort) sort: MatSort;
+
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
                 private userHasStoreItemService: UserHasStoreItemService,
@@ -47,6 +49,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
                 private storeItemService: StoreItemService,
                 public currentUserQuery: EntityCurrentUserQuery,
                 private userHasStoreItemQuery: UserHasStoreItemQuery) { }
+
 
 
   requestStoreItem(storeItem) {
@@ -68,7 +71,9 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
 
+      this.dataSource.sort = this.sort;
   }
+
 
   approvalToggle(row, event){
     console.log('row:');
@@ -112,6 +117,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     console.log(declinedItems);
 
     // Do something with the approved items
+
 
     // Do something the declined items
 
