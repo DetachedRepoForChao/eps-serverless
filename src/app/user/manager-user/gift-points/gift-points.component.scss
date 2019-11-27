@@ -34,6 +34,12 @@
   border-color: #c5c1d5;
 }
 
+::ng-deep .mat-radio-label {
+  color: black;
+}
+
+
+
 
 /* Style the active class (and buttons on mouse-over) */
 /*.active, .btn:hover {
