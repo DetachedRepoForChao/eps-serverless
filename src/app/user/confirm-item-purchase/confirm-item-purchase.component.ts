@@ -118,6 +118,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     // Do something with the approved items
 
+
     // Do something the declined items
 
   }
