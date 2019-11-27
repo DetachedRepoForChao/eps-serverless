@@ -28,22 +28,19 @@ color:	rgba(75, 68, 68, 0.774);
 
 /*.navbar-brand {margin-left: 250px;}*/
 
-.tweet {
-  position: fixed;
-  top: -300px;
-  right: 0px;
-  bottom: 0;
-  left: 0;
-  z-index: 10040;
-  overflow: hidden;
-  overflow-y: hidden;
-}
 
 .modalclass{
   overflow-scrolling: auto;
   overflow-y: auto;
   overflow-x: hidden;
+  margin-top: 0px;
 }
 .black{
   color: black;
+}
+
+.modalheight {
+  position: absolute;
+  margin-top: 55px;
+  overflow-y: auto;
 }
