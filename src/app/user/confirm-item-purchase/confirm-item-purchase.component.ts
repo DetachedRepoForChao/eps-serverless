@@ -71,7 +71,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
 
-      this.dataSource.sort = this.sort;
+      // this.dataSource.sort = this.sort;
   }
 
 

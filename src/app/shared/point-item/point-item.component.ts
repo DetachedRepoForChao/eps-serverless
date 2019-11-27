@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {Globals} from '../../globals';
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
@@ -13,19 +13,21 @@ import {PointItemTransactionService} from '../../entity-store/point-item-transac
 import {PointItemTransactionQuery} from '../../entity-store/point-item-transaction/state/point-item-transaction.query';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Order} from '@datorama/akita';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {Spinner} from 'ngx-spinner/lib/ngx-spinner.enum';
 import {NgxSpinnerService} from 'ngx-spinner';
 
+declare var $: any;
+
 @Component({
   selector: 'app-point-item',
   templateUrl: './point-item.component.html',
   styleUrls: ['./point-item.component.css']
 })
-export class PointItemComponent implements OnInit {
+export class PointItemComponent implements OnInit, OnDestroy {
   @Input() inputUser;
 
   componentName = 'point-item.component';
@@ -34,6 +36,7 @@ export class PointItemComponent implements OnInit {
   pointItems$;
   pointItemTransactions$;
   user$;
+  selectUser$;
   user;
   currentUser$;
   currentUser;
@@ -59,6 +62,7 @@ export class PointItemComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
 
     this.spinner.show('other-user-spinner');
+
     this.currentUserService.cacheCurrentUser().subscribe();
     this.userService.cacheUsers().subscribe();
     this.pointItemService.cachePointItems().subscribe();
@@ -210,5 +214,25 @@ export class PointItemComponent implements OnInit {
     }, {});
   }
 
+  onUserClick(userId: number) {
+
+
+    const user = this.userQuery.getAll({
+      filterBy: e => e.userId === userId
+    });
+
+    this.router.navigate(['/', 'user', 'profile', user[0].username]).then(() => {
+      // $('#pointsModal').modal('hide');
+    });
+  }
+
+  ngOnDestroy(): void {
+    // this.onUserClickSubscription.unsubscribe();
+/*    this.selectUser$.unsubscribe();
+    this.pointItems$.unsubscribe();
+    this.pointItemTransactions$.unsubscribe();
+    this.user$.unsubscribe();
+    this.currentUser$.unsubscribe();*/
+  }
 
 }

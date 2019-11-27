@@ -18,6 +18,8 @@ import {OtherUserAchievementQuery} from '../../../entity-store/other-user-achiev
 import {OtherUserAchievementModel} from '../../../entity-store/other-user-achievement/state/other-user-achievement.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 
+declare var $: any;
+
 @Component({
   selector: 'app-other-user',
   templateUrl: './other-user.component.html',

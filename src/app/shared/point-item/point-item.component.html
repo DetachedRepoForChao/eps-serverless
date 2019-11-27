@@ -1,9 +1,9 @@
 <div class="container align-items-center" style="min-height: 600px; max-height: 600px">
 
-  <div class="row justify-content-md-center">
-    <div *ngFor="let transaction of (pointItemTransactions$ | async); let i = index" class="col-10 achievlist">
+  <div class="row justify-content-md-center ">
+    <div *ngFor="let transaction of (pointItemTransactions$ | async); let i = index" class="col-10 achievlist point-item-container">
       <div class="row">
-        <div class="col-2 text-left avatar-col circle-container">
+        <div class="col-2 text-left avatar-col">
           <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
             <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
                  alt="Avatar"
@@ -21,21 +21,22 @@
 
 
         </div>
-        <div class="col-8 text-left">
-            <div class="form-row y-padding-0 margin-top--10">
-              <div class="col-8">
-                <h5 class="user-attribute italics">{{transaction?.description}}</h5>
-              </div>
-              <div class="col-2 textr">
-                <h5 class="user-attribute">{{transaction?.amount}}pts</h5>
-              </div>
-            </div>
-            <div class="form-row y-padding-0 margin-top--10">
-              <div class="col-12">
-                <h5 class="user-attribute">- Awarded by {{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.lastName}} on {{transaction?.createdAt | date:'longDate'}}</h5>
-              </div>
-            </div>
+        <div class="col-8 text-left y-margin-auto">
+          <div class="col-12">
+            <div class="form-row">
 
+                <h5 class="point-content italics">{{(pointItemQuery.selectPointItemByItemId(transaction?.pointItemId) | async)[0]?.name}}</h5>
+
+            </div>
+            <div class="form-row">
+
+              <h5 class="point-content">- Awarded by <a href="javascript:void(0)" (click)="onUserClick(transaction?.sourceUserId)" data-dismiss="modal">{{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.lastName}}</a> on {{transaction?.createdAt | date:'longDate'}}</h5>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-2 textr y-margin-auto">
+          <h3 class="point-value">{{transaction?.amount}}pts</h3>
         </div>
       </div>
 <!--      transactionId {{transaction.transactionId}}
@@ -47,7 +48,6 @@
       description {{transaction.description}}
       coreValues {{transaction.coreValues}}
       createdAt {{transaction.createdAt}}-->
-      <br>
     </div>
   </div>
 
