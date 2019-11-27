@@ -193,7 +193,7 @@
           <i class="tim-icons icon-coins" title="gift"></i>
         </button>
 
-        <div class="modal fade" id="giftModal" role="dialog">
+        <!--<div class="modal fade" id="giftModal" role="dialog">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -228,7 +228,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
         <!-----Achievements----->
         <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#navbarAchievementModal">
           <i class="tim-icons icon-trophy" title="recent achievements"></i>
@@ -387,6 +387,29 @@
       <div class="modal-body modalclass">
         <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
           <app-achievement></app-achievement>
+        </perfect-scrollbar>
+      </div>
+
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+
+
+</div>
+
+<div class="modal fade modal-black" id="giftModal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h4 class="modal-title">Your Point Item Awards</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body modalclass">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+          <app-point-item></app-point-item>
         </perfect-scrollbar>
       </div>
 
