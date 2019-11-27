@@ -301,6 +301,27 @@ app.post('/items/deleteUser', function(req, res) {
   });
 });
 
+app.get('/items/getusernameusername', function(req, res) {
+  console.log('starting get getuserusername');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const user = req.body.user;
+      ctrlUser.getUserUsername()
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.user});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+
+
 // Department Routes
 app.get('/items/departments', function(req, res) {
   const functionName = 'get departments';

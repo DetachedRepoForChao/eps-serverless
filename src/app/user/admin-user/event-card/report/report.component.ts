@@ -17,15 +17,16 @@ import { Observable } from 'rxjs';
 })
 export class ReportComponent implements OnInit {
 
-  public user:  EntityUserModel;
-  public userEntity: string;
-  reportUsers$: any
+  user:  EntityUserModel;
+  userEntity: string;
+  reportUsers$: any;
+
 
   ngOnInit() {
-    this.reportUsers$ = this.entityuserQuery.selectAll().subscribe(reportUsers=>{
-      this.userEntity = reportUsers.map.toString()
-      console.log(this.userEntity)
-    })
+    // this.reportUsers$ = this.entityuserQuery.selectAll().subscribe(reportUsers=>{
+    //   this.userEntity = reportUsers.map.toString()
+    //   console.log(this.userEntity)
+    // })
 
 
 
