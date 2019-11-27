@@ -1,5 +1,5 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {forkJoin, Observable, pipe} from 'rxjs';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {BehaviorSubject, forkJoin, Observable, pipe} from 'rxjs';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {HttpClient} from '@angular/common/http';
 
@@ -36,7 +36,11 @@ declare var $: any;
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, AfterViewInit {
+  @Input() option;
+  @Output() clearOption = new EventEmitter<any>();
+
+  optionExecuted = false;
   componentName = 'edit-profile.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
@@ -62,10 +66,8 @@ export class EditProfileComponent implements OnInit {
   confirmPhoneFormSubmitted = false;
   phoneChanged = false;
   emailChanged = false;
-  confirmPromptMessage;
-  /*  confirmEmailForm: FormGroup = new FormGroup({
-      code: new FormControl('', [ Validators.required, Validators.min(6) ])
-    });*/
+  quoteLengthMax = 1000;
+  quoteText: string = null;
 
   confirmEmailForm = this.formBuilder.group({
     code: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])]
@@ -104,16 +106,6 @@ export class EditProfileComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('edit-profile-spinner');
 
-    /*      const text_max = 200;
-        $('#count_message').html(text_max + ' remaining');
-
-        $('#text').keyup(function() {
-          const text_length = $('#text').val().length;
-          const text_remaining = text_max - text_length;
-
-          $('#count_message').html(text_remaining + ' remaining');
-        });*/
-
     this.loadEditUserForm();
 
     this.authService.currentUserInfo()
@@ -136,6 +128,8 @@ export class EditProfileComponent implements OnInit {
       this.populateFormData();
     });
 
+
+
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('edit-profile-spinner');
@@ -147,7 +141,7 @@ export class EditProfileComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
     this.currentUser$.subscribe(currentUser => {
       const user = currentUser[0];
-      console.log(user);
+      // console.log(user);
       this.editUserForm.patchValue({user: user});
       const keys = Object.keys(user);
       for (let i = 0; i < keys.length; i++) {
@@ -157,14 +151,12 @@ export class EditProfileComponent implements OnInit {
           // We must take special consideration for selection objects like securityRole and department
           switch (key) {
             case 'gender': {
-              console.log('gender');
-              console.log(user[keys[i]]);
+              // console.log('gender');
+              // console.log(user[keys[i]]);
               if (((user[keys[i]] !== 'Male') && (user[keys[i]] !== 'Female') && (user[keys[i]] !== 'Prefer Not to Say')) && (user[keys[i]])) {
-                console.log('test1');
                 this.editUserForm.patchValue({[key]: 'Custom'});
                 this.editUserForm.patchValue({genderCustom: user[keys[i]]});
               } else {
-                console.log('test2');
                 this.editUserForm.patchValue({[key]: user[keys[i]]});
               }
               break;
@@ -184,8 +176,15 @@ export class EditProfileComponent implements OnInit {
                 this.editUserForm.patchValue({[key]: user[keys[i]]});
               } else {
                 this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
-                console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
+                // console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
               }
+              break;
+            }
+            case 'quote': {
+              // console.log('quote: ');
+              // console.log(key);
+              // console.log(user[keys[i]]);
+              this.editUserForm.patchValue({[key]: user[keys[i]]});
               break;
             }
             default: {
@@ -197,28 +196,32 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
-  onConfirmEmailClick() {
-    this.authService.verifyEmail();
+  ngAfterViewInit(): void {
   }
 
-  getPendingBalance(): Observable<any> {
-    return new Observable(observer => {
-      this.currentUserQuery.selectAll()
-        .subscribe(user => {
-          if (user[0]) {
-            observer.next(user[0].pointsBalance);
-            observer.complete();
-          } else {
-            observer.complete();
-          }
-
-        });
-    });
+  onConfirmEmailClick() {
+    this.authService.verifyEmail();
   }
 
   avatarClick() {
     $('#avatarModal').modal('show');
   }
+
+  executeOption(field) {
+    console.log('start executeOption');
+    if (!this.option) {
+      // Don't do anything since no option was passed
+    } else {
+      console.log('current optionExecuted: ' + this.optionExecuted);
+      this.optionExecuted = true;
+      this.option = null;
+
+      console.log(`removing glow to glowing_${field}`);
+      document.getElementById(`glowing_${field}`).className = document.getElementById(`glowing_${field}`).className.replace('glow', '').trim();
+      this.clearOption.emit(true);
+    }
+  }
+
 
   // Creates the Edit User reactive form
   private loadEditUserForm() {
@@ -236,7 +239,8 @@ export class EditProfileComponent implements OnInit {
       genderCustom: [null],
       birthdate: [null],
       email: [null, Validators.compose([Validators.required, Validators.email])],
-      phone: [null, Validators.required]
+      phone: [null, Validators.required],
+      quote: [null, Validators.compose([Validators.maxLength(this.quoteLengthMax)])],
     });
   }
 

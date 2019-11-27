@@ -1,22 +1,5 @@
 const Sequelize = require('sequelize');
-/*const UserModel = require('./models/user');
-const DepartmentModel = require('./models/department');
-const NodeModel = require('./models/node');
-const SecurityRoleModel = require('./models/securityrole');
-const AchievementModel = require('./models/achievement');
-const AchievementTransactionModel = require('./models/achievement_transaction');
-const PointItemModel = require('./models/point_item');
-const PointTransactionModel = require('./models/point_transaction');
-const UserAchievementProgressModel = require('./models/user_achievement_progress');
-const MetricsModel = require('./models/metrics');
-const PointPoolModel = require('./models/point_pool');
-const SessionModel = require('./models/session');
-const LikeModel = require('./models/like');
-const StoreItemModel = require('./models/store_item');
-const NotificationModel = require('./models/notification');
-const UserHasStoreItemModel = require('./models/user_has_store_item');*/
 const DbModels = require('./models/models');
-// console.log('starting db.js');
 
 process.env.DB_NAME = "eps-test";
 process.env.DB_USER = "nodeuser";
@@ -47,48 +30,7 @@ const sequelize = new Sequelize(
 );
 
 
-console.log(process.env.DB_NAME);
-console.log(process.env.DB_USER);
-// console.log(sequelize);
-
-// console.log('created sequelize');
-
 const Models = DbModels(sequelize, Sequelize);
-/*const User = UserModel(sequelize, Sequelize);
-const Department = DepartmentModel(sequelize, Sequelize);
-const Node = NodeModel(sequelize, Sequelize);
-const SecurityRole = SecurityRoleModel(sequelize, Sequelize);
-const Achievement = AchievementModel(sequelize, Sequelize);
-const AchievementTransaction = AchievementTransactionModel(sequelize, Sequelize);
-const PointItem = PointItemModel(sequelize, Sequelize);
-const PointTransaction = PointTransactionModel(sequelize, Sequelize);
-const UserAchievementProgress = UserAchievementProgressModel(sequelize, Sequelize);
-const Metrics = MetricsModel(sequelize, Sequelize);
-const PointPool = PointPoolModel(sequelize, Sequelize);
-const Session = SessionModel(sequelize, Sequelize);
-const Like = LikeModel(sequelize,Sequelize);
-const StoreItem = StoreItemModel(sequelize ,Sequelize);
-const Notification = NotificationModel(sequelize ,Sequelize);
-const UserHasStoreItem = UserHasStoreItemModel(sequelize, Sequelize);*/
-
-/*const Models = {
-  User,
-  Department,
-  Node,
-  SecurityRole,
-  Achievement,
-  AchievementTransaction,
-  PointItem,
-  PointTransaction,
-  UserAchievementProgress,
-  Metrics,
-  PointPool,
-  Session,
-  Like,
-  StoreItem,
-  Notification,
-  UserHasStoreItem
-};*/
 const connection = {};
 
 /*

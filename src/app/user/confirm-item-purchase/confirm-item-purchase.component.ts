@@ -9,10 +9,10 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
 import {MatTableModule } from '@angular/material';
 
-  import { from } from 'rxjs';
+import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 
-  declare var $: any;
+declare var $: any;
 
 @Component({
   selector: 'app-confirm-item-purchase',
@@ -30,8 +30,8 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   rows = [];
   requestedStoreItem;
   managerRequests$;
-  displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest','declineRequest'];
-
+  displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest'];
+  approveOptions = ['Approve', 'Decline'];
 
 
   constructor ( private currentUserStore: CurrentUserStore,
@@ -66,14 +66,18 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
 
+  }
 
-
-
+  approvalToggle(row, event){
+    console.log('row:');
+    console.log(row);
+    console.log('event:');
+    console.log(event);
 
   }
 
-  approvalToggle(){
-    console.log ("some")
+  declineToggle(event) {
+    console.log(event);
   }
 
   test() {
@@ -82,3 +86,4 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
 
 }
+

@@ -20,5 +20,6 @@ exports.handler = (event, context) => {
   // console.log(event.body);
   // console.log(context);
   console.log(`EVENT: ${JSON.stringify(event)}`);
+  context.callbackWaitsForEmptyEventLoop = false;
   awsServerlessExpress.proxy(server, event, context);
 };

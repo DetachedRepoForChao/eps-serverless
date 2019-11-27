@@ -37,9 +37,10 @@ export class SignInComponent implements OnInit {
               private achievementComponent: AchievementComponent,
               private securityRoleService: SecurityRoleService,
               private departmentService: DepartmentService,
-              public auth: AuthService,
+              public authService: AuthService,
               private spinner: NgxSpinnerService,
-              private globals: Globals) { }
+              private globals: Globals,
+              ) { }
 
   model = {
     username : '',
@@ -54,15 +55,13 @@ export class SignInComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.userService.isLoggedIn()
+    this.authService.isLoggedIn()
       .then(result => {
+        // console.log(result);
         if (result) {
-          this.router.navigateByUrl('/user');
+          this.router.navigateByUrl('/user').then();
         }
       });
-/*    if (this.userService.isLoggedIn()) {
-      this.router.navigateByUrl('/user');
-    }*/
 
   }
 
@@ -74,7 +73,7 @@ export class SignInComponent implements OnInit {
     console.log(`${functionFullName}: Showing sign-in-onSubmit-spinner`);
     this.spinner.show('sign-in-onSubmit-spinner');
     console.log(form.value);
-    this.auth.signIn(form.value.username, form.value.password)
+    this.authService.signIn(form.value.username, form.value.password)
       .then((signInResult: any) => {
         if (signInResult.status === 'NEW_PASSWORD_REQUIRED') {
           this.spinner.hide('sign-in-onSubmit-spinner');

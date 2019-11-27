@@ -14,10 +14,12 @@ export type AchievementModel = {
   startAmount: number;
   level: number;
   roles: any;
+  updatedAt: any;
+  dateModified: any;
 };
 
-export function createEntityAchievementModel({ achievementId, name, description, cost, progress, progressId,
-                                      achievementStatus, progressStatus, family, startAmount, level, roles}: Partial<AchievementModel>) {
+export function createEntityAchievementModel({ achievementId, name, description, cost, progress, progressId, achievementStatus,
+                                               progressStatus, family, startAmount, level, roles, updatedAt}: Partial<AchievementModel>) {
 
   return {
     id: guid(),
@@ -32,6 +34,8 @@ export function createEntityAchievementModel({ achievementId, name, description,
     family,
     startAmount,
     level,
-    roles
+    roles,
+    updatedAt,
+    dateModified: Date.now(),
   } as AchievementModel;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Department} from './shared/department.model';
 import {SecurityRole} from './shared/securityrole.model';
-import {UserAvatarRelationship} from './shared/avatar/avatar.service';
+import {AuthService} from './login/auth.service';
 
 @Injectable()
 
@@ -12,6 +12,7 @@ export class Globals {
   userDetails: any = null;
 
   constructor() {}
+/*
 
   public localStorageItem(id: string): string {
     return localStorage.getItem(id);
@@ -41,5 +42,6 @@ export class Globals {
     const userData = this.getUserAttributes();
     return userData.Username;
   }
+*/
 
 }

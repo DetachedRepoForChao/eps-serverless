@@ -1,3 +1,223 @@
-<p>
-  privacy-settings works!
-</p>
+<div *ngIf="!isCardLoading; else cardLoading">
+  <div class="row">
+    <div class="user-form-container col-12">
+      <form>
+        <div *ngIf="isUserDataRetrieved; else placeholderForm">
+          <div class="form-row">
+            <div class="col-10">
+              <label class="form-label">Choose which fields you want to set as public.</label><br>
+              <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>
+
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_email" class="form-label">Email</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.emailPublic" name="privacy_email" (change)="toggleFieldPrivacy('emailPublic')" id="privacy_email" [color]="color">
+                <div *ngIf="!fieldPrivacyList.emailPublic; else toggledPublic">Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_phone" class="form-label">Phone</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.phonePublic" name="privacy_phone" (change)="toggleFieldPrivacy('phonePublic')" id="privacy_phone" [color]="color">
+                <div *ngIf="!fieldPrivacyList.phonePublic; else toggledPublic">Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_birthdate" class="form-label">Date of Birth</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.birthdatePublic" name="privacy_birthdate" (change)="toggleFieldPrivacy('birthdatePublic')" id="privacy_birthdate" [color]="color">
+                <div *ngIf="!fieldPrivacyList.birthdatePublic; else toggledPublic">Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_gender" class="form-label">Gender</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.genderPublic" name="privacy_gender" (change)="toggleFieldPrivacy('genderPublic')" id="privacy_gender" [color]="color">
+                <div *ngIf="!fieldPrivacyList.genderPublic; else toggledPublic">Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+
+
+          <div class="form-row">
+            <div class="col-12">
+              <label class="form-label">Other Preferences</label><br>
+              <!--            <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>-->
+
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_share_point_awards" class="form-label">Point awards shared in the app's feed</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.pointAwardsPublic" name="privacy_share_point_awards" (change)="toggleFieldPrivacy('pointAwardsPublic')" id="privacy_share_point_awards" [color]="color">
+                <div *ngIf="!fieldPrivacyList.pointAwardsPublic; else toggledYes">No</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_points_visible" class="form-label">Others can view your awarded points</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.pointsPublic" name="privacy_points_visible" (change)="toggleFieldPrivacy('pointsPublic')" id="privacy_points_visible" [color]="color">
+                <div *ngIf="!fieldPrivacyList.pointsPublic; else toggledYes">No</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_achievements_visible" class="form-label">Others can view your achievements</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.achievementsPublic" name="privacy_achievements_visible" (change)="toggleFieldPrivacy('achievementsPublic')" id="privacy_achievements_visible" [color]="color">
+                <div *ngIf="!fieldPrivacyList.achievementsPublic; else toggledYes">No</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_coreValues_visible" class="form-label">Others can view your Core Values</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.coreValuesPublic" name="privacy_achievements_visible" (change)="toggleFieldPrivacy('coreValuesPublic')" id="privacy_coreValues_visible" [color]="color">
+                <div *ngIf="!fieldPrivacyList.coreValuesPublic; else toggledYes">No</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #placeholderForm>
+          <div class="form-row">
+            <div class="col-10">
+              <label class="form-label">Choose which fields you want to set as public.</label><br>
+              <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>
+
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_email" class="form-label">Email</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_phone" class="form-label">Phone</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_birthdate" class="form-label">Date of Birth</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_gender" class="form-label">Gender</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Private</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-12">
+              <label class="form-label">Other Preferences</label><br>
+              <!--            <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>-->
+
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_share_point_awards" class="form-label">Point awards shared in the app's feed</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Yes</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_points_visible" class="form-label">Others can view your awarded points</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Yes</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_achievements_visible" class="form-label">Others can view your achievements</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Yes</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-8 aligncentercontent">
+              <label for="privacy_coreValues_visible" class="form-label">Others can view your Core Values</label>
+            </div>
+            <div class="col-2 toggle-col">
+              <mat-slide-toggle [color]="color">
+                <div>Yes</div>
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </ng-template>
+
+      </form>
+      <button type="button" class="btn btn-primary" (click)="onFieldPrivacyListSubmit()">Save Changes</button>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #toggledPublic>Public</ng-template>
+<ng-template #toggledYes>Yes</ng-template>
+
+<ng-template #cardLoading>
+  <ngx-spinner
+    name="privacy-settings-spinner"
+    [fullScreen]="true"
+    bdColor="rgba(51,51,51,0.8)"
+    size="medium"
+    color="#fff"
+    type="pacman"
+  >
+    <p class="loadingstyle">Loading...</p>
+  </ngx-spinner>
+</ng-template>

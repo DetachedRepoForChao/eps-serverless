@@ -158,6 +158,51 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 1,
       field: 'active',
     },
+    quote: {
+      type: DataTypes.STRING(1000),
+      allowNull: true,
+      field: 'quote',
+    },
+    phonePublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'phone_public'
+    },
+    emailPublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'email_public'
+    },
+    birthdatePublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'birthdate_public'
+    },
+    genderPublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'gender_public'
+    },
+    pointAwardsPublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'point_awards_public'
+    },
+    achievementsPublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'achievements_public'
+    },
+    pointsPublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'points_public'
+    },
+    coreValuesPublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'core_values_public'
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

@@ -1,3 +1,7 @@
+.profile-card-header {
+  min-height: 165px;
+}
+
 #avatar {
   margin-right: 25px;
   margin-left: 25px;
@@ -101,6 +105,18 @@ div.card {
   color: red;
 }
 
-.chart-row {
-  margin-top: -25px;
+.quote-box-quotation-mark {
+  font-size: 100px;
+  padding-left: 0;
+  padding-right: 15px;
+  text-align: right;
+  font-style: italic;
+}
+
+.quote-box-text {
+  padding: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: left;
+  font-style: italic;
 }

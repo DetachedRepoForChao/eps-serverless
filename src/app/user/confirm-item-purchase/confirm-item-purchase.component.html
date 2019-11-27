@@ -1,97 +1,104 @@
 <div class="index-page" >
 
-    <app-navigation></app-navigation>
-    <div class="wrapper">
-        <section class="section section-lg section-coins">
+  <app-navigation></app-navigation>
+  <div class="wrapper">
+    <section class="section section-lg section-coins">
 
-            <img src="../../../assets/img/path3.png" class="path">
-            <div class="container align-items-center">
+      <img src="../../../assets/img/path3.png" class="path">
+      <div class="container align-items-center">
 
-                <div class="row">
-                    <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="confirmRequest">
-                        <div class="card">
-                          <div class="card card-coin card-plain">
-                            <div class="card-body">
-
-
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                      <h3> Hello there!</h3>
-                                      <span> Confirm Purchase Request</span>
-                                    </div>
-                                </div>
-
-                              <div>
-                                <mat-table  #requestTable [dataSource]="managerRequests$">
-                                  <ng-container matColumnDef="recordId">
-                                    <mat-header-cell *matHeaderCellDef>Request ID</mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
-                                  </ng-container>
-
-                                  <ng-container matColumnDef="userUsername">
-                                    <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userUsername}}</mat-cell>
-                                  </ng-container>
-
-                                  <ng-container matColumnDef=storeItemName>
-                                    <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
-                                  </ng-container>
-
-                                  <ng-container matColumnDef="storeItemCost">
-                                    <mat-header-cell *matHeaderCellDef> Item Cost </mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
-                                  </ng-container>
-
-                                  <ng-container matColumnDef="status">
-                                    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-                                    <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
-                                  </ng-container>
-
-                                  <ng-container matColumnDef="acceptRequest">
-                                    <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> <mat-checkbox (change)="$event ? approvalToggle() : null" [(ngModel)]="row.acceptRequest"></mat-checkbox> {{row.acceptRequest}}</mat-cell>
-                                  </ng-container>
-
-                                  <ng-container matColumnDef="declineRequest">
-                                    <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-                                    <mat-cell *matCellDef="let row"> <mat-checkbox [(ngModel)]="row.declineRequest"></mat-checkbox> {{row.declineRequest}}</mat-cell>
-                                  </ng-container>
-
-                                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <div class="row">
+          <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="confirmRequest">
+            <div class="card">
+              <div class="card card-coin card-plain">
+                <div class="card-body">
 
 
-                                </mat-table>
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <h3> Hello there!</h3>
+                      <span> Confirm Purchase Request</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <mat-table  #requestTable [dataSource]="managerRequests$">
+                      <ng-container matColumnDef="recordId">
+                        <mat-header-cell *matHeaderCellDef>Request ID</mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="userUsername">
+                        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userUsername}}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef=storeItemName>
+                        <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="storeItemCost">
+                        <mat-header-cell *matHeaderCellDef> Item Cost </mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="acceptRequest">
+                        <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel">
+                          <mat-radio-button *ngFor="let approveOption of approveOptions" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="UserHasStoreItemModel.acceptRequest" [value]="approveOption">
+                          {{approveOption}}
+                        </mat-radio-button> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
+
+                      </ng-container>
+
+<!--                      <ng-container matColumnDef="declineRequest">
+                        <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
+&lt;!&ndash;                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>&ndash;&gt;
+                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-radio-button (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-radio-button> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+
+                      </ng-container>-->
+
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let UserHasStoreItemModel; columns: displayedColumns;"></mat-row>
 
 
-                                <div class="container">
-                                  <button type="button" class="btn btn-success" >Save</button>
-                                  <button type="button" class="btn btn-danger">Cancel</button>
-                                </div>
+                    </mat-table>
 
-                                <mat-paginator
-                                  [length] ="100"
-                                  [pageSize]= "10"
-                                  [pageSizeOptions] ="[5, 10, 25, 100]">
-                                </mat-paginator>
 
-                              </div>
+                    <div class="container">
+                      <button type="button" class="btn btn-success" >Save</button>
+                      <button type="button" class="btn btn-danger">Cancel</button>
+                    </div>
 
-                          </div>
-                          </div>
-                        </div>
-                      </div>
+                    <mat-paginator
+                      [length] ="100"
+                      [pageSize]= "10"
+                      [pageSizeOptions] ="[5, 10, 25, 100]">
+                    </mat-paginator>
 
+                  </div>
 
                 </div>
-
-
-
-
+              </div>
             </div>
+          </div>
 
-        </section>
 
-    </div>
+        </div>
+
+
+
+
+      </div>
+
+    </section>
+
+  </div>
 </div>
+
