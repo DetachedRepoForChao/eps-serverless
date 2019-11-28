@@ -101,6 +101,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
         parentScope.inputUser = null;
         parentScope.navigationService.pointItemComponentInputUser = null;
         parentScope.clearInputUser.emit(true);
+        parentScope.navigationService.pointItemModalActive = false;
       });
   }
 
@@ -270,9 +271,6 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
               sortBy: 'createdAt',
               sortByOrder: Order.DESC
             });
-
-            console.log('point item transactions');
-            console.log(this.pointItemTransactions);
 
           } else {
             console.log(`Cache Current Manager Point Item Transactions returned ${result}`);
@@ -454,6 +452,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
           parentScope.inputUser = null;
           parentScope.navigationService.pointItemComponentInputUser = null;
           parentScope.clearInputUser.emit(true);
+          parentScope.navigationService.pointItemModalActive = false;
         });
     }
   }

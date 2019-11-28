@@ -299,11 +299,18 @@ export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
     this.navigationService.openPointItemModal();
   }
 
+  showAchievementsModal() {
+    console.log(`invoking achievements modal with the following user input:`);
+    console.log(this.user);
+    this.navigationService.achievementComponentInputUser = this.user;
+    this.navigationService.openAchievementModal();
+  }
+
   ngOnDestroy(): void {
     console.log('ngOnDestroy');
-    if (this.navigationService.pointItemComponentInputUser) {
+/*    if (this.navigationService.pointItemComponentInputUser) {
       this.router.navigate(['/', 'user', 'profile', this.navigationService.pointItemComponentInputUser.username]).then();
-    }
+    }*/
   }
 
   ngOnChanges(changes: SimpleChanges): void {

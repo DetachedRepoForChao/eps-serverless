@@ -464,6 +464,16 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'not started',
       field: 'status'
+    },
+    completedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'completedAt'
+    },
+    acknowledgedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'acknowledgedAt'
     }
   }, {
     tableName: 'user_achievement_progress'

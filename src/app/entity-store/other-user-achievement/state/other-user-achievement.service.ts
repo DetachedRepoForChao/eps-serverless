@@ -106,10 +106,13 @@ export class OtherUserAchievementService {
                 const startAmount = achievement.achievement.startAmount;
                 const level = achievement.achievement.level;
                 const roles = achievement.achievement.achievementHasRoleAudiences;
+                const completedAt = achievement.completedAt;
+                const acknowledgedAt = achievement.acknowledgedAt;
                 const updatedAt = achievement.updatedAt;
 
                 const otherUserAchievementModel = createEntityOtherUserAchievementModel({userId, achievementId, name, description, cost,
-                  progress, progressId, achievementStatus, progressStatus, family, startAmount, level, roles, updatedAt});
+                  progress, progressId, achievementStatus, progressStatus, family, startAmount, level, roles, completedAt, acknowledgedAt,
+                  updatedAt});
 
                 console.log(`adding achievement: ${achievement.progressId}`);
                 achievementsArray.push(otherUserAchievementModel);

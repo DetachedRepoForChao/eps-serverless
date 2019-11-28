@@ -11,6 +11,7 @@ import {AuthService} from '../../login/auth.service';
 import {LeaderboardService} from '../leaderboard.service';
 import {FeedcardService} from '../feedcard/feedcard.service';
 import {Globals} from '../../globals';
+import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 
 declare var $: any;
 @Component({
@@ -49,6 +50,7 @@ export class ImageGalleryComponent implements OnInit {
 
   constructor(private avatarService: AvatarService,
               private imageService: ImageService,
+              private achievementService: AchievementService,
               private authService: AuthService,
               private leaderboardService: LeaderboardService,
               private feedcardService: FeedcardService,
@@ -153,25 +155,10 @@ export class ImageGalleryComponent implements OnInit {
             console.log(blob);
             this.avatarService.saveUserAvatar(blob).subscribe((saveResult) => {
               console.log(`${functionFullName}: saveResult: ${saveResult}`);
-              if (saveResult === true) {
-                /*this.leaderboardService.isUserInLeaderboardTop5(this.globals.getUsername()).subscribe(isTop5Result => {
-                  console.log(`${functionFullName}: isTop5Result: ${isTop5Result}`);
-                  if (isTop5Result === true) {
-                    console.log(`${functionFullName}: user is in the Leaderboard Top 5. Refreshing leaderboard data`);
-                    this.leaderboardService.getPointsLeaderboard()
-                      .subscribe(leaderboardData => {
-                        console.log(`${functionFullName}: populating leaderboard data`);
-                        this.leaderboardService.populateLeaderboardDataSource(leaderboardData).subscribe(() => {
-                          console.log(`${functionFullName}: leaderboard data populated`);
-                        });
-                      });
-                  }
-                });
-
-                this.feedcardService.refreshPointTransactionAvatars();*/
+              if (saveResult !== false) {
+                this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
               }
 
-              // $('#imageSelectorModal').modal('hide');
               this.selected.emit(result);
             });
           });
