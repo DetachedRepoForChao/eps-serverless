@@ -1,16 +1,7 @@
-<div class="container align-items-center" style="min-height: 600px; max-height: 600px">
-
-
-  <!--    <div class="row">
-        <div class="col-md-12 text-center">
-        </div>
-      </div>-->
-
-
-
+<div class="container align-items-center max-height-600">
   <div *ngFor="let family of keys; let i = index" class="row justify-content-md-center">
 
-    <div class="col-10" style="text-align: center">
+    <div class="col-10 text-center" >
       {{family}}<br>
       **********************
     </div>
@@ -19,10 +10,10 @@
     <div *ngFor="let achievement of (achievementQuery.getAchievementFamily(family) | async); let i = index" class="col-10 achievlist">
 
       <div *ngIf="(achievement.progressStatus === 'complete')" class="row justify-content-md-center">
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center">
-          <i *ngIf="achievement.level === 1" class="fas fa-star" style="font-size: 40pt; color: #a88218; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 2" class="fas fa-star" style="font-size: 40pt; color: #c3c3c3; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 3" class="fas fa-star" style="font-size: 40pt; color: #ffef13; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
+        <div class="col-2 star-col">
+          <i *ngIf="achievement.level === 1" class="fas fa-star bronze-star" ></i>
+          <i *ngIf="achievement.level === 2" class="fas fa-star silver-star"></i>
+          <i *ngIf="achievement.level === 3" class="fas fa-star gold-star" ></i>
         </div>
         <div class="col-8">
           <span >{{achievement.name}}</span><br>
@@ -40,14 +31,14 @@
                    [ngStyle]="{'width': (achievement.progress / achievement.cost) * 100 + '%'}">
               </div>
             </div>
-            <div class="progress-value glow" style="text-align: center">
+            <div class="progress-value glow text-center">
               {{achievement.progress}} / {{achievement.cost}}
               <br>
               <button type="button" class="btn btn-success glow" (click)="acknowledgeAchievement(achievement)">COMPLETE</button>
             </div>
           </div>
         </div>
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
+        <div class="col-2 award-col">
           <div *ngFor="let feature of (featureQuery.selectAll() | async)">
             <img *ngIf="feature.achievementId === achievement.achievementId" src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" />
           </div>
@@ -55,10 +46,10 @@
       </div>
 
       <div *ngIf="(achievement.progressStatus === 'complete acknowledged')" class="row justify-content-md-center">
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center">
-          <i *ngIf="achievement.level === 1" class="fas fa-star" style="font-size: 40pt; color: #a88218; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 2" class="fas fa-star" style="font-size: 40pt; color: #c3c3c3; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 3" class="fas fa-star" style="font-size: 40pt; color: #ffef13; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
+        <div class="col-2 star-col" >
+          <i *ngIf="achievement.level === 1" class="fas fa-star bronze-star" ></i>
+          <i *ngIf="achievement.level === 2" class="fas fa-star silver-star" ></i>
+          <i *ngIf="achievement.level === 3" class="fas fa-star gold-star" ></i>
         </div>
         <div class="col-8">
           <span >{{achievement.name}}</span><br>
@@ -76,12 +67,12 @@
                    [ngStyle]="{'width': (achievement.progress / achievement.cost) * 100 + '%'}">
               </div>
             </div>
-            <div style="text-align: center">
+            <div class="text-center" >
               {{achievement.progress}} / {{achievement.cost}}
             </div>
           </div>
         </div>
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
+        <div class="col-2 award-col" >
           <div *ngFor="let feature of (featureQuery.selectAll() | async)">
             <img *ngIf="feature.achievementId === achievement.achievementId" src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" />
           </div>
@@ -90,10 +81,10 @@
 
       <div *ngIf="(achievement.progressStatus === 'in progress')" class="row justify-content-md-center">
 
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center">
-          <i *ngIf="achievement.level === 1" class="fas fa-star" style="font-size: 40pt; color: #a88218; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 2" class="fas fa-star" style="font-size: 40pt; color: #c3c3c3; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 3" class="fas fa-star" style="font-size: 40pt; color: #ffef13; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
+        <div class="col-2 star-col" >
+          <i *ngIf="achievement.level === 1" class="fas fa-star bronze-star" ></i>
+          <i *ngIf="achievement.level === 2" class="fas fa-star silver-star"></i>
+          <i *ngIf="achievement.level === 3" class="fas fa-star gold-star" ></i>
         </div>
         <div class="col-8">
           <span >{{achievement.name}}</span><br>
@@ -111,12 +102,12 @@
                    [ngStyle]="{'width': (achievement.progress / achievement.cost) * 100 + '%'}">
               </div>
             </div>
-            <div style="text-align: center">
+            <div class="text-center" >
               {{achievement.progress}} / {{achievement.cost}}
             </div>
           </div>
         </div>
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
+        <div class="col-2 award-col" >
           <div *ngFor="let feature of (featureQuery.selectAll() | async)">
             <img *ngIf="feature.achievementId === achievement.achievementId" src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" />
           </div>
@@ -124,10 +115,10 @@
       </div>
 
       <div *ngIf="(achievement.progressStatus === 'not started')" class="row justify-content-md-center">
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center">
-          <i *ngIf="achievement.level === 1" class="fas fa-star" style="font-size: 40pt; color: #a88218; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 2" class="fas fa-star" style="font-size: 40pt; color: #c3c3c3; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
-          <i *ngIf="achievement.level === 3" class="fas fa-star" style="font-size: 40pt; color: #ffef13; vertical-align: middle; display: inline-block; line-height: 1.5"></i>
+        <div class="col-2 star-col" >
+          <i *ngIf="achievement.level === 1" class="fas fa-star bronze-star" ></i>
+          <i *ngIf="achievement.level === 2" class="fas fa-star silver-star" ></i>
+          <i *ngIf="achievement.level === 3" class="fas fa-star gold-star" ></i>
         </div>
         <div class="col-8">
           <span>Unknown Achievement</span>
@@ -146,7 +137,7 @@
             </div>
           </div>
         </div>
-        <div class="col-2" style="line-height: 100px; height: 100px; text-align: center; padding: 0">
+        <div class="col-2 award-col" >
           <div *ngFor="let feature of (featureQuery.selectAll() | async)" >
             <div *ngIf="feature.achievementId === achievement.achievementId"
                  matTooltipPosition="above"
@@ -162,10 +153,4 @@
     </div>
 
   </div>
-
-
-
-
-
-
 </div>

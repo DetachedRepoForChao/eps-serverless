@@ -37,50 +37,20 @@
                         <ng-template #noPreferredName>
                           <h4 class="text-uppercase">{{(user$ | async)[0]?.firstName}} {{(user$ | async)[0]?.lastName}}</h4>
                         </ng-template>
-                        <span>{{(user$ | async)[0]?.department.Name}}</span>
+                        <span>{{(user$ | async)[0]?.department.Name}} Manager</span>
                       </div>
                     </div>
                     <div *ngIf="user$" class="row text-center">
                       <div class="col p-2">
-                        <h3 class="mb-1 line-height-5 font-weight-bold">Points</h3>
-                        <h4 class="mb-0">{{(user$ | async)[0]?.points}}</h4>
+                        <h3 class="mb-1 line-height-5 font-weight-bold">Point Pool</h3>
+                        <h4 class="mb-0">{{(user$ | async)[0]?.pointsPool}} / 5000</h4>
                       </div>
                       <div class="col p-2">
                         <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
                         <h4 class="mb-0">{{userQuery.getUserCompleteAchievementCount((user$ | async)[0]?.userId).length}} / {{achievementQuery.getAll().length}}</h4>
                       </div>
-                      <div class="col p-2">
-                        <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-                        <h4 class="mb-0">{{(leaderboardUsers$ | async).indexOf((user$ | async)[0]) + 1}}</h4>
-                      </div>
                     </div>
-                    <div class="row core-value-row">
-                      <div class="col-12">
-                        <div *ngIf="(user$ | async)[0]?.genderPublic; else chartPrivate">
-                          <div *ngIf="coreValueData && (coreValueData)?.length > 0; else coreValueChartPlaceholder" class="img-center img-fluid">
-                            <div class="positionrelative">
-                              <div class="row text-center">
-                                <h3 class="mb-1 line-height-5 font-weight-bold x-margin-auto">Core Values</h3>
-                              </div>
-                              <div class="row chart-row" >
-                                <google-chart class="x-margin-auto" #chart
-                                              [type]="'PieChart'"
-                                              [data]="coreValueData"
-                                              [columnNames]="myColumnNames"
-                                              [options]="options">
-                                </google-chart>
-                              </div>
-                            </div>
-                          </div>
-                          <ng-template #coreValueChartPlaceholder>
-                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                                 alt="Loading..."
-                                 class="img-center img-fluid rounded-circle"
-                                 id="coreValueChartPlaceholder">
-                          </ng-template>
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
 
                   <div class="col-8">
@@ -150,7 +120,7 @@
                       <div class="col-12">
                         <div class="form-row y-padding-0">
                           <div class="col-8">
-                            <label class="form-label">Latest points award...</label>
+                            <label class="form-label">Latest awarded points...</label>
                           </div>
                           <div *ngIf="(user$ | async)[0]?.pointsPublic" class="col-2 y-margin-auto textr">
                             <a href="javascript:void(0)" (click)="showPointsModal()">...view all</a>
@@ -168,14 +138,14 @@
                             </div>
                             <div class="form-row y-padding-0 margin-top--10">
                               <div class="col-12">
-                                <h5 class="user-attribute">- Awarded by {{(userQuery.selectUserByUserId(pointItemTransactions[0]?.sourceUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(pointItemTransactions[0]?.sourceUserId) | async)[0]?.lastName}} on {{pointItemTransactions[0]?.createdAt | date:'longDate'}}</h5>
+                                <h5 class="user-attribute">- Awarded to {{(userQuery.selectUserByUserId(pointItemTransactions[0]?.targetUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(pointItemTransactions[0]?.targetUserId) | async)[0]?.lastName}} on {{pointItemTransactions[0]?.createdAt | date:'longDate'}}</h5>
                               </div>
                             </div>
                           </div>
                           <ng-template #noPointItemTransactions>
                             <div class="form-row y-padding-0 margin-top--10">
                               <div class="col-8">
-                                <h5 class="user-attribute font-italic">No points awards yet...</h5>
+                                <h5 class="user-attribute font-italic">No points awarded to anyone yet...</h5>
                               </div>
                             </div>
                           </ng-template>
@@ -255,27 +225,11 @@
     </div>
   </div>
 </ng-template>
-<ng-template #chartPrivate>
-  <div class="img-center img-fluid">
-    <div class="positionrelative">
-      <div class="row text-center">
-        <h3 class="mb-1 line-height-5 font-weight-bold x-margin-auto">Core Values</h3>
-      </div>
-      <div class="row chart-row" >
-        <google-chart class="x-margin-auto" #chart
-                      [type]="'PieChart'"
-                      [data]="privateCoreValueData"
-                      [columnNames]="myColumnNames"
-                      [options]="privateOptions">
-        </google-chart>
-      </div>
-    </div>
-  </div>
-</ng-template>
+
 <ng-template #cardLoading>
   <div class="card-body">
     <ngx-spinner
-      name="other-user-spinner"
+      name="other-user-manager-spinner"
       [fullScreen]="false"
       bdColor="rgba(51,51,51,0.8)"
       size="medium"

@@ -39,9 +39,14 @@
   width: 50px;
 }
 
-#avatar {
+/*#avatar {
   width: 50px;
   padding: 0;
+}*/
+
+.avatar-img {
+  width: 50px;
+  padding: 0 !important;
 }
 
 .avatar-col {
@@ -90,4 +95,7 @@
   font-style: italic;
 }
 
+.max-height-600 {
+  max-height: 600px;
+}
 

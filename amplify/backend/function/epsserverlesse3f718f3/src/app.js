@@ -1106,6 +1106,27 @@ app.post('/items/getUserPointTransactions', function(req, res) {
   });
 });
 
+app.post('/items/getManagerPointTransactions', function(req, res) {
+  console.log('starting post getManagerPointTransactions');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const userId = req.body.userId;
+      ctrlPointsTransaction.getManagerPointTransactions(userId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 // Core Values Routes
 app.post('/items/getUserCoreValues', function(req, res) {
   console.log('starting post getUserCoreValues');

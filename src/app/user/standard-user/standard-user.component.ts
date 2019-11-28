@@ -7,7 +7,6 @@ import {map} from 'rxjs/operators';
 import { Globals} from '../../globals';
 import { NotifierService} from 'angular-notifier';
 import {AchievementService} from '../../shared/achievement/achievement.service';
-import {AchievementComponent} from '../../shared/achievement/achievement.component';
 
 @Component({
   selector: 'app-standard-user',

@@ -1,4 +1,4 @@
-import {Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Injectable, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { Achievement} from './achievement.model';
 import { UserAchievementProgress} from './user-achievement-progress.model';
 import { Globals} from '../../globals';
@@ -13,19 +13,19 @@ import {AchievementModel} from '../../entity-store/achievement/state/achievement
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 import {FeatureService} from '../../entity-store/feature/state/feature.service';
 import {FeatureQuery} from '../../entity-store/feature/state/feature.query';
+import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
+import {NavigationService} from '../navigation.service';
 
-
-
-@Injectable({
-  providedIn: 'root'
-})
 
 @Component({
   selector: 'app-achievement',
   templateUrl: './achievement.component.html',
   styleUrls: ['./achievement.component.scss']
 })
-export class AchievementComponent implements OnInit {
+export class AchievementComponent implements OnInit, OnDestroy {
+  @Input() inputUser: EntityUserModel;
+  @Output() clearInputUser = new EventEmitter<any>();
+
   componentName = 'achievement.component';
 
   public config: PerfectScrollbarConfigInterface = {};
@@ -33,15 +33,14 @@ export class AchievementComponent implements OnInit {
   families;
   keys;
   features$;
-  // @ViewChild(PerfectScrollbarComponent, { static: false }) componentRef?: PerfectScrollbarComponent;
-  // @ViewChild(PerfectScrollbarDirective, { static: false }) directiveRef?: PerfectScrollbarDirective;
 
   constructor(private globals: Globals,
               private achievementService: AchievementService,
               private router: Router,
               private achievementQuery: AchievementQuery,
               private featureService: FeatureService,
-              private featureQuery: FeatureQuery) { }
+              private featureQuery: FeatureQuery,
+              private navigationService: NavigationService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -59,26 +58,9 @@ export class AchievementComponent implements OnInit {
       });
 
     this.featureService.cacheFeatures().subscribe();
-/*    this.features$ = this.featureQuery.selectAll();
-    this.features$.subscribe(x => {
-      console.log(x);
-    });*/
-/*    this.achievementQuery.getAchievementFamilies()
-      .pipe(tap(families => {
-        this.keys = Object.keys(families);
-      }))
-      .subscribe();*/
-    // this.keys = Object.keys(this.achievementQuery.getAchievementFamilies());
+
     console.log(this.keys);
-/*    this.achievementService.getUserAchievements().subscribe((result: any) => {
-      if (result.status === true) {
-        console.log(`${functionFullName}: achievement data populated successfully`);
-        console.log(`${functionFullName}: after getUserAchievements:`);
-        console.log(this.achievementService.achievementDataList);
-      } else {
-        console.log(`${functionFullName}: error populating achievement data`);
-      }
-    });*/
+
   }
 
   // groupBy function reference: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
@@ -108,4 +90,10 @@ export class AchievementComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy');
+    this.inputUser = null;
+    this.navigationService.achievementComponentInputUser = null;
+    this.clearInputUser.emit(true);
+  }
 }

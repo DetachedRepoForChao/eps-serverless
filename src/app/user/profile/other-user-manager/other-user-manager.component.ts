@@ -22,84 +22,20 @@ import {NavigationService} from '../../../shared/navigation.service';
 declare var $: any;
 
 @Component({
-  selector: 'app-other-user',
-  templateUrl: './other-user.component.html',
-  styleUrls: ['./other-user.component.css']
+  selector: 'app-other-user-manager',
+  templateUrl: './other-user-manager.component.html',
+  styleUrls: ['./other-user-manager.component.css']
 })
-export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
+export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('chart') chart: GoogleChartComponent;
   @Input() inputUser: EntityUserModel;
   user$: Observable<EntityUserModel[]> = null;
   user: EntityUserModel = null;
-  leaderboardUsers$: Observable<EntityUserModel[]> = null;
+  userId: number = null;
   pointItemTransactions$: Observable<PointItemTransactionModel[]> = null;
   pointItemTransactions: PointItemTransactionModel[] = null;
   achievements: OtherUserAchievementModel[] = null;
   completedAchievements: OtherUserAchievementModel[] = null;
-
-  coreValueData$;
-  coreValueData;
-  coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
-  myColumnNames = ['Core Value', 'Amount'];
-  options = {
-    width: 275,
-    height: 275,
-    colors: ['#ff8d72', '#fd5d93', '#d528ec', '#8129f3', '#00f2c3', '#4fdef3'],
-    backgroundColor: 'transparent',
-    chartArea: {
-      backgroundColor: 'white'
-    },
-    legend: 'none',
-    pieHole: 0.4,
-    pieSliceText: 'label',
-    pieSliceTextStyle: {
-      color: '#ffffff'
-    },
-    pieSliceBorderColor: 'transparent',
-    slices: {
-
-    },
-    tooltip: {
-      trigger: 'selection',
-      text: 'value',
-      textStyle: {
-        fontSize: 16,
-        fontName: 'Poppins'
-      }
-    }
-  };
-
-  privateCoreValueData = [
-    ['happy', 1],
-    ['fun', 1],
-    ['genuine', 1],
-    ['caring', 1],
-    ['respect', 1],
-    ['honest', 1]
-  ];
-
-  privateOptions = {
-    width: 275,
-    height: 275,
-    colors: ['#ff8d72', '#fd5d93', '#d528ec', '#8129f3', '#00f2c3', '#4fdef3'],
-    backgroundColor: 'transparent',
-    chartArea: {
-      backgroundColor: 'white'
-    },
-    legend: 'none',
-    pieHole: 0.4,
-    pieSliceText: 'label',
-    pieSliceTextStyle: {
-      color: '#ffffff'
-    },
-    pieSliceBorderColor: 'transparent',
-    slices: {
-
-    },
-    tooltip: {
-      trigger: 'none',
-    }
-  };
 
   isUserDataRetrieved = false;
   pointItemsTransactionsRetrieving = false;
@@ -126,58 +62,20 @@ export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
     this.userService.cacheUsers().subscribe();
     this.achievementService.cacheAchievements().subscribe();
     this.pointItemService.cachePointItems().subscribe();
-    this.spinner.show('other-user-spinner');
+    this.spinner.show('other-user-manager-spinner');
 
     this.populateUserData();
-
-    this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
-  }
-
-  getCoreValues(userId: number): Observable<any[]> {
-    // console.log(`getCoreValues for user id ${userId}`);
-    const coreValueArray = [
-      ['happy', 0],
-      ['fun', 0],
-      ['genuine', 0],
-      ['caring', 0],
-      ['respect', 0],
-      ['honest', 0]
-    ];
-
-    return new Observable<any[]>(observer => {
-      this.pointItemTransactionService.getUserCoreValues(userId)
-        .subscribe(coreValues => {
-          console.log(coreValues);
-          const keys = Object.keys(coreValues);
-          for (const key of keys) {
-            // console.log(`key: ${key}`);
-            // console.log(`coreValues[key]: ${coreValues[key]}`);
-            const coreValueItem = coreValueArray.find(x => x[0] === key);
-            const value: number = coreValues[key];
-            coreValueItem[1] = value;
-            // console.log(`coreValueItem: ${coreValueItem}`);
-            // console.log(`coreValueItem[1]: ${coreValueItem[1]}`);
-            // debugger;
-          }
-
-          console.log(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
-          observer.next(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
-          observer.complete();
-        });
-    });
   }
 
   populateUserPointTransactionData(user: EntityUserModel) {
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
-      this.pointItemTransactionService.cacheUserPointItemTransactions(user.userId)
+      this.pointItemTransactionService.cacheManagerPointItemTransactions(user.userId)
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {
               this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
-                filterBy: e => e.targetUserId === user.userId,
+                filterBy: e => e.sourceUserId === user.userId,
                 sortBy: 'createdAt',
                 sortByOrder: Order.DESC
               });
@@ -190,7 +88,7 @@ export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
             // We may have retrieved the data but the pointItemTransactions variable may be null... this accounts for that
             if (!this.pointItemTransactions) {
               this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
-                filterBy: e => e.targetUserId === user.userId,
+                filterBy: e => e.sourceUserId === user.userId,
                 sortBy: 'createdAt',
                 sortByOrder: Order.DESC
               });
@@ -276,15 +174,10 @@ export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
                 filterBy: e => e.username === this.route.snapshot.params.username
                 // filterBy: e => e.username === this.inputUser.username
               })[0];
-
-              this.getCoreValues(this.user.userId)
-                .subscribe(coreValues => {
-                  this.coreValueData = coreValues;
-                });
             }
 
             this.isUserDataRetrieved = true;
-            this.spinner.hide('other-user-spinner');
+            this.spinner.hide('other-user-manager-spinner');
           });
         } else {
           console.log('ERROR: User is still loading');
@@ -308,32 +201,9 @@ export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
-
-    if (changes) {
-      console.log('clearing all variables');
-
-      this.user$ = null;
-      this.user = null;
-      this.leaderboardUsers$ = null;
-      this.pointItemTransactions$ = null;
-      this.pointItemTransactions = null;
-      this.achievements = null;
-      this.completedAchievements = null;
-      this.isUserDataRetrieved = false;
-      this.pointItemsTransactionsRetrieving = false;
-      this.achievementsRetrieving = false;
-
-      console.log('on changes input user:');
-      console.log(this.inputUser);
-
-      console.log('on changes populating data');
-
+    console.log(this.inputUser);
+    if (changes.inputUser && changes.inputUser.previousValue && changes.inputUser.previousValue.length > 0) {
       this.populateUserData();
-
-      this.leaderboardUsers$ = this.userQuery.selectAll({
-        filterBy: userEntity => userEntity.securityRole.Id === 1,
-      });
     }
   }
-
 }

@@ -3,8 +3,10 @@
 
   <div *ngIf="(currentUserQuery.selectLoading() | async) === false && user$">
     <div *ngIf="(currentUserQuery.selectAll() | async)[0]?.username !== (user$ | async)[0]?.username; else currentUserPage">
-      <app-other-user></app-other-user>
+      <app-other-user *ngIf="(user$ | async)[0]?.securityRole.Id === 1" [inputUser]="(user$ | async)"></app-other-user>
+      <app-other-user-manager *ngIf="(user$ | async)[0]?.securityRole.Id === 2" [inputUser]="(user$ | async)"></app-other-user-manager>
     </div>
+
 
     <ng-template #currentUserPage>
       <div class="profile-header">

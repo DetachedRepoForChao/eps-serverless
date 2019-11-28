@@ -16,6 +16,59 @@ select:-webkit-autofill:focus {
 }
 */
 
+/*.perfect-scrollbar-dark {
+  perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+    opacity: 1;
+    background: linear-gradient(to top,  rgb(31, 34, 81) 0%,  rgba(255, 255, 255, 0) 100%) !important;
+    min-height: 50px !important;
+  }
+
+
+  perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+    opacity: 1;
+    background: linear-gradient(to bottom,  rgb(31, 34, 81) 0%,  rgba(255, 255, 255, 0) 100%) !important;
+    min-height: 50px !important;
+  }
+
+  perfect-scrollbar > .ps.ps--scrolling-y > .ps__rail-y,
+  perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
+    opacity: 0.9;
+
+    background-color: #eee0 !important;
+  }
+
+  .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+    background-color: #eee0 !important;
+    opacity: 0.9;
+  }
+}*/
+
+perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top,  rgb(31, 34, 81) 0%,  rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+
+perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to bottom,  rgb(31, 34, 81) 0%,  rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+perfect-scrollbar > .ps.ps--scrolling-y > .ps__rail-y,
+perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
+  opacity: 0.9;
+
+  background-color: #eee0 !important;
+}
+
+.ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: #eee0 !important;
+  opacity: 0.9;
+}
+
+
 .mat-tooltip {
   font-size: 16px;
   white-space: pre-line !important;

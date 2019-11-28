@@ -14,6 +14,7 @@ export type EntityUserModel = {
   suffix: string;
   position: string;
   points: number;
+  pointsPool: number;
   birthdate: string;
   preferredPronoun: string;
   sex: string;
@@ -49,8 +50,8 @@ export type EntityUserModel = {
 };
 
 export function createEntityUserModel({ userId, username, firstName, lastName, middleName, preferredName, prefix, suffix, position,
-                                        points, birthdate, preferredPronoun, sex, gender, securityRole, department, email, phone,
-                                        avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, active,
+                                        points, pointsPool, birthdate, preferredPronoun, sex, gender, securityRole, department, email,
+                                        phone, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, active,
                                         address1, address2, city, state, country, zip, dateOfHire, dateOfTermination, quote,
                                         phonePublic,  emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic,
                                         pointsPublic, coreValuesPublic}: Partial<EntityUserModel>) {
@@ -66,6 +67,7 @@ export function createEntityUserModel({ userId, username, firstName, lastName, m
     suffix,
     position,
     points,
+    pointsPool,
     birthdate,
     preferredPronoun,
     sex,

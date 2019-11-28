@@ -30,6 +30,8 @@ export class OtherUserAchievementService {
     }
   };
 
+  retrievedUserIds: number[] = [];
+
   constructor(private otherUserAchievementStore: OtherUserAchievementStore,
               private otherUserAchievementQuery: OtherUserAchievementQuery,
               private globals: Globals,
@@ -71,10 +73,7 @@ export class OtherUserAchievementService {
 
     return new Observable<any>(observer => {
       // Check if achievements for this user have already been cached
-      const achievements = this.otherUserAchievementQuery.getAll({
-        filterBy: e => e.userId === user.userId
-      });
-      if (achievements.length > 0) {
+      if (this.retrievedUserIds.find(x => x === user.userId)) {
         // Achievements for this user have already been retrieved
         console.log(`${functionFullName}: Achievements for user ${user.userId} have already been retrieved`);
         observer.next(false);
@@ -92,6 +91,7 @@ export class OtherUserAchievementService {
               // Make sure we're not adding duplicates
               if (this.otherUserAchievementQuery.getAll({filterBy: e => e.progressId === progressId}).length > 0) {
                 // Duplicate. Ignore this one.
+                console.log(`ignoring achievement: ${achievement.progressId}`);
               } else {
                 const userId = achievement.userId;
                 const achievementId = achievement.achievementId;
@@ -111,15 +111,16 @@ export class OtherUserAchievementService {
                 const otherUserAchievementModel = createEntityOtherUserAchievementModel({userId, achievementId, name, description, cost,
                   progress, progressId, achievementStatus, progressStatus, family, startAmount, level, roles, updatedAt});
 
+                console.log(`adding achievement: ${achievement.progressId}`);
                 achievementsArray.push(otherUserAchievementModel);
               }
+            }
 
-              // If achievements already exist in the store, we're going to add them to the array and re-push
-              // when setting the store with the new values
-              if (this.otherUserAchievementQuery.getAll().length > 0) {
-                for (const existingAchievement of this.otherUserAchievementQuery.getAll()) {
-                  achievementsArray.push(existingAchievement);
-                }
+            // If achievements already exist in the store, we're going to add them to the array and re-push
+            // when setting the store with the new values
+            if (this.otherUserAchievementQuery.getAll().length > 0) {
+              for (const existingAchievement of this.otherUserAchievementQuery.getAll()) {
+                achievementsArray.push(existingAchievement);
               }
             }
 
@@ -128,6 +129,7 @@ export class OtherUserAchievementService {
             this.otherUserAchievementStore.set(achievementsArray);
           }));
 
+        this.retrievedUserIds.push(user.userId);
         observer.next(request$);
         observer.complete();
       }

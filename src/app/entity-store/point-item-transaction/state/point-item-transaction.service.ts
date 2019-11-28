@@ -27,6 +27,9 @@ export class PointItemTransactionService {
     }
   };
 
+  retrievedUserIds: number[] = [];
+  retrievedManagerIds: number[] = [];
+
   constructor(private pointItemTransactionStore: PointItemTransactionStore,
               private pointItemTransactionQuery: PointItemTransactionQuery,
               private authService: AuthService) {
@@ -185,6 +188,44 @@ export class PointItemTransactionService {
     });
   }
 
+
+  getManagerPointItemTransactions(userId: number): Observable<any> {
+    const functionName = 'getManagerPointItemTransactions';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            userId: userId
+          };
+
+          API.post(this.apiName, this.apiPath + '/getManagerPointTransactions', myInit).then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            observer.next(data.data.pointTransactions);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving features data from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
+  }
+
   cacheUserPointItemTransactions(userId: number) {
     const functionName = 'cacheUserPointItemTransactions';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -193,21 +234,15 @@ export class PointItemTransactionService {
     // this.pointItemTransactionStore.setLoading(true);
     return new Observable<any>(observer => {
       // Check if point transactions for this user have already been cached
-      const transactions = this.pointItemTransactionQuery.getAll({
-        filterBy: e => e.targetUserId === userId
-      });
-      if (transactions.length > 0) {
+      if (this.retrievedUserIds.find(x => x === userId)) {
         // Point transactions for this user have already been retrieved
-        // console.log(transactions);
         console.log(`${functionFullName}: Point transactions for user ${userId} have already been retrieved`);
         observer.next(false);
         observer.complete();
-        // this.pointItemTransactionStore.setLoading(false);
       } else {
         const request$ = this.getUserPointItemTransactions(userId)
           .pipe(tap((pointItemTransactions: any) => {
             console.log(`${functionFullName}: caching for User Id ${userId}:`);
-            // console.log(pointItemTransactions);
 
             const pointItemTransactionsArray: PointItemTransactionModel[] = [];
 
@@ -216,8 +251,6 @@ export class PointItemTransactionService {
               // Make sure we're not adding duplicates
               if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
                 // Duplicate. Ignore this one.
-                // console.log('Duplicate...');
-                // console.log(this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}));
               } else {
                 const type = pointItemTransactions[i].type;
                 const amount = pointItemTransactions[i].amount;
@@ -233,13 +266,9 @@ export class PointItemTransactionService {
 
                 const createdAt = pointItemTransactions[i].createdAt;
 
-                const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId, pointItemId,
-                  description, coreValues, createdAt});
-                // console.log('pointItemTransactionModel');
-                // console.log(pointItemTransactionModel);
+                const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId,
+                  pointItemId, description, coreValues, createdAt});
                 pointItemTransactionsArray.push(pointItemTransactionModel);
-                // console.log('pointItemTransactionsArray');
-                // console.log(pointItemTransactionsArray);
               }
             }
 
@@ -249,14 +278,74 @@ export class PointItemTransactionService {
               }
             }
 
-            // console.log('caching transactions: ');
-            // console.log(pointItemTransactionsArray);
             this.pointItemTransactionStore.set(pointItemTransactionsArray);
           }));
 
+        this.retrievedUserIds.push(userId);
         observer.next(request$);
         observer.complete();
-        // this.pointItemTransactionStore.setLoading(false);
+      }
+    });
+  }
+
+  cacheManagerPointItemTransactions(userId: number) {
+    const functionName = 'cacheManagerPointItemTransactions';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    console.log(`${functionFullName}: Manager Id ${userId}`);
+    // this.pointItemTransactionStore.setLoading(true);
+    return new Observable<any>(observer => {
+      // Check if point transactions for this manager have already been cached.
+      if (this.retrievedManagerIds.find(x => x === userId)) {
+        // Point transactions for this user have already been retrieved
+        console.log(`${functionFullName}: Point transactions for manager ${userId} have already been retrieved`);
+        observer.next(false);
+        observer.complete();
+      } else {
+        const request$ = this.getManagerPointItemTransactions(userId)
+          .pipe(tap((pointItemTransactions: any) => {
+            console.log(`${functionFullName}: caching for Manager Id ${userId}:`);
+
+            const pointItemTransactionsArray: PointItemTransactionModel[] = [];
+
+            for (let i = 0; i < pointItemTransactions.length; i++) {
+              const transactionId = pointItemTransactions[i].id;
+              // Make sure we're not adding duplicates
+              if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
+                // Duplicate. Ignore this one.
+              } else {
+                const type = pointItemTransactions[i].type;
+                const amount = pointItemTransactions[i].amount;
+                const sourceUserId = pointItemTransactions[i].sourceUserId;
+                const targetUserId = pointItemTransactions[i].targetUserId;
+                const pointItemId = pointItemTransactions[i].pointItemId;
+                const description = pointItemTransactions[i].description;
+
+                const coreValues: string[] = pointItemTransactions[i].pointItem.coreValues.split(';');
+                for (let j = 0; j < coreValues.length; j++) {
+                  coreValues[j] = coreValues[j].trim();
+                }
+
+                const createdAt = pointItemTransactions[i].createdAt;
+
+                const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId,
+                  pointItemId, description, coreValues, createdAt});
+                pointItemTransactionsArray.push(pointItemTransactionModel);
+              }
+            }
+
+            if (this.pointItemTransactionQuery.getAll().length > 0) {
+              for (const transaction of this.pointItemTransactionQuery.getAll()) {
+                pointItemTransactionsArray.push(transaction);
+              }
+            }
+
+            this.pointItemTransactionStore.set(pointItemTransactionsArray);
+          }));
+
+        this.retrievedManagerIds.push(userId);
+        observer.next(request$);
+        observer.complete();
       }
     });
   }

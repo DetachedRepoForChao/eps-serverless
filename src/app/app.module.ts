@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { MatDialogModule } from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 
 
@@ -103,6 +103,7 @@ import { OtherUserComponent } from './user/profile/other-user/other-user.compone
 import { NotificationComponent } from './user/notification/notification.component';
 import { AlertCardComponent } from './user/homepage/alert-card/alert-card.component';
 import {PointItemComponent} from './shared/point-item/point-item.component';
+import { OtherUserManagerComponent } from './user/profile/other-user-manager/other-user-manager.component';
 akitaConfig({
   resettable: true
 });
@@ -170,7 +171,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProfileHeaderComponent,
     OtherUserComponent,
     AlertCardComponent,
-    PointItemComponent
+    PointItemComponent,
+    OtherUserManagerComponent
   ],
   imports: [
     BrowserModule,
@@ -217,12 +219,14 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     RoleGuardService,
     UserService,
     Globals,
+    { provide: MatDialogRef, useValue: {}},
     { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }},
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG}
   ],
   bootstrap: [AppComponent],
   entryComponents: [AwesomeTooltipComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    PointItemComponent,
   ]
 })
 export class AppModule { }

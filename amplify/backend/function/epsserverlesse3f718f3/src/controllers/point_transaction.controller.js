@@ -136,3 +136,53 @@ const getUserPointTransactions = function (userId) {
 };
 
 module.exports.getUserPointTransactions = getUserPointTransactions;
+
+
+const getManagerPointTransactions = function (userId) {
+  const functionName = 'getManagerPointTransactions';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PointTransaction.findAll({
+    include: [
+      {
+        model: Models.User,
+        as: 'sourceUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.User,
+        as: 'targetUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.PointItem,
+        attributes: ['name', 'coreValues']
+      },
+    ],
+    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId'],
+    order: [
+      ['id', 'DESC'],
+    ],
+    where: {
+      sourceUserId: userId
+    }
+  })
+    .then(pointTransactionResult => {
+        console.log(`${functionFullName}: pointTransactionResult:`);
+        console.log(pointTransactionResult);
+
+        const resultLength = pointTransactionResult.length;
+        console.log(`${functionFullName}: resultLength: ${resultLength}`);
+        return {status: true, pointTransactions: pointTransactionResult};
+      }
+    )
+    .catch(err => {
+        console.log(`${functionFullName}: Database error`);
+        console.log(err);
+        return {status: false, message: err};
+      }
+    );
+};
+
+module.exports.getManagerPointTransactions = getManagerPointTransactions;
