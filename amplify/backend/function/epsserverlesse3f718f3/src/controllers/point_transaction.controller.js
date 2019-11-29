@@ -62,12 +62,21 @@ const getPointTransaction = function () {
         model: Models.PointItem,
         attributes: ['name', 'coreValues']
       },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost', 'imagePath']
+      },
+      {
+        model: Models.LikeInfo,
+        attributes: ['id', 'postId', 'username', 'createdAt']
+      },
     ],
     attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId'],
     order: [
       ['id', 'DESC'],
     ],
-    limit: 25
+    limit: 25,
+    subQuery: false
   })
     .then(pointTransactionResult => {
         console.log(`${functionFullName}: pointTransactionResult:`);
@@ -75,18 +84,77 @@ const getPointTransaction = function () {
 
         const resultLength = pointTransactionResult.length;
         console.log(`${functionFullName}: resultLength: ${resultLength}`);
-        return {status: 200, pointTransactions: pointTransactionResult};
+        return {status: true, pointTransactions: pointTransactionResult};
       }
     )
     .catch(err => {
         console.log(`${functionFullName}: Database error`);
         console.log(err);
-        return {status: 500, message: err};
+        return {status: false, message: err};
       }
     );
 };
 
 module.exports.getPointTransaction = getPointTransaction;
+
+
+
+const getPointTransactionRange = function (startIndex, numberRecords) {
+  const functionName = 'getPointTransactionRange';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PointTransaction.findAll({
+    include: [
+      {
+        model: Models.User,
+        as: 'sourceUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.User,
+        as: 'targetUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.PointItem,
+        attributes: ['name', 'coreValues']
+      },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost', 'imagePath']
+      },
+      {
+        model: Models.LikeInfo,
+        attributes: ['id', 'postId', 'username', 'createdAt']
+      },
+    ],
+    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId'],
+    order: [
+      ['id', 'DESC'],
+    ],
+    offset: startIndex,
+    limit: numberRecords,
+    subQuery: false,
+  })
+    .then(pointTransactionResult => {
+        console.log(`${functionFullName}: pointTransactionResult:`);
+        console.log(pointTransactionResult);
+
+        const resultLength = pointTransactionResult.length;
+        console.log(`${functionFullName}: resultLength: ${resultLength}`);
+        return {status: true, pointTransactions: pointTransactionResult};
+      }
+    )
+    .catch(err => {
+        console.log(`${functionFullName}: Database error`);
+        console.log(err);
+        return {status: false, message: err};
+      }
+    );
+};
+
+module.exports.getPointTransactionRange = getPointTransactionRange;
 
 const getUserPointTransactions = function (userId) {
   const functionName = 'getUserPointTransactions';
@@ -113,8 +181,12 @@ const getUserPointTransactions = function (userId) {
         model: Models.StoreItem,
         attributes: ['id', 'name', 'description', 'cost', 'imagePath']
       },
+      {
+        model: Models.LikeInfo,
+        attributes: ['id', 'postId', 'username', 'createdAt']
+      },
     ],
-    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId'],
+    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId', 'storeItemId'],
     order: [
       ['id', 'DESC'],
     ],
@@ -163,8 +235,12 @@ const getManagerPointTransactions = function (userId) {
         model: Models.PointItem,
         attributes: ['name', 'coreValues']
       },
+      {
+        model: Models.LikeInfo,
+        attributes: ['id', 'postId', 'username', 'createdAt']
+      },
     ],
-    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId'],
+    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId', 'storeItemId'],
     order: [
       ['id', 'DESC'],
     ],

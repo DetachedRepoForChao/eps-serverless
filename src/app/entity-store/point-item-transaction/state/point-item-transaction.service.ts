@@ -29,6 +29,8 @@ export class PointItemTransactionService {
 
   retrievedUserIds: number[] = [];
   retrievedManagerIds: number[] = [];
+  numBatchRetrieved: number = null;
+  public initialBatchRetrieved = false;
 
   constructor(private pointItemTransactionStore: PointItemTransactionStore,
               private pointItemTransactionQuery: PointItemTransactionQuery,
@@ -129,10 +131,10 @@ export class PointItemTransactionService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
 
-          API.get(this.apiName, this.apiPath + '/getCurrentUserPointTransactions', myInit).then(data => {
+          API.get(this.apiName, this.apiPath + '/getCurrentUserPointTransactions', myInit).then(response => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data.pointTransactions);
+            console.log(response);
+            observer.next(response.data.pointTransactions);
             observer.complete();
           })
             .catch(err => {
@@ -166,10 +168,49 @@ export class PointItemTransactionService {
             userId: userId
           };
 
-          API.post(this.apiName, this.apiPath + '/getUserPointTransactions', myInit).then(data => {
+          API.post(this.apiName, this.apiPath + '/getUserPointTransactions', myInit).then(response => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data.pointTransactions);
+            console.log(response);
+            observer.next(response.data.pointTransactions);
+            observer.complete();
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: error retrieving features data from API`);
+              console.log(err);
+              observer.next(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          console.log(err);
+          observer.next(err);
+          observer.complete();
+        });
+    });
+  }
+
+
+  getPointItemTransactionsRange(startIndex: number, numberRecords: number): Observable<any> {
+    const functionName = 'getPointItemTransactionsRange';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            startIndex: startIndex,
+            numberRecords: numberRecords
+          };
+
+          API.post(this.apiName, this.apiPath + '/getPointTransactionRange', myInit).then(response => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(response);
+            observer.next(response.data);
             observer.complete();
           })
             .catch(err => {
@@ -204,10 +245,10 @@ export class PointItemTransactionService {
             userId: userId
           };
 
-          API.post(this.apiName, this.apiPath + '/getManagerPointTransactions', myInit).then(data => {
+          API.post(this.apiName, this.apiPath + '/getManagerPointTransactions', myInit).then(response => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data.pointTransactions);
+            console.log(response);
+            observer.next(response.data.pointTransactions);
             observer.complete();
           })
             .catch(err => {
@@ -233,203 +274,254 @@ export class PointItemTransactionService {
     console.log(`${functionFullName}: User Id ${userId}`);
     // this.pointItemTransactionStore.setLoading(true);
     return new Observable<any>(observer => {
-      // Check if point transactions for this user have already been cached
-      if (this.retrievedUserIds.find(x => x === userId)) {
-        // Point transactions for this user have already been retrieved
-        console.log(`${functionFullName}: Point transactions for user ${userId} have already been retrieved`);
-        observer.next(false);
-        observer.complete();
-      } else {
-        const request$ = this.getUserPointItemTransactions(userId)
-          .pipe(tap((pointItemTransactions: any) => {
-            console.log(`${functionFullName}: caching for User Id ${userId}:`);
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const username = currentUser.username;
 
-            const pointItemTransactionsArray: PointItemTransactionModel[] = [];
+          // Check if point transactions for this user have already been cached
+          if (this.retrievedUserIds.find(x => x === userId)) {
+            // Point transactions for this user have already been retrieved
+            console.log(`${functionFullName}: Point transactions for user ${userId} have already been retrieved`);
+            observer.next(false);
+            observer.complete();
+          } else {
+            const request$ = this.getUserPointItemTransactions(userId)
+              .pipe(tap((pointItemTransactions: any) => {
+                console.log(`${functionFullName}: caching for User Id ${userId}:`);
 
-            for (let i = 0; i < pointItemTransactions.length; i++) {
-              const transactionId = pointItemTransactions[i].id;
-              // Make sure we're not adding duplicates
-              if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
-                // Duplicate. Ignore this one.
-              } else {
-                const type = pointItemTransactions[i].type;
-                const amount = pointItemTransactions[i].amount;
-                const sourceUserId = pointItemTransactions[i].sourceUserId;
-                const targetUserId = pointItemTransactions[i].targetUserId;
-                const pointItemId = pointItemTransactions[i].pointItemId;
-                const description = pointItemTransactions[i].description;
+                const pointItemTransactionsArray: PointItemTransactionModel[] = [];
 
-                const coreValues: string[] = pointItemTransactions[i].pointItem.coreValues.split(';');
-                for (let j = 0; j < coreValues.length; j++) {
-                  coreValues[j] = coreValues[j].trim();
+                for (const pointItemTransaction of pointItemTransactions) {
+                  const transactionId = pointItemTransaction.id;
+                  // Make sure we're not adding duplicates
+                  if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
+                    // Duplicate. Ignore this one.
+                    console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
+                  } else {
+                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    const type = pointItemTransaction.type;
+                    const amount = pointItemTransaction.amount;
+                    const sourceUserId = pointItemTransaction.sourceUserId;
+                    const targetUserId = pointItemTransaction.targetUserId;
+                    const pointItemId = pointItemTransaction.pointItemId;
+                    const description = pointItemTransaction.description;
+
+                    const coreValues: string[] = pointItemTransaction.pointItem.coreValues.split(';');
+                    for (let j = 0; j < coreValues.length; j++) {
+                      coreValues[j] = coreValues[j].trim();
+                    }
+
+                    const createdAt = pointItemTransaction.createdAt;
+                    const likes = pointItemTransaction.likeInfos;
+                    const likedByCurrentUser = (pointItemTransaction.likeInfos && pointItemTransaction.likeInfos.username === username) ? true : false;
+
+                    const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId,
+                      targetUserId, pointItemId, description, coreValues, createdAt, likes, likedByCurrentUser});
+                    pointItemTransactionsArray.push(pointItemTransactionModel);
+                  }
                 }
 
-                const createdAt = pointItemTransactions[i].createdAt;
+                if (this.pointItemTransactionQuery.getAll().length > 0) {
+                  console.log(`${functionFullName}: Adding transactions`);
+                  console.log(this.pointItemTransactionQuery.getAll());
+                  console.log(`${functionFullName}: to`);
+                  console.log(pointItemTransactionsArray);
+                  for (const transaction of this.pointItemTransactionQuery.getAll()) {
+                    pointItemTransactionsArray.push(transaction);
+                  }
+                } else {
+                  console.log(`${functionFullName}: Setting transactions`);
+                  console.log(pointItemTransactionsArray);
+                }
 
-                const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId,
-                  pointItemId, description, coreValues, createdAt});
-                pointItemTransactionsArray.push(pointItemTransactionModel);
-              }
-            }
+                this.pointItemTransactionStore.set(pointItemTransactionsArray);
+              }));
 
-            if (this.pointItemTransactionQuery.getAll().length > 0) {
-              for (const transaction of this.pointItemTransactionQuery.getAll()) {
-                pointItemTransactionsArray.push(transaction);
-              }
-            }
-
-            this.pointItemTransactionStore.set(pointItemTransactionsArray);
-          }));
-
-        this.retrievedUserIds.push(userId);
-        observer.next(request$);
-        observer.complete();
-      }
+            this.retrievedUserIds.push(userId);
+            observer.next(request$);
+            observer.complete();
+          }
+        });
     });
   }
 
-  cacheManagerPointItemTransactions(userId: number) {
+  cacheManagerPointItemTransactions(managerId: number) {
     const functionName = 'cacheManagerPointItemTransactions';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: Manager Id ${userId}`);
-    // this.pointItemTransactionStore.setLoading(true);
+    console.log(`${functionFullName}: Manager Id ${managerId}`);
+
     return new Observable<any>(observer => {
-      // Check if point transactions for this manager have already been cached.
-      if (this.retrievedManagerIds.find(x => x === userId)) {
-        // Point transactions for this user have already been retrieved
-        console.log(`${functionFullName}: Point transactions for manager ${userId} have already been retrieved`);
-        observer.next(false);
-        observer.complete();
-      } else {
-        const request$ = this.getManagerPointItemTransactions(userId)
-          .pipe(tap((pointItemTransactions: any) => {
-            console.log(`${functionFullName}: caching for Manager Id ${userId}:`);
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const username = currentUser.username;
 
-            const pointItemTransactionsArray: PointItemTransactionModel[] = [];
+          // Check if point transactions for this manager have already been cached.
+          if (this.retrievedManagerIds.find(x => x === managerId)) {
+            // Point transactions for this user have already been retrieved
+            console.log(`${functionFullName}: Point transactions for manager ${managerId} have already been retrieved`);
+            observer.next(false);
+            observer.complete();
+          } else {
+            const request$ = this.getManagerPointItemTransactions(managerId)
+              .pipe(tap((pointItemTransactions: any) => {
+                console.log(`${functionFullName}: caching for Manager Id ${managerId}:`);
 
-            for (let i = 0; i < pointItemTransactions.length; i++) {
-              const transactionId = pointItemTransactions[i].id;
-              // Make sure we're not adding duplicates
-              if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
-                // Duplicate. Ignore this one.
-              } else {
-                const type = pointItemTransactions[i].type;
-                const amount = pointItemTransactions[i].amount;
-                const sourceUserId = pointItemTransactions[i].sourceUserId;
-                const targetUserId = pointItemTransactions[i].targetUserId;
-                const pointItemId = pointItemTransactions[i].pointItemId;
-                const description = pointItemTransactions[i].description;
+                const pointItemTransactionsArray: PointItemTransactionModel[] = [];
 
-                const coreValues: string[] = pointItemTransactions[i].pointItem.coreValues.split(';');
-                for (let j = 0; j < coreValues.length; j++) {
-                  coreValues[j] = coreValues[j].trim();
+                for (const pointItemTransaction of pointItemTransactions) {
+                  const transactionId = pointItemTransaction.id;
+                  // Make sure we're not adding duplicates
+                  if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
+                    // Duplicate. Ignore this one.
+                    console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
+                  } else {
+                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    const type = pointItemTransaction.type;
+                    const amount = pointItemTransaction.amount;
+                    const sourceUserId = pointItemTransaction.sourceUserId;
+                    const targetUserId = pointItemTransaction.targetUserId;
+                    const pointItemId = pointItemTransaction.pointItemId;
+                    const description = pointItemTransaction.description;
+
+                    const coreValues: string[] = pointItemTransaction.pointItem.coreValues.split(';');
+                    for (let j = 0; j < coreValues.length; j++) {
+                      coreValues[j] = coreValues[j].trim();
+                    }
+
+                    const createdAt = pointItemTransaction.createdAt;
+                    const likes = pointItemTransaction.likeInfos;
+                    const likedByCurrentUser = (pointItemTransaction.likeInfos && pointItemTransaction.likeInfos.username === username) ? true : false;
+
+                    const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId,
+                      targetUserId, pointItemId, description, coreValues, createdAt, likes, likedByCurrentUser});
+                    pointItemTransactionsArray.push(pointItemTransactionModel);
+                  }
                 }
 
-                const createdAt = pointItemTransactions[i].createdAt;
+                if (this.pointItemTransactionQuery.getAll().length > 0) {
+                  console.log(`${functionFullName}: Adding transactions`);
+                  console.log(this.pointItemTransactionQuery.getAll());
+                  console.log(`${functionFullName}: to`);
+                  console.log(pointItemTransactionsArray);
+                  for (const transaction of this.pointItemTransactionQuery.getAll()) {
+                    pointItemTransactionsArray.push(transaction);
+                  }
+                } else {
+                  console.log(`${functionFullName}: Setting transactions`);
+                  console.log(pointItemTransactionsArray);
+                }
 
-                const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId,
-                  pointItemId, description, coreValues, createdAt});
-                pointItemTransactionsArray.push(pointItemTransactionModel);
-              }
-            }
+                this.pointItemTransactionStore.set(pointItemTransactionsArray);
+              }));
 
-            if (this.pointItemTransactionQuery.getAll().length > 0) {
-              for (const transaction of this.pointItemTransactionQuery.getAll()) {
-                pointItemTransactionsArray.push(transaction);
-              }
-            }
-
-            this.pointItemTransactionStore.set(pointItemTransactionsArray);
-          }));
-
-        this.retrievedManagerIds.push(userId);
-        observer.next(request$);
-        observer.complete();
-      }
+            this.retrievedManagerIds.push(managerId);
+            observer.next(request$);
+            observer.complete();
+          }
+        });
     });
   }
 
-  /*cacheCurrentUserPointItemTransactions() {
-    const functionName = 'cacheCurrentUserPointItemTransactions';
+  cachePointItemTransactionsBatch() {
+    const functionName = 'cachePointItemTransactionsBatch';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
+
+    const numberRecords = 10;
+    let startIndex;
+    if (!this.numBatchRetrieved) {
+      console.log(`${functionFullName}: Retrieving first transaction batch`);
+      startIndex = 0;
+    } else {
+      startIndex = (this.numBatchRetrieved + 1) * 10;
+    }
 
     return new Observable<any>(observer => {
-      // Check if point transactions for this user have already been cached
-      this.pointItemTransactionQuery.selectAll({
-        filterBy: e => e.targetUserId === userId
-      }).subscribe(transactions => {
-        if (transactions.length > 0) {
-          // Point transactions for this user have already been retrieved
-          // console.log(transactions);
-          // console.log(`${functionFullName}: Point transactions for user ${userId} have already been retrieved`);
-          observer.next(false);
-          observer.complete();
-        } else {
-          const request$ = this.getCurrentUserPointItemTransactions()
-            .pipe(tap((pointItemTransactions: any) => {
-              console.log(`${functionFullName}: caching:`);
-              console.log(pointItemTransactions);
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const username = currentUser.username;
 
-              const pointItemTransactionsArray: PointItemTransactionModel[] = [];
+          // Check if point transactions for this user have already been cached
+          if (this.numBatchRetrieved && (this.numBatchRetrieved * 10) >= startIndex) {
+            // Point transactions for this batch has already been retrieved
+            console.log(`${functionFullName}: Point transactions for range [${startIndex} - ${startIndex + numberRecords}] have already been retrieved`);
+            observer.next(false);
+            observer.complete();
+          } else {
+            const request$ = this.getPointItemTransactionsRange(startIndex, numberRecords)
+              .pipe(tap((pointItemTransactions: any) => {
+                console.log(`${functionFullName}: caching for range [${startIndex} - ${startIndex + numberRecords}]:`);
+                console.log(pointItemTransactions);
 
-              for (let i = 0; i < pointItemTransactions.length; i++) {
-                const transactionId = pointItemTransactions[i].id;
-                const type = pointItemTransactions[i].type;
-                const amount = pointItemTransactions[i].amount;
-                const sourceUserId = pointItemTransactions[i].sourceUserId;
-                const targetUserId = pointItemTransactions[i].targetUserId;
-                const pointItemId = pointItemTransactions[i].pointItemId;
-                const description = pointItemTransactions[i].description;
-                const createdAt = pointItemTransactions[i].createdAt;
+                const pointItemTransactionsArray: PointItemTransactionModel[] = [];
 
-                const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId, pointItemId,
-                  description, createdAt});
-                pointItemTransactionsArray.push(pointItemTransactionModel);
-                // this.pointItemTransactionStore.add(pointItemTransactionModel);
-              }
+                for (const pointItemTransaction of pointItemTransactions) {
+                  console.log(pointItemTransaction);
+                  const transactionId = pointItemTransaction.id;
+                  // Make sure we're not adding duplicates
+                  if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
+                    // Duplicate. Ignore this one.
+                    console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
+                  } else {
+                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    const type = pointItemTransaction.type;
+                    const amount = pointItemTransaction.amount;
+                    const sourceUserId = pointItemTransaction.sourceUserId;
+                    const targetUserId = pointItemTransaction.targetUserId;
+                    const pointItemId = pointItemTransaction.pointItemId;
+                    const description = pointItemTransaction.description;
 
-              this.pointItemTransactionStore.set(pointItemTransactionsArray);
-            }));
+                    let coreValues: string[] = [];
+                    if (pointItemTransaction.pointItem && pointItemTransaction.pointItem.coreValues) {
+                      coreValues = pointItemTransaction.pointItem.coreValues.split(';');
+                      for (let j = 0; j < coreValues.length; j++) {
+                        coreValues[j] = coreValues[j].trim();
+                      }
+                    }
 
-          observer.next(request$);
-          observer.complete();
-        }
-      });
+                    const createdAt = pointItemTransaction.createdAt;
+                    const likes = pointItemTransaction.likeInfos;
+                    const likedByCurrentUser = (pointItemTransaction.likeInfos && pointItemTransaction.likeInfos.username === username) ? true : false;
+
+                    const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId,
+                      pointItemId, description, coreValues, createdAt, likes, likedByCurrentUser});
+                    pointItemTransactionsArray.push(pointItemTransactionModel);
+                  }
+                }
+
+                if (this.pointItemTransactionQuery.getAll().length > 0) {
+                  console.log(`${functionFullName}: Adding transactions`);
+                  console.log(this.pointItemTransactionQuery.getAll());
+                  console.log(`${functionFullName}: to`);
+                  console.log(pointItemTransactionsArray);
+                  for (const transaction of this.pointItemTransactionQuery.getAll()) {
+                    pointItemTransactionsArray.push(transaction);
+                  }
+                } else {
+                  console.log(`${functionFullName}: Setting transactions`);
+                  console.log(pointItemTransactionsArray);
+                }
+
+                console.log(pointItemTransactionsArray);
+                this.pointItemTransactionStore.set(pointItemTransactionsArray);
+              }));
+
+            if (!this.numBatchRetrieved) {
+              this.numBatchRetrieved = 1;
+            } else {
+              this.numBatchRetrieved += 1;
+            }
+
+            observer.next(request$);
+            observer.complete();
+          }
+        });
     });
-  }*/
-  /*
-  cacheCurrentUserPointItemTransactions() {
-    const functionName = 'cacheCurrentUserPointItemTransactions';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+  }
 
-    const request$ = this.getCurrentUserPointItemTransactions()
-      .pipe(tap((pointItemTransactions: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(pointItemTransactions);
-
-        const pointItemTransactionsArray: PointItemTransactionModel[] = [];
-
-        for (let i = 0; i < pointItemTransactions.length; i++) {
-          const transactionId = pointItemTransactions[i].id;
-          const type = pointItemTransactions[i].type;
-          const amount = pointItemTransactions[i].amount;
-          const sourceUserId = pointItemTransactions[i].sourceUserId;
-          const targetUserId = pointItemTransactions[i].targetUserId;
-          const pointItemId = pointItemTransactions[i].pointItemId;
-          const description = pointItemTransactions[i].description;
-          const createdAt = pointItemTransactions[i].createdAt;
-
-          const pointItemTransactionModel = createPointItemTransactionModel({transactionId, type, amount, sourceUserId, targetUserId,
-            pointItemId, description, createdAt});
-          pointItemTransactionsArray.push(pointItemTransactionModel);
-        }
-
-        this.pointItemTransactionStore.set(pointItemTransactionsArray);
-      }));
-
-    return cacheable(this.pointItemTransactionStore, request$);
-  }*/
+  public setInitialBatchRetrievedTrue() {
+    console.log(`Initial batch retrieved`);
+    this.initialBatchRetrieved = true;
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PointItemTransactionState, PointItemTransactionStore } from './point-item-transaction.store';
 import { PointItemTransactionModel } from './point-item-transaction.model';
-import { QueryEntity } from '@datorama/akita';
+import {Order, QueryEntity} from '@datorama/akita';
 import {combineLatest, Observable} from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/point-item-transaction-filter.model';
 import { map } from 'rxjs/operators';
@@ -36,6 +36,16 @@ export class PointItemTransactionQuery extends QueryEntity<PointItemTransactionS
       default:
         return pointItemTransactions;
     }
+  }
+
+
+
+  public selectAllAddTransactions() {
+    return this.selectAll({
+      filterBy: e => e.type === 'Add',
+      sortBy: 'transactionId',
+      sortByOrder: Order.DESC
+    });
   }
 
   public getUserTotalCoreValues(userId: number): Observable<any> {

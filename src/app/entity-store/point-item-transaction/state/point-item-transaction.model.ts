@@ -12,10 +12,12 @@ export type PointItemTransactionModel = {
   coreValues: string[];
   createdAt: any;
   dateModified: any;
+  likes: any[];
+  likedByCurrentUser: boolean;
 };
 
 export function createPointItemTransactionModel({ transactionId, type, amount, sourceUserId, targetUserId, pointItemId,
-                                     description, coreValues, createdAt }: Partial<PointItemTransactionModel>) {
+                                     description, coreValues, createdAt, likes, likedByCurrentUser }: Partial<PointItemTransactionModel>) {
 
   return {
     id: guid(),
@@ -28,6 +30,8 @@ export function createPointItemTransactionModel({ transactionId, type, amount, s
     description,
     coreValues,
     createdAt,
+    likes,
+    likedByCurrentUser,
     dateModified: Date.now()
   } as PointItemTransactionModel;
 }

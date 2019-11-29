@@ -1,9 +1,9 @@
-import { EntityState,EntityStore, StoreConfig } from '@datorama/akita';
-import {FeedcardModel } from './feedcard.model'
-import {VISIBILITY_FILTER } from '../filter/feedcard-filter.model'
-import { Injectable} from '@angular/core'
+import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
+import {FeedcardModel } from './feedcard.model';
+import {VISIBILITY_FILTER } from '../filter/feedcard-filter.model';
+import { Injectable} from '@angular/core';
 
-export interface FeedcardState extends EntityState<FeedcardModel>{
+export interface FeedcardState extends EntityState<FeedcardModel> {
   ui: {
     filter: VISIBILITY_FILTER
   };

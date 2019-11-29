@@ -45,140 +45,150 @@
     </div>
   </div>
 
-  <div *ngFor="let pointTransaction of this.feedcardService.pointTransactionsLimited">
-    <!-- /////// post -->
-    <div class="card gedf-card">
-      <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="mr-2">
-              <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
-                <img class="rounded-circle" width="45"
-                  [src]="(entityUserQuery.selectUser(pointTransaction.targetUserName) | async)[0]?.avatarResolvedUrl"
-                  alt="">
-                <!--                {{(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0].avatarResolvedUrl}}-->
-              </div>
-              <!-- Placeholder for loading avatar -->
-              <ng-template #avatarLoading>
-                <div>
-                  <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..."
-                    class="rounded-circle" width="45">
-                </div>
-              </ng-template>
-              <!--            <div>-->
-              <!--              <img class="rounded-circle" width="45" [src]="this.avatarService.getAvatarFromCache(pointTransaction.targetUserName)" alt="">-->
-              <!--              <img class="rounded-circle" width="45" [src]="(pointTransaction.targetUserAvatarUrl | async).avatar" alt="">-->
-              <!--            </div>-->
+<!--  <div *ngFor="let pointTransaction of this.feedcardService.pointTransactionsLimited">-->
+  <div *ngIf="pointItemTransactionService.initialBatchRetrieved; else nothingHere">
+    <div *ngFor="let pointTransaction of (this.pointItemTransactionQuery.selectAllAddTransactions() | async).slice(0, (this.pointItemTransactionService.numBatchRetrieved * 10))">
+<!--    <div *ngFor="let pointTransaction of pointItemTransactions">-->
 
-              <!--            <img class="rounded-circle" width="45" [src]="(this.avatarService.resolveAvatar(pointTransaction.targetUser) | async).avatar" alt="">-->
-            </div>
-            <div class="ml-2">
-              <div class="h5 m-0">@{{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}}
+    <!-- /////// post -->
+      <div class="card gedf-card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="mr-2">
+                <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else avatarLoading">
+                  <img class="rounded-circle" width="45"
+                       [src]="(entityUserQuery.selectUserByUserId(pointTransaction.targetUserId) | async)[0]?.avatarResolvedUrl"
+                       alt="">
+                  <!--                {{(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0].avatarResolvedUrl}}-->
+                </div>
+                <!-- Placeholder for loading avatar -->
+                <ng-template #avatarLoading>
+                  <div>
+                    <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..."
+                         class="rounded-circle" width="45">
+                  </div>
+                </ng-template>
+                <!--            <div>-->
+                <!--              <img class="rounded-circle" width="45" [src]="this.avatarService.getAvatarFromCache(pointTransaction.targetUserName)" alt="">-->
+                <!--              <img class="rounded-circle" width="45" [src]="(pointTransaction.targetUserAvatarUrl | async).avatar" alt="">-->
+                <!--            </div>-->
+
+                <!--            <img class="rounded-circle" width="45" [src]="(this.avatarService.resolveAvatar(pointTransaction.targetUser) | async).avatar" alt="">-->
               </div>
-              <div class="h7 text-muted"><i
+              <div class="ml-2">
+                <div class="h5 m-0">@{{(entityUserQuery.selectUserByUserId(pointTransaction.targetUserId) | async)[0]?.firstName}}&nbsp;{{(entityUserQuery.selectUserByUserId(pointTransaction.targetUserId) | async)[0]?.lastName}}
+                </div>
+                <div class="h7 text-muted"><i
                   class="fa fa-clock-o"></i>{{pointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="dropdown">
-              <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-h"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
-                <div class="h6 dropdown-header">Configuration</div>
-                <a class="dropdown-item">Save</a>
-                <a class="dropdown-item" href="#">Hide</a>
-                <a class="dropdown-item" href="#">Report</a>
+            <div>
+              <div class="dropdown">
+                <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                  <div class="h6 dropdown-header">Configuration</div>
+                  <a class="dropdown-item">Save</a>
+                  <a class="dropdown-item" href="#">Hide</a>
+                  <a class="dropdown-item" href="#">Report</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="card-body">
-        <div class="text-muted h7 mb-2"> </div>
-        <a class="card-link" href="#">
-          <h5 class="card-title">{{pointTransaction.sourceUserFirstName}} {{pointTransaction.sourceUserLastName}}
-            awarded {{pointTransaction.amount}} points to
-            {{pointTransaction.targetUserFirstName}}&nbsp;{{pointTransaction.targetUserLastName}} for:</h5>
-        </a>
+        <div class="card-body">
+          <div class="text-muted h7 mb-2"> </div>
+          <a class="card-link" href="#">
+            <h5 class="card-title">{{(entityUserQuery.selectUserByUserId(pointTransaction.sourceUserId) | async)[0]?.firstName}} {{(entityUserQuery.selectUserByUserId(pointTransaction.sourceUserId) | async)[0]?.lastName}}
+              awarded {{pointTransaction.amount}} points to
+              {{(entityUserQuery.selectUserByUserId(pointTransaction.targetUserId) | async)[0]?.firstName}}&nbsp;{{(entityUserQuery.selectUserByUserId(pointTransaction.targetUserId) | async)[0]?.lastName}} for:</h5>
+          </a>
 
 
-        <p class="card-text">
-          {{pointTransaction.pointItemName}}
-        </p>
-      </div>
-      <div class="card-footer">
-        <div class="row">
+          <p class="card-text">
+            {{(pointItemQuery.selectPointItemByItemId(pointTransaction.pointItemId) | async)[0]?.name}}
+          </p>
+        </div>
+        <div class="card-footer">
+          <div class="row">
 
-          <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-            <a *ngIf="pointTransaction.likedByCurrentUser === false; else likedByUser" href="javascript:void(0)"
-              (click)="onLikeClick(pointTransaction)" class="card-link">
-              <i class="far fa-heart"></i> Like
-              <span *ngIf="pointTransaction.likeData.length > 0"
-                class="badge badge-secondary">{{pointTransaction.likeData.length}}</span>
-            </a>
-
-            <ng-template #likedByUser>
-              <a href="javascript:void(0)" (click)="onUnlikeClick(pointTransaction)" class="card-link">
-                <!--          <i class="fas fa-heart"></i> Like <span class="badge badge-default">4</span>-->
-                <i class="fas fa-heart"></i> Like
-                <span *ngIf="pointTransaction.likeData.length > 0"
-                  class="badge badge-secondary">{{pointTransaction.likeData.length}}</span>
+            <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+              <a *ngIf="pointTransaction.likedByCurrentUser === false; else likedByUser" href="javascript:void(0)"
+                 (click)="onLikeClick(pointTransaction)" class="card-link">
+                <i class="far fa-heart"></i> Like
+                <span *ngIf="pointTransaction.likes?.length > 0"
+                      class="badge badge-secondary">{{pointTransaction.likes.length}}</span>
               </a>
-            </ng-template>
-          </div>
-          <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-            <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-          </div>
-          <div class="col-lg-6 col-md-3 col-4">
+
+              <ng-template #likedByUser>
+                <a href="javascript:void(0)" (click)="onUnlikeClick(pointTransaction)" class="card-link">
+                  <!--          <i class="fas fa-heart"></i> Like <span class="badge badge-default">4</span>-->
+                  <i class="fas fa-heart"></i> Like
+                  <span *ngIf="pointTransaction.likes?.length > 0"
+                        class="badge badge-secondary">{{pointTransaction.likes.length}}</span>
+                </a>
+              </ng-template>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+              <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+            </div>
+            <div class="col-lg-6 col-md-3 col-4">
             <span class="row heights">
                 <div class="col-lg-3 col-md-3 col-sm-4 col-4">
             <!---- FACEBOOK SHARE------->
-<!--            <script>
-              window.fbAsyncInit = function () {
-                FB.init({
-                  appId: 'your-app-id',
-                  autoLogAppEvents: true,
-                  xfbml: true,
-                  version: 'v4.0'
-                });
-              };
+                  <!--            <script>
+                                window.fbAsyncInit = function () {
+                                  FB.init({
+                                    appId: 'your-app-id',
+                                    autoLogAppEvents: true,
+                                    xfbml: true,
+                                    version: 'v4.0'
+                                  });
+                                };
 
-            </script>-->
-<!--            <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>-->
+                              </script>-->
+                  <!--            <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>-->
 
             <div id="fb-root"></div>
-<!--            <script async defer crossorigin="anonymous"
-              src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0"></script>-->
+                  <!--            <script async defer crossorigin="anonymous"
+                                src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v4.0"></script>-->
 
             <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
-              data-layout="button_count" data-size="small"><a target="_blank"
-                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"
-                class="fb-xfbml-parse-ignore">Share</a></div>
+                 data-layout="button_count" data-size="small"><a target="_blank"
+                                                                 href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"
+                                                                 class="fb-xfbml-parse-ignore">Share</a></div>
               </div>
               <div class="col-lg-3 col-md-3 col-sm-4 col-4">
            <!--TWITTER-->
            <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a>
-<!--                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>-->
+                <!--                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>-->
           </div>
           </span>
 
+            </div>
+
+            <!--          <div class="col-4">
+
+            </div>-->
+
           </div>
 
-          <!--          <div class="col-4">
 
-          </div>-->
+
 
         </div>
-
-
-
-
       </div>
-    </div>
 
+    </div>
   </div>
+
+  <ng-template #nothingHere>
+    Nothing here!
+  </ng-template>
+
 
   <!-- /////// Post -->
   <!--  <div class="card gedf-card">-->
