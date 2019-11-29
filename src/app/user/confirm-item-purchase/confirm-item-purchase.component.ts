@@ -106,6 +106,11 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
   }
 
+  approveRequest(request) {
+    console.log(request);
+    this.userHasStoreItemService.approveStoreItemRequest(request).subscribe();
+
+  }
 
   onSaveClick() {
     console.log(this.approveList);

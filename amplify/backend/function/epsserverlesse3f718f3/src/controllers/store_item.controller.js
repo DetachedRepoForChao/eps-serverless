@@ -230,3 +230,134 @@ const deleteStoreItem = function (storeItem) {
 };
 
 module.exports.deleteStoreItem = deleteStoreItem;
+
+
+const approveStoreItemRequest = function (managerUser, request) {
+  const functionName = 'approveStoreItemRequest';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const approvedAt = Date.now();
+  request.status = 'approved';
+  request.approvedAt = approvedAt;
+
+  // Update user_has_store_item record
+  return sqlUserHasStoreItemModel.update({
+    status: 'approved',
+    approvedAt: approvedAt
+  }, {
+    where: {
+      id: request.recordId,
+      managerId: managerUser.id
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item request updated successfully`);
+      return {status: true, updatedRecord: request};
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.approveStoreItemRequest = approveStoreItemRequest;
+
+const declineStoreItemRequest = function (managerUser, request, cancelDescription) {
+  const functionName = 'declineStoreItemRequest';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const declinedAt = Date.now();
+  request.status = 'declined';
+  request.declinedAt = declinedAt;
+
+  // Update user_has_store_item record
+  return sqlUserHasStoreItemModel.update({
+    status: 'declined',
+    declinedAt: declinedAt,
+    cancelDescription: cancelDescription
+  }, {
+    where: {
+      id: request.recordId,
+      managerId: managerUser.id
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item request updated successfully`);
+      return {status: true, updatedRecord: request};
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.declineStoreItemRequest = declineStoreItemRequest;
+
+const fulfillStoreItemRequest = function (requestUser, request) {
+  const functionName = 'fulfillStoreItemRequest';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const fulfilledAt = Date.now();
+  request.status = 'fulfilled';
+  request.fulfilledAt = fulfilledAt;
+
+  // Update user_has_store_item record
+  return sqlUserHasStoreItemModel.update({
+    status: 'fulfilled',
+    fulfilledAt: fulfilledAt,
+  }, {
+    where: {
+      id: request.recordId,
+      userId: requestUser.id
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item request updated successfully`);
+      return {status: true, updatedRecord: request};
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.fulfillStoreItemRequest = fulfillStoreItemRequest;
+
+const cancelStoreItemRequest = function (requestUser, request, cancelDescription) {
+  const functionName = 'cancelStoreItemRequest';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const cancelledAt = Date.now();
+  request.status = 'cancelled';
+  request.cancelledAt = cancelledAt;
+  // Update user_has_store_item record
+  return sqlUserHasStoreItemModel.update({
+    status: 'cancelled',
+    cancelledAt: cancelledAt,
+    cancelDescription: cancelDescription
+  }, {
+    where: {
+      id: request.recordId,
+      userId: requestUser.id
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item request updated successfully`);
+
+      return {status: true, updatedRecord: request};
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.cancelStoreItemRequest = cancelStoreItemRequest;

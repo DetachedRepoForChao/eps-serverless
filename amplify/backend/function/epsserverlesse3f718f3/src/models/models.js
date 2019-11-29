@@ -1210,6 +1210,26 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'declined'
     },
+    approvedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'approvedAt'
+    },
+    declinedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'declinedAt'
+    },
+    fulfilledAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'fulfilledAt'
+    },
+    cancelledAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'cancelledAt'
+    },
   }, {
     tableName: 'user_has_store_item'
   });
