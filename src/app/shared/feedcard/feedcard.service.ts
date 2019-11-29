@@ -125,120 +125,124 @@ export class FeedcardService implements OnInit {
           // this.PointTransactions = point_transactions['PointTransactionResult'];
           // console.log('PointTransactionResult:' + point_transactions['PointTransactionResult']);
           for (let i = 0; i < result.length; i++) {
-            const sourceUser: LeaderboardUser = {
-              username: result[i].sourceUser.username,
-              id: result[i].sourceUser.id,
-              rank: null,
-              name: null,
-              avatar: result[i].sourceUser.avatarUrl,
-              email: result[i].sourceUser.email,
-              points: result[i].sourceUser.points,
-              position: null,
-              department: null
-            };
+            if (result[i].pointItem) {
+              const sourceUser: LeaderboardUser = {
+                username: result[i].sourceUser.username,
+                id: result[i].sourceUser.id,
+                rank: null,
+                name: null,
+                avatar: result[i].sourceUser.avatarUrl,
+                email: result[i].sourceUser.email,
+                points: result[i].sourceUser.points,
+                position: null,
+                department: null
+              };
 
-            const targetUser: LeaderboardUser = {
-              username: result[i].targetUser.username,
-              id: result[i].targetUser.id,
-              rank: null,
-              name: null,
-              avatar: result[i].targetUser.avatarUrl,
-              email: result[i].targetUser.email,
-              points: result[i].targetUser.points,
-              position: null,
-              department: null
-            };
+              const targetUser: LeaderboardUser = {
+                username: result[i].targetUser.username,
+                id: result[i].targetUser.id,
+                rank: null,
+                name: null,
+                avatar: result[i].targetUser.avatarUrl,
+                email: result[i].targetUser.email,
+                points: result[i].targetUser.points,
+                position: null,
+                department: null
+              };
 
-            // const sourceUserAvatarUrl = this.avatarService.resolveAvatarPath(result[i].sourceUserAvatarUrl);
-            // const targetUserAvatarUrl = this.avatarService.resolveAvatarPath(result[i].targetUserAvatarUrl);
+              // const sourceUserAvatarUrl = this.avatarService.resolveAvatarPath(result[i].sourceUserAvatarUrl);
+              // const targetUserAvatarUrl = this.avatarService.resolveAvatarPath(result[i].targetUserAvatarUrl);
 
-            // const sourceUserResolved = this.avatarService.resolveAvatar(sourceUser);
-            // const targetUserResolved = this.avatarService.resolveAvatar(targetUser);
+              // const sourceUserResolved = this.avatarService.resolveAvatar(sourceUser);
+              // const targetUserResolved = this.avatarService.resolveAvatar(targetUser);
 
-            // this.avatarService.resolveAvatar(sourceUser).subscribe();
-            // this.avatarService.resolveAvatar(targetUser).subscribe();
+              // this.avatarService.resolveAvatar(sourceUser).subscribe();
+              // this.avatarService.resolveAvatar(targetUser).subscribe();
 
-            // let sourceUserAvatarEntry = null;
-            // let sourceUserAvatarUrl = null;
-            // let sourceUserAvatarCached = false;
+              // let sourceUserAvatarEntry = null;
+              // let sourceUserAvatarUrl = null;
+              // let sourceUserAvatarCached = false;
 
-            // sourceUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].sourceUserName);
+              // sourceUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].sourceUserName);
 
-            /*            if (sourceUserAvatarEntry) {
-                          console.log(`${functionFullName}: Retrieved cached user avatar entry for source user ${result[i].sourceUserName}`);
-                          sourceUserAvatarUrl = sourceUserAvatarEntry.avatarResolvedUrl;
-                          sourceUserAvatarCached = true;
-                        } else {
-                          console.log(`${functionFullName}: Unable to find cached user avatar entry for source user ${result[i].sourceUserName}`);
-                        }
+              /*            if (sourceUserAvatarEntry) {
+                            console.log(`${functionFullName}: Retrieved cached user avatar entry for source user ${result[i].sourceUserName}`);
+                            sourceUserAvatarUrl = sourceUserAvatarEntry.avatarResolvedUrl;
+                            sourceUserAvatarCached = true;
+                          } else {
+                            console.log(`${functionFullName}: Unable to find cached user avatar entry for source user ${result[i].sourceUserName}`);
+                          }
 
-                        let targetUserAvatarEntry = null;
-                        let targetUserAvatarUrl = null;
-                        let targetUserAvatarCached = false;
+                          let targetUserAvatarEntry = null;
+                          let targetUserAvatarUrl = null;
+                          let targetUserAvatarCached = false;
 
-                        targetUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].targetUserName);
+                          targetUserAvatarEntry = this.avatarService.userAvatarHash.find(x => x.username === result[i].targetUserName);
 
-                        if (targetUserAvatarEntry) {
-                          console.log(`${functionFullName}: Retrieved cached user avatar entry for target user ${result[i].targetUserName}`);
-                          targetUserAvatarUrl = targetUserAvatarEntry.avatarResolvedUrl;
-                          targetUserAvatarCached = true;
-                        } else {
-                          console.log(`${functionFullName}: Unable to find cached user avatar entry for target user ${result[i].targetUserName}`);
-                        }*/
+                          if (targetUserAvatarEntry) {
+                            console.log(`${functionFullName}: Retrieved cached user avatar entry for target user ${result[i].targetUserName}`);
+                            targetUserAvatarUrl = targetUserAvatarEntry.avatarResolvedUrl;
+                            targetUserAvatarCached = true;
+                          } else {
+                            console.log(`${functionFullName}: Unable to find cached user avatar entry for target user ${result[i].targetUserName}`);
+                          }*/
 
-            const pointTransaction: PointTransaction = {
-              id: result[i].id,
-              amount: result[i].amount,
-              // sourceUserAvatarPath: result[i].sourceUserAvatarUrl,
-              // sourceUserAvatarUrl: sourceUserAvatarUrl,
-              // sourceUserAvatarCached: sourceUserAvatarCached,
-              /*              sourceUserEmail: result[i].sourceUserEmail,
-                            sourceUserFirstName: result[i].sourceUserFirstName,
-                            sourceUserLastName: result[i].sourceUserLastName,
-                            sourceUserId: result[i].sourceUserId,
-                            sourceUserName: result[i].sourceUserName,
-                            sourceUserPoints: result[i].sourceUserPoints,*/
-              sourceUserEmail: result[i].sourceUser.email,
-              sourceUserFirstName: result[i].sourceUser.firstName,
-              sourceUserLastName: result[i].sourceUser.lastName,
-              sourceUserId: result[i].sourceUser.id,
-              sourceUserName: result[i].sourceUser.username,
-              sourceUserPoints: result[i].sourceUser.points,
-              // targetUserAvatarPath: result[i].targetUserAvatarUrl,
-              // targetUserAvatarUrl: targetUserAvatarUrl,
-              // targetUserAvatarCached: targetUserAvatarCached,
-              /*              targetUserEmail: result[i].targetUserEmail,
-                            targetUserFirstName: result[i].targetUserFirstName,
-                            targetUserLastName: result[i].targetUserLastName,
-                            targetUserId: result[i].targetUserId,
-                            targetUserName: result[i].targetUserName,
-                            targetUserPoints: result[i].targetUserPoints,*/
-              targetUserEmail: result[i].targetUser.email,
-              targetUserFirstName: result[i].targetUser.firstName,
-              targetUserLastName: result[i].targetUser.lastName,
-              targetUserId: result[i].targetUser.id,
-              targetUserName: result[i].targetUser.username,
-              targetUserPoints: result[i].targetUser.points,
-              type: result[i].type,
-              createdAt: result[i].createdAt,
-              description: result[i].description,
-              /*              pointItemName: result[i].pointItemName,
-                            pointItemCoreValues: result[i].pointItemCoreValues,*/
-              pointItemName: result[i].pointItem.name,
-              pointItemCoreValues: result[i].pointItem.coreValues,
-              sourceUser: sourceUser,
-              targetUser: targetUser,
-              likeData: [],
-              likedByCurrentUser: false
-            };
+              const pointTransaction: PointTransaction = {
+                id: result[i].id,
+                amount: result[i].amount,
+                // sourceUserAvatarPath: result[i].sourceUserAvatarUrl,
+                // sourceUserAvatarUrl: sourceUserAvatarUrl,
+                // sourceUserAvatarCached: sourceUserAvatarCached,
+                /*              sourceUserEmail: result[i].sourceUserEmail,
+                              sourceUserFirstName: result[i].sourceUserFirstName,
+                              sourceUserLastName: result[i].sourceUserLastName,
+                              sourceUserId: result[i].sourceUserId,
+                              sourceUserName: result[i].sourceUserName,
+                              sourceUserPoints: result[i].sourceUserPoints,*/
+                sourceUserEmail: result[i].sourceUser.email,
+                sourceUserFirstName: result[i].sourceUser.firstName,
+                sourceUserLastName: result[i].sourceUser.lastName,
+                sourceUserId: result[i].sourceUser.id,
+                sourceUserName: result[i].sourceUser.username,
+                sourceUserPoints: result[i].sourceUser.points,
+                // targetUserAvatarPath: result[i].targetUserAvatarUrl,
+                // targetUserAvatarUrl: targetUserAvatarUrl,
+                // targetUserAvatarCached: targetUserAvatarCached,
+                /*              targetUserEmail: result[i].targetUserEmail,
+                              targetUserFirstName: result[i].targetUserFirstName,
+                              targetUserLastName: result[i].targetUserLastName,
+                              targetUserId: result[i].targetUserId,
+                              targetUserName: result[i].targetUserName,
+                              targetUserPoints: result[i].targetUserPoints,*/
+                targetUserEmail: result[i].targetUser.email,
+                targetUserFirstName: result[i].targetUser.firstName,
+                targetUserLastName: result[i].targetUser.lastName,
+                targetUserId: result[i].targetUser.id,
+                targetUserName: result[i].targetUser.username,
+                targetUserPoints: result[i].targetUser.points,
+                type: result[i].type,
+                createdAt: result[i].createdAt,
+                description: result[i].description,
+                /*              pointItemName: result[i].pointItemName,
+                              pointItemCoreValues: result[i].pointItemCoreValues,*/
+                pointItemName: result[i].pointItem.name,
+                pointItemCoreValues: result[i].pointItem.coreValues,
+                sourceUser: sourceUser,
+                targetUser: targetUser,
+                likeData: [],
+                likedByCurrentUser: false
+              };
 
-            if (this.pointTransactions.find(x => x.id === pointTransaction.id)) {
-              // Entry already exists. No need to add it again
-              console.log(`${functionFullName}: Entry id ${pointTransaction.id} already exists`);
-            } else {
-              console.log(`${functionFullName}: Adding entry id ${pointTransaction.id}`);
-              this.pointTransactions.push(pointTransaction);
+              if (this.pointTransactions.find(x => x.id === pointTransaction.id)) {
+                // Entry already exists. No need to add it again
+                console.log(`${functionFullName}: Entry id ${pointTransaction.id} already exists`);
+              } else {
+                console.log(`${functionFullName}: Adding entry id ${pointTransaction.id}`);
+                this.pointTransactions.push(pointTransaction);
+              }
             }
+
+
           }
 
           console.log(`${functionFullName}: PointTransactionResult:`);

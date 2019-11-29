@@ -109,6 +109,10 @@ const getUserPointTransactions = function (userId) {
         model: Models.PointItem,
         attributes: ['name', 'coreValues']
       },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost', 'imagePath']
+      },
     ],
     attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId'],
     order: [

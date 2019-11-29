@@ -571,7 +571,7 @@ module.exports = function(sequelize, DataTypes) {
       field: 'targetUserId'
     },
     description: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(1000),
       allowNull: true,
       field: 'description'
     },
@@ -589,12 +589,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     pointItemId: {
       type: DataTypes.INTEGER(11),
-      allowNull: false,
-/*      references: {
-        model: 'point_item',
-        key: 'id'
-      },*/
+      allowNull: true,
       field: 'point_item_id'
+    },
+    storeItemId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      field: 'store_item_id'
     }
   }, {
     tableName: 'point_transaction'
@@ -1095,6 +1096,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'store_item'
   });
+
+  PointTransaction.belongsTo(StoreItem, {foreignKey: 'storeItemId', targetKey: 'id'});
+  StoreItem.hasMany(PointTransaction, {foreignKey: 'storeItemId', sourceKey: 'id'});
+
 
   // user_has_notification
   const UserHasNotification = sequelize.define('userHasNotification', {
