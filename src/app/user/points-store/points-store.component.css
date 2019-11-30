@@ -17,6 +17,15 @@
   min-height: 600px;
 }
 
+.item-selection-container {
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.item-selection-container:hover {
+  background-color: rgba(0, 0, 0, 0.11);
+}
+
 div.card.card-coin.card-plain.card-custom {
   background-color: #674ba580;
 }
