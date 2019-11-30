@@ -9,6 +9,8 @@ import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.quer
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {forkJoin, Observable} from 'rxjs';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {NavigationService} from '../../../shared/navigation.service';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 declare var $: any;
 
@@ -19,6 +21,7 @@ declare var $: any;
 })
 export class PointsStoreHeaderComponent implements OnInit {
 
+  public config: PerfectScrollbarConfigInterface = {};
   currentUser$: Observable<EntityCurrentUserModel[]>;
 
   constructor(private currentUserService: EntityCurrentUserService,
@@ -28,7 +31,8 @@ export class PointsStoreHeaderComponent implements OnInit {
               private userHasStoreItemService: UserHasStoreItemService,
               private userQuery: EntityUserQuery,
               private currentUserQuery: EntityCurrentUserQuery,
-              private achievementQuery: AchievementQuery) { }
+              private achievementQuery: AchievementQuery,
+              private navigationService: NavigationService) { }
 
   ngOnInit() {
     const observables: Observable<any>[] = [];
@@ -72,5 +76,18 @@ export class PointsStoreHeaderComponent implements OnInit {
 
   viewPurchaseHistory() {
     console.log('view purchase history');
+  }
+
+  showPurchaseHistoryModal() {
+    console.log(`invoking points modal with the following user input:`);
+    const currentUser = this.currentUserQuery.getAll()[0];
+    console.log(currentUser);
+    this.navigationService.purchaseHistoryComponentInputUser = currentUser;
+    this.navigationService.openPointItemModal();
+  }
+
+  clearPurchaseHistoryComponentInputUser(event) {
+    console.log(event);
+    this.navigationService.purchaseHistoryComponentInputUser = null;
   }
 }

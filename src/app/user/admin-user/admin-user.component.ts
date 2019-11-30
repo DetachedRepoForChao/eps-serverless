@@ -4,6 +4,7 @@ import { Globals} from '../../globals';
 import {AchievementService} from '../../shared/achievement/achievement.service';
 import {AuthService} from '../../login/auth.service';
 import {resetStores} from '@datorama/akita';
+import {NavigationService} from '../../shared/navigation.service';
 
 @Component({
   selector: 'app-admin-user',
@@ -17,16 +18,15 @@ export class AdminUserComponent implements OnInit {
   constructor(public globals: Globals,
               private router: Router,
               private achievementService: AchievementService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private navigationService: NavigationService) { }
 
   ngOnInit() {
   }
 
 
   onLogout() {
-    this.authService.signOut().then();
-    resetStores();
-    this.router.navigate(['/login']).then();
+    this.navigationService.onLogout();
   }
 }
 

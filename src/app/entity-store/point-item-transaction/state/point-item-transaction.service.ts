@@ -695,5 +695,10 @@ export class PointItemTransactionService {
     });
   }
 
-
+  resetState() {
+    this.retrievedUserIds = [];
+    this.retrievedManagerIds = [];
+    this.numBatchRetrieved = null;
+    this.initialBatchRetrieved = false;
+  }
 }

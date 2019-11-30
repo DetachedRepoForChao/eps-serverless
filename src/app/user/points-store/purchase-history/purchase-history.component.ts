@@ -17,8 +17,12 @@ import {PointItemTransactionService} from '../../../entity-store/point-item-tran
 import {PointItemTransactionQuery} from '../../../entity-store/point-item-transaction/state/point-item-transaction.query';
 import {NavigationService} from '../../../shared/navigation.service';
 import {Order} from '@datorama/akita';
+import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
+import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
+import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
 
-declare var $: any; 
+declare var $: any;
 
 @Component({
   selector: 'app-purchase-history',
@@ -49,6 +53,7 @@ export class PurchaseHistoryComponent implements OnInit, OnChanges, OnDestroy {
   isCurrentManagerDataRetrieved = false;
   isManagerDataRetrieved = false;
   isManager = false;
+  purchaseRequestsRetrieving = false;
   routerDestination: string[];
   showLimit = 6;
 
@@ -62,6 +67,10 @@ export class PurchaseHistoryComponent implements OnInit, OnChanges, OnDestroy {
               private pointItemQuery: PointItemQuery,
               private pointItemTransactionService: PointItemTransactionService,
               private pointItemTransactionQuery: PointItemTransactionQuery,
+              private userHasStoreItemService: UserHasStoreItemService,
+              private userHasStoreItemQuery: UserHasStoreItemQuery,
+              private storeItemService: StoreItemService,
+              private storeItemQuery: StoreItemQuery,
               private navigationService: NavigationService) { }
 
   ngOnInit() {
@@ -72,10 +81,12 @@ export class PurchaseHistoryComponent implements OnInit, OnChanges, OnDestroy {
     console.log(`point-item component starting with the following input user:`);
     console.log(this.inputUser);
 
-    this.spinner.show('other-user-spinner');
+    this.spinner.show('purchase-history-spinner');
 
     this.currentUserService.cacheCurrentUser().subscribe();
     this.userService.cacheUsers().subscribe();
+    this.storeItemService.cacheStoreItems().subscribe();
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();
     this.pointItemService.cachePointItems().subscribe();
     this.pointItems$ = this.pointItemQuery.selectAll();
 
@@ -145,10 +156,10 @@ export class PurchaseHistoryComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  populateCurrentUserPointTransactionData(currentUser: EntityCurrentUserModel) {
-    if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
-      this.pointItemsTransactionsRetrieving = true;
-      this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser.userId)
+  populateCurrentUserPurchaseRequestData(currentUser: EntityCurrentUserModel) {
+    if (!this.purchaseRequestsRetrieving) { // This check prevents the API call from firing more than it has to
+      this.purchaseRequestsRetrieving = true;
+      this.userHasStoreItemService.cacheUserHasStoreItemRecords()
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {
@@ -322,7 +333,7 @@ export class PurchaseHistoryComponent implements OnInit, OnChanges, OnDestroy {
               this.isUserDataRetrieved = true;
             }
 
-            this.spinner.hide('point-item-spinner');
+            this.spinner.hide('purchase-history-spinner');
           });
         } else {
           console.log('ERROR: User is still loading');
@@ -349,7 +360,7 @@ export class PurchaseHistoryComponent implements OnInit, OnChanges, OnDestroy {
               this.isManager = true;
               this.isCurrentManagerDataRetrieved = true;
             } else {
-              this.populateCurrentUserPointTransactionData(currentUser[0]);
+              this.populateCurrentUserPurchaseRequestData(currentUser[0]);
 
               // Pull user info into a static variable if this hasn't happened yet
               if (!this.currentUser) {
@@ -359,7 +370,7 @@ export class PurchaseHistoryComponent implements OnInit, OnChanges, OnDestroy {
               this.isCurrentUserDataRetrieved = true;
             }
 
-            this.spinner.hide('point-item-spinner');
+            this.spinner.hide('purchase-history-spinner');
           });
         } else {
           console.log('ERROR: User is still loading');

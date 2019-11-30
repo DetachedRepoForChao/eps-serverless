@@ -31,7 +31,7 @@
               </div>
               <div class="row">
                 <div class="col-12">
-                  <a href="javascript:void(0)" (click)="viewPurchaseHistory()">View Purchase History</a>
+                  <a href="javascript:void(0)" (click)="showPurchaseHistoryModal()">View Purchase History</a>
                 </div>
               </div>
 
@@ -44,4 +44,26 @@
     </div>
   </div>
 
+</div>
+
+
+<div class="modal fade modal-black" id="purchaseHistoryModal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content points-modal modal-custom" >
+      <div class="modal-header">
+        <h4 class="modal-title">Your Purchase History</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body modalclass padding-bottom-0">
+        <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+          <app-point-item *ngIf="navigationService.purchaseHistoryModalActive" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-point-item>
+        </perfect-scrollbar>
+      </div>
+
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
 </div>

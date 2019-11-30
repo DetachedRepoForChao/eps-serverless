@@ -34,7 +34,7 @@ declare var $: any;
   styleUrls: ['./point-item.component.css']
 })
 export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() inputUser: EntityUserModel;
+  @Input() inputUser: EntityCurrentUserModel;
   @Output() clearInputUser = new EventEmitter<any>();
 
   componentName = 'point-item.component';

@@ -163,4 +163,8 @@ export class OtherUserAchievementService {
         });
     });
   }
+
+  resetState() {
+    this.retrievedUserIds = [];
+  }
 }

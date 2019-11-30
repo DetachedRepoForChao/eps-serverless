@@ -16,6 +16,8 @@ import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/st
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {Router } from '@angular/router';
+import {NavigationService} from '../../shared/navigation.service';
+import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
 
 
 @Component({
@@ -34,19 +36,19 @@ export class PointsStoreComponent implements OnInit {
   rows = [];
   selectedStoreItem;
 
-  constructor(private storeItemStore: StoreItemStore,
-              private storeItemQuery: StoreItemQuery,
+  constructor(private storeItemQuery: StoreItemQuery,
               private storeItemService: StoreItemService,
               private entityCurrentUserService: EntityCurrentUserService,
-              private currentUserStore: CurrentUserStore,
               private currentUserQuery: EntityCurrentUserQuery,
               private userHasStoreItemService: UserHasStoreItemService,
               private userHasStoreItemQuery: UserHasStoreItemQuery,
+              private userService: EntityUserService,
               private userQuery: EntityUserQuery,
               private authService: AuthService,
               private snackBar: MatSnackBar,
               private router: Router,
-              public dialog: MatDialog, ) {}
+              public dialog: MatDialog,
+              private navigationService: NavigationService) {}
 
 
   openDialog(): void {
@@ -77,8 +79,6 @@ export class PointsStoreComponent implements OnInit {
       }
     });
   }
-
-
 
   selectStoreItem(storeItem) {
     this.selectedStoreItem = storeItem;
@@ -148,6 +148,7 @@ export class PointsStoreComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
     this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();
 
@@ -192,7 +193,6 @@ export class PointsStoreComponent implements OnInit {
     console.log('rows:');
     console.log(this.rows);
   }
-
 
 
 

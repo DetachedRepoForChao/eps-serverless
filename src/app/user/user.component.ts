@@ -22,6 +22,7 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {resetStores} from '@datorama/akita';
 import {AchievementService} from '../entity-store/achievement/state/achievement.service';
 import {CognitoUser} from 'amazon-cognito-identity-js';
+import {NavigationService} from '../shared/navigation.service';
 
 declare var $: any;
 
@@ -74,7 +75,8 @@ export class UserComponent implements OnInit, OnDestroy {
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private giftPointsService: GiftPointsService,
-              private achievementService: AchievementService) {
+              private achievementService: AchievementService,
+              private navigationService: NavigationService) {
     this.display = false;
     this.alive = true;
     this.interval = 10000;
@@ -224,10 +226,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
 
   onLogout() {
-    this.feedcardService.clearPointTransactionCache();
-    this.achievementService.incrementAchievement('SignOut').subscribe();
-    this.authService.signOut().then();
-    resetStores();
-    this.router.navigate(['/login']).then();
+    this.navigationService.onLogout();
   }
 }

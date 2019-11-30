@@ -135,11 +135,7 @@ export class NavigationComponent implements OnInit {
   }
 
   onLogout() {
-    this.feedcardService.clearPointTransactionCache();
-    this.achievementService.incrementAchievement('SignOut').subscribe();
-    this.authService.signOut().then();
-    resetStores();
-    this.router.navigate(['/login']).then();
+    this.navigationService.onLogout();
   }
 
   onStoreClick() {
