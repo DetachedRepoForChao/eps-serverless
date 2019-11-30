@@ -18,6 +18,8 @@ import {PointItemTransactionQuery} from '../../../entity-store/point-item-transa
 import {NavigationService} from '../../../shared/navigation.service';
 import {Order} from '@datorama/akita';
 
+declare var $: any; 
+
 @Component({
   selector: 'app-purchase-history',
   templateUrl: './purchase-history.component.html',
