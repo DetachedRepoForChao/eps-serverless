@@ -56,7 +56,7 @@
                     </div>
                     <div class="row core-value-row">
                       <div class="col-12">
-                        <div *ngIf="(user$ | async)[0]?.genderPublic; else chartPrivate">
+                        <div *ngIf="(user$ | async)[0]?.coreValuesPublic; else chartPrivate">
                           <div *ngIf="coreValueData && (coreValueData)?.length > 0; else coreValueChartPlaceholder" class="img-center img-fluid">
                             <div class="positionrelative">
                               <div class="row text-center">

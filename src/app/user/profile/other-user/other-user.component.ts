@@ -280,6 +280,8 @@ export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
               this.getCoreValues(this.user.userId)
                 .subscribe(coreValues => {
                   this.coreValueData = coreValues;
+                  console.log('core value data');
+                  console.log(this.coreValueData);
                 });
             }
 

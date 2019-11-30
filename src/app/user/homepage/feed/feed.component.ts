@@ -34,8 +34,7 @@ export class FeedComponent implements OnInit {
   // numBatchRetrieved = 0;
 
 
-  constructor(public feedcardService: FeedcardService,
-              private spinner: NgxSpinnerService,
+  constructor(private spinner: NgxSpinnerService,
               private globals: Globals,
               private entityUserService: EntityUserService,
               private userStore: UserStore,
@@ -132,7 +131,11 @@ export class FeedComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.feedcardService.addLike(pointTransaction.targetUserId, pointTransaction.transactionId).subscribe(() => {
+    // this.feedcardService.addLike(pointTransaction.targetUserId, pointTransaction.transactionId).subscribe(() => {
+    //   this.achievementService.incrementAchievement('LikePost').subscribe();
+    // });
+
+    this.pointItemTransactionService.addLike(pointTransaction.targetUserId, pointTransaction.transactionId).subscribe(() => {
       this.achievementService.incrementAchievement('LikePost').subscribe();
     });
   }
@@ -142,9 +145,43 @@ export class FeedComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.feedcardService.removeLike(pointTransaction.transactionId).subscribe(() => {
+    // this.feedcardService.removeLike(pointTransaction.transactionId).subscribe(() => {
+    //   this.achievementService.incrementAchievement('UnlikePost').subscribe();
+    // });
+    this.pointItemTransactionService.removeLike(pointTransaction.transactionId).subscribe(() => {
       this.achievementService.incrementAchievement('UnlikePost').subscribe();
     });
+  }
+
+  loadMore() {
+    console.log('loading next batch of posts');
+    this.pointItemTransactionService.cachePointItemTransactionsBatch()
+      .subscribe((result) => {
+        if (result !== false) {
+          console.log('Received observable response... subscribing...');
+          result.subscribe((response) => {
+            console.log('Subscribed to point transaction caching...');
+            console.log(response);
+            this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
+              filterBy: e => e.type === 'Add',
+              sortBy: 'transactionId',
+              sortByOrder: Order.DESC
+            });
+            console.log('point item transactions');
+            console.log(this.pointItemTransactions);
+            console.log(`loaded batch ${this.pointItemTransactionService.numBatchRetrieved}`);
+          });
+
+          this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
+            filterBy: e => e.type === 'Add',
+            sortBy: 'transactionId',
+            sortByOrder: Order.DESC
+          });
+
+        } else {
+          console.log(`Cache Point Item Transactions returned ${result}`);
+        }
+      });
   }
 
   function(d, s, id) {

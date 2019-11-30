@@ -76,7 +76,7 @@ const addLike = function (likingUsername, targetUserId, postId) {
                 .then(countByPostId => {
                   if (countByPostId.status !== false) {
                     // return res.status(200).json({ status: true, countLikes: CountByPostId.likeNum,targetUserId:targetUserId});
-                    return {status: true, countLikes: countByPostId.likeNum, targetUserId: targetUserId, likeId: insertLikeResult.id};
+                    return {status: true, countLikes: countByPostId.likeNum, targetUserId: targetUserId, likeId: insertLikeResult.id, createdAt: insertLikeResult.createdAt};
                   } else {
                     // return res.status(500).json({status: false, message: 'Return Total Like Num Fail!'});
                     return {status: false, message: 'Return Total Like Num Fail!'};

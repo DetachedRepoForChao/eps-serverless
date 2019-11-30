@@ -1,0 +1,47 @@
+
+<div class="container align-items-center wrapper-width">
+  <div class="card">
+    <div class="card card-coin card-plain card-custom card-header">
+      <div class="card-body card-header-body">
+        <div class="row profile-body">
+          <div class="col-8 text-left store-title">
+            <span class="font-weight-bold">The Asbury</span> | Points Store
+          </div>
+
+          <div class="col-3 profile-points-section">
+            <div [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
+                 matTooltipPosition="above">
+              <div class="row">
+                <div class="col-6">
+                  <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
+                </div>
+                <div class="col-4">
+                  <div *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
+                    <div class="mb-0">{{(currentUser$ | async)[0]?.points}}</div>
+                  </div>
+                  <ng-template #pointsWithBalance >
+                    <div *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance"
+                         class="mb-0 red"
+                    >
+                      {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
+                    </div>
+
+                  </ng-template>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <a href="javascript:void(0)" (click)="viewPurchaseHistory()">View Purchase History</a>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
