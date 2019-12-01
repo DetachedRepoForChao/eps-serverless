@@ -10,3 +10,7 @@
 .input-group .form-control {
   min-width: 200px;
 }
+
+.scroll{
+  overflow: scroll;
+}

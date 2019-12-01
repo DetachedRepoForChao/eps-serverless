@@ -109,9 +109,11 @@ export class AchievementService {
           const startAmount = achievementsResult[i].achievement.startAmount;
           const level = achievementsResult[i].achievement.level;
           const roles = achievementsResult[i].achievement.achievementHasRoleAudiences;
+          const completedAt = achievementsResult[i].completedAt;
+          const acknowledgedAt = achievementsResult[i].acknowledgedAt;
           const updatedAt = achievementsResult[i].updatedAt;
           const achievement = createEntityAchievementModel({achievementId, name, description, cost, progress, progressId,
-            achievementStatus, progressStatus, family, startAmount, level, roles, updatedAt});
+            achievementStatus, progressStatus, family, startAmount, level, roles, completedAt, acknowledgedAt, updatedAt});
           achievements.push(achievement);
 
         }

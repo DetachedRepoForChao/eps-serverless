@@ -3,6 +3,18 @@
   min-height: 300px;
 }
 
+.rounded-circle{
+  max-width: 400px;
+  max-height: 400px;
+}
+
+@media (max-width: 575.98px) {
+  .rounded-circle{
+  max-width: 200px;
+  max-height: 200px;
+  }
+}
+
 .card.card-coin .card-header {
   margin: 0px auto 20px;
 }

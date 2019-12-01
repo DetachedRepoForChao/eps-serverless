@@ -5,7 +5,6 @@ import { DepartmentService} from '../../../shared/department.service';
 import { UserService} from '../../../shared/user.service';
 import {User} from '../../../shared/user.model';
 import { Department} from '../../../shared/department.model';
-import {AchievementComponent} from '../../../shared/achievement/achievement.component';
 import {MatTableDataSource, ThemePalette} from '@angular/material';
 
 import {PointItem} from '../../../shared/point-item.model';
@@ -88,7 +87,6 @@ export class GiftPointsComponent implements OnInit {
     private pointItemService: PointItemService,
     private pointItemQuery: PointItemQuery,
     private router: Router,
-    private achievementComponent: AchievementComponent,
     private achievementService: AchievementService,
     private notifierService: NotifierService,
     private leaderboardService: LeaderboardService,

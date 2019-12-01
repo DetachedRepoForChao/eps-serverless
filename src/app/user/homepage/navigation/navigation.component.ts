@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../../../shared/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
@@ -12,6 +12,7 @@ import {AuthService} from '../../../login/auth.service';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {NotificationService} from '../../../shared/notifications/notification.service';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {NavigationService} from '../../../shared/navigation.service';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -25,7 +26,7 @@ declare var $: any;
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.css']
+  styleUrls: ['./navigation.component.css'],
 })
 export class NavigationComponent implements OnInit {
   componentName = 'navigation.component';
@@ -49,6 +50,7 @@ export class NavigationComponent implements OnInit {
               private storeItemService: StoreItemService,
               private authService: AuthService,
               private notificationService: NotificationService,
+              private navigationService: NavigationService,
               ) { }
 
   ngOnInit() {
@@ -133,11 +135,7 @@ export class NavigationComponent implements OnInit {
   }
 
   onLogout() {
-    this.feedcardService.clearPointTransactionCache();
-    this.achievementService.incrementAchievement('SignOut').subscribe();
-    this.authService.signOut().then();
-    resetStores();
-    this.router.navigate(['/login']).then();
+    this.navigationService.onLogout();
   }
 
   onStoreClick() {
@@ -268,4 +266,19 @@ export class NavigationComponent implements OnInit {
     return result;
   }
 
+  onClickPointItemModal() {
+    this.navigationService.openPointItemModal();
+  }
+
+  onClickAchievementModal() {
+    this.navigationService.openAchievementModal();
+  }
+
+  clearPointItemComponentInputUser(event) {
+    this.navigationService.pointItemComponentInputUser = null;
+  }
+
+  clearAchievementComponentInputUser(event) {
+    this.navigationService.achievementComponentInputUser = null;
+  }
 }

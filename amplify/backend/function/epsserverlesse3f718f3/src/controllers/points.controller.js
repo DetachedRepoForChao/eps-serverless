@@ -20,16 +20,16 @@ const getPointItems = function () {
     .then(pointItems => {
       if(!pointItems) {
         console.log(`${functionFullName}: No point item records found`);
-        return {status: 404, message: "No point item records found" };
+        return {status: false, message: "No point item records found" };
       } else {
         console.log(`${functionFullName}: Retrieved point item records successfully`);
-        return {status: 200, pointItems: pointItems };
+        return {status: true, pointItems: pointItems };
       }
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      return {status: 500, message: err};
+      return {status: false, message: err};
     });
 };
 
@@ -70,7 +70,7 @@ const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, a
   console.log(`Start ${functionFullName}`);
 
   // Create New Points Transaction
-  newPointsTransaction('Add', sourceUserId, targetUserId, pointItemId, amount, description);
+  newPointsTransaction('Add', sourceUserId, targetUserId, pointItemId, null, amount, description);
 
   // Get user's current points amount
   return sqlUserModel.findOne({
@@ -112,6 +112,57 @@ const addPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, a
 };
 
 module.exports.addPointsToEmployee = addPointsToEmployee;
+
+
+const removePointsFromEmployee = function (sourceUserId, targetUserId, storeItemId, amount, description) {
+  const functionName = 'removePointsFromEmployee';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  // Create New Points Transaction
+  newPointsTransaction('Remove', sourceUserId, targetUserId, null, storeItemId, amount, description);
+
+  // Get user's current points amount
+  return sqlUserModel.findOne({
+    attributes: ['id', 'username', 'points'],
+    where: {
+      id: targetUserId
+    }
+  })
+    .then(user => {
+      // Remove Points from Employee
+      const newAmount = user.points - amount;
+      return sqlUserModel.update({
+        points: newAmount,
+      }, {
+        where: {
+          id: targetUserId,
+        }
+      })
+        .then(result => {
+          if(!result) {
+            console.log(`${functionFullName}: Error updating user points`);
+            return {status: false, message: 'Error updating user points'};
+          } else {
+            console.log(`${functionFullName}: User points updated successfully`);
+            return {status: true, message: 'Success', newPointAmount: newAmount };
+          }
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Database error`);
+          console.log(err);
+          return {status: false, message: err};
+        });
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.removePointsFromEmployee = removePointsFromEmployee;
+
 
 const giftPointsToEmployees = function (sourceUser, userPointObjectArray) {
   const functionName = 'giftPointsToEmployees';
@@ -199,11 +250,11 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
     .then(result => {
       if(!result) {
         console.log(`${functionFullName}: getPointItem did not return a result. Something went very wrong`);
-        return {status: 500, message: 'Error. Something went very wrong'};
+        return {status: false, message: 'Error. Something went very wrong'};
       } else {
         if(result.status !== true) {
           console.log(`${functionFullName}: getPointItem returned an error: ${result.message}`);
-          return {status: 400, message: result.status};
+          return {status: false, message: result.status};
         } else {
           console.log(`${functionFullName}: Success`);
           const amount = result.pointItem.amount;
@@ -211,11 +262,7 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
           // Remove points from the point pool
           return ctrlPointPool.removePointsFromPointPool(sourceUserId, amount)
             .then(result => {
-              if ( result.status === false) {
-                console.log(`${functionFullName}: Something went wrong with removing points from the point pool`);
-                console.log(result.message);
-                return {status: 400, message: `Error removing points from the points pool: ${result.message}`};
-              } else {
+              if ( result.status !== false) {
                 console.log(`${functionFullName}: Successfully removed points from the point pool`);
                 console.log(result.message);
                 const newPointPoolAmount = result.newPointPoolAmount;
@@ -223,29 +270,33 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
                 // Add points to employee
                 return addPointsToEmployee(sourceUserId, targetUserId, pointItemId, amount, description)
                   .then( result => {
-                    if ( result.status !== 200) {
-                      console.log(`${functionFullName}: Something went wrong with adding points to the employee`);
-                      console.log(result.message);
-                      return {status: 400, message: `Something went wrong with adding points to the employee: ${result.message}` };
-                    } else {
+                    if ( result.status !== false) {
                       console.log(`${functionFullName}: Successfully added points to the employee`);
                       console.log(result.message);
                       const newPointAmount = result.newPointAmount;
 
-                      return {status: 200, message: `Success: ${result.message}`, newPointPoolAmount: newPointPoolAmount, newPointAmount: newPointAmount};
+                      return {status: true, message: `Success: ${result.message}`, newPointPoolAmount: newPointPoolAmount, newPointAmount: newPointAmount};
+                    } else {
+                      console.log(`${functionFullName}: Something went wrong with adding points to the employee`);
+                      console.log(result.message);
+                      return {status: false, message: `Something went wrong with adding points to the employee: ${result.message}` };
                     }
                   })
                   .catch(err => {
                     console.log(`${functionFullName}: Database error`);
                     console.log(err);
-                    return {status: 500, message: err};
+                    return {status: false, message: err};
                   });
+              } else {
+                console.log(`${functionFullName}: Something went wrong with removing points from the point pool`);
+                console.log(result.message);
+                return {status: false, message: `Error removing points from the points pool: ${result.message}`};
               }
             })
             .catch(err => {
               console.log(`${functionFullName}: Database error`);
               console.log(err);
-              return {status: 500, message: err};
+              return {status: false, message: err};
             });
         }
       }
@@ -253,7 +304,7 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      return {status: 500, message: err};
+      return {status: false, message: err};
     });
 
 };
@@ -261,7 +312,7 @@ const giftPointsToEmployee = function (sourceUserId, targetUserId, pointItemId, 
 module.exports.giftPointsToEmployee = giftPointsToEmployee;
 
 
-const newPointsTransaction = function (type, sourceUserId, targetUserId, pointItemId, amount, description) {
+const newPointsTransaction = function (type, sourceUserId, targetUserId, pointItemId, storeItemId, amount, description) {
   const functionName = 'newPointsTransaction';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -270,6 +321,7 @@ const newPointsTransaction = function (type, sourceUserId, targetUserId, pointIt
   console.log(`${functionFullName}: sourceUserId: ${sourceUserId}`);
   console.log(`${functionFullName}: targetUserId: ${targetUserId}`);
   console.log(`${functionFullName}: pointItemId: ${pointItemId}`);
+  console.log(`${functionFullName}: storeItemId: ${storeItemId}`);
   console.log(`${functionFullName}: amount: ${amount}`);
   console.log(`${functionFullName}: description: ${description}`);
 
@@ -279,6 +331,7 @@ const newPointsTransaction = function (type, sourceUserId, targetUserId, pointIt
     sourceUserId: sourceUserId,
     targetUserId: targetUserId,
     pointItemId: pointItemId,
+    storeItemId: storeItemId,
     description: description
   })
     .then(res => {
@@ -403,3 +456,4 @@ const deletePointItem = function (pointItem) {
 };
 
 module.exports.deletePointItem = deletePointItem;
+

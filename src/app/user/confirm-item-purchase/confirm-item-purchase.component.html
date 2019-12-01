@@ -22,47 +22,49 @@
                   </div>
 
                   <div>
-                    <mat-table  #requestTable [dataSource]="managerRequests$">
+                    <mat-table  #requestTable [dataSource]="managerRequests$" matSort>
                       <ng-container matColumnDef="recordId">
-                        <mat-header-cell *matHeaderCellDef>Request ID</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Request ID </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="userUsername">
-                        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Username </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userUsername}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef=storeItemName>
-                        <mat-header-cell *matHeaderCellDef> Item </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Item </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="storeItemCost">
-                        <mat-header-cell *matHeaderCellDef> Item Cost </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Item Cost </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="status">
-                        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="acceptRequest">
-                        <mat-header-cell *matHeaderCellDef> Accept</mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel">
-                          <mat-radio-button *ngFor="let approveOption of approveOptions" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="UserHasStoreItemModel.acceptRequest" [value]="approveOption">
-                          {{approveOption}}
-                        </mat-radio-button> {{UserHasStoreItemModel.acceptRequest}}</mat-cell>
-
+                          <mat-radio-group [ngModel]="approveOptions">
+                          <mat-radio-button *ngFor="let approveOption of approveOptions" [checked]="approveOption.checked" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="approveOption" [value]="approveOption">
+                          {{approveOption.name}}
+                        </mat-radio-button>
+                          </mat-radio-group>
+                        </mat-cell>
                       </ng-container>
 
-<!--                      <ng-container matColumnDef="declineRequest">
-                        <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-&lt;!&ndash;                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>&ndash;&gt;
-                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-radio-button (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-radio-button> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
+                      <!--                      <ng-container matColumnDef="declineRequest">
+                                              <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
+                      &lt;!&ndash;                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>&ndash;&gt;
+                                              <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-radio-button (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-radio-button> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
 
-                      </ng-container>-->
+                                            </ng-container>-->
 
                       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                       <mat-row *matRowDef="let UserHasStoreItemModel; columns: displayedColumns;"></mat-row>
@@ -72,7 +74,7 @@
 
 
                     <div class="container">
-                      <button type="button" class="btn btn-success" >Save</button>
+                      <button type="button" class="btn btn-success" (click)="onSaveClick()" >Save</button>
                       <button type="button" class="btn btn-danger">Cancel</button>
                     </div>
 

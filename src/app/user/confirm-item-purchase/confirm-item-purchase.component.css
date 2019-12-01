@@ -1,0 +1,8 @@
+.mat-radio-label-content {
+  color: black;
+}
+
+::ng-deep .mat-radio-label-content {
+  color: black;
+}
+

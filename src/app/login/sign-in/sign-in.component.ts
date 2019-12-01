@@ -7,7 +7,6 @@ import {Department} from '../../shared/department.model';
 import {promise} from 'selenium-webdriver';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 import { NotifierService} from 'angular-notifier';
-import {AchievementComponent} from '../../shared/achievement/achievement.component';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {DepartmentService} from '../../shared/department.service';
 import { CognitoUser } from 'amazon-cognito-identity-js';
@@ -34,7 +33,6 @@ export class SignInComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private notifierService: NotifierService,
-              private achievementComponent: AchievementComponent,
               private securityRoleService: SecurityRoleService,
               private departmentService: DepartmentService,
               public authService: AuthService,

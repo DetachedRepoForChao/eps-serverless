@@ -309,6 +309,10 @@ const getUsersPublicDetails = function () {
       {
         model: Models.SecurityRole,
         attributes: ['id', 'name', 'description']
+      },
+      {
+        model: Models.PointPool,
+        attributes: ['id', 'managerId', 'pointsRemaining']
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
