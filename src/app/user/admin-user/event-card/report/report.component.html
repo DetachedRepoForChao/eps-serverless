@@ -1,7 +1,12 @@
+<button (click)="getSelectedRows()">Get Selected Rows</button>
 <ag-grid-angular
-    style="width: 500px; height: 500px;"
+    #agGrid
+    style="width: 1300px; height: 500px; margin-left: 10px; margin-right: 10px;"
     class="ag-theme-balham"
-    [rowData]="rowData | async"
+    [rowData]="rowData"
     [columnDefs]="columnDefs"
+    rowSelection="multiple"
+    [autoGroupColumnDef]="autoGroupColumnDef"
     >
 </ag-grid-angular>
+

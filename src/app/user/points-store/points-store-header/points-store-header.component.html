@@ -34,6 +34,11 @@
                   <a href="javascript:void(0)" (click)="showPurchaseHistoryModal()">View Purchase History</a>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-12">
+                <div *ngIf="(this.currentUserQuery.selectAll() | async)[0]?.securityRole.Id === 2">
+                  <a href="javascript:void(0)" (click)="confirmStoreItemPurchaseRequest();" >Approve Purchase</a>
+                </div>
 
             </div>
 

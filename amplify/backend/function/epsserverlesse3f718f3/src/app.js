@@ -302,6 +302,8 @@ app.post('/items/deleteUser', function(req, res) {
   });
 });
 
+
+
 // Department Routes
 app.get('/items/departments', function(req, res) {
   const functionName = 'get departments';

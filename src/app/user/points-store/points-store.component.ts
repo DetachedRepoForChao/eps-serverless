@@ -11,7 +11,6 @@ import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/enti
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
 import {MatDialog, MatSnackBar, VERSION } from '@angular/material';
 import { EntityCurrentUserService } from 'src/app/entity-store/current-user/state/entity-current-user.service';
-import { CurrentUserStore } from 'src/app/entity-store/current-user/state/current-user.store';
 import {UserHasStoreItemService} from '../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
