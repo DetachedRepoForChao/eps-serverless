@@ -34,6 +34,10 @@
                   <a href="javascript:void(0)" (click)="showPurchaseHistoryModal()">View Purchase History</a>
                 </div>
               </div>
+              <div class="row">
+                <div *ngIf="(this.currentUserQuery.selectAll() | async)[0]?.securityRole.Id === 2">
+                  <button mat-raised-button (click)="confirmStoreItemPurchaseRequest();" color="warn"><span>Manager Confirm item Purchase</span></button>
+                </div>
 
             </div>
 

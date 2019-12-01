@@ -11,6 +11,9 @@ import {forkJoin, Observable} from 'rxjs';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {NavigationService} from '../../../shared/navigation.service';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
+import {ConfirmItemPurchaseComponent} from '../../confirm-item-purchase/confirm-item-purchase.component';
+import {PointsStoreComponent} from '../points-store.component';
+import {Router} from '@angular/router';
 
 declare var $: any;
 
@@ -32,6 +35,7 @@ export class PointsStoreHeaderComponent implements OnInit {
               private userQuery: EntityUserQuery,
               private currentUserQuery: EntityCurrentUserQuery,
               private achievementQuery: AchievementQuery,
+              private router: Router,
               private navigationService: NavigationService) { }
 
   ngOnInit() {
@@ -89,5 +93,11 @@ export class PointsStoreHeaderComponent implements OnInit {
   clearPurchaseHistoryComponentInputUser(event) {
     console.log(event);
     this.navigationService.purchaseHistoryComponentInputUser = null;
+  }
+
+  confirmStoreItemPurchaseRequest(): void {
+    console.log(`Received request to purchase store item`);
+    this.router.navigate(['/confirm-item-purchase']);
+
   }
 }
