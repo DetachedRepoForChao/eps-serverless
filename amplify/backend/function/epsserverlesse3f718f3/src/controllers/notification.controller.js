@@ -87,17 +87,34 @@ const setNotificationsToGroup = function (groupID, title, event, description, so
   const functionFullName = `${componentName} ${functionName}`;
 
   // get the userList by department ID
-
-    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList =>{
+  if (groupID == 911) {
+    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList => {
       for (let user of userList) {
-            setNotificationsToPerson(user.id, title, event, description, sourceUserId, status);
-       }
+           setNotificationsToPerson(user.id, title, event, description, sourceUserId, status);
+      }
       return { status: 200, message: 'success' };
     }).catch(err => {
       console.log('Database error');
       console.log(err);
       return { status: 500, message: err };
     });
+  } else {
+    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList => {
+      
+      for (let user of userList) {
+         setNotificationsToPerson(user.id, title, event, description, sourceUserId, status);
+      }
+      setTimeout(() => {
+        return { status: 200, message: userList };
+      }, 3000);
+     
+    }).catch(err => {
+      console.log('Database error');
+      console.log(err);
+      return { status: 500, message: err };
+    });
+  }
+    
   // console.log(`Start ${functionFullName}`);
   // for (let user of UserList.users){
   //   setNotificationsToPerson(user.id, title, event, description, event, sourceUserId, status);

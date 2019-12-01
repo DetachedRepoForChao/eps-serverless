@@ -1486,7 +1486,6 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
       console.log(tokenResult.claims)
       const sourceUserId = tokenResult.claims['cognito:username'];
       console.log("cognito:username:" + sourceUserId)
-
       const title = req.body.title;
       const event = req.body.event;
       // const sourceUserId = req.body.sourceUserId;
@@ -1496,7 +1495,7 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
 
       ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
         .then(data => {
-          res.json({ status: 'get call succeed!', data: data.notifications });
+          res.json({ status: 'get call succeed!', data: data });
         })
         .catch(err => {
           res.json({ status: 'post call failed!', error: err });
@@ -1506,6 +1505,7 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
     }
   });
 });
+
 
 app.post('/items/setNotificationSeenTime', function (req, res) {
   console.log('starting get getNotifications');

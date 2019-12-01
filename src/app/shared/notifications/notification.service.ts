@@ -4,19 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../../login/auth.service';
 import { API } from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
-
-
-export interface Notification {
-  Title: String;
-  Description: String;
-  audience: String;
-  targetUserId: String;
-  sourceUserId: String;
-  status: String;
-  event:String;
-  groupId:String;
-}
-
+import { Notification } from 'src/app/shared/notifications/notification';
 
 
 @Injectable({
@@ -106,7 +94,7 @@ export class NotificationService implements OnInit {
 
 
 
-  setNewNotification(notificaion: Notification): Observable<any> {
+  setNotificationToGroup(notificaion: Notification): Observable<any> {
     const functionName = 'setNewNotification';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -117,11 +105,12 @@ export class NotificationService implements OnInit {
           const token = user.signInUserSession.idToken.jwtToken;
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
+          console.log(notificaion);
           myInit['body'] = {
             title: notificaion.Title,
             event: notificaion.event,
             description: notificaion.Description,
-            GroupId:notificaion.groupId,
+            groupid: notificaion.groupId,
             status:notificaion.status,
           };
           API.post(this.apiName, this.apiPath + '/setNotificationsToGroup', myInit).then(data => {

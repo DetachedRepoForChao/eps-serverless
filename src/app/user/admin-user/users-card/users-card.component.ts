@@ -60,6 +60,8 @@ export class UsersCardComponent implements OnInit {
         })
       );
 
+    const observables: Observable<any>[] = [];
+    observables.push(departments$);
     // Read in the list of security roles from the SecurityRole service
     const securityRoles$ = this.securityRoleService.getSecurityRoles()
       .pipe(
@@ -68,8 +70,8 @@ export class UsersCardComponent implements OnInit {
         })
       );
 
-    const observables: Observable<any>[] = [];
-    observables.push(departments$);
+    // const observables: Observable<any>[] = [];
+    // observables.push(departments$);
     observables.push(securityRoles$);
 
     forkJoin(observables)
