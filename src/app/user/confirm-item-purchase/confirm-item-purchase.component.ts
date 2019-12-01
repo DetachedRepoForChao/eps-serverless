@@ -30,6 +30,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   numRows: number;
   rows = [];
   requestedStoreItem;
+  dialogResult = " ";
   managerRequests$;
   displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest'];
   approveOptions = [
@@ -115,13 +116,24 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   }
 
   openDialog(): void {
-    console.log(`confirm approval`);
+    console.log(`confirm approval?`);
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
       data: "Would you like to continue?"
     });
-  }
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog closed: ${result}`);
+      this.dialogResult = result;
+      if (result === 'Confirm') {
+        const onSave = this.onSaveClick();
+        }
+       else if (result === 'Cancel') {
+        console.log('Cancelled');
+      }
+    });
+    }
 
   onSaveClick() {
     console.log(this.approveList);
