@@ -6,3 +6,10 @@
   color: black;
 }
 
+.mat-row:nth-child(even){
+  background-color: #c0c1c2;
+}
+
+.mat-row:nth-child(odd){
+  background-color: #cd23b2;
+}
