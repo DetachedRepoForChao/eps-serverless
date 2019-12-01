@@ -7,7 +7,7 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatSort, MatTableModule, MatTableDataSource} from '@angular/material';
+import {MatSort, MatTableModule} from '@angular/material';
 
 import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
@@ -71,7 +71,6 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
 
-      this.dataSource.sort = this.sort;
   }
 
 
