@@ -529,29 +529,4 @@ const deleteUser = function (user) {
 
 module.exports.deleteUser = deleteUser;
 
-const getUserUsername = function(){
-  const functionName = 'getUserUsername';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  return sqlUserModel.findAll({
-    attributes: ['username']
-  })
-    .then(usersDetailsResult => {
-      if (!usersDetailsResult) {
-        console.log(`${functionFullName}: No records found`);
-        return { status: false, message: 'No records found' };
-      } else {
-        console.log(`${functionFullName}: User records found`);
-        return  {status: true, users: usersDetailsResult};
-      }
-    })
-    .catch(err => {
-      console.log(`${functionFullName}: Error retrieving user records`);
-      console.log(err);
-      return {status: false, message: err};
-    });
-}
-
-module.exports.getUserUsername=getUserUsername
 
