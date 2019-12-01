@@ -61,6 +61,8 @@ export class PointsStoreHeaderComponent implements OnInit {
       console.log('balance: ' + balance);
       this.currentUserService.updatePointsBalance(balance);
     });
+
+
   }
 
   getPendingBalance(): Observable<any> {
