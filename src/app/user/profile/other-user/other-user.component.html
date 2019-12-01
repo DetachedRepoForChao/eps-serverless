@@ -56,7 +56,7 @@
                     </div>
                     <div class="row core-value-row">
                       <div class="col-12">
-                        <div *ngIf="(user$ | async)[0]?.genderPublic; else chartPrivate">
+                        <div *ngIf="(user$ | async)[0]?.coreValuesPublic; else chartPrivate">
                           <div *ngIf="coreValueData && (coreValueData)?.length > 0; else coreValueChartPlaceholder" class="img-center img-fluid">
                             <div class="positionrelative">
                               <div class="row text-center">
@@ -153,14 +153,14 @@
                             <label class="form-label">Latest points award...</label>
                           </div>
                           <div *ngIf="(user$ | async)[0]?.pointsPublic" class="col-2 y-margin-auto textr">
-                            <a href="javascript:void(0)">...view all</a>
+                            <a href="javascript:void(0)" (click)="showPointsModal()">...view all</a>
                           </div>
                         </div>
                         <div *ngIf="(user$ | async)[0]?.pointsPublic; else fieldPrivate2">
                           <div *ngIf="pointItemTransactions[0]; else noPointItemTransactions">
                             <div class="form-row y-padding-0 margin-top--10">
                               <div class="col-8">
-                                <h5 class="user-attribute italics">{{pointItemTransactions[0]?.description}}</h5>
+                                <h5 class="user-attribute italics">{{(pointItemQuery.selectPointItemByItemId(pointItemTransactions[0]?.pointItemId) | async)[0]?.name}}</h5>
                               </div>
                               <div class="col-2 textr">
                                 <h5 class="user-attribute">{{pointItemTransactions[0]?.amount}}pts</h5>
@@ -190,7 +190,7 @@
                             <label class="form-label">Latest completed achievement...</label>
                           </div>
                           <div *ngIf="(user$ | async)[0]?.achievementsPublic" class="col-2 y-margin-auto textr">
-                            <a href="javascript:void(0)">...view all</a>
+                            <a href="javascript:void(0)" (click)="showAchievementsModal()">...view all</a>
                           </div>
 
                         </div>
@@ -286,3 +286,26 @@
     </ngx-spinner>
   </div>
 </ng-template>
+
+<!--<div class="modal fade modal-black" id="pointsModal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+
+    &lt;!&ndash; Modal content&ndash;&gt;
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h4 class="modal-title">Your Point Item Awards</h4>
+      </div>
+      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
+      <div class="modal-body modalclass">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+          <app-point-item [inputUser]="user"></app-point-item>
+        </perfect-scrollbar>
+      </div>
+
+      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
+
+    </div>
+  </div>
+
+
+</div>-->

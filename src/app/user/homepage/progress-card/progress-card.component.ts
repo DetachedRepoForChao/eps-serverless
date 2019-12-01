@@ -101,15 +101,6 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
                   result.subscribe(() => {
                   });
 
-/*                  this.pointItemTransactionQuery.selectLoading()
-                    .subscribe(pointItemTransactionLoading => {
-                      console.log(`Point Item Transaction loading status is ${pointItemTransactionLoading}`);
-                      if (!pointItemTransactionLoading) {
-                        this.coreValueData$ = this.getCoreValues(currentUser[0].userId);
-                      } else {
-                        console.log('ERROR: Point Item Transaction is still loading');
-                      }
-                    });*/
                 } else {
                   console.log(`Cache User Point Item Transactions returned ${result}`);
                 }
@@ -150,14 +141,11 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
           console.log(coreValues);
           const keys = Object.keys(coreValues);
           for (const key of keys) {
-            // console.log(`key: ${key}`);
-            // console.log(`coreValues[key]: ${coreValues[key]}`);
+
             const coreValueItem = coreValueArray.find(x => x[0] === key);
             const value: number = coreValues[key];
             coreValueItem[1] = value;
-            // console.log(`coreValueItem: ${coreValueItem}`);
-            // console.log(`coreValueItem[1]: ${coreValueItem[1]}`);
-            // debugger;
+
           }
 
           console.log(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
@@ -166,53 +154,6 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
         });
     });
   }
-
-
-  /*
-
-    getCoreValues(userId: number): Observable<any[]> {
-      const coreValueArray = [
-        ['happy', 1],
-        ['fun', 1],
-        ['genuine', 1],
-        ['caring', 1],
-        ['respect', 1],
-        ['honest', 1]
-      ];
-
-      return new Observable<any[]>(observer => {
-        if (userId) {
-          this.pointItemTransactionQuery.selectAll({
-            filterBy: e => e.targetUserId === userId
-          })
-            .subscribe(transactions => {
-              for (const transaction of transactions) {
-                console.log(transaction);
-                this.pointItemQuery.selectAll({
-                  filterBy: (e => e.itemId === transaction.pointItemId)
-                })
-                  .subscribe(pointItem => {
-                    console.log(pointItem);
-                    const coreValues = pointItem[0].coreValues;
-                    for (const coreValue of coreValues) {
-                      const coreValueItem = coreValueArray.find(x => x[0] === coreValue);
-                      coreValueItem[1] = +coreValueItem[1] + 1;
-                    }
-                  });
-              }
-
-              // coreValueArray = coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; });
-              console.log(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
-              observer.next(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
-              observer.complete();
-            });
-        } else {
-          observer.error();
-          observer.complete();
-        }
-      });
-    }
-  */
 
   acknowledgeAchievement(achievement: AchievementModel) {
     const functionName = 'acknowledgeAchievement';
@@ -228,7 +169,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
         console.log(result);
 
         // this.achievementService.getUserAchievements().subscribe();
-        $('#achievementModal').modal('hide');
+        $('#singleAchievementModal').modal('hide');
       });
   }
 

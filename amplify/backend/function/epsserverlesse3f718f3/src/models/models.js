@@ -464,6 +464,16 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'not started',
       field: 'status'
+    },
+    completedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'completedAt'
+    },
+    acknowledgedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'acknowledgedAt'
     }
   }, {
     tableName: 'user_achievement_progress'
@@ -561,7 +571,7 @@ module.exports = function(sequelize, DataTypes) {
       field: 'targetUserId'
     },
     description: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(1000),
       allowNull: true,
       field: 'description'
     },
@@ -579,12 +589,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     pointItemId: {
       type: DataTypes.INTEGER(11),
-      allowNull: false,
-/*      references: {
-        model: 'point_item',
-        key: 'id'
-      },*/
+      allowNull: true,
       field: 'point_item_id'
+    },
+    storeItemId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      field: 'store_item_id'
     }
   }, {
     tableName: 'point_transaction'
@@ -1086,6 +1097,10 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'store_item'
   });
 
+  PointTransaction.belongsTo(StoreItem, {foreignKey: 'storeItemId', targetKey: 'id'});
+  StoreItem.hasMany(PointTransaction, {foreignKey: 'storeItemId', sourceKey: 'id'});
+
+
   // user_has_notification
   const UserHasNotification = sequelize.define('userHasNotification', {
     id: {
@@ -1199,6 +1214,26 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       field: 'declined'
+    },
+    approvedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'approvedAt'
+    },
+    declinedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'declinedAt'
+    },
+    fulfilledAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'fulfilledAt'
+    },
+    cancelledAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'cancelledAt'
     },
   }, {
     tableName: 'user_has_store_item'

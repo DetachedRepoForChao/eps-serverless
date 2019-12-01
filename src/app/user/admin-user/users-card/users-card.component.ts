@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Globals} from '../../../globals';
-import {AchievementComponent} from '../../../shared/achievement/achievement.component';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {AuthService} from '../../../login/auth.service';
 import {resetStores} from '@datorama/akita';

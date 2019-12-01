@@ -189,11 +189,11 @@
 
 
         <!----- Gift---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#giftModal">
+        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickPointItemModal()">
           <i class="tim-icons icon-coins" title="gift"></i>
         </button>
 
-        <div class="modal fade" id="giftModal" role="dialog">
+        <!--<div class="modal fade" id="giftModal" role="dialog">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -228,9 +228,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
         <!-----Achievements----->
-        <button type="button" class="btn btn-primary btn-icon btn-round" data-toggle="modal" data-target="#navbarAchievementModal">
+        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickAchievementModal()">
           <i class="tim-icons icon-trophy" title="recent achievements"></i>
         </button>
 
@@ -375,19 +375,19 @@
 </nav>
 <!-- End Navbar -->
 
-<div class="modal fade modal-black" id="navbarAchievementModal" role="dialog">
+<div class="modal fade modal-black" id="achievementModal" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
 
     <!-- Modal content-->
-    <div class="modal-content modalheight">
+    <div class="modal-content modal-custom">
       <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Your Achievements</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body modalclass">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
-          <app-achievement></app-achievement>
+      <div class="modal-body modalclass padding-bottom-0">
+        <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+          <app-achievement *ngIf="navigationService.achievementModalActive" [inputUser]="navigationService.achievementComponentInputUser" (clearInputUser)="clearAchievementComponentInputUser($event)"></app-achievement>
         </perfect-scrollbar>
       </div>
 
@@ -398,3 +398,26 @@
 
 
 </div>
+
+<div class="modal fade modal-black" id="pointItemModal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+
+    <!-- Modal content-->
+    <div class="modal-content points-modal modal-custom" >
+      <div class="modal-header">
+        <h4 class="modal-title">Your Point Item Awards</h4>
+      </div>
+      <!---modal body---->
+      <div class="modal-body modalclass padding-bottom-0">
+        <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+          <app-point-item *ngIf="navigationService.pointItemModalActive" [inputUser]="navigationService.pointItemComponentInputUser" (clearInputUser)="clearPointItemComponentInputUser($event)"></app-point-item>
+        </perfect-scrollbar>
+      </div>
+
+      <!----End Mod Bod---->
+
+    </div>
+  </div>
+</div>
+
+

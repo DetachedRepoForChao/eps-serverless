@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PointItemState, PointItemStore } from './point-item.store';
 import { PointItemModel } from './point-item.model';
 import { QueryEntity } from '@datorama/akita';
-import { combineLatest } from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/point-item-filter.model';
 import { map } from 'rxjs/operators';
 
@@ -36,5 +36,9 @@ export class PointItemQuery extends QueryEntity<PointItemState, PointItemModel> 
     }
   }
 
-
+  public selectPointItemByItemId(itemId: number) {
+    return this.selectAll({
+      filterBy: e => e.itemId === itemId
+    });
+  }
 }

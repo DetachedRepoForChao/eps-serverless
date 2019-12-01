@@ -7,9 +7,17 @@ import awsconfig from '../../../aws-exports';
 
 
 export interface Notification {
-  Name: string;
-  Message: string;
+  Title: String;
+  Description: String;
+  audience: String;
+  targetUserId: String;
+  sourceUserId: String;
+  status: String;
+  event:String;
+  groupId:String;
 }
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +102,40 @@ export class NotificationService implements OnInit {
           });
         });
     });
+  }
+
+
+
+  setNewNotification(notificaion: Notification): Observable<any> {
+    const functionName = 'setNewNotification';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    console.log(`${functionFullName}: set new Notifications`);
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            title: notificaion.Title,
+            event: notificaion.event,
+            description: notificaion.Description,
+            GroupId:notificaion.groupId,
+            status:notificaion.status,
+          };
+          API.post(this.apiName, this.apiPath + '/setNotificationsToGroup', myInit).then(data => {
+            console.log(`${functionFullName}: successfully set data from API`);
+            console.log(data);
+            observer.next(data.data);
+            observer.complete();
+          });
+        });
+    });
+  }
+
+  setNotificationToPerson(){
+    
   }
 
 }

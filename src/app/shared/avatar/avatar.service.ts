@@ -205,30 +205,6 @@ export class AvatarService implements OnInit {
                       observer.next(newAvatarPath);
                       observer.complete();
                     });
-                  /*observables.push(this.setUserAvatar(newAvatarPath));
-
-                  // Set new Avatar path in the picture attribute within Cognito profile
-                  observables.push(this.setCognitoPictureAttribute(newAvatarPath));
-
-                  forkJoin(observables)
-                    .subscribe(obsResults => {
-                      console.log(`${functionFullName}: obsResults:`);
-                      console.log(obsResults);
-
-// Delete old Avatar image if there was one
-                      if (oldAvatarKey) {
-                        Storage.remove(oldAvatarKey, {
-                          level: oldAvatarLevel,
-                          identityId: oldAvatarCognitoIdentityId
-                        }).then(removeResult => {
-                          console.log(`${functionFullName}: Deleted old avatar file:`);
-                          console.log(removeResult);
-                        });
-                      }
-
-                      observer.next(true);
-                      observer.complete();
-                    });*/
                 })
                 .catch(err => {
                   console.log(`${functionFullName}: Error retrieving current user info`);
