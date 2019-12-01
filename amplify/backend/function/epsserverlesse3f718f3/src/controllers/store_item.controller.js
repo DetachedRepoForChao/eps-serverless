@@ -134,9 +134,37 @@ const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId)
     managerId: managerId,
     storeItemId: storeItemId
   })
-    .then(userHasStoreItemRecord => {
+    .then(newUserHasStoreItemRecord => {
       console.log(`${functionFullName}: New user / store item request created successfully`);
-      return {status: true, userHasStoreItemRecord: userHasStoreItemRecord};
+      return sqlUserHasStoreItemModel.findOne({
+        include: [
+          {
+            model: Models.User,
+            as: 'requestUser',
+            attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+          },
+          {
+            model: Models.User,
+            as: 'managerUser',
+            attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+          },
+          {
+            model: Models.StoreItem,
+            attributes: ['id', 'name', 'description', 'cost']
+          },
+        ],
+        where: {
+          id: newUserHasStoreItemRecord.id
+        }
+      })
+        .then(userHasStoreItemRecord => {
+          return {status: true, userHasStoreItemRecord: userHasStoreItemRecord};
+        })
+        .catch( err => {
+          console.log(`${functionFullName}: Error returning new user / store item request`);
+          console.log(err);
+          return {status: false, message: err};
+        });
     })
     .catch( err => {
       console.log(`${functionFullName}: Error creating new user / store item request`);
@@ -160,6 +188,22 @@ const newStoreItem = function (storeItem) {
     description: storeItem.description,
     cost: storeItem.cost,
     imagePath: storeItem.imagePath,
+    include: [
+      {
+        model: Models.User,
+        as: 'requestUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.User,
+        as: 'managerUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost']
+      },
+    ],
   })
     .then(newStoreItem => {
       console.log(newStoreItem);

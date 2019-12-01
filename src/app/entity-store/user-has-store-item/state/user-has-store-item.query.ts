@@ -3,7 +3,7 @@ import { UserHasStoreItemState, UserHasStoreItemStore } from './user-has-store-i
 import { UserHasStoreItemModel } from './user-has-store-item.model';
 import { StoreItemQuery} from '../../store-item/state/store-item.query';
 import { StoreItemStore} from '../../store-item/state/store-item.store';
-import { QueryEntity } from '@datorama/akita';
+import {Order, QueryEntity} from '@datorama/akita';
 import { combineLatest } from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/user-has-store-item-filter.model';
 import { map } from 'rxjs/operators';
@@ -44,7 +44,45 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
+  public selectCurrentUserRequests(userId: number) {
+    return this.selectAll({
+      filterBy: e => (e.userId === userId),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
 
+  public selectCurrentUserPendingRequests(userId: number) {
+    return this.selectAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'pending'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public selectCurrentUserDeclinedRequests(userId: number) {
+    return this.selectAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'declined'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public selectCurrentUserFulfilledRequests(userId: number) {
+    return this.selectAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'fulfilled'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public selectCurrentUserCancelledRequests(userId: number) {
+    return this.selectAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'cancelled'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
 
   // public getUser(username: string): EntityUserAvatarModel {
 /*  public getCurrentUser() {

@@ -9,6 +9,7 @@
     <section class="section section-lg section-coins">
       <img src="../../../assets/img/path3.png" class="path">
       <div class="container align-items-center wrapper-width">
+        <div class="row">
           <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="store">
             <div class="card">
               <div class="card card-coin card-plain card-custom">
@@ -26,28 +27,28 @@
                       <div *ngIf="(this.storeItemQuery.selectLoading() | async) === false; else storeLoading">
                         <div class="row">
                           <div *ngFor="let row of (this.storeItemQuery.getAll())" class="col-4">
-                              <div *ngIf="row" class="row">
-                                <div class="col-2">
+                            <div *ngIf="row" class="row">
+                              <div class="col-2">
 
-                                </div>
-                                <div class="col-8 item-selection-container" (click)="openDialog(); selectStoreItem(row);">
-                                  <div class="row">
-                                    <div class="col-12">
-                                      <div class="container-img">
-                                        <img [src]="row.imageResolvedUrl"/>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-12">
-                                      <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
-                                        <div class="container-text2">{{row.description}}</div>
+                              </div>
+                              <div class="col-8 item-selection-container" (click)="openDialog(); selectStoreItem(row);">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <div class="container-img">
+                                      <img [src]="row.imageResolvedUrl"/>
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-2">
-
+                                <div class="row">
+                                  <div class="col-12">
+                                    <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
+                                    <div class="container-text2">{{row.description}}</div>
+                                  </div>
                                 </div>
+                              </div>
+                              <div class="col-2">
+
+                              </div>
 
 
                             </div>
@@ -62,13 +63,15 @@
 
                     </div>
 
-<!--                    <button type="button" class="btn btn-danger" (click)="listStoreItems()" style="padding-right: 10px; padding-left: 10px">List Store Items</button>-->
-<!--                    <button type="button" class="btn btn-danger" (click)="storeItemQuery.getAll()" style="padding-right: 10px; padding-left: 10px">Get Store Items</button>-->
+                    <!--                    <button type="button" class="btn btn-danger" (click)="listStoreItems()" style="padding-right: 10px; padding-left: 10px">List Store Items</button>-->
+                    <!--                    <button type="button" class="btn btn-danger" (click)="storeItemQuery.getAll()" style="padding-right: 10px; padding-left: 10px">Get Store Items</button>-->
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+
       </div>
     </section>
   </div>

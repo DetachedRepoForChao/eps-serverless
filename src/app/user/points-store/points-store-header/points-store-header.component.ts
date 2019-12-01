@@ -89,7 +89,7 @@ export class PointsStoreHeaderComponent implements OnInit {
     const currentUser = this.currentUserQuery.getAll()[0];
     console.log(currentUser);
     this.navigationService.purchaseHistoryComponentInputUser = currentUser;
-    this.navigationService.openPointItemModal();
+    this.navigationService.openPurchaseHistoryModal();
   }
 
   clearPurchaseHistoryComponentInputUser(event) {

@@ -65,7 +65,7 @@
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
         <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-          <app-point-item *ngIf="navigationService.purchaseHistoryModalActive" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-point-item>
+          <app-purchase-history *ngIf="navigationService.purchaseHistoryModalActive" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-purchase-history>
         </perfect-scrollbar>
       </div>
 

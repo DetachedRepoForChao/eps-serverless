@@ -35,6 +35,22 @@
   padding-top: 5px;
 }
 
+.request-list {
+  border-style: solid;
+  border-color: #dd9d22;
+  border-width: medium;
+  background-color: #412584;
+  margin-bottom: 5px;
+  border-radius: 25px;
+}
+
+.request-container {
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+
 .card.card-coin img {
   width: 50px;
 }
@@ -43,6 +59,17 @@
   width: 50px;
   padding: 0;
 }*/
+
+.store-item-img {
+  max-width: 250px;
+  /*padding: 0 !important;;*/
+}
+
+.store-item-img-col {
+  padding: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
 .avatar-img {
   width: 50px;
