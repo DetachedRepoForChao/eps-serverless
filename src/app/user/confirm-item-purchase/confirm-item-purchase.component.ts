@@ -7,7 +7,8 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatSort, MatTableModule, MatTableDataSource} from '@angular/material';
+import {MatSort, MatTableModule, MatTableDataSource, MatDialog} from '@angular/material';
+import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
 
 import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
@@ -47,6 +48,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
                 private storeItemStore: StoreItemStore,
                 private storeItemQuery: StoreItemQuery,
                 private storeItemService: StoreItemService,
+                public dialog: MatDialog,
                 public currentUserQuery: EntityCurrentUserQuery,
                 private userHasStoreItemQuery: UserHasStoreItemQuery) { }
 
@@ -110,6 +112,15 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     console.log(request);
     this.userHasStoreItemService.approveStoreItemRequest(request).subscribe();
 
+  }
+
+  openDialog(): void {
+    console.log(`confirm approval`);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: "Would you like to continue?"
+    });
   }
 
   onSaveClick() {
