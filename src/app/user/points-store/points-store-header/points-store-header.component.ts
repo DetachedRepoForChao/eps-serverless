@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnChanges, OnInit, SimpleChanges,} from '@angular/core';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
@@ -22,10 +22,20 @@ declare var $: any;
   templateUrl: './points-store-header.component.html',
   styleUrls: ['./points-store-header.component.css']
 })
-export class PointsStoreHeaderComponent implements OnInit {
+export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewInit {
 
   public config: PerfectScrollbarConfigInterface = {};
   currentUser$: Observable<EntityCurrentUserModel[]>;
+  currentUser: EntityCurrentUserModel;
+  currentPurchaseRequestTabItem = 'all';
+  purchaseRequestTabItems = [
+    'all',
+    'pending',
+    'approved',
+    'declined',
+    'fulfilled',
+    'cancelled'
+  ];
 
   constructor(private currentUserService: EntityCurrentUserService,
               private userService: EntityUserService,
@@ -57,12 +67,16 @@ export class PointsStoreHeaderComponent implements OnInit {
       limitTo: 1
     });
 
+    this.currentUserQuery.selectAll({
+      limitTo: 1
+    }).subscribe(currentUser => {
+      this.currentUser = currentUser[0];
+    });
+
     this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
       console.log('balance: ' + balance);
       this.currentUserService.updatePointsBalance(balance);
     });
-
-
   }
 
   getPendingBalance(): Observable<any> {
@@ -88,6 +102,7 @@ export class PointsStoreHeaderComponent implements OnInit {
     console.log(`invoking points modal with the following user input:`);
     const currentUser = this.currentUserQuery.getAll()[0];
     console.log(currentUser);
+    this.navigationService.purchaseHistoryModalActive = true;
     this.navigationService.purchaseHistoryComponentInputUser = currentUser;
     this.navigationService.openPurchaseHistoryModal();
   }
@@ -101,5 +116,28 @@ export class PointsStoreHeaderComponent implements OnInit {
     console.log(`Received request to purchase store item`);
     this.router.navigate(['/confirm-item-purchase']);
 
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+  }
+
+  ngAfterViewInit(): void {
+    console.log('AfterViewInit');
+  }
+
+  onPurchaseRequestTabItemClick(clickedItem: string) {
+    if (this.currentPurchaseRequestTabItem === clickedItem) {
+      // Already there, do nothing.
+    } else {
+      for (const item of this.purchaseRequestTabItems) {
+        if (item === clickedItem) {
+          this.currentPurchaseRequestTabItem = clickedItem;
+          document.getElementById(`purchaseRequestTab_${item}`).className = document.getElementById(`purchaseRequestTab_${item}`).className += ' toggled';
+        } else {
+          document.getElementById(`purchaseRequestTab_${item}`).className = document.getElementById(`purchaseRequestTab_${item}`).className.replace('toggled', '').trim();
+        }
+      }
+    }
   }
 }

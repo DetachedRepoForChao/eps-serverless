@@ -58,15 +58,40 @@
   <div class="modal-dialog modal-lg" role="document">
 
     <!-- Modal content-->
-    <div class="modal-content points-modal modal-custom" >
+    <div class="modal-content purchase-request-modal modal-custom" >
       <div class="modal-header">
-        <h4 class="modal-title">Your Purchase History</h4>
+        <div class="row title-row">
+          <h4 class="modal-title">Your Purchase History</h4>
+        </div>
       </div>
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
-        <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-          <app-purchase-history *ngIf="navigationService.purchaseHistoryModalActive" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-purchase-history>
-        </perfect-scrollbar>
+        <div class="row tab-row">
+          <div class="col-2 text-center">
+            <span (click)="navigationService.setPurchaseRequestDataSourceAll(currentUser.userId); onPurchaseRequestTabItemClick('all')" class="tab-item toggled" id="purchaseRequestTab_all">All</span>
+          </div>
+          <div class="col-2 text-center">
+            <span (click)="navigationService.setPurchaseRequestDataSourcePending(currentUser.userId); onPurchaseRequestTabItemClick('pending')" class="tab-item" id="purchaseRequestTab_pending">Pending</span>
+          </div>
+          <div class="col-2 text-center">
+            <span (click)="navigationService.setPurchaseRequestDataSourceApproved(currentUser.userId); onPurchaseRequestTabItemClick('approved')" class="tab-item" id="purchaseRequestTab_approved">Approved</span>
+          </div>
+          <div class="col-2 text-center">
+            <span (click)="navigationService.setPurchaseRequestDataSourceDeclined(currentUser.userId); onPurchaseRequestTabItemClick('declined')" class="tab-item" id="purchaseRequestTab_declined">Declined</span>
+          </div>
+          <div class="col-2 text-center">
+            <span (click)="navigationService.setPurchaseRequestDataSourceFulfilled(currentUser.userId); onPurchaseRequestTabItemClick('fulfilled')" class="tab-item" id="purchaseRequestTab_fulfilled">Fulfilled</span>
+          </div>
+          <div class="col-2 text-center">
+            <span (click)="navigationService.setPurchaseRequestDataSourceCancelled(currentUser.userId); onPurchaseRequestTabItemClick('cancelled')" class="tab-item" id="purchaseRequestTab_cancelled">Cancelled</span>
+          </div>
+        </div>
+        <div class="row content-row">
+          <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+            <app-purchase-history *ngIf="navigationService.purchaseHistoryModalActive" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-purchase-history>
+          </perfect-scrollbar>
+        </div>
+
       </div>
 
       <!----End Mod Bod---->

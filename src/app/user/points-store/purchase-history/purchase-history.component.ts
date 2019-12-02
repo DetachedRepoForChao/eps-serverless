@@ -34,7 +34,7 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
   @Input() inputUser: EntityCurrentUserModel;
   @Output() clearInputUser = new EventEmitter<any>();
 
-  componentName = 'point-item.component';
+  componentName = 'purchase-history.component';
 
   public config: PerfectScrollbarConfigInterface = {};
   pointItems$: Observable<PointItemModel[]>;
@@ -54,6 +54,7 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
   approvedPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
   declinedPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
   fulfilledPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
+  dataSource$: Observable<UserHasStoreItemModel[]>;
   routerDestination: string[];
   showLimit = 6;
 
@@ -90,196 +91,24 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 
     // this.populateCurrentUserData();
     this.currentUser$ = this.currentUserQuery.selectAll();
-    this.currentUser$
+    this.currentUserQuery.selectAll()
       .subscribe(currentUser => {
+        this.currentUser = currentUser[0];
+        this.navigationService.setPurchaseRequestDataSourceAll(this.currentUser.userId);
         this.purchaseRequests$ = this.userHasStoreItemQuery.selectAll({
           filterBy: e => e.userId === currentUser[0].userId
         });
       });
 
 
+
     const parentScope = this;
-    $('#pointItemModal').on('hidden.bs.modal',
+    $('#purchaseHistoryModal').on('hidden.bs.modal',
       function (e) {
         console.log('running on hidden function');
         console.log(e);
         parentScope.navigationService.closePurchaseHistoryModal();
-      });
-  }
-
-  populateCurrentUserPurchaseRequestData(currentUser: EntityCurrentUserModel) {
-    if (!this.purchaseRequestsRetrieving) { // This check prevents the API call from firing more than it has to
-      this.purchaseRequestsRetrieving = true;
-      this.userHasStoreItemService.cacheUserHasStoreItemRecords()
-        .subscribe((result: Observable<any> | any) => {
-          if (result !== false) {
-            result.subscribe(() => {
-              this.purchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => e.userId === currentUser.userId,
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-              console.log('purchase requests');
-              console.log(this.purchaseRequests);
-
-              this.pendingPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'pending'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-              console.log('pending purchase requests');
-              console.log(this.pendingPurchaseRequests);
-
-              this.approvedPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'approved'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-              console.log('approved purchase requests');
-              console.log(this.approvedPurchaseRequests);
-
-              this.declinedPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'declined'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-              console.log('declined purchase requests');
-              console.log(this.declinedPurchaseRequests);
-
-              this.fulfilledPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'fulfilled'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-              console.log('fulfilled purchase requests');
-              console.log(this.fulfilledPurchaseRequests);
-            });
-
-            this.purchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-              filterBy: e => e.userId === currentUser.userId,
-              sortBy: 'createdAt',
-              sortByOrder: Order.DESC
-            });
-
-            this.pendingPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-              filterBy: e => (e.userId === currentUser.userId) && (e.status === 'pending'),
-              sortBy: 'createdAt',
-              sortByOrder: Order.DESC
-            });
-
-            this.approvedPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-              filterBy: e => (e.userId === currentUser.userId) && (e.status === 'approved'),
-              sortBy: 'createdAt',
-              sortByOrder: Order.DESC
-            });
-
-            this.declinedPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-              filterBy: e => (e.userId === currentUser.userId) && (e.status === 'declined'),
-              sortBy: 'createdAt',
-              sortByOrder: Order.DESC
-            });
-
-            this.fulfilledPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-              filterBy: e => (e.userId === currentUser.userId) && (e.status === 'fulfilled'),
-              sortBy: 'createdAt',
-              sortByOrder: Order.DESC
-            });
-
-          } else {
-            console.log(`Cache User Point Item Transactions returned ${result}`);
-            // We may have retrieved the data but the pointItemTransactions variable may be null... this accounts for that
-            if (!this.purchaseRequests) {
-              this.purchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => e.userId === currentUser.userId,
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.pendingPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'pending'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.approvedPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'approved'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.declinedPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'declined'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.fulfilledPurchaseRequests = this.userHasStoreItemQuery.getAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'fulfilled'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.purchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-                filterBy: e => e.userId === currentUser.userId,
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.pendingPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'pending'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.approvedPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'approved'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.declinedPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'declined'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-
-              this.fulfilledPurchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-                filterBy: e => (e.userId === currentUser.userId) && (e.status === 'fulfilled'),
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
-              });
-            }
-          }
-        });
-    } else {
-      console.log(`Already retrieving purchase requests`);
-    }
-  }
-
-
-  populateCurrentUserData() {
-    this.currentUserQuery.selectLoading()
-      .subscribe(currentUserQueryLoading => {
-        console.log(`Current User loading status is ${currentUserQueryLoading}`);
-        if (!currentUserQueryLoading) {
-          this.currentUser$ = this.currentUserQuery.selectAll();
-
-          this.currentUser$.subscribe((currentUser: EntityCurrentUserModel[]) => {
-            this.populateCurrentUserPurchaseRequestData(currentUser[0]);
-
-            // Pull user info into a static variable if this hasn't happened yet
-            if (!this.currentUser) {
-              this.currentUser = this.currentUserQuery.getAll()[0];
-            }
-
-            this.isCurrentUserDataRetrieved = true;
-
-
-            this.spinner.hide('purchase-history-spinner');
-          });
-        } else {
-          console.log('ERROR: User is still loading');
-        }
+        parentScope.navigationService.purchaseHistoryModalActive = false;
       });
   }
 
@@ -301,18 +130,14 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
     console.log(`closing modal and navigating to /user/profile/${user[0].username}`);
     this.routerDestination = ['/', 'user', 'profile', user[0].username];
     this.router.navigate(['/', 'user', 'profile', user[0].username]).then();
-    this.navigationService.closePointItemModal();
+    this.navigationService.closePurchaseHistoryModal();
     // this.dialogRef.close();
 
     $('#pointItemModal').on('hidden.bs.modal',
       function (e) {
         console.log('running on hidden function');
         console.log(e);
-        parentScope.inputUser = null;
-        parentScope.navigationService.pointItemComponentInputUser = null;
-        parentScope.clearInputUser.emit(true);
         parentScope.navigationService.navigateToProfile(user[0].username);
-        // parentScope.router.navigate(parentScope.routerDestination).then();
       });
 
     // $('#pointsModal').modal('hide');
@@ -364,9 +189,7 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('ngOnDestroy');
-/*    this.inputUser = null;
-    this.navigationService.pointItemComponentInputUser = null;
-    this.clearInputUser.emit(true);*/
+
   }
 
 

@@ -184,12 +184,14 @@ li.toggled {
   transform: translate(0, 0%);
 }
 
+
+
 .padding-bottom-0 {
   padding-bottom: 0;
 }
 
-.points-modal {
-  max-height: 650px;
+.purchase-request-modal {
+  max-height: 750px;
 }
 
 a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
@@ -203,4 +205,29 @@ a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 0px;
+}
+
+
+.tab-item {
+  cursor: pointer;
+  color: #b350f2
+}
+
+.tab-item:hover {
+  color: #bd3db8;
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
+}
+
+.toggled {
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
+}
+
+.tab-row {
+  margin-bottom: 20px;
+}
+
+.margin-top-10 {
+  margin-top: 10px;
 }

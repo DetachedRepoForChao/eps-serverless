@@ -126,3 +126,57 @@
   max-height: 600px;
 }
 
+div.card.card-coin.card-plain.card-custom {
+  background-color: #674ba580;
+}
+
+div.card {
+  background-color: rgba(167,53,43,0)
+}
+
+.modal-custom {
+  border-style: solid;
+  border-color: #5e72e4;
+  border-width: 5px;
+  border-radius: 25px;
+}
+
+.points-modal {
+  max-height: 650px;
+}
+
+.modalclass{
+  overflow-scrolling: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 0px;
+}
+
+.padding-bottom-0 {
+  padding-bottom: 0;
+}
+
+.tab-item {
+  cursor: pointer;
+  color: #b350f2
+}
+
+.tab-item:hover {
+  color: #bd3db8
+}
+
+.color-yellow {
+  color: #fff229 !important
+}
+
+.color-green {
+  color: #2bffc6 !important;
+}
+
+.color-red {
+  color: red !important;
+}
+
+.color-blue {
+  color: dodgerblue !important;
+}

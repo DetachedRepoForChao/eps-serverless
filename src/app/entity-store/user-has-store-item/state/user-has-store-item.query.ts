@@ -44,7 +44,7 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
-  public selectCurrentUserRequests(userId: number) {
+  public selectUserRequests(userId: number) {
     return this.selectAll({
       filterBy: e => (e.userId === userId),
       sortBy: 'createdAt',
@@ -52,7 +52,7 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
-  public selectCurrentUserPendingRequests(userId: number) {
+  public selectUserPendingRequests(userId: number) {
     return this.selectAll({
       filterBy: e => (e.userId === userId) && (e.status === 'pending'),
       sortBy: 'createdAt',
@@ -60,7 +60,15 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
-  public selectCurrentUserDeclinedRequests(userId: number) {
+  public selectUserApprovedRequests(userId: number) {
+    return this.selectAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'approved'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public selectUserDeclinedRequests(userId: number) {
     return this.selectAll({
       filterBy: e => (e.userId === userId) && (e.status === 'declined'),
       sortBy: 'createdAt',
@@ -68,7 +76,7 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
-  public selectCurrentUserFulfilledRequests(userId: number) {
+  public selectUserFulfilledRequests(userId: number) {
     return this.selectAll({
       filterBy: e => (e.userId === userId) && (e.status === 'fulfilled'),
       sortBy: 'createdAt',
@@ -76,7 +84,7 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
-  public selectCurrentUserCancelledRequests(userId: number) {
+  public selectUserCancelledRequests(userId: number) {
     return this.selectAll({
       filterBy: e => (e.userId === userId) && (e.status === 'cancelled'),
       sortBy: 'createdAt',
