@@ -40,8 +40,8 @@ export class NotificationCardComponent implements OnInit {
 
   sendNotification(){
      this.notification.Title = this.userForm.value['title'];
-    this.notification.Description = this.userForm.value['content'];
-    this.notification.groupId = this.userForm.value['department'];
+     this.notification.Description = this.userForm.value['content'];
+     this.notification.groupId = this.userForm.value['department'];
      this.notification.event = 'Alert'
      this.notification.status = '1';
      this.notificationService.setNotificationToGroup(this.notification).subscribe(result => {

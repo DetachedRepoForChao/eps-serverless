@@ -1,14 +1,15 @@
 
 export class Notification  {
     constructor( ){ }
-    Title: String;
-    Description: String;
-    audience: String;
-    targetUserId: String;
-    sourceUserId: String;
-    status: String;
-    event: String;
-    groupId: String;
+    id: String;
+    Title: string;
+    Description: string;
+    audience: string;
+    targetUserId: string;
+    sourceUserId: string;
+    status: string;
+    event: string;
+    groupId: string;
     
 }
 
