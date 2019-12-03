@@ -756,7 +756,7 @@ module.exports = function(sequelize, DataTypes) {
       field: 'timeSeen'
     },
     targetUserId:{
-      type: DataTypes.STRING(20),
+      type: DataTypes.INTEGER(11),
       allowNull:false,
       field: 'targetUserId'
     }, 
