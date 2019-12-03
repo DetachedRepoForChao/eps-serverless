@@ -89,7 +89,7 @@ const setNotificationsToPerson = function (targetUserId, title, event, descripti
       const functionName = 'setNotificationsToPerson';
       const functionFullName = `${componentName} ${functionName}`;
       console.log(`Start ${functionFullName}`);
-  console.log('statusstatus--------------------------------------------------'+sourceUserId);
+      console.log('statusstatus--------------------------------------------------'+sourceUserId);
       return sqlNotification.create({
             targetUserId: targetUserId,
             title:title,
@@ -113,16 +113,33 @@ exports.setNotificationsToPerson = setNotificationsToPerson;
 
 
 
+async function setGroupNotification(targetUserId, title, event, description, sourceUserId, status){
+      const functionName = 'setNotificationsToPerson';
+      const functionFullName = `${componentName} ${functionName}`;
+      console.log(`Start ${functionFullName}`);
+      console.log('statusstatus--------------------------------------------------' + sourceUserId);
+      await sqlNotification.create({
+      targetUserId: targetUserId,
+      title: title,
+      description: description,
+      audience: 'Group',
+      event: event,
+      timeSeen: null,
+      status: 1,
+      sourceUserId: sourceUserId,
+    })
+}
 
-const setNotificationsToGroup = function (groupID, title, event, description, sourceUserId,status) {
+
+const setNotificationsToGroup =function (groupID, title, event, description, sourceUserId,status) {
   const functionName = 'setNotificationsToGroup';
   const functionFullName = `${componentName} ${functionName}`;
 
   // get the userList by department ID
   if (groupID == 911) {
-    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList => {
+    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(async userList => {
       for (let user of userList) {
-           setNotificationsToPerson(user.id, title, event, description, sourceUserId, status);
+          await setGroupNotification(user.id, title, event, description, sourceUserId, status);
       }
       return { status: 200, message: 'success' };
     }).catch(err => {
@@ -131,27 +148,21 @@ const setNotificationsToGroup = function (groupID, title, event, description, so
       return { status: 500, message: err };
     });
   } else {
-    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList => {
-      
+    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(async userList => {
       for (let user of userList) {
-         setNotificationsToPerson(user.id, title, event, description, sourceUserId, status);
+        await setGroupNotification(user.id, title, event, description, sourceUserId, status);
       }
-      setTimeout(() => {
-        return { status: 200, message: userList };
-      }, 3000);
-     
+      return { status: 200, message: 'success' };
     }).catch(err => {
       console.log('Database error');
       console.log(err);
       return { status: 500, message: err };
     });
   }
-    
-  // console.log(`Start ${functionFullName}`);
-  // for (let user of UserList.users){
-  //   setNotificationsToPerson(user.id, title, event, description, event, sourceUserId, status);
-  // }
 }
+
+
+
 
 module.exports.setNotificationsToGroup = setNotificationsToGroup;
 
@@ -324,13 +335,6 @@ const sendAwardPointsEmail = function (targetUserId, sourceUser, pointItem) {
 };
 
 module.exports.sendAwardPointsEmail = sendAwardPointsEmail;
-
-// const setNotificationsToGroup =function(targetGroup,notificaionTitle,event,description,event){
-
-// }
-
-
-// module.exports.setNotificationsToGroup = setNotificationsToGroup;
 
 
 

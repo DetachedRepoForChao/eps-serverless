@@ -136,7 +136,6 @@ export class NotificationService implements OnInit {
           };
           API.post(this.apiName, this.apiPath + '/setNotificationsToGroup', myInit).then(data => {
             console.log(`${functionFullName}: successfully set data from API`);
-            console.log(data);
             observer.next(data.data);
             observer.complete();
           });

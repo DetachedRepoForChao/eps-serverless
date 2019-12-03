@@ -71,12 +71,9 @@
 
                                     <div *ngIf="(entityUserQuery.selectLoading() | async) === false">
                                     <div>
-                                      <h4 class="mb-0 text-sm black" >{{notification.sourceUserId}}{{(entityUserQuery.selectUserByUserId(notification.sourceUserId) | async)[0]?.username}}</h4>
+                                      <h4 class="mb-0 text-sm black" >{{(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)[0]?.username}}</h4>
                                     </div>
                                     </div>
-
-
-
                                     </div>
                                     <div class="text-right text-muted">
                                       <small>{{notification.createdAt | timeAgo}}</small>
