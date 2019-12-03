@@ -1,6 +1,5 @@
 import { Component, OnInit, TestabilityRegistry, ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EntityUserService } from '../../../../entity-store/user/state/entity-user.service';
 import { User } from 'src/app/shared/user.model';
 import { AchievementQuery } from 'src/app/entity-store/achievement/state/achievement.query';
 import { EntityCurrentUserQuery } from 'src/app/entity-store/current-user/state/entity-current-user.query';
@@ -48,7 +47,6 @@ export class ReportComponent implements OnInit {
     public globals: Globals,
     public entityCurrentUserQuery: EntityCurrentUserQuery,
     public achievementQuery: AchievementQuery,
-    public entityuserService: EntityUserService,
     public entityuserQuery: EntityUserQuery,
     public departmentService: DepartmentService
 
@@ -59,18 +57,11 @@ export class ReportComponent implements OnInit {
     .subscribe(result => {
       if (result) {
         this.users = this.entityuserQuery.getAll();
-        // this.departments = this.departmentService.getDepartments();
             // tslint:disable-next-line: forin
         var strMap = [];
         let dp = new Map();
         let mapu = new Map();
           for ( let i = 0; i < this.users.length; i++){
-              this.user2=this.entityuserService.cacheUsers().subscribe(()=>{
-                for (var keys of Object.keys(this.departmentService.getDepartmentById(this.user2[i].departmentId))){
-                  console.log(keys)
-                }
-              })
-              console.log(this.user2[i])
               mapu[i]={
                 'username' : this.users[i].username,
                 'points':this.users[i].points,
@@ -84,23 +75,13 @@ export class ReportComponent implements OnInit {
           }
       this.rowData = strMap;
       console.log(strMap);
-      } else {
-        this.entityuserService.cacheUsers().subscribe(() => {
-          this.users = this.entityuserQuery.getAll();
-          // console.log(this.users);
-          for (const user of this.users) {
-            const keys = Object.keys(user);
-            for (const key of keys) {
-            }
-          }
-        });
       }
     });
   }
 
   // tslint:disable-next-line: member-ordering
   columnDefs = [
-    // {headerName: 'Username', field: 'username', sortable: true, filter: true,checkboxSelection: true},
+    {headerName: 'Username', field: 'username', sortable: true, filter: true,checkboxSelection: true},
     {headerName: 'Points', field: 'points', sortable: true, filter: true},
     {headerName: 'Positions', field: 'position', sortable: true, filter: true},
     {headerName: 'LastName', field: 'lastName', sortable: true, filter: true},
@@ -109,14 +90,7 @@ export class ReportComponent implements OnInit {
 ];
 
   // tslint:disable-next-line: member-ordering
-  autoGroupColumnDef = {
-    headerName: 'Username',
-    field: 'usernamel',
-    cellRenderer: 'agGroupCellRenderer',
-    cellRendererParams: {
-        checkbox: true
-    }
-  };
+
 
 
   // tslint:disable-next-line: member-ordering

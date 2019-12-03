@@ -1,81 +1,113 @@
+
 <div class="container align-items-center max-height-600">
 
-  <div *ngIf="pointItemTransactions$; else noTransactions">
-    <div class="row justify-content-md-center ">
+  <div *ngIf="purchaseRequests$ && currentUser$; else noPurchaseRequests">
+    <div class="row justify-content-md-left ">
 
-      <div *ngFor="let transaction of (pointItemTransactions$ | async).slice(0, showLimit); let i = index" class="col-10 achievlist point-item-container">
+      <div *ngFor="let purchaseRequest of (navigationService.purchaseRequestDataSource$ | async).slice(0, showLimit); let i = index" class="col-11 request-list request-container">
 
         <div class="row">
-          <div class="col-2 text-left avatar-col">
-            <div *ngIf="!isManager; else managerAvatar">
-              <div *ngIf="(this.userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]; else avatarLoading">
-                <img [src]="(this.userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.avatarResolvedUrl"
-                     alt="Avatar"
-                     class="img-center img-fluid rounded-circle avatar-img"
-                     id="avatar-user">
-              </div>
+          <div class="col-5 text-left store-item-img-col">
+            <div *ngIf="(storeItemQuery.selectStoreItemById(purchaseRequest?.storeItemId) | async)[0]; else storeItemImageLoading">
+              <img [src]="(storeItemQuery.selectStoreItemById(purchaseRequest?.storeItemId) | async)[0]?.imageResolvedUrl"
+                   alt="Store Item Image"
+                   class="img-center img-fluid store-item-img"
+                   id="store-item-image">
             </div>
 
-            <ng-template #managerAvatar>
-              <div *ngIf="(this.userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]; else avatarLoading">
-                <img [src]="(this.userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]?.avatarResolvedUrl"
-                     alt="Avatar"
-                     class="img-center img-fluid rounded-circle avatar-img"
-                     id="avatar-manager">
-              </div>
-            </ng-template>
-
-            <ng-template #avatarLoading >
+            <ng-template #storeItemImageLoading >
               <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                    alt="Loading..."
                    class="img-center img-fluid rounded-circle"
-                   id="avatarPlaceholder">
+                   id="storeItemImagePlaceholder">
             </ng-template>
 
           </div>
-          <div class="col-8 text-left y-margin-auto">
+          <div class="col-7 text-left margin-top-10">
             <div class="col-12">
               <div class="form-row">
+                <div class="col-12">
+                  <div class="form-row">
+                    <div class="col-10">
+                      <h4 class="point-content font-weight-bold">{{purchaseRequest.storeItemName}}</h4>
+                    </div>
+                    <div class="col-2">
+                      <h4 class="point-content">{{purchaseRequest.storeItemCost}}pts</h4>
+                    </div>
 
-                <h5 class="point-content italics">{{(pointItemQuery.selectPointItemByItemId(transaction?.pointItemId) | async)[0]?.name}}</h5>
+                  </div>
+                  <div class="form-row">
+                    <div class="col-12">
+                      <h4 class="point-content italics">{{purchaseRequest.storeItemDescription}}</h4>
+                    </div>
 
+                  </div>
+<!--                  <div class="form-row">
+                    <h4 class="point-content">Cost: {{purchaseRequest.storeItemCost}}pts</h4>
+                  </div>-->
+                </div>
+              </div>
+              <!--              <div class="form-row">
+                              <h5 class="point-content">Request Date: {{(purchaseRequest.createdAt) | date:'longDate'}}</h5>
+                            </div>-->
+              <div class="form-row margin-top-10">
+                <div class="col-12">
+                  <h5 class="point-content">Request submitted to <a href="javascript:void(0)" (click)="onUserClick(purchaseRequest?.managerId)">{{(userQuery.selectUserByUserId(purchaseRequest?.managerId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(purchaseRequest?.managerId) | async)[0]?.lastName}}</a></h5>
+
+                </div>
               </div>
               <div class="form-row">
-                <div *ngIf="!isManager; else managerContent">
-                  <h5 class="point-content">- Awarded by <a href="javascript:void(0)" (click)="onUserClick(transaction?.sourceUserId)">{{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.lastName}}</a> on {{transaction?.createdAt | date:'longDate'}}</h5>
+                <div class="col-12">
+                  <h5 class="point-content">Request date: {{purchaseRequest?.createdAt | date:'longDate'}}</h5>
+
                 </div>
-                <ng-template #managerContent>
-                  <h5 class="point-content">- Awarded to <a href="javascript:void(0)" (click)="onUserClick(transaction?.targetUserId)">{{(userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]?.lastName}}</a> on {{transaction?.createdAt | date:'longDate'}}</h5>
+              </div>
+              <div class="form-row">
+                <div class="col-12">
+                  <div *ngIf="purchaseRequest.status === 'pending'">
+                    <h5 class="point-content">Request status: <span class="color-yellow font-weight-bold">{{purchaseRequest.status | uppercase}}</span></h5>
+                  </div>
+                  <div *ngIf="purchaseRequest.status === 'approved'">
+                    <h5 class="point-content">Request status: <span class="color-green font-weight-bold">{{purchaseRequest.status | uppercase}}</span></h5>
+                  </div>
+                  <div *ngIf="purchaseRequest.status === 'declined' || purchaseRequest.status === 'cancelled'">
+                    <h5 class="point-content">Request status: <span class="color-red font-weight-bold">{{purchaseRequest.status | uppercase}}</span></h5>
+                  </div>
+                  <div *ngIf="purchaseRequest.status === 'fulfilled'">
+                    <h5 class="point-content">Request status: <span class="color-blue font-weight-bold">{{purchaseRequest.status | uppercase}}</span></h5>
+                  </div>
+                </div>
 
-                </ng-template>
-
+              </div>
+              <div class="form-row text-center margin-top-10">
+                <div class="col-12">
+                  <button type="button" class="btn btn-danger btn-sm">CANCEL REQUEST</button>
+                </div>
 
               </div>
             </div>
           </div>
-          <div class="col-2 textr y-margin-auto">
-            <h3 class="point-value">{{transaction?.amount}}pts</h3>
-          </div>
+
         </div>
       </div>
     </div>
 
     <div class="row justify-content-md-center">
-      <div *ngIf="(pointItemTransactions$ | async)?.length >= showLimit; else noMore" >
-        Displaying {{showLimit}} out of {{(pointItemTransactions$ | async)?.length}} points awards. <a href="javascript:void(0)" (click)="showLimit = showLimit + 6">Show more...</a>
+      <div *ngIf="(navigationService.purchaseRequestDataSource$ | async)?.length >= showLimit; else noMore" >
+        Displaying {{showLimit}} out of {{(navigationService.purchaseRequestDataSource$ | async)?.length}} purchase requests. <a href="javascript:void(0)" (click)="showLimit = showLimit + 6">Show more...</a>
       </div>
       <ng-template #noMore>
-        Displaying all {{(pointItemTransactions$ | async)?.length}} points awards.
+        Displaying all {{(navigationService.purchaseRequestDataSource$ | async)?.length}} purchase requests.
       </ng-template>
     </div>
 
   </div>
 
-  <ng-template #noTransactions>
+  <ng-template #noPurchaseRequests>
     <div class="row justify-content-md-center ">
       <div class="col-10 achievlist point-item-container">
         <div class="row">
-          No points awards yet...
+          No purchase requests yet...
         </div>
       </div>
     </div>

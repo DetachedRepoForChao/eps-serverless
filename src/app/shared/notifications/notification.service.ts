@@ -132,7 +132,7 @@ export class NotificationService implements OnInit {
             event: notificaion.event,
             description: notificaion.Description,
             groupid: notificaion.groupId,
-            status:notificaion.status,
+            status: notificaion.status,
           };
           API.post(this.apiName, this.apiPath + '/setNotificationsToGroup', myInit).then(data => {
             console.log(`${functionFullName}: successfully set data from API`);
@@ -144,4 +144,11 @@ export class NotificationService implements OnInit {
     });
   }
 
+<<<<<<< HEAD
+=======
+  setNotificationToPerson(){
+
+  }
+
+>>>>>>> b6b30731f3789528af4426f69b1b6a4f6459e7fd
 }
