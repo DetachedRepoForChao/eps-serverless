@@ -9,6 +9,9 @@ import {StoreItemService} from '../../entity-store/store-item/state/store-item.s
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
 import {MatSort, MatTableModule, MatTableDataSource, MatDialog} from '@angular/material';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
+import {Router } from '@angular/router';
+import {NavigationService} from '../../shared/navigation.service';
+
 
 import { from } from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
@@ -51,6 +54,8 @@ export class ConfirmItemPurchaseComponent implements OnInit {
                 private storeItemService: StoreItemService,
                 public dialog: MatDialog,
                 public currentUserQuery: EntityCurrentUserQuery,
+                private router: Router,
+                private navigationService: NavigationService,
                 private userHasStoreItemQuery: UserHasStoreItemQuery) { }
 
 
@@ -101,8 +106,10 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
   }
 
-  declineToggle(event) {
-    console.log(event);
+  cancelApproval(): void {
+    console.log('cancelled');
+    this.router.navigate(['/store']);
+
   }
 
   test() {
@@ -120,7 +127,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
-      data: "Would you like to continue?"
+      data: "Would you like to save your changes?"
     });
 
     dialogRef.afterClosed().subscribe(result => {
