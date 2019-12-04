@@ -320,7 +320,7 @@ const getUsersPublicDetails = function () {
       'email', 'gender', 'phone', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
       'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
     where: {
-      securityRoleId: [1, 2],
+      securityRoleId: [1, 2, 3],
       active: 1,
     },
     order: [

@@ -5,18 +5,18 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header justify-content-center">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        <button id="button_close" type="button" class="close" data-dismiss="modal" aria-hidden="true">
           <i class="tim-icons icon-simple-remove"></i>
         </button>
         <h4 class="title title-up">Special Alert</h4>
       </div>
       <div class="modal-body">
-        <p>{{showContent}}
+        <p>{{AlertDetail.description}}
         </p>
       </div>
       <div class="modal-footer" style="align-items: center;">
         <!-- <button type="button" class="btn btn-default">Nice Button</button> -->
-        <button type="button" class="btn btn-danger" (click)="shownext()">Next</button>
+        <button id="alert-button" type="button" class="btn btn-danger" (click)="shownext(AlertDetail)">Next</button>
       </div>
     </div>
   </div>

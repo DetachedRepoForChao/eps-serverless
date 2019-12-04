@@ -7,7 +7,9 @@ import { Department } from '../../../shared/department.model';
 import { forkJoin, Observable } from 'rxjs';
 import { EntityUserService } from 'src/app/entity-store/user/state/entity-user.service';
 import { Notification } from 'src/app/shared/notifications/notification';
+import { NotifierService } from 'angular-notifier';
 
+declare var $: any;
 @Component({
   selector: 'app-notification-card',
   templateUrl: './notification-card.component.html',
@@ -28,7 +30,8 @@ export class NotificationCardComponent implements OnInit {
 
   constructor(private notificationService: NotificationService,
                   private departmentService: DepartmentService,
-                 private userService: EntityUserService,) { }
+                 private userService: EntityUserService,
+                  private notifierService: NotifierService,) { }
 
   ngOnInit() {
     this.userService.cacheUsers().subscribe();
@@ -40,12 +43,17 @@ export class NotificationCardComponent implements OnInit {
 
   sendNotification(){
      this.notification.Title = this.userForm.value['title'];
-    this.notification.Description = this.userForm.value['content'];
-    this.notification.groupId = this.userForm.value['department'];
+     this.notification.Description = this.userForm.value['content'];
+     this.notification.groupId = this.userForm.value['department'];
      this.notification.event = 'Alert'
      this.notification.status = '1';
      this.notificationService.setNotificationToGroup(this.notification).subscribe(result => {
-          console.log(result)
+        if (result.status==200){
+            this.notifierService.notify('success',"Success Send Notification");
+            $('#close_modal').click();
+        }else {
+            this.notifierService.notify('error', "Fail to set Notification");
+        }
      });
   }
 
