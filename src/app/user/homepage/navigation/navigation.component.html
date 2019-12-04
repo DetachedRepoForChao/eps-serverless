@@ -333,15 +333,15 @@
 <!--        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'homepage']">-->
         <button type="button" class="btn btn-primary btn-icon btn-round" (click)="navigateHome()">
 <!--        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user']">-->
-          <i class="fas fa-home" title="home"></i>
+          <i class="fas fa-home" title="Home"></i>
         </button>
         <!----- Store ---->
         <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'store']">
-          <i class="fas fa-shopping-cart" title="store"></i>
+          <i class="fas fa-shopping-cart" title="Store"></i>
         </button>
         <!----- Settings---->
         <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', (currentUser$ | async)[0]?.username]">
-          <i class="tim-icons icon-settings-gear-63" title="settings"></i>
+          <i class="tim-icons icon-settings-gear-63" title="Settings"></i>
         </button>
 <!--        <div class="modal fade" id="settingsModal" role="dialog">
           <div class="modal-dialog">
@@ -364,7 +364,7 @@
 
         <!----- Log out ---->
         <button type="button" class="btn btn-danger btn-icon btn-round" (click)="onLogout()">
-          <i class="fas fa-door-open" title="logoff"></i>
+          <i class="fas fa-door-open" title="Logoff"></i>
         </button>
         <!--        <i class="tim-icons icon-bell-55" title="notifications" style="margin-left:35px;"> </i>
                 <i class="tim-icons icon-settings-gear-63" title="settings" style="margin-left:35px;"></i>
