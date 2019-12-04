@@ -1524,10 +1524,10 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
           const status = req.body.status;
           ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
             .then(data => {
-              res.json({ status: 'get call succeed!', data: data });
+              res.json({ status: 200, data: data });
             })
             .catch(err => {
-              res.json({ status: 'post call failed!', error: err });
+              res.json({ status: 500, data: err });
             });
         })
     } else {

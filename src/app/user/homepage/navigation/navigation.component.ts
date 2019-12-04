@@ -15,6 +15,7 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {NotificationService} from '../../../shared/notifications/notification.service';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {NavigationService} from '../../../shared/navigation.service';
+import { NotifierService } from 'angular-notifier';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -51,6 +52,7 @@ export class NavigationComponent implements OnInit {
               private authService: AuthService,
               private notificationService: NotificationService,
               private navigationService: NavigationService,
+              
               ) { }
 
   ngOnInit() {
