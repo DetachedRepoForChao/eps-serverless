@@ -20,17 +20,19 @@ import {SecurityRole} from '../../../../shared/securityrole.model';
 import {Department} from '../../../../shared/department.model';
 import {FormGroup} from '@angular/forms';
 import {environment} from '../../../../../environments/environment';
-import {AllCommunityModules} from '@ag-grid-community/all-modules';
+import {AllCommunityModules, Module} from '@ag-grid-community/all-modules';
 import { AgGridAngular } from '@ag-grid-community/angular';
 import { DepartmentService } from '../../../../shared/department.service';
-
+import '@ag-grid-community/all-modules/dist/styles/ag-grid.css';
+import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
+import { GridApi } from 'ag-grid-community';
 
 
 
 @Component({
     selector: 'app-report',
     templateUrl: './report.component.html',
-    styleUrls: ['./report.component.scss']
+    styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit {
   @ViewChild('agGrid') agGrid: AgGridAngular;
@@ -39,6 +41,11 @@ export class ReportComponent implements OnInit {
   user2: any;
   userEntity: string;
   reportUsers$: any;
+  public gridApi;
+  public rowClassRules;
+  public modules: Module[] = AllCommunityModules;
+  private gridColumnApi;
+
 
 
 
@@ -48,9 +55,18 @@ export class ReportComponent implements OnInit {
     public entityCurrentUserQuery: EntityCurrentUserQuery,
     public achievementQuery: AchievementQuery,
     public entityuserQuery: EntityUserQuery,
-    public departmentService: DepartmentService
+    public departmentService: DepartmentService,
 
-  ) {}
+
+  ) {
+    this.rowClassRules = {
+      "points-warning": function(params) {
+        var points = params.data.points;
+        return points > 1000 && points <= 3000;
+      },
+      "points-breach": "data.points > 6000"
+    };
+  }
 
   ngOnInit() {
     this.entityuserQuery.selectHasCache()
@@ -58,16 +74,23 @@ export class ReportComponent implements OnInit {
       if (result) {
         this.users = this.entityuserQuery.getAll();
             // tslint:disable-next-line: forin
+        console.log(this.users)
         var strMap = [];
         let dp = new Map();
         let mapu = new Map();
           for ( let i = 0; i < this.users.length; i++){
+              this.departments = this.departmentService.getDepartmentById(this.users[i].departmentId)
+              console.log(this.departments)
+              console.log(this.users[i].department.Name)
               mapu[i]={
                 'username' : this.users[i].username,
                 'points':this.users[i].points,
                 'position':this.users[i].position,
                 'lastName':this.users[i].lastName,
-                'country':this.users[i].country,
+                'email':this.users[i].email,
+                'phoneNumber':this.users[i].phoneNumber,
+                'department':this.users[i].department.Name,
+                'role':this.users[i].securityRole.Name
                 // 'departmentName':
               }
               strMap.push(mapu[i])
@@ -81,13 +104,51 @@ export class ReportComponent implements OnInit {
 
   // tslint:disable-next-line: member-ordering
   columnDefs = [
-    {headerName: 'Username', field: 'username', sortable: true, filter: true,checkboxSelection: true},
-    {headerName: 'Points', field: 'points', sortable: true, filter: true},
-    {headerName: 'Positions', field: 'position', sortable: true, filter: true},
-    {headerName: 'LastName', field: 'lastName', sortable: true, filter: true},
-    {headerName: 'Country', field: 'country', sortable: true, filter: true},
-    {headerName: 'departments', field: 'departmentName', sortable: true, filter: true}
+    {
+      headerName:'USER INFO',
+      children:[
+        {headerName: 'Username', field: 'username', sortable: true, filter: true,checkboxSelection: true,},
+        {headerName: 'Points', field: 'points', sortable: true, filter: true,editable: true},
+        {headerName: 'Positions', field: 'position', sortable: true, filter: true},
+      ]
+    },
+    {
+      headerName:'CONTACT INFO',
+      children:
+      [
+        {headerName: 'LastName', field: 'lastName', sortable: true, filter: true},
+        {headerName: 'Email', field: 'email', sortable: true, filter: true},
+        {headerName: 'PhoneNumber', field: 'phoneNumber', sortable: true, filter: true},
+      ]
+    },
+    {
+      headerName:'OFFICE INFO',
+      children:
+      [
+        {headerName: 'department', field: 'department', sortable: true, filter: true},
+        {headerName: 'role', field: 'role', sortable: true, filter: true}
+      ]
+    }
 ];
+
+// tslint:disable-next-line: member-ordering
+showToolPanel = {
+  toolPanels: [
+    {
+      id: "columns",
+      labelDefault: "Columns",
+      labelKey: "columns",
+      iconKey: "columns",
+      toolPanel: "agColumnsToolPanel",
+      toolPanelParams: {
+        toolPanelSuppressRowGroups: true,
+        toolPanelSuppressValues: true,
+        toolPanelSuppressPivots: true,
+        toolPanelSuppressPivotMode: true
+      }
+    }
+  ]
+};
 
   // tslint:disable-next-line: member-ordering
 
@@ -102,7 +163,19 @@ export class ReportComponent implements OnInit {
     const selectedDataStringPresentation = selectedData.map( node => node.username + ' ' + node.points).join(', ');
     alert(`Selected nodes: ${selectedDataStringPresentation}`);
 }
+  // tslint:disable-next-line: member-ordering
+
+  onBtExport() {
+    var params={
+        fileName: document.querySelector('#fileName').textContent,
+    }
+    this.gridApi.exportDataAsCsv(params);
+  }
+  onGridReady(params) {
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
+  }
 
   // tslint:disable-next-line: member-ordering
-  modules = AllCommunityModules;
+
 }

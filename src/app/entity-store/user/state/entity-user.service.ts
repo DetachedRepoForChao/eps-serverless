@@ -206,7 +206,7 @@ export class EntityUserService {
               const preferredName = usersMerged[i].preferredName;
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
-              //const pointsPool = (+usersMerged[i].securityRole.id === 2) ? usersMerged[i].pointPool.pointsRemaining : null;
+              // const pointsPool = (+usersMerged[i].securityRole.id === 2) ? usersMerged[i].pointPool.pointsRemaining : null;
               const preferredPronoun = usersMerged[i].preferredPronoun;
               const birthdate = (usersMerged[i].birthdatePublic) ? usersMerged[i].dateOfBirth : null;
               const email = (usersMerged[i].emailPublic) ? usersMerged[i].email : null;
