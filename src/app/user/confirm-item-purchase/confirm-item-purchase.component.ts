@@ -7,14 +7,17 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatSort, MatTableModule, MatTableDataSource, MatDialog} from '@angular/material';
+import {MatSort, MatTableModule, MatTableDataSource, MatDialog, MatTable} from '@angular/material';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
 import {Router } from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
 
 
-import { from } from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {UserHasStoreItemModel} from '../../entity-store/user-has-store-item/state/user-has-store-item.model';
+import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
+import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 
 declare var $: any;
 
@@ -24,18 +27,20 @@ declare var $: any;
   styleUrls: ['./confirm-item-purchase.component.css']
 })
 export class ConfirmItemPurchaseComponent implements OnInit {
+  @ViewChild('requestTable') requestTable: MatTable<UserHasStoreItemModel>;
   componentName = 'confirm-item-purchase.component';
 
 
-  currentUser$;
+  currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser;
   items: StoreItemModel[] = [];
   numRows: number;
   rows = [];
-  requestedStoreItem;
+  requestedStoreItem: UserHasStoreItemModel;
   dialogResult = " ";
-  managerRequests$;
-  displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest'];
+  managerRequests$: Observable<UserHasStoreItemModel[]>;
+  displayedColumns = ['createdAt', 'userUsername', 'storeItemName', 'status', 'action'];
+
   approveOptions = [
     {name: 'Approve', checked: false},
     {name: 'Decline', checked: false},
@@ -48,6 +53,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
+                private entityUserQuery: EntityUserQuery,
                 private userHasStoreItemService: UserHasStoreItemService,
                 private storeItemStore: StoreItemStore,
                 private storeItemQuery: StoreItemQuery,
@@ -70,11 +76,13 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    console.log(this.requestTable);
 
     this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemManagerRecords().subscribe(() => {
+    this.userHasStoreItemService.cacheUserHasStoreItemManagerRecords().subscribe((result) => {
+      console.log(result);
     });
 
     this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
@@ -84,19 +92,20 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
 
   approvalToggle(row, event){
+    console.log(this.requestTable);
     console.log('row:');
     console.log(row);
     console.log('event:');
     console.log(event);
     const approveItem = {
       item: row,
-      approveAction: event.value.name
+      approveAction: event.value
     };
 
     if (this.approveList.find(x => x.item === row)) {
       console.log(`Record ID ${row.recordId} already exists in the approveList`);
       console.log(this.approveList.find(x => x.item === row));
-      this.approveList.find(x => x.item === row).approveAction = event.value.name;
+      this.approveList.find(x => x.item === row).approveAction = event.value;
     } else {
       this.approveList.push(approveItem);
     }

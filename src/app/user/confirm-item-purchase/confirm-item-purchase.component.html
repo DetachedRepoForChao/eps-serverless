@@ -24,24 +24,57 @@
 
                   <div>
                     <mat-table  #requestTable [dataSource]="managerRequests$" matSort>
-                      <ng-container matColumnDef="recordId">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Request ID </mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.recordId}}</mat-cell>
+                      <ng-container matColumnDef="createdAt">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header >Request Date</mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.createdAt | date:'longDate'}}</mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="userUsername">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Username </mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.userUsername}}</mat-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Employee </mat-header-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel">
+                          <div class="col-12">
+                            <div class="row">
+                              <div class="col-3">
+                                <img class="rounded-circle avatar-img" [src]="(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.avatarResolvedUrl">
+                              </div>
+                              <div class="col-9">
+                                <div class="row">
+                                  Name: {{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}
+                                </div>
+                                <div class="row">
+                                  Email: {{UserHasStoreItemModel.userEmail}}
+                                </div>
+                                <div class="row">
+                                  Department: {{(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.department.Name}}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+
+                        </mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef=storeItemName>
                         <mat-header-cell *matHeaderCellDef mat-sort-header> Item </mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemName}}</mat-cell>
-                      </ng-container>
-
-                      <ng-container matColumnDef="storeItemCost">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Item Cost </mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.storeItemCost}}</mat-cell>
+                        <mat-cell *matCellDef="let UserHasStoreItemModel">
+                          <div class="col-12">
+                            <div class="row">
+                              <div class="col-3">
+                                <img class="avatar-img" [src]="(storeItemQuery.selectStoreItemById(UserHasStoreItemModel.storeItemId) | async)[0]?.imageResolvedUrl">
+                              </div>
+                              <div class="col-9">
+                                <div class="row">
+                                  {{UserHasStoreItemModel.storeItemName}}
+                                </div>
+                                <div class="row">
+                                  Cost: {{UserHasStoreItemModel.storeItemCost}}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </mat-cell>
                       </ng-container>
 
                       <ng-container matColumnDef="status">
@@ -49,13 +82,16 @@
                         <mat-cell *matCellDef="let UserHasStoreItemModel"> {{UserHasStoreItemModel.status}}</mat-cell>
                       </ng-container>
 
-                      <ng-container matColumnDef="acceptRequest">
+                      <ng-container matColumnDef="action">
                         <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel">
-                          <mat-radio-group [ngModel]="approveOptions">
-                          <mat-radio-button *ngFor="let approveOption of approveOptions" [checked]="approveOption.checked" (change)="$event ? approvalToggle(UserHasStoreItemModel, $event) : null" [(ngModel)]="approveOption" [value]="approveOption" name="approve-option" ngDefaultControl>
-                          {{approveOption.name}}
-                        </mat-radio-button>
+                          <mat-radio-group >
+                            <mat-radio-button [value]="'Approve'" (change)="approvalToggle(UserHasStoreItemModel, $event)">Approve</mat-radio-button>
+                            <mat-radio-button [value]="'Decline'" (change)="approvalToggle(UserHasStoreItemModel, $event)">Decline</mat-radio-button>
+                            <mat-radio-button checked [value]="'Pending'" (change)="approvalToggle(UserHasStoreItemModel, $event)">Pending</mat-radio-button>
+<!--                            <mat-radio-button *ngFor="let approveOption of approveOptions" [checked]="approveOption === approveOptions[0]" (change)="approvalToggle(UserHasStoreItemModel, $event)" [value]="approveOption">
+                              {{approveOption.name}}
+                            </mat-radio-button>-->
                           </mat-radio-group>
                         </mat-cell>
                       </ng-container>
