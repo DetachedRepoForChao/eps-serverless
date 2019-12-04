@@ -4,7 +4,7 @@
     <div class="card card-coin card-plain card-custom">
       <div class="card-body">
         <div class="row profile-body">
-          <div class="col-2 text-left avatar-col circle-container">
+          <div class="col-lg-2 col-md-2 col-sm-2 text-left avatar-col circle-container">
             <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
               <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
                    alt="Avatar"
@@ -27,12 +27,12 @@
 
 
           </div>
-          <div class="col-5 text-left profile-details">
+          <div class="col-lg-5 col-md-5 col-sm-5 text-left profile-details">
             <div class="row">
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="mb-1 line-height-3 font-weight-200">Name:</div>
               </div>
-              <div class="col-8">
+              <div class="col-lg-8 col-md-8 col-sm-8">
                 <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
                   <div>{{(currentUser$ | async)[0]?.preferredName}}</div>
                 </div>
@@ -42,32 +42,32 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="mb-1 line-height-3 font-weight-200">Username:</div>
               </div>
-              <div class="col-8">
+              <div class="col-lg-8 col-md-8 col-sm-8">
                 <div>{{(currentUser$ | async)[0]?.username}}</div>
               </div>
             </div>
             <div class="row">
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="mb-1 line-height-3 font-weight-200">Department:</div>
               </div>
-              <div class="col-8">
+              <div class="col-lg-8 col-md-8 col-sm-8">
                 <div>{{(currentUser$ | async)[0]?.department.Name}}</div>
               </div>
             </div>
 
           </div>
 
-          <div class="col-3 profile-points-section">
+          <div class="col-lg-3 col-md-3 col-sm-3 profile-points-section">
             <div [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
                  matTooltipPosition="above">
               <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                   <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
                 </div>
-                <div class="col-4">
+                <div class="col-lg-4 col-md-4 col-sm-4">
                   <div *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
                     <div class="mb-0">{{(currentUser$ | async)[0]?.points}}</div>
                   </div>
@@ -84,20 +84,20 @@
 
             </div>
             <div class="row">
-              <div class="col-6">
+              <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="mb-1 line-height-3 font-weight-200">Trophies:</div>
               </div>
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
                   {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-6">
+              <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="mb-1 line-height-3 font-weight-200">Rank:</div>
               </div>
-              <div class="col-4">
+              <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="mb-0" *ngIf="(userQuery.selectLoading() | async) === false">
                   {{(leaderboardUsers$ | async).indexOf((userQuery.selectUser((currentUserQuery.selectAll() | async)[0]?.username) | async)[0]) + 1}}
                 </div>
