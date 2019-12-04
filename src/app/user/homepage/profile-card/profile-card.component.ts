@@ -112,6 +112,7 @@ export class ProfileCardComponent implements OnInit {
             observer.next(user[0].pointsBalance);
             observer.complete();
           } else {
+            observer.next(0);
             observer.complete();
           }
 

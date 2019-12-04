@@ -1,12 +1,14 @@
 .glow {
   font-size: 16px;
   color: #fff;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
   text-align: center;
-  -webkit-animation: glow 1s ease-in-out infinite alternate;
-  -moz-animation: glow 1s ease-in-out infinite alternate;
-  animation: glow 1s ease-in-out infinite alternate;
+  //-webkit-animation: glow 1s ease-in-out infinite alternate;
+  //-moz-animation: glow 1s ease-in-out infinite alternate;
+  //animation: glow 1s ease-in-out infinite alternate;
 }
 
+/*
 @-webkit-keyframes glow {
   from {
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
@@ -15,6 +17,7 @@
     text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
   }
 }
+*/
 
 .achievlist:hover {
   background-color: rgba(63, 51, 112, 0.81);
@@ -27,4 +30,29 @@
   background-color: #412584;
   margin-bottom: 5px;
   border-radius: 25px;
+}
+
+
+.max-height-600 {
+  max-height: 600px;
+}
+
+.star-col {
+  line-height: 100px; height: 100px; text-align: center
+}
+
+.award-col {
+  line-height: 100px; height: 100px; text-align: center; padding: 0
+}
+
+.bronze-star {
+  font-size: 40pt; color: #a88218; vertical-align: middle; display: inline-block; line-height: 1.5
+}
+
+.silver-star {
+  font-size: 40pt; color: #c3c3c3; vertical-align: middle; display: inline-block; line-height: 1.5
+}
+
+.gold-star {
+  font-size: 40pt; color: #ffef13; vertical-align: middle; display: inline-block; line-height: 1.5
 }

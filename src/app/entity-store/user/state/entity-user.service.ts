@@ -34,7 +34,8 @@ export class EntityUserService {
 
   constructor(private userStore: UserStore,
               private entityUserQuery: EntityUserQuery,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              ) { }
 
   updateFilter(filter: VISIBILITY_FILTER) {
     this.userStore.update({
@@ -184,6 +185,9 @@ export class EntityUserService {
 
         console.log('usersMerged');
         console.log(usersMerged);
+        usersMerged.forEach(users => {
+          console.log(users.username);
+        });
 
         const usersArray: EntityUserModel[] = [];
         const observables: Observable<any>[] = [];
@@ -202,6 +206,7 @@ export class EntityUserService {
               const preferredName = usersMerged[i].preferredName;
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
+              //const pointsPool = (+usersMerged[i].securityRole.id === 2) ? usersMerged[i].pointPool.pointsRemaining : null;
               const preferredPronoun = usersMerged[i].preferredPronoun;
               const birthdate = (usersMerged[i].birthdatePublic) ? usersMerged[i].dateOfBirth : null;
               const email = (usersMerged[i].emailPublic) ? usersMerged[i].email : null;
@@ -242,8 +247,8 @@ export class EntityUserService {
               const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
-              const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
-                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
+              const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points,
+                birthdate, securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
                 preferredName, preferredPronoun, address1, address2, city, country, state, zip, dateOfHire, dateOfTermination, phone,
                 active, sex, gender, quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic,
                 pointsPublic, coreValuesPublic});
@@ -382,10 +387,37 @@ export class EntityUserService {
     });
   }
 
-  getuserName():string []{
-    this.user$= this.getUsers().subscribe()
-    const username:string [] = this.user$.username
-    return username;
+  getUserUsername(){
+    const request$ = this.getUsers()
+      .pipe(tap((users: any) => {
+        console.log(`caching:`);
+        console.log(users);
+
+        // Merge into single array
+        const usersMerged = [];
+        for (let i = 0; i < users[0].users.length; i++) {
+          const newUserObj = users[0].users[i];
+          for (let j = 0; j < users[1].usersCompleteAchievementTotal.length; j++) {
+            if (users[1].usersCompleteAchievementTotal[j].userId === newUserObj.id) {
+              newUserObj['completeAchievementsTotal'] = users[1].usersCompleteAchievementTotal[j].num_complete;
+              break;
+            }
+          }
+
+          usersMerged.push(newUserObj);
+        }
+
+        console.log('usersMerged');
+        console.log(usersMerged);
+        usersMerged.forEach(users => {
+          console.log(users.username);
+        });
+
+      })
+
+    );
+
+
   }
 
 

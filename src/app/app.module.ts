@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { MatDialogModule } from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { AgGridModule } from 'ag-grid-angular';
 
 
@@ -25,7 +25,7 @@ import { UserService } from './shared/user.service';
 import { EventCardComponent }from './user/admin-user/event-card/event-card.component';
 import { ReportComponent } from './user/admin-user/event-card/report/report.component';
 import { AuthGuard } from './auth/auth.guard';
-import { AuthInterceptor } from './auth/auth.interceptor';
+// import { AuthInterceptor } from './auth/auth.interceptor';
 import {RoleGuardService} from './auth/role-guard.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
@@ -54,7 +54,7 @@ import { NgxImageGalleryModule} from 'ngx-image-gallery';
 import { ImageGalleryComponent } from './shared/image-gallery/image-gallery.component';
 import { KeysPipe } from './pipe/keys.pipe';
 import {
-  MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatListModule,
+  MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatListModule, MatSortModule, MatTableModule,
   MatToolbarModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -100,6 +100,11 @@ import {GoogleChartsModule} from 'angular-google-charts';
 import { PlaceholderCardComponent } from './user/homepage/placeholder-card/placeholder-card.component';
 import { ProfileHeaderComponent } from './user/profile/profile-header/profile-header.component';
 import { OtherUserComponent } from './user/profile/other-user/other-user.component';
+import { AlertCardComponent } from './user/homepage/alert-card/alert-card.component';
+import {PointItemComponent} from './shared/point-item/point-item.component';
+import { OtherUserManagerComponent } from './user/profile/other-user-manager/other-user-manager.component';
+import { PointsStoreHeaderComponent } from './user/points-store/points-store-header/points-store-header.component';
+import { PurchaseHistoryComponent } from './user/points-store/purchase-history/purchase-history.component';
 akitaConfig({
   resettable: true
 });
@@ -165,7 +170,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PrivacySettingsComponent,
     PlaceholderCardComponent,
     ProfileHeaderComponent,
-    OtherUserComponent
+    OtherUserComponent,
+    AlertCardComponent,
+    PointItemComponent,
+    OtherUserManagerComponent,
+    PointsStoreHeaderComponent,
+    PurchaseHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -190,6 +200,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatDialogModule,
     MatInputModule,
     MatListModule,
+    MatSortModule,
+    MatTableModule,
     ReactiveFormsModule,
     ImageCropperModule,
     NgxSpinnerModule,
@@ -201,21 +213,23 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     GoogleChartsModule.forRoot(),
   ],
   providers: [
-    {
+/*    {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    },
+    },*/
     AuthGuard,
     RoleGuardService,
     UserService,
     Globals,
+    { provide: MatDialogRef, useValue: {}},
     { provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }},
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG}
   ],
   bootstrap: [AppComponent],
   entryComponents: [AwesomeTooltipComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    PointItemComponent,
   ]
 })
 export class AppModule { }

@@ -24,13 +24,15 @@ const getUserCoreValues = function (userId) {
       console.log(pointTransactionsResult);
       if (pointTransactionsResult.status !== false) {
         for (const pointTransaction of pointTransactionsResult.pointTransactions) {
-          const coreValues = pointTransaction.pointItem.coreValues.split(';');
-          for (let j = 0; j < coreValues.length; j++) {
-            coreValues[j] = coreValues[j].trim();
-          }
+          if (pointTransaction.pointItem) {
+            const coreValues = pointTransaction.pointItem.coreValues.split(';');
+            for (let j = 0; j < coreValues.length; j++) {
+              coreValues[j] = coreValues[j].trim();
+            }
 
-          for (const coreValue of coreValues) {
-            coreValuesList[coreValue] += 1;
+            for (const coreValue of coreValues) {
+              coreValuesList[coreValue] += 1;
+            }
           }
         }
 

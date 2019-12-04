@@ -309,6 +309,10 @@ const getUsersPublicDetails = function () {
       {
         model: Models.SecurityRole,
         attributes: ['id', 'name', 'description']
+      },
+      {
+        model: Models.PointPool,
+        attributes: ['id', 'managerId', 'pointsRemaining']
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
@@ -316,7 +320,7 @@ const getUsersPublicDetails = function () {
       'email', 'gender', 'phone', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
       'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
     where: {
-      securityRoleId: [1, 2],
+      securityRoleId: [1, 2, 3],
       active: 1,
     },
     order: [
@@ -355,6 +359,10 @@ const adminGetUsersDetails = function () {
       {
         model: Models.SecurityRole,
         attributes: ['id', 'name', 'description']
+      },
+      {
+        model: Models.PointPool,
+        attributes: ['id', 'managerId', 'pointsRemaining']
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
@@ -528,4 +536,5 @@ const deleteUser = function (user) {
 };
 
 module.exports.deleteUser = deleteUser;
+
 

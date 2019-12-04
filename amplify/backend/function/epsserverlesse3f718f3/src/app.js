@@ -302,6 +302,8 @@ app.post('/items/deleteUser', function(req, res) {
   });
 });
 
+
+
 // Department Routes
 app.get('/items/departments', function(req, res) {
   const functionName = 'get departments';
@@ -1049,10 +1051,10 @@ app.get('/items/getPointTransaction', function(req, res) {
   });
 });
 
-app.get('/items/getPointTransaction2', function(req, res) {
+app.post('/items/getPointTransaction2', function(req, res) {
   console.log('starting get getPointTransaction2');
 
-  ctrlPointsTransaction.getPointTransaction()
+  ctrlPointsTransaction.getUserPointTransactions(req.body.userId)
     .then(data => {
       res.json({status: 'get call succeed!', data: data.pointTransactions});
     })
@@ -1060,6 +1062,28 @@ app.get('/items/getPointTransaction2', function(req, res) {
       res.json({status: 'get call failed!', error: err});
     });
 });
+
+app.post('/items/getPointTransactionRange', function(req, res) {
+  console.log('starting post getPointTransactionRange');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const startIndex = req.body.startIndex;
+      const numberRecords = req.body.numberRecords;
+      ctrlPointsTransaction.getPointTransactionRange(startIndex, numberRecords)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data.pointTransactions});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 
 app.get('/items/getCurrentUserPointTransactions', function(req, res) {
   console.log('starting get getCurrentUserPointTransactions');
@@ -1093,6 +1117,27 @@ app.post('/items/getUserPointTransactions', function(req, res) {
     if(tokenResult.message === 'Success') {
       const userId = req.body.userId;
       ctrlPointsTransaction.getUserPointTransactions(userId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/getManagerPointTransactions', function(req, res) {
+  console.log('starting post getManagerPointTransactions');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const userId = req.body.userId;
+      ctrlPointsTransaction.getManagerPointTransactions(userId)
         .then(data => {
           res.json({status: 'post call succeed!', data: data});
         })
@@ -1270,10 +1315,10 @@ app.post('/items/newUserHasStoreItemRecord', function(req, res) {
           const storeItemId = req.body.storeItemId;
           ctrlStoreItem.newUserHasStoreItemRecord(requestUser, managerId, storeItemId)
             .then(data => {
-              res.json({status: 'get call succeed!', data: data});
+              res.json({status: 'post call succeed!', data: data});
             })
             .catch(err => {
-              res.json({status: 'get call failed!', error: err});
+              res.json({status: 'post call failed!', error: err});
             });
         });
     } else {
@@ -1282,7 +1327,138 @@ app.post('/items/newUserHasStoreItemRecord', function(req, res) {
   });
 });
 
+app.post('/items/approveStoreItemRequest', function(req, res) {
+  console.log('starting post approveStoreItemRequest');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const managerUser = userResult.user;
+          const request = req.body.request;
+          ctrlStoreItem.approveStoreItemRequest(managerUser, request)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/declineStoreItemRequest', function(req, res) {
+  console.log('starting post declineStoreItemRequest');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const managerUser = userResult.user;
+          const request = req.body.request;
+          const cancelDescription = req.body.cancelDescription;
+          ctrlStoreItem.declineStoreItemRequest(managerUser, request, cancelDescription)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/fulfillStoreItemRequest', function(req, res) {
+  console.log('starting post fulfillStoreItemRequest');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const requestUser = userResult.user;
+          const request = req.body.request;
+          ctrlStoreItem.fulfillStoreItemRequest(requestUser, request)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/cancelStoreItemRequest', function(req, res) {
+  console.log('starting post cancelStoreItemRequest');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const requestUser = userResult.user;
+          const request = req.body.request;
+          const cancelDescription = req.body.cancelDescription;
+          ctrlStoreItem.cancelStoreItemRequest(requestUser, request, cancelDescription)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+
+
+
 // Notifications Routes
+app.get('/items/getAlerts', function (req, res) {
+  console.log('starting get getAlerts');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      // const targetUserId = req.body.targetUserId;
+      console.log(tokenResult.claims)
+      const targetUserId = tokenResult.claims['cognito:username'];
+      console.log("cognito:username:" + targetUserId)
+      ctrlUser.getUserProfile(targetUserId).then(userProfile => {
+        ctrlNotifications.getAlerts(userProfile.user.id)
+          .then(data => {
+            res.json({ status: 'get call succeed!', data: data.notifications });
+          })
+          .catch(err => {
+            res.json({ status: 'post call failed!', error: err });
+          });
+      })
+
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
 app.get('/items/getNotifications', function(req, res) {
   console.log('starting get getNotifications');
 
@@ -1293,13 +1469,16 @@ app.get('/items/getNotifications', function(req, res) {
       console.log(tokenResult.claims)
       const targetUserId = tokenResult.claims['cognito:username'];
       console.log("cognito:username:" + targetUserId)
-      ctrlNotifications.getNotifications(targetUserId)
-        .then(data => {
-          res.json({ status: 'get call succeed!', data: data.notifications });
-        })
-        .catch(err => {
-          res.json({ status: 'post call failed!', error: err });
-        });
+      ctrlUser.getUserProfile(targetUserId).then(userProfile => {
+        ctrlNotifications.getNotifications(userProfile.user.id)
+          .then(data => {
+            res.json({ status: 'get call succeed!', data: data.notifications });
+          })
+          .catch(err => {
+            res.json({ status: 'post call failed!', error: err });
+          });
+      })
+      
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
@@ -1311,22 +1490,20 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      console.log(tokenResult.claims)
-      const targetUserId = tokenResult.claims['cognito:username'];
-      console.log("cognito:username:" + targetUserId)
-
-      const title = req.body.title;
-      const event = req.body.event;
-      const sourceUserId = req.body.sourceUserId;
-      const description = req.body.description;
-
-      ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, sourceUserId)
-        .then(data => {
-          res.json({ status: 'get call succeed!', data: data.notifications });
-        })
-        .catch(err => {
-          res.json({ status: 'post call failed!', error: err });
+      ctrlUser.getUserProfile(tokenResult.claims['cognito:username']).then(user => {
+        const sourceUserId = user.user.id;
+        const title = req.body.title;
+        const event = req.body.event;
+        const targetUserId = req.body.targetUserId;
+        const description = req.body.description;
+        ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, sourceUserId)
+          .then(data => {
+            res.json({ status: 'get call succeed!', data: data.notifications });
+          })
+          .catch(err => {
+            res.json({ status: 'post call failed!', error: err });
         });
+      })
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
@@ -1338,29 +1515,27 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      console.log(tokenResult.claims)
-      const sourceUserId = tokenResult.claims['cognito:username'];
-      console.log("cognito:username:" + sourceUserId)
-
-      const title = req.body.title;
-      const event = req.body.event;
-      // const sourceUserId = req.body.sourceUserId;
-      const description = req.body.description;
-      const GroupId  = req.body.groupid;
-      const status = req.body.status;
-
-      ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
-        .then(data => {
-          res.json({ status: 'get call succeed!', data: data.notifications });
+        ctrlUser.getUserProfile(tokenResult.claims['cognito:username']).then(user => {
+          const sourceUserId = user.user.id;
+          const title = req.body.title;
+          const event = req.body.event;
+          const description = req.body.description;
+          const GroupId  = req.body.groupid;
+          const status = req.body.status;
+          ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
+            .then(data => {
+              res.json({ status: 200, data: data });
+            })
+            .catch(err => {
+              res.json({ status: 500, data: err });
+            });
         })
-        .catch(err => {
-          res.json({ status: 'post call failed!', error: err });
-        });
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
   });
 });
+
 
 app.post('/items/setNotificationSeenTime', function (req, res) {
   console.log('starting get getNotifications');

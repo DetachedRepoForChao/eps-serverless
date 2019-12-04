@@ -36,6 +36,12 @@ export class StoreItemQuery extends QueryEntity<StoreItemState, StoreItemModel> 
     }
   }
 
+  public selectStoreItemById(itemId: number) {
+    return this.selectAll({
+      filterBy: e => e.itemId === itemId,
+    });
+  }
+
   // public getUser(username: string): EntityUserAvatarModel {
 /*  public getCurrentUser() {
     const currentUserAvatar = this.getAll();

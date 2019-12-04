@@ -1,10 +1,6 @@
 const SqlModel = require('../db');
 const Models = SqlModel().Models;
 const sqlUserModel = Models.User;
-const sqlAchievementModel = Models.Achievement;
-const sqlAchievementTransactionModel = Models.AchievementTransaction;
-const sqlUserAchievementProgressModel = Models.UserAchievementProgress;
-const ctrlAchievement = require('./achievement.controller');
 const sqlNotification = Models.Notification;
 const AWS = require('aws-sdk');
 const ctrlDepartment = require('./department.controller');
@@ -47,6 +43,42 @@ const getNotifications = function (targetUserId) {
 
 module.exports.getNotifications = getNotifications;
 
+
+const getAlerts = function (targetUserId) {
+  const functionName = 'getAlert';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlNotification.findAll({
+    where: {
+      targetUserId: targetUserId,
+      event: 'Alert',
+      timeSeen: null,
+    },
+    'order': [
+      ['id', 'DESC'],
+      
+    ]
+  })
+    .then(notificationsResult => {
+      if (!notificationsResult) {
+        console.log(`${functionFullName}: No alert records found`);
+        return { status: 404, message: "No alert records found" };
+      } else {
+        console.log(`${functionFullName}: Retrieved alert records successfully`);
+        console.log(notificationsResult);
+        return { status: 200, notifications: notificationsResult };
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return { status: 500, message: err };
+    });
+};
+
+module.exports.getAlerts = getAlerts;
+
 /**
  *
  * Set up notification  to the target user and based on the role of user.
@@ -57,7 +89,7 @@ const setNotificationsToPerson = function (targetUserId, title, event, descripti
       const functionName = 'setNotificationsToPerson';
       const functionFullName = `${componentName} ${functionName}`;
       console.log(`Start ${functionFullName}`);
-  console.log('statusstatus--------------------------------------------------'+sourceUserId);
+      console.log('statusstatus--------------------------------------------------'+sourceUserId);
       return sqlNotification.create({
             targetUserId: targetUserId,
             title:title,
@@ -81,28 +113,56 @@ exports.setNotificationsToPerson = setNotificationsToPerson;
 
 
 
+async function setGroupNotification(targetUserId, title, event, description, sourceUserId, status){
+      const functionName = 'setNotificationsToPerson';
+      const functionFullName = `${componentName} ${functionName}`;
+      console.log(`Start ${functionFullName}`);
+      console.log('statusstatus--------------------------------------------------' + sourceUserId);
+      await sqlNotification.create({
+      targetUserId: targetUserId,
+      title: title,
+      description: description,
+      audience: 'Group',
+      event: event,
+      timeSeen: null,
+      status: 1,
+      sourceUserId: sourceUserId,
+    })
+}
 
-const setNotificationsToGroup = function (groupID, title, event, description, sourceUserId,status) {
+
+const setNotificationsToGroup =function (groupID, title, event, description, sourceUserId,status) {
   const functionName = 'setNotificationsToGroup';
   const functionFullName = `${componentName} ${functionName}`;
 
   // get the userList by department ID
-
-    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(userList =>{
+  if (groupID == 911) {
+    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(async userList => {
       for (let user of userList) {
-            setNotificationsToPerson(user.id, title, event, description, sourceUserId, status);
-       }
+          await setGroupNotification(user.id, title, event, description, sourceUserId, status);
+      }
       return { status: 200, message: 'success' };
     }).catch(err => {
       console.log('Database error');
       console.log(err);
       return { status: 500, message: err };
     });
-  // console.log(`Start ${functionFullName}`);
-  // for (let user of UserList.users){
-  //   setNotificationsToPerson(user.id, title, event, description, event, sourceUserId, status);
-  // }
+  } else {
+    return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(async userList => {
+      for (let user of userList) {
+        await setGroupNotification(user.id, title, event, description, sourceUserId, status);
+      }
+      return { status: 200, message: 'success' };
+    }).catch(err => {
+      console.log('Database error');
+      console.log(err);
+      return { status: 500, message: err };
+    });
+  }
 }
+
+
+
 
 module.exports.setNotificationsToGroup = setNotificationsToGroup;
 
@@ -275,13 +335,6 @@ const sendAwardPointsEmail = function (targetUserId, sourceUser, pointItem) {
 };
 
 module.exports.sendAwardPointsEmail = sendAwardPointsEmail;
-
-// const setNotificationsToGroup =function(targetGroup,notificaionTitle,event,description,event){
-
-// }
-
-
-// module.exports.setNotificationsToGroup = setNotificationsToGroup;
 
 
 

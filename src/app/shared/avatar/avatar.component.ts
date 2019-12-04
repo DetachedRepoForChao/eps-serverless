@@ -4,13 +4,9 @@ import {AvatarService} from './avatar.service';
 import {LeaderboardService} from '../leaderboard.service';
 import {Globals} from '../../globals';
 import {FeedcardService} from '../feedcard/feedcard.service';
-import {MatTableDataSource} from '@angular/material';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
-
 import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
-import { Achievement } from '../achievement/achievement.model';
-
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 
 @Component({
@@ -73,10 +69,14 @@ export class AvatarComponent implements OnInit {
 
     this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
       console.log(`${functionFullName}: saveResult: ${saveResult}`);
-      if (saveResult === true) {
+      if (saveResult !== false) {
+        console.log('save result !== false');
+        this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
         this.avatarUpload = false;
         this.avatarPreview = true;
-        this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
+
+      } else {
+        console.log('save result !== false');
       }
 
     });
@@ -122,7 +122,7 @@ export class AvatarComponent implements OnInit {
           currentFn.avatarUrl = base64data.toString();
           // currentFn.entityCurrentUserService.updateAvatar(data.avatarUrl);
           currentFn.avatarService.saveUserAvatar(data.result).subscribe((saveResult) => {
-            if (saveResult === true) {
+            if (saveResult !== false) {
               currentFn.achievementService.incrementAchievement('ChangeAvatar').subscribe();
             }
           });

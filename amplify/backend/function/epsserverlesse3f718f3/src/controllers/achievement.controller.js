@@ -80,7 +80,7 @@ const getUserAchievements = function(user) {
       userId: user.id,
       '$achievement.achievementHasRoleAudiences.role_id$': user.securityRoleId
     },
-    attributes: ['id', 'userId', 'achievementId', 'goalProgress', 'status', 'updatedAt'],
+    attributes: ['id', 'userId', 'achievementId', 'goalProgress', 'status', 'updatedAt', 'completedAt', 'acknowledgedAt'],
   })
     .then(userAchievements => {
       if(!userAchievements) {
@@ -166,6 +166,7 @@ const addPointsToAchievementProgress = function (achievementProgressId, amount) 
               console.log(`${functionFullName}: amount to add: ${amount}`);
 
               let status;
+              let completedAt = null;
               let transactionDescription = null;
               let adjustedAmount;
               let newAmount;
@@ -181,12 +182,14 @@ const addPointsToAchievementProgress = function (achievementProgressId, amount) 
                 console.log(`${functionFullName}: achievementProgress.goalProgress + amount: ` +
                   `${(achievementProgress.goalProgress + amount)}`);
                 status = 'complete';
+                completedAt = Date.now();
               } else if ((achievementProgress.goalProgress + amount) >= achievement.cost) {
                 // This will complete the achievement but with a point overflow. Only add enough points
                 // to complete the achievement
                 console.log(`${functionFullName}: This will complete the achievement with an overflow. ` +
                   `Only add enough points to complete the achievement`);
                 status = 'complete';
+                completedAt = Date.now();
                 adjustedAmount =  achievementProgress.goalProgress - achievement.cost;
                 overflowAmount = (achievementProgress.goalProgress + amount) - achievement.cost;
                 transactionDescription = 'overflow: ' + overflowAmount;
@@ -216,7 +219,8 @@ const addPointsToAchievementProgress = function (achievementProgressId, amount) 
                     // Add points to achievement progress
                     return sqlUserAchievementProgressModel.update({
                       goalProgress: newAmount,
-                      status: status
+                      status: status,
+                      completedAt: completedAt
                     }, {
                       where: {
                         id: achievementProgress.id
@@ -510,7 +514,7 @@ const getAchievementProgressById = function (id) {
   console.log(`Start ${functionFullName}`);
 
   return sqlUserAchievementProgressModel.findOne({
-    attributes: ['id','userId', 'achievementId', 'goalProgress', 'status'],
+    attributes: ['id','userId', 'achievementId', 'goalProgress', 'status', 'completedAt', 'acknowledgedAt'],
     where: {
       id: id,
     }
@@ -699,6 +703,7 @@ const acknowledgeAchievementComplete = function (achievementProgressId, userId) 
 
   return sqlUserAchievementProgressModel.update({
     status: 'complete acknowledged',
+    acknowledgedAt: Date.now()
   }, {
     where: {
       id: achievementProgressId,

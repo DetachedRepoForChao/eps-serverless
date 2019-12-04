@@ -76,12 +76,10 @@ export class OtherUserAchievementQuery extends QueryEntity<OtherUserAchievementS
     return notStartedAchievements;
   }
 
-  public getAchievementFamily(achievementFamily: string) {
-    const familyAchievements$ = this.selectAll({
-      filterBy: achievement => achievement.family === achievementFamily
+  public getAchievementFamily(achievementFamily: string, userId: number) {
+    return this.selectAll({
+      filterBy: achievement => (achievement.family === achievementFamily) && (achievement.userId === userId)
     });
-
-    return familyAchievements$;
   }
 
   filterAchievements(): Observable<OtherUserAchievementModel[]> {

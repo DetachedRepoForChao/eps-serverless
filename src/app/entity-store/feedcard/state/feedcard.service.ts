@@ -43,8 +43,8 @@ export class FeedcardService {
     });
   }
 
-  add(feedcardId: number, createAt: any, createUser: string, description: string) {
-    const feedcard = createFeedcardModel({feedcardId, createAt, createUser, description});
+  add(feedcardId: number, createdAt: any, createUser: string, description: string) {
+    const feedcard = createFeedcardModel({feedcardId, createdAt, createUser, description});
   }
 
   // delete(id: ID) {
@@ -56,7 +56,7 @@ export class FeedcardService {
   //   this.featureStore.remove(id);
   // }
 
-  delete(id:ID){
+  delete(id: ID) {
     const functionName = 'delete';
     const functionFullName = '${this.componentName} ${functionName}';
     console.log('start ${functionFullName}');
@@ -68,17 +68,17 @@ export class FeedcardService {
     this.feedcardStore.reset();
   }
 
-  modify(feedcardId:number,description:string,createAt:string,createUser:string){
-    const functionName = 'delete';
-    const functionFullName = '${this.componentName} ${functionName}';
-    console.log('start ${functionFullName}');
-    console.log(`${functionFullName}: update ${feedcardId}`);
+  modify(feedcardId: number, description: string, createdAt: string, createUser: string) {
+    const functionName = 'modify';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`start ${functionFullName}`);
+    console.log(`${functionFullName}: modify ${feedcardId}`);
 
-    this.feedcardStore.update((e)=>e.feedcardID==feedcardId,{
-      description:description,
-      createAt:create,
-      createUser:createUser
-    })
+    this.feedcardStore.update(e => e.feedcardID === feedcardId, {
+      description: description,
+      createdAt: createdAt,
+      createUser: createUser
+    });
   }
 
   getFeedcards(): Observable<any> {
@@ -130,9 +130,9 @@ export class FeedcardService {
         for (let i = 0; i < feedcards.length; i++) {
           const feedcardId = feedcards[i].feedcard.id;
           const description = feedcards[i].feedcard.description;
-          const createAt = feedcards[i].feedcard.id;
+          const createdAt = feedcards[i].feedcard.id;
           const createUser = feedcards[i].createUser;
-          const feedcard = createFeedcardModel({feedcardId,description,createAt,createUser});
+          const feedcard = createFeedcardModel({feedcardId, description, createdAt, createUser});
           feedcardsArray.push(feedcard);
         }
 

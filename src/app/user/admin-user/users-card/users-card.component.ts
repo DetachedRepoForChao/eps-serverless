@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Globals} from '../../../globals';
-import {AchievementComponent} from '../../../shared/achievement/achievement.component';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {AuthService} from '../../../login/auth.service';
 import {resetStores} from '@datorama/akita';
@@ -61,6 +60,8 @@ export class UsersCardComponent implements OnInit {
         })
       );
 
+    const observables: Observable<any>[] = [];
+    observables.push(departments$);
     // Read in the list of security roles from the SecurityRole service
     const securityRoles$ = this.securityRoleService.getSecurityRoles()
       .pipe(
@@ -69,8 +70,8 @@ export class UsersCardComponent implements OnInit {
         })
       );
 
-    const observables: Observable<any>[] = [];
-    observables.push(departments$);
+    // const observables: Observable<any>[] = [];
+    // observables.push(departments$);
     observables.push(securityRoles$);
 
     forkJoin(observables)
