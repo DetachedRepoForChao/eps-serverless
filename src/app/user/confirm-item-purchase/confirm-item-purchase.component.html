@@ -30,11 +30,11 @@
                       </ng-container>
 
                       <ng-container matColumnDef="userUsername">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Employee </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header class="mat-header-cell-confirm-item-purchase" > Employee </mat-header-cell>
                         <mat-cell *matCellDef="let UserHasStoreItemModel">
                           <div class="col-12">
                             <div class="row">
-                              <div class="col-3">
+                              <div class="col-3 img-col">
                                 <img class="rounded-circle avatar-img" [src]="(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.avatarResolvedUrl">
                               </div>
                               <div class="col-9">
@@ -61,7 +61,7 @@
                         <mat-cell *matCellDef="let UserHasStoreItemModel">
                           <div class="col-12">
                             <div class="row">
-                              <div class="col-3">
+                              <div class="col-3 img-col">
                                 <img class="avatar-img" [src]="(storeItemQuery.selectStoreItemById(UserHasStoreItemModel.storeItemId) | async)[0]?.imageResolvedUrl">
                               </div>
                               <div class="col-9">

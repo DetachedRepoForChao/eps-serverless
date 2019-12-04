@@ -19,8 +19,30 @@ table{
 }
 
 .avatar-img {
+  margin-top: auto;
+  margin-bottom: auto;
   width: 45px !important;
 }
+
+.img-col {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+/*
+
+mat-header-cell {
+  text-align: center !important;
+}
+
+.mat-header-cell {
+  text-align: center !important;
+}
+
+::ng-deep .mat-header-cell .mat-sort-header-container {
+  text-align: center !important;
+  justify-content: flex-end;
+}
+*/
 
 .mat-column-createdAt {
   word-wrap: break-word !important;
