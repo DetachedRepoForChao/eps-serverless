@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card card-coin card-plain">
     <div class="card-body" *ngIf="!isCardLoading; else cardLoading">
-      <div class="col-md-12">
+      <div class="col-lg-12 col-md-12 col-sm-12">
         <h4 class="text-uppercase">Award Employee Points</h4>
         <div class="container">
           <div class="row">
@@ -35,7 +35,7 @@
             </div>
           </div>
           <div *ngIf="appliedFilters.length > 0" class="row filter-row">
-            <div class="col-8">
+            <div class="col-lg-8 col-md-8 col-sm-8">
               Applied Filters
               <div *ngFor="let filter of appliedFilters" class="col-2 filter-col">
                 <span class="filter-item" (click)="toggleCoreValueButtonFilter(filter)">
@@ -48,14 +48,14 @@
 
         <!------- Search form -------->
         <div class="row heighted">
-          <div class="col-md-4">
+          <div class="col-lg-4 col-md-4 col-sm-4">
             <form class="form py-4">
 
               <input class="form-control form-rounded w-100 border-neutral" type="text"
                      placeholder="Search Point Items" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
             </form>
           </div>
-          <div class="col-md-5 fluid">
+          <div class="col-lg-5 col-md-5 col-sm-5 fluid">
             <form class="form py-4">
 
               <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
@@ -92,7 +92,7 @@
             </div>
           </ng-template>-->
 
-          <div class="col-md-3 search">
+          <div class="col-lg-3 col-md-3 col-sm-3 search">
             <!-----Toggle button for multi-users-->
 <!--            <mat-slide-toggle class="test" [color]="color" [checked]="toggled" [disabled]="disabled"
               (change)="onChange()">Select Multiple Employees
@@ -160,7 +160,7 @@
           <div class="row">
             <div class="container" [class.show]="show">
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-4 col-sm-4">
                   <div class="container text-center">
                     <form #giftPointsForm="ngForm" class="form text-left">
                       <div class="selection" *ngIf="filteredPointItemList.length === 0; else filteredList">
@@ -190,7 +190,7 @@
                     </form>
                   </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="row">
                     <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
                       <div *ngIf="i <= showLimit">
@@ -201,12 +201,12 @@
 
                           </span>
                           <div class="row togstyle">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-2">
                               <mat-checkbox *ngIf="toggled" [color]="'warn'" (click)="$event.stopPropagation()"
                                             (change)="$event ? selection.toggle(user) : null"
                                             [checked]="selection.isSelected(user)"></mat-checkbox>
                             </div>
-                            <div class="col-10 textr">
+                            <div class="col-lg-10 col-md-10 col-sm-10 textr">
                               <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
                             </div>
                           </div>
@@ -220,9 +220,9 @@
                 <!--              <div class="col-md-1"></div>-->
               </div>
               <div class="row">
-                <div class="col-md-4"></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"></div>
 
-                <div class="col-md-4 text-center">
+                <div class="col-lg-4 col-md-4 col-sm-4 text-center">
                   <div *ngIf="!showFlag; else buttonViewLess">
                     <button class="btn btn-success textc" (click)="showMore()">View More</button>
                   </div>
@@ -230,8 +230,7 @@
                     <button class="btn btn-success textc" (click)="showLess()">View Less</button>
                   </ng-template>
                 </div>
-
-                <div class="col-md-4"></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"></div>
               </div>
             </div>
           </div>
