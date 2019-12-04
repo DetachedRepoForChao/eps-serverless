@@ -759,7 +759,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull:false,
       field: 'targetUserId'
-    }, 
+    },
     sourceUserId: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
@@ -1239,6 +1239,16 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'cancelledAt'
+    },
+    readyForPickupAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'ready_for_pickupAt'
+    },
+    pickedUpAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'picked_upAt'
     },
   }, {
     tableName: 'user_has_store_item'

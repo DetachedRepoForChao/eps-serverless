@@ -1352,6 +1352,31 @@ app.post('/items/approveStoreItemRequest', function(req, res) {
   });
 });
 
+app.post('/items/setStoreItemRequestReadyForPickup', function(req, res) {
+  console.log('starting post setStoreItemRequestReadyForPickup');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const managerUser = userResult.user;
+          const request = req.body.request;
+          ctrlStoreItem.setStoreItemRequestReadyForPickup(managerUser, request)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.post('/items/declineStoreItemRequest', function(req, res) {
   console.log('starting post declineStoreItemRequest');
 
@@ -1390,6 +1415,31 @@ app.post('/items/fulfillStoreItemRequest', function(req, res) {
           const requestUser = userResult.user;
           const request = req.body.request;
           ctrlStoreItem.fulfillStoreItemRequest(requestUser, request)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/setStoreItemRequestPickedUp', function(req, res) {
+  console.log('starting post setStoreItemRequestPickedUp');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const requestUser = userResult.user;
+          const request = req.body.request;
+          ctrlStoreItem.setStoreItemRequestPickedUp(requestUser, request)
             .then(data => {
               res.json({status: 'post call succeed!', data: data});
             })
@@ -1478,7 +1528,7 @@ app.get('/items/getNotifications', function(req, res) {
             res.json({ status: 'post call failed!', error: err });
           });
       })
-      
+
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
