@@ -37,7 +37,7 @@
                       </ngx-spinner>-->
 
                       <div class="row">
-                        <div class="col-4 textl">
+                        <div class="col-lg-4 col-md-4 col-sm-4 textl">
                           <ul class="nobullets">
                             <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile" class="toggled">
                               Edit Profile
@@ -50,7 +50,7 @@
                             </li>
                           </ul>
                         </div>
-                        <div class="col-8">
+                        <div class="col-lg-8 col-md-8 col-sm-8">
                           <app-edit-profile *ngIf="currentView === 'editProfile'" [option]="option" (clearOption)="clearOption($event)"></app-edit-profile>
                           <app-change-password *ngIf="currentView === 'changePassword'"></app-change-password>
                           <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>
