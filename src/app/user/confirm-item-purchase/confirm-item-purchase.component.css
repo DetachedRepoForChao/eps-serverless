@@ -6,6 +6,14 @@
   color: black;
 }
 
+::ng-deep .mat-checkbox .mat-checkbox-label {
+  color: black;
+}
+
+::ng-deep .mat-checkbox .mat-checkbox-frame {
+  border-color: black;
+}
+
 .mat-row:nth-child(even){
   background-color: #c0c1c2;
 }
@@ -28,21 +36,42 @@ table{
   margin-top: auto;
   margin-bottom: auto;
 }
-/*
 
-mat-header-cell {
-  text-align: center !important;
+.pending-style {
+  color: #5603ad;
+  font-weight: bold;
 }
 
-.mat-header-cell {
-  text-align: center !important;
+.approved-style {
+  color: #2dce89;
+  font-weight: bold;
 }
 
-::ng-deep .mat-header-cell .mat-sort-header-container {
+.cancelled-style {
+  color: #f21c19;
+  font-weight: bold;
+}
+
+.fulfilled-style {
+  color: #e14eca;
+  font-style: italic;
+  font-weight: bold;
+}
+
+/*mat-header-cell {*/
+/*  text-align: center !important;*/
+/*}*/
+
+/*::ng-deep .mat-header-cell {
+  text-align: center !important;
+}*/
+
+
+/*::ng-deep .mat-header-cell .mat-sort-header-container {
   text-align: center !important;
   justify-content: flex-end;
-}
-*/
+}*/
+
 
 .mat-column-createdAt {
   word-wrap: break-word !important;
@@ -138,4 +167,72 @@ mat-header-cell {
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   hyphens: auto;
+}
+
+.section-coins {
+  margin-top: 0;
+  padding: 0;
+}
+
+.section {
+  margin-top: 0;
+  padding: 0;
+}
+
+div.card.card-coin.card-plain.card-custom {
+  background-color: #674ba580;
+}
+
+div.card {
+  background-color: rgba(167,53,43,0);
+  margin-bottom: 20px;
+}
+
+.purchase-request-row {
+  margin-top: 100px
+}
+
+@media (max-width: 575.98px) {
+  /*  .section-coins {
+      margin-top: 100px !important;
+    }*/
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  /*  .section-coins {
+      margin-top: 100px !important;
+    }*/
+
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  /*  .section-coins {
+      margin-top: 100px;
+    }*/
+  .card.card-coin {
+    /*margin-top: 0px;*/
+    margin-bottom: 0px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
 }

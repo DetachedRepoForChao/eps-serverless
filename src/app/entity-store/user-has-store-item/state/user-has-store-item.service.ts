@@ -96,18 +96,31 @@ export class UserHasStoreItemService {
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
+          Auth.currentUserInfo()
+            .then(userAttributes => {
+              let apiCall = '/getUserHasStoreItemRecords';
+              if (+userAttributes.attributes['custom:security_role_id'] === 2) {
+                apiCall = '/getUserHasStoreItemManagerRecords';
+              }
+              const token = user.signInUserSession.idToken.jwtToken;
+              const myInit = this.myInit;
+              myInit.headers['Authorization'] = token;
 
-          API.get(this.apiName, this.apiPath + '/getUserHasStoreItemRecords', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data);
-            observer.complete();
-          })
+              API.get(this.apiName, this.apiPath + apiCall, myInit).then(data => {
+                console.log(`${functionFullName}: successfully retrieved data from API`);
+                console.log(data);
+                observer.next(data.data);
+                observer.complete();
+              })
+                .catch(err => {
+                  console.log(`${functionFullName}: error retrieving user / store-item records  from API`);
+                  console.log(err);
+                  observer.next(err);
+                  observer.complete();
+                });
+            })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving user / store-item records  from API`);
+              console.log(`${functionFullName}: error getting current user info from auth service`);
               console.log(err);
               observer.next(err);
               observer.complete();

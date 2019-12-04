@@ -47,7 +47,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     {name: 'Pending', checked: true}
   ];
 
-  approveList = [];
+  actionList = [];
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -81,38 +81,55 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemManagerRecords().subscribe((result) => {
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe((result) => {
       console.log(result);
     });
 
-    this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
+    this.userHasStoreItemQuery.selectLoading()
+      .subscribe(isLoading => {
+        console.log('isLoading?: ' + isLoading);
+        if (!isLoading) {
+          this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
+        }
+      });
 
       // this.dataSource.sort = this.sort;
   }
 
 
-  approvalToggle(row, event){
+  actionToggle(row, event) {
     console.log(this.requestTable);
     console.log('row:');
     console.log(row);
     console.log('event:');
     console.log(event);
-    const approveItem = {
+
+    const actionItem = {
       item: row,
-      approveAction: event.value
+      action: null,
     };
 
-    if (this.approveList.find(x => x.item === row)) {
-      console.log(`Record ID ${row.recordId} already exists in the approveList`);
-      console.log(this.approveList.find(x => x.item === row));
-      this.approveList.find(x => x.item === row).approveAction = event.value;
+    if (event.source && event.source.value === 'Fulfill' && event.checked === true) {
+      actionItem.action = 'Fulfill';
+    } else if (event.source && event.source.value === 'Fulfill' && event.checked === false) {
+      if (this.actionList.find(x => x.item === row)) {
+        console.log(`Record ID ${row.recordId} already exists in the action list. We're going to remove it from the list.`);
+        this.actionList = this.actionList.filter(x => x.item !== row);
+      }
+      return;
     } else {
-      this.approveList.push(approveItem);
+      actionItem.action = event.value;
     }
 
-    console.log(this.approveList);
+    if (this.actionList.find(x => x.item === row)) {
+      console.log(`Record ID ${row.recordId} already exists in the action list`);
+      console.log(this.actionList.find(x => x.item === row));
+      this.actionList.find(x => x.item === row).approveAction = event.value;
+    } else {
+      this.actionList.push(actionItem);
+    }
 
-
+    console.log(this.actionList);
   }
 
   cancelApproval(): void {
@@ -152,9 +169,9 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     }
 
   onSaveClick() {
-    console.log(this.approveList);
-    const approvedItems = this.approveList.filter(x => x.approveAction === 'Approve');
-    const declinedItems = this.approveList.filter(x => x.approveAction === 'Decline');
+    console.log(this.actionList);
+    const approvedItems = this.actionList.filter(x => x.approveAction === 'Approve');
+    const declinedItems = this.actionList.filter(x => x.approveAction === 'Decline');
     console.log('Approved Items:');
     console.log(approvedItems);
     console.log('Declined Items:');
