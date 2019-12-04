@@ -73,7 +73,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
-
+    this.storeItemService.cacheStoreItems().subscribe();
     this.userHasStoreItemService.cacheUserHasStoreItemManagerRecords().subscribe(() => {
     });
 

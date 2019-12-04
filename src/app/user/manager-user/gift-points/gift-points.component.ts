@@ -79,6 +79,7 @@ export class GiftPointsComponent implements OnInit {
   disabled = false;
   toggled = false;
 
+  appliedFilters = [];
 
   constructor(
     private departmentService: DepartmentService,
@@ -224,8 +225,38 @@ export class GiftPointsComponent implements OnInit {
     }
   }
 
+  toggleCoreValueButtonFilter(coreValue: string) {
+    const functionName = 'toggleCoreValueButtonFilter';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+    console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
+
+    const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
+    if (coreValueButton.Toggled) {
+      if (!this.appliedFilters.find(x => x === coreValue)) {
+        console.log(`${functionFullName}: Core value button is toggled but is not set as a filter. This means that it is toggled as a display of which Core Values a selected Point Item has. Leaving it toggled but adding the filter.`);
+        this.appliedFilters.push(coreValue);
+      } else if (this.selectedPointItem && this.selectedPointItem.coreValues.find(x => x === coreValue)) {
+        console.log(`${functionFullName}: Core value button is toggled and is set as a filter, but the selected Point Item contains this Core Value. Removing the filter, but leaving the Core Value button toggled.`);
+        this.appliedFilters = this.appliedFilters.filter(x => x !== coreValue);
+      } else {
+        console.log(`${functionFullName}: Core value button is already toggled. Untoggling`);
+        this.appliedFilters = this.appliedFilters.filter(x => x !== coreValue);
+        coreValueButton.Toggled = false;
+        document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className.replace('toggled', '').trim();
+      }
+    } else {
+      console.log(`${functionFullName}: Core value button is not yet toggled. Toggling`);
+      this.appliedFilters.push(coreValue);
+      coreValueButton.Toggled = true;
+      document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className += ' toggled';
+    }
+
+    this.filterPointItemList();
+  }
+
   toggleCoreValueButton(coreValue: string) {
-    const functionName = 'toggleCoreValue';
+    const functionName = 'toggleCoreValueButton';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
     console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
@@ -241,41 +272,8 @@ export class GiftPointsComponent implements OnInit {
       document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className += ' toggled';
     }
 
-    this.filterPointItemList();
   }
 
-  toggleCoreValue(coreValue: string) {
-    const functionName = 'toggleCoreValue';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: Core value: ${coreValue}`);
-
-    if (!this.isCoreValueToggled(coreValue)) {
-      // Core value button is not toggled. Proceed
-      console.log(`${functionFullName}: Core value is not yet toggled. Check if the core value exists in the core value list`);
-      if (!this.selectedCoreValues.find(x => x === coreValue)) {
-        // Core value not yet in the core value list. Adding it to the list
-        console.log(`${functionFullName}: Core value is not yet in the core value list. Adding core value ${coreValue} to the core value list`);
-        this.selectedCoreValues.push(coreValue);
-      }
-    } else {
-      // Core value button is already toggled. Check if the core value exists in the core value list and remove it if it does
-      console.log(`${functionFullName}: Core value is already toggled. Check if the core value exists in the core value list`);
-      if (this.selectedCoreValues.find(x => x === coreValue)) {
-        // Core value already toggled. Remove it from the list
-        console.log(`${functionFullName}: Core value exists in the core value list. Removing it`);
-        const index = this.selectedCoreValues.indexOf(coreValue);
-        console.log(`${functionFullName}: Selected Core Values filtered:`);
-        console.log(this.selectedCoreValues.filter(x => x !== coreValue));
-        this.selectedCoreValues = this.selectedCoreValues.filter(x => x !== coreValue);
-      }
-    }
-
-    console.log(`${functionFullName}: New Core Value list:`);
-    console.log(this.selectedCoreValues);
-
-    // this.filterPointItemList(this.selectedCoreValues);
-  }
 
   untoggleAllCoreValueButtons() {
     const functionName = 'untoggleAllCoreValueButtons';
@@ -329,20 +327,6 @@ export class GiftPointsComponent implements OnInit {
     for (let i = 0; i < pointItem.coreValues.length; i++) {
       console.log(`${functionFullName}: Toggling core value '${pointItem.coreValues[i]}' for point item '${pointItem.name}'`);
       this.toggleCoreValueButton(pointItem.coreValues[i]);
-    }
-  }
-
-  isCoreValueToggled(coreValue: string): boolean {
-    const functionName = 'isCoreValueToggled';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    console.log(`${functionFullName}: Checking if button for core value ${coreValue} is toggled`);
-    const buttonClass = document.getElementById(`button_${coreValue}`).className;
-    if (buttonClass.match('active')) {
-      return true;
-    } else {
-      return false;
     }
   }
 

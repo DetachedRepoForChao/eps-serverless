@@ -35,6 +35,22 @@
   padding-top: 5px;
 }
 
+.request-list {
+  border-style: solid;
+  border-color: #dd9d22;
+  border-width: medium;
+  background-color: #412584;
+  margin-bottom: 5px;
+  border-radius: 25px;
+}
+
+.request-container {
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+
 .card.card-coin img {
   width: 50px;
 }
@@ -43,6 +59,17 @@
   width: 50px;
   padding: 0;
 }*/
+
+.store-item-img {
+  max-width: 250px;
+  /*padding: 0 !important;;*/
+}
+
+.store-item-img-col {
+  padding: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
 .avatar-img {
   width: 50px;
@@ -99,3 +126,57 @@
   max-height: 600px;
 }
 
+div.card.card-coin.card-plain.card-custom {
+  background-color: #674ba580;
+}
+
+div.card {
+  background-color: rgba(167,53,43,0)
+}
+
+.modal-custom {
+  border-style: solid;
+  border-color: #5e72e4;
+  border-width: 5px;
+  border-radius: 25px;
+}
+
+.points-modal {
+  max-height: 650px;
+}
+
+.modalclass{
+  overflow-scrolling: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 0px;
+}
+
+.padding-bottom-0 {
+  padding-bottom: 0;
+}
+
+.tab-item {
+  cursor: pointer;
+  color: #b350f2
+}
+
+.tab-item:hover {
+  color: #bd3db8
+}
+
+.color-yellow {
+  color: #fff229 !important
+}
+
+.color-green {
+  color: #2bffc6 !important;
+}
+
+.color-red {
+  color: red !important;
+}
+
+.color-blue {
+  color: dodgerblue !important;
+}

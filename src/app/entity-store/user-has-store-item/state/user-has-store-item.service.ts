@@ -239,9 +239,16 @@ export class UserHasStoreItemService {
           const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
           const acceptRequest = userHasStoreItemRecords[i].accepted;
           const declineRequest = userHasStoreItemRecords[i].declined;
+          const approvedAt = userHasStoreItemRecords[i].approvedAt;
+          const declinedAt = userHasStoreItemRecords[i].declinedAt;
+          const fulfilledAt = userHasStoreItemRecords[i].fulfilledAt;
+          const cancelledAt = userHasStoreItemRecords[i].cancelledAt;
+          const createdAt = userHasStoreItemRecords[i].createdAt;
+          const updatedAt = userHasStoreItemRecords[i].updatedAt;
           const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
             managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
-            storeItemCost, status, cancelDescription, acceptRequest, declineRequest});
+            storeItemCost, status, cancelDescription, acceptRequest, declineRequest, approvedAt, declinedAt, fulfilledAt, cancelledAt,
+            createdAt, updatedAt});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 
@@ -276,8 +283,34 @@ export class UserHasStoreItemService {
               console.log(`${functionFullName}: status returned true. Updating entity store with new record`);
               const recordId = response.data.userHasStoreItemRecord.id;
               const userId = response.data.userHasStoreItemRecord.userId;
+              const userUsername = response.data.userHasStoreItemRecord.requestUser.username;
+              const userFirstName = response.data.userHasStoreItemRecord.requestUser.firstName;
+              const userLastName = response.data.userHasStoreItemRecord.requestUser.lastName;
+              const userEmail = response.data.userHasStoreItemRecord.requestUser.email;
+              // const managerId = response.data.userHasStoreItemRecord.managerUser.id;
+              const managerUsername = response.data.userHasStoreItemRecord.managerUser.username;
+              const managerFirstName = response.data.userHasStoreItemRecord.managerUser.firstName;
+              const managerLastName = response.data.userHasStoreItemRecord.managerUser.lastName;
+              const managerEmail = response.data.userHasStoreItemRecord.managerUser.email;
+              // const storeItemId = response.data.userHasStoreItemRecord.storeItemId;
+              const storeItemName = response.data.userHasStoreItemRecord.storeItem.name;
+              const storeItemDescription = response.data.userHasStoreItemRecord.storeItem.description;
+              const storeItemCost = response.data.userHasStoreItemRecord.storeItem.cost;
               const status = response.data.userHasStoreItemRecord.status;
-              const userHasStoreItemModel = createStoreItemModel({recordId, userId, storeItemId, status});
+              const cancelDescription = response.data.userHasStoreItemRecord.cancelDescription;
+              const acceptRequest = response.data.userHasStoreItemRecord.accepted;
+              const declineRequest = response.data.userHasStoreItemRecord.declined;
+              const approvedAt = response.data.userHasStoreItemRecord.approvedAt;
+              const declinedAt = response.data.userHasStoreItemRecord.declinedAt;
+              const fulfilledAt = response.data.userHasStoreItemRecord.fulfilledAt;
+              const cancelledAt = response.data.userHasStoreItemRecord.cancelledAt;
+              const createdAt = response.data.userHasStoreItemRecord.createdAt;
+              const updatedAt = response.data.userHasStoreItemRecord.updatedAt;
+              const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
+                managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName,
+                storeItemDescription, storeItemCost, status, cancelDescription, acceptRequest, declineRequest, approvedAt, declinedAt,
+                fulfilledAt, cancelledAt, createdAt, updatedAt});
+
               this.userHasStoreItemStore.add(userHasStoreItemModel);
 
               observer.next(response.data);

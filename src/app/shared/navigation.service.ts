@@ -9,6 +9,9 @@ import {AchievementService} from '../entity-store/achievement/state/achievement.
 import {AuthService} from '../login/auth.service';
 import {PointItemTransactionService} from '../entity-store/point-item-transaction/state/point-item-transaction.service';
 import {OtherUserAchievementService} from '../entity-store/other-user-achievement/state/other-user-achievement.service';
+import {Observable} from 'rxjs';
+import {UserHasStoreItemModel} from '../entity-store/user-has-store-item/state/user-has-store-item.model';
+import {UserHasStoreItemQuery} from '../entity-store/user-has-store-item/state/user-has-store-item.query';
 
 declare var $: any;
 
@@ -20,11 +23,13 @@ export class NavigationService {
   public achievementModalActive = false;
   public purchaseHistoryComponentInputUser: EntityCurrentUserModel;
   public purchaseHistoryModalActive = false;
+  public purchaseRequestDataSource$: Observable<UserHasStoreItemModel[]>;
 
   constructor(private router: Router,
               private achievementService: AchievementService,
               private otherUserAchievementService: OtherUserAchievementService,
               private pointItemTransactionService: PointItemTransactionService,
+              private userHasStoreItemQuery: UserHasStoreItemQuery,
               private authService: AuthService) {
   }
 
@@ -94,4 +99,45 @@ export class NavigationService {
     this.purchaseHistoryComponentInputUser = null;
     this.purchaseHistoryModalActive = null;
   }
+
+  setPurchaseRequestDataSourceAll(userId: number) {
+    console.log('setPurchaseRequestDataSourceAll');
+    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserRequests(userId);
+
+  }
+
+  setPurchaseRequestDataSourcePending(userId: number) {
+    console.log('setPurchaseRequestDataSourcePending');
+
+    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserPendingRequests(userId);
+
+  }
+
+  setPurchaseRequestDataSourceApproved(userId: number) {
+    console.log('setPurchaseRequestDataSourceApproved');
+
+    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserApprovedRequests(userId);
+
+  }
+
+  setPurchaseRequestDataSourceDeclined(userId: number) {
+    console.log('setPurchaseRequestDataSourceDeclined');
+
+    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserDeclinedRequests(userId);
+
+  }
+
+  setPurchaseRequestDataSourceFulfilled(userId: number) {
+    console.log('setPurchaseRequestDataSourceFulfilled');
+
+    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserFulfilledRequests(userId);
+
+  }
+
+  setPurchaseRequestDataSourceCancelled(userId: number) {
+    console.log('setPurchaseRequestDataSourceCancelled');
+
+    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserCancelledRequests(userId);
+  }
+
 }

@@ -38,8 +38,25 @@
   color: black;
 }
 
+.filter-item {
+  cursor: pointer;
+}
 
+.filter-item:hover {
+  .fas.fa-times {
+    color: red;
+  }
+}
 
+span.filter-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter-col {
+  display: inline-block;
+}
 
 /* Style the active class (and buttons on mouse-over) */
 /*.active, .btn:hover {
