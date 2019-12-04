@@ -4,4 +4,11 @@
 @import url('https://fonts.googleapis.com/css?family=Allerta+Stencil');
 @import '~perfect-scrollbar/css/perfect-scrollbar.css';
 
+.ag-theme-balham .sick-days-warning {
+  background-color: sandybrown !important;
+}
+.ag-theme-balham .sick-days-breach {
+  background-color: lightcoral !important;
+}
+
 
