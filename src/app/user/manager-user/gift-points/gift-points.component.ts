@@ -60,7 +60,7 @@ export class GiftPointsComponent implements OnInit {
   selection = new SelectionModel<EntityUserModel>(true, []);
   // dataSource = new MatTableDataSource<DepartmentEmployee>();
   pointItemList$: Observable<PointItemModel[]>;
-  filteredPointItemList = [];
+  filteredPointItemList: PointItemModel[] = [];
   // selectedPointItem = {};
   selectedEmployees = [];
   selectedCoreValues = [];
@@ -231,25 +231,13 @@ export class GiftPointsComponent implements OnInit {
     console.log(`Start ${functionFullName}`);
     console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
 
-    const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
-    if (coreValueButton.Toggled) {
-      if (!this.appliedFilters.find(x => x === coreValue)) {
-        console.log(`${functionFullName}: Core value button is toggled but is not set as a filter. This means that it is toggled as a display of which Core Values a selected Point Item has. Leaving it toggled but adding the filter.`);
-        this.appliedFilters.push(coreValue);
-      } else if (this.selectedPointItem && this.selectedPointItem.coreValues.find(x => x === coreValue)) {
-        console.log(`${functionFullName}: Core value button is toggled and is set as a filter, but the selected Point Item contains this Core Value. Removing the filter, but leaving the Core Value button toggled.`);
-        this.appliedFilters = this.appliedFilters.filter(x => x !== coreValue);
-      } else {
-        console.log(`${functionFullName}: Core value button is already toggled. Untoggling`);
-        this.appliedFilters = this.appliedFilters.filter(x => x !== coreValue);
-        coreValueButton.Toggled = false;
-        document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className.replace('toggled', '').trim();
-      }
+    // const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
+    if (this.appliedFilters.find(x => x === coreValue)) {
+      console.log(`${functionFullName}: Core value filter is already applied. Removing`);
+      this.appliedFilters = this.appliedFilters.filter(x => x !== coreValue);
     } else {
-      console.log(`${functionFullName}: Core value button is not yet toggled. Toggling`);
+      console.log(`${functionFullName}: Core value filter is not yet applied. Applying`);
       this.appliedFilters.push(coreValue);
-      coreValueButton.Toggled = true;
-      document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className += ' toggled';
     }
 
     this.filterPointItemList();
@@ -264,11 +252,11 @@ export class GiftPointsComponent implements OnInit {
     const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
     if (coreValueButton.Toggled) {
       console.log(`${functionFullName}: Core value button is already toggled. Untoggling`);
-      coreValueButton.Toggled = false;
+      // coreValueButton.Toggled = false;
       document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className.replace('toggled', '').trim();
     } else {
       console.log(`${functionFullName}: Core value button is not yet toggled. Toggling`);
-      coreValueButton.Toggled = true;
+      // coreValueButton.Toggled = true;
       document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className += ' toggled';
     }
 
@@ -292,25 +280,43 @@ export class GiftPointsComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const pointItemList = this.pointItemQuery.getAll();
+    const pointItemList: PointItemModel[] = this.pointItemQuery.getAll();
     this.filteredPointItemList = [];
-    const toggledCoreValues = this.coreValueButtonList.filter(x => x.Toggled);
+    // const toggledCoreValues = this.coreValueButtonList.filter(x => x.Toggled);
+    const toggledCoreValues = this.appliedFilters;
     if (toggledCoreValues.length === 0) {
       for (let i = 0; i < pointItemList.length; i++) {
         this.filteredPointItemList = [];
       }
     } else {
       for (let i = 0; i < pointItemList.length; i++) {
+        // Only add point item to the filtered list if it contains ALL the toggled core values
+        let noMatch = false;
         for (let j = 0; j < toggledCoreValues.length; j++) {
-          if (pointItemList[i].coreValues.find(x => x === toggledCoreValues[j].Name)) {
+          console.log(`Checking if ${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
+          if (pointItemList[i].coreValues.find(x => x === toggledCoreValues[j])) {
             // filteredPointItem contains current toggled core value
-            this.filteredPointItemList.push(pointItemList[i]);
+            console.log(`${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
+
           } else {
             // filteredPointItem does NOT contain current toggled core value. Break out of loop
+            console.log(`${pointItemList[i].name} does NOT contain core value ${toggledCoreValues[j]}`);
+            noMatch = true;
             break;
           }
         }
+
+        if (!noMatch) {
+          console.log(`Adding ${pointItemList[i].name} to the filtered list`);
+          this.filteredPointItemList.push(pointItemList[i]);
+        }
       }
+    }
+
+    if (this.selectedPointItem && !this.filteredPointItemList.find(x => x.itemId === this.selectedPointItem.itemId)) {
+      console.log('filtered point item list does not contain the currently selected point item. Setting selected point item to null and untoggling all core values');
+      this.selectedPointItem = null;
+      this.untoggleAllCoreValueButtons();
     }
   }
 
@@ -338,18 +344,44 @@ export class GiftPointsComponent implements OnInit {
     form.resetForm();
   }
 
-
-
-  onAvatarClick(user) {
-    console.log(user);
-    this.clickedUser = user;
-    $('#giftClickedModal').modal('show');
-    console.log(document.getElementById('giftClickedModal'));
-    if (!this.toggled) {
-      this.selection.clear();
+  styleObject(user: EntityUserModel): Object {
+    if (this.selection.isSelected(user)) {
+      const boxShadow = 'rgb(81, 203, 238) 0px 0px 5px';
+      const padding = '3px 0px 3px 3px';
+      const margin = '5px 1px 3px 0px';
+      const border = '1px solid rgb(81, 203, 238)';
+      return {
+        'box-shadow': boxShadow,
+      'padding': padding,
+      'margin': margin,
+      'border': border,
+      };
     }
+    return {
+/*      '-webkit-transition': 'all 0.30s ease-in-out',
+    '-moz-transition': 'all 0.30s ease-in-out',
+    '-ms-transition': 'all 0.30s ease-in-out',
+    '-o-transition': 'all 0.30s ease-in-out',
+    'outline': 'none',
+    'padding': '3px 0px 3px 3px',
+    'margin': '5px 1px 3px 0px',
+    'border': '1px solid #DDDDDD',*/
+    };
+  }
+
+  onAvatarClick(event, user) {
+    // console.log(event);
+    // console.log(user);
+    console.log(event);
+    this.clickedUser = user;
+/*    $('#giftClickedModal').modal('show');
+    console.log(document.getElementById('giftClickedModal'));*/
+/*    if (!this.toggled) {
+      this.selection.clear();
+    }*/
     this.selection.toggle(user);
     this.selection.isSelected(user);
+
   }
 
   showMore() {
