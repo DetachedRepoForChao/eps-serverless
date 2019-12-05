@@ -1453,6 +1453,46 @@ app.post('/items/setStoreItemRequestPickedUp', function(req, res) {
   });
 });
 
+app.post('/items/setStoreItemRequestsReadyForPickup', function(req, res) {
+  console.log('starting post setStoreItemRequestsReadyForPickup');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const requests = req.body.requests;
+      ctrlStoreItem.setStoreItemRequestsReadyForPickup(requests)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/setStoreItemRequestsPickedUp', function(req, res) {
+  console.log('starting post setStoreItemRequestsPickedUp');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const requests = req.body.requests;
+      ctrlStoreItem.setStoreItemRequestsPickedUp(requests)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 app.post('/items/cancelStoreItemRequest', function(req, res) {
   console.log('starting post cancelStoreItemRequest');
 

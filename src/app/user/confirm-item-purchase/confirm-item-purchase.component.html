@@ -4,7 +4,7 @@
   <div class="wrapper">
     <section class="section section-lg section-coins">
 
-      <img src="../../../assets/img/path3.png" class="path">
+      <img src="../../../assets/img/path3.png" class="path position-fixed">
       <div class="container align-items-center">
 
         <div class="row purchase-request-row">
@@ -17,112 +17,146 @@
 
                   <div class="row">
                     <div class="col-md-12 text-center">
-                      <h3> Hello there!</h3>
-                      <span> Confirm Purchase Request</span>
+                      <h3> Manage Employee Points Purchases</h3>
+<!--                      <span> Confirm Purchase Request</span>-->
+                    </div>
+                  </div>
+                  <div class="row tab-row">
+                    <div class="col-4 text-center"></div>
+                    <div class="col-2 text-center">
+                      <span class="tab-item toggled" (click)="filterDataSourceByStatus('all'); onTabItemClick('all')" id="confirmItemPurchaseTab_all">All</span>
+                    </div>
+                    <div class="col-2 text-center">
+                      <span class="tab-item" (click)="filterDataSourceByStatus('readyForPickup'); onTabItemClick('readyForPickup')" id="confirmItemPurchaseTab_readyForPickup">Ready for Pickup</span>
+                    </div>
+                    <div class="col-2 text-center">
+                      <span class="tab-item" (click)="filterDataSourceByStatus('pickedUp'); onTabItemClick('pickedUp')" id="confirmItemPurchaseTab_pickedUp">Picked Up</span>
+                    </div>
+                    <div class="col-2 text-center">
+                      <span class="tab-item" (click)="filterDataSourceByStatus('cancelled'); onTabItemClick('cancelled')" id="confirmItemPurchaseTab_cancelled">Cancelled</span>
                     </div>
                   </div>
 
-                  <div>
-                    <mat-table  #requestTable [dataSource]="managerRequests$" >
-                      <ng-container matColumnDef="createdAt">
-                        <mat-header-cell *matHeaderCellDef  >Request Date</mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel">{{UserHasStoreItemModel.createdAt | date:'longDate'}}</mat-cell>
-                      </ng-container>
-
-                      <ng-container matColumnDef="userUsername">
-                        <mat-header-cell *matHeaderCellDef > Employee Details</mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel">
-                          <div class="col-12">
-                            <div class="row">
-                              <div class="col-3 img-col">
-                                <img class="rounded-circle avatar-img" [src]="(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.avatarResolvedUrl">
+                  <div class="table-container mat-elevation-z8">
+                    <table mat-table  #requestTable [dataSource]="managerRequests$"  >
+                        <ng-container matColumnDef="createdAt">
+                          <th mat-header-cell *matHeaderCellDef  >Activity</th>
+                          <td mat-cell *matCellDef="let UserHasStoreItemModel">
+                            <div class="col-12">
+                              <div class="row">
+                                Created On: {{UserHasStoreItemModel.createdAt | date:'shortDate'}}
                               </div>
-                              <div class="col-9">
-                                <div class="row">
-                                  Name: {{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}
+                              <div *ngIf="UserHasStoreItemModel.createdAt !==UserHasStoreItemModel.updatedAt" class="row font-italic">
+                                Updated On: {{UserHasStoreItemModel.updatedAt | date:'shortDate'}}
+                              </div>
+                            </div>
+<!--                            {{UserHasStoreItemModel.createdAt | date:'longDate'}}-->
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="userUsername">
+                          <th mat-header-cell *matHeaderCellDef > Employee Details</th>
+                          <td mat-cell *matCellDef="let UserHasStoreItemModel">
+                            <div class="col-12">
+                              <div class="row">
+                                <div class="col-4 img-col">
+                                  <img class="rounded-circle avatar-img" [src]="(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.avatarResolvedUrl">
                                 </div>
-                                <div class="row">
-                                  Email: {{UserHasStoreItemModel.userEmail}}
-                                </div>
-                                <div class="row">
-                                  Department: {{(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.department.Name}}
+                                <div class="col-8">
+                                  <div class="row">
+                                    <a href="javascript:void(0)" (click)="onUserClick(UserHasStoreItemModel?.userId)">{{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}</a>
+                                  </div>
+                                  <div class="row font-italic">
+                                    {{(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.department.Name}}
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
 
 
 
-                        </mat-cell>
-                      </ng-container>
+                          </td>
+                        </ng-container>
 
-                      <ng-container matColumnDef=storeItemName>
-                        <mat-header-cell *matHeaderCellDef > Item </mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel">
-                          <div class="col-12">
-                            <div class="row">
-                              <div class="col-3 img-col">
-                                <img class="avatar-img" [src]="(storeItemQuery.selectStoreItemById(UserHasStoreItemModel.storeItemId) | async)[0]?.imageResolvedUrl">
-                              </div>
-                              <div class="col-9">
-                                <div class="row">
-                                  {{UserHasStoreItemModel.storeItemName}}
+                        <ng-container matColumnDef=storeItemName>
+                          <th mat-header-cell *matHeaderCellDef > Item </th>
+                          <td mat-cell *matCellDef="let UserHasStoreItemModel">
+                            <div class="col-12">
+                              <div class="row">
+                                <div class="col-4 img-col">
+                                  <img class="avatar-img" [src]="(storeItemQuery.selectStoreItemById(UserHasStoreItemModel.storeItemId) | async)[0]?.imageResolvedUrl">
                                 </div>
-                                <div class="row">
-                                  Cost: {{UserHasStoreItemModel.storeItemCost}}
+                                <div class="col-8">
+                                  <div class="row">
+                                    {{UserHasStoreItemModel.storeItemName}}
+                                  </div>
+                                  <div class="row font-italic">
+                                    Cost: {{UserHasStoreItemModel.storeItemCost}}pts
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </mat-cell>
-                      </ng-container>
+                          </td>
+                        </ng-container>
 
-                      <ng-container matColumnDef="status">
-                        <mat-header-cell *matHeaderCellDef > Status </mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel">
-                          <div *ngIf="UserHasStoreItemModel.status === 'pending'" class="pending-style">
-                            {{UserHasStoreItemModel.status | uppercase}}
-                          </div>
-                          <div *ngIf="UserHasStoreItemModel.status === 'approved'" class="approved-style">
-                            {{UserHasStoreItemModel.status | uppercase}}
-                          </div>
-                          <div *ngIf="UserHasStoreItemModel.status === 'declined'" class="cancelled-style">
-                            {{UserHasStoreItemModel.status | uppercase}}
-                          </div>
-                          <div *ngIf="UserHasStoreItemModel.status === 'cancelled'" class="cancelled-style">
-                            {{UserHasStoreItemModel.status | uppercase}}
-                          </div>
-                          <div *ngIf="UserHasStoreItemModel.status === 'fulfilled'" class="fulfilled-style">
-                            {{UserHasStoreItemModel.status | uppercase}}
-                          </div>
+                        <ng-container matColumnDef="status">
+                          <th mat-header-cell *matHeaderCellDef > Status </th>
+                          <td mat-cell *matCellDef="let UserHasStoreItemModel">
+                            <div *ngIf="UserHasStoreItemModel.status === 'pending'" class="pending-style">
+                              {{UserHasStoreItemModel.status | uppercase}}
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'approved'" class="approved-style">
+                              {{UserHasStoreItemModel.status | uppercase}}
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'readyForPickup'" class="approved-style">
+                              READY FOR PICKUP
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'declined'" class="cancelled-style">
+                              {{UserHasStoreItemModel.status | uppercase}}
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'cancelled'" class="cancelled-style">
+                              {{UserHasStoreItemModel.status | uppercase}}
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'fulfilled'" class="fulfilled-style">
+                              {{UserHasStoreItemModel.status | uppercase}}
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'pickedUp'" class="fulfilled-style">
+                              PICKED UP!
+                            </div>
 
-                        </mat-cell>
-                      </ng-container>
+                          </td>
+                        </ng-container>
 
-                      <ng-container matColumnDef="action">
-                        <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                        <mat-cell *matCellDef="let UserHasStoreItemModel">
-                          <div *ngIf="UserHasStoreItemModel.status === 'pending'">
-                            <mat-radio-group >
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> </th>
+                          <td mat-cell *matCellDef="let UserHasStoreItemModel">
+                            <div *ngIf="UserHasStoreItemModel.status === 'pending'">
+                              <mat-checkbox [value]="'readyForPickup'" (change)="actionToggle(UserHasStoreItemModel, $event)">Ready for Pickup</mat-checkbox>
+<!--                              <mat-radio-group >
 
-                              <mat-radio-button [value]="'Approve'" (change)="actionToggle(UserHasStoreItemModel, $event)">Approve</mat-radio-button>
-                              <mat-radio-button [value]="'Decline'" (change)="actionToggle(UserHasStoreItemModel, $event)">Decline</mat-radio-button>
-                              <mat-radio-button checked [value]="'Pending'" (change)="actionToggle(UserHasStoreItemModel, $event)">Pending</mat-radio-button>
-                              <!--                            <mat-radio-button *ngFor="let approveOption of approveOptions" [checked]="approveOption === approveOptions[0]" (change)="approvalToggle(UserHasStoreItemModel, $event)" [value]="approveOption">
-                                                            {{approveOption.name}}
-                                                          </mat-radio-button>-->
-                            </mat-radio-group>
-                          </div>
-                          <div *ngIf="UserHasStoreItemModel.status === 'approved'" >
-                            <mat-checkbox [value]="'Fulfill'" (change)="actionToggle(UserHasStoreItemModel, $event)">Fulfill</mat-checkbox>
-                          </div>
-                          <div *ngIf="UserHasStoreItemModel.status === 'declined' || UserHasStoreItemModel.status === 'cancelled'">
-                          </div>
-                          <div *ngIf="UserHasStoreItemModel.status === 'fulfilled'">
-                          </div>
+                                <mat-radio-button [value]="'Approve'" (change)="actionToggle(UserHasStoreItemModel, $event)">Approve</mat-radio-button>
+                                <mat-radio-button [value]="'Decline'" (change)="actionToggle(UserHasStoreItemModel, $event)">Decline</mat-radio-button>
+                                <mat-radio-button checked [value]="'Pending'" (change)="actionToggle(UserHasStoreItemModel, $event)">Pending</mat-radio-button>
+                                &lt;!&ndash;                            <mat-radio-button *ngFor="let approveOption of approveOptions" [checked]="approveOption === approveOptions[0]" (change)="approvalToggle(UserHasStoreItemModel, $event)" [value]="approveOption">
+                                                              {{approveOption.name}}
+                                                            </mat-radio-button>&ndash;&gt;
+                              </mat-radio-group>-->
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'approved'" >
+                              <mat-checkbox [value]="'Fulfill'" (change)="actionToggle(UserHasStoreItemModel, $event)">Fulfill</mat-checkbox>
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'readyForPickup'" >
+                              <mat-checkbox [value]="'pickedUp'" (change)="actionToggle(UserHasStoreItemModel, $event)">Picked Up</mat-checkbox>
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'declined' || UserHasStoreItemModel.status === 'cancelled'">
+                            </div>
+                            <div *ngIf="UserHasStoreItemModel.status === 'fulfilled'">
+                            </div>
 
-                        </mat-cell>
-                      </ng-container>
+                          </td>
+                        </ng-container>
+
+
 
                       <!--                      <ng-container matColumnDef="declineRequest">
                                               <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
@@ -131,25 +165,23 @@
 
                                             </ng-container>-->
 
-                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 
-                    </mat-table>
-
-
-                    <div class="container">
-                      <button type="button" class="btn btn-success" (click)="openDialog()" >Save</button>
-                      <button type="button" class="btn btn-danger" (click)="cancelApproval()" >Cancel</button>
-                    </div>
-
-                    <mat-paginator
-                      [length] ="100"
-                      [pageSize]= "10"
-                      [pageSizeOptions] ="[5, 10, 25, 100]">
-                    </mat-paginator>
-
+                    </table>
                   </div>
+
+                  <div class="container">
+                    <button type="button" class="btn btn-success" (click)="openDialog()" >Save</button>
+                    <button type="button" class="btn btn-danger" (click)="cancelApproval()" >Cancel</button>
+                  </div>
+
+<!--                  <mat-paginator
+                    [length] ="100"
+                    [pageSize]= "10"
+                    [pageSizeOptions] ="[5, 10, 25, 100]">
+                  </mat-paginator>-->
 
                 </div>
               </div>

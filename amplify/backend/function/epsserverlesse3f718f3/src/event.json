@@ -1,11 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items/usersPublicDetails2",
-  "httpMethod": "GET",
+  "path": "/items/setStoreItemRequestsReadyForPickup",
+  "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiJsMWFEcmpPZ283VitGV1RvMzFCYnFlOFZmSldOWDBxR1FUTEVGaVVnbE04PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxYTg3ZmVjYi01ZTE2LTQ0YTEtODg3MC01N2MyYWNkNDI4YTMiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfVmxYajVtaU0yIiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjpmYWxzZSwiY29nbml0bzp1c2VybmFtZSI6Im1iYWRvIiwiZ2l2ZW5fbmFtZSI6Ik1heCIsImF1ZCI6IjN0dHZtZWY5cTRmNDE0YzJtaXJzMDg5YWMxIiwiZXZlbnRfaWQiOiI4MTJlOTY0Ni0zZmEyLTQ3NzYtOGExNi03OTI1MWNlNDI2NjIiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU3NDg2OTU5NSwibmFtZSI6Ik1heCBCYWRvIiwicGhvbmVfbnVtYmVyIjoiKzE3MzI4NTk3ODM5IiwiZXhwIjoxNTc0ODczMTk1LCJpYXQiOjE1NzQ4Njk1OTYsImZhbWlseV9uYW1lIjoiQmFkbyIsImVtYWlsIjoibWF4LmJhZG9AZ21haWwuY29tIn0.ZjgadQboIoqp7tflkuRxp7gCtEBZEs0caRp3_iDp-hBqxxcgBWcom8Rau-uzh3xQBbox9SgwEs3PLJ-luobw-xoJxsNxB7W8iiUzHnl3b7MT0hTpN3ytTSP5PYZgfAZ3zByB93YswKnReWtx8ovOOz_2qutMSl2belVZi8D3I19C6gHaYYkWHeEGLFOY1tLFpSxncdGy_Cy6p2WgEu9zXw3EWhNczpLK1cQ7u2NkPYYNg9UJ2cwzlXgUdC56i_yG0IPhUAdv3wGCdyia-9FHE5oTDynwPDNN7aBrIBleG3lYd2W-cB-J-KCv1UMviNGj2Zd12yUJWPheLQ_i1bkinA"
+    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJmMDBkODQyNS04OTU2LTRhM2ItODZiZS1hZTcxNmQzNmExYmUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImJpcnRoZGF0ZSI6IjAzXC8wN1wvMTk4NSIsImN1c3RvbTpkZXBhcnRtZW50IjoiRnJvbnQgRGVzayIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX3ZPZzRIU1pjOCIsInBob25lX251bWJlcl92ZXJpZmllZCI6dHJ1ZSwiY29nbml0bzp1c2VybmFtZSI6IkRhbiIsImN1c3RvbTpzZWN1cml0eV9yb2xlIjoibWFuYWdlciIsImdpdmVuX25hbWUiOiJNYW5hZ2VyIiwiY3VzdG9tOmRlcGFydG1lbnRfaWQiOiIyIiwiYXVkIjoiN3ZnYzVnZDdxMjBrMXA0bThhcjliY3FkOG0iLCJjdXN0b206c2VjdXJpdHlfcm9sZV9pZCI6IjIiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU3NTQ4OTMwNSwibmFtZSI6Ik1hbmFnZXIgREFOIiwicGhvbmVfbnVtYmVyIjoiKzE3MzI4NTYyNzYwIiwiZXhwIjoxNTc1NTAxMjE1LCJpYXQiOjE1NzU0OTc2MTUsImZhbWlseV9uYW1lIjoiREFOIiwiZW1haWwiOiJkam1hcnI1NkBnbWFpbC5jb20ifQ.gW_FSnj68Vgrj3e_w0XdvheQfZQpz24O82h_BzzeRH5USUgaUs1-6Rw6zLCbkO4D1aBzd6QMM2kdanvM2C99MhBEy-RTpECeZ5ESjKrt6BB9of4mfahIS7n4sZE-ybRw4Cqk30pbBqX1qpc_5Cd0h1cTbSR1lwh-vHmeSF6cKE1dVnmbe01xj80WRMnNSIkrzvF9G5lKpgw0xH613ZH7xCxNMMwki7JH69x5nEnbYORYpqrVVlyFsyLlDhCTjmslDQJzs07jbj3Lv2DfnSXI9OKtbg41DQbfXnoiil2te6FNoKlgVWUVOjdrzy-3uCb_GkpJLnPX-WYTtga0tmDbCA"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -41,6 +41,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"managerId\":49,\"storeItemId\":5}",
+  "body": "{\"requests\":[{\"id\":\"459d624c81\",\"recordId\":25,\"userId\":81,\"userUsername\":\"zaudu\",\"userFirstName\":\"zainab\",\"userLastName\":\"audu\",\"userEmail\":\"s1229578@monmouth.edu\",\"managerId\":52,\"managerUsername\":\"Dan\",\"managerFirstName\":\"Manager\",\"managerLastName\":\"DAN\",\"managerEmail\":\"s0763921@monmouth.edu\",\"storeItemId\":1,\"storeItemName\":\"Rook Coffee\",\"storeItemDescription\":\"A $10 Rook Coffee gift card\",\"storeItemCost\":150,\"status\":\"pending\",\"cancelDescription\":null,\"acceptRequest\":null,\"declineRequest\":null,\"approvedAt\":null,\"declinedAt\":null,\"fulfilledAt\":null,\"cancelledAt\":null,\"createdAt\":\"2019-10-30T00:56:34.000Z\",\"updatedAt\":\"2019-10-30T00:56:34.000Z\",\"dateModified\":1575498774709},{\"id\":\"f0a20a4396\",\"recordId\":24,\"userId\":81,\"userUsername\":\"zaudu\",\"userFirstName\":\"zainab\",\"userLastName\":\"audu\",\"userEmail\":\"s1229578@monmouth.edu\",\"managerId\":52,\"managerUsername\":\"Dan\",\"managerFirstName\":\"Manager\",\"managerLastName\":\"DAN\",\"managerEmail\":\"s0763921@monmouth.edu\",\"storeItemId\":2,\"storeItemName\":\"Fancy Cocktail\",\"storeItemDescription\":\"A cocktail from the bar\",\"storeItemCost\":200,\"status\":\"pending\",\"cancelDescription\":null,\"acceptRequest\":null,\"declineRequest\":null,\"approvedAt\":null,\"declinedAt\":null,\"fulfilledAt\":null,\"cancelledAt\":null,\"createdAt\":\"2019-10-30T00:55:06.000Z\",\"updatedAt\":\"2019-10-30T00:55:06.000Z\",\"dateModified\":1575498774709}]}",
   "isBase64Encoded": false
 }

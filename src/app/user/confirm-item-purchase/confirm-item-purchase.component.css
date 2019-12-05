@@ -22,6 +22,11 @@
   background-color: #d3d9e5;
 }
 
+.mat-header-cell {
+  text-align: center;
+  padding-top: 20px
+}
+
 table{
   width: 100%;
 }
@@ -76,8 +81,8 @@ table{
 .mat-column-createdAt {
   word-wrap: break-word !important;
   white-space: unset !important;
-  flex: 0 0 15% !important;
-  width: 15% !important;
+  flex: 0 0 14% !important;
+  width: 14% !important;
   overflow-wrap: break-word;
   word-wrap: break-word;
 
@@ -92,8 +97,8 @@ table{
 .mat-column-userUsername {
   word-wrap: break-word !important;
   white-space: unset !important;
-  flex: 0 0 30% !important;
-  width: 30% !important;
+  flex: 0 0 20% !important;
+  width: 20% !important;
   overflow-wrap: break-word;
   word-wrap: break-word;
 
@@ -108,8 +113,8 @@ table{
 .mat-column-storeItemName {
   word-wrap: break-word !important;
   white-space: unset !important;
-  flex: 0 0 30% !important;
-  width: 30% !important;
+  flex: 0 0 20% !important;
+  width: 20% !important;
   overflow-wrap: break-word;
   word-wrap: break-word;
 
@@ -138,10 +143,11 @@ table{
 }*/
 
 .mat-column-status {
+  text-align: center;
   word-wrap: break-word !important;
   white-space: unset !important;
-  flex: 0 0 10% !important;
-  width: 10% !important;
+  flex: 0 0 14% !important;
+  width: 14% !important;
   overflow-wrap: break-word;
   word-wrap: break-word;
 
@@ -156,8 +162,8 @@ table{
 .mat-column-action {
   word-wrap: break-word !important;
   white-space: unset !important;
-  flex: 0 0 8% !important;
-  width: 8% !important;
+  flex: 0 0 14% !important;
+  width: 14% !important;
   overflow-wrap: break-word;
   word-wrap: break-word;
 
@@ -186,6 +192,17 @@ div.card.card-coin.card-plain.card-custom {
 div.card {
   background-color: rgba(167,53,43,0);
   margin-bottom: 20px;
+}
+
+.card-coin {
+  border: 0;
+  min-height: 700px;
+  overflow: auto;
+}
+
+.table-container {
+  max-height: 500px;
+  overflow: auto;
 }
 
 .purchase-request-row {
@@ -235,4 +252,28 @@ div.card {
   .card {
     margin-bottom: 20px;
   }
+}
+
+.tab-item {
+  cursor: pointer;
+  color: #b350f2
+}
+
+.tab-item:hover {
+  color: #bd3db8;
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
+}
+
+.toggled {
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
+}
+
+.tab-row {
+  margin-bottom: 20px;
+}
+
+.margin-top-10 {
+  margin-top: 10px;
 }

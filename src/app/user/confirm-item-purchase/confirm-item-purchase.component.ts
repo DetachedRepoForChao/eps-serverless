@@ -7,7 +7,7 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatSort, MatTableModule, MatTableDataSource, MatDialog, MatTable} from '@angular/material';
+import {MatSort, MatTableModule, MatTableDataSource, MatDialog, MatTable, MatCheckboxChange} from '@angular/material';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
 import {Router } from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
@@ -48,6 +48,14 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   ];
 
   actionList = [];
+  currentTabItem = 'all';
+  tabItems = [
+    'all',
+    'readyForPickup',
+    'pickedUp',
+    'cancelled',
+  ];
+
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -97,19 +105,21 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   }
 
 
-  actionToggle(row, event) {
+  actionToggle(row, event: MatCheckboxChange) {
     console.log(this.requestTable);
     console.log('row:');
     console.log(row);
     console.log('event:');
     console.log(event);
 
+    const eventItem: MatCheckboxChange = event;
     const actionItem = {
       item: row,
-      action: null,
+      action: event.source.value,
+      event: eventItem,
     };
 
-    if (event.source && event.source.value === 'Fulfill' && event.checked === true) {
+/*    if (event.source && event.source.value === 'Fulfill' && event.checked === true) {
       actionItem.action = 'Fulfill';
     } else if (event.source && event.source.value === 'Fulfill' && event.checked === false) {
       if (this.actionList.find(x => x.item === row)) {
@@ -119,12 +129,12 @@ export class ConfirmItemPurchaseComponent implements OnInit {
       return;
     } else {
       actionItem.action = event.value;
-    }
+    }*/
 
-    if (this.actionList.find(x => x.item === row)) {
-      console.log(`Record ID ${row.recordId} already exists in the action list`);
-      console.log(this.actionList.find(x => x.item === row));
-      this.actionList.find(x => x.item === row).approveAction = event.value;
+    if (this.actionList.find(x => x.item === row) && event.checked === false) {
+      console.log(`Record ID ${row.recordId} already exists in the action list. Removing.`);
+      // console.log(this.actionList.find(x => x.item === row));
+      this.actionList = this.actionList.filter(x => x.item !== row);
     } else {
       this.actionList.push(actionItem);
     }
@@ -134,12 +144,18 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
   cancelApproval(): void {
     console.log('cancelled');
-    this.router.navigate(['/store']);
+    console.log(this.actionList);
+    for (const action of this.actionList) {
+      action.event.source.toggle();
+    }
+    this.router.navigate(['/', 'user', 'store']);
 
   }
 
-  test() {
-
+  untoggleAll() {
+    for (const actionItem of this.actionList) {
+      actionItem.event.source.toggle();
+    }
   }
 
   approveRequest(request) {
@@ -153,34 +169,74 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
-      data: "Would you like to save your changes?"
+      data: {action: 'confirmPurchaseRequestSave', actionList: this.actionList}
     });
+
+    // data: "Would you like to save your changes?",
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog closed: ${result}`);
       this.dialogResult = result;
       if (result === 'Confirm') {
         const onSave = this.onSaveClick();
-        }
-       else if (result === 'Cancel') {
+      } else if (result === 'Cancel') {
         console.log('Cancelled');
       }
     });
-    }
+  }
 
   onSaveClick() {
     console.log(this.actionList);
-    const approvedItems = this.actionList.filter(x => x.approveAction === 'Approve');
-    const declinedItems = this.actionList.filter(x => x.approveAction === 'Decline');
-    console.log('Approved Items:');
-    console.log(approvedItems);
-    console.log('Declined Items:');
-    console.log(declinedItems);
 
-    // Do something with the approved items
+    const actionList = [];
+    this.actionList.forEach((actionItem) => {
+      actionList.push(actionItem);
+    });
 
+    this.userHasStoreItemService.processRequests(actionList)
+      .subscribe(result => {
+        console.log('processRequests result');
+        console.log(result);
+      });
 
-    // Do something the declined items
-
+    this.untoggleAll();
   }
+
+
+  onUserClick(userId: number) {
+    const user = this.entityUserQuery.getAll({
+      filterBy: e => e.userId === userId
+    });
+
+    console.log(`navigating to /user/profile/${user[0].username}`);
+    this.router.navigate(['/', 'user', 'profile', user[0].username]).then();
+  }
+
+
+  onTabItemClick(clickedItem: string) {
+    if (this.currentTabItem === clickedItem) {
+      // Already there, do nothing.
+    } else {
+      for (const item of this.tabItems) {
+        if (item === clickedItem) {
+          this.currentTabItem = clickedItem;
+          document.getElementById(`confirmItemPurchaseTab_${item}`).className = document.getElementById(`confirmItemPurchaseTab_${item}`).className += ' toggled';
+        } else {
+          document.getElementById(`confirmItemPurchaseTab_${item}`).className = document.getElementById(`confirmItemPurchaseTab_${item}`).className.replace('toggled', '').trim();
+        }
+      }
+    }
+  }
+
+  filterDataSourceByStatus(status: string) {
+    console.log('filterDataSourceByStatus');
+    if (status === 'all') {
+      this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
+      return;
+    }
+    this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+      filterBy: e => e.status === status
+    });
+  }
+
 }

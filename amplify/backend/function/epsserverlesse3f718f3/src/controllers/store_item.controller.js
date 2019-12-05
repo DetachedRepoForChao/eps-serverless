@@ -510,7 +510,7 @@ const setStoreItemRequestPickedUp = function (requestUser, request) {
   console.log(`Start ${functionFullName}`);
 
   const time = Date.now();
-  request.status = 'pickedUp';
+  request.status = 'readyForPickup';
   request.pickedUpAt = time;
 
   // Update user_has_store_item record
@@ -535,3 +535,111 @@ const setStoreItemRequestPickedUp = function (requestUser, request) {
 };
 
 module.exports.setStoreItemRequestPickedUp = setStoreItemRequestPickedUp;
+
+
+const setStoreItemRequestsReadyForPickup = function (requests) {
+  const functionName = 'setStoreItemRequestsReadyForPickup';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const time = Date.now();
+  const status = 'readyForPickup';
+  // const pickedUpAt = time;
+  const ids = [];
+  requests.forEach(request => {
+    ids.push(request.recordId);
+    request.status = status;
+    request.pickedUpAt = time;
+  });
+
+  console.log(`${functionFullName}: updating records:`);
+  console.log(ids);
+  // Update user_has_store_item records
+  return sqlUserHasStoreItemModel.update({
+    status: status,
+    readyForPickupAt: time,
+  }, {
+    where: {
+      id: ids,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item requests updated successfully`);
+
+      const promises = [];
+      for (const request of requests) {
+        const description = `Manager (id: ${request.managerId}; username: ${request.managerUsername}) procured user's (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId})`;
+        promises.push(ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description));
+      }
+
+      return Promise.all(promises)
+        .then(removeResults => {
+          console.log(`${functionFullName}: Remove points result:`);
+          console.log(removeResults);
+          const resultsArray = [];
+          for (let i = 0; i < removeResults.length; i++) {
+            if (removeResults[i].status !== false) {
+              console.log(`${functionFullName}: Points removed from ${removeResults[i].user.username}'s total successfully. User's new point total is ${removeResults[i].newPointAmount}`);
+              resultsArray.push({status: true, updatedRecord: requests[i], newPointTotal: removeResults[i].newPointAmount});
+              // return {status: true, updatedRecords: requests, newPointTotal: removeResults.newPointAmount};
+            } else {
+              console.log(`${functionFullName}: Error removing points from ${removeResults[i].user.username}'s total:`);
+              console.log(removeResults[i].message);
+              resultsArray.push({status: false, updatedRecord: requests[i], error: removeResults[i]});
+              // return {status: false, updatedRecords: requests, error: removeResults};
+            }
+          }
+
+          return {status: true, results: resultsArray};
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Error`);
+          console.log(err);
+          return {status: false, message: err};
+        });
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.setStoreItemRequestsReadyForPickup = setStoreItemRequestsReadyForPickup;
+
+const setStoreItemRequestsPickedUp = function (requests) {
+  const functionName = 'setStoreItemRequestsPickedUp';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const time = Date.now();
+  const status = 'pickedUp';
+  // const pickedUpAt = time;
+  const ids = [];
+  requests.forEach(request => {
+    ids.push(request.recordId);
+    request.status = status;
+    request.pickedUpAt = time;
+  });
+
+  // Update user_has_store_item records
+  return sqlUserHasStoreItemModel.update({
+    status: status,
+    pickedUpAt: time,
+  }, {
+    where: {
+      id: ids,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item request updated successfully`);
+      return {status: true, updatedRecords: requests};
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.setStoreItemRequestsPickedUp = setStoreItemRequestsPickedUp;

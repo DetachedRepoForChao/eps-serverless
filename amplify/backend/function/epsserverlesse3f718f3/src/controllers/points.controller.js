@@ -145,7 +145,7 @@ const removePointsFromEmployee = function (sourceUserId, targetUserId, storeItem
             return {status: false, message: 'Error updating user points'};
           } else {
             console.log(`${functionFullName}: User points updated successfully`);
-            return {status: true, message: 'Success', newPointAmount: newAmount };
+            return {status: true, message: 'Success', newPointAmount: newAmount, user: user };
           }
         })
         .catch(err => {
