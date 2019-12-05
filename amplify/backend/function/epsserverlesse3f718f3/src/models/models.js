@@ -1210,31 +1210,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'cancel_description'
     },
-    accepted: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      field: 'accepted'
-    },
-    declined: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      field: 'declined'
-    },
-    approvedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'approvedAt'
-    },
-    declinedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'declinedAt'
-    },
-    fulfilledAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'fulfilledAt'
-    },
     cancelledAt: {
       type: DataTypes.DATE,
       allowNull: true,

@@ -9,6 +9,10 @@ import { EntityCurrentUserQuery } from 'src/app/entity-store/current-user/state/
 })
 export class ConfirmationDialogComponent implements OnInit {
 
+  isDefault = false;
+  isConfirmPurchaseRequestSave = false;
+  confirmPurchaseRequestData: any[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public message: any,
@@ -16,8 +20,18 @@ export class ConfirmationDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.message.data && this.message.data === 'confirmPurchaseRequestSave') {
-
+    console.log('test');
+    console.log(this.message);
+    if (this.message.action && this.message.action === 'confirmPurchaseRequestSave') {
+      console.log('test');
+      this.isConfirmPurchaseRequestSave = true;
+      this.confirmPurchaseRequestData = this.message.actionList.sort((a, b) => {
+        if (a.item.userUsername < b.item.userUsername) { return -1; }
+        if (a.item.userUsername > b.item.userUsername) { return 1; }
+        return 0;
+      });
+    } else {
+      this.isDefault = true;
     }
   }
 

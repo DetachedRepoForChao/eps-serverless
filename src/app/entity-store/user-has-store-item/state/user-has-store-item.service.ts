@@ -165,18 +165,12 @@ export class UserHasStoreItemService {
           const storeItemCost = userHasStoreItemRecords[i].storeItem.cost;
           const status = userHasStoreItemRecords[i].status;
           const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
-          const acceptRequest = userHasStoreItemRecords[i].accepted;
-          const declineRequest = userHasStoreItemRecords[i].declined;
-          const approvedAt = userHasStoreItemRecords[i].approvedAt;
-          const declinedAt = userHasStoreItemRecords[i].declinedAt;
-          const fulfilledAt = userHasStoreItemRecords[i].fulfilledAt;
           const cancelledAt = userHasStoreItemRecords[i].cancelledAt;
           const createdAt = userHasStoreItemRecords[i].createdAt;
           const updatedAt = userHasStoreItemRecords[i].updatedAt;
           const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
             managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
-            storeItemCost, status, cancelDescription, acceptRequest, declineRequest, approvedAt, declinedAt, fulfilledAt, cancelledAt,
-            createdAt, updatedAt});
+            storeItemCost, status, cancelDescription, cancelledAt, createdAt, updatedAt});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 
@@ -226,11 +220,6 @@ export class UserHasStoreItemService {
               const storeItemCost = response.data.userHasStoreItemRecord.storeItem.cost;
               const status = response.data.userHasStoreItemRecord.status;
               const cancelDescription = response.data.userHasStoreItemRecord.cancelDescription;
-              const acceptRequest = response.data.userHasStoreItemRecord.accepted;
-              const declineRequest = response.data.userHasStoreItemRecord.declined;
-              const approvedAt = response.data.userHasStoreItemRecord.approvedAt;
-              const declinedAt = response.data.userHasStoreItemRecord.declinedAt;
-              const fulfilledAt = response.data.userHasStoreItemRecord.fulfilledAt;
               const cancelledAt = response.data.userHasStoreItemRecord.cancelledAt;
               const readyForPickupAt = response.data.userHasStoreItemRecord.readyForPickupAt;
               const pickedUpAt = response.data.userHasStoreItemRecord.pickedUpAt;
@@ -238,8 +227,8 @@ export class UserHasStoreItemService {
               const updatedAt = response.data.userHasStoreItemRecord.updatedAt;
               const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
                 managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName,
-                storeItemDescription, storeItemCost, status, cancelDescription, acceptRequest, declineRequest, approvedAt, declinedAt,
-                fulfilledAt, cancelledAt, readyForPickupAt, pickedUpAt, createdAt, updatedAt});
+                storeItemDescription, storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt,
+                updatedAt});
 
               this.userHasStoreItemStore.add(userHasStoreItemModel);
 
@@ -274,46 +263,6 @@ export class UserHasStoreItemService {
         observer.next(sum);
         observer.complete();
       });
-    });
-  }
-
-  approveStoreItemRequest(request: UserHasStoreItemModel): Observable<any> {
-    const functionName = 'approveStoreItemRequest';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          myInit['body'] = {
-            request: request
-          };
-
-          API.post(this.apiName, this.apiPath + '/approveStoreItemRequest', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
-
-            if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating record in entity store`);
-              const recordId = response.data.updatedRecord.recordId;
-              const status = response.data.updatedRecord.status;
-              const actionAt = response.data.updatedRecord.updatedAt;
-              const cancelDescription = null;
-              this.update(recordId, status, cancelDescription, actionAt);
-
-              observer.next(response.data);
-              observer.complete();
-            } else {
-              console.log(`${functionFullName}: status did not return true`);
-              observer.next(false);
-              observer.complete();
-            }
-          });
-        });
     });
   }
 
@@ -413,86 +362,6 @@ export class UserHasStoreItemService {
     });
   }
 
-
-  declineStoreItemRequest(request: UserHasStoreItemModel, cancelDescription: string): Observable<any> {
-    const functionName = 'declineStoreItemRequest';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          myInit['body'] = {
-            request: request,
-            cancelDescription: cancelDescription,
-          };
-
-          API.post(this.apiName, this.apiPath + '/declineStoreItemRequest', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
-
-            if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating record in entity store`);
-              const recordId = response.data.updatedRecord.recordId;
-              const status = response.data.updatedRecord.status;
-              const actionAt = response.data.updatedRecord.updatedAt;
-              this.update(recordId, status, cancelDescription, actionAt);
-
-              observer.next(response.data);
-              observer.complete();
-            } else {
-              console.log(`${functionFullName}: status did not return true`);
-              observer.next(false);
-              observer.complete();
-            }
-          });
-        });
-    });
-  }
-
-  fulfillStoreItemRequest(request: UserHasStoreItemModel): Observable<any> {
-    const functionName = 'fulfillStoreItemRequest';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          myInit['body'] = {
-            request: request
-          };
-
-          API.post(this.apiName, this.apiPath + '/declineStoreItemRequest', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
-
-            if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating record in entity store`);
-              const recordId = response.data.updatedRecord.recordId;
-              const status = response.data.updatedRecord.status;
-              const actionAt = response.data.updatedRecord.updatedAt;
-              const cancelDescription = null;
-              this.update(recordId, status, cancelDescription, actionAt);
-
-              observer.next(response.data);
-              observer.complete();
-            } else {
-              console.log(`${functionFullName}: status did not return true`);
-              observer.next(false);
-              observer.complete();
-            }
-          });
-        });
-    });
-  }
 
   setStoreItemRequestPickedUp(request: UserHasStoreItemModel): Observable<any> {
     const functionName = 'setStoreItemRequestPickedUp';

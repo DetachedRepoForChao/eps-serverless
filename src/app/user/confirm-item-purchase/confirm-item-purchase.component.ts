@@ -158,20 +158,14 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     }
   }
 
-  approveRequest(request) {
-    console.log(request);
-    this.userHasStoreItemService.approveStoreItemRequest(request).subscribe();
-
-  }
-
   openDialog(): void {
     console.log(`confirm approval?`);
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '350px',
       data: {action: 'confirmPurchaseRequestSave', actionList: this.actionList}
     });
 
+    // width: '600px',
     // data: "Would you like to save your changes?",
 
     dialogRef.afterClosed().subscribe(result => {

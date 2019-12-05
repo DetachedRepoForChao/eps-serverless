@@ -1,1 +1,28 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+li {
+  color: black;
+}
+
+
+
+.pending-style {
+  color: #5603ad;
+  font-weight: bold;
+}
+
+.approved-style {
+  color: #2dce89;
+  font-weight: bold;
+}
+
+.cancelled-style {
+  color: #f21c19;
+  font-weight: bold;
+}
+
+.fulfilled-style {
+  color: #e14eca;
+  font-style: italic;
+  font-weight: bold;
+}
