@@ -41,19 +41,14 @@ export class ConfirmItemPurchaseComponent implements OnInit {
   managerRequests$: Observable<UserHasStoreItemModel[]>;
   displayedColumns = ['createdAt', 'userUsername', 'storeItemName', 'status', 'action'];
 
-  approveOptions = [
-    {name: 'Approve', checked: false},
-    {name: 'Decline', checked: false},
-    {name: 'Pending', checked: true}
-  ];
-
   actionList = [];
-  currentTabItem = 'all';
+  currentTabItem = 'allActive';
   tabItems = [
-    'all',
+    'allActive',
     'readyForPickup',
     'pickedUp',
     'cancelled',
+    'archived'
   ];
 
 
@@ -97,7 +92,8 @@ export class ConfirmItemPurchaseComponent implements OnInit {
       .subscribe(isLoading => {
         console.log('isLoading?: ' + isLoading);
         if (!isLoading) {
-          this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
+          this.filterDataSourceByStatus(this.currentTabItem);
+          // this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
         }
       });
 
@@ -224,10 +220,42 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
   filterDataSourceByStatus(status: string) {
     console.log('filterDataSourceByStatus');
-    if (status === 'all') {
-      this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
+    const currentDate = Date.now();
+    let otherDate;
+    let dayDiff;
+
+    if (status === 'allActive') {
+      this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+        filterBy: e => {
+          if (e.status === 'pickedUp') {
+            otherDate = new Date(e.pickedUpAt);
+            dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (dayDiff >= 5) {
+              return false;
+            }
+          }
+          return true;
+        }
+      });
+      return;
+    } else if (status === 'archived') {
+
+      this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+        filterBy: e => {
+          if (e.status === 'pickedUp') {
+            otherDate = new Date(e.pickedUpAt);
+            dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (dayDiff >= 5) {
+              return true;
+            }
+          }
+          return false;
+        }
+      });
+
       return;
     }
+
     this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
       filterBy: e => e.status === status
     });

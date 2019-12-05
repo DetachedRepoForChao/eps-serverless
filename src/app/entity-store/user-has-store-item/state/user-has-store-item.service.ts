@@ -166,11 +166,13 @@ export class UserHasStoreItemService {
           const status = userHasStoreItemRecords[i].status;
           const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
           const cancelledAt = userHasStoreItemRecords[i].cancelledAt;
+          const readyForPickupAt = userHasStoreItemRecords[i].readyForPickupAt;
+          const pickedUpAt = userHasStoreItemRecords[i].pickedUpAt;
           const createdAt = userHasStoreItemRecords[i].createdAt;
           const updatedAt = userHasStoreItemRecords[i].updatedAt;
           const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
             managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
-            storeItemCost, status, cancelDescription, cancelledAt, createdAt, updatedAt});
+            storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt, updatedAt});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 

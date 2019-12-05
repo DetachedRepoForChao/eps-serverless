@@ -22,9 +22,9 @@
                     </div>
                   </div>
                   <div class="row tab-row">
-                    <div class="col-4 text-center"></div>
+                    <div class="col-2 text-center"></div>
                     <div class="col-2 text-center">
-                      <span class="tab-item toggled" (click)="filterDataSourceByStatus('all'); onTabItemClick('all')" id="confirmItemPurchaseTab_all">All</span>
+                      <span class="tab-item toggled" (click)="filterDataSourceByStatus('allActive'); onTabItemClick('allActive')" id="confirmItemPurchaseTab_allActive">All Active</span>
                     </div>
                     <div class="col-2 text-center">
                       <span class="tab-item" (click)="filterDataSourceByStatus('readyForPickup'); onTabItemClick('readyForPickup')" id="confirmItemPurchaseTab_readyForPickup">Ready for Pickup</span>
@@ -34,6 +34,9 @@
                     </div>
                     <div class="col-2 text-center">
                       <span class="tab-item" (click)="filterDataSourceByStatus('cancelled'); onTabItemClick('cancelled')" id="confirmItemPurchaseTab_cancelled">Cancelled</span>
+                    </div>
+                    <div class="col-2 text-center">
+                      <span class="tab-item" (click)="filterDataSourceByStatus('archived'); onTabItemClick('archived')" id="confirmItemPurchaseTab_archived">Archived</span>
                     </div>
                   </div>
 
