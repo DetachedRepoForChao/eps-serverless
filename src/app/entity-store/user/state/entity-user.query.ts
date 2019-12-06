@@ -53,6 +53,12 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     return user$;
   }
 
+  public getUserByUsername(username: string) {
+    return this.getAll({
+      filterBy: e => e.username === username
+    });
+  }
+
   public selectUserByUserId(userId: number) {
     return this.selectAll({
       filterBy: e => e.userId === userId

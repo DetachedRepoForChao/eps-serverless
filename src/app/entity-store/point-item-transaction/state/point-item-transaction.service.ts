@@ -298,7 +298,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;
@@ -384,7 +384,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;
@@ -480,7 +480,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;

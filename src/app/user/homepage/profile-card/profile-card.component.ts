@@ -1,13 +1,8 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
-import {forkJoin, Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
-import {GALLERY_IMAGE} from 'ngx-image-gallery';
-import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.service';
-import {ImageCroppedEvent} from 'ngx-image-cropper';
-import {Auth, Storage} from 'aws-amplify';
-import awsconfig from '../../../../aws-exports';
+import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 // import {AchievementService} from '../../../shared/achievement/achievement.service';
@@ -32,6 +27,9 @@ import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.
 import {PointItemTransactionService} from '../../../entity-store/point-item-transaction/state/point-item-transaction.service';
 import {PointItemTransactionQuery} from '../../../entity-store/point-item-transaction/state/point-item-transaction.query';
 import {Router} from '@angular/router';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {Order} from '@datorama/akita';
+import {AchievementModel} from '../../../entity-store/achievement/state/achievement.model';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -41,14 +39,19 @@ declare var $: any;
   templateUrl: './profile-card.component.html',
   styleUrls: ['./profile-card.component.css']
 })
-export class ProfileCardComponent implements OnInit {
+export class ProfileCardComponent implements OnInit, OnDestroy {
   componentName = 'profile-card.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
-
+  leaderboardUsers: EntityUserModel[];
+  leaderboardUsersSubscription: Subscription;
   pendingBalance$;
-  currentUser$;
-  currentUser;
+  currentUser$: Observable<EntityCurrentUserModel[]>;
+  currentUser: EntityCurrentUserModel;
+  currentUserSubscription: Subscription;
+  finishedAchievements: AchievementModel[];
+  achievements: AchievementModel[];
+  achievementsSubscription: Subscription;
   pointItemTransactions$;
   isCardLoading: boolean;
 
@@ -89,14 +92,38 @@ export class ProfileCardComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('profile-card-spinner');
 
+    this.entityUserService.cacheUsers().subscribe().unsubscribe();
+    this.pointItemService.cachePointItems().subscribe().unsubscribe();
+    this.achievementService.cacheAchievements().subscribe().unsubscribe();
+
     this.currentUser$ = this.currentUserQuery.selectAll();
-    this.entityUserService.cacheUsers().subscribe();
+
     // this.featureService.cacheFeatures().subscribe().unsubscribe();
     this.leaderboardUsers$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
 
-    this.pointItemService.cachePointItems().subscribe();
+
+
+    this.currentUserSubscription = this.currentUserQuery.selectAll()
+      .subscribe(currentUser => {
+        this.currentUser = currentUser[0];
+      });
+
+    this.leaderboardUsersSubscription = this.entityUserQuery.selectAll({
+      filterBy: e => e.securityRole.Id === 1,
+      sortBy: 'points',
+      sortByOrder: Order.DESC
+    })
+      .subscribe(users => {
+        this.leaderboardUsers = users;
+      });
+
+    this.achievementsSubscription = this.achievementQuery.selectAll()
+      .subscribe(achievements => {
+        this.achievements = achievements;
+        this.finishedAchievements = this.achievementQuery.getFinishedAchievements();
+      });
 
     // this.pendingBalance$ = this.entityCurrentUserService.getPendingBalance();
     this.isImageLoading = false;
@@ -104,30 +131,17 @@ export class ProfileCardComponent implements OnInit {
     this.spinner.hide('profile-card-spinner');
   }
 
-  getPendingBalance(): Observable<any> {
-    return new Observable(observer => {
-      this.currentUserQuery.selectAll()
-        .subscribe(user => {
-          if (user[0]) {
-            observer.next(user[0].pointsBalance);
-            observer.complete();
-          } else {
-            observer.next(0);
-            observer.complete();
-          }
-
-        });
-    });
-  }
-
   avatarClick() {
     $('#avatarModal').modal('show');
   }
 
-  onSetQuoteClick() {
-    this.currentUserQuery.selectAll()
-      .subscribe(currentUser => {
-        this.router.navigate(['user', 'profile', currentUser[0].username], {state: {option: 'quote'}});
-      }).unsubscribe();
+  onSetQuoteClick(username: string) {
+    this.router.navigate(['user', 'profile', username], {state: {option: 'quote'}});
+  }
+
+  ngOnDestroy(): void {
+    this.currentUserSubscription.unsubscribe();
+    this.leaderboardUsersSubscription.unsubscribe();
+    this.achievementsSubscription.unsubscribe();
   }
 }

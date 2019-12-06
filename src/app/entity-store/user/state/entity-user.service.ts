@@ -185,9 +185,9 @@ export class EntityUserService {
 
         console.log('usersMerged');
         console.log(usersMerged);
-        usersMerged.forEach(users => {
+/*        usersMerged.forEach(users => {
           console.log(users.username);
-        });
+        });*/
 
         const usersArray: EntityUserModel[] = [];
         const observables: Observable<any>[] = [];
@@ -206,7 +206,7 @@ export class EntityUserService {
               const preferredName = usersMerged[i].preferredName;
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
-              // const pointsPool = (+usersMerged[i].securityRole.id === 2) ? usersMerged[i].pointPool.pointsRemaining : null;
+              const pointsPool = (+usersMerged[i].securityRole.id === 2) ? usersMerged[i].pointPool.pointsRemaining : null;
               const preferredPronoun = usersMerged[i].preferredPronoun;
               const birthdate = (usersMerged[i].birthdatePublic) ? usersMerged[i].dateOfBirth : null;
               const email = (usersMerged[i].emailPublic) ? usersMerged[i].email : null;
@@ -251,7 +251,7 @@ export class EntityUserService {
                 birthdate, securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
                 preferredName, preferredPronoun, address1, address2, city, country, state, zip, dateOfHire, dateOfTermination, phone,
                 active, sex, gender, quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic,
-                pointsPublic, coreValuesPublic});
+                pointsPublic, coreValuesPublic, pointsPool});
               usersArray.push(userModel);
             }
 
