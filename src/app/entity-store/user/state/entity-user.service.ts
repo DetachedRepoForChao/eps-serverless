@@ -32,6 +32,10 @@ export class EntityUserService {
   };
   user$: any;
 
+  usersRetrieved = false;
+  usersRetrieving = false;
+
+
   constructor(private userStore: UserStore,
               private entityUserQuery: EntityUserQuery,
               private authService: AuthService,
@@ -163,6 +167,7 @@ export class EntityUserService {
 
   cacheUsers() {
     console.log(`Retrieving all users public details`);
+
     // this.userAvatarStore.setLoading(true);  // this is the initial state before doing anything
     const request$ = this.getUsers()
       .pipe(tap((users: any) => {

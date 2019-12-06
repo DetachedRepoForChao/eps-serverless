@@ -92,9 +92,9 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
     this.isImageLoading = true;
     this.spinner.show('profile-card-spinner');
 
-    this.entityUserService.cacheUsers().subscribe().unsubscribe();
-    this.pointItemService.cachePointItems().subscribe().unsubscribe();
-    this.achievementService.cacheAchievements().subscribe().unsubscribe();
+    this.entityUserService.cacheUsers().subscribe();
+    this.pointItemService.cachePointItems().subscribe();
+    this.achievementService.cacheAchievements().subscribe();
 
     this.currentUser$ = this.currentUserQuery.selectAll();
 

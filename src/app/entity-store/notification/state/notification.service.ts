@@ -63,10 +63,10 @@ export class NotificationService {
           const token = user.signInUserSession.idToken.jwtToken;
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
-          API.get(this.apiName, this.apiPath + '/getNotifications', myInit).then(data => {
+          API.get(this.apiName, this.apiPath + '/getNotifications', myInit).then(response => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data);
+            console.log(response);
+            observer.next(response.data.notifications);
             observer.complete();
           });
         });
@@ -138,9 +138,10 @@ export class NotificationService {
             console.log(response);
 
             if (response.data.status !== false) {
+              const timeSeen = new Date(response.data.timeSeen);
               const notification = {
                 notificationId: response.data.notificationId,
-                timeSeen: response.data.timeSeen,
+                timeSeen: timeSeen,
               };
 
               this.update(notification);
@@ -157,8 +158,8 @@ export class NotificationService {
     });
   }
 
-  setNotificationToGroup(notification: NotificationModel): Observable<any> {
-    const functionName = 'setNotificationToGroup';
+  sendNotification(notification): Observable<any> {
+    const functionName = 'sendNotification';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
     console.log(`${functionFullName}: set new Notifications`);
@@ -167,16 +168,30 @@ export class NotificationService {
         .then(user => {
           const token = user.signInUserSession.idToken.jwtToken;
           const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-          console.log(notification);
+          let apiCall;
+
           myInit['body'] = {
             title: notification.title,
             event: notification.event,
             description: notification.description,
-            departmentId: notification.departmentId,
             status: notification.status,
           };
-          API.post(this.apiName, this.apiPath + '/setNotificationsToDepartment', myInit).then(data => {
+
+          switch (notification['audience']) {
+            case 'department':
+              apiCall = '/setNotificationsToDepartment';
+              myInit['body']['departmentId'] = notification['departmentId'];
+              break;
+            case 'individual':
+              apiCall = '/setNotificationsToPerson';
+              myInit['body']['targetUserId'] = notification['targetUserId'];
+              break;
+          }
+
+          myInit.headers['Authorization'] = token;
+          // console.log(notification);
+
+          API.post(this.apiName, this.apiPath + apiCall, myInit).then(data => {
             console.log(`${functionFullName}: successfully set data from API`);
             observer.next(data.data);
             observer.complete();

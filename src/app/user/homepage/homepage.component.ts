@@ -94,9 +94,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
       this.storeItemService.cacheStoreItems().subscribe(() => {
         this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
 
-        }).unsubscribe();
-      }).unsubscribe();
-    }).unsubscribe();
+        });
+      });
+    });
 
 
     this.currentUserSubscription = this.currentUser$.subscribe((currentUser) => {

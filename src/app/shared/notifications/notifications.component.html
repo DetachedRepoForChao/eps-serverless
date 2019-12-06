@@ -5,18 +5,23 @@
   </div>
   <!-- Dropdown header -->
   <div class="px-3 py-3">
-    <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">&nbsp; {{notifications.length}} &nbsp;</strong>unread notifications.</h6>
+    <div *ngIf="unseenNotifications.length > 0; else noUnseenNotifications">
+      <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">{{unseenNotifications.length}}</strong> unread notifications.</h6>
+    </div>
+    <ng-template #noUnseenNotifications>
+      <h6 class="text-sm text-muted m-0">No new notifications.</h6>
+    </ng-template>
   </div>
   <div>
     <!-- List group -->
     <div class="list-group list-group-flush">
-      <div *ngFor="let notification of notifications ">
-        <a  class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(notification)">
+      <div *ngFor="let unseenNotification of unseenNotifications ">
+        <a  class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(unseenNotification)">
           <div class="row align-items-center">
             <div class="col-auto">
               <!-- Avatar -->
               <img class="rounded-circle" width="48px"
-                   [src]="userQuery.getUserByUserId(notification.sourceUserId)[0]?.avatarResolvedUrl" alt="">
+                   [src]="userQuery.getUserByUserId(unseenNotification.sourceUserId)[0]?.avatarResolvedUrl" alt="">
             </div>
             <div class="col ml--2">
               <div class="d-flex justify-content-between align-items-center">
@@ -24,16 +29,16 @@
 
                 <div >
                   <div>
-                    <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(notification.sourceUserId)[0]?.username}}</h4>
+                    <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(unseenNotification.sourceUserId)[0]?.username}}</h4>
                   </div>
                 </div>
               </div>
               <div class="text-right text-muted">
-                <small>{{notification.createdAt | timeAgo}}</small>
+                <small>{{unseenNotification.createdAt | timeAgo}}</small>
                 <!-- <small>{{notification.createdAt}}</small> -->
               </div>
 
-              <p class="text-sm mb-0 black">{{notification.title}}</p>
+              <p class="text-sm mb-0 black">{{unseenNotification.title}}</p>
             </div>
           </div>
         </a>
@@ -42,24 +47,26 @@
   </div>
   <!-- View all -->
   <a (click)="onShowAll()" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
-</div>
 
-<div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">{{detail?.title}}</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body black" >
-        {{detail?.description}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  <div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLabel">{{detail?.title}}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body black" >
+          {{detail?.description}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+

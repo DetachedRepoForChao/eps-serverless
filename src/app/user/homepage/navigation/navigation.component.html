@@ -40,7 +40,7 @@
 
 
 
-        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notiModal">
+        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notiModal" [ngClass]="{'btn-primary': unseenNotifications.length === 0, 'btn-danger': unseenNotifications.length > 0}">
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
 

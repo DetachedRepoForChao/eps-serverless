@@ -19,6 +19,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   alerts: NotificationModel[];
   notificationsSubscription: Subscription;
   alertsSubscription: Subscription;
+  unseenNotifications: NotificationModel[];
+  notificationSubscription: Subscription;
+  unseenNotificationSubscription: Subscription;
 
   detail;
   showDetail = false;
@@ -29,12 +32,19 @@ export class NotificationsComponent implements OnInit, OnDestroy {
               public userQuery: EntityUserQuery) { }
 
   ngOnInit() {
-    this.userService.cacheUsers().subscribe().unsubscribe();
-    this.notificationService.cacheNotifications().subscribe().unsubscribe();
+    this.userService.cacheUsers().subscribe();
+    this.notificationService.cacheNotifications().subscribe();
 
     this.notificationsSubscription = this.notificationQuery.selectAll()
       .subscribe(notifications => {
         this.notifications = notifications;
+      });
+
+    this.unseenNotificationSubscription = this.notificationQuery.selectAll({
+      filterBy: e => e.timeSeen === null
+    })
+      .subscribe(unseenNotifications => {
+        this.unseenNotifications = unseenNotifications;
       });
 
     this.alertsSubscription = this.notificationQuery.selectAll({
@@ -46,10 +56,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
 
 
-    this.notificationService.getNotifications().subscribe(result => {
+/*    this.notificationService.getNotifications().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
-      /*for (let notification of result){
+      /!*for (let notification of result){
         if(size<5){
           if (notification.timeSeen == null) {
             size++;
@@ -61,7 +71,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         }else{
           break;
         }
-      }*/
+      }*!/
       this.detail  = template[0];
       // this.Notifications = template;
       // this.notificationNums = size;
@@ -72,8 +82,20 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         $('#notification_button').addClass('btn-danger');
       }
       console.log('Notification-log Initial' + this.notifications);
-    });
+    });*/
   }
+
+/*  updateNotificationButton() {
+    if (this.notifications.length === 0) {
+      $('#notification_button').removeClass('btn-danger');
+
+      if (!$('#notification_button').hasClass('btn-danger')) {
+        $('#notification_button').addClass('btn-primary');
+      }
+    } else {
+      $('#notification_button').removeClass('btn-primary');
+    }
+  }*/
 
 
   onSeenNotificationClick(notification) {
@@ -120,8 +142,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       }
     }*/
 
+    this.detail = notification;
     if (notification.timeSeen === null) {
-      this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
+      this.notificationService.setNotificationSeenTime(notification.notificationId).subscribe(result => {
         console.log('onSeenNotificationClick');
         console.log(result);
 /*        if (true) {

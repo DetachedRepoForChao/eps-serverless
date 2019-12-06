@@ -1,6 +1,11 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { NotificationService } from 'src/app/shared/notifications/notification.service';
+import {Component, OnInit, ElementRef, OnDestroy} from '@angular/core';
 import { Notification } from 'src/app/shared/notifications/notification';
+import {NotificationService} from '../../../entity-store/notification/state/notification.service';
+import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
+import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
+import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
+import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
+import {Subscription} from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -10,8 +15,8 @@ declare var $: any;
 })
 
 
-export class AlertCardComponent implements OnInit {
-
+export class AlertCardComponent implements OnInit, OnDestroy {
+  componentName = 'alert-card.component';
 
   alertSize: number;
   Index : number;
@@ -21,10 +26,49 @@ export class AlertCardComponent implements OnInit {
   };
   alert: Array<Object> = new Array<Object>();
 
-  constructor(private notificationService: NotificationService,) { }
+  alerts: NotificationModel[];
+  alertSubscription: Subscription;
+  unseenAlerts: NotificationModel[];
+  unseenAlertSubscription: Subscription;
+  currentAlert: NotificationModel;
+
+  constructor(private notificationService: NotificationService,
+              public notificationQuery: NotificationQuery,
+              private userService: EntityUserService,
+              private userQuery: EntityUserQuery) { }
 
   ngOnInit() {
-    this.notificationService.getAlerts().subscribe(result => {
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Starting ${functionFullName}`);
+
+    this.userService.cacheUsers().subscribe();
+    this.notificationService.cacheNotifications().subscribe();
+
+    this.alertSubscription = this.notificationQuery.selectAll({
+      filterBy: e => e.event === 'Alert'
+    })
+      .subscribe(alerts => {
+        console.log(alerts);
+        this.alerts = alerts;
+      });
+
+    this.unseenAlertSubscription = this.notificationQuery.selectAll({
+      filterBy: e => (e.event === 'Alert') && (e.timeSeen === null)
+    })
+      .subscribe(unseenAlerts => {
+        console.log(unseenAlerts);
+        this.unseenAlerts = unseenAlerts;
+        if (this.unseenAlerts.length > 0) {
+          this.currentAlert = this.unseenAlerts[0];
+          this.showAlert();
+        } else {
+          this.currentAlert = null;
+          this.closeAlert();
+        }
+      });
+
+/*    this.notificationService.getAlerts().subscribe(result => {
        let size = 0;
        let alertList = new Array<Object>();
         for (let notification of result){
@@ -42,15 +86,15 @@ export class AlertCardComponent implements OnInit {
         this.Index=0;
 
         console.log("Alert Size:"+size);
-    });
+    });*/
   }
 
-  shownext(notification) {
+  showNext(notification) {
     // set current notification as readed
     console.log("this.Index" + this.Index)
-    this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
+    this.notificationService.setNotificationSeenTime(notification.notificationId).subscribe(result => {
         this.Index++;
-        if (this.Index < this.alertSize) {
+        if (this.Index < this.alerts.length) {
           this.AlertDetail = this.alert[this.Index];
         } else {
           $('#alert-button').text("Close");
@@ -62,15 +106,16 @@ export class AlertCardComponent implements OnInit {
   }
 
 
-
-
-
-
-
-
-
   showAlert() {
-    $('#alert-modal').click();
+    $('#alertModal').modal('show');
   }
 
+  closeAlert() {
+    $('#alertModal').modal('hide');
+  }
+
+  ngOnDestroy(): void {
+    this.alertSubscription.unsubscribe();
+    this.unseenAlertSubscription.unsubscribe();
+  }
 }
