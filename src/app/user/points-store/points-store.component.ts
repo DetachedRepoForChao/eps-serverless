@@ -35,7 +35,7 @@ export class PointsStoreComponent implements OnInit {
   rows = [];
   selectedStoreItem;
 
-  constructor(private storeItemQuery: StoreItemQuery,
+  constructor(public storeItemQuery: StoreItemQuery,
               private storeItemService: StoreItemService,
               private entityCurrentUserService: EntityCurrentUserService,
               private currentUserQuery: EntityCurrentUserQuery,

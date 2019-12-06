@@ -251,7 +251,37 @@ const getUserProfile = function (username) {
       } else {
         console.log(`${functionFullName}: User record found`);
         console.log(user);
-        return  {status: true, user: user};
+
+        // Get the user's pending balance
+        let pendingBalance = 0;
+        return Models.UserHasStoreItem.findAll({
+          include: [
+            {
+              model: Models.StoreItem
+            }
+          ],
+          where: {
+            userId: user.id,
+            status: 'pending',
+          }
+        })
+          .then(requests => {
+            if (!requests) {
+              // No requests. Leaving pending balance at 0
+
+            } else {
+              for (request of requests) {
+                pendingBalance += request.storeItem.cost;
+              }
+            }
+
+            return  {status: true, user: user, pendingBalance: pendingBalance};
+          })
+          .catch(err => {
+            console.log('Error retrieving user store item requests. Returning user object anyway');
+            console.log(err);
+            return  {status: true, error: err, user: user, pendingBalance: pendingBalance};
+          });
       }
     })
     .catch(err => {

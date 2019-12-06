@@ -101,7 +101,7 @@ export class MetricsService {
 
 
 
-  startHomepageTimer() {
+/*  startHomepageTimer() {
     const functionName = 'startHomePageTimer';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -126,9 +126,9 @@ export class MetricsService {
     } else {
       console.log(`${functionFullName}: Timer has already been started`);
     }
-  }
+  }*/
 
-  cacheMetrics() {
+/*  cacheMetrics() {
     const functionName = 'cacheMetrics';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -147,5 +147,5 @@ export class MetricsService {
       }));
 
     return cacheable(this.metricsStore, request$);
-  }
+  }*/
 }

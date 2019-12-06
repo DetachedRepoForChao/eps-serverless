@@ -59,7 +59,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
                 private entityUserQuery: EntityUserQuery,
                 private userHasStoreItemService: UserHasStoreItemService,
                 private storeItemStore: StoreItemStore,
-                private storeItemQuery: StoreItemQuery,
+                public storeItemQuery: StoreItemQuery,
                 private storeItemService: StoreItemService,
                 public dialog: MatDialog,
                 public currentUserQuery: EntityCurrentUserQuery,

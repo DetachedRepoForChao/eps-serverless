@@ -51,8 +51,8 @@ export class NavigationComponent implements OnInit {
               private entityUserService: EntityUserService,
               private authService: AuthService,
               private notificationService: NotificationService,
-              private navigationService: NavigationService,
-              
+              public navigationService: NavigationService,
+
               ) { }
 
   ngOnInit() {
@@ -66,7 +66,7 @@ export class NavigationComponent implements OnInit {
     this.entityUserService.cacheUsers().subscribe();
     this.entityCurrentUserService.cacheCurrentUser().subscribe();
     this.currentUser$ = this.currentUserQuery.selectAll();
-    
+
     this.notificationService.getNotification().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
@@ -74,7 +74,7 @@ export class NavigationComponent implements OnInit {
         if(size<5){
           if (notification.timeSeen == null) {
             size++;
-            
+
             // console.log("notification.sourceUserId:" + notification['sourceUserId']);
             // notification.avatar = this.entityUserQuery.selectUserByUserId(notification.sourceUserId)
             template.push(notification)

@@ -40,7 +40,7 @@ export class FeedComponent implements OnInit {
               private userStore: UserStore,
               private entityUserQuery: EntityUserQuery,
               private achievementService: AchievementService,
-              private pointItemTransactionService: PointItemTransactionService,
+              public pointItemTransactionService: PointItemTransactionService,
               private pointItemTransactionQuery: PointItemTransactionQuery,
               private pointItemService: PointItemService,
               private pointItemQuery: PointItemQuery) { }

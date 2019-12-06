@@ -100,7 +100,7 @@ app.get('/items/userProfile', function(req, res) {
       const username = tokenResult.claims['cognito:username'];
       ctrlUser.getUserProfile(username)
         .then(data => {
-          res.json({status: 'get call succeed!', data: data.user});
+          res.json({status: 'get call succeed!', data: data});
         })
         .catch(err => {
           res.json({status: 'get call failed!', error: err});

@@ -153,6 +153,7 @@ export class EntityCurrentUserService {
         const achievementsPublic = userDataResult.achievementsPublic;
         const pointsPublic = userDataResult.pointsPublic;
         const coreValuesPublic = userDataResult.coreValuesPublic;
+        const pointsBalance = userDataResult.pointsBalance;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
@@ -161,7 +162,8 @@ export class EntityCurrentUserService {
             const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, prefix,
               suffix, position, points, pointsPool, email, address1, address2, city, state, country, zip, birthdate, preferredPronoun, sex,
               gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl, quote, phonePublic,
-              emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic});
+              emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic,
+              pointsBalance});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -227,53 +229,54 @@ export class EntityCurrentUserService {
               console.log(userAttributes);
 
               this.getCurrentUserFromDb()
-                .subscribe(currentUser => {
-                  const userId = currentUser.id;
-                  const username = currentUser.username;
-                  const firstName = currentUser.firstName;
-                  const lastName = currentUser.lastName;
-                  const middleName = currentUser.middleName;
-                  const preferredName = currentUser.preferredName;
-                  const prefix = currentUser.prefix;
-                  const suffix = currentUser.suffix;
-                  const position = currentUser.position;
-                  const points = currentUser.points;
+                .subscribe(currentUserData => {
+                  const userId = currentUserData.user.id;
+                  const username = currentUserData.user.username;
+                  const firstName = currentUserData.user.firstName;
+                  const lastName = currentUserData.user.lastName;
+                  const middleName = currentUserData.user.middleName;
+                  const preferredName = currentUserData.user.preferredName;
+                  const prefix = currentUserData.user.prefix;
+                  const suffix = currentUserData.user.suffix;
+                  const position = currentUserData.user.position;
+                  const points = currentUserData.user.points;
                   let pointsPool = null;
-                  if (currentUser.pointPool) {
-                    pointsPool = (currentUser.pointPool.pointsRemaining) ? currentUser.pointPool.pointsRemaining : null;
+                  if (currentUserData.user.pointPool) {
+                    pointsPool = (currentUserData.user.pointPool.pointsRemaining) ? currentUserData.user.pointPool.pointsRemaining : null;
                   }
-                  const email = currentUser.email;
-                  const address1 = currentUser.address1;
-                  const address2 = currentUser.address2;
-                  const city = currentUser.city;
-                  const state = currentUser.state;
-                  const country = currentUser.country;
-                  const zip = currentUser.zip;
-                  const dateOfBirth = currentUser.dateOfBirth;
-                  const preferredPronoun = currentUser.preferredPronoun;
-                  const sex = currentUser.sex;
-                  const gender = currentUser.gender;
-                  const dateOfHire = currentUser.dateOfHire;
-                  const phone = currentUser.phone;
+                  const email = currentUserData.user.email;
+                  const address1 = currentUserData.user.address1;
+                  const address2 = currentUserData.user.address2;
+                  const city = currentUserData.user.city;
+                  const state = currentUserData.user.state;
+                  const country = currentUserData.user.country;
+                  const zip = currentUserData.user.zip;
+                  const dateOfBirth = currentUserData.user.dateOfBirth;
+                  const preferredPronoun = currentUserData.user.preferredPronoun;
+                  const sex = currentUserData.user.sex;
+                  const gender = currentUserData.user.gender;
+                  const dateOfHire = currentUserData.user.dateOfHire;
+                  const phone = currentUserData.user.phone;
                   const department: Department = {
-                    Id: currentUser.departmentId,
-                    Name: currentUser.department.name,
+                    Id: currentUserData.user.departmentId,
+                    Name: currentUserData.user.department.name,
                   };
                   const securityRole: SecurityRole = {
-                    Id: currentUser.securityRoleId,
-                    Name: currentUser.securityRole.name,
-                    Description: currentUser.securityRole.description
+                    Id: currentUserData.user.securityRoleId,
+                    Name: currentUserData.user.securityRole.name,
+                    Description: currentUserData.user.securityRole.description
                   };
-                  const avatarUrl = currentUser.avatarUrl;
-                  const quote = currentUser.quote;
-                  const phonePublic = currentUser.phonePublic;
-                  const emailPublic = currentUser.emailPublic;
-                  const genderPublic = currentUser.genderPublic;
-                  const birthdatePublic = currentUser.birthdatePublic;
-                  const pointAwardsPublic = currentUser.pointAwardsPublic;
-                  const achievementsPublic = currentUser.achievementsPublic;
-                  const pointsPublic = currentUser.pointsPublic;
-                  const coreValuesPublic = currentUser.coreValuesPublic;
+                  const avatarUrl = currentUserData.user.avatarUrl;
+                  const quote = currentUserData.user.quote;
+                  const phonePublic = currentUserData.user.phonePublic;
+                  const emailPublic = currentUserData.user.emailPublic;
+                  const genderPublic = currentUserData.user.genderPublic;
+                  const birthdatePublic = currentUserData.user.birthdatePublic;
+                  const pointAwardsPublic = currentUserData.user.pointAwardsPublic;
+                  const achievementsPublic = currentUserData.user.achievementsPublic;
+                  const pointsPublic = currentUserData.user.pointsPublic;
+                  const coreValuesPublic = currentUserData.user.coreValuesPublic;
+                  const pointsBalance = currentUserData.pendingBalance;
 
                   const data = {
                     userId: userId,
@@ -312,6 +315,7 @@ export class EntityCurrentUserService {
                     achievementsPublic: achievementsPublic,
                     pointsPublic: pointsPublic,
                     coreValuesPublic: coreValuesPublic,
+                    pointsBalance: pointsBalance,
                   };
 
                   console.log('userData:');

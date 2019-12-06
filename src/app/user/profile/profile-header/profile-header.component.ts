@@ -28,9 +28,9 @@ export class ProfileHeaderComponent implements OnInit {
               private achievementService: AchievementService,
               private storeItemService: StoreItemService,
               private userHasStoreItemService: UserHasStoreItemService,
-              private userQuery: EntityUserQuery,
-              private currentUserQuery: EntityCurrentUserQuery,
-              private achievementQuery: AchievementQuery) { }
+              public userQuery: EntityUserQuery,
+              public currentUserQuery: EntityCurrentUserQuery,
+              public achievementQuery: AchievementQuery) { }
 
   ngOnInit() {
     const observables: Observable<any>[] = [];

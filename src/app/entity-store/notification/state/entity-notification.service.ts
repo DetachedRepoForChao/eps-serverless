@@ -30,7 +30,6 @@ export class NotificationService {
 
   constructor(private http: HttpClient,
               private authService: AuthService,
-              private notificationModel: NotificationModel,
               private notificationStore: NotificationStore) {
     console.log('notification:' + this.apiName);
 

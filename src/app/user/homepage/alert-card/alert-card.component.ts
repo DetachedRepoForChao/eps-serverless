@@ -9,13 +9,14 @@ declare var $: any;
   styleUrls: ['./alert-card.component.css']
 })
 
+
 export class AlertCardComponent implements OnInit {
 
-  
+
   alertSize: number;
   Index : number;
 
-  AlertDetail:Object = {
+  AlertDetail: any = {
     description: "",
   };
   alert: Array<Object> = new Array<Object>();
@@ -30,7 +31,7 @@ export class AlertCardComponent implements OnInit {
            alertList.push(notification);
            size++;
         }
-       
+
         // this.Index = 0;
        if (size > 0) {
          this.AlertDetail = alertList[0];
@@ -38,7 +39,7 @@ export class AlertCardComponent implements OnInit {
         }
         this.alert = alertList;
         this.alertSize = size;
-        this.Index=0; 
+        this.Index=0;
 
         console.log("Alert Size:"+size);
     });
@@ -59,14 +60,14 @@ export class AlertCardComponent implements OnInit {
         }
       });
   }
-   
-   
-     
-    
 
-  
-      
-  
+
+
+
+
+
+
+
 
   showAlert() {
     $('#alert-modal').click();

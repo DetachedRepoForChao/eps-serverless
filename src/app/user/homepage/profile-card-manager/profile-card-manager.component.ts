@@ -44,7 +44,7 @@ export class ProfileCardManagerComponent implements OnInit {
               private userService: UserService,
               private currentUserStore: CurrentUserStore,
               private entityUserService: EntityCurrentUserService,
-              private entityCurrentUserQuery: EntityCurrentUserQuery) { }
+              public entityCurrentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
