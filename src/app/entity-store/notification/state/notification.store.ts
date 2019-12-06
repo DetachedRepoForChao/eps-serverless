@@ -1,8 +1,7 @@
 
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-
 import {Injectable} from '@angular/core';
-import {NotificationModel} from './entity-notification.model';
+import {NotificationModel} from './notification.model';
 import { VISIBILITY_FILTER} from '../filter/notification-filter.model';
 export interface NotificationState extends EntityState<NotificationModel> {
   ui: {

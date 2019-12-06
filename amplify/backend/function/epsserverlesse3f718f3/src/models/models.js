@@ -765,10 +765,28 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'sourceUserId'
     },
+    departmentId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      field: 'departmentId'
+    },
+    securityRoleId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      field: 'securityRoleId'
+    },
   }, {
     tableName: 'notification'
   });
 
+  Notification.belongsTo(User, {foreignKey: 'targetUserId', targetKey: 'id', as: 'notificationTargetUser'});
+  Notification.belongsTo(User, {foreignKey: 'sourceUserId', targetKey: 'id', as: 'notificationSourceUser'});
+  User.hasMany(Notification, {foreignKey: 'targetUserId', sourceKey: 'id', as: 'notificationTargetUser'});
+  User.hasMany(Notification, {foreignKey: 'sourceUserId', sourceKey: 'id', as: 'notificationSourceUser'});
+  Notification.belongsTo(Department, {foreignKey: 'departmentId', targetKey: 'id'});
+  Notification.belongsTo(SecurityRole, {foreignKey: 'securityRoleId', targetKey: 'id'});
+  Department.hasMany(Notification, {foreignKey: 'departmentId', sourceKey: 'id'});
+  SecurityRole.hasMany(Notification, {foreignKey: 'securityRoleId', sourceKey: 'id'});
 
   // metrics table
   const Metrics = sequelize.define('metrics', {

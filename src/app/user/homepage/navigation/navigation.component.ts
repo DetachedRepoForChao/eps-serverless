@@ -67,7 +67,7 @@ export class NavigationComponent implements OnInit {
     this.entityCurrentUserService.cacheCurrentUser().subscribe();
     this.currentUser$ = this.currentUserQuery.selectAll();
 
-    this.notificationService.getNotification().subscribe(result => {
+    this.notificationService.getNotifications().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
       for (let notification of result){
@@ -98,7 +98,7 @@ export class NavigationComponent implements OnInit {
   }
 
   onShowAll(){
-    this.notificationService.getNotification().subscribe(result => {
+    this.notificationService.getNotifications().subscribe(result => {
       let size = this.notificationNums+5;
       size = Math.min(size,result.length);
       this.Notifications = result.slice(0,size);
@@ -110,7 +110,7 @@ export class NavigationComponent implements OnInit {
 
   close(){
 
-    this.notificationService.getNotification().subscribe(result => {
+    this.notificationService.getNotifications().subscribe(result => {
 
       let size = 0;
       let template: Array<number> = new Array<number>();
@@ -160,7 +160,7 @@ export class NavigationComponent implements OnInit {
        console.log('onSeenNotificationClick');
        if (true) {
          // tslint:disable-next-line:no-shadowed-variable
-         this.notificationService.getNotification().subscribe(result => {
+         this.notificationService.getNotifications().subscribe(result => {
            if (result === '') {
              $('#notification_button').removeClass('btn-danger');
              if (!$('#notification_button').hasClass('btn-danger')) {

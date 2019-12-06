@@ -27,17 +27,17 @@ const getNotifications = function (targetUserId) {
       .then(notificationsResult => {
         if(!notificationsResult) {
           console.log(`${functionFullName}: No notification records found`);
-          return {status: 404, message: "No notification records found" };
+          return {status: false, message: "No notification records found" };
         } else {
           console.log(`${functionFullName}: Retrieved notification records successfully`);
-          console.log(notificationsResult);
-          return {status: 200, notifications: notificationsResult };
+          // console.log(notificationsResult);
+          return {status: true, notifications: notificationsResult };
         }
       })
       .catch(err => {
         console.log(`${functionFullName}: Database error`);
         console.log(err);
-        return {status: 500, message: err};
+        return {status: false, message: 'Database error', error: err};
       });
   };
 
@@ -45,7 +45,7 @@ module.exports.getNotifications = getNotifications;
 
 
 const getAlerts = function (targetUserId) {
-  const functionName = 'getAlert';
+  const functionName = 'getAlerts';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
@@ -57,23 +57,23 @@ const getAlerts = function (targetUserId) {
     },
     'order': [
       ['id', 'DESC'],
-      
+
     ]
   })
     .then(notificationsResult => {
       if (!notificationsResult) {
         console.log(`${functionFullName}: No alert records found`);
-        return { status: 404, message: "No alert records found" };
+        return { status: false, message: "No alert records found" };
       } else {
         console.log(`${functionFullName}: Retrieved alert records successfully`);
-        console.log(notificationsResult);
-        return { status: 200, notifications: notificationsResult };
+        // console.log(notificationsResult);
+        return { status: true, notifications: notificationsResult };
       }
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      return { status: 500, message: err };
+      return { status: false, message: 'Database error', error: err };
     });
 };
 
@@ -85,34 +85,38 @@ module.exports.getAlerts = getAlerts;
  * Only Manager can send noticiations
  *
  */
-const setNotificationsToPerson = function (targetUserId, title, event, description, sourceUserId,status){
+const setNotificationsToPerson = function (targetUserId, title, event, description, sourceUserId, status){
       const functionName = 'setNotificationsToPerson';
       const functionFullName = `${componentName} ${functionName}`;
       console.log(`Start ${functionFullName}`);
-      console.log('statusstatus--------------------------------------------------'+sourceUserId);
+      // console.log('statusstatus--------------------------------------------------'+sourceUserId);
       return sqlNotification.create({
             targetUserId: targetUserId,
-            title:title,
-            description:description,
-            audience:'Group',
-            event:event,
-            timeSeen:null,
-            status:1,
+            title: title,
+            description: description,
+            audience: 'Personal',
+            event: event,
+            timeSeen: null,
+            status: 1,
             sourceUserId: sourceUserId,
-      }).then((notifications)=>{
-          console.log(`${functionFullName}: notification created in the db`);
-          return {status:true,message:'notification created', notifications:notifications}
-      }).catch(err=>{
+      }).then(notification => {
+        if (!notification) {
+          console.log(`${functionFullName}: Error creating notification in the db`);
+          return {status: true, message: 'Error creating notification in the db'};
+        }
+          console.log(`${functionFullName}: Notification created in the db`);
+          return {status: true, message:'Notification created', notification: notification};
+      }).catch(err => {
         console.log(`${functionFullName}: Problem with the database`);
         console.log(err);
-        return { status: false, error: 'Problem with the database: ' + err };
+        return { status: false, message: 'Problem with the database', error: err };
       })
-}
+};
 
 exports.setNotificationsToPerson = setNotificationsToPerson;
 
 
-
+/*
 async function setGroupNotification(targetUserId, title, event, description, sourceUserId, status){
       const functionName = 'setNotificationsToPerson';
       const functionFullName = `${componentName} ${functionName}`;
@@ -128,15 +132,15 @@ async function setGroupNotification(targetUserId, title, event, description, sou
       status: 1,
       sourceUserId: sourceUserId,
     })
-}
+}*/
 
 
-const setNotificationsToGroup =function (groupID, title, event, description, sourceUserId,status) {
-  const functionName = 'setNotificationsToGroup';
+const setNotificationsToDepartment =function (departmentId, title, event, description, sourceUserId, status) {
+  const functionName = 'setNotificationsToDepartment';
   const functionFullName = `${componentName} ${functionName}`;
 
   // get the userList by department ID
-  if (groupID == 911) {
+/*  if (groupID == 911) {
     return ctrlDepartment.getEmployeesByDepartmentId(groupID).then(async userList => {
       for (let user of userList) {
           await setGroupNotification(user.id, title, event, description, sourceUserId, status);
@@ -158,44 +162,88 @@ const setNotificationsToGroup =function (groupID, title, event, description, sou
       console.log(err);
       return { status: 500, message: err };
     });
-  }
-}
+  }*/
+  return ctrlDepartment.getEmployeesByDepartmentId(departmentId)
+    .then(userList => {
+      if (!userList) {
+        console.log(`${functionFullName}: No members in department ${departmentId}`);
+        return { status: false, message: `No members in department ${departmentId}`};
+      } else {
+        console.log(`${functionFullName}: Members for department ${departmentId} retrieved successfully`);
 
+        const newRecordArray = [];
+        for (let user of userList) {
+          // setGroupNotification(user.id, title, event, description, sourceUserId, status);
+          newRecordArray.push({
+            targetUserId: user.id,
+            title: title,
+            description: description,
+            audience: 'Group',
+            event: event,
+            timeSeen: null,
+            status: 1,
+            sourceUserId: sourceUserId,
+            departmentId: departmentId,
+          })
+        }
 
+        return sqlNotification.bulkCreate(newRecordArray)
+          .then(newRecords => {
+            // console.log(newRecords);
+            if (!newRecords) {
+              console.log('No new records created');
+              return {status: false, message: 'No new records created', newRecords: newRecords};
+            } else {
+              console.log('New records created successfully');
+              return {status: true, message: 'New records created successfully', newRecords: newRecords};
+            }
+          })
+          .catch(err => {
+            console.log('Database error trying to create new records');
+            console.log(err);
+            return { status: false, message: 'Database error trying to create new records', error: err };
+          });
+      }
+  }).catch(err => {
+    console.log('Database error');
+    console.log(err);
+    return { status: false, message: 'Database error', error: err };
+  });
+};
 
-
-module.exports.setNotificationsToGroup = setNotificationsToGroup;
+module.exports.setNotificationsToDepartment = setNotificationsToDepartment;
 
 
 
 /**
  *
- * @param {*} notifictaionId
+ * @param {*} notificationId
  */
 
-const setNotifictaionSeenTime = function(notifictaionId){
-  const functionName = 'setNotifictaionSeenTime';
+const setNotificationSeenTime = function(notificationId){
+  const functionName = 'setNotificationSeenTime';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
-  console.log(new Date().getTime.toString);
+  // console.log(new Date().getTime.toString);
+  const timeSeen = Date.now();
   return sqlNotification.update({
       timeSeen: Date.now(),
   },{
-      where:{
-         id: notifictaionId,
+      where: {
+         id: notificationId,
       }
   }).then((notifications) => {
-      console.log(`${functionFullName}: timeseen update in the db`);
-      return { status: true, message: 'timeseen updated', noticiations: notifications }
+      console.log(`${functionFullName}: timeSeen updated in the db`);
+      return { status: true, message: 'timeSeen updated', notifications: notifications, notificationId: notificationId, timeSeen: timeSeen }
   }).catch(err => {
         console.log(`${functionFullName}: Problem with the database`);
         console.log(err);
-        return { status: false, error: 'Problem with the database: ' + err };
+        return { status: false, message: 'Problem with the database', error: err };
   })
-}
+};
 
-module.exports.setNotifictaionSeenTime = setNotifictaionSeenTime;
+module.exports.setNotifictaionSeenTime = setNotificationSeenTime;
 
 const sendNotificationEmail = function (targetUserId, sourceUser) {
   // Set the region
@@ -227,7 +275,7 @@ const sendNotificationEmail = function (targetUserId, sourceUser) {
                     },*/
             Text: {
               Charset: "UTF-8",
-              Data: `Hi ${targetUserName}, 
+              Data: `Hi ${targetUserName},
 This is an automated notification test from the Employee Points System!
 
 Our records indicate that you currently have ${targetUserPoints} points!

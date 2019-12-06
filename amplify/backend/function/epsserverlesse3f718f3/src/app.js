@@ -1472,16 +1472,16 @@ app.get('/items/getAlerts', function (req, res) {
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
       // const targetUserId = req.body.targetUserId;
-      console.log(tokenResult.claims)
+      // console.log(tokenResult.claims)
       const targetUserId = tokenResult.claims['cognito:username'];
-      console.log("cognito:username:" + targetUserId)
+      // console.log("cognito:username:" + targetUserId)
       ctrlUser.getUserProfile(targetUserId).then(userProfile => {
         ctrlNotifications.getAlerts(userProfile.user.id)
           .then(data => {
-            res.json({ status: 'get call succeed!', data: data.notifications });
+            res.json({ status: 'get call succeed!', data: data });
           })
           .catch(err => {
-            res.json({ status: 'post call failed!', error: err });
+            res.json({ status: 'get call failed!', error: err });
           });
       })
 
@@ -1498,16 +1498,16 @@ app.get('/items/getNotifications', function(req, res) {
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
       // const targetUserId = req.body.targetUserId;
-      console.log(tokenResult.claims)
+      // console.log(tokenResult.claims)
       const targetUserId = tokenResult.claims['cognito:username'];
-      console.log("cognito:username:" + targetUserId)
+      // console.log("cognito:username:" + targetUserId)
       ctrlUser.getUserProfile(targetUserId).then(userProfile => {
         ctrlNotifications.getNotifications(userProfile.user.id)
           .then(data => {
-            res.json({ status: 'get call succeed!', data: data.notifications });
+            res.json({ status: 'get call succeed!', data: data });
           })
           .catch(err => {
-            res.json({ status: 'post call failed!', error: err });
+            res.json({ status: 'get call failed!', error: err });
           });
       })
 
@@ -1518,7 +1518,7 @@ app.get('/items/getNotifications', function(req, res) {
 });
 
 app.post('/items/setNotificationsToPerson', function (req, res) {
-  console.log('starting get setNotificationsToPerson');
+  console.log('starting post setNotificationsToPerson');
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
@@ -1530,7 +1530,7 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
         const description = req.body.description;
         ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, sourceUserId)
           .then(data => {
-            res.json({ status: 'get call succeed!', data: data.notifications });
+            res.json({ status: 'post call succeed!', data: data });
           })
           .catch(err => {
             res.json({ status: 'post call failed!', error: err });
@@ -1542,8 +1542,8 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
   });
 });
 
-app.post('/items/setNotificationsToGroup', function (req, res) {
-  console.log('starting get setNotificationsToGroup');
+app.post('/items/setNotificationsToDepartment', function (req, res) {
+  console.log('starting post setNotificationsToDepartment');
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
@@ -1552,14 +1552,14 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
           const title = req.body.title;
           const event = req.body.event;
           const description = req.body.description;
-          const GroupId  = req.body.groupid;
+          const departmentId  = req.body.departmentId;
           const status = req.body.status;
-          ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
+          ctrlNotifications.setNotificationsToDepartment(departmentId, title, event, description, sourceUserId, status)
             .then(data => {
-              res.json({ status: 200, data: data });
+              res.json({ status: 'post call succeed!', data: data });
             })
             .catch(err => {
-              res.json({ status: 500, data: err });
+              res.json({ status: 'post call failed!', data: err });
             });
         })
     } else {
@@ -1570,14 +1570,14 @@ app.post('/items/setNotificationsToGroup', function (req, res) {
 
 
 app.post('/items/setNotificationSeenTime', function (req, res) {
-  console.log('starting get getNotifications');
+  console.log('starting post setNotificationSeenTime');
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      const notificationid = req.body.notificationId;
-      ctrlNotifications.setNotifictaionSeenTime(notificationid)
+      const notificationId = req.body.notificationId;
+      ctrlNotifications.setNotifictaionSeenTime(notificationId)
         .then(data => {
-          res.json({ status: 'get call succeed!', data: data.notifications });
+          res.json({ status: 'post call succeed!', data: data });
         })
         .catch(err => {
           res.json({ status: 'post call failed!', error: err });

@@ -24,7 +24,7 @@ export class AlertCardComponent implements OnInit {
   constructor(private notificationService: NotificationService,) { }
 
   ngOnInit() {
-    this.notificationService.getAlert().subscribe(result => {
+    this.notificationService.getAlerts().subscribe(result => {
        let size = 0;
        let alertList = new Array<Object>();
         for (let notification of result){
