@@ -69,6 +69,33 @@ perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
 }
 
 
+
+#notificationModal > div > div > div.modal-body.modalclass > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+
+#notificationModal > div > div > div.modal-body.modalclass > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#notificationModal > div > div > div.modal-body.modalclass > perfect-scrollbar > .ps.ps--scrolling-y > .ps__rail-y,
+#notificationModal > div > div > div.modal-body.modalclass > perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
+  opacity: 0.9;
+
+  background-color: #eee0 !important;
+}
+
+#notificationModal > div > div > div.modal-body.modalclass > perfect-scrollbar .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: #eee0 !important;
+  opacity: 0.9;
+}
+
+
 .mat-tooltip {
   font-size: 16px;
   white-space: pre-line !important;
@@ -79,28 +106,15 @@ perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
   z-index: 1051 !important;
 }
 
-/* width */
-/*::-webkit-scrollbar {
-  width: 10px;
-}*/
-
-/* Track */
-/*::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}*/
-
-/* Handle */
-/*::-webkit-scrollbar-thumb {
-  background: #888;
-}*/
-
-/* Handle on hover */
 /*
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.notification-modal {
+  z-index: 1040 !important;
+}
+
+.notification-details-modal {
+  z-index: 1100 !important;
 }
 */
-
 
 /*.mat-tooltip.tooltip {
   font-size: 20px;

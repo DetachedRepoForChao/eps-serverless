@@ -40,7 +40,7 @@
 
 
 
-        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notiModal" [ngClass]="{'btn-primary': unseenNotifications.length === 0, 'btn-danger': unseenNotifications.length > 0}">
+        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notificationModal" [ngClass]="{'btn-primary': unseenNotifications.length === 0, 'btn-danger': unseenNotifications.length > 0}">
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
 
@@ -97,12 +97,7 @@
         </div>
 -->
 
-        <div class="modal fade" id="notiModal" role="dialog">
-          <div class="modal-dialog tweet">
-            <app-notifications></app-notifications>
-          </div>
 
-        </div>
 
         <!-- Modal
         <div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -437,3 +432,44 @@
 </div>
 
 
+<div class="modal fade notification-details-modal" id="notificationDetailsModal" tabindex="-1" role="dialog" aria-labelledby="notificationDetailModal"
+     aria-hidden="true">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">{{navigationService.notificationDetailsInput?.title}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="navigationService.closeNotificationDetailsModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body black modalclass" >
+        {{navigationService.notificationDetailsInput?.description}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade notification-modal" id="notificationModal" role="dialog">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="close()">&times;</button>
+
+        <h4 class="modal-title"><b>Your Notifications</b></h4>
+
+      </div>
+      <!-- Dropdown header -->
+      <div class="modal-body modalclass">
+        <perfect-scrollbar class="scroll-container perfect-scrollbar-light" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+          <app-notifications></app-notifications>
+        </perfect-scrollbar>
+      </div>
+    </div>
+
+
+  </div>
+
+</div>

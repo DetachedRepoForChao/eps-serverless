@@ -158,6 +158,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   }
 
+
   onLogout() {
     this.navigationService.onLogout();
   }

@@ -5,6 +5,8 @@ import {NotificationModel} from '../../entity-store/notification/state/notificat
 import {Subscription} from 'rxjs';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
+import {take} from 'rxjs/operators';
+import {NavigationService} from '../navigation.service';
 
 declare var $: any;
 
@@ -14,6 +16,14 @@ declare var $: any;
   styleUrls: ['./notifications.component.css']
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
+
+  dataSource: NotificationModel[];
+  currentNotificationTab = 'new';
+  notificationTabs = [
+    'new',
+    'all',
+  ];
 
   notifications: NotificationModel[];
   alerts: NotificationModel[];
@@ -23,66 +33,88 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   notificationSubscription: Subscription;
   unseenNotificationSubscription: Subscription;
 
-  detail;
+  notificationDetails;
   showDetail = false;
+  showLimit = 5;
 
   constructor(private notificationService: NotificationService,
               public notificationQuery: NotificationQuery,
               private userService: EntityUserService,
-              public userQuery: EntityUserQuery) { }
+              public userQuery: EntityUserQuery,
+              private navigationService: NavigationService) { }
 
   ngOnInit() {
-    this.userService.cacheUsers().subscribe();
-    this.notificationService.cacheNotifications().subscribe();
+    this.userService.cacheUsers()
+      .pipe(take(1))
+      .subscribe();
 
-    this.notificationsSubscription = this.notificationQuery.selectAll()
+    this.notificationService.cacheNotifications()
+      .pipe(take(1))
+      .subscribe();
+
+    this.subscription.add(this.notificationQuery.selectAll()
       .subscribe(notifications => {
         this.notifications = notifications;
-      });
-
-    this.unseenNotificationSubscription = this.notificationQuery.selectAll({
-      filterBy: e => e.timeSeen === null
-    })
-      .subscribe(unseenNotifications => {
-        this.unseenNotifications = unseenNotifications;
-      });
-
-    this.alertsSubscription = this.notificationQuery.selectAll({
-      filterBy: e => e.event === 'Alert'
-    })
-      .subscribe(alerts => {
-        this.alerts = alerts;
-      });
-
-
-
-/*    this.notificationService.getNotifications().subscribe(result => {
-      let size = 0;
-      let template: Array<number> = new Array<number>();
-      /!*for (let notification of result){
-        if(size<5){
-          if (notification.timeSeen == null) {
-            size++;
-
-            // console.log("notification.sourceUserId:" + notification['sourceUserId']);
-            // notification.avatar = this.entityUserQuery.selectUserByUserId(notification.sourceUserId)
-            template.push(notification)
-          }
-        }else{
-          break;
+        if (this.currentNotificationTab === 'all') {
+          this.dataSource = this.notifications;
         }
-      }*!/
-      this.detail  = template[0];
-      // this.Notifications = template;
-      // this.notificationNums = size;
-      this.showDetail = false;
-      if (size === 0) {
-        $('#notification_button').addClass('btn-primary');
-      } else {
-        $('#notification_button').addClass('btn-danger');
+      })
+    );
+
+    this.subscription.add(this.notificationQuery.selectAll({
+        filterBy: e => e.timeSeen === null
+      })
+        .subscribe(unseenNotifications => {
+          this.unseenNotifications = unseenNotifications;
+          if (this.currentNotificationTab === 'new') {
+            this.dataSource = this.unseenNotifications;
+          }
+        })
+    );
+
+    this.subscription.add(this.notificationQuery.selectAll({
+        filterBy: e => e.event === 'Alert'
+      })
+        .subscribe(alerts => {
+          this.alerts = alerts;
+        })
+    );
+
+    // this.setNotificationsDataSource('new');
+    this.onNotificationTabItemClick('new');
+  }
+
+  setNotificationsDataSource(filter) {
+    switch (filter) {
+      case 'new':
+        this.dataSource = this.unseenNotifications;
+        break;
+      case 'all':
+        this.dataSource = this.notifications;
+        break;
+    }
+  }
+
+  onNotificationTabItemClick(clickedItem: string) {
+    if (this.currentNotificationTab === clickedItem) {
+      // Already there, do nothing.
+    } else {
+      for (const item of this.notificationTabs) {
+        if (item === clickedItem) {
+          this.currentNotificationTab = clickedItem;
+          document.getElementById(`notificationTab_${item}`).className = document.getElementById(`notificationTab_${item}`).className += ' toggled';
+        } else {
+          document.getElementById(`notificationTab_${item}`).className = document.getElementById(`notificationTab_${item}`).className.replace('toggled', '').trim();
+        }
       }
-      console.log('Notification-log Initial' + this.notifications);
-    });*/
+    }
+  }
+
+
+  openNotificationDetails() {
+    this.navigationService.notificationDetailsInput = this.notificationDetails;
+    this.navigationService.openNotificationDetailsModal();
+
   }
 
 /*  updateNotificationButton() {
@@ -98,73 +130,51 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }*/
 
 
-  onSeenNotificationClick(notification) {
-    console.log('notificationID:' + notification.id);
-    this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
-      console.log('onSeenNotificationClick');
-      console.log(result);
-      /*if (true) {
-        // tslint:disable-next-line:no-shadowed-variable
-        this.notificationService.getNotifications().subscribe(result => {
-          if (result === '') {
-            $('#notification_button').removeClass('btn-danger');
-            if (!$('#notification_button').hasClass('btn-danger')) {
-              $('#notification_button').addClass('btn-primary');
-            }
-          } else {
-            $('#notification_button').removeClass('btn-primary');
-          }
-          this.Notifications = result;
-        });
-      }*/
-    });
-  }
-
-
-  onClickNotificationDetail(notification) {
-
-/*    let numsofUnread = this.notificationNums;
-    console.log('onClickNotificationDetail:' + notification.id);
-    if(notification.timeSeen==null){
-      this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
-        console.log('onSeenNotificationClick');
-        if (true) {
-          numsofUnread-=1;
-          this.notificationNums = numsofUnread;
-        }
-      });
-    }
-    let id = notification.id;
-    for (let temp of this.Notifications){
-      if(temp.id === id){
-        this.Detail = temp;
-        console.log('onClickNotificationDetail:' + notification.id);
-      }
-    }*/
-
-    this.detail = notification;
-    if (notification.timeSeen === null) {
-      this.notificationService.setNotificationSeenTime(notification.notificationId).subscribe(result => {
+  onSeenNotificationClick(notification: NotificationModel) {
+    console.log('notificationID:' + notification.notificationId);
+    this.notificationService.setNotificationSeenTime(notification.notificationId)
+      .pipe(take(1))
+      .subscribe(result => {
         console.log('onSeenNotificationClick');
         console.log(result);
-/*        if (true) {
-          numsofUnread-=1;
-          this.notificationNums = numsofUnread;
+        /*if (true) {
+          // tslint:disable-next-line:no-shadowed-variable
+          this.notificationService.getNotifications().subscribe(result => {
+            if (result === '') {
+              $('#notification_button').removeClass('btn-danger');
+              if (!$('#notification_button').hasClass('btn-danger')) {
+                $('#notification_button').addClass('btn-primary');
+              }
+            } else {
+              $('#notification_button').removeClass('btn-primary');
+            }
+            this.Notifications = result;
+          });
         }*/
       });
-    }
   }
 
 
-  onShowAll() {
-    /*this.notificationService.getNotifications().subscribe(result => {
-      let size = this.notificationNums+5;
-      size = Math.min(size,result.length);
-      this.Notifications = result.slice(0,size);
+  onClickNotificationDetails(notification: NotificationModel) {
 
-      console.log('Notification-log Initial' + this.Notifications);
-      this.notificationNums = size;
-    });*/
+    this.notificationDetails = notification;
+    if (notification.timeSeen === null) {
+      this.notificationService.setNotificationSeenTime(notification.notificationId)
+        .pipe(take(1))
+        .subscribe(result => {
+          console.log('onSeenNotificationClick');
+          console.log(result);
+        });
+    }
+  }
+
+  deleteNotification(notification: NotificationModel) {
+    console.log('deleting notification:');
+    console.log(notification);
+  }
+
+  showMore() {
+    this.showLimit += 5;
   }
 
   close() {
@@ -249,7 +259,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.notificationsSubscription.unsubscribe();
-    this.alertsSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

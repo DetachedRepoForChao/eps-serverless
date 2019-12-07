@@ -1,72 +1,83 @@
-<div class="modal-content">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" (click)="close()">&times;</button>
-    <h4 class="modal-title"><b>Notifications</b></h4>
-  </div>
-  <!-- Dropdown header -->
-  <div class="px-3 py-3">
-    <div *ngIf="unseenNotifications.length > 0; else noUnseenNotifications">
-      <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">{{unseenNotifications.length}}</strong> unread notifications.</h6>
+<div class="max-height-600 min-height-300">
+  <div class="row tab-row justify-content-start">
+    <div class="col-2 text-center">
+      <span (click)="setNotificationsDataSource('new'); onNotificationTabItemClick('new')" class="tab-item toggled" id="notificationTab_new">New</span>
     </div>
-    <ng-template #noUnseenNotifications>
-      <h6 class="text-sm text-muted m-0">No new notifications.</h6>
-    </ng-template>
+    <div class="col-2 text-center">
+      <span (click)="setNotificationsDataSource('all'); onNotificationTabItemClick('all')" class="tab-item" id="notificationTab_all">All</span>
+    </div>
   </div>
+  <div class="row text-center">
+    <div class="col-12">
+      <ng-container *ngIf="currentNotificationTab === 'new'">
+        <ng-container *ngIf="unseenNotifications.length > 0; else noUnseenNotifications">
+          <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">{{unseenNotifications.length}}</strong> unread notifications.</h6>
+        </ng-container>
+        <ng-template #noUnseenNotifications>
+          <h6 class="text-sm text-muted m-0">No new notifications.</h6>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngIf="currentNotificationTab === 'all'">
+        <ng-container *ngIf="notifications.length === 0;">
+          <h6 class="text-sm text-muted m-0">No notifications.</h6>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+
   <div>
     <!-- List group -->
     <div class="list-group list-group-flush">
-      <div *ngFor="let unseenNotification of unseenNotifications ">
-        <a  class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(unseenNotification)">
-          <div class="row align-items-center">
-            <div class="col-auto">
-              <!-- Avatar -->
-              <img class="rounded-circle" width="48px"
-                   [src]="userQuery.getUserByUserId(unseenNotification.sourceUserId)[0]?.avatarResolvedUrl" alt="">
-            </div>
-            <div class="col ml--2">
-              <div class="d-flex justify-content-between align-items-center">
 
+      <ng-container *ngIf="dataSource.length > 0">
+        <ng-container *ngFor="let notification of dataSource.slice(0, showLimit) ">
+          <div>
+            <a class="list-group-item list-group-item-action notification-item pb-0 border-bottom-0"
+               data-toggle="modal" (click)="onClickNotificationDetails(notification); openNotificationDetails()"
+               [ngClass]="{'seen-notification': notification.timeSeen}">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-2 p-0">
+                    <!-- Avatar -->
+                    <img class="rounded-circle avatar-img"
+                         [src]="userQuery.getUserByUserId(notification.sourceUserId)[0]?.avatarResolvedUrl" alt="">
+                  </div>
+                  <div class="col-6">
+                    <div class="row">
+                      <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(notification.sourceUserId)[0]?.firstName}} {{userQuery.getUserByUserId(notification.sourceUserId)[0]?.lastName}}</h4>
+                    </div>
+                    <div class="row">
+                      <div class="text-sm mb-0 black">{{notification.title}}</div>
+                    </div>
+                  </div>
+                  <div class="col-4 text-right p-0">
+                    <ng-container>
+                      <p class="text-muted"><small>Sent {{notification.createdAt | timeAgo}}</small></p>
+                    </ng-container>
+                    <ng-container *ngIf="notification.timeSeen">
+                      <p class="text-muted"><small>Seen {{notification.timeSeen | timeAgo}}</small></p>
+                    </ng-container>
 
-                <div >
-                  <div>
-                    <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(unseenNotification.sourceUserId)[0]?.username}}</h4>
                   </div>
                 </div>
               </div>
-              <div class="text-right text-muted">
-                <small>{{unseenNotification.createdAt | timeAgo}}</small>
-                <!-- <small>{{notification.createdAt}}</small> -->
-              </div>
 
-              <p class="text-sm mb-0 black">{{unseenNotification.title}}</p>
+            </a>
+            <div class="notification-item-footer text-right">
+             <i class="far fa-trash-alt text-right text-primary trash-icon pr-4" (click)="deleteNotification(notification)"></i>
             </div>
           </div>
-        </a>
-      </div>
-    </div>
-  </div>
-  <!-- View all -->
-  <a (click)="onShowAll()" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
 
-  <div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-       aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="exampleModalLabel">{{detail?.title}}</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body black" >
-          {{detail?.description}}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
+        </ng-container>
+      </ng-container>
+
     </div>
   </div>
+
+  <ng-container *ngIf="dataSource?.length > showLimit">
+    <a (click)="showMore()" class="dropdown-item text-center text-primary font-weight-bold py-3">Show more</a>
+  </ng-container>
 </div>
 
 

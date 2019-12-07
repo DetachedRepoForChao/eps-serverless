@@ -83,3 +83,65 @@ a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
   text-decoration: none;
   border-radius: inherit;
 }
+
+.tab-item {
+  cursor: pointer;
+  color: #b350f2
+}
+
+.tab-item:hover {
+  color: #bd3db8;
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
+}
+
+.toggled {
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
+}
+
+.tab-row {
+  margin-bottom: 20px;
+}
+
+.avatar-img {
+  padding: 0 !important;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 50px !important;
+}
+
+.seen-notification {
+  background-color: #f4f5f7;
+}
+
+.seen-notification:hover {
+  background-color: #d4d5d7;
+  z-index: auto;
+}
+
+.notification-item:hover {
+  cursor: pointer;
+  z-index: auto;
+}
+
+.max-height-600 {
+  max-height: 600px;
+}
+
+.min-height-300 {
+  min-height: 300px;
+}
+
+.trash-icon {
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.trash-icon:hover {
+  color: black;
+}
+
+.notification-item-footer {
+  background-color: #f6f9fc;
+}
