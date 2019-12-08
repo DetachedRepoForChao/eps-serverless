@@ -8,7 +8,7 @@ export type EntityDepartmentModel = {
   dateAdded: any;
 };
 
-export function createEntityDepartmentModel({ departmentId,name }: Partial<EntityDepartmentModel>) {
+export function createEntityDepartmentModel({ departmentId, name }: Partial<EntityDepartmentModel>) {
   return {
     id: guid(),
     departmentId,

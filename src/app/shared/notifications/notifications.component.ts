@@ -7,6 +7,7 @@ import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
 import {take} from 'rxjs/operators';
 import {NavigationService} from '../navigation.service';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 declare var $: any;
 
@@ -17,13 +18,18 @@ declare var $: any;
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
+  public config: PerfectScrollbarConfigInterface = {};
 
+  notificationsToDelete: NotificationModel[] = [];
+  notificationToDelete: NotificationModel;
+  deleteMultiple = false;
   dataSource: NotificationModel[];
-  currentNotificationTab = 'new';
+  currentNotificationTab = 'all';
   notificationTabs = [
     'new',
     'all',
   ];
+
 
   notifications: NotificationModel[];
   alerts: NotificationModel[];
@@ -54,10 +60,18 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     this.subscription.add(this.notificationQuery.selectAll()
       .subscribe(notifications => {
+        console.log('notifications changed');
         this.notifications = notifications;
-        if (this.currentNotificationTab === 'all') {
+        this.setNotificationsDataSource(this.currentNotificationTab);
+/*        if (this.currentNotificationTab === 'all') {
           this.dataSource = this.notifications;
-        }
+        }*/
+        console.log('data source:');
+        console.log(this.dataSource);
+        console.log('notifications:');
+        console.log(this.notifications);
+        console.log('unseen notifications');
+        console.log(this.unseenNotifications);
       })
     );
 
@@ -65,10 +79,18 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         filterBy: e => e.timeSeen === null
       })
         .subscribe(unseenNotifications => {
+          console.log('unseen notifications changed');
           this.unseenNotifications = unseenNotifications;
-          if (this.currentNotificationTab === 'new') {
-            this.dataSource = this.unseenNotifications;
-          }
+          this.setNotificationsDataSource(this.currentNotificationTab);
+          console.log('data source:');
+          console.log(this.dataSource);
+          console.log('notifications:');
+          console.log(this.notifications);
+          console.log('unseen notifications');
+          console.log(this.unseenNotifications);
+          // if (this.currentNotificationTab === 'all') {
+          //   this.dataSource = this.notifications;
+          // }
         })
     );
 
@@ -81,7 +103,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     );
 
     // this.setNotificationsDataSource('new');
-    this.onNotificationTabItemClick('new');
+    this.onNotificationTabItemClick('all');
   }
 
   setNotificationsDataSource(filter) {
@@ -117,17 +139,32 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   }
 
-/*  updateNotificationButton() {
-    if (this.notifications.length === 0) {
-      $('#notification_button').removeClass('btn-danger');
+  deleteNotification(notification: NotificationModel) {
+    console.log(`Deleting notification ${notification.notificationId}`);
+    this.notificationService.deleteNotification(notification)
+      .pipe(take(1))
+      .subscribe(result => {
+        console.log(`Notification delete result: `);
+        console.log(result);
+      });
+  }
 
-      if (!$('#notification_button').hasClass('btn-danger')) {
-        $('#notification_button').addClass('btn-primary');
-      }
-    } else {
-      $('#notification_button').removeClass('btn-primary');
+  notificationDeleteToggle(notification: NotificationModel) {
+    if (this.notificationToDelete === notification) {
+      this.notificationToDelete = null;
+      return;
     }
-  }*/
+    this.notificationToDelete = notification;
+/*    if (this.notificationsToDelete.find(x => x.notificationId === notification.notificationId)) {
+      console.log(`Record ID ${notification.notificationId} already exists in the delete list. Removing.`);
+      // console.log(this.actionList.find(x => x.item === row));
+      this.notificationsToDelete = this.notificationsToDelete.filter(x => x.notificationId !== notification.notificationId);
+    } else {
+      this.notificationsToDelete.push(notification);
+    }
+
+    console.log(this.notificationsToDelete);*/
+  }
 
 
   onSeenNotificationClick(notification: NotificationModel) {
@@ -166,11 +203,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           console.log(result);
         });
     }
-  }
-
-  deleteNotification(notification: NotificationModel) {
-    console.log('deleting notification:');
-    console.log(notification);
   }
 
   showMore() {

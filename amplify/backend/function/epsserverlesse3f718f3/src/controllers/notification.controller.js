@@ -94,7 +94,7 @@ const setNotificationsToPerson = function (targetUserId, title, event, descripti
             targetUserId: targetUserId,
             title: title,
             description: description,
-            audience: 'Personal',
+            audience: 'employee',
             event: event,
             timeSeen: null,
             status: 1,
@@ -178,7 +178,7 @@ const setNotificationsToDepartment =function (departmentId, title, event, descri
             targetUserId: user.id,
             title: title,
             description: description,
-            audience: 'Group',
+            audience: 'department',
             event: event,
             timeSeen: null,
             status: 1,
@@ -244,6 +244,49 @@ const setNotificationSeenTime = function(notificationId){
 };
 
 module.exports.setNotifictaionSeenTime = setNotificationSeenTime;
+
+const deleteNotification = function(notificationId){
+  const functionName = 'deleteNotification';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlNotification.destroy({
+    where: {
+      id: notificationId,
+    }
+  }).then((result) => {
+    console.log(`${functionFullName}: Delete operation completed without errors. ${result} records deleted.`);
+    return { status: true, message: `Delete operation completed without errors. ${result} records deleted.`, notificationId: notificationId, numRecordsDeleted: result }
+  }).catch(err => {
+    console.log(`${functionFullName}: Delete operation error`);
+    console.log(err);
+    return { status: false, message: 'Delete operation error', error: err };
+  })
+};
+
+module.exports.deleteNotification = deleteNotification;
+
+const deleteNotifications = function(notificationIds){
+  const functionName = 'deleteNotifications';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return sqlNotification.destroy({
+    where: {
+      id: notificationIds,
+    }
+  }).then((result) => {
+    console.log(`${functionFullName}: Delete operation completed without errors. ${result} records deleted.`);
+    return { status: true, message: `Delete operation completed without errors. ${result} records deleted.`, notificationIds: notificationIds, numRecordsDeleted: result }
+  }).catch(err => {
+    console.log(`${functionFullName}: Error deleting notification`);
+    console.log(err);
+    return { status: false, message: 'Error deleting notification', error: err };
+  })
+};
+
+module.exports.deleteNotifications = deleteNotifications;
+
 
 const sendNotificationEmail = function (targetUserId, sourceUser) {
   // Set the region

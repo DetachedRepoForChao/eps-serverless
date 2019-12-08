@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="col-8">
                                   <div class="row">
-                                    <a href="javascript:void(0)" (click)="onUserClick(UserHasStoreItemModel?.userId)">{{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}</a>
+                                    <a href="javascript:void(0)" (click)="onUserClick(UserHasStoreItemModel.userId)">{{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}</a>
                                   </div>
                                   <div class="row font-italic">
                                     {{(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.department.Name}}

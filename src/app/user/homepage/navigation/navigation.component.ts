@@ -19,6 +19,7 @@ import {NotificationService} from '../../../entity-store/notification/state/noti
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {Subscription} from 'rxjs';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
+import {take} from 'rxjs/operators';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -305,6 +306,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   clearAchievementComponentInputUser(event) {
     this.navigationService.achievementComponentInputUser = null;
+  }
+
+  clearNotificationDetailComponentInput(event) {
+    this.navigationService.notificationDetailsInput = null;
+  }
+
+  deleteNotification(notification: NotificationModel) {
+    console.log(`Deleting notification ${notification.notificationId}`);
+    this.notificationService.deleteNotification(notification)
+      .pipe(take(1))
+      .subscribe(result => {
+        console.log(`Notification delete result: `);
+        console.log(result);
+        this.navigationService.closeNotificationDetailsModal();
+      });
   }
 
   ngOnDestroy(): void {

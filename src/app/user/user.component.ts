@@ -6,6 +6,7 @@ import { SecurityRoleService} from '../shared/securityRole.service';
 import {map} from 'rxjs/operators';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 import {forkJoin, Observable, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Auth, Storage} from 'aws-amplify';
@@ -23,6 +24,7 @@ import {resetStores} from '@datorama/akita';
 import {AchievementService} from '../entity-store/achievement/state/achievement.service';
 import {CognitoUser} from 'amazon-cognito-identity-js';
 import {NavigationService} from '../shared/navigation.service';
+import {EntityDepartmentService} from '../entity-store/department/state/entity-department.service';
 
 declare var $: any;
 
@@ -69,13 +71,13 @@ export class UserComponent implements OnInit, OnDestroy {
               private securityRoleService: SecurityRoleService,
               private route: ActivatedRoute,
               private userIdle: UserIdleService,
-              private departmentService: DepartmentService,
               private http: HttpClient,
               private authService: AuthService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private giftPointsService: GiftPointsService,
               private achievementService: AchievementService,
+              private departmentService: EntityDepartmentService,
               private navigationService: NavigationService) {
     this.display = false;
     this.alive = true;
@@ -91,6 +93,10 @@ export class UserComponent implements OnInit, OnDestroy {
     console.log(this.route);
     console.log('this.route.snapshot');
     console.log(this.route.snapshot);
+
+    this.departmentService.cacheDepartments()
+      .pipe(take(1))
+      .subscribe();
 
     if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
       console.log('this.route.snapshot.children[0].url[0].path');
@@ -151,7 +157,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   }
 
-  startAchievementPolling() {
+/*  startAchievementPolling() {
     const functionName = 'startAchievementPolling';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -169,7 +175,7 @@ export class UserComponent implements OnInit, OnDestroy {
             console.log(this.data);
           });
       });
-  }
+  }*/
 
   onStartWatching() {
     console.log('onStartWatching');

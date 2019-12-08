@@ -437,16 +437,17 @@
   <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">{{navigationService.notificationDetailsInput?.title}}</h4>
+        <h4 class="modal-title" id="notificationDetailsModalTitle">Notification Details</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="navigationService.closeNotificationDetailsModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body black modalclass" >
-        {{navigationService.notificationDetailsInput?.description}}
+        <app-notification-details *ngIf="navigationService.notificationDetailsModalActive" [inputNotification]="navigationService.notificationDetailsInput" (clearInputNotification)="clearNotificationDetailComponentInput($event)"></app-notification-details>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="navigationService.closeNotificationDetailsModal()">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteNotification(navigationService.notificationDetailsInput)">Delete</button>
       </div>
     </div>
   </div>
@@ -463,9 +464,8 @@
       </div>
       <!-- Dropdown header -->
       <div class="modal-body modalclass">
-        <perfect-scrollbar class="scroll-container perfect-scrollbar-light" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-          <app-notifications></app-notifications>
-        </perfect-scrollbar>
+        <app-notifications></app-notifications>
+
       </div>
     </div>
 

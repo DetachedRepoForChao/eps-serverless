@@ -1588,6 +1588,44 @@ app.post('/items/setNotificationSeenTime', function (req, res) {
   });
 });
 
+app.post('/items/deleteNotification', function (req, res) {
+  console.log('starting post deleteNotification');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const notificationId = req.body.notificationId;
+      ctrlNotifications.deleteNotification(notificationId)
+        .then(data => {
+          res.json({ status: 'post call succeed!', data: data });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+app.post('/items/deleteNotifications', function (req, res) {
+  console.log('starting post deleteNotifications');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const notificationIds = req.body.notificationIds;
+      ctrlNotifications.deleteNotifications(notificationIds)
+        .then(data => {
+          res.json({ status: 'post call succeed!', data: data });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
 // Email routes
 app.post('/items/sendNotificationEmail' , function (req, res) {
   console.log('starting post sendNotificationEmail');
