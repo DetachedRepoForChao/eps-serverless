@@ -51,7 +51,7 @@ export class UsersCardComponent implements OnInit {
               private notifierService: NotifierService) { }
 
   ngOnInit() {
-    this.userService.cacheUsers().subscribe();
+    // this.userService.cacheUsers().subscribe();
     // Read in the list of departments from the DepartmentService
     const departments$ = this.departmentService.getDepartments()
       .pipe(

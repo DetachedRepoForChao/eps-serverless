@@ -7,7 +7,7 @@ import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {take, tap} from 'rxjs/operators';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
 import {SecurityRole} from '../../../shared/securityrole.model';
@@ -491,7 +491,9 @@ export class EntityUserService {
               API.post(this.apiName, this.apiPath2 + '/addCognitoUser', myInit).then(addCognitoUserResult => {
 
                 this.userStore.reset();
-                this.cacheUsers().subscribe();
+                this.cacheUsers()
+                  .pipe(take(1))
+                  .subscribe();
 
                 observer.next(addCognitoUserResult.data);
                 observer.complete();

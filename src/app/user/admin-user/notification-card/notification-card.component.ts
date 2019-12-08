@@ -57,6 +57,7 @@ export class NotificationCardComponent implements OnInit, OnDestroy {
               private notifierService: NotifierService) { }
 
   ngOnInit() {
+/*
     this.userService.cacheUsers()
       .pipe(take(1))
       .subscribe();
@@ -64,6 +65,7 @@ export class NotificationCardComponent implements OnInit, OnDestroy {
     this.departmentService.cacheDepartments()
       .pipe(take(1))
       .subscribe();
+*/
 
     this.departmentService.getDepartments().subscribe(data => {
       this.departments = data;

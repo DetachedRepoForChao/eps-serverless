@@ -4,8 +4,8 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {AchievementModel} from '../../../entity-store/achievement/state/achievement.model';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
-import {Observable} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {filter, take, takeUntil} from 'rxjs/operators';
 import {PointItemService} from '../../../entity-store/point-item/state/point-item.service';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {PointItemTransactionQuery} from '../../../entity-store/point-item-transaction/state/point-item-transaction.query';
@@ -24,7 +24,13 @@ declare var $: any;
 export class ProgressCardComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: GoogleChartComponent;
   componentName = 'progress-card.component';
+
+  subscription = new Subscription();
+  private achievementsLoading$ = new Subject();
+  private currentUserLoading$ = new Subject();
   filteredAchievements$: Observable<AchievementModel[]>;
+  achievements: AchievementModel[];
+  filteredAchievements: AchievementModel[];
   isCardLoading: boolean;
   selectedAchievement: AchievementModel;
   pointItemTransactions$;
@@ -79,47 +85,60 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.currentUserService.cacheCurrentUser().subscribe();
 
-    this.achievementService.cacheAchievements().subscribe(() => {
-      this.filteredAchievements$ = this.achievementQuery.filterAchievements();
-    });
-
-    this.pointItemService.cachePointItems().subscribe();
-    // this.pointItemTransactionService.cacheCurrentUserPointItemTransactions().subscribe();
-
-
-    this.currentUserQuery.selectLoading()
-      .subscribe(loading => {
-        console.log(`Current User loading status is ${loading}`);
-        if (!loading) {
-          this.currentUser$ = this.currentUserQuery.selectAll();
-          this.currentUser$.subscribe(currentUser => {
-            this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser[0].userId)
-              .subscribe((result: Observable<any> | any) => {
-                if (result !== false) {
-                  result.subscribe(() => {
-                  });
-
-                } else {
-                  console.log(`Cache User Point Item Transactions returned ${result}`);
-                }
-              });
-          });
-
-          if (!this.currentUser) {
-            this.currentUser = this.currentUserQuery.getAll()[0];
-
-            this.getCoreValues(this.currentUser.userId)
-              .subscribe(coreValues => {
-                this.coreValueData = coreValues;
-              });
-          }
-        } else {
-          console.log('ERROR: Current User is still loading');
+    this.achievementQuery.selectLoading()
+      .pipe(takeUntil(this.achievementsLoading$))
+      .subscribe(isLoading => {
+        console.log('achievements loading: ' + isLoading);
+        if (!isLoading) {
+          this.subscription.add(
+            this.achievementQuery.selectAll()
+              .subscribe(achievements => {
+                this.achievements = achievements;
+                this.filteredAchievements = this.achievementQuery.getFilteredAchievementsList();
+              })
+          );
+          this.achievementsLoading$.next();
+          this.achievementsLoading$.complete();
         }
       });
 
+
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        console.log('current user loading: ' + isLoading);
+        if (!isLoading) {
+          this.subscription.add(
+            this.currentUserQuery.selectAll()
+              .subscribe(currentUser => {
+                console.log('current user changed');
+                console.log(currentUser[0]);
+                this.currentUser = currentUser[0];
+                this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser[0].userId)
+                  .pipe(take(1))
+                  .subscribe((result: Observable<any> | any) => {
+                    if (result !== false) {
+                      result.subscribe(() => {
+                      });
+
+                    } else {
+                      console.log(`Cache User Point Item Transactions returned ${result}`);
+                    }
+                  });
+
+                this.getCoreValues(this.currentUser.userId)
+                  .pipe(take(1))
+                  .subscribe(coreValues => {
+                    this.coreValueData = coreValues;
+                  });
+              })
+          );
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
 
   }
 
@@ -137,6 +156,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
 
     return new Observable<any[]>(observer => {
       this.pointItemTransactionService.getUserCoreValues(userId)
+        .pipe(take(1))
         .subscribe(coreValues => {
           console.log(coreValues);
           const keys = Object.keys(coreValues);
@@ -164,6 +184,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
     console.log(achievement);
 
     this.achievementService.acknowledgeAchievementComplete(achievement.progressId)
+      .pipe(take(1))
       .subscribe(result => {
         console.log(`${functionFullName}: Acknowledge result:`);
         console.log(result);
@@ -185,7 +206,9 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.subscription.unsubscribe();
+    this.achievementsLoading$.next();
+    this.achievementsLoading$.complete();
   }
 
 }

@@ -50,7 +50,7 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
 
   ngOnInit() {
     const observables: Observable<any>[] = [];
-    observables.push(
+/*    observables.push(
       this.currentUserService.cacheCurrentUser(),
       this.userService.cacheUsers(),
       this.achievementService.cacheAchievements(),
@@ -61,7 +61,7 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
     forkJoin(observables)
       .subscribe(() => {
 
-      });
+      });*/
 
     this.currentUser$ = this.currentUserQuery.selectAll({
       limitTo: 1

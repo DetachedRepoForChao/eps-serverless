@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NotificationService} from '../../entity-store/notification/state/notification.service';
 import {NotificationQuery} from '../../entity-store/notification/state/notification.query';
 import {NotificationModel} from '../../entity-store/notification/state/notification.model';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
-import {take} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {NavigationService} from '../navigation.service';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
@@ -30,7 +30,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     'all',
   ];
 
-
+  notificationsLoading$ = new Subject();
   notifications: NotificationModel[];
   alerts: NotificationModel[];
   notificationsSubscription: Subscription;
@@ -50,6 +50,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
               private navigationService: NavigationService) { }
 
   ngOnInit() {
+/*
     this.userService.cacheUsers()
       .pipe(take(1))
       .subscribe();
@@ -57,50 +58,62 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.notificationService.cacheNotifications()
       .pipe(take(1))
       .subscribe();
+*/
 
-    this.subscription.add(this.notificationQuery.selectAll()
-      .subscribe(notifications => {
-        console.log('notifications changed');
-        this.notifications = notifications;
-        this.setNotificationsDataSource(this.currentNotificationTab);
-/*        if (this.currentNotificationTab === 'all') {
-          this.dataSource = this.notifications;
-        }*/
-        console.log('data source:');
-        console.log(this.dataSource);
-        console.log('notifications:');
-        console.log(this.notifications);
-        console.log('unseen notifications');
-        console.log(this.unseenNotifications);
-      })
-    );
+    this.notificationQuery.selectLoading()
+      .pipe(takeUntil(this.notificationsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.subscription.add(this.notificationQuery.selectAll()
+            .subscribe(notifications => {
+              console.log('notifications changed');
+              this.notifications = notifications;
+              this.setNotificationsDataSource(this.currentNotificationTab);
+              /*        if (this.currentNotificationTab === 'all') {
+                        this.dataSource = this.notifications;
+                      }*/
+              console.log('data source:');
+              console.log(this.dataSource);
+              console.log('notifications:');
+              console.log(this.notifications);
+              console.log('unseen notifications');
+              console.log(this.unseenNotifications);
+            })
+          );
 
-    this.subscription.add(this.notificationQuery.selectAll({
-        filterBy: e => e.timeSeen === null
-      })
-        .subscribe(unseenNotifications => {
-          console.log('unseen notifications changed');
-          this.unseenNotifications = unseenNotifications;
-          this.setNotificationsDataSource(this.currentNotificationTab);
-          console.log('data source:');
-          console.log(this.dataSource);
-          console.log('notifications:');
-          console.log(this.notifications);
-          console.log('unseen notifications');
-          console.log(this.unseenNotifications);
-          // if (this.currentNotificationTab === 'all') {
-          //   this.dataSource = this.notifications;
-          // }
-        })
-    );
+          this.subscription.add(this.notificationQuery.selectAll({
+              filterBy: e => e.timeSeen === null
+            })
+              .subscribe(unseenNotifications => {
+                console.log('unseen notifications changed');
+                this.unseenNotifications = unseenNotifications;
+                this.setNotificationsDataSource(this.currentNotificationTab);
+                console.log('data source:');
+                console.log(this.dataSource);
+                console.log('notifications:');
+                console.log(this.notifications);
+                console.log('unseen notifications');
+                console.log(this.unseenNotifications);
+                // if (this.currentNotificationTab === 'all') {
+                //   this.dataSource = this.notifications;
+                // }
+              })
+          );
 
-    this.subscription.add(this.notificationQuery.selectAll({
-        filterBy: e => e.event === 'Alert'
-      })
-        .subscribe(alerts => {
-          this.alerts = alerts;
-        })
-    );
+          this.subscription.add(this.notificationQuery.selectAll({
+              filterBy: e => e.event === 'Alert'
+            })
+              .subscribe(alerts => {
+                this.alerts = alerts;
+              })
+          );
+
+          this.notificationsLoading$.next();
+          this.notificationsLoading$.complete();
+        }
+      });
+
+
 
     // this.setNotificationsDataSource('new');
     this.onNotificationTabItemClick('all');
@@ -292,5 +305,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.notificationsLoading$.next();
+    this.notificationsLoading$.complete();
   }
 }

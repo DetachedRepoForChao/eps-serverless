@@ -82,11 +82,11 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     console.log(this.requestTable);
 
     this.currentUser$ = this.currentUserQuery.selectAll();
-    this.entityUserService.cacheUsers().subscribe();
+/*    this.entityUserService.cacheUsers().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
     this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe((result) => {
       console.log(result);
-    });
+    });*/
 
     this.userHasStoreItemQuery.selectLoading()
       .subscribe(isLoading => {

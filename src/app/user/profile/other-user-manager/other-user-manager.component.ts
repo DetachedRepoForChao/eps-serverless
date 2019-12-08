@@ -59,9 +59,9 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.userService.cacheUsers().subscribe();
+/*    this.userService.cacheUsers().subscribe();
     this.achievementService.cacheAchievements().subscribe();
-    this.pointItemService.cachePointItems().subscribe();
+    this.pointItemService.cachePointItems().subscribe();*/
     this.spinner.show('other-user-manager-spinner');
 
     this.populateUserData();

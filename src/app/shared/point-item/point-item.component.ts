@@ -82,9 +82,9 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
 
     this.spinner.show('other-user-spinner');
 
-    this.currentUserService.cacheCurrentUser().subscribe();
+/*    this.currentUserService.cacheCurrentUser().subscribe();
     this.userService.cacheUsers().subscribe();
-    this.pointItemService.cachePointItems().subscribe();
+    this.pointItemService.cachePointItems().subscribe();*/
     this.pointItems$ = this.pointItemQuery.selectAll();
 
     if (this.inputUser) {

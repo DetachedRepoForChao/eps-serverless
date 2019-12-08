@@ -84,10 +84,10 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 
     this.spinner.show('purchase-history-spinner');
 
-    this.currentUserService.cacheCurrentUser().subscribe();
+/*    this.currentUserService.cacheCurrentUser().subscribe();
     this.userService.cacheUsers().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();*/
 
     // this.populateCurrentUserData();
     this.currentUser$ = this.currentUserQuery.selectAll();

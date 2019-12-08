@@ -33,7 +33,7 @@ export class ProfileHeaderComponent implements OnInit {
               public achievementQuery: AchievementQuery) { }
 
   ngOnInit() {
-    const observables: Observable<any>[] = [];
+/*    const observables: Observable<any>[] = [];
     observables.push(
       this.currentUserService.cacheCurrentUser(),
       this.userService.cacheUsers(),
@@ -45,7 +45,7 @@ export class ProfileHeaderComponent implements OnInit {
     forkJoin(observables)
       .subscribe(() => {
 
-      });
+      });*/
 
     this.leaderboardUsers$ = this.userQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,

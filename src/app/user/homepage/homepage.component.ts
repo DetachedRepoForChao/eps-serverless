@@ -12,6 +12,7 @@ import {PointItemTransactionService} from '../../entity-store/point-item-transac
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-homepage',
@@ -20,6 +21,7 @@ import {EntityCurrentUserModel} from '../../entity-store/current-user/state/enti
 })
 export class HomepageComponent implements OnInit, OnDestroy {
   componentName = 'homepage.component';
+  subscription = new Subscription();
   currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
   currentUserSubscription: Subscription;
@@ -46,7 +48,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
       if (this.isKonamiCode()) {
         console.log('success');
         this.codeEntered.emit(true);
-        this.achievementService.incrementAchievement('RetroGamer').subscribe();
+        this.achievementService.incrementAchievement('RetroGamer')
+          .pipe(take(1))
+          .subscribe();
       } else {
         this.codeEntered.emit(false);
       }
@@ -78,9 +82,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
 
 
 
-    this.currentUser$ = this.currentUserQuery.selectAll({
+/*    this.currentUser$ = this.currentUserQuery.selectAll({
       limitTo: 1
-    });
+    });*/
 
     // this.pendingBalance$ = this.userHasStoreItemQuery.selectAll();
     // this.pendingBalance$.subscribe(() => {
@@ -90,25 +94,27 @@ export class HomepageComponent implements OnInit, OnDestroy {
       }).unsubscribe();*/
     // }).unsubscribe();
 
-    this.currentUserService.cacheCurrentUser().subscribe(() => {
+/*    this.currentUserService.cacheCurrentUser().subscribe(() => {
       this.storeItemService.cacheStoreItems().subscribe(() => {
         this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
 
         });
       });
-    });
+    });*/
 
 
-    this.currentUserSubscription = this.currentUser$.subscribe((currentUser) => {
-      this.currentUser = currentUser[0];
-      if (currentUser[0]) {
-        console.log(currentUser);
-/*        this.metricsService.cacheMetrics().subscribe(() => {
-          this.metricsService.startHomepageTimer();
-        });*/
+    this.subscription.add(
+      this.currentUserQuery.selectAll().subscribe((currentUser) => {
+        this.currentUser = currentUser[0];
+        if (currentUser[0]) {
+          console.log(currentUser);
+          /*        this.metricsService.cacheMetrics().subscribe(() => {
+                    this.metricsService.startHomepageTimer();
+                  });*/
 
-      }
-    });
+        }
+      })
+    );
 
     /*this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
       console.log('balance: ' + balance);
@@ -125,6 +131,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('ngOnDestroy');
     console.log('unsubscribing from current user');
-    this.currentUserSubscription.unsubscribe();
+    this.subscription.unsubscribe();
+    // this.currentUserSubscription.unsubscribe();
   }
 }

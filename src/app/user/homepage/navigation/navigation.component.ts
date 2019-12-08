@@ -72,11 +72,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
     this.isCardLoading = true;
-    this.entityUserService.cacheUsers().subscribe();
-    this.entityCurrentUserService.cacheCurrentUser().subscribe();
+/*    this.entityUserService.cacheUsers().subscribe();
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();*/
     this.currentUser$ = this.currentUserQuery.selectAll();
 
-    this.notificationService.cacheNotifications().subscribe();
+    // this.notificationService.cacheNotifications().subscribe();
     this.unseenNotificationSubscription = this.notificationQuery.selectAll({
       filterBy: e => e.timeSeen === null
     })

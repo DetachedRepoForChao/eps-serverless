@@ -41,6 +41,7 @@ declare var $: any;
 })
 export class ProfileCardComponent implements OnInit, OnDestroy {
   componentName = 'profile-card.component';
+  subscription = new Subscription();
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
   leaderboardUsers: EntityUserModel[];
@@ -92,38 +93,66 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
     this.isImageLoading = true;
     this.spinner.show('profile-card-spinner');
 
-    this.entityUserService.cacheUsers().subscribe();
+/*    this.entityUserService.cacheUsers().subscribe();
     this.pointItemService.cachePointItems().subscribe();
-    this.achievementService.cacheAchievements().subscribe();
+    this.achievementService.cacheAchievements().subscribe();*/
 
-    this.currentUser$ = this.currentUserQuery.selectAll();
+    // this.currentUser$ = this.currentUserQuery.selectAll();
 
     // this.featureService.cacheFeatures().subscribe().unsubscribe();
+/*
     this.leaderboardUsers$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
+*/
 
 
+    this.subscription.add(
+      this.currentUserQuery.selectAll()
+        .subscribe(currentUser => {
+          this.currentUser = currentUser[0];
+        })
+    );
 
-    this.currentUserSubscription = this.currentUserQuery.selectAll()
+    this.subscription.add(
+      this.entityUserQuery.selectAll({
+        filterBy: e => e.securityRole.Id === 1,
+        sortBy: 'points',
+        sortByOrder: Order.DESC
+      })
+        .subscribe(users => {
+          this.leaderboardUsers = users;
+        })
+    );
+
+    this.subscription.add(
+      this.achievementQuery.selectAll()
+        .subscribe(achievements => {
+          this.achievements = achievements;
+          this.finishedAchievements = this.achievementQuery.getFinishedAchievements();
+        })
+    );
+/*    this.currentUserSubscription = this.currentUserQuery.selectAll()
       .subscribe(currentUser => {
         this.currentUser = currentUser[0];
-      });
+      });*/
 
-    this.leaderboardUsersSubscription = this.entityUserQuery.selectAll({
+/*    this.leaderboardUsersSubscription = this.entityUserQuery.selectAll({
       filterBy: e => e.securityRole.Id === 1,
       sortBy: 'points',
       sortByOrder: Order.DESC
     })
       .subscribe(users => {
         this.leaderboardUsers = users;
-      });
+      });*/
 
+/*
     this.achievementsSubscription = this.achievementQuery.selectAll()
       .subscribe(achievements => {
         this.achievements = achievements;
         this.finishedAchievements = this.achievementQuery.getFinishedAchievements();
       });
+*/
 
     // this.pendingBalance$ = this.entityCurrentUserService.getPendingBalance();
     this.isImageLoading = false;
@@ -140,8 +169,9 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentUserSubscription.unsubscribe();
+    this.subscription.unsubscribe();
+/*    this.currentUserSubscription.unsubscribe();
     this.leaderboardUsersSubscription.unsubscribe();
-    this.achievementsSubscription.unsubscribe();
+    this.achievementsSubscription.unsubscribe();*/
   }
 }

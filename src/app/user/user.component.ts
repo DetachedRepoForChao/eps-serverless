@@ -25,6 +25,14 @@ import {AchievementService} from '../entity-store/achievement/state/achievement.
 import {CognitoUser} from 'amazon-cognito-identity-js';
 import {NavigationService} from '../shared/navigation.service';
 import {EntityDepartmentService} from '../entity-store/department/state/entity-department.service';
+import {EntityUserService} from '../entity-store/user/state/entity-user.service';
+import {EntityCurrentUserService} from '../entity-store/current-user/state/entity-current-user.service';
+import {StoreItemService} from '../entity-store/store-item/state/store-item.service';
+import {UserHasStoreItemService} from '../entity-store/user-has-store-item/state/user-has-store-item.service';
+import {PointItemTransactionService} from '../entity-store/point-item-transaction/state/point-item-transaction.service';
+import {NotificationService} from '../entity-store/notification/state/notification.service';
+import {FeatureService} from '../entity-store/feature/state/feature.service';
+import {PointItemService} from '../entity-store/point-item/state/point-item.service';
 
 declare var $: any;
 
@@ -66,8 +74,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   public config: PerfectScrollbarConfigInterface = {};
 
-  constructor(private userService: UserService,
-              private router: Router,
+  constructor(private router: Router,
               private securityRoleService: SecurityRoleService,
               private route: ActivatedRoute,
               private userIdle: UserIdleService,
@@ -78,6 +85,16 @@ export class UserComponent implements OnInit, OnDestroy {
               private giftPointsService: GiftPointsService,
               private achievementService: AchievementService,
               private departmentService: EntityDepartmentService,
+              private userService: EntityUserService,
+              private currentUserService: EntityCurrentUserService,
+              private storeItemService: StoreItemService,
+              private userHasStoreItemService: UserHasStoreItemService,
+              private pointItemTransactionService: PointItemTransactionService,
+              private pointItemService: PointItemService,
+              private featureService: FeatureService,
+
+              private notificationService: NotificationService,
+
               private navigationService: NavigationService) {
     this.display = false;
     this.alive = true;
@@ -94,7 +111,39 @@ export class UserComponent implements OnInit, OnDestroy {
     console.log('this.route.snapshot');
     console.log(this.route.snapshot);
 
+    this.achievementService.cacheAchievements()
+      .pipe(take(1))
+      .subscribe();
+
     this.departmentService.cacheDepartments()
+      .pipe(take(1))
+      .subscribe();
+
+    this.userService.cacheUsers()
+      .pipe(take(1))
+      .subscribe();
+
+    this.currentUserService.cacheCurrentUser()
+      .pipe(take(1))
+      .subscribe();
+
+    this.storeItemService.cacheStoreItems()
+      .pipe(take(1))
+      .subscribe();
+
+    this.pointItemService.cachePointItems()
+      .pipe(take(1))
+      .subscribe();
+
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords()
+      .pipe(take(1))
+      .subscribe();
+
+    this.featureService.cacheFeatures()
+      .pipe(take(1))
+      .subscribe();
+
+    this.notificationService.cacheNotifications()
       .pipe(take(1))
       .subscribe();
 
