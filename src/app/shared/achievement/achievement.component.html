@@ -9,7 +9,7 @@
 
       <br>
 
-      <div *ngFor="let achievement of (achievementQuery.getAchievementFamily(family) | async); let i = index" class="col-10 achievlist">
+      <div *ngFor="let achievement of achievementQuery.getAchievementFamily(family); let i = index" class="col-10 achievlist">
 
         <div *ngIf="(achievement.progressStatus === 'complete')" class="row justify-content-md-center">
           <div class="col-2 star-col">
@@ -189,7 +189,7 @@
       </div>
 
       <br>
-      <div *ngFor="let achievement of (otherUserAchievementQuery.getAchievementFamily(family, (user$ | async)[0]?.userId) | async); let i = index" class="col-10 achievlist">
+      <div *ngFor="let achievement of (otherUserAchievementQuery.getAchievementFamily(family, user?.userId) | async); let i = index" class="col-10 achievlist">
 
         <div *ngIf="(achievement.progressStatus === 'complete acknowledged') || (achievement.progressStatus === 'complete')" class="row justify-content-md-center">
           <div class="col-2 star-col" >

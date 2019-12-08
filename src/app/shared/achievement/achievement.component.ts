@@ -83,6 +83,8 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     this.achievementService.cacheAchievements().subscribe();
     this.featureService.cacheFeatures().subscribe();*/
 
+
+
     if (this.inputUser) {
       this.populateUserData();
     } else {
@@ -203,6 +205,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.achievementsRetrieving) {
       this.achievementsRetrieving = true;
       this.otherUserAchievementService.cacheAchievements(user)
+        .pipe(take(1))
         .subscribe((result: Observable<OtherUserAchievementModel[]> | any) => {
           if (result !== false) {
             result.subscribe(() => {
@@ -322,7 +325,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     console.log('ngOnDestroy');
-    this.currentUserSub.unsubscribe();
+    // this.currentUserSub.unsubscribe();
     this.subscription.unsubscribe();
     this.inputUser = null;
     this.navigationService.achievementComponentInputUser = null;

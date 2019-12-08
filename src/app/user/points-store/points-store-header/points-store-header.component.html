@@ -9,21 +9,21 @@
           </div>
 
           <div class="col-3 profile-points-section">
-            <div [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
+            <div [matTooltip]="'Points: ' + currentUser?.points + '&#13;Pending Balance: ' + currentUser?.pointsBalance"
                  matTooltipPosition="above">
               <div class="row">
                 <div class="col-6">
                   <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
                 </div>
                 <div class="col-4">
-                  <div *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
-                    <div class="mb-0">{{(currentUser$ | async)[0]?.points}}</div>
+                  <div *ngIf="currentUser?.pointsBalance === 0; else pointsWithBalance">
+                    <div class="mb-0">{{currentUser?.points}}</div>
                   </div>
                   <ng-template #pointsWithBalance >
-                    <div *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance"
+                    <div *ngIf="currentUser?.points - currentUser?.pointsBalance"
                          class="mb-0 red"
                     >
-                      {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
+                      {{currentUser?.points - currentUser?.pointsBalance}}
                     </div>
 
                   </ng-template>
@@ -36,7 +36,7 @@
               </div>
               <div class="row">
                 <div class="col-12">
-                <div *ngIf="(this.currentUserQuery.selectAll() | async)[0]?.securityRole.Id === 2">
+                <div *ngIf="currentUser?.securityRole.Id === 2">
                   <a href="javascript:void(0)" (click)="confirmStoreItemPurchaseRequest();" >Approve Purchase</a>
                 </div>
                 </div>

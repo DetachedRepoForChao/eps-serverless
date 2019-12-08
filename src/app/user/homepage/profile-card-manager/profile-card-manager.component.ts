@@ -55,7 +55,7 @@ export class ProfileCardManagerComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('profile-card-manager-spinner');
 
-    this.entityUserService.cacheCurrentUser().subscribe();
+    // this.entityUserService.cacheCurrentUser().subscribe();
     this.currentUser$ = this.entityCurrentUserQuery.selectCurrentUser();
 
 /*    if (!this.globals.userDetails) {

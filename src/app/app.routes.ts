@@ -66,38 +66,61 @@ export const appRoutes: Routes = [
     path: 'user',
     component: UserComponent,
     canActivate: [AuthGuard],
+    data: {
+      roles: ['admin', 'employee', 'manager']
+    },
     children: [
       {
         path: 'profile/:username',
         component: ProfileComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['admin', 'employee', 'manager']
+        }
       },
       {
         path: 'homepage', component: HomepageComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['employee', 'manager']
+        }
       },
       {
         path: 'admin-user', component: AdminUserComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['admin']
+        }
       },
-
       {
         path: 'store',
         component: PointsStoreComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['admin', 'employee', 'manager']
+        }
       },
+      {
+        path: 'confirm-item-purchase',
+        component: ConfirmItemPurchaseComponent,
+        // canActivate: [AuthGuard],
+        data: {
+          roles: ['admin', 'manager']
+        }
+      },
+      {
+        path: 'report',
+        component: ReportComponent,
+        // canActivate: [AuthGuard],
+        data: {
+          roles: ['admin']
+        }
+      }
     ]
   },
   {
       path: '', redirectTo: '/login', pathMatch: 'full'
   },
-  {
-    path: 'confirm-item-purchase',
-    component: ConfirmItemPurchaseComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'report',
-    component: ReportComponent,
-  }
+
+
 ];

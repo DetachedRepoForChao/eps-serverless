@@ -147,12 +147,12 @@ export class UserComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe();
 
-    if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
+/*    if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
       console.log('this.route.snapshot.children[0].url[0].path');
       console.log(this.route.snapshot.children[0].url[0].path);
     } else {
       this.navigateHome();
-    }
+    }*/
 
     this.isComponentLoading = false;
 

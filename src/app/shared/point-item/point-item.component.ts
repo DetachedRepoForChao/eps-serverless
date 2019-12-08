@@ -25,6 +25,7 @@ import {EntityCurrentUserModel} from '../../entity-store/current-user/state/enti
 import {NavigationService} from '../navigation.service';
 import {PointItemTransactionModel} from '../../entity-store/point-item-transaction/state/point-item-transaction.model';
 import {PointItemModel} from '../../entity-store/point-item/state/point-item.model';
+import {take} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -110,6 +111,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
       this.pointItemTransactionService.cacheUserPointItemTransactions(user.userId)
+        .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {
@@ -157,6 +159,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
       this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser.userId)
+        .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {
@@ -206,6 +209,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
       this.pointItemTransactionService.cacheManagerPointItemTransactions(managerUser.userId)
+        .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {
@@ -254,6 +258,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
       this.pointItemTransactionService.cacheManagerPointItemTransactions(currentManager.userId)
+        .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {

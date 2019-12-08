@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnChanges, OnInit, SimpleChanges,} from '@angular/core';
+import {AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges,} from '@angular/core';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
@@ -7,7 +7,7 @@ import {StoreItemService} from '../../../entity-store/store-item/state/store-ite
 import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, Subscription} from 'rxjs';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {NavigationService} from '../../../shared/navigation.service';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
@@ -22,9 +22,10 @@ declare var $: any;
   templateUrl: './points-store-header.component.html',
   styleUrls: ['./points-store-header.component.css']
 })
-export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewInit {
+export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   public config: PerfectScrollbarConfigInterface = {};
+  private subscription = new Subscription();
   currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
   currentPurchaseRequestTabItem = 'all';
@@ -49,7 +50,7 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
               public navigationService: NavigationService) { }
 
   ngOnInit() {
-    const observables: Observable<any>[] = [];
+    // const observables: Observable<any>[] = [];
 /*    observables.push(
       this.currentUserService.cacheCurrentUser(),
       this.userService.cacheUsers(),
@@ -63,7 +64,7 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
 
       });*/
 
-    this.currentUser$ = this.currentUserQuery.selectAll({
+/*    this.currentUser$ = this.currentUserQuery.selectAll({
       limitTo: 1
     });
 
@@ -76,10 +77,18 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
     this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
       console.log('balance: ' + balance);
       this.currentUserService.updatePointsBalance(balance);
-    });
+    });*/
+
+    this.subscription.add(
+      this.currentUserQuery.selectAll({
+        limitTo: 1
+      }).subscribe(currentUser => {
+        this.currentUser = currentUser[0];
+      })
+    );
   }
 
-  getPendingBalance(): Observable<any> {
+/*  getPendingBalance(): Observable<any> {
     return new Observable(observer => {
       this.currentUserQuery.selectAll()
         .subscribe(user => {
@@ -92,7 +101,7 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
 
         });
     });
-  }
+  }*/
 
   viewPurchaseHistory() {
     console.log('view purchase history');
@@ -114,7 +123,7 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
 
   confirmStoreItemPurchaseRequest(): void {
     console.log(`Received request to purchase store item`);
-    this.router.navigate(['/confirm-item-purchase']);
+    this.router.navigate(['/', 'user', 'confirm-item-purchase']);
 
   }
 
@@ -140,4 +149,9 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
       }
     }
   }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }
+

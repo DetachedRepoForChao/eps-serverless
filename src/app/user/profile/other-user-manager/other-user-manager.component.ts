@@ -18,6 +18,7 @@ import {OtherUserAchievementQuery} from '../../../entity-store/other-user-achiev
 import {OtherUserAchievementModel} from '../../../entity-store/other-user-achievement/state/other-user-achievement.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {NavigationService} from '../../../shared/navigation.service';
+import {take} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -71,6 +72,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
       this.pointItemTransactionService.cacheManagerPointItemTransactions(user.userId)
+        .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {
@@ -104,6 +106,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.achievementsRetrieving) { // This check prevents the API call from firing more than it has to
       this.achievementsRetrieving = true;
       this.otherUserAchievementService.cacheAchievements(user)
+        .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             result.subscribe(() => {

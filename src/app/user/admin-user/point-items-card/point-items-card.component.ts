@@ -74,7 +74,7 @@ export class PointItemsCardComponent implements OnInit {
 
   ngOnInit() {
 
-    this.pointItemService.cachePointItems().subscribe();
+    // this.pointItemService.cachePointItems().subscribe();
 
     // Build the reactive Edit User form
     this.loadAddPointItemForm();

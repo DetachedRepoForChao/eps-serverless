@@ -77,7 +77,7 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
   }
 
   public getAchievementFamily(achievementFamily: string) {
-    return this.selectAll({
+    return this.getAll({
       filterBy: achievement => achievement.family === achievementFamily
     });
   }

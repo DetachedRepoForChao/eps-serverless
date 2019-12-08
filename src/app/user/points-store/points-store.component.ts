@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import awsconfig from '../../../aws-exports';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
-import {Observable, from} from 'rxjs';
+import {Observable, from, Subscription} from 'rxjs';
 import {StoreItemStore} from '../../entity-store/store-item/state/store-item.store';
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
@@ -17,6 +17,7 @@ import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/stat
 import {Router } from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
+import {take} from 'rxjs/operators';
 
 
 @Component({
@@ -24,8 +25,9 @@ import {EntityUserService} from '../../entity-store/user/state/entity-user.servi
   templateUrl: './points-store.component.html',
   styleUrls: ['./points-store.component.css']
 })
-export class PointsStoreComponent implements OnInit {
+export class PointsStoreComponent implements OnInit, OnDestroy {
   componentName = 'points-store.component';
+  private subscription = new Subscription();
   dialogResult = " ";
   version = VERSION;
 
@@ -50,6 +52,17 @@ export class PointsStoreComponent implements OnInit {
               private navigationService: NavigationService) {}
 
 
+  ngOnInit() {
+    const functionName = 'ngOnInit';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+/*    this.entityCurrentUserService.cacheCurrentUser().subscribe();
+    this.storeItemService.cacheStoreItems().subscribe();
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();*/
+
+  }
+
   openDialog(): void {
     console.log(`User's manager:`);
     const requestUser = this.currentUserQuery.getAll()[0];
@@ -60,7 +73,10 @@ export class PointsStoreComponent implements OnInit {
       data: "Would you like to redeem this gift?"
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+
+    dialogRef.afterClosed()
+      .pipe(take(1))
+      .subscribe(result => {
       console.log(`Dialog closed: ${result}`);
       this.dialogResult = result;
 
@@ -92,6 +108,7 @@ export class PointsStoreComponent implements OnInit {
     const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
     console.log(storeItem);
     this.userHasStoreItemService.newUserHasStoreItemRecord(managerUser.userId, storeItem.itemId)
+      .pipe(take(1))
       .subscribe((result: any) => {
         console.log(`${functionFullName}: result:`);
         console.log(result);
@@ -100,6 +117,7 @@ export class PointsStoreComponent implements OnInit {
           console.log(`${functionFullName}: Trying to send an email to user's manager:`);
           console.log(managerUser);
           this.storeItemService.sendStoreItemPurchaseRequestEmail(managerUser, requestUser, storeItem)
+            .pipe(take(1))
             .subscribe(emailResult => {
               console.log(`${functionFullName}: email result:`);
               console.log(emailResult);
@@ -142,16 +160,6 @@ export class PointsStoreComponent implements OnInit {
 
 
 
-  ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    this.entityCurrentUserService.cacheCurrentUser().subscribe();
-    this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();
-
-  }
 
 
   listStoreItems() {
@@ -193,6 +201,8 @@ export class PointsStoreComponent implements OnInit {
     console.log(this.rows);
   }
 
-
+  ngOnDestroy(): void {
+    // this.subscription.unsubscribe();
+  }
 
 }
