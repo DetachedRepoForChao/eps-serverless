@@ -44,7 +44,7 @@ export class StoreItemsCardComponent implements OnInit {
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
               private storeItemService: StoreItemService,
-              private storeItemQuery: StoreItemQuery,
+              public storeItemQuery: StoreItemQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
@@ -52,7 +52,7 @@ export class StoreItemsCardComponent implements OnInit {
 
   ngOnInit() {
 
-    this.storeItemService.cacheStoreItems().subscribe();
+    // this.storeItemService.cacheStoreItems().subscribe();
 
     // Load the reactive forms
     this.loadAddStoreItemForm();

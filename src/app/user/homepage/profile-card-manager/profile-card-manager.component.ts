@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, Subject} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {PointItemService} from '../../../shared/point-item.service';
@@ -15,6 +15,8 @@ import {EntityCurrentUserService} from '../../../entity-store/current-user/state
 import {UserService} from '../../../shared/user.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {takeUntil} from 'rxjs/operators';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -24,14 +26,18 @@ declare var $: any;
   templateUrl: './profile-card-manager.component.html',
   styleUrls: ['./profile-card-manager.component.css']
 })
-export class ProfileCardManagerComponent implements OnInit {
+export class ProfileCardManagerComponent implements OnInit, OnDestroy {
   componentName = 'profile-card-manager.component';
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+
   isImageLoading: boolean;
   isCardLoading: boolean;
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
   currentUser$;
+  currentUser: EntityCurrentUserModel;
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
@@ -44,7 +50,7 @@ export class ProfileCardManagerComponent implements OnInit {
               private userService: UserService,
               private currentUserStore: CurrentUserStore,
               private entityUserService: EntityCurrentUserService,
-              private entityCurrentUserQuery: EntityCurrentUserQuery) { }
+              public entityCurrentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -55,9 +61,23 @@ export class ProfileCardManagerComponent implements OnInit {
     this.isImageLoading = true;
     this.spinner.show('profile-card-manager-spinner');
 
-    this.entityUserService.cacheCurrentUser().subscribe();
-    this.currentUser$ = this.entityCurrentUserQuery.selectCurrentUser();
+    // this.entityUserService.cacheCurrentUser().subscribe();
+    // this.currentUser$ = this.entityCurrentUserQuery.selectCurrentUser();
 
+    this.entityCurrentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.entityCurrentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
 /*    if (!this.globals.userDetails) {
       this.userService.getUserProfile()
         .subscribe(userDetails => {
@@ -70,12 +90,12 @@ export class ProfileCardManagerComponent implements OnInit {
         });
     }*/
 
-    const observables: Observable<any>[] = [];
+    // const observables: Observable<any>[] = [];
 
-    observables.push(this.pointItemService.storeRemainingPointPool());
+    // observables.push(this.pointItemService.storeRemainingPointPool());
     // observables.push(this.avatarService.refreshCurrentUserAvatar());
 
-    forkJoin(observables)
+/*    forkJoin(observables)
       .subscribe(obsResults => {
         console.log(`${functionFullName}: obsResults:`);
         console.log(obsResults);
@@ -86,10 +106,12 @@ export class ProfileCardManagerComponent implements OnInit {
           console.log(obsResult);
         });
 
-        this.isImageLoading = false;
-        this.isCardLoading = false;
-        this.spinner.hide('profile-card-manager-spinner');
-      });
+
+      });*/
+
+    this.isImageLoading = false;
+    this.isCardLoading = false;
+    this.spinner.hide('profile-card-manager-spinner');
   }
 
   showGallery() {
@@ -138,5 +160,12 @@ export class ProfileCardManagerComponent implements OnInit {
 
   avatarClick() {
     $('#avatarModal').modal('show');
+  }
+
+  ngOnDestroy(): void {
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

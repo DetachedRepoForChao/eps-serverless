@@ -34,6 +34,9 @@ export class AuthService {
   private _authState: Subject<CognitoUser | any> = new Subject<CognitoUser | any>();
   authState: Observable<CognitoUser | any> = this._authState.asObservable();
 
+  // store the URL so we can redirect after logging in
+  public redirectUrl: string;
+
   public static SIGN_IN = 'signIn';
   public static SIGN_OUT = 'signOut';
   public static FACEBOOK = CognitoHostedUIIdentityProvider.Facebook;
@@ -47,6 +50,8 @@ export class AuthService {
         this._authState.next(payload.event);
       }
     });
+
+    // this.isLoggedIn().then();
   }
 
   signUp(user: NewUser): Promise<CognitoUser | any> {
@@ -106,6 +111,7 @@ export class AuthService {
   }
 
   currentUserInfo(): Promise<any> {
+    console.log('getting current user info');
     return Auth.currentUserInfo();
   }
 
@@ -158,6 +164,7 @@ export class AuthService {
   }
 
   isLoggedIn() {
+    console.log('auth service isLoggedIn()');
     return Auth.currentSession()
       .then((session: CognitoUserSession) => {
         console.log(session);

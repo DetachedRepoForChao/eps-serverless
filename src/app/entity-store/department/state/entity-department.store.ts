@@ -17,8 +17,8 @@ const initialState = {
 @Injectable({
   providedIn: 'root'
 })
-export class EntityDepartmentStore extends EntityStore<EntityDepartmentState,EntityDepartmentModel>{
-  constructor(){
+export class EntityDepartmentStore extends EntityStore<EntityDepartmentState, EntityDepartmentModel> {
+  constructor() {
     super(initialState);
   }
 }

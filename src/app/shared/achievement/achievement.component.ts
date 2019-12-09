@@ -4,11 +4,11 @@ import { UserAchievementProgress} from './user-achievement-progress.model';
 import { Globals} from '../../globals';
 import {MatTableDataSource} from '@angular/material';
 import {DepartmentEmployee} from '../../user/manager-user/gift-points/gift-points.component';
-import {Observable, forkJoin, Subscription} from 'rxjs';
+import {Observable, forkJoin, Subscription, Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
-import {tap} from 'rxjs/operators';
+import {take, takeUntil, tap} from 'rxjs/operators';
 import {AchievementModel} from '../../entity-store/achievement/state/achievement.model';
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 import {FeatureService} from '../../entity-store/feature/state/feature.service';
@@ -38,6 +38,9 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
 
   componentName = 'achievement.component';
 
+  private subscription = new Subscription();
+  private currentUserLoading$ = new Subject();
+  private userLoading$ = new Subject();
   public config: PerfectScrollbarConfigInterface = {};
 
   user$: Observable<EntityUserModel[]>;
@@ -75,10 +78,12 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    this.currentUserService.cacheCurrentUser().subscribe();
+/*    this.currentUserService.cacheCurrentUser().subscribe();
     this.userService.cacheUsers().subscribe();
     this.achievementService.cacheAchievements().subscribe();
-    this.featureService.cacheFeatures().subscribe();
+    this.featureService.cacheFeatures().subscribe();*/
+
+
 
     if (this.inputUser) {
       this.populateUserData();
@@ -100,11 +105,28 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
 
   populateCurrentUserData() {
     this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
       .subscribe(isLoading => {
         console.log(`Current User loading status is ${isLoading}`);
         if (!isLoading) {
-          this.currentUser$ = this.currentUserQuery.selectAll();
-          this.currentUserSub = this.currentUser$.subscribe((currentUser: EntityCurrentUserModel[]) => {
+          // this.currentUser$ = this.currentUserQuery.selectAll();
+          this.subscription.add(
+            this.currentUserQuery.selectAll().subscribe((currentUser: EntityCurrentUserModel[]) => {
+              this.currentUser = currentUser[0];
+              this.populateCurrentUserAchievements(currentUser[0]);
+
+              // Pull user info into a static variable if this hasn't happened yet
+/*              if (!this.currentUser) {
+                this.currentUser = this.currentUserQuery.getAll()[0];
+              }*/
+
+              this.isCurrentUserDataRetrieved = true;
+            })
+          );
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+/*          this.currentUserSub = this.currentUser$.subscribe((currentUser: EntityCurrentUserModel[]) => {
             this.populateCurrentUserAchievements(currentUser[0]);
 
             // Pull user info into a static variable if this hasn't happened yet
@@ -113,7 +135,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
             }
 
             this.isCurrentUserDataRetrieved = true;
-          });
+          });*/
         }
       });
   }
@@ -145,23 +167,36 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
 
   populateUserData() {
     this.userQuery.selectLoading()
+      .pipe(takeUntil(this.userLoading$))
       .subscribe(isLoading => {
         console.log(`User loading status is ${isLoading}`);
         if (!isLoading) {
-          this.user$ = this.userQuery.selectAll({
+/*          this.user$ = this.userQuery.selectAll({
             filterBy: e => e.username === this.inputUser.username
-          });
+          });*/
 
-          this.user$.subscribe((user: EntityUserModel[]) => {
-            this.populateUserAchievements(user[0]);
+          this.subscription.add(
+            this.userQuery.selectAll({
+              filterBy: e => e.username === this.inputUser.username
+            })
+              .subscribe((user: EntityUserModel[]) => {
+                this.user = user[0];
+                this.populateUserAchievements(user[0]);
 
-            // Pull user info into a static variable if this hasn't happened yet
-            if (!this.user) {
-              this.user = this.userQuery.getAll()[0];
-            }
+                // Pull user info into a static variable if this hasn't happened yet
+/*                if (!this.user) {
+                  this.user = this.userQuery.getAll()[0];
+                }*/
 
-            this.isUserDataRetrieved = true;
-          });
+                this.isUserDataRetrieved = true;
+              })
+          );
+
+          this.userLoading$.next();
+          this.userLoading$.complete();
+/*          this.user$.subscribe((user: EntityUserModel[]) => {
+
+          });*/
         }
       });
   }
@@ -170,6 +205,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.achievementsRetrieving) {
       this.achievementsRetrieving = true;
       this.otherUserAchievementService.cacheAchievements(user)
+        .pipe(take(1))
         .subscribe((result: Observable<OtherUserAchievementModel[]> | any) => {
           if (result !== false) {
             result.subscribe(() => {
@@ -234,6 +270,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     console.log(achievement);
 
     this.achievementService.acknowledgeAchievementComplete(achievement.progressId)
+      .pipe(take(1))
       .subscribe(result => {
         console.log(`${functionFullName}: Acknowledge result:`);
         console.log(result);
@@ -288,10 +325,15 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     console.log('ngOnDestroy');
-    this.currentUserSub.unsubscribe();
+    // this.currentUserSub.unsubscribe();
+    this.subscription.unsubscribe();
     this.inputUser = null;
     this.navigationService.achievementComponentInputUser = null;
     this.navigationService.achievementModalActive = false;
     this.clearInputUser.emit(true);
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.userLoading$.next();
+    this.userLoading$.complete();
   }
 }

@@ -83,3 +83,11 @@ a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
   text-decoration: none;
   border-radius: inherit;
 }
+
+.notification-modal {
+  z-index: 1051 !important;
+}
+
+.notification-details-modal {
+  z-index: 1100 !important;
+}

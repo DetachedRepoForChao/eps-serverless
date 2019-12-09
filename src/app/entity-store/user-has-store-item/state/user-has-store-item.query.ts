@@ -52,6 +52,14 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
+  public getUserRequests(userId: number) {
+    return this.getAll({
+      filterBy: e => (e.userId === userId),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
   public selectUserPendingRequests(userId: number) {
     return this.selectAll({
       filterBy: e => (e.userId === userId) && (e.status === 'pending'),
@@ -59,6 +67,15 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
       sortByOrder: Order.DESC
     });
   }
+
+  public getUserPendingRequests(userId: number) {
+    return this.getAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'pending'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
 
   public selectUserApprovedRequests(userId: number) {
     return this.selectAll({
@@ -68,9 +85,25 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
-  public selectUserDeclinedRequests(userId: number) {
+  public getUserReadyForPickupRequests(userId: number) {
+    return this.getAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'readyForPickup'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public selectUserPickedUpRequests(userId: number) {
     return this.selectAll({
-      filterBy: e => (e.userId === userId) && (e.status === 'declined'),
+      filterBy: e => (e.userId === userId) && (e.status === 'pickedUp'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public getUserPickedUpRequests(userId: number) {
+    return this.getAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'pickedUp'),
       sortBy: 'createdAt',
       sortByOrder: Order.DESC
     });
@@ -84,8 +117,62 @@ export class UserHasStoreItemQuery extends QueryEntity<UserHasStoreItemState, Us
     });
   }
 
+  public getUserArchivedRequests(userId: number) {
+    const currentDate = Date.now();
+    let otherDate;
+    let dayDiff;
+
+    return this.getAll({
+      filterBy: e => {
+        if (e.userId === userId) {
+          if (e.status === 'pickedUp') {
+            otherDate = new Date(e.pickedUpAt);
+            dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (dayDiff >= 5) {
+              return true;
+            }
+          }
+          return false;
+        }
+      },
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public getUserActiveRequests(userId: number) {
+    const currentDate = Date.now();
+    let otherDate;
+    let dayDiff;
+
+    return this.getAll({
+      filterBy: e => {
+        if (e.userId === userId) {
+          if (e.status === 'pickedUp') {
+            otherDate = new Date(e.pickedUpAt);
+            dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (dayDiff >= 5) {
+              return false;
+            }
+          }
+          return true;
+        }
+      },
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
   public selectUserCancelledRequests(userId: number) {
     return this.selectAll({
+      filterBy: e => (e.userId === userId) && (e.status === 'cancelled'),
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public getUserCancelledRequests(userId: number) {
+    return this.getAll({
       filterBy: e => (e.userId === userId) && (e.status === 'cancelled'),
       sortBy: 'createdAt',
       sortByOrder: Order.DESC

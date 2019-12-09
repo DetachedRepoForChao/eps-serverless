@@ -1,0 +1,75 @@
+<ng-container *ngIf="inputNotification">
+  <!--<div class="col-12">
+    <div class="row">
+      <div class="col-3 img-col">
+        <img class="rounded-circle avatar-img"
+             [src]="userQuery.getUserByUserId(inputNotification.sourceUserId)[0].avatarResolvedUrl" alt="">
+      </div>
+      <div class="col-7">
+        <a class="text-muted">{{userQuery.getUserByUserId(inputNotification.sourceUserId)[0].firstName}} {{userQuery.getUserByUserId(inputNotification.sourceUserId)[0].lastName}}</a>
+      </div>
+    </div>
+    <div class="row">
+      <h4 class="text-muted">{{inputNotification.title}}</h4>
+      <h5 class="text-muted">{{inputNotification?.description}}</h5>
+    </div>
+
+
+  </div>-->
+  <div>
+    <div class="list-group-item  pb-0 border-0">
+      <div class="col-12">
+        <div class="row">
+          <ng-container *ngIf="inputNotification.audience === 'department'">
+            <div>
+              Notification sent to the <strong>{{departmentQuery.getDepartmentByDepartmentId(inputNotification.departmentId)?.name}}</strong> department.
+            </div>
+          </ng-container>
+        </div>
+        <div class="row border-bottom pb-2 mb-4">
+          <div class="col-2 p-0">
+            <!-- Avatar -->
+            <img class="rounded-circle avatar-img"
+                 [src]="userQuery.getUserByUserId(inputNotification.sourceUserId)?.avatarResolvedUrl" alt="">
+          </div>
+          <div class="col-6 my-auto">
+            <div class="row">
+              <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(inputNotification.sourceUserId)?.firstName}} {{userQuery.getUserByUserId(inputNotification.sourceUserId)?.lastName}}</h4>
+              <div class="text-sm mb-0 black" >{{userQuery.getUserByUserId(inputNotification.sourceUserId)?.email}}</div>
+
+            </div>
+
+          </div>
+          <div class="col-4 text-right p-0">
+            <ng-container>
+              <p class="text-muted my-0 py-0"><small>Sent {{inputNotification.createdAt | timeAgo}}</small></p>
+            </ng-container>
+            <ng-container *ngIf="!inputNotification.timeSeen">
+              <p class="text-muted font-italic my-0 py-0"><small> </small></p>
+            </ng-container>
+            <ng-container *ngIf="inputNotification.timeSeen">
+              <p class="text-muted my-0 py-0"><small>Read {{inputNotification.timeSeen | timeAgo}}</small></p>
+            </ng-container>
+
+          </div>
+        </div>
+<!--        <div class="row">
+          <div class="col-12 pr-0 mr-0 notification-item-footer text-right">
+            <ng-container *ngIf="notificationToDelete === inputNotification">
+              <span class="text-primary delete-prompt pr-4" (click)="deleteNotification(inputNotification)">Delete?</span>
+            </ng-container>
+            <i class="far fa-trash-alt text-primary trash-icon pr-2" (click)="notificationDeleteToggle(inputNotification)"></i>
+          </div>
+        </div>-->
+        <div class="row">
+          <h4 class="text-sm mb-0 black">{{inputNotification.title}}</h4>
+        </div>
+        <div class="row">
+          {{inputNotification.description}}
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</ng-container>

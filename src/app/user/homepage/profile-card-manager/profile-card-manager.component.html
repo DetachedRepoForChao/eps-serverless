@@ -2,12 +2,13 @@
   <div class="card card-coin card-plain card-custom">
     <div class="card-header">
 
-      <img [src]="this.entityCurrentUserQuery.getCurrentUser()[0].avatarResolvedUrl"
-           alt="Avatar"
-           *ngIf="(this.entityCurrentUserQuery.selectLoading() | async) === false; else avatarLoading"
-           class="img-center img-fluid rounded-circle"
-           id="avatar"
-           (click)="avatarClick()">
+      <ng-container *ngIf="currentUser; else avatarLoading">
+        <img [src]="currentUser.avatarResolvedUrl"
+             alt="Avatar"
+             class="img-center img-fluid rounded-circle"
+             id="avatar"
+             (click)="avatarClick()">
+      </ng-container>
 
       <ng-template #avatarLoading >
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
@@ -17,58 +18,70 @@
       </ng-template>
     </div>
 
-    <div class="card-body" *ngIf="!isCardLoading; else cardLoading">
-      <ngx-spinner
-        name="profile-card-manager-spinner"
-        [fullScreen]="false"
-        bdColor="rgba(51,51,51,0.8)"
-        size="medium"
-        color="#fff"
-        type="pacman"
-      >
-        <p class="loadingstyle">Loading...</p>
-      </ngx-spinner>
+    <ng-container *ngIf="!isCardLoading; else cardLoading">
+      <div class="card-body">
+        <ngx-spinner
+          name="profile-card-manager-spinner"
+          [fullScreen]="false"
+          bdColor="rgba(51,51,51,0.8)"
+          size="medium"
+          color="#fff"
+          type="pacman"
+        >
+          <p class="loadingstyle">Loading...</p>
+        </ngx-spinner>
 
-      <div class="row">
-        <div class="col-md-12 text-center">
-          <h4 class="text-uppercase" *ngIf="(this.entityCurrentUserQuery.selectLoading() | async) === false">
-            {{(currentUser$ | async)[0].firstName}} {{(currentUser$ | async)[0].lastName}}</h4>
-          <span *ngIf="(this.entityCurrentUserQuery.selectLoading() | async) === false">
-            {{(currentUser$ | async)[0].department.Name}}</span>
-          <hr class="line-success">
-        </div>
-      </div>
-      <div class="row text-center mt-4">
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold">Point Pool</h3>
-          <h4 class="mb-0" *ngIf="(this.entityCurrentUserQuery.selectLoading() | async) === false">
-            {{(currentUser$ | async)[0].pointsPool}} / 5000</h4>
-        </div>
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-          <h4 class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
-            {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
-          </h4>
-        </div>
-      </div>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <ng-container *ngIf="currentUser">
+              <h4 class="text-uppercase" >
+                {{currentUser.firstName}} {{currentUser.lastName}}</h4>
+              <span >
+            {{currentUser.department.Name}}</span>
+              <hr class="line-success">
+            </ng-container>
 
-
-      <div *ngIf="(currentUser$ | async)[0]?.quote" class="row">
-        <div class="col-2 quote-box-quotation-mark" >
-          <div>&ldquo;</div>
-        </div>
-        <div class="col-8 quote-box-text">
-          <div>
-            {{(currentUser$ | async)[0]?.quote}}
           </div>
-
         </div>
-        <div class="col-2">
+        <div class="row text-center mt-4">
+          <div class="col p-2">
+            <h3 class="mb-1 line-height-5 font-weight-bold">Point Pool</h3>
+            <ng-container *ngIf="currentUser">
+              <h4 class="mb-0" >
+                {{currentUser.pointsPool}} / 5000</h4>
+            </ng-container>
 
+          </div>
+          <div class="col p-2">
+            <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
+            <ng-container *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
+              <h4 class="mb-0" >
+                {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
+              </h4>
+            </ng-container>
+
+          </div>
+        </div>
+
+
+        <div *ngIf="currentUser?.quote" class="row">
+          <div class="col-2 quote-box-quotation-mark" >
+            <div>&ldquo;</div>
+          </div>
+          <div class="col-8 quote-box-text">
+            <div>
+              {{currentUser?.quote}}
+            </div>
+
+          </div>
+          <div class="col-2">
+
+          </div>
         </div>
       </div>
 
-    </div>
+
+    </ng-container>
     <div class="card-footer text-center">
       <!-----Button----->
 <!--      <div class="container">
@@ -109,9 +122,12 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" *ngIf="this.entityCurrentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.entityCurrentUserQuery.getCurrentUser()[0].avatarResolvedUrl"></app-avatar>
-      </div>
+      <ng-container *ngIf="currentUser; else avatarModalLoading">
+        <div class="modal-body" >
+          <app-avatar [avatarUrl]="currentUser.avatarResolvedUrl"></app-avatar>
+        </div>
+      </ng-container>
+
       <ng-template #avatarModalLoading>
 
       </ng-template>

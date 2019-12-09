@@ -6,7 +6,7 @@ import { VISIBILITY_FILTER } from '../filter/point-item-transaction-filter.model
 import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
-import {forkJoin, Observable, of} from 'rxjs';
+import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
@@ -191,8 +191,8 @@ export class PointItemTransactionService {
   }
 
 
-  getPointItemTransactionsRange(startIndex: number, numberRecords: number): Observable<any> {
-    const functionName = 'getPointItemTransactionsRange';
+  getAddPointItemTransactionsRange(startIndex: number, numberRecords: number): Observable<any> {
+    const functionName = 'getAddPointItemTransactionsRange';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -207,7 +207,7 @@ export class PointItemTransactionService {
             numberRecords: numberRecords
           };
 
-          API.post(this.apiName, this.apiPath + '/getPointTransactionRange', myInit).then(response => {
+          API.post(this.apiName, this.apiPath + '/getAddPointTransactionRange', myInit).then(response => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(response);
             observer.next(response.data);
@@ -298,7 +298,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;
@@ -306,9 +306,12 @@ export class PointItemTransactionService {
                     const pointItemId = pointItemTransaction.pointItemId;
                     const description = pointItemTransaction.description;
 
-                    const coreValues: string[] = pointItemTransaction.pointItem.coreValues.split(';');
-                    for (let j = 0; j < coreValues.length; j++) {
-                      coreValues[j] = coreValues[j].trim();
+                    let coreValues: string[] = [];
+                    if (pointItemTransaction.pointItem && pointItemTransaction.pointItem.coreValues) {
+                      coreValues = pointItemTransaction.pointItem.coreValues.split(';');
+                      for (let j = 0; j < coreValues.length; j++) {
+                        coreValues[j] = coreValues[j].trim();
+                      }
                     }
 
                     const createdAt = pointItemTransaction.createdAt;
@@ -384,7 +387,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;
@@ -392,9 +395,12 @@ export class PointItemTransactionService {
                     const pointItemId = pointItemTransaction.pointItemId;
                     const description = pointItemTransaction.description;
 
-                    const coreValues: string[] = pointItemTransaction.pointItem.coreValues.split(';');
-                    for (let j = 0; j < coreValues.length; j++) {
-                      coreValues[j] = coreValues[j].trim();
+                    let coreValues: string[] = [];
+                    if (pointItemTransaction.pointItem && pointItemTransaction.pointItem.coreValues) {
+                      coreValues = pointItemTransaction.pointItem.coreValues.split(';');
+                      for (let j = 0; j < coreValues.length; j++) {
+                        coreValues[j] = coreValues[j].trim();
+                      }
                     }
 
                     const createdAt = pointItemTransaction.createdAt;
@@ -439,8 +445,8 @@ export class PointItemTransactionService {
     });
   }
 
-  cachePointItemTransactionsBatch() {
-    const functionName = 'cachePointItemTransactionsBatch';
+  cacheAddPointItemTransactionsBatch() {
+    const functionName = 'cacheAddPointItemTransactionsBatch';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -458,14 +464,14 @@ export class PointItemTransactionService {
         .then(currentUser => {
           const username = currentUser.username;
 
-          // Check if point transactions for this user have already been cached
+          // Check if transactions for this batch have already been cached
           if (this.numBatchRetrieved && (this.numBatchRetrieved * 10) >= startIndex) {
-            // Point transactions for this batch has already been retrieved
+            // Point transactions for this batch have already been retrieved
             console.log(`${functionFullName}: Point transactions for range [${startIndex} - ${startIndex + numberRecords}] have already been retrieved`);
             observer.next(false);
             observer.complete();
           } else {
-            const request$ = this.getPointItemTransactionsRange(startIndex, numberRecords)
+            const request$ = this.getAddPointItemTransactionsRange(startIndex, numberRecords)
               .pipe(tap((pointItemTransactions: any) => {
                 console.log(`${functionFullName}: caching for range [${startIndex} - ${startIndex + numberRecords}]:`);
                 console.log(pointItemTransactions);
@@ -480,7 +486,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;
@@ -694,6 +700,7 @@ export class PointItemTransactionService {
       likedByCurrentUser: false
     });
   }
+
 
   resetState() {
     this.retrievedUserIds = [];

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {AvatarService} from './avatar.service';
 import {LeaderboardService} from '../leaderboard.service';
@@ -8,18 +8,23 @@ import {EntityCurrentUserService} from '../../entity-store/current-user/state/en
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
+import {Subject} from 'rxjs';
+import {take, takeUntil} from 'rxjs/operators';
+import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 
 @Component({
   selector: 'app-avatar',
   templateUrl: './avatar.component.html',
   styleUrls: ['./avatar.component.css']
 })
-export class AvatarComponent implements OnInit {
+export class AvatarComponent implements OnInit, OnDestroy {
   @Input() avatarUrl: string;
 
   componentName = 'avatar.component';
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
   isImageLoading: boolean;
-
+  currentUser: EntityCurrentUserModel;
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
@@ -34,16 +39,32 @@ export class AvatarComponent implements OnInit {
               private globals: Globals,
               private feedcardService: FeedcardService,
               private entityCurrentUserService: EntityCurrentUserService,
-              public userQuery: EntityCurrentUserQuery,
+              public currentUserQuery: EntityCurrentUserQuery,
               private achievementService: AchievementService,
               public achievementQuery: AchievementQuery
               ) { }
 
 
   ngOnInit() {
-    this.croppedImageToShow = this.userQuery.getCurrentUser()[0].avatarResolvedUrl;
-    console.log('croppedImageToShow:');
-    console.log(this.croppedImageToShow);
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+              this.croppedImageToShow = this.currentUser.avatarResolvedUrl;
+              console.log('croppedImageToShow:');
+              console.log(this.croppedImageToShow);
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
+    // this.croppedImageToShow = this.currentUserQuery.getCurrentUser()[0].avatarResolvedUrl;
+
   }
 
   toggleAvatarUpload() {
@@ -67,11 +88,15 @@ export class AvatarComponent implements OnInit {
     console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
 
 
-    this.avatarService.saveUserAvatar(this.croppedImage).subscribe((saveResult) => {
+    this.avatarService.saveUserAvatar(this.croppedImage)
+      .pipe(take(1))
+      .subscribe((saveResult) => {
       console.log(`${functionFullName}: saveResult: ${saveResult}`);
       if (saveResult !== false) {
         console.log('save result !== false');
-        this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
+        this.achievementService.incrementAchievement('ChangeAvatar')
+          .pipe(take(1))
+          .subscribe();
         this.avatarUpload = false;
         this.avatarPreview = true;
 
@@ -111,6 +136,7 @@ export class AvatarComponent implements OnInit {
     this.avatarPreview = true;
 
     this.avatarService.generateRandomAvatar()
+      .pipe(take(1))
       .subscribe((data: any) => {
         const currentFn = this;
         const reader = new FileReader();
@@ -121,9 +147,13 @@ export class AvatarComponent implements OnInit {
           console.log(data.avatarUrl);
           currentFn.avatarUrl = base64data.toString();
           // currentFn.entityCurrentUserService.updateAvatar(data.avatarUrl);
-          currentFn.avatarService.saveUserAvatar(data.result).subscribe((saveResult) => {
+          currentFn.avatarService.saveUserAvatar(data.result)
+            .pipe(take(1))
+            .subscribe((saveResult) => {
             if (saveResult !== false) {
-              currentFn.achievementService.incrementAchievement('ChangeAvatar').subscribe();
+              currentFn.achievementService.incrementAchievement('ChangeAvatar')
+                .pipe(take(1))
+                .subscribe();
             }
           });
         };
@@ -138,5 +168,11 @@ export class AvatarComponent implements OnInit {
     return "please complete the achievement four"
   }
 
+  ngOnDestroy(): void {
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
 }

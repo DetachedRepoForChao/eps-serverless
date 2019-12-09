@@ -1,1 +1,32 @@
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+/*@import '@angular/material/prebuilt-themes/deeppurple-amber.css';*/
+
+li {
+  color: black;
+}
+
+.store-item-img {
+  max-width: 350px;
+  max-height: 350px;
+  /*padding: 0 !important;;*/
+}
+
+.pending-style {
+  color: #5603ad;
+  font-weight: bold;
+}
+
+.approved-style {
+  color: #2dce89;
+  font-weight: bold;
+}
+
+.cancelled-style {
+  color: #f21c19;
+  font-weight: bold;
+}
+
+.fulfilled-style {
+  color: #e14eca;
+  font-style: italic;
+  font-weight: bold;
+}

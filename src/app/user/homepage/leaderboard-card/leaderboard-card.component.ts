@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.service';
 import {MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -7,7 +7,7 @@ import {DepartmentService} from '../../../shared/department.service';
 import {Department} from '../../../shared/department.model';
 import {Storage} from 'aws-amplify';
 import {ImageService} from '../../../shared/image.service';
-import {forkJoin, observable, Observable} from 'rxjs';
+import {forkJoin, observable, Observable, Subject, Subscription} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {UserStore} from '../../../entity-store/user/state/user.store';
@@ -24,6 +24,7 @@ import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {FeatureQuery} from '../../../entity-store/feature/state/feature.query';
 import {AuthService} from '../../../login/auth.service';
+import {takeUntil} from 'rxjs/operators';
 
 // Create a variable to interact with jquery
 declare var $: any;
@@ -33,8 +34,10 @@ declare var $: any;
   templateUrl: './leaderboard-card.component.html',
   styleUrls: ['./leaderboard-card.component.css']
 })
-export class LeaderboardCardComponent implements OnInit {
+export class LeaderboardCardComponent implements OnInit, OnDestroy {
   componentName = 'leaderboard-card.component';
+  private subscription = new Subscription();
+  private usersLoading$ = new Subject();
   // leaderboardUsers: LeaderboardUser[] = [];
   // leaderboardUsersTop: LeaderboardUser[] = [];
 
@@ -49,20 +52,21 @@ export class LeaderboardCardComponent implements OnInit {
   displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
 
   leaderboardUsers$: Observable<EntityUserModel[]>;
+  leaderboardUsers: EntityUserModel[];
   selectedRow;
 
   constructor(public leaderboardService: LeaderboardService,
               private departmentService: DepartmentService,
               private imageService: ImageService,
               private spinner: NgxSpinnerService,
-              private entityUserService: EntityUserService,
+              private userService: EntityUserService,
               private userStore: UserStore,
-              public entityUserQuery: EntityUserQuery,
+              public userQuery: EntityUserQuery,
               public achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
-              public entityCurrentUserQuery: EntityCurrentUserQuery,
+              public currentUserQuery: EntityCurrentUserQuery,
               private userHasStoreItemQuery: UserHasStoreItemQuery,
-              private entityCurrentUserService: EntityCurrentUserService,
+              private currentUserService: EntityCurrentUserService,
               private storeItemQuery: StoreItemQuery,
               private pointItemQuery: PointItemQuery,
               private metricsQuery: MetricsQuery,
@@ -79,11 +83,29 @@ export class LeaderboardCardComponent implements OnInit {
     this.spinner.show('leaderboard-card-spinner');
     this.spinner.show('avatar-loading-spinner');
 
-    this.entityUserService.cacheUsers().subscribe();
+    // this.entityUserService.cacheUsers().subscribe();
 
-    this.leaderboardUsers$ = this.entityUserQuery.selectAll({
+/*    this.leaderboardUsers$ = this.userQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
+    });*/
+
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.usersLoading$))
+      .subscribe(isLoading => {
+        console.log('achievements loading: ' + isLoading);
+        if (!isLoading) {
+          this.subscription.add(
+            this.userQuery.selectAll({
+              filterBy: e => e.securityRole.Id === 1,
+            })
+              .subscribe(users => {
+                this.leaderboardUsers = users;
+              })
+          );
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
 
     this.isCardLoading = false;
 
@@ -101,7 +123,7 @@ export class LeaderboardCardComponent implements OnInit {
   }
 
   test1() {
-    this.entityCurrentUserService.updatePointsBalance(123);
+    this.currentUserService.updatePointsBalance(123);
   }
 
   getFirstDigit(number: number) {
@@ -119,7 +141,7 @@ export class LeaderboardCardComponent implements OnInit {
     console.log('completed');
     console.log(this.achievementQuery.getCompleteAchievements());
     console.log('user query select all');
-    const users$ = this.entityUserQuery.selectAll({
+    const users$ = this.userQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
 
@@ -127,7 +149,7 @@ export class LeaderboardCardComponent implements OnInit {
       console.log(users);
     });
 
-    const currentUser$ = this.entityCurrentUserQuery.selectAll();
+    const currentUser$ = this.currentUserQuery.selectAll();
     currentUser$.subscribe(currentUser => {
       console.log(currentUser);
     });
@@ -141,7 +163,7 @@ export class LeaderboardCardComponent implements OnInit {
     const metrics$ = this.metricsQuery.selectAll();
     metrics$.subscribe(metrics => {
       console.log(metrics);
-    }).unsubscribe();
+    });
 
     // this.entityUserQuery.getUserCompleteAchievementCount(47);
 
@@ -159,5 +181,11 @@ export class LeaderboardCardComponent implements OnInit {
       .subscribe(x => {
         console.log(x);
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.usersLoading$.next();
+    this.usersLoading$.complete();
   }
 }

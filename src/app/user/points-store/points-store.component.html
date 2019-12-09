@@ -24,25 +24,25 @@
                   </div>-->
                   <div class="row">
                     <div class="col-md-12 text-center">
-                      <div *ngIf="(this.storeItemQuery.selectLoading() | async) === false; else storeLoading">
+                      <div *ngIf="storeItems; else storeLoading">
                         <div class="row">
-                          <div *ngFor="let row of (this.storeItemQuery.getAll())" class="col-4">
-                            <div *ngIf="row" class="row">
+                          <div *ngFor="let storeItem of storeItems" class="col-4">
+                            <div *ngIf="storeItem" class="row">
                               <div class="col-2">
 
                               </div>
-                              <div class="col-8 item-selection-container" (click)="openDialog(); selectStoreItem(row);">
+                              <div class="col-8 item-selection-container" (click)="selectStoreItem(storeItem);">
                                 <div class="row">
                                   <div class="col-12">
                                     <div class="container-img">
-                                      <img [src]="row.imageResolvedUrl"/>
+                                      <img [src]="storeItem.imageResolvedUrl"/>
                                     </div>
                                   </div>
                                 </div>
                                 <div class="row">
                                   <div class="col-12">
-                                    <div class="container-text">{{row.cost}}pts | {{row.name}}</div>
-                                    <div class="container-text2">{{row.description}}</div>
+                                    <div class="container-text">{{storeItem.cost}}pts | {{storeItem.name}}</div>
+                                    <div class="container-text2">{{storeItem.description}}</div>
                                   </div>
                                 </div>
                               </div>

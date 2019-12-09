@@ -66,7 +66,7 @@ export class PointItemsCardComponent implements OnInit {
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
               private pointItemService: PointItemService,
-              private pointItemQuery: PointItemQuery,
+              public pointItemQuery: PointItemQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
@@ -74,7 +74,7 @@ export class PointItemsCardComponent implements OnInit {
 
   ngOnInit() {
 
-    this.pointItemService.cachePointItems().subscribe();
+    // this.pointItemService.cachePointItems().subscribe();
 
     // Build the reactive Edit User form
     this.loadAddPointItemForm();

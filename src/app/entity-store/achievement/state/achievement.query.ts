@@ -77,7 +77,7 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
   }
 
   public getAchievementFamily(achievementFamily: string) {
-    return this.selectAll({
+    return this.getAll({
       filterBy: achievement => achievement.family === achievementFamily
     });
   }
@@ -125,6 +125,47 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
       // return filteredList;
     });
 
+  }
+
+  getFilteredAchievementsList() {
+    const achievementsList = this.getAll();
+    const functionName = 'filterAchievements';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
+
+    // console.log(achievementsList);
+
+    const filteredList: AchievementModel[] = [];
+    const completedList = this.getCompletedAchievements();
+    const inProgressList = this.getInProgressAchievements();
+
+    // Add the 'complete' achievements to the filtered achievements list
+    for (let i = 0; i < completedList.length; i++) {
+      // console.log(`${functionFullName}: Adding 'complete' achievement ${completedList[i].name} to the filtered list`);
+      filteredList.push(completedList[i]);
+    }
+
+    // Add the 'in progress' achievements to the filtered achievements list
+    for (let i = 0; i < inProgressList.length; i++) {
+      // If there is a 'complete' achievement in the completed achievements list of the same family as this 'in progress'
+      // achievement, do not add this achievement to the list
+      const sameFamilyAchievementsList = completedList.filter(x => x.family === inProgressList[i].family);
+      if (sameFamilyAchievementsList.length > 0) {
+        // There is a 'complete' achievement of the same family as this 'in progress' achievement. The 'in progress' achievement
+        // will not be added to the filtered list until the 'completed' achievement is acknowledged by the user.
+        // console.log(`${functionFullName}: There is a 'completed' achievement in the '${inProgressList[i].family}' family. ` +
+        //   `Not adding 'in progress' achievement '${inProgressList[i].name}' to the filtered achievement list`);
+      } else {
+        // console.log(`${functionFullName}: Adding 'in progress' achievement ${inProgressList[i].name} to the filtered list`);
+        filteredList.push(inProgressList[i]);
+      }
+    }
+
+    // console.log(`${functionFullName}: filteredList:`);
+    // console.log(filteredList);
+
+
+    return filteredList;
   }
 
   // Returns number of achievements in the achievement family

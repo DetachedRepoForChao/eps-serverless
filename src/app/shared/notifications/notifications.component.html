@@ -1,0 +1,115 @@
+<ng-container *ngIf="notifications">
+  <div class="max-height-620 min-height-300">
+    <div class="row tab-row justify-content-start">
+      <div class="col-2 text-center">
+        <span (click)="setNotificationsDataSource('all'); onNotificationTabItemClick('all')" class="tab-item toggled" id="notificationTab_all">All</span>
+      </div>
+      <div class="col-2 text-center">
+        <span (click)="setNotificationsDataSource('new'); onNotificationTabItemClick('new')" class="tab-item" id="notificationTab_new">Unread</span>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col-12">
+        <ng-container *ngIf="currentNotificationTab === 'all'">
+          <ng-container *ngIf="unseenNotifications.length > 0; else noUnseenNotifications">
+            <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">{{unseenNotifications.length}}</strong> unread notifications.</h6>
+          </ng-container>
+          <ng-container *ngIf="notifications.length === 0;">
+            <h6 class="text-sm text-muted m-0">No notifications.</h6>
+          </ng-container>
+          <ng-template #noUnseenNotifications>
+            <h6 class="text-sm text-muted m-0">No unread notifications.</h6>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="currentNotificationTab === 'new'">
+          <ng-container *ngIf="unseenNotifications.length > 0; else noUnseenNotifications">
+            <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">{{unseenNotifications.length}}</strong> unread notifications.</h6>
+          </ng-container>
+          <ng-template #noUnseenNotifications>
+            <h6 class="text-sm text-muted m-0">No unread notifications.</h6>
+          </ng-template>
+        </ng-container>
+
+      </div>
+    </div>
+
+
+    <div>
+      <!-- List group -->
+      <perfect-scrollbar class="scroll-container perfect-scrollbar-light" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+        <div class="list-group list-group-flush">
+
+          <ng-container *ngIf="dataSource.length > 0">
+            <ng-container *ngFor="let notification of dataSource.slice(0, showLimit) ">
+              <div>
+                <a class="list-group-item list-group-item-action notification-item pb-0 border-bottom-0"
+                   data-toggle="modal" (click)="onClickNotificationDetails(notification); openNotificationDetails()"
+                   [ngClass]="{'seen-notification': notification.timeSeen}">
+                  <div class="col-12">
+                    <div class="row">
+                      <div class="col-2 p-0">
+                        <!-- Avatar -->
+                        <img class="rounded-circle avatar-img"
+                             [src]="userQuery.getUserByUserId(notification.sourceUserId)?.avatarResolvedUrl" alt="">
+                      </div>
+                      <div class="col-6">
+                        <div class="row">
+                          <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(notification.sourceUserId)?.firstName}} {{userQuery.getUserByUserId(notification.sourceUserId)?.lastName}}</h4>
+                        </div>
+                        <div class="row">
+                          <div class="text-sm mb-0 black">{{notification.title}}</div>
+                        </div>
+                      </div>
+                      <div class="col-4 text-right p-0">
+                        <ng-container>
+                          <p class="text-muted"><small>Sent {{notification.createdAt | timeAgo}}</small></p>
+                        </ng-container>
+                        <ng-container *ngIf="!notification.timeSeen">
+                          <p class="text-muted font-italic"><small>Unread</small></p>
+                        </ng-container>
+                        <ng-container *ngIf="notification.timeSeen">
+                          <p class="text-muted"><small>Read {{notification.timeSeen | timeAgo}}</small></p>
+                        </ng-container>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </a>
+                <div class="notification-item-footer border-bottom text-right" [ngClass]="{'seen-notification-item-footer': notification.timeSeen}">
+                  <ng-container *ngIf="notificationToDelete === notification">
+                    <span class="text-primary delete-prompt pr-4" (click)="deleteNotification(notification)">Delete?</span>
+                  </ng-container>
+                  <i class="far fa-trash-alt text-primary trash-icon pr-4" (click)="notificationDeleteToggle(notification)"></i>
+
+
+                </div>
+              </div>
+
+            </ng-container>
+          </ng-container>
+
+        </div>
+      </perfect-scrollbar>
+
+    </div>
+
+    <ng-container *ngIf="dataSource.length > 0">
+      <div class="text-center py-3">
+        <a class=" text-muted">Displaying {{(dataSource.length > showLimit) ? showLimit : dataSource.length}} of {{dataSource.length}} notifications. </a>
+        <ng-container *ngIf="dataSource?.length > showLimit; else noMoreNotifications">
+          <a (click)="showMore()" class="text-primary font-weight-bold show-more">Show more</a>
+        </ng-container>
+        <ng-template #noMoreNotifications>
+          <!--      <div class="text-center">
+                  <br>
+                </div>-->
+        </ng-template>
+      </div>
+    </ng-container>
+
+  </div>
+
+</ng-container>
+
+

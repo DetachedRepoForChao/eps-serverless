@@ -1,0 +1,144 @@
+
+/* Naviagtion .    */
+.fa-bell {
+  color: rgba(221, 8, 8, 0.774);
+}
+.tim-icons icon-trophy {
+  color:	rgba(255, 217, 0, 0.815);
+}
+.fa {
+  font-size:25px;
+}
+.fas {
+  font-size:25px;
+}
+.fa-gift {
+  color:	rgb(202, 104, 120);
+}
+.fas-cog {
+  color:	rgba(75, 68, 68, 0.774);
+}
+
+.tim-icons {
+  font-size: 25px
+}
+.tim-icons {
+  font-size: 25px
+}
+
+/*.navbar-brand {margin-left: 250px;}*/
+
+
+.modalclass{
+  overflow-scrolling: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 0px;
+}
+
+.black{
+  color: black;
+}
+
+.modalheight {
+  position: absolute;
+  margin-top: 55px;
+  overflow-y: auto;
+}
+
+.modal-custom {
+  border-style: solid;
+  border-color: #5e72e4;
+  border-width: 5px;
+  border-radius: 25px;
+}
+
+.modal.show .modal-dialog {
+  transform: translate(0, 0%);
+}
+
+.padding-bottom-0 {
+  padding-bottom: 0;
+}
+
+.points-modal {
+  max-height: 650px;
+}
+
+/*perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top,  rgb(31, 34, 81) 0%,  rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+
+perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to top,  rgb(31, 34, 81) 0%,  rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px;
+}*/
+
+
+
+.avatar-img {
+  padding: 0 !important;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 50px !important;
+}
+
+.seen-notification {
+  background-color: #f4f5f7;
+}
+
+.seen-notification:hover {
+  background-color: #d4d5d7;
+  z-index: auto;
+}
+
+.notification-item:hover {
+  cursor: pointer;
+  z-index: auto;
+}
+
+.max-height-600 {
+  max-height: 600px;
+}
+
+.min-height-300 {
+  min-height: 300px;
+}
+
+.trash-icon {
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.trash-icon:hover {
+  color: black;
+}
+
+.notification-item-footer {
+
+  /*background-color: #f6f9fc;*/
+}
+
+.seen-notification-item-footer {
+  background-color: #f4f5f7;
+}
+
+.show-more {
+  cursor: pointer;
+}
+
+.scroll-container {
+  max-height: 500px;
+}
+
+.delete-prompt {
+  cursor: pointer;
+}
+
+.delete-prompt:hover {
+  color: #ba1655 !important;
+}

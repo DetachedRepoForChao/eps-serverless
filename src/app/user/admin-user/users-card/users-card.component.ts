@@ -44,14 +44,14 @@ export class UsersCardComponent implements OnInit {
               private achievementService: AchievementService,
               private authService: AuthService,
               private userService: EntityUserService,
-              private userQuery: EntityUserQuery,
+              public userQuery: EntityUserQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
               private notifierService: NotifierService) { }
 
   ngOnInit() {
-    this.userService.cacheUsers().subscribe();
+    // this.userService.cacheUsers().subscribe();
     // Read in the list of departments from the DepartmentService
     const departments$ = this.departmentService.getDepartments()
       .pipe(

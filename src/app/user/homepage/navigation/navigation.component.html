@@ -9,7 +9,7 @@
       -->
 
       <a class="navbar-brand" target="_blank">
-        <span>The Asbury Hotel </span>| EPS
+        <span>Pineapple Points</span>🍍
       </a>
 
       <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,59 +40,63 @@
 
 
 
-        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notiModal">
+        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notificationModal" [ngClass]="{'btn-primary': unseenNotifications.length === 0, 'btn-danger': unseenNotifications.length > 0}">
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
+
+<!--
         <div class="modal fade" id="notiModal" role="dialog">
-                    <div class="modal-dialog tweet">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" (click)="close()">&times;</button>
-                          <h4 class="modal-title"><b>Notifications</b></h4>
+          <div class="modal-dialog tweet">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" (click)="close()">&times;</button>
+                <h4 class="modal-title"><b>Notifications</b></h4>
+              </div>
+              &lt;!&ndash; Dropdown header &ndash;&gt;
+              <div class="px-3 py-3">
+                <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">&nbsp; {{notificationNums}} &nbsp;</strong>unread notifications.</h6>
+              </div>
+              <div *ngIf="!isCardLoading">
+                &lt;!&ndash; List group &ndash;&gt;
+                <div class="list-group list-group-flush">
+                  <div *ngFor="let notification of Notifications ">
+                    <a  class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(notification)">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          &lt;!&ndash; Avatar &ndash;&gt;
+                          <img class="rounded-circle" width="48px"
+                               [src]="(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)[0]?.avatarResolvedUrl" alt="">
                         </div>
-                    <!-- Dropdown header -->
-                    <div class="px-3 py-3">
-                      <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">&nbsp; {{notificationNums}} &nbsp;</strong>unread notifications.</h6>
-                    </div>
-                    <div *ngIf="!isCardLoading">
-                    <!-- List group -->
-                      <div class="list-group list-group-flush">
-                        <div *ngFor="let notification of Notifications ">
-                            <a  class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(notification)">
-                              <div class="row align-items-center">
-                                <div class="col-auto">
-                                  <!-- Avatar -->
-                                    <img class="rounded-circle" width="48px"
-                                      [src]="(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)[0]?.avatarResolvedUrl" alt="">
-                                </div>
-                                <div class="col ml--2">
-                                  <div class="d-flex justify-content-between align-items-center">
+                        <div class="col ml&#45;&#45;2">
+                          <div class="d-flex justify-content-between align-items-center">
 
 
-                                    <div *ngIf="(entityUserQuery.selectLoading() | async) === false">
-                                    <div>
-                                      <h4 class="mb-0 text-sm black" >{{(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)[0]?.username}}</h4>
-                                    </div>
-                                    </div>
-                                    </div>
-                                    <div class="text-right text-muted">
-                                      <small>{{notification.createdAt | timeAgo}}</small>
-                                      <!-- <small>{{notification.createdAt}}</small> -->
-                                    </div>
-
-                                  <p class="text-sm mb-0 black">{{notification.title}}</p>
-                                </div>
+                            <div *ngIf="(entityUserQuery.selectLoading() | async) === false">
+                              <div>
+                                <h4 class="mb-0 text-sm black" >{{(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)[0]?.username}}</h4>
                               </div>
-                            </a>
+                            </div>
+                          </div>
+                          <div class="text-right text-muted">
+                            <small>{{notification.createdAt | timeAgo}}</small>
+                            &lt;!&ndash; <small>{{notification.createdAt}}</small> &ndash;&gt;
+                          </div>
+
+                          <p class="text-sm mb-0 black">{{notification.title}}</p>
                         </div>
                       </div>
-                    </div>
-                    <!-- View all -->
-                    <a (click)="onShowAll()" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+                    </a>
                   </div>
-                  </div>
+                </div>
+              </div>
+              &lt;!&ndash; View all &ndash;&gt;
+              <a (click)="onShowAll()" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+            </div>
+          </div>
 
         </div>
+-->
+
 
 
         <!-- Modal
@@ -117,7 +121,7 @@
         </div> -->
 
 
-        <div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!--        <div class="modal fade" id="notificationdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -135,7 +139,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
 
 
 
@@ -196,7 +200,7 @@
 
         <!----- Gift---->
         <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickPointItemModal()">
-          <i class="tim-icons icon-coins" title="gift"></i>
+          <i class="tim-icons icon-gift-2" title="gift"></i>
         </button>
 
         <!--<div class="modal fade" id="giftModal" role="dialog">
@@ -364,7 +368,7 @@
 
         <!----- Log out ---->
         <button type="button" class="btn btn-danger btn-icon btn-round" (click)="onLogout()">
-          <i class="fas fa-door-open" title="Logoff"></i>
+          <i class="tim-icons icon-button-power" title="Logoff"></i>
         </button>
         <!--        <i class="tim-icons icon-bell-55" title="notifications" style="margin-left:35px;"> </i>
                 <i class="tim-icons icon-settings-gear-63" title="settings" style="margin-left:35px;"></i>
@@ -393,7 +397,9 @@
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
         <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-          <app-achievement *ngIf="navigationService.achievementModalActive" [inputUser]="navigationService.achievementComponentInputUser" (clearInputUser)="clearAchievementComponentInputUser($event)"></app-achievement>
+          <ng-container *ngIf="navigationService.achievementModalActive">
+            <app-achievement [inputUser]="navigationService.achievementComponentInputUser" (clearInputUser)="clearAchievementComponentInputUser($event)"></app-achievement>
+          </ng-container>
         </perfect-scrollbar>
       </div>
 
@@ -417,7 +423,9 @@
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
         <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-          <app-point-item *ngIf="navigationService.pointItemModalActive" [inputUser]="navigationService.pointItemComponentInputUser" (clearInputUser)="clearPointItemComponentInputUser($event)"></app-point-item>
+          <ng-container *ngIf="navigationService.pointItemModalActive">
+            <app-point-item  [inputUser]="navigationService.pointItemComponentInputUser" (clearInputUser)="clearPointItemComponentInputUser($event)"></app-point-item>
+          </ng-container>
         </perfect-scrollbar>
       </div>
 
@@ -428,3 +436,49 @@
 </div>
 
 
+<div class="modal fade notification-details-modal" id="notificationDetailsModal" tabindex="-1" role="dialog" aria-labelledby="notificationDetailModal"
+     aria-hidden="true">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="notificationDetailsModalTitle">Notification Details</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="navigationService.closeNotificationDetailsModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body black modalclass" >
+        <ng-container *ngIf="navigationService.notificationDetailsModalActive">
+          <app-notification-details [inputNotification]="navigationService.notificationDetailsInput" (clearInputNotification)="clearNotificationDetailComponentInput($event)"></app-notification-details>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="navigationService.closeNotificationDetailsModal()">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteNotification(navigationService.notificationDetailsInput)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade notification-modal" id="notificationModal" role="dialog">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" (click)="close()">&times;</button>
+
+        <h4 class="modal-title"><b>Your Notifications</b></h4>
+
+      </div>
+      <!-- Dropdown header -->
+      <div class="modal-body modalclass">
+        <ng-container>
+          <app-notifications></app-notifications>
+        </ng-container>
+
+
+      </div>
+    </div>
+
+
+  </div>
+
+</div>

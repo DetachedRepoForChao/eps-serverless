@@ -96,18 +96,31 @@ export class UserHasStoreItemService {
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
+          Auth.currentUserInfo()
+            .then(userAttributes => {
+              let apiCall = '/getUserHasStoreItemRecords';
+              if (+userAttributes.attributes['custom:security_role_id'] === 2) {
+                apiCall = '/getUserHasStoreItemManagerRecords';
+              }
+              const token = user.signInUserSession.idToken.jwtToken;
+              const myInit = this.myInit;
+              myInit.headers['Authorization'] = token;
 
-          API.get(this.apiName, this.apiPath + '/getUserHasStoreItemRecords', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data);
-            observer.complete();
-          })
+              API.get(this.apiName, this.apiPath + apiCall, myInit).then(data => {
+                console.log(`${functionFullName}: successfully retrieved data from API`);
+                console.log(data);
+                observer.next(data.data);
+                observer.complete();
+              })
+                .catch(err => {
+                  console.log(`${functionFullName}: error retrieving user / store-item records  from API`);
+                  console.log(err);
+                  observer.next(err);
+                  observer.complete();
+                });
+            })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving user / store-item records  from API`);
+              console.log(`${functionFullName}: error getting current user info from auth service`);
               console.log(err);
               observer.next(err);
               observer.complete();
@@ -152,103 +165,14 @@ export class UserHasStoreItemService {
           const storeItemCost = userHasStoreItemRecords[i].storeItem.cost;
           const status = userHasStoreItemRecords[i].status;
           const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
-          const acceptRequest = userHasStoreItemRecords[i].accepted;
-          const declineRequest = userHasStoreItemRecords[i].declined;
-          const approvedAt = userHasStoreItemRecords[i].approvedAt;
-          const declinedAt = userHasStoreItemRecords[i].declinedAt;
-          const fulfilledAt = userHasStoreItemRecords[i].fulfilledAt;
           const cancelledAt = userHasStoreItemRecords[i].cancelledAt;
+          const readyForPickupAt = userHasStoreItemRecords[i].readyForPickupAt;
+          const pickedUpAt = userHasStoreItemRecords[i].pickedUpAt;
           const createdAt = userHasStoreItemRecords[i].createdAt;
           const updatedAt = userHasStoreItemRecords[i].updatedAt;
           const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
             managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
-            storeItemCost, status, cancelDescription, acceptRequest, declineRequest, approvedAt, declinedAt, fulfilledAt, cancelledAt,
-            createdAt, updatedAt});
-          userHasStoreItemRecordsArray.push(userHasStoreItemModel);
-        }
-
-        this.userHasStoreItemStore.set(userHasStoreItemRecordsArray);
-      }));
-
-    return cacheable(this.userHasStoreItemStore, request$);
-  }
-
-  getUserHasStoreItemManagerRecords(): Observable<any> {
-    const functionName = 'getUserHasStoreItemManagerRecords';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-
-          API.get(this.apiName, this.apiPath + '/getUserHasStoreItemManagerRecords', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data);
-            observer.complete();
-          })
-            .catch(err => {
-              console.log(`${functionFullName}: error retrieving user / store-item records from API`);
-              console.log(err);
-              observer.next(err);
-              observer.complete();
-            });
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
-          observer.next(err);
-          observer.complete();
-        });
-    });
-  }
-
-  cacheUserHasStoreItemManagerRecords() {
-    const functionName = 'cacheUserHasStoreItemManagerRecords';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    const request$ = this.getUserHasStoreItemManagerRecords()
-      .pipe(tap((userHasStoreItemRecords: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(userHasStoreItemRecords);
-
-        const userHasStoreItemRecordsArray: UserHasStoreItemModel[] = [];
-
-        for (let i = 0; i < userHasStoreItemRecords.length; i++) {
-          const recordId = userHasStoreItemRecords[i].id;
-          const userId = userHasStoreItemRecords[i].userId;
-          const userUsername = userHasStoreItemRecords[i].requestUser.username;
-          const userFirstName = userHasStoreItemRecords[i].requestUser.firstName;
-          const userLastName = userHasStoreItemRecords[i].requestUser.lastName;
-          const userEmail = userHasStoreItemRecords[i].requestUser.email;
-          const managerId = userHasStoreItemRecords[i].managerUser.id;
-          const managerUsername = userHasStoreItemRecords[i].managerUser.username;
-          const managerFirstName = userHasStoreItemRecords[i].managerUser.firstName;
-          const managerLastName = userHasStoreItemRecords[i].managerUser.lastName;
-          const managerEmail = userHasStoreItemRecords[i].managerUser.email;
-          const storeItemId = userHasStoreItemRecords[i].storeItemId;
-          const storeItemName = userHasStoreItemRecords[i].storeItem.name;
-          const storeItemDescription = userHasStoreItemRecords[i].storeItem.description;
-          const storeItemCost = userHasStoreItemRecords[i].storeItem.cost;
-          const status = userHasStoreItemRecords[i].status;
-          const cancelDescription = userHasStoreItemRecords[i].cancelDescription;
-          const acceptRequest = userHasStoreItemRecords[i].accepted;
-          const declineRequest = userHasStoreItemRecords[i].declined;
-          const approvedAt = userHasStoreItemRecords[i].approvedAt;
-          const declinedAt = userHasStoreItemRecords[i].declinedAt;
-          const fulfilledAt = userHasStoreItemRecords[i].fulfilledAt;
-          const cancelledAt = userHasStoreItemRecords[i].cancelledAt;
-          const createdAt = userHasStoreItemRecords[i].createdAt;
-          const updatedAt = userHasStoreItemRecords[i].updatedAt;
-          const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
-            managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
-            storeItemCost, status, cancelDescription, acceptRequest, declineRequest, approvedAt, declinedAt, fulfilledAt, cancelledAt,
-            createdAt, updatedAt});
+            storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt, updatedAt});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 
@@ -298,18 +222,15 @@ export class UserHasStoreItemService {
               const storeItemCost = response.data.userHasStoreItemRecord.storeItem.cost;
               const status = response.data.userHasStoreItemRecord.status;
               const cancelDescription = response.data.userHasStoreItemRecord.cancelDescription;
-              const acceptRequest = response.data.userHasStoreItemRecord.accepted;
-              const declineRequest = response.data.userHasStoreItemRecord.declined;
-              const approvedAt = response.data.userHasStoreItemRecord.approvedAt;
-              const declinedAt = response.data.userHasStoreItemRecord.declinedAt;
-              const fulfilledAt = response.data.userHasStoreItemRecord.fulfilledAt;
               const cancelledAt = response.data.userHasStoreItemRecord.cancelledAt;
+              const readyForPickupAt = response.data.userHasStoreItemRecord.readyForPickupAt;
+              const pickedUpAt = response.data.userHasStoreItemRecord.pickedUpAt;
               const createdAt = response.data.userHasStoreItemRecord.createdAt;
               const updatedAt = response.data.userHasStoreItemRecord.updatedAt;
               const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
                 managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName,
-                storeItemDescription, storeItemCost, status, cancelDescription, acceptRequest, declineRequest, approvedAt, declinedAt,
-                fulfilledAt, cancelledAt, createdAt, updatedAt});
+                storeItemDescription, storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt,
+                updatedAt});
 
               this.userHasStoreItemStore.add(userHasStoreItemModel);
 
@@ -347,8 +268,8 @@ export class UserHasStoreItemService {
     });
   }
 
-  approveStoreItemRequest(request: UserHasStoreItemModel): Observable<any> {
-    const functionName = 'approveStoreItemRequest';
+  setStoreItemRequestReadyForPickup(request: UserHasStoreItemModel): Observable<any> {
+    const functionName = 'setStoreItemRequestReadyForPickup';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -363,7 +284,7 @@ export class UserHasStoreItemService {
             request: request
           };
 
-          API.post(this.apiName, this.apiPath + '/approveStoreItemRequest', myInit).then(response => {
+          API.post(this.apiName, this.apiPath + '/setStoreItemRequestReadyForPickup', myInit).then(response => {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(response);
 
@@ -387,8 +308,8 @@ export class UserHasStoreItemService {
     });
   }
 
-  declineStoreItemRequest(request: UserHasStoreItemModel, cancelDescription: string): Observable<any> {
-    const functionName = 'declineStoreItemRequest';
+  setStoreItemRequestsReadyForPickup(requests: UserHasStoreItemModel[]): Observable<any> {
+    const functionName = 'setStoreItemRequestsReadyForPickup';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -400,20 +321,36 @@ export class UserHasStoreItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            request: request,
-            cancelDescription: cancelDescription,
+            requests: requests
           };
 
-          API.post(this.apiName, this.apiPath + '/declineStoreItemRequest', myInit).then(response => {
+          API.post(this.apiName, this.apiPath + '/setStoreItemRequestsReadyForPickup', myInit).then(response => {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(response);
 
             if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating record in entity store`);
-              const recordId = response.data.updatedRecord.recordId;
-              const status = response.data.updatedRecord.status;
-              const actionAt = response.data.updatedRecord.updatedAt;
-              this.update(recordId, status, cancelDescription, actionAt);
+              console.log(`${functionFullName}: status returned true. Updating records in entity store`);
+              console.log('results');
+              console.log(response.data.results);
+
+              for (const result of response.data.results) {
+                console.log('result');
+                console.log(result);
+
+                const recordId = result.updatedRecord.recordId;
+                const status = result.updatedRecord.status;
+                const actionAt = result.updatedRecord.updatedAt;
+                const cancelDescription = null;
+                this.update(recordId, status, cancelDescription, actionAt);
+                console.log(`record id ${recordId} updated with status ${status} for user ${result.updatedRecord.userUsername}`);
+
+                if (result.status !== false) {
+                  console.log(`${result.updatedRecord.userUsername}'s points were adjusted to ${result.newPointTotal}`);
+
+                } else {
+                  console.log(`Ran into an error trying to adjust ${result.updatedRecord.userUsername}'s points`);
+                }
+              }
 
               observer.next(response.data);
               observer.complete();
@@ -427,8 +364,9 @@ export class UserHasStoreItemService {
     });
   }
 
-  fulfillStoreItemRequest(request: UserHasStoreItemModel): Observable<any> {
-    const functionName = 'fulfillStoreItemRequest';
+
+  setStoreItemRequestPickedUp(request: UserHasStoreItemModel): Observable<any> {
+    const functionName = 'setStoreItemRequestPickedUp';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -443,7 +381,7 @@ export class UserHasStoreItemService {
             request: request
           };
 
-          API.post(this.apiName, this.apiPath + '/declineStoreItemRequest', myInit).then(response => {
+          API.post(this.apiName, this.apiPath + '/setStoreItemRequestPickedUp', myInit).then(response => {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(response);
 
@@ -454,6 +392,48 @@ export class UserHasStoreItemService {
               const actionAt = response.data.updatedRecord.updatedAt;
               const cancelDescription = null;
               this.update(recordId, status, cancelDescription, actionAt);
+
+              observer.next(response.data);
+              observer.complete();
+            } else {
+              console.log(`${functionFullName}: status did not return true`);
+              observer.next(false);
+              observer.complete();
+            }
+          });
+        });
+    });
+  }
+
+  setStoreItemRequestsPickedUp(requests: UserHasStoreItemModel[]): Observable<any> {
+    const functionName = 'setStoreItemRequestsPickedUp';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            requests: requests
+          };
+
+          API.post(this.apiName, this.apiPath + '/setStoreItemRequestsPickedUp', myInit).then(response => {
+            console.log(`${functionFullName}: data retrieved from API`);
+            console.log(response);
+
+            if (response.data.status !== false) {
+              console.log(`${functionFullName}: status returned true. Updating records in entity store`);
+              for (const updatedRecord of response.data.updatedRecords) {
+                const recordId = updatedRecord.recordId;
+                const status = updatedRecord.status;
+                const actionAt = updatedRecord.updatedAt;
+                const cancelDescription = null;
+                this.update(recordId, status, cancelDescription, actionAt);
+              }
 
               observer.next(response.data);
               observer.complete();
@@ -504,6 +484,42 @@ export class UserHasStoreItemService {
             }
           });
         });
+    });
+  }
+
+  processRequests(requests: any[]): Observable<any> {
+    const functionName = 'processRequests';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      const observables: Observable<any>[] = [];
+      const readyForPickupArray = [];
+      const pickedUpArray = [];
+
+      for (const request of requests) {
+        switch (request.action) {
+          case 'readyForPickup':
+            readyForPickupArray.push(request.item);
+            break;
+          case 'pickedUp':
+            pickedUpArray.push(request.item);
+            break;
+        }
+      }
+
+      observables.push(
+        this.setStoreItemRequestsReadyForPickup(readyForPickupArray),
+        this.setStoreItemRequestsPickedUp(pickedUpArray),
+      );
+
+      forkJoin(observables).subscribe((result) => {
+        console.log('Observables result');
+        console.log(result);
+
+        observer.next(result);
+        observer.complete();
+      });
     });
   }
 

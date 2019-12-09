@@ -4,7 +4,8 @@ import { EntityUserModel } from './entity-user.model';
 import {QueryConfig, QueryEntity, Order} from '@datorama/akita';
 import {combineLatest, Observable} from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/user-filter.model';
-import { map } from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
+import {EntityCurrentUserModel} from '../../current-user/state/entity-current-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,13 +54,46 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     return user$;
   }
 
-  public selectUserByUserId(userId: number) {
-    return this.selectAll({
+  public getUserByUsername(username: string) {
+    return this.getAll({
+      filterBy: e => e.username === username
+    })[0];
+  }
+
+  public getUserByUserId(userId: number) {
+    return this.getAll({
       filterBy: e => e.userId === userId
+    })[0];
+  }
+
+  public selectUserByUserId(userId: number): Observable<EntityUserModel> {
+    return new Observable<EntityUserModel>(observer => {
+      this.selectAll({
+        filterBy: e => e.userId === userId
+      })
+          .pipe(take(1))
+          .subscribe((user: EntityUserModel[]) => {
+            observer.next(user[0]);
+            observer.complete();
+          });
     });
   }
 
-  public getDeactivatedUsers() {
+  public selectUserByUsername(username: string): Observable<EntityUserModel> {
+    return new Observable<EntityUserModel>(observer => {
+      this.selectAll({
+        filterBy: e => e.username === username
+      })
+          .pipe(take(1))
+          .subscribe((user: EntityUserModel[]) => {
+            observer.next(user[0]);
+            observer.complete();
+          });
+    });
+  }
+
+
+public getDeactivatedUsers() {
     return this.selectAll({
       filterBy: userEntity => !(userEntity.active)
     });

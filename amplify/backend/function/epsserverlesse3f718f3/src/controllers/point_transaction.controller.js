@@ -129,7 +129,7 @@ const getPointTransactionRange = function (startIndex, numberRecords) {
         attributes: ['id', 'postId', 'username', 'createdAt']
       },
     ],
-    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId'],
+    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId', 'storeItemId'],
     order: [
       ['id', 'DESC'],
     ],
@@ -155,6 +155,67 @@ const getPointTransactionRange = function (startIndex, numberRecords) {
 };
 
 module.exports.getPointTransactionRange = getPointTransactionRange;
+
+
+const getAddPointTransactionRange = function (startIndex, numberRecords) {
+  const functionName = 'getAddPointTransactionRange';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PointTransaction.findAll({
+    include: [
+      {
+        model: Models.User,
+        as: 'sourceUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.User,
+        as: 'targetUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.PointItem,
+        attributes: ['name', 'coreValues']
+      },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost', 'imagePath']
+      },
+      {
+        model: Models.LikeInfo,
+        attributes: ['id', 'postId', 'username', 'createdAt']
+      },
+    ],
+    attributes: ['id', 'type', 'amount', 'createdAt', 'description', 'sourceUserId', 'targetUserId', 'pointItemId', 'storeItemId'],
+    order: [
+      ['id', 'DESC'],
+    ],
+    offset: startIndex,
+    limit: numberRecords,
+    subQuery: false,
+    where: {
+      type: 'Add'
+    }
+  })
+    .then(pointTransactionResult => {
+        console.log(`${functionFullName}: pointTransactionResult:`);
+        console.log(pointTransactionResult);
+
+        const resultLength = pointTransactionResult.length;
+        console.log(`${functionFullName}: resultLength: ${resultLength}`);
+        return {status: true, pointTransactions: pointTransactionResult};
+      }
+    )
+    .catch(err => {
+        console.log(`${functionFullName}: Database error`);
+        console.log(err);
+        return {status: false, message: err};
+      }
+    );
+};
+
+module.exports.getAddPointTransactionRange = getAddPointTransactionRange;
 
 const getUserPointTransactions = function (userId) {
   const functionName = 'getUserPointTransactions';

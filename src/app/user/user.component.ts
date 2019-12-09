@@ -3,10 +3,11 @@ import { UserService } from '../shared/user.service';
 import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { DepartmentService } from '../shared/department.service';
 import { SecurityRoleService} from '../shared/securityRole.service';
-import {map} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
-import {forkJoin, Observable, Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
+import {forkJoin, Observable, Subject, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Auth, Storage} from 'aws-amplify';
 import * as Amplify from 'aws-amplify';
@@ -23,6 +24,17 @@ import {resetStores} from '@datorama/akita';
 import {AchievementService} from '../entity-store/achievement/state/achievement.service';
 import {CognitoUser} from 'amazon-cognito-identity-js';
 import {NavigationService} from '../shared/navigation.service';
+import {EntityDepartmentService} from '../entity-store/department/state/entity-department.service';
+import {EntityUserService} from '../entity-store/user/state/entity-user.service';
+import {EntityCurrentUserService} from '../entity-store/current-user/state/entity-current-user.service';
+import {StoreItemService} from '../entity-store/store-item/state/store-item.service';
+import {UserHasStoreItemService} from '../entity-store/user-has-store-item/state/user-has-store-item.service';
+import {PointItemTransactionService} from '../entity-store/point-item-transaction/state/point-item-transaction.service';
+import {NotificationService} from '../entity-store/notification/state/notification.service';
+import {FeatureService} from '../entity-store/feature/state/feature.service';
+import {PointItemService} from '../entity-store/point-item/state/point-item.service';
+import {EntityCurrentUserModel} from '../entity-store/current-user/state/entity-current-user.model';
+import {EntityCurrentUserQuery} from '../entity-store/current-user/state/entity-current-user.query';
 
 declare var $: any;
 
@@ -63,19 +75,29 @@ export class UserComponent implements OnInit, OnDestroy {
   private interval: number;
 
   public config: PerfectScrollbarConfigInterface = {};
+  private currentUserLoading$ = new Subject();
+  private unsubscribe$ = new Subject();
 
-  constructor(private userService: UserService,
-              private router: Router,
+  constructor(private router: Router,
               private securityRoleService: SecurityRoleService,
               private route: ActivatedRoute,
               private userIdle: UserIdleService,
-              private departmentService: DepartmentService,
               private http: HttpClient,
               private authService: AuthService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private giftPointsService: GiftPointsService,
               private achievementService: AchievementService,
+              private departmentService: EntityDepartmentService,
+              private userService: EntityUserService,
+              private currentUserService: EntityCurrentUserService,
+              private storeItemService: StoreItemService,
+              private userHasStoreItemService: UserHasStoreItemService,
+              private pointItemTransactionService: PointItemTransactionService,
+              private pointItemService: PointItemService,
+              private featureService: FeatureService,
+              private notificationService: NotificationService,
+              private currentUserQuery: EntityCurrentUserQuery,
               private navigationService: NavigationService) {
     this.display = false;
     this.alive = true;
@@ -92,12 +114,75 @@ export class UserComponent implements OnInit, OnDestroy {
     console.log('this.route.snapshot');
     console.log(this.route.snapshot);
 
-    if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
+    this.achievementService.cacheAchievements()
+      .pipe(take(1))
+      .subscribe();
+
+    this.departmentService.cacheDepartments()
+      .pipe(take(1))
+      .subscribe();
+
+    this.userService.cacheUsers()
+      .pipe(take(1))
+      .subscribe();
+
+    this.currentUserService.cacheCurrentUser()
+      .pipe(take(1))
+      .subscribe();
+
+    this.storeItemService.cacheStoreItems()
+      .pipe(take(1))
+      .subscribe();
+
+    this.pointItemService.cachePointItems()
+      .pipe(take(1))
+      .subscribe();
+
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords()
+      .pipe(take(1))
+      .subscribe();
+
+    this.featureService.cacheFeatures()
+      .pipe(take(1))
+      .subscribe();
+
+    this.notificationService.cacheNotifications()
+      .pipe(take(1))
+      .subscribe();
+
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        console.log('current user loading: ' + isLoading);
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser.userId)
+                .pipe(take(1))
+                .subscribe((result: Observable<any> | any) => {
+                  if (result !== false) {
+                    result
+                      .pipe(take(1))
+                      .subscribe(() => {
+                      });
+
+                  } else {
+                    console.log(`Cache User Point Item Transactions returned ${result}`);
+                  }
+                });
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
+/*    if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
       console.log('this.route.snapshot.children[0].url[0].path');
       console.log(this.route.snapshot.children[0].url[0].path);
     } else {
       this.navigateHome();
-    }
+    }*/
 
     this.isComponentLoading = false;
 
@@ -148,10 +233,14 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.alive = false; // switches your TimerObservable off
 
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
 
   }
 
-  startAchievementPolling() {
+/*  startAchievementPolling() {
     const functionName = 'startAchievementPolling';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -169,7 +258,7 @@ export class UserComponent implements OnInit, OnDestroy {
             console.log(this.data);
           });
       });
-  }
+  }*/
 
   onStartWatching() {
     console.log('onStartWatching');

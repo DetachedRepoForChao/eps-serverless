@@ -277,123 +277,6 @@ const deleteStoreItem = function (storeItem) {
 module.exports.deleteStoreItem = deleteStoreItem;
 
 
-const approveStoreItemRequest = function (managerUser, request) {
-  const functionName = 'approveStoreItemRequest';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  const approvedAt = Date.now();
-  request.status = 'approved';
-  request.approvedAt = approvedAt;
-
-  // Update user_has_store_item record
-  return sqlUserHasStoreItemModel.update({
-    status: 'approved',
-    approvedAt: approvedAt
-  }, {
-    where: {
-      id: request.recordId,
-      managerId: managerUser.id
-    }
-  })
-    .then(() => {
-      console.log(`${functionFullName}: Store item request updated successfully`);
-
-      const description = `Manager (id: ${request.managerId}; username: ${request.managerUsername}) approved user's (id: ${request.userId}; username: ${request.userUsername}) purchase of item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId})`;
-
-      return ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description)
-        .then(removeResult => {
-          console.log(`${functionFullName}: Remove points result:`);
-          console.log(removeResult);
-          if (removeResult.status !== false) {
-            console.log(`${functionFullName}: Points removed from user's total successfully. User's new point total is ${removeResult.newPointAmount}`);
-            return {status: true, updatedRecord: request, newPointTotal: removeResult.newPointAmount};
-          } else {
-            console.log(`${functionFullName}: Error removing points from user's total:`);
-            console.log(removeResult.message);
-            return {status: false, updatedRecord: request, error: removeResult};
-          }
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: Database error`);
-          console.log(err);
-          return {status: false, message: err};
-        });
-    })
-    .catch( err => {
-      console.log(`${functionFullName}: Error updating store item request`);
-      console.log(err);
-      return {status: false, message: err};
-    });
-};
-
-module.exports.approveStoreItemRequest = approveStoreItemRequest;
-
-const declineStoreItemRequest = function (managerUser, request, cancelDescription) {
-  const functionName = 'declineStoreItemRequest';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  const declinedAt = Date.now();
-  request.status = 'declined';
-  request.declinedAt = declinedAt;
-
-  // Update user_has_store_item record
-  return sqlUserHasStoreItemModel.update({
-    status: 'declined',
-    declinedAt: declinedAt,
-    cancelDescription: cancelDescription
-  }, {
-    where: {
-      id: request.recordId,
-      managerId: managerUser.id
-    }
-  })
-    .then(() => {
-      console.log(`${functionFullName}: Store item request updated successfully`);
-      return {status: true, updatedRecord: request};
-    })
-    .catch( err => {
-      console.log(`${functionFullName}: Error updating store item request`);
-      console.log(err);
-      return {status: false, message: err};
-    });
-};
-
-module.exports.declineStoreItemRequest = declineStoreItemRequest;
-
-const fulfillStoreItemRequest = function (requestUser, request) {
-  const functionName = 'fulfillStoreItemRequest';
-  const functionFullName = `${componentName} ${functionName}`;
-  console.log(`Start ${functionFullName}`);
-
-  const fulfilledAt = Date.now();
-  request.status = 'fulfilled';
-  request.fulfilledAt = fulfilledAt;
-
-  // Update user_has_store_item record
-  return sqlUserHasStoreItemModel.update({
-    status: 'fulfilled',
-    fulfilledAt: fulfilledAt,
-  }, {
-    where: {
-      id: request.recordId,
-      userId: requestUser.id
-    }
-  })
-    .then(() => {
-      console.log(`${functionFullName}: Store item request updated successfully`);
-      return {status: true, updatedRecord: request};
-    })
-    .catch( err => {
-      console.log(`${functionFullName}: Error updating store item request`);
-      console.log(err);
-      return {status: false, message: err};
-    });
-};
-
-module.exports.fulfillStoreItemRequest = fulfillStoreItemRequest;
-
 const cancelStoreItemRequest = function (requestUser, request, cancelDescription) {
   const functionName = 'cancelStoreItemRequest';
   const functionFullName = `${componentName} ${functionName}`;
@@ -427,26 +310,194 @@ const cancelStoreItemRequest = function (requestUser, request, cancelDescription
 
 module.exports.cancelStoreItemRequest = cancelStoreItemRequest;
 
-const subtractPointsFromUserPointTotal = function (user, subtractAmount) {
-  const functionName = 'subtractPointsFromUserPointTotal';
+const setStoreItemRequestReadyForPickup = function (managerUser, request) {
+  const functionName = 'setStoreItemRequestReadyForPickup';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
-  // Update user record
-  return Models.User.update({
-    points: (user.points - subtractAmount)
+  const time = Date.now();
+  request.status = 'readyForPickup';
+  request.readyForPickupAt = time;
+
+  // Update user_has_store_item record
+  return sqlUserHasStoreItemModel.update({
+    status: 'readyForPickup',
+    readyForPickupAt: time
   }, {
     where: {
-      id: user.id,
+      id: request.recordId,
+      managerId: managerUser.id
     }
   })
     .then(() => {
-      console.log(`${functionFullName}: User points updated successfully`);
-      return {status: true, newPointTotal: (user.points - subtractAmount)};
+      console.log(`${functionFullName}: Store item request updated successfully`);
+
+      const description = `Manager (id: ${request.managerId}; username: ${request.managerUsername}) procured user's (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId})`;
+
+      return ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description)
+        .then(removeResult => {
+          console.log(`${functionFullName}: Remove points result:`);
+          console.log(removeResult);
+          if (removeResult.status !== false) {
+            console.log(`${functionFullName}: Points removed from user's total successfully. User's new point total is ${removeResult.newPointAmount}`);
+            return {status: true, updatedRecord: request, newPointTotal: removeResult.newPointAmount};
+          } else {
+            console.log(`${functionFullName}: Error removing points from user's total:`);
+            console.log(removeResult.message);
+            return {status: false, updatedRecord: request, error: removeResult};
+          }
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Database error`);
+          console.log(err);
+          return {status: false, message: err};
+        });
     })
     .catch( err => {
-      console.log(`${functionFullName}: Error updating user points`);
+      console.log(`${functionFullName}: Error updating store item request`);
       console.log(err);
       return {status: false, message: err};
     });
 };
+
+module.exports.setStoreItemRequestReadyForPickup = setStoreItemRequestReadyForPickup;
+
+const setStoreItemRequestPickedUp = function (requestUser, request) {
+  const functionName = 'setStoreItemRequestPickedUp';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const time = Date.now();
+  request.status = 'pickedUp';
+  request.pickedUpAt = time;
+
+  // Update user_has_store_item record
+  return sqlUserHasStoreItemModel.update({
+    status: 'pickedUp',
+    pickedUpAt: time,
+  }, {
+    where: {
+      id: request.recordId,
+      userId: requestUser.id
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item request updated successfully`);
+      return {status: true, updatedRecord: request};
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.setStoreItemRequestPickedUp = setStoreItemRequestPickedUp;
+
+
+const setStoreItemRequestsReadyForPickup = function (requests) {
+  const functionName = 'setStoreItemRequestsReadyForPickup';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const time = Date.now();
+  const status = 'readyForPickup';
+  // const pickedUpAt = time;
+  const ids = [];
+  requests.forEach(request => {
+    ids.push(request.recordId);
+    request.status = status;
+    request.pickedUpAt = time;
+  });
+
+  console.log(`${functionFullName}: updating records:`);
+  console.log(ids);
+  // Update user_has_store_item records
+  return sqlUserHasStoreItemModel.update({
+    status: status,
+    readyForPickupAt: time,
+  }, {
+    where: {
+      id: ids,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item requests updated successfully`);
+
+      const promises = [];
+      for (const request of requests) {
+        const description = `Manager (id: ${request.managerId}; username: ${request.managerUsername}) procured user's (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId})`;
+        promises.push(ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description));
+      }
+
+      return Promise.all(promises)
+        .then(removeResults => {
+          console.log(`${functionFullName}: Remove points result:`);
+          console.log(removeResults);
+          const resultsArray = [];
+          for (let i = 0; i < removeResults.length; i++) {
+            if (removeResults[i].status !== false) {
+              console.log(`${functionFullName}: Points removed from ${removeResults[i].user.username}'s total successfully. User's new point total is ${removeResults[i].newPointAmount}`);
+              resultsArray.push({status: true, updatedRecord: requests[i], newPointTotal: removeResults[i].newPointAmount});
+              // return {status: true, updatedRecords: requests, newPointTotal: removeResults.newPointAmount};
+            } else {
+              console.log(`${functionFullName}: Error removing points from ${removeResults[i].user.username}'s total:`);
+              console.log(removeResults[i].message);
+              resultsArray.push({status: false, updatedRecord: requests[i], error: removeResults[i]});
+              // return {status: false, updatedRecords: requests, error: removeResults};
+            }
+          }
+
+          return {status: true, results: resultsArray};
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Error`);
+          console.log(err);
+          return {status: false, message: err};
+        });
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.setStoreItemRequestsReadyForPickup = setStoreItemRequestsReadyForPickup;
+
+const setStoreItemRequestsPickedUp = function (requests) {
+  const functionName = 'setStoreItemRequestsPickedUp';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  const time = Date.now();
+  const status = 'pickedUp';
+  // const pickedUpAt = time;
+  const ids = [];
+  requests.forEach(request => {
+    ids.push(request.recordId);
+    request.status = status;
+    request.pickedUpAt = time;
+  });
+
+  // Update user_has_store_item records
+  return sqlUserHasStoreItemModel.update({
+    status: status,
+    pickedUpAt: time,
+  }, {
+    where: {
+      id: ids,
+    }
+  })
+    .then(() => {
+      console.log(`${functionFullName}: Store item request updated successfully`);
+      return {status: true, updatedRecords: requests};
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error updating store item request`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.setStoreItemRequestsPickedUp = setStoreItemRequestsPickedUp;

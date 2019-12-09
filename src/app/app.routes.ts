@@ -8,8 +8,6 @@ import { AuthGuard } from './auth/auth.guard';
 import { SecurityRole } from './shared/securityrole.model';
 import {AdminUserComponent} from './user/admin-user/admin-user.component';
 import {RoleGuardService as RoleGuard} from './auth/role-guard.service';
-import {StandardUserComponent} from './user/standard-user/standard-user.component';
-import {ManagerUserComponent} from './user/manager-user/manager-user.component';
 import {ProfileComponent} from './user/profile/profile.component';
 import {HomepageComponent} from './user/homepage/homepage.component';
 import {ConfirmCodeComponent} from './login/confirm-code/confirm-code.component';
@@ -68,82 +66,61 @@ export const appRoutes: Routes = [
     path: 'user',
     component: UserComponent,
     canActivate: [AuthGuard],
+    data: {
+      roles: ['admin', 'employee', 'manager']
+    },
     children: [
       {
         path: 'profile/:username',
         component: ProfileComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['admin', 'employee', 'manager']
+        }
       },
       {
         path: 'homepage', component: HomepageComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['employee', 'manager']
+        }
       },
       {
         path: 'admin-user', component: AdminUserComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['admin']
+        }
       },
-
       {
         path: 'store',
         component: PointsStoreComponent,
         canActivate: [AuthGuard],
+        data: {
+          roles: ['admin', 'employee', 'manager']
+        }
       },
+      {
+        path: 'confirm-item-purchase',
+        component: ConfirmItemPurchaseComponent,
+        // canActivate: [AuthGuard],
+        data: {
+          roles: ['admin', 'manager']
+        }
+      },
+      {
+        path: 'report',
+        component: ReportComponent,
+        // canActivate: [AuthGuard],
+        data: {
+          roles: ['admin']
+        }
+      }
     ]
   },
-
-/*  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuard],
-  },*/
-  // {
-  //   path:'chatroom',
-  //   component:ChatRoomComponent,
-  //   canActivate:[AuthGuard],
-  // },
-
-/*  {
-    path: 'store',
-    component: PointsStoreComponent,
-    canActivate: [AuthGuard],
-  },*/
-  /*
-  {
-    path: 'standard-user',
-    component: UserComponent,
-    canActivate: [RoleGuard],
-    children: [{path: '', component: StandardUserComponent}],
-    data: {
-      expectedRoleId: 1
-    }
-  },
-  {
-    path: 'manager-user',
-    component: UserComponent,
-    canActivate: [RoleGuard],
-    children: [{path: '', component: ManagerUserComponent}],
-    data: {
-      expectedRoleId: 2
-    }
-  },
-  */
-/*  {
-    path: 'admin-user',
-    component: UserComponent,
-    children: [{path: '', component: AdminUserComponent}],
-
-
-  },*/
   {
       path: '', redirectTo: '/login', pathMatch: 'full'
   },
-  {
-    path: 'confirm-item-purchase',
-    component: ConfirmItemPurchaseComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'report',
-    component: ReportComponent,
-  }
+
+
 ];
