@@ -48,6 +48,22 @@ export class PointItemTransactionQuery extends QueryEntity<PointItemTransactionS
     });
   }
 
+  public selectAllAddTransactionsByUserId(targetUserId: number) {
+    return this.selectAll({
+      filterBy: e => (e.type === 'Add') && (e.targetUserId === targetUserId),
+      sortBy: 'transactionId',
+      sortByOrder: Order.DESC
+    });
+  }
+
+  public selectAllAddTransactionsByManagerId(sourceUserId: number) {
+    return this.selectAll({
+      filterBy: e => (e.type === 'Add') && (e.sourceUserId === sourceUserId),
+      sortBy: 'transactionId',
+      sortByOrder: Order.DESC
+    });
+  }
+
   public getUserTotalCoreValues(userId: number): Observable<any> {
     console.log(`Starting get user total core values for user id ${userId}`);
     const coreValuesList = {

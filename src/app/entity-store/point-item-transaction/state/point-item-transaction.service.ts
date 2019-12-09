@@ -6,7 +6,7 @@ import { VISIBILITY_FILTER } from '../filter/point-item-transaction-filter.model
 import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
-import {forkJoin, Observable, of} from 'rxjs';
+import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
@@ -306,9 +306,12 @@ export class PointItemTransactionService {
                     const pointItemId = pointItemTransaction.pointItemId;
                     const description = pointItemTransaction.description;
 
-                    const coreValues: string[] = pointItemTransaction.pointItem.coreValues.split(';');
-                    for (let j = 0; j < coreValues.length; j++) {
-                      coreValues[j] = coreValues[j].trim();
+                    let coreValues: string[] = [];
+                    if (pointItemTransaction.pointItem && pointItemTransaction.pointItem.coreValues) {
+                      coreValues = pointItemTransaction.pointItem.coreValues.split(';');
+                      for (let j = 0; j < coreValues.length; j++) {
+                        coreValues[j] = coreValues[j].trim();
+                      }
                     }
 
                     const createdAt = pointItemTransaction.createdAt;
@@ -392,9 +395,12 @@ export class PointItemTransactionService {
                     const pointItemId = pointItemTransaction.pointItemId;
                     const description = pointItemTransaction.description;
 
-                    const coreValues: string[] = pointItemTransaction.pointItem.coreValues.split(';');
-                    for (let j = 0; j < coreValues.length; j++) {
-                      coreValues[j] = coreValues[j].trim();
+                    let coreValues: string[] = [];
+                    if (pointItemTransaction.pointItem && pointItemTransaction.pointItem.coreValues) {
+                      coreValues = pointItemTransaction.pointItem.coreValues.split(';');
+                      for (let j = 0; j < coreValues.length; j++) {
+                        coreValues[j] = coreValues[j].trim();
+                      }
                     }
 
                     const createdAt = pointItemTransaction.createdAt;
@@ -694,6 +700,7 @@ export class PointItemTransactionService {
       likedByCurrentUser: false
     });
   }
+
 
   resetState() {
     this.retrievedUserIds = [];
