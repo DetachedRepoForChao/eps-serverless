@@ -3,11 +3,11 @@ import { UserService } from '../shared/user.service';
 import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { DepartmentService } from '../shared/department.service';
 import { SecurityRoleService} from '../shared/securityRole.service';
-import {map} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import { UserIdleService } from 'angular-user-idle';
 import { tap } from 'rxjs/operators';
 import {take} from 'rxjs/operators';
-import {forkJoin, Observable, Subscription} from 'rxjs';
+import {forkJoin, Observable, Subject, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Auth, Storage} from 'aws-amplify';
 import * as Amplify from 'aws-amplify';
@@ -33,6 +33,8 @@ import {PointItemTransactionService} from '../entity-store/point-item-transactio
 import {NotificationService} from '../entity-store/notification/state/notification.service';
 import {FeatureService} from '../entity-store/feature/state/feature.service';
 import {PointItemService} from '../entity-store/point-item/state/point-item.service';
+import {EntityCurrentUserModel} from '../entity-store/current-user/state/entity-current-user.model';
+import {EntityCurrentUserQuery} from '../entity-store/current-user/state/entity-current-user.query';
 
 declare var $: any;
 
@@ -73,6 +75,8 @@ export class UserComponent implements OnInit, OnDestroy {
   private interval: number;
 
   public config: PerfectScrollbarConfigInterface = {};
+  private currentUserLoading$ = new Subject();
+  private unsubscribe$ = new Subject();
 
   constructor(private router: Router,
               private securityRoleService: SecurityRoleService,
@@ -92,9 +96,8 @@ export class UserComponent implements OnInit, OnDestroy {
               private pointItemTransactionService: PointItemTransactionService,
               private pointItemService: PointItemService,
               private featureService: FeatureService,
-
               private notificationService: NotificationService,
-
+              private currentUserQuery: EntityCurrentUserQuery,
               private navigationService: NavigationService) {
     this.display = false;
     this.alive = true;
@@ -147,6 +150,33 @@ export class UserComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe();
 
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        console.log('current user loading: ' + isLoading);
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser.userId)
+                .pipe(take(1))
+                .subscribe((result: Observable<any> | any) => {
+                  if (result !== false) {
+                    result
+                      .pipe(take(1))
+                      .subscribe(() => {
+                      });
+
+                  } else {
+                    console.log(`Cache User Point Item Transactions returned ${result}`);
+                  }
+                });
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
 /*    if (this.route.snapshot.children[0] && this.route.snapshot.children[0].url[0].path === 'profile') {
       console.log('this.route.snapshot.children[0].url[0].path');
       console.log(this.route.snapshot.children[0].url[0].path);
@@ -203,6 +233,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.alive = false; // switches your TimerObservable off
 
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
 
   }
 

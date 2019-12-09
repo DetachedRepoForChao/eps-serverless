@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import awsconfig from '../../../aws-exports';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
-import {Observable, from, Subscription} from 'rxjs';
+import {Observable, from, Subscription, Subject} from 'rxjs';
 import {StoreItemStore} from '../../entity-store/store-item/state/store-item.store';
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
@@ -17,7 +17,8 @@ import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/stat
 import {Router } from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
-import {take} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
+import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 
 
 @Component({
@@ -28,11 +29,14 @@ import {take} from 'rxjs/operators';
 export class PointsStoreComponent implements OnInit, OnDestroy {
   componentName = 'points-store.component';
   private subscription = new Subscription();
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private storeItemsLoading$ = new Subject();
   dialogResult = " ";
   version = VERSION;
 
-
-  items: StoreItemModel[] = [];
+  currentUser: EntityCurrentUserModel;
+  storeItems: StoreItemModel[] = [];
   numRows: number;
   rows = [];
   selectedStoreItem;
@@ -57,12 +61,42 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
+
+    this.storeItemQuery.selectLoading()
+      .pipe(takeUntil(this.storeItemsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.storeItemQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((storeItems: StoreItemModel[]) => {
+              this.storeItems = storeItems;
+            });
+
+          this.storeItemsLoading$.next();
+          this.storeItemsLoading$.complete();
+        }
+      });
+
 /*    this.entityCurrentUserService.cacheCurrentUser().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
     this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();*/
 
   }
-
+/*
   openDialog(): void {
     console.log(`User's manager:`);
     const requestUser = this.currentUserQuery.getAll()[0];
@@ -93,11 +127,50 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
         console.log(this.selectedStoreItem);
       }
     });
+  }*/
+
+  openDialog(): void {
+    console.log(`confirm approval?`);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {action: 'confirmStoreItemPurchase', selectedStoreItem: this.selectedStoreItem}
+    });
+
+    // width: '600px',
+    // data: "Would you like to save your changes?",
+
+    dialogRef.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialogRef.close('Cancel');
+    });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(result => {
+        console.log(`Dialog closed: ${result}`);
+        this.dialogResult = result;
+        if (result === 'Confirm') {
+          this.onSaveClick();
+        } else if (result === 'Cancel') {
+          console.log('Cancelled');
+        }
+      });
+  }
+
+  onSaveClick() {
+    const checkPointsResult = this.checkPoints();
+    if (checkPointsResult !== true) {
+      console.log('Not enough points.');
+    } else {
+      console.log('Enough points. Submitting request');
+      this.submitStoreItemPurchaseRequest(this.selectedStoreItem);
+    }
   }
 
   selectStoreItem(storeItem) {
     this.selectedStoreItem = storeItem;
     console.log(this.selectedStoreItem);
+    this.openDialog();
   }
 
   submitStoreItemPurchaseRequest(storeItem: StoreItemModel) {
@@ -167,7 +240,7 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
     // const storeItems = this.rows;
     // console.log(storeItems);
     console.log('items:');
-    console.log(this.items);
+    console.log(this.storeItems);
     console.log('numRows:');
     console.log(this.numRows);
     console.log('rows:');
@@ -177,10 +250,10 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
   }
 
   getStoreItems() {
-    this.items = this.storeItemQuery.getAll();
+    this.storeItems = this.storeItemQuery.getAll();
     console.log(this.storeItemQuery.getAll());
-    console.log(this.items);
-    this.numRows = Math.ceil(this.items.length / 3);
+    console.log(this.storeItems);
+    this.numRows = Math.ceil(this.storeItems.length / 3);
     let index = 0;
     for (let i = 0; i < this.numRows; i++) {
       /*          const row = {
@@ -188,9 +261,9 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
                 };*/
 
       const row = [];
-      row.push(this.items[index]);
-      row.push(this.items[index + 1]);
-      row.push(this.items[index + 2]);
+      row.push(this.storeItems[index]);
+      row.push(this.storeItems[index + 1]);
+      row.push(this.storeItems[index + 2]);
       console.log('row:');
       console.log(row);
       this.rows.push(row);
@@ -203,6 +276,12 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // this.subscription.unsubscribe();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.storeItemsLoading$.next();
+    this.storeItemsLoading$.complete();
   }
 
 }

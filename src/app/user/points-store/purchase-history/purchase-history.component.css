@@ -122,9 +122,7 @@
   font-style: italic;
 }
 
-.max-height-600 {
-  max-height: 600px;
-}
+
 
 div.card.card-coin.card-plain.card-custom {
   background-color: #674ba580;
@@ -179,4 +177,38 @@ div.card {
 
 .color-blue {
   color: dodgerblue !important;
+}
+
+.scroll-container {
+  min-height: 320px;
+  max-height: 550px;
+}
+
+
+.max-height-600 {
+  max-height: 600px;
+}
+
+.max-height-700 {
+  max-height: 700px;
+}
+
+.min-height-400 {
+  min-height: 400px;
+}
+
+.tab-item {
+  cursor: pointer;
+  color: #b350f2
+}
+
+.tab-item:hover {
+  color: #bd3db8;
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
+}
+
+.toggled {
+  border-bottom-color: #b350f2;
+  border-bottom-style: solid;
 }

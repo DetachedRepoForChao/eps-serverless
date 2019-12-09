@@ -13,6 +13,7 @@ import {PointItemTransactionService} from '../../../entity-store/point-item-tran
 import {ChartEvent, GoogleChartComponent} from 'angular-google-charts';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 
 declare var $: any;
 
@@ -25,9 +26,10 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: GoogleChartComponent;
   componentName = 'progress-card.component';
 
-  subscription = new Subscription();
+  private subscription = new Subscription();
   private achievementsLoading$ = new Subject();
   private currentUserLoading$ = new Subject();
+  private unsubscribe$ = new Subject();
   filteredAchievements$: Observable<AchievementModel[]>;
   achievements: AchievementModel[];
   filteredAchievements: AchievementModel[];
@@ -91,13 +93,13 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
       .subscribe(isLoading => {
         console.log('achievements loading: ' + isLoading);
         if (!isLoading) {
-          this.subscription.add(
-            this.achievementQuery.selectAll()
-              .subscribe(achievements => {
-                this.achievements = achievements;
-                this.filteredAchievements = this.achievementQuery.getFilteredAchievementsList();
-              })
-          );
+          this.achievementQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((achievements: AchievementModel[]) => {
+              this.achievements = achievements;
+              this.filteredAchievements = this.achievementQuery.getFilteredAchievementsList();
+            });
+
           this.achievementsLoading$.next();
           this.achievementsLoading$.complete();
         }
@@ -109,31 +111,32 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
       .subscribe(isLoading => {
         console.log('current user loading: ' + isLoading);
         if (!isLoading) {
-          this.subscription.add(
-            this.currentUserQuery.selectAll()
-              .subscribe(currentUser => {
-                console.log('current user changed');
-                console.log(currentUser[0]);
-                this.currentUser = currentUser[0];
-                this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser[0].userId)
-                  .pipe(take(1))
-                  .subscribe((result: Observable<any> | any) => {
-                    if (result !== false) {
-                      result.subscribe(() => {
-                      });
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              console.log('current user changed');
+              console.log(currentUser);
+              this.currentUser = currentUser;
+              this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser.userId)
+                .pipe(take(1))
+                .subscribe((result: Observable<any> | any) => {
+                  if (result !== false) {
+                    result
+                      .pipe(take(1))
+                      .subscribe(() => {
+                    });
 
-                    } else {
-                      console.log(`Cache User Point Item Transactions returned ${result}`);
-                    }
-                  });
+                  } else {
+                    console.log(`Cache User Point Item Transactions returned ${result}`);
+                  }
+                });
 
-                this.getCoreValues(this.currentUser.userId)
-                  .pipe(take(1))
-                  .subscribe(coreValues => {
-                    this.coreValueData = coreValues;
-                  });
-              })
-          );
+              this.getCoreValues(this.currentUser.userId)
+                .pipe(take(1))
+                .subscribe(coreValues => {
+                  this.coreValueData = coreValues;
+                });
+            });
 
           this.currentUserLoading$.next();
           this.currentUserLoading$.complete();
@@ -209,6 +212,10 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
     this.achievementsLoading$.next();
     this.achievementsLoading$.complete();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

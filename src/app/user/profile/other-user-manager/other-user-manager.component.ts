@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
@@ -18,7 +18,7 @@ import {OtherUserAchievementQuery} from '../../../entity-store/other-user-achiev
 import {OtherUserAchievementModel} from '../../../entity-store/other-user-achievement/state/other-user-achievement.model';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {NavigationService} from '../../../shared/navigation.service';
-import {take} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -30,6 +30,13 @@ declare var $: any;
 export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('chart') chart: GoogleChartComponent;
   @Input() inputUser: EntityUserModel;
+
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private userLoading$ = new Subject();
+  private achievementsLoading$ = new Subject();
+  private transactionsLoading$ = new Subject();
+
   user$: Observable<EntityUserModel[]> = null;
   user: EntityUserModel = null;
   userId: number = null;
@@ -75,32 +82,61 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
         .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
-            result.subscribe(() => {
-              this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
-                filterBy: e => e.sourceUserId === user.userId,
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
+            result
+              .pipe(take(1))
+              .subscribe(() => {
+                this.pointItemTransactionQuery.selectLoading()
+                  .pipe(takeUntil(this.transactionsLoading$))
+                  .subscribe(isLoading => {
+                    if (!isLoading) {
+                      this.pointItemTransactionQuery.selectAll({
+                        filterBy: e => e.sourceUserId === user.userId,
+                        sortBy: 'createdAt',
+                        sortByOrder: Order.DESC
+                      })
+                        .pipe(takeUntil(this.unsubscribe$))
+                        .subscribe((transactions: PointItemTransactionModel[]) => {
+                          this.pointItemTransactions = transactions;
+                          console.log('point item transactions');
+                          console.log(this.pointItemTransactions);
+                        });
+
+                      this.transactionsLoading$.next();
+                      this.transactionsLoading$.complete();
+                    }
+                  });
               });
-              console.log('point item transactions');
-              console.log(this.pointItemTransactions);
-            });
 
           } else {
             console.log(`Cache User Point Item Transactions returned ${result}`);
             // We may have retrieved the data but the pointItemTransactions variable may be null... this accounts for that
-            if (!this.pointItemTransactions) {
-              this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
-                filterBy: e => e.sourceUserId === user.userId,
-                sortBy: 'createdAt',
-                sortByOrder: Order.DESC
+            this.pointItemTransactionQuery.selectLoading()
+              .pipe(takeUntil(this.transactionsLoading$))
+              .subscribe(isLoading => {
+                if (!isLoading) {
+                  this.pointItemTransactionQuery.selectAll({
+                    filterBy: e => e.sourceUserId === user.userId,
+                    sortBy: 'createdAt',
+                    sortByOrder: Order.DESC
+                  })
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe((transactions: PointItemTransactionModel[]) => {
+                      this.pointItemTransactions = transactions;
+                      console.log('point item transactions');
+                      console.log(this.pointItemTransactions);
+                    });
+
+                  this.transactionsLoading$.next();
+                  this.transactionsLoading$.complete();
+                }
               });
-            }
           }
         });
     } else {
       console.log(`Already retrieving point item transactions`);
     }
   }
+
 
   populateUserAchievementData(user: EntityUserModel) {
     if (!this.achievementsRetrieving) { // This check prevents the API call from firing more than it has to
@@ -109,47 +145,80 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
         .pipe(take(1))
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
-            result.subscribe(() => {
-              this.achievements = this.otherUserAchievementQuery.getAll({
-                filterBy: e => e.userId === user.userId,
-                sortBy: 'updatedAt',
-                sortByOrder: Order.DESC
-              });
-              console.log('achievements');
-              console.log(this.achievements);
+            result
+              .pipe(take(1))
+              .subscribe(() => {
+                this.otherUserAchievementQuery.selectLoading()
+                  .pipe(takeUntil(this.achievementsLoading$))
+                  .subscribe(isLoading => {
+                    if (!isLoading) {
+                      this.otherUserAchievementQuery.selectAll({
+                        filterBy: e => e.userId === user.userId,
+                        sortBy: 'updatedAt',
+                        sortByOrder: Order.DESC
+                      })
+                        .pipe(takeUntil(this.unsubscribe$))
+                        .subscribe((achievements: OtherUserAchievementModel[]) => {
+                          this.achievements = achievements;
+                          console.log('achievements');
+                          console.log(this.achievements);
+                        });
 
-              this.completedAchievements = this.otherUserAchievementQuery.getAll({
-                filterBy: e => (e.userId === user.userId) && ((e.progressStatus === 'complete') || (e.progressStatus === 'complete acknowledged')),
-                sortBy: 'updatedAt',
-                sortByOrder: Order.DESC
+                      this.otherUserAchievementQuery.selectAll({
+                        filterBy: e => (e.userId === user.userId) && ((e.progressStatus === 'complete') || (e.progressStatus === 'complete acknowledged')),
+                        sortBy: 'updatedAt',
+                        sortByOrder: Order.DESC
+                      })
+                        .pipe(takeUntil(this.unsubscribe$))
+                        .subscribe((achievements: OtherUserAchievementModel[]) => {
+                          this.completedAchievements = achievements;
+                          console.log('completed achievements');
+                          console.log(this.completedAchievements);
+                        });
+
+                      this.achievementsLoading$.next();
+                      this.achievementsLoading$.complete();
+                    }
+                  });
               });
-              console.log('completed achievements');
-              console.log(this.completedAchievements);
-            });
 
           } else {
             console.log(`Cache Achievements returned ${result}`);
             // We may have retrieved the data but the achievements or completedAchievements variables may be null...
             // this accounts for that...
-            if (!this.achievements || !this.completedAchievements) {
-              this.achievements = this.otherUserAchievementQuery.getAll({
-                filterBy: e => e.userId === user.userId,
-                sortBy: 'updatedAt',
-                sortByOrder: Order.DESC
-              });
-              console.log('achievements');
-              console.log(this.achievements);
 
-              this.completedAchievements = this.otherUserAchievementQuery.getAll({
-                filterBy: e => (e.userId === user.userId) && ((e.progressStatus === 'complete') || (e.progressStatus === 'complete acknowledged')),
-                // filterBy: e => (e.userId === user[0].userId) && ((e.achievementStatus === 'complete') || (e.achievementStatus === 'complete acknowledged')),
+            this.otherUserAchievementQuery.selectLoading()
+              .pipe(takeUntil(this.achievementsLoading$))
+              .subscribe(isLoading => {
+                if (!isLoading) {
+                  this.otherUserAchievementQuery.selectAll({
+                    filterBy: e => e.userId === user.userId,
+                    sortBy: 'updatedAt',
+                    sortByOrder: Order.DESC
+                  })
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe((achievements: OtherUserAchievementModel[]) => {
+                      this.achievements = achievements;
+                      console.log('achievements');
+                      console.log(this.achievements);
+                    });
 
-                sortBy: 'updatedAt',
-                sortByOrder: Order.DESC
+                  this.otherUserAchievementQuery.selectAll({
+                    filterBy: e => (e.userId === user.userId) && ((e.progressStatus === 'complete') || (e.progressStatus === 'complete acknowledged')),
+                    sortBy: 'updatedAt',
+                    sortByOrder: Order.DESC
+                  })
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe((achievements: OtherUserAchievementModel[]) => {
+                      this.completedAchievements = achievements;
+                      console.log('completed achievements');
+                      console.log(this.completedAchievements);
+                    });
+
+                  this.achievementsLoading$.next();
+                  this.achievementsLoading$.complete();
+                }
               });
-              console.log('completed achievements');
-              console.log(this.completedAchievements);
-            }
           }
         });
     } else {
@@ -159,29 +228,23 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
 
   populateUserData() {
     this.userQuery.selectLoading()
+      .pipe(takeUntil(this.userLoading$))
       .subscribe(userQueryLoading => {
         console.log(`User loading status is ${userQueryLoading}`);
         if (!userQueryLoading) {
-          this.user$ = this.userQuery.selectAll({
-            filterBy: e => e.username === this.route.snapshot.params.username
-            // filterBy: e => e.username === this.inputUser.username
-          });
+          this.userQuery.selectUserByUsername(this.route.snapshot.params.username)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((user: EntityUserModel) => {
+              this.user = user;
+              this.populateUserPointTransactionData(user);
+              this.populateUserAchievementData(user);
 
-          this.user$.subscribe(user => {
-            this.populateUserPointTransactionData(user[0]);
-            this.populateUserAchievementData(user[0]);
+              this.isUserDataRetrieved = true;
+              this.spinner.hide('other-user-manager-spinner');
+            });
 
-            // Pull user info into a static variable if this hasn't happened yet
-            if (!this.user) {
-              this.user = this.userQuery.getAll({
-                filterBy: e => e.username === this.route.snapshot.params.username
-                // filterBy: e => e.username === this.inputUser.username
-              })[0];
-            }
-
-            this.isUserDataRetrieved = true;
-            this.spinner.hide('other-user-manager-spinner');
-          });
+          this.userLoading$.next();
+          this.userLoading$.complete();
         } else {
           console.log('ERROR: User is still loading');
         }
@@ -202,12 +265,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
     this.navigationService.openAchievementModal();
   }
 
-  ngOnDestroy(): void {
-    console.log('ngOnDestroy');
-/*    if (this.navigationService.pointItemComponentInputUser) {
-      this.router.navigate(['/', 'user', 'profile', this.navigationService.pointItemComponentInputUser.username]).then();
-    }*/
-  }
+
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -233,5 +291,19 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
 
       this.populateUserData();
     }
+  }
+
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy');
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.userLoading$.next();
+    this.userLoading$.complete();
+    this.achievementsLoading$.next();
+    this.achievementsLoading$.complete();
+    this.transactionsLoading$.next();
+    this.transactionsLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

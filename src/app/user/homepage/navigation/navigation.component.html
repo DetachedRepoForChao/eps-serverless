@@ -9,7 +9,7 @@
       -->
 
       <a class="navbar-brand" target="_blank">
-        <span>The Asbury Hotel </span>| EPS
+        <span>Pineapple Points</span>🍍
       </a>
 
       <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -397,7 +397,9 @@
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
         <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-          <app-achievement *ngIf="navigationService.achievementModalActive" [inputUser]="navigationService.achievementComponentInputUser" (clearInputUser)="clearAchievementComponentInputUser($event)"></app-achievement>
+          <ng-container *ngIf="navigationService.achievementModalActive">
+            <app-achievement [inputUser]="navigationService.achievementComponentInputUser" (clearInputUser)="clearAchievementComponentInputUser($event)"></app-achievement>
+          </ng-container>
         </perfect-scrollbar>
       </div>
 
@@ -421,7 +423,9 @@
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
         <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-          <app-point-item *ngIf="navigationService.pointItemModalActive" [inputUser]="navigationService.pointItemComponentInputUser" (clearInputUser)="clearPointItemComponentInputUser($event)"></app-point-item>
+          <ng-container *ngIf="navigationService.pointItemModalActive">
+            <app-point-item  [inputUser]="navigationService.pointItemComponentInputUser" (clearInputUser)="clearPointItemComponentInputUser($event)"></app-point-item>
+          </ng-container>
         </perfect-scrollbar>
       </div>
 
@@ -443,7 +447,9 @@
         </button>
       </div>
       <div class="modal-body black modalclass" >
-        <app-notification-details *ngIf="navigationService.notificationDetailsModalActive" [inputNotification]="navigationService.notificationDetailsInput" (clearInputNotification)="clearNotificationDetailComponentInput($event)"></app-notification-details>
+        <ng-container *ngIf="navigationService.notificationDetailsModalActive">
+          <app-notification-details [inputNotification]="navigationService.notificationDetailsInput" (clearInputNotification)="clearNotificationDetailComponentInput($event)"></app-notification-details>
+        </ng-container>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="navigationService.closeNotificationDetailsModal()">Close</button>
@@ -464,7 +470,10 @@
       </div>
       <!-- Dropdown header -->
       <div class="modal-body modalclass">
-        <app-notifications></app-notifications>
+        <ng-container>
+          <app-notifications></app-notifications>
+        </ng-container>
+
 
       </div>
     </div>

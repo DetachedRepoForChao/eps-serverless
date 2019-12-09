@@ -5,10 +5,10 @@
       <div class="card-body card-header-body">
         <div class="row profile-body">
           <div class="col-8 text-left store-title">
-            <span class="font-weight-bold">The Asbury</span> | Points Store
+            <span class="font-weight-bold">Pineapple Points</span> 🍍 Store
           </div>
 
-          <div class="col-3 profile-points-section">
+          <div class="col-3 profile-points-section ml-4">
             <div [matTooltip]="'Points: ' + currentUser?.points + '&#13;Pending Balance: ' + currentUser?.pointsBalance"
                  matTooltipPosition="above">
               <div class="row">
@@ -66,30 +66,13 @@
       </div>
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
-        <div class="row tab-row">
-          <div class="col-2 text-center">
-            <span (click)="navigationService.setPurchaseRequestDataSourceAll(currentUser.userId); onPurchaseRequestTabItemClick('all')" class="tab-item toggled" id="purchaseRequestTab_all">All</span>
-          </div>
-          <div class="col-2 text-center">
-            <span (click)="navigationService.setPurchaseRequestDataSourcePending(currentUser.userId); onPurchaseRequestTabItemClick('pending')" class="tab-item" id="purchaseRequestTab_pending">Pending</span>
-          </div>
-          <div class="col-2 text-center">
-            <span (click)="navigationService.setPurchaseRequestDataSourceApproved(currentUser.userId); onPurchaseRequestTabItemClick('approved')" class="tab-item" id="purchaseRequestTab_approved">Approved</span>
-          </div>
-          <div class="col-2 text-center">
-            <span (click)="navigationService.setPurchaseRequestDataSourceDeclined(currentUser.userId); onPurchaseRequestTabItemClick('declined')" class="tab-item" id="purchaseRequestTab_declined">Declined</span>
-          </div>
-          <div class="col-2 text-center">
-            <span (click)="navigationService.setPurchaseRequestDataSourceFulfilled(currentUser.userId); onPurchaseRequestTabItemClick('fulfilled')" class="tab-item" id="purchaseRequestTab_fulfilled">Fulfilled</span>
-          </div>
-          <div class="col-2 text-center">
-            <span (click)="navigationService.setPurchaseRequestDataSourceCancelled(currentUser.userId); onPurchaseRequestTabItemClick('cancelled')" class="tab-item" id="purchaseRequestTab_cancelled">Cancelled</span>
-          </div>
-        </div>
-        <div class="row content-row">
-          <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
-            <app-purchase-history *ngIf="navigationService.purchaseHistoryModalActive" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-purchase-history>
-          </perfect-scrollbar>
+
+        <div class="content-row">
+<!--          <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">-->
+          <ng-container *ngIf="navigationService.purchaseHistoryModalActive">
+            <app-purchase-history class="mx-auto" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-purchase-history>
+          </ng-container>
+<!--          </perfect-scrollbar>-->
         </div>
 
       </div>

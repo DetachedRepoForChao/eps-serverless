@@ -28,8 +28,12 @@ import {take, takeUntil} from 'rxjs/operators';
 })
 export class FeedComponent implements OnInit, OnDestroy {
   componentName = 'feed.component';
-  subscription = new Subscription();
-  unsubscribe$ = new Subject();
+  private subscription = new Subscription();
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private userLoading$ = new Subject();
+  private transactionsLoading$ = new Subject();
+  users: EntityUserModel[];
   isCardLoading: boolean;
   pointItemTransactions$: Observable<PointItemTransactionModel[]>;
   pointItemTransactions: PointItemTransactionModel[];
@@ -41,7 +45,7 @@ export class FeedComponent implements OnInit, OnDestroy {
               private globals: Globals,
               private entityUserService: EntityUserService,
               private userStore: UserStore,
-              private entityUserQuery: EntityUserQuery,
+              private userQuery: EntityUserQuery,
               private achievementService: AchievementService,
               public pointItemTransactionService: PointItemTransactionService,
               private pointItemTransactionQuery: PointItemTransactionQuery,
@@ -59,6 +63,21 @@ export class FeedComponent implements OnInit, OnDestroy {
 
     // this.entityUserService.cacheUsers().subscribe();
     // this.pointItemService.cachePointItems().subscribe();
+
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.userLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.users = users;
+            });
+
+          this.userLoading$.next();
+          this.userLoading$.complete();
+        }
+      });
 
     if (!this.pointItemTransactionService.initialBatchRetrieved) {
       console.log('Invoking populatePointTransactionData()');
@@ -85,32 +104,52 @@ export class FeedComponent implements OnInit, OnDestroy {
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             console.log('Received observable response... subscribing...');
-            result.subscribe((response) => {
+            result
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe((response) => {
               console.log('Subscribed to point transaction caching...');
               console.log(response);
-              this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
+/*              this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
                 filterBy: e => e.type === 'Add',
                 sortBy: 'transactionId',
                 sortByOrder: Order.DESC
               });
               console.log('point item transactions');
-              console.log(this.pointItemTransactions);
+              console.log(this.pointItemTransactions);*/
             });
 
-            this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
+            this.pointItemTransactionQuery.selectLoading()
+              .pipe(takeUntil(this.transactionsLoading$))
+              .subscribe(isLoading => {
+                if (!isLoading) {
+                  this.pointItemTransactionQuery.selectAllAddTransactions()
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe((transactions: PointItemTransactionModel[]) => {
+                      this.pointItemTransactions = transactions;
+                      console.log('point item transactions');
+                      console.log(this.pointItemTransactions);
+                    });
+
+
+                  this.transactionsLoading$.next();
+                  this.transactionsLoading$.complete();
+                }
+
+              });
+/*            this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
               filterBy: e => e.type === 'Add',
               sortBy: 'transactionId',
               sortByOrder: Order.DESC
             });
             console.log('point item transactions');
-            console.log(this.pointItemTransactions);
+            console.log(this.pointItemTransactions);*/
 
             this.pointItemTransactionService.setInitialBatchRetrievedTrue();
 
           } else {
             console.log(`Cache Point Item Transactions returned ${result}`);
             // We may have retrieved the data but the pointItemTransactions variable may be null... this accounts for that
-            if (!this.pointItemTransactions) {
+/*            if (!this.pointItemTransactions) {
               this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
                 filterBy: e => e.type === 'Add',
                 sortBy: 'transactionId',
@@ -122,7 +161,26 @@ export class FeedComponent implements OnInit, OnDestroy {
                 sortBy: 'transactionId',
                 sortByOrder: Order.DESC
               });
-            }
+            }*/
+
+            this.pointItemTransactionQuery.selectLoading()
+              .pipe(takeUntil(this.transactionsLoading$))
+              .subscribe(isLoading => {
+                if (!isLoading) {
+                  this.pointItemTransactionQuery.selectAllAddTransactions()
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe((transactions: PointItemTransactionModel[]) => {
+                      this.pointItemTransactions = transactions;
+                      console.log('point item transactions');
+                      console.log(this.pointItemTransactions);
+                    });
+
+
+                  this.transactionsLoading$.next();
+                  this.transactionsLoading$.complete();
+                }
+
+              });
           }
         });
     } else {
@@ -172,24 +230,45 @@ export class FeedComponent implements OnInit, OnDestroy {
       .subscribe((result) => {
         if (result !== false) {
           console.log('Received observable response... subscribing...');
-          result.subscribe((response) => {
+          result
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((response) => {
             console.log('Subscribed to point transaction caching...');
             console.log(response);
-            this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
+/*            this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
               filterBy: e => e.type === 'Add',
               sortBy: 'transactionId',
               sortByOrder: Order.DESC
             });
             console.log('point item transactions');
-            console.log(this.pointItemTransactions);
+            console.log(this.pointItemTransactions);*/
             console.log(`loaded batch ${this.pointItemTransactionService.numBatchRetrieved}`);
           });
 
-          this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
+          this.pointItemTransactionQuery.selectLoading()
+            .pipe(takeUntil(this.transactionsLoading$))
+            .subscribe(isLoading => {
+              if (!isLoading) {
+                this.pointItemTransactionQuery.selectAllAddTransactions()
+                  .pipe(takeUntil(this.unsubscribe$))
+                  .subscribe((transactions: PointItemTransactionModel[]) => {
+                    this.pointItemTransactions = transactions;
+                    console.log('point item transactions');
+                    console.log(this.pointItemTransactions);
+                  });
+
+
+                this.transactionsLoading$.next();
+                this.transactionsLoading$.complete();
+              }
+
+            });
+
+/*          this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
             filterBy: e => e.type === 'Add',
             sortBy: 'transactionId',
             sortByOrder: Order.DESC
-          });
+          });*/
 
         } else {
           console.log(`Cache Point Item Transactions returned ${result}`);
@@ -206,6 +285,12 @@ export class FeedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.userLoading$.next();
+    this.userLoading$.complete();
+    this.transactionsLoading$.next();
+    this.transactionsLoading$.complete();
     this.subscription.unsubscribe();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

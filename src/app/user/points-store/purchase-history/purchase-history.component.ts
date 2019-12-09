@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {PointItemModel} from '../../../entity-store/point-item/state/point-item.model';
-import {PointItemTransactionModel} from '../../../entity-store/point-item-transaction/state/point-item-transaction.model';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {Router} from '@angular/router';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -22,6 +21,7 @@ import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/s
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
 import {UserHasStoreItemModel} from '../../../entity-store/user-has-store-item/state/user-has-store-item.model';
+import {take, takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -35,6 +35,11 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
   @Output() clearInputUser = new EventEmitter<any>();
 
   componentName = 'purchase-history.component';
+
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private userLoading$ = new Subject();
+  private requestsLoading$ = new Subject();
 
   public config: PerfectScrollbarConfigInterface = {};
   pointItems$: Observable<PointItemModel[]>;
@@ -55,8 +60,17 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
   declinedPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
   fulfilledPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
   dataSource$: Observable<UserHasStoreItemModel[]>;
+  dataSource: UserHasStoreItemModel[];
   routerDestination: string[];
   showLimit = 6;
+  currentPurchaseRequestTabItem = 'allActive';
+  purchaseRequestTabItems = [
+    'allActive',
+    'pending',
+    'readyForPickup',
+    'pickedUp',
+    'archived',
+  ];
 
   constructor(private router: Router,
               private spinner: NgxSpinnerService,
@@ -84,23 +98,40 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 
     this.spinner.show('purchase-history-spinner');
 
-/*    this.currentUserService.cacheCurrentUser().subscribe();
-    this.userService.cacheUsers().subscribe();
-    this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();*/
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+              this.navigationService.setPurchaseRequestDataSourceAllActive(this.currentUser.userId);
 
-    // this.populateCurrentUserData();
-    this.currentUser$ = this.currentUserQuery.selectAll();
-    this.currentUserQuery.selectAll()
-      .subscribe(currentUser => {
-        this.currentUser = currentUser[0];
-        this.navigationService.setPurchaseRequestDataSourceAll(this.currentUser.userId);
-        this.purchaseRequests$ = this.userHasStoreItemQuery.selectAll({
-          filterBy: e => e.userId === currentUser[0].userId
-        });
+              this.userHasStoreItemQuery.selectLoading()
+                .pipe(takeUntil(this.requestsLoading$))
+                .subscribe(isRequestsLoading => {
+                  if (!isRequestsLoading) {
+                    this.userHasStoreItemQuery.selectAll({
+                      filterBy: e => e.userId === currentUser.userId
+                    })
+                      .pipe(takeUntil(this.unsubscribe$))
+                      .subscribe((requests: UserHasStoreItemModel[]) => {
+                        this.purchaseRequests = requests;
+                      });
+
+                    this.requestsLoading$.next();
+                    this.requestsLoading$.complete();
+                  }
+                });
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
       });
 
-
+    this.setPurchaseRequestDataSource(this.currentPurchaseRequestTabItem);
 
     const parentScope = this;
     $('#purchaseHistoryModal').on('hidden.bs.modal',
@@ -143,6 +174,111 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
     // $('#pointsModal').modal('hide');
     this.navigationService.closePointItemModal();
   }
+
+  onPickedUpClick(request: UserHasStoreItemModel) {
+    console.log('item has been marked as picked up');
+    this.userHasStoreItemService.setStoreItemRequestPickedUp(request)
+      .pipe(take(1))
+      .subscribe();
+
+  }
+
+  onPurchaseRequestTabItemClick(clickedItem: string) {
+    if (this.currentPurchaseRequestTabItem === clickedItem) {
+      // Already there, do nothing.
+    } else {
+      for (const item of this.purchaseRequestTabItems) {
+        if (item === clickedItem) {
+          this.currentPurchaseRequestTabItem = clickedItem;
+          document.getElementById(`purchaseRequestTab_${item}`).className = document.getElementById(`purchaseRequestTab_${item}`).className += ' toggled';
+        } else {
+          document.getElementById(`purchaseRequestTab_${item}`).className = document.getElementById(`purchaseRequestTab_${item}`).className.replace('toggled', '').trim();
+        }
+      }
+    }
+  }
+
+  setPurchaseRequestDataSource(filter) {
+    const currentDate = Date.now();
+    let otherDate;
+    let dayDiff;
+
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+          if (!isLoading) {
+            this.currentUserQuery.selectCurrentUser()
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe((currentUser: EntityCurrentUserModel) => {
+                this.userHasStoreItemQuery.selectLoading()
+                  .pipe(takeUntil(this.requestsLoading$))
+                  .subscribe(isRequestsLoading => {
+                    if (!isRequestsLoading) {
+                      this.userHasStoreItemQuery.selectAll({
+                        filterBy: e => {
+                          if (e.userId === currentUser.userId) {
+                            switch (filter) {
+                              case 'allActive':
+                                if (e.status === 'pickedUp') {
+                                  otherDate = new Date(e.pickedUpAt);
+                                  dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+                                  if (dayDiff >= 5) {
+                                    return false;
+                                  }
+                                }
+                                return true;
+                              case 'pending':
+                                if (e.status === 'pending') {
+                                  return true;
+                                }
+                                return false;
+                              case 'readyForPickup':
+                                if (e.status === 'readyForPickup') {
+                                  return true;
+                                }
+                                return false;
+                              case 'pickedUp':
+                                if (e.status === 'pickedUp') {
+                                  return true;
+                                }
+                                return false;
+                              case 'archived':
+                                if (e.status === 'pickedUp') {
+                                  otherDate = new Date(e.pickedUpAt);
+                                  dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+                                  if (dayDiff >= 5) {
+                                    return true;
+                                  }
+                                }
+                                return false;
+                            }
+                          }
+
+                        },
+                        sortBy: 'createdAt',
+                        sortByOrder: Order.DESC
+                      })
+                        .pipe(takeUntil(this.unsubscribe$))
+                        .subscribe((requests: UserHasStoreItemModel[]) => {
+                          this.dataSource = requests;
+                        });
+
+                      this.requestsLoading$.next();
+                      this.requestsLoading$.complete();
+                    }
+                  });
+              });
+
+            this.currentUserLoading$.next();
+            this.currentUserLoading$.complete();
+          }
+        });
+  }
+
+  setPurchaseRequestDataSourceAllActive(currentUser) {
+
+}
+
 /*
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -189,7 +325,14 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('ngOnDestroy');
-
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.userLoading$.next();
+    this.userLoading$.complete();
+    this.requestsLoading$.next();
+    this.requestsLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 

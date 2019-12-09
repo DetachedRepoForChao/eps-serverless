@@ -50,11 +50,11 @@
                       <div class="col-2 p-0">
                         <!-- Avatar -->
                         <img class="rounded-circle avatar-img"
-                             [src]="userQuery.getUserByUserId(notification.sourceUserId)[0]?.avatarResolvedUrl" alt="">
+                             [src]="userQuery.getUserByUserId(notification.sourceUserId)?.avatarResolvedUrl" alt="">
                       </div>
                       <div class="col-6">
                         <div class="row">
-                          <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(notification.sourceUserId)[0]?.firstName}} {{userQuery.getUserByUserId(notification.sourceUserId)[0]?.lastName}}</h4>
+                          <h4 class="mb-0 text-sm black" >{{userQuery.getUserByUserId(notification.sourceUserId)?.firstName}} {{userQuery.getUserByUserId(notification.sourceUserId)?.lastName}}</h4>
                         </div>
                         <div class="row">
                           <div class="text-sm mb-0 black">{{notification.title}}</div>

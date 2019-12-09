@@ -98,7 +98,7 @@
                       <div class="card-header">
 
                         <div *ngIf="leaderboardUsers?.length > 0; else selectedAvatarLoading">
-                          <img src="{{userQuery.getUserByUsername(selectedRow.username)[0]?.avatarResolvedUrl}}"
+                          <img src="{{userQuery.getUserByUsername(selectedRow.username)?.avatarResolvedUrl}}"
                                alt="Place image title"
                                class="img-center img-fluid rounded-circle"
                                id="avatar">
