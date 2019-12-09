@@ -33,29 +33,43 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="isConfirmStoreItemPurchase">
+<ng-container *ngIf="isConfirmStoreItemPurchase && selectedStoreItem">
   <h1 mat-dialog-title class="text-black-50">Confirm purchase</h1>
   <div mat-dialog-content>
     <div class="row">
-      <div class="col-12 text-left">
-        <img class="store-item-img pb-4" [src]="selectedStoreItem?.imageResolvedUrl" />
-        <h4 class="text-muted">{{selectedStoreItem?.cost}}pts | {{selectedStoreItem?.name}}</h4>
-        <h5 class="text-muted">{{selectedStoreItem?.description}}</h5>
+      <div class="col-12 text-center">
+        <img class="store-item-img pb-4" [src]="selectedStoreItem.imageResolvedUrl" />
       </div>
 
+    </div>
+    <div class="row text-left">
+      <div class="col-12 text-left">
+        <h4 class="text-muted">{{selectedStoreItem.cost}}pts | {{selectedStoreItem.name}}</h4>
+        <h5 class="text-muted">{{selectedStoreItem.description}}</h5>
+      </div>
     </div>
     <mat-divider></mat-divider>
     <br>
     <div class="row">
       <div class="col-12 text-left">
-        Click <span class="font-weight-bold">Yes</span> to confirm your purchase.
+        <ng-container *ngIf="(currentUser.points - currentUser.pointsBalance) >= selectedStoreItem.cost; else notEnoughPoints">
+          <div>
+            Would you like to make this purchase?
+          </div>
+        </ng-container>
+        <ng-template #notEnoughPoints>
+          <div class="text-primary">
+            You do not have enough points to make this purchase.
+          </div>
+        </ng-template>
+
       </div>
     </div>
 
   </div>
   <div mat-dialog-actions>
-    <button mat-button (click)="onCloseConfirm()"cdkFocusInitial>Yes</button>
-    <button mat-button (click)="onCloseCancel()" >No</button>
+    <button mat-button [disabled]="(currentUser.points - currentUser.pointsBalance) < selectedStoreItem.cost" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>
+    <button mat-button (click)="onCloseCancel()" >Cancel</button>
   </div>
 
 </ng-container>
