@@ -122,9 +122,18 @@ export class UserComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe();
 
-    this.userService.cacheUsers()
-      .pipe(take(1))
-      .subscribe();
+    Auth.currentUserInfo()
+      .then(userAttributes => {
+        if (+userAttributes.attributes['custom:security_role_id'] === 3) {
+          this.userService.cacheUsersAdmin()
+            .pipe(take(1))
+            .subscribe();
+        } else {
+          this.userService.cacheUsers()
+            .pipe(take(1))
+            .subscribe();
+        }
+      });
 
     this.currentUserService.cacheCurrentUser()
       .pipe(take(1))

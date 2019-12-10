@@ -833,6 +833,46 @@ app.get('/items/getRemainingPointPool', function(req, res) {
   });
 });
 
+app.get('/items/getPointPoolMax', function(req, res) {
+  console.log('starting get getPointPoolMax');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlPointPool.getPointPoolMax()
+        .then(data => {
+          res.json({status: 'get call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'get call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/setPointPoolMax', function(req, res) {
+  console.log('starting post setPointPoolMax');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const username = tokenResult.claims['cognito:username'];
+      const newMax = req.body.newMax;
+      ctrlPointPool.setPointPoolMax(newMax, username)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
 // Like Routes
 app.post('/items/addLike', function(req, res) {
   console.log('starting post addLike');

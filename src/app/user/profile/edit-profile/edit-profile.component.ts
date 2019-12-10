@@ -177,6 +177,13 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.spinner.hide('edit-profile-spinner');
   }
 
+  // This is used to make Angular display the date correctly instead of being 1 day off due to
+  // the way time zones work...
+  fudgeDate(date): Date {
+    const offset = new Date().getTimezoneOffset() * 60000;
+    return new Date(new Date(date).getTime() + offset);
+  }
+
   populateFormData() {
     const functionName = 'populateFormData';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -220,6 +227,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
               this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
               // console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
             }
+            break;
+          }
+          case 'birthdate': {
+            this.editUserForm.patchValue({[key]: this.fudgeDate(user[keys[i]])});
             break;
           }
           case 'quote': {
@@ -275,10 +286,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editUserForm = this.formBuilder.group({
       user: [null, Validators.required],
       preferredName: [null],
-      prefix: [null],
-      suffix: [null],
-      position: [null],
-      preferredPronoun: [null],
+      // prefix: [null],
+      // suffix: [null],
+      // position: [null],
+      // preferredPronoun: [null],
       gender: [null],
       genderCustom: [null],
       birthdate: [null],

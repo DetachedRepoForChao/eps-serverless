@@ -72,20 +72,90 @@ const removePointsFromPointPool = function (managerId, amount) {
 
 module.exports.removePointsFromPointPool = removePointsFromPointPool;
 
-const initializePointPool = function (managerId) {
+const initializePointPool = function (amount, managerId) {
   console.log('initializePointPool');
 
-  return sqlPointPoolModel.create({
-    managerId: managerId,
-  })
-    .then(() => {
-      console.log('Point Pool creation succeeded.');
-      return { status: true, message: 'Point Pool creation succeeded.' };
+  return getPointPoolMax()
+    .then(pointPoolMaxResult => {
+      if (pointPoolMaxResult.status !== false) {
+        const pointsRemaining = (amount) ? amount : pointPoolMaxResult.pointPoolMax.maxAmount;
+        return sqlPointPoolModel.create({
+          managerId: managerId,
+          pointsRemaining: pointsRemaining,
+          maxAmount: pointPoolMaxResult.pointPoolMax.maxAmount
+        })
+          .then((pointPool) => {
+            console.log('Point Pool creation succeeded.');
+            return { status: true, message: 'Point Pool creation succeeded.', pointPool: pointPool };
+          })
+          .catch(err => {
+            console.log('Problem creating point pool.');
+            console.log(err);
+            return { status: false, message: err };
+          })
+      } else {
+        console.log('Problem retrieving point pool max');
+        return {status: false, message: 'Problem retrieving point pool max'};
+      }
     })
     .catch(err => {
-      console.log('Problem with the database');
+      console.log('Database error.');
+      console.log(err);
       return { status: false, message: err };
-    })
+    });
 };
 
 module.exports.initializePointPool = initializePointPool;
+
+
+const getPointPoolMax = function () {
+  console.log('getPointPoolMax');
+
+  return Models.PointPoolMax.findOne({
+    where: {
+      isActive: true,
+    }
+  })
+    .then(pointPoolMax => {
+      if (!pointPoolMax) {
+        return {status: false, message: 'Point Pool Max record not found.'};
+      } else {
+        return {status: true, pointPoolMax: pointPoolMax};
+      }
+    })
+    .catch(err => {
+      console.log('problem communicating with db');
+      console.log(err);
+      return {status: false, message: err};
+    });
+  // });
+};
+
+module.exports.getPointPoolMax = getPointPoolMax;
+
+const setPointPoolMax = function (newMax, username) {
+  console.log('setPointPoolMax');
+
+  return Models.PointPoolMax.update(
+    {
+      maxAmount: newMax,
+      setBy: username
+    },
+    {
+      where: {
+        isActive: true,
+      }
+    }
+  )
+    .then(() => {
+      return {status: true, pointPoolMax: newMax};
+    })
+    .catch(err => {
+      console.log('problem communicating with db');
+      console.log(err);
+      return {status: false, message: err};
+    });
+  // });
+};
+
+module.exports.setPointPoolMax = setPointPoolMax;

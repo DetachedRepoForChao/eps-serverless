@@ -71,11 +71,11 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
       this.selectAll({
         filterBy: e => e.userId === userId
       })
-          .pipe(take(1))
-          .subscribe((user: EntityUserModel[]) => {
-            observer.next(user[0]);
-            observer.complete();
-          });
+        .pipe(take(1))
+        .subscribe((user: EntityUserModel[]) => {
+          observer.next(user[0]);
+          observer.complete();
+        });
     });
   }
 
@@ -84,18 +84,24 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
       this.selectAll({
         filterBy: e => e.username === username
       })
-          .pipe(take(1))
-          .subscribe((user: EntityUserModel[]) => {
-            observer.next(user[0]);
-            observer.complete();
-          });
+        .pipe(take(1))
+        .subscribe((user: EntityUserModel[]) => {
+          observer.next(user[0]);
+          observer.complete();
+        });
     });
   }
 
 
-public getDeactivatedUsers() {
+  public selectDeactivatedUsers() {
     return this.selectAll({
-      filterBy: userEntity => !(userEntity.active)
+      filterBy: e => !(e.active)
+    });
+  }
+
+  public getDeactivatedUsers() {
+    return this.getAll({
+      filterBy: e => !(e.active)
     });
   }
 

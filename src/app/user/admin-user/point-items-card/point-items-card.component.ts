@@ -8,7 +8,7 @@ import {EntityUserService} from '../../../entity-store/user/state/entity-user.se
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
-import {tap} from 'rxjs/operators';
+import {take, tap} from 'rxjs/operators';
 import {Department} from '../../../shared/department.model';
 import {SecurityRole} from '../../../shared/securityrole.model';
 import {forkJoin, Observable} from 'rxjs';
@@ -58,6 +58,9 @@ export class PointItemsCardComponent implements OnInit {
   editPointItemFormSubmitted = false;
   deletePointItemForm: FormGroup;
   deletePointItemFormSubmitted = false;
+  pointPoolMaxForm: FormGroup;
+  pointPoolMaxFormSubmitted = false;
+  public pointPoolMax: number;
 
   constructor(public globals: Globals,
               private router: Router,
@@ -80,6 +83,14 @@ export class PointItemsCardComponent implements OnInit {
     this.loadAddPointItemForm();
     this.loadEditPointItemForm();
     this.loadDeletePointItemForm();
+    this.loadPointPoolMaxForm();
+
+    this.userService.getPointPoolMax()
+      .pipe(take(1))
+      .subscribe(pointPoolMax => {
+        console.log(pointPoolMax);
+        this.pointPoolMax = pointPoolMax;
+      });
 
     // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
     this.editPointItemForm.get('pointItem').valueChanges.subscribe(pointItem => {
@@ -152,6 +163,12 @@ export class PointItemsCardComponent implements OnInit {
   private loadDeletePointItemForm() {
     this.deletePointItemForm = this.formBuilder.group({
       pointItem: [null, Validators.required],
+    });
+  }
+
+  private loadPointPoolMaxForm() {
+    this.pointPoolMaxForm = this.formBuilder.group({
+      maxAmount: [this.pointPoolMax, Validators.required],
     });
   }
 
@@ -309,6 +326,30 @@ export class PointItemsCardComponent implements OnInit {
           this.deletePointItemFormSubmitted = false;
         } else {
           this.notifierService.notify('error', `Submission error: ${deleteResult.message}`);
+        }
+      });
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
+
+  onSetPointPoolMaxSubmit(form: FormGroup) {
+    console.log(form);
+    this.pointPoolMaxFormSubmitted = true;
+    const maxAmount = form.controls.maxAmount.value;
+    if (!form.invalid) {
+
+      this.userService.setPointPoolMax(maxAmount)
+        .pipe(take(1))
+        .subscribe(setMaxAmountResult => {
+        console.log(setMaxAmountResult);
+        if (setMaxAmountResult.status !== false) {
+          this.notifierService.notify('success', 'Point pool max amount set successfully.');
+          this.pointPoolMaxFormSubmitted = false;
+          this.pointPoolMax = maxAmount;
+        } else {
+          this.notifierService.notify('error', `Submission error: ${setMaxAmountResult.message}`);
         }
       });
     } else {

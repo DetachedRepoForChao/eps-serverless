@@ -30,19 +30,32 @@ const registerUser = function (user) {
   // const password = req.body.password;
   const middleName = user.body.middleName;
   const preferredName = user.body.preferredName;
-  const prefix = user.body.prefix;
-  const suffix = user.body.suffix;
+  // const prefix = user.body.prefix;
+  // const suffix = user.body.suffix;
   const position = user.body.position;
-  const address1 = user.body.address1;
-  const address2 = user.body.address2;
-  const city = user.body.city;
-  const state = user.body.state;
-  const country = user.body.country;
-  const zip = user.body.zip;
-  const preferredPronoun = user.body.preferredPronoun;
-  const sex = user.body.sex;
-  const gender = user.body.gender;
+  // const address1 = user.body.address1;
+  // const address2 = user.body.address2;
+  // const city = user.body.city;
+  // const state = user.body.state;
+  // const country = user.body.country;
+  // const zip = user.body.zip;
+  // const preferredPronoun = user.body.preferredPronoun;
+  // const sex = user.body.sex;
+  // const gender = user.body.gender;
   const dateOfHire = user.body.dateOfHire;
+  let phonePublic = false;
+  let emailPublic = false;
+  let birthdatePublic = true;
+  let genderPublic = false;
+  let pointAwardsPublic = true;
+  let achievementsPublic = true;
+  let pointsPublic = true;
+  let coreValuesPublic = true;
+  if (securityRoleId === 2) {
+    phonePublic = true;
+    emailPublic = true;
+  }
+
   // const avatarUrl =
 
   // var password;
@@ -72,19 +85,27 @@ const registerUser = function (user) {
           points: 0,
           middleName: middleName,
           preferredName: preferredName,
-          prefix: prefix,
-          suffix: suffix,
+          // prefix: prefix,
+          // suffix: suffix,
           position: position,
-          address1: address1,
-          address2: address2,
-          city: city,
-          state: state,
-          country: country,
-          zip: zip,
-          preferredPronoun: preferredPronoun,
-          sex: sex,
-          gender: gender,
+          // address1: address1,
+          // address2: address2,
+          // city: city,
+          // state: state,
+          // country: country,
+          // zip: zip,
+          // preferredPronoun: preferredPronoun,
+          // sex: sex,
+          // gender: gender,
           dateOfHire: dateOfHire,
+          phonePublic: phonePublic,
+          emailPublic: emailPublic,
+          birthdatePublic: birthdatePublic,
+          genderPublic: genderPublic,
+          pointAwardsPublic: pointAwardsPublic,
+          achievementsPublic: achievementsPublic,
+          pointsPublic: pointsPublic,
+          coreValuesPublic: coreValuesPublic,
           active: 1,
         })
           .then((user) => {
@@ -133,19 +154,40 @@ const adminRegisterUser = function (user) {
   const birthdate = user.birthdate;
   const middleName = user.middleName;
   const preferredName = user.preferredName;
-  const prefix = user.prefix;
-  const suffix = user.suffix;
+  let points = 0;
+  if (securityRoleId === 1) {
+    points = (user.points) ? user.points : 0;
+  }
+  let pointsPool = null;
+  if (securityRoleId === 2) {
+    pointsPool = (user.pointsPool) ? user.pointsPool : null;
+  }
+
+  // const prefix = user.prefix;
+  // const suffix = user.suffix;
   const position = user.position;
-  const address1 = user.address1;
-  const address2 = user.address2;
-  const city = user.city;
-  const state = user.state;
-  const country = user.country;
-  const zip = user.zip;
-  const preferredPronoun = user.preferredPronoun;
-  const sex = user.sex;
-  const gender = user.gender;
+  // const address1 = user.address1;
+  // const address2 = user.address2;
+  // const city = user.city;
+  // const state = user.state;
+  // const country = user.country;
+  // const zip = user.zip;
+  // const preferredPronoun = user.preferredPronoun;
+  // const sex = user.sex;
+  // const gender = user.gender;
   const dateOfHire = user.dateOfHire;
+  let phonePublic = false;
+  let emailPublic = false;
+  let birthdatePublic = true;
+  let genderPublic = false;
+  let pointAwardsPublic = true;
+  let achievementsPublic = true;
+  let pointsPublic = true;
+  let coreValuesPublic = true;
+  if (securityRoleId === 2) {
+    phonePublic = true;
+    emailPublic = true;
+  }
 
   return sqlUserModel.findOne({
     where: {
@@ -168,22 +210,30 @@ const adminRegisterUser = function (user) {
           departmentId: departmentId,
           phone: phone,
           dateOfBirth: birthdate,
-          points: 0,
+          points: points,
           middleName: middleName,
           preferredName: preferredName,
-          prefix: prefix,
-          suffix: suffix,
+          // prefix: prefix,
+          // suffix: suffix,
           position: position,
-          address1: address1,
-          address2: address2,
-          city: city,
-          state: state,
-          country: country,
-          zip: zip,
-          preferredPronoun: preferredPronoun,
-          sex: sex,
-          gender: gender,
+          // address1: address1,
+          // address2: address2,
+          // city: city,
+          // state: state,
+          // country: country,
+          // zip: zip,
+          // preferredPronoun: preferredPronoun,
+          // sex: sex,
+          // gender: gender,
           dateOfHire: dateOfHire,
+          phonePublic: phonePublic,
+          emailPublic: emailPublic,
+          birthdatePublic: birthdatePublic,
+          genderPublic: genderPublic,
+          pointAwardsPublic: pointAwardsPublic,
+          achievementsPublic: achievementsPublic,
+          pointsPublic: pointsPublic,
+          coreValuesPublic: coreValuesPublic,
           active: 1,
         })
           .then(newUser => {
@@ -192,7 +242,7 @@ const adminRegisterUser = function (user) {
             // If the user is a manager, initialize their points pool
             if (newUser.securityRoleId === 2) {
               console.log(`${functionFullName}: initializing manager point pool for new user`);
-              ctrlPointPool.initializePointPool(newUser.id);
+              ctrlPointPool.initializePointPool(pointsPool, newUser.id);
             }
 
             return {status: true, message: 'user created', newUser: newUser};

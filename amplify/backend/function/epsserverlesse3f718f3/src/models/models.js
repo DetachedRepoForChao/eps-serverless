@@ -623,6 +623,12 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '5000',
       field: 'points_remaining'
     },
+    maxAmount: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      defaultValue: '5000',
+      field: 'max_amount'
+    },
     managerId: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -1372,6 +1378,46 @@ module.exports = function(sequelize, DataTypes) {
   Feature.hasOne(AchievementUnlocksFeature, {foreignKey: 'featureId', sourceKey: 'id'});
   AchievementUnlocksFeature.belongsTo(Feature, {foreignKey: 'featureId', targetKey: 'id'});
 
+  // point_pool_max table
+  const PointPoolMax = sequelize.define('pointPoolMax', {
+    id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id'
+    },
+    maxAmount: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      field: 'max_amount'
+    },
+    setBy: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'set_by'
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: 'is_active'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'createdAt'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'updatedAt'
+    },
+  }, {
+    tableName: 'point_pool_max',
+  });
+
 
   return {
     Achievement: Achievement,
@@ -1391,6 +1437,7 @@ module.exports = function(sequelize, DataTypes) {
     UserHasStoreItem: UserHasStoreItem,
     AchievementHasRoleAudience: AchievementHasRoleAudience,
     Feature: Feature,
-    AchievementUnlocksFeature: AchievementUnlocksFeature
+    AchievementUnlocksFeature: AchievementUnlocksFeature,
+    PointPoolMax: PointPoolMax,
   };
 };

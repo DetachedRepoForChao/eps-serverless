@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Globals} from '../../../globals';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
@@ -8,14 +8,16 @@ import {EntityUserService} from '../../../entity-store/user/state/entity-user.se
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
-import {tap} from 'rxjs/operators';
+import {take, takeUntil, tap} from 'rxjs/operators';
 import {Department} from '../../../shared/department.model';
 import {SecurityRole} from '../../../shared/securityrole.model';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, Subject} from 'rxjs';
 import {DepartmentService} from '../../../shared/department.service';
 import {SecurityRoleService} from '../../../shared/securityRole.service';
 import {NotifierService} from 'angular-notifier';
 import {environment} from '../../../../environments/environment';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 
 
 @Component({
@@ -23,9 +25,12 @@ import {environment} from '../../../../environments/environment';
   templateUrl: './users-card.component.html',
   styleUrls: ['./users-card.component.css']
 })
-export class UsersCardComponent implements OnInit {
+export class UsersCardComponent implements OnInit, OnDestroy {
   componentName = 'users-card.component';
   public config: PerfectScrollbarConfigInterface = {};
+  private unsubscribe$ = new Subject();
+  private usersLoading$ = new Subject();
+
   zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
   phoneValidationError: string;
   addUserForm: FormGroup;
@@ -36,8 +41,13 @@ export class UsersCardComponent implements OnInit {
   deleteUserFormSubmitted = false;
   activateUserForm: FormGroup;
   activateUserFormSubmitted = false;
-  departments;
-  securityRoles;
+  today = new Date(Date.now());
+  departments: Department[];
+  securityRoles: SecurityRole[];
+  users: EntityUserModel[];
+  deactivatedUsers: EntityUserModel[];
+  public pointPoolMax: number;
+
 
   constructor(public globals: Globals,
               private router: Router,
@@ -53,64 +63,109 @@ export class UsersCardComponent implements OnInit {
   ngOnInit() {
     // this.userService.cacheUsers().subscribe();
     // Read in the list of departments from the DepartmentService
-    const departments$ = this.departmentService.getDepartments()
-      .pipe(
-        tap((departments: Department[]) => {
-          this.departments = departments;
-        })
-      );
+    this.departmentService.getDepartments()
+      .pipe(take(1))
+      .subscribe((departments: Department[]) => {
+        this.departments = departments;
+      });
 
-    const observables: Observable<any>[] = [];
-    observables.push(departments$);
-    // Read in the list of security roles from the SecurityRole service
-    const securityRoles$ = this.securityRoleService.getSecurityRoles()
-      .pipe(
-        tap((securityRoles: SecurityRole[]) => {
-          this.securityRoles = securityRoles;
-        })
-      );
+    this.securityRoleService.getSecurityRoles()
+      .pipe(take(1))
+      .subscribe((securityRoles: SecurityRole[]) => {
+        this.securityRoles = securityRoles;
+      });
 
-    // const observables: Observable<any>[] = [];
-    // observables.push(departments$);
-    observables.push(securityRoles$);
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.usersLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.users = users;
+            });
 
-    forkJoin(observables)
-      .subscribe(() => {
+          this.userQuery.selectDeactivatedUsers()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((deactivatedUsers: EntityUserModel[]) => {
+              this.deactivatedUsers = deactivatedUsers;
+            });
+
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
+
+    this.userService.getPointPoolMax()
+      .pipe(take(1))
+      .subscribe(pointPoolMax => {
+        console.log(pointPoolMax);
+        this.pointPoolMax = pointPoolMax;
+        this.loadAddUserForm();
       });
 
     // load reactive forms
     this.loadEditUserForm();
-    this.loadAddUserForm();
+
     this.loadDeleteUserForm();
     this.loadActivateUserForm();
+
     // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
-    this.editUserForm.get('user').valueChanges.subscribe(user => {
-      console.log(user);
+    this.editUserForm.get('user').valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        console.log(user);
 
-      const keys = Object.keys(user);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
+        const keys = Object.keys(user);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
 
-        if (this.editUserForm.get(key)) {
-          // We must take special consideration for selection objects like securityRole and department
-          switch (key) {
-            case 'securityRole': {
-              const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
-              this.editUserForm.patchValue({[key]: securityRole});
-              break;
-            }
-            case 'department': {
-              const department = this.departments.find(x => x.Id === user[keys[i]].Id);
-              this.editUserForm.patchValue({[key]: department});
-              break;
-            }
-            default: {
-              this.editUserForm.patchValue({[key]: user[keys[i]]});
+          if (this.editUserForm.get(key)) {
+            // We must take special consideration for selection objects like securityRole and department
+            switch (key) {
+              case 'securityRole': {
+                const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
+                this.editUserForm.patchValue({[key]: securityRole});
+                break;
+              }
+              case 'department': {
+                const department = this.departments.find(x => x.Id === user[keys[i]].Id);
+                this.editUserForm.patchValue({[key]: department});
+                break;
+              }
+              case 'birthdate': {
+                const birthdate = (user[keys[i]]) ? this.fudgeDate(user[keys[i]]) : null;
+
+                this.editUserForm.patchValue({[key]: birthdate});
+                break;
+              }
+              case 'dateOfHire': {
+                const dateOfHire = (user[keys[i]]) ? this.fudgeDate(user[keys[i]]) : null;
+
+                this.editUserForm.patchValue({[key]: dateOfHire});
+                break;
+              }
+              default: {
+                this.editUserForm.patchValue({[key]: user[keys[i]]});
+              }
             }
           }
         }
-      }
-    });
+      });
+  }
+
+  // This is used to make Angular display the date correctly instead of being 1 day off due to
+  // the way time zones work...
+  fudgeDate(date): Date {
+    const offset = new Date().getTimezoneOffset() * 60000;
+    return new Date(new Date(date).getTime() + offset);
+  }
+
+  public trackByFunction(index, item) {
+    if (!item) {
+      return null;
+    }
+    return item.userId;
   }
 
   // Creates the Edit User reactive form
@@ -121,24 +176,26 @@ export class UsersCardComponent implements OnInit {
       middleName: [null],
       lastName: [null, Validators.required],
       preferredName: [null],
-      prefix: [null],
-      suffix: [null],
+      // prefix: [null],
+      // suffix: [null],
       position: [null],
-      preferredPronoun: [null],
-      sex: [null],
+      // preferredPronoun: [null],
+      // sex: [null],
       gender: [null],
       securityRole: [null, Validators.required],
       department: [null, Validators.required],
       dateOfHire: [null],
-      address1: [null],
-      address2: [null],
-      city: [null],
-      state: [null],
-      country: [null],
-      zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
+      // address1: [null],
+      // address2: [null],
+      // city: [null],
+      // state: [null],
+      // country: [null],
+      // zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
       birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
-      phone: [null, Validators.required]
+      phone: [null, Validators.required],
+      points: [null],
+      pointsPool: [null],
     });
   }
 
@@ -149,24 +206,26 @@ export class UsersCardComponent implements OnInit {
       middleName: [null],
       lastName: [null, Validators.required],
       preferredName: [null],
-      prefix: [null],
-      suffix: [null],
+      // prefix: [null],
+      // suffix: [null],
       position: [null],
-      preferredPronoun: [null],
-      sex: [null],
+      // preferredPronoun: [null],
+      // sex: [null],
       gender: [null],
       securityRole: [null, Validators.required],
       department: [null, Validators.required],
       dateOfHire: [null],
-      address1: [null],
-      address2: [null],
-      city: [null],
-      state: [null],
-      country: [null],
-      zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
+      // address1: [null],
+      // address2: [null],
+      // city: [null],
+      // state: [null],
+      // country: [null],
+      // zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
       birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
-      phone: [null, Validators.required]
+      phone: [null, Validators.required],
+      points: [0, Validators.compose([Validators.required, Validators.min(0)])],
+      pointsPool: [this.pointPoolMax, Validators.compose([Validators.required, Validators.min(0)])],
     });
   }
 
@@ -198,8 +257,16 @@ export class UsersCardComponent implements OnInit {
     }
   }
 
+  logDate(event) {
+    console.log(event);
+  }
+
   onEditUserFormSubmit(form: FormGroup) {
     console.log(form);
+    console.log(form.controls.birthdate.value);
+    console.log(new Date(form.controls.birthdate.value));
+    console.log(form.controls.user.value.birthdate);
+    console.log(new Date(form.controls.user.value.birthdate));
     this.editUserFormSubmitted = true;
 
     const sourceUser = form.controls.user.value;
@@ -276,15 +343,17 @@ export class UsersCardComponent implements OnInit {
         // User object changes exist. Add the userId to the user object and invoke modifyUser function
         user['userId'] = sourceUser.userId;
         user['username'] = sourceUser.username;
-        this.userService.modifyUser(user).subscribe(modifyResult => {
-          console.log(modifyResult);
-          if (modifyResult.status !== false) {
-            this.notifierService.notify('success', 'User record updated successfully.');
-            this.editUserFormSubmitted = false;
-          } else {
-            this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
-          }
-        });
+        this.userService.modifyUser(user)
+          .pipe(take(1))
+          .subscribe(modifyResult => {
+            console.log(modifyResult);
+            if (modifyResult.status !== false) {
+              this.notifierService.notify('success', 'User record updated successfully.');
+              this.editUserFormSubmitted = false;
+            } else {
+              this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
+            }
+          });
 
       } else {
         // User object was not changed
@@ -305,8 +374,19 @@ export class UsersCardComponent implements OnInit {
     // form.controls.user.reset();
   }
 
+  getAge(date) {
+    const today = new Date();
+    let age = today.getFullYear() - date.getFullYear();
+    const m = today.getMonth() - date.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < date.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
   onAddUserFormSubmit(form: FormGroup) {
     console.log(form);
+
     this.addUserFormSubmitted = true;
 
     const user = {};
@@ -356,15 +436,17 @@ export class UsersCardComponent implements OnInit {
         }
       }
 
-      this.userService.addUser(user).subscribe(addResult => {
-        console.log(addResult);
-        if (addResult.status !== false) {
-          this.notifierService.notify('success', 'User record added successfully.');
-          this.addUserFormSubmitted = false;
-        } else {
-          this.notifierService.notify('error', `Submission error: ${addResult.message}`);
-        }
-      });
+      this.userService.addUser(user)
+        .pipe(take(1))
+        .subscribe(addResult => {
+          console.log(addResult);
+          if (addResult.status !== false) {
+            this.notifierService.notify('success', 'User record added successfully.');
+            this.addUserFormSubmitted = false;
+          } else {
+            this.notifierService.notify('error', `Submission error: ${addResult.message}`);
+          }
+        });
 
       console.log(user);
     } else {
@@ -384,15 +466,17 @@ export class UsersCardComponent implements OnInit {
 
     if (!form.invalid) {
       user = form.controls.user.value;
-      this.userService.deleteUser(user).subscribe(deleteResult => {
-        console.log(deleteResult);
-        if (deleteResult.status !== false) {
-          this.notifierService.notify('success', 'User record deleted successfully.');
-          this.deleteUserFormSubmitted = false;
-        } else {
-          this.notifierService.notify('error', `Submission error: ${deleteResult.message}`);
-        }
-      });
+      this.userService.deleteUser(user)
+        .pipe(take(1))
+        .subscribe(deleteResult => {
+          console.log(deleteResult);
+          if (deleteResult.status !== false) {
+            this.notifierService.notify('success', 'User record deleted successfully.');
+            this.deleteUserFormSubmitted = false;
+          } else {
+            this.notifierService.notify('error', `Submission error: ${deleteResult.message}`);
+          }
+        });
 
       console.log(user);
     } else {
@@ -411,16 +495,18 @@ export class UsersCardComponent implements OnInit {
 
     if (!form.invalid) {
       user = form.controls.user.value;
-      this.userService.deactivateUser(user).subscribe(deactivateResult => {
-        console.log(deactivateResult);
-        if (deactivateResult.status !== false) {
-          this.notifierService.notify('success', 'User record deactivated successfully.');
-          this.deleteUserFormSubmitted = false;
-          form.reset();
-        } else {
-          this.notifierService.notify('error', `Submission error: ${deactivateResult.message}`);
-        }
-      });
+      this.userService.deactivateUser(user)
+        .pipe(take(1))
+        .subscribe(deactivateResult => {
+          console.log(deactivateResult);
+          if (deactivateResult.status !== false) {
+            this.notifierService.notify('success', 'User record deactivated successfully.');
+            this.deleteUserFormSubmitted = false;
+            form.reset();
+          } else {
+            this.notifierService.notify('error', `Submission error: ${deactivateResult.message}`);
+          }
+        });
 
       console.log(user);
     } else {
@@ -439,21 +525,30 @@ export class UsersCardComponent implements OnInit {
 
     if (!form.invalid) {
       user = form.controls.user.value;
-      this.userService.activateUser(user).subscribe(activateResult => {
-        console.log(activateResult);
-        if (activateResult.status !== false) {
-          this.notifierService.notify('success', 'User record activated successfully.');
-          this.activateUserFormSubmitted = false;
-          form.reset();
-        } else {
-          this.notifierService.notify('error', `Submission error: ${activateResult.message}`);
-        }
-      });
+      this.userService.activateUser(user)
+        .pipe(take(1))
+        .subscribe(activateResult => {
+          console.log(activateResult);
+          if (activateResult.status !== false) {
+            this.notifierService.notify('success', 'User record activated successfully.');
+            this.activateUserFormSubmitted = false;
+            form.reset();
+          } else {
+            this.notifierService.notify('error', `Submission error: ${activateResult.message}`);
+          }
+        });
 
       console.log(user);
     } else {
       console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.usersLoading$.next();
+    this.usersLoading$.complete();
   }
 }

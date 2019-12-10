@@ -25,7 +25,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addUserModalLabel">Add a new User</h5>
+        <h5 class="modal-title" id="addUserModalLabel">Add a New User</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -34,174 +34,167 @@
       <div class="modal-body user-modal-body">
         <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
           <div class="user-form-container">
-            <form [formGroup]="addUserForm">
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_UserName" class="form-label">Username</label>
-                  <input class="form-control user-form-control" id="addUser_UserName" placeholder="Username" formControlName="username">
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.username.invalid) || (addUserForm.dirty && addUserForm.controls.username.touched && addUserForm.controls.username.invalid)">
-                    <label class="validation-message">This field is required.</label>
+            <ng-container *ngIf="addUserForm">
+              <form [formGroup]="addUserForm">
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_UserName" class="form-label">Username</label>
+                    <input class="form-control user-form-control" id="addUser_UserName" placeholder="Username" formControlName="username" required>
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.username.invalid) || (addUserForm.dirty && addUserForm.controls.username.touched && addUserForm.controls.username.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
-                </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_securityRole" class="form-label">Security Role</label>
-                  <select formControlName="securityRole" class="form-control user-form-control black" id="addUser_securityRole" name="addUser_securityRole">
-                    <option [ngValue]="null" [disabled]="true">Security Role</option>
-                    <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole" class="black">
-                      {{securityRole.Name}}
-                    </option>
-                  </select>
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.securityRole.invalid) || (addUserForm.dirty && addUserForm.controls.securityRole.touched && addUserForm.controls.securityRole.invalid)">
-                    <label class="validation-message">This field is required.</label>
-                  </div>
-                </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_department" class="form-label">Department</label>
-                  <select formControlName="department" class="form-control user-form-control black" id="addUser_department" name="addUser_department">
-                    <option [ngValue]="null" [disabled]="true">Department</option>
-                    <option *ngFor="let department of departments" [ngValue]="department" class="black">
-                      {{department.Name}}
-                    </option>
-                  </select>
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.department.invalid) || (addUserForm.dirty && addUserForm.controls.department.touched && addUserForm.controls.department.invalid)">
-                    <label class="validation-message">This field is required.</label>
-                  </div>
-                </div>
-              </div>
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_securityRole" class="form-label">Role</label>
+                    <select formControlName="securityRole" class="form-control user-form-control black" id="addUser_securityRole" name="addUser_securityRole" required>
+                      <option [ngValue]="null" [disabled]="true">Role</option>
+                      <ng-container *ngFor="let securityRole of securityRoles">
+                        <option [ngValue]="securityRole" class="black">
+                          {{securityRole.Name}}
+                        </option>
+                      </ng-container>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_firstName" class="form-label">First Name</label>
-                  <input class="form-control user-form-control" id="addUser_firstName" placeholder="First Name" formControlName="firstName">
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.firstName.invalid) || (addUserForm.dirty && addUserForm.controls.firstName.touched && addUserForm.controls.firstName.invalid)">
-                    <label class="validation-message">This field is required.</label>
+                    </select>
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.securityRole.invalid) || (addUserForm.dirty && addUserForm.controls.securityRole.touched && addUserForm.controls.securityRole.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
+                  </div>
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_department" class="form-label">Department</label>
+                    <select formControlName="department" class="form-control user-form-control black" id="addUser_department" name="addUser_department" required>
+                      <option [ngValue]="null" [disabled]="true">Department</option>
+                      <ng-container *ngFor="let department of departments">
+                        <option [ngValue]="department" class="black">
+                          {{department.Name}}
+                        </option>
+                      </ng-container>
+
+                    </select>
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.department.invalid) || (addUserForm.dirty && addUserForm.controls.department.touched && addUserForm.controls.department.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
                 </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_middleName" class="form-label">Middle Name</label>
-                  <input class="form-control user-form-control" id="addUser_middleName" placeholder="Middle Name" formControlName="middleName">
-                </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_lastName" class="form-label">Last Name</label>
-                  <input class="form-control user-form-control" id="addUser_lastName" placeholder="Last Name" formControlName="lastName">
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.lastName.invalid) || (addUserForm.dirty && addUserForm.controls.lastName.touched && addUserForm.controls.lastName.invalid)">
-                    <label class="validation-message">This field is required.</label>
+                <ng-container *ngIf="addUserForm.controls.securityRole.value?.Id !== 3">
+                  <div class="form-row">
+                    <ng-container *ngIf="addUserForm.controls.securityRole.value?.Id === 1 || !addUserForm.controls.securityRole.value">
+                      <div class="form-group col-sm-12 col-md-6 col-log-6">
+                        <label for="addUser_points" class="form-label">Starting Points Amount</label>
+                        <input class="form-control user-form-control" id="addUser_points" placeholder="0" formControlName="points" value="0">
+                        <ng-container *ngIf="(addUserFormSubmitted) || (addUserForm.dirty && addUserForm.controls.points.touched && addUserForm.controls.points.value < 0)">
+                          <label class="validation-message">The value cannot be less than 0.</label>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="addUserForm.controls.securityRole.value?.Id === 2">
+                      <div class="form-group col-sm-12 col-md-6 col-log-6">
+                        <label for="addUser_pointsPool" class="form-label">Starting Points Pool Amount (out of {{pointPoolMax}})</label>
+                        <input class="form-control user-form-control" id="addUser_pointsPool" placeholder="{{pointPoolMax}}" formControlName="pointsPool" value="{{pointPoolMax}}">
+                        <ng-container *ngIf="(addUserFormSubmitted) || (addUserForm.dirty && addUserForm.controls.pointsPool.touched && (addUserForm.controls.pointsPool.value < 0) || (addUserForm.controls.pointsPool.value > pointPoolMax))">
+                          <label class="validation-message">The value cannot be less than 0 or greater than {{pointPoolMax}}.</label>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+
+                    <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                      <label for="addUser_position" class="form-label">Position</label>
+                      <input type="text" class="form-control user-form-control black" id="addUser_position" placeholder="Position" formControlName="position" >
+                    </div>
+                  </div>
+
+                </ng-container>
+
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_firstName" class="form-label">First Name</label>
+                    <input class="form-control user-form-control" id="addUser_firstName" placeholder="First Name" formControlName="firstName">
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.firstName.invalid) || (addUserForm.dirty && addUserForm.controls.firstName.touched && addUserForm.controls.firstName.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
+                  </div>
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_middleName" class="form-label">Middle Name</label>
+                    <input class="form-control user-form-control" id="addUser_middleName" placeholder="Middle Name" formControlName="middleName">
+                  </div>
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_lastName" class="form-label">Last Name</label>
+                    <input class="form-control user-form-control" id="addUser_lastName" placeholder="Last Name" formControlName="lastName">
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.lastName.invalid) || (addUserForm.dirty && addUserForm.controls.lastName.touched && addUserForm.controls.lastName.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
                 </div>
-              </div>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_preferredName" class="form-label">Preferred Name</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
-                </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_birthdate" class="form-label">Date of Birth</label>
-                  <input type="text" [matDatepicker]="addUser_birthdate"
-                         (click)="addUser_birthdate.open()"
-                         placeholder="Date of Birth"
-                         formControlName="birthdate"
-                         class="form-control user-form-control datepicker"
-                         id="addUser_birthdate">
-                  <mat-datepicker #addUser_birthdate [startView]="'year'"></mat-datepicker>
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.birthdate.invalid) || (addUserForm.dirty && addUserForm.controls.birthdate.touched && addUserForm.controls.birthdate.invalid)">
-                    <label class="validation-message">This field is required.</label>
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_preferredName" class="form-label">Preferred Name</label>
+                    <input type="text" class="form-control user-form-control black" id="addUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
+                  </div>
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_birthdate" class="form-label">Date of Birth</label>
+                    <input type="text" [matDatepicker]="addUser_birthdate"
+                           (click)="addUser_birthdate.open()"
+                           placeholder="Date of Birth"
+                           formControlName="birthdate"
+                           class="form-control user-form-control datepicker"
+                           id="addUser_birthdate">
+                    <mat-datepicker #addUser_birthdate [startView]="'year'"></mat-datepicker>
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.birthdate.invalid) || (addUserForm.dirty && addUserForm.controls.birthdate.touched && addUserForm.controls.birthdate.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
+                  </div>
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_dateOfHire" class="form-label">Date of Hire</label>
+                    <input type="text" [matDatepicker]="addUser_dateOfHire"
+                           (click)="addUser_dateOfHire.open()"
+                           placeholder="Date of Hire"
+                           formControlName="dateOfHire"
+                           class="form-control user-form-control datepicker"
+                           id="addUser_dateOfHire">
+                    <mat-datepicker #addUser_dateOfHire [startView]="'month'"></mat-datepicker>
                   </div>
                 </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_dateOfHire" class="form-label">Date of Hire</label>
-                  <input type="text" [matDatepicker]="addUser_dateOfHire"
-                         (click)="addUser_dateOfHire.open()"
-                         placeholder="Date of Hire"
-                         formControlName="dateOfHire"
-                         class="form-control user-form-control datepicker"
-                         id="addUser_dateOfHire">
-                  <mat-datepicker #addUser_dateOfHire [startView]="'month'"></mat-datepicker>
-                </div>
-              </div>
+                <ng-container *ngIf="addUserForm.controls.birthdate.value && getAge(addUserForm.controls.birthdate.value) < 18">
+                  <div class="form-row justify-content-center">
+                    <div class="col-sm-12 col-md-12 col-lg-8 text-left">
+                      <label class="validation-message">This employee is under 18 years of age. Please make certain you have their parent or legal guardian's permission to create this account!</label>
+                    </div>
+                  </div>
+                </ng-container>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_prefix" class="form-label">Prefix</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_prefix" placeholder="Prefix" formControlName="prefix" >
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_suffix" class="form-label">Suffix</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_suffix" placeholder="Suffix" formControlName="suffix" >
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_sex" class="form-label">Sex</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_sex" placeholder="Sex" formControlName="sex" >
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_gender" class="form-label">Gender</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_gender" placeholder="Gender" formControlName="gender" >
-                </div>
-              </div>
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_email" class="form-label">Email</label>
+                    <input type="email" class="form-control user-form-control black" id="addUser_email" placeholder="Email" formControlName="email" >
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.email.invalid) || (addUserForm.dirty && addUserForm.controls.email.touched && addUserForm.controls.email.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
+                  </div>
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="addUser_phone" class="form-label">Phone</label>
+                    <input class="form-control user-form-control black"
+                           placeholder="Phone"
+                           formControlName="phone"
+                           name="addUser_phone"
+                           appPhoneMask
+                           type="tel"
+                           maxLength="14"
+                           id="addUser_phone"
+                    >
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.phone.invalid) || (addUserForm.dirty && addUserForm.controls.phone.touched && phoneValidationError)">
+                      <label class="validation-message">This field is required.</label>
+                      <ng-container *ngIf="phoneValidationError">
+                        <label class="validation-message">{{phoneValidationError}}</label>
+                      </ng-container>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_email" class="form-label">Email</label>
-                  <input type="email" class="form-control user-form-control black" id="addUser_email" placeholder="Email" formControlName="email" >
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.email.invalid) || (addUserForm.dirty && addUserForm.controls.email.touched && addUserForm.controls.email.invalid)">
-                    <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
                 </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addUser_phone" class="form-label">Phone</label>
-                  <input class="form-control user-form-control black"
-                         placeholder="Phone"
-                         formControlName="phone"
-                         name="addUser_phone"
-                         appPhoneMask
-                         type="tel"
-                         maxLength="14"
-                         id="addUser_phone"
-                        >
-                  <div *ngIf="(addUserFormSubmitted && addUserForm.controls.phone.invalid) || (addUserForm.dirty && addUserForm.controls.phone.touched && phoneValidationError)">
-                    <label class="validation-message">This field is required.</label>
-                    <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
-                  </div>
-                </div>
-              </div>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <label for="addUser_address1" class="form-label">Address 1</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_address1" placeholder="Address 1" formControlName="address1" >
-                </div>
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <label for="addUser_address2" class="form-label">Address 2</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_address2" placeholder="Address 2" formControlName="address2" >
-                </div>
-              </div>
+              </form>
+            </ng-container>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_city" class="form-label">City</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_city" placeholder="City" formControlName="city" >
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_state" class="form-label">State</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_state" placeholder="State" formControlName="state" >
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_country" class="form-label">Country</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_country" placeholder="Country" formControlName="country" >
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_zip" class="form-label">Zip</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_zip" placeholder="Zip" formControlName="zip" >
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="addUser_position" class="form-label">Position</label>
-                  <input type="text" class="form-control user-form-control black" id="addUser_position" placeholder="Position" formControlName="position" >
-                </div>
-              </div>
-            </form>
 
           </div>
         </perfect-scrollbar>
@@ -235,13 +228,16 @@
                       class="form-control user-form-control"
                       id="deleteUser_user" name="deleteUser_user">
                 <option [ngValue]="null" disabled="true">Select a User</option>
-                <option *ngFor="let user of (userQuery.selectAll() | async)" [ngValue]="user">
-                  {{user.username}}
-                </option>
+                <ng-container *ngFor="let user of users">
+                  <option [ngValue]="user">
+                    {{user.username}}
+                  </option>
+                </ng-container>
+
               </select>
-              <div *ngIf="(deleteUserFormSubmitted && deleteUserForm.controls.user.invalid) || (deleteUserForm.dirty && deleteUserForm.controls.user.touched && deleteUserForm.controls.user.invalid)">
+              <ng-container *ngIf="(deleteUserFormSubmitted && deleteUserForm.controls.user.invalid) || (deleteUserForm.dirty && deleteUserForm.controls.user.touched && deleteUserForm.controls.user.invalid)">
                 <label class="validation-message">This field is required.</label>
-              </div>
+              </ng-container>
             </div>
           </div>
         </form>
@@ -275,13 +271,16 @@
                       class="form-control user-form-control"
                       id="activateUser_user" name="activateUser_user">
                 <option [ngValue]="null" disabled="true">Select a User</option>
-                <option *ngFor="let user of (userQuery.getDeactivatedUsers() | async)" [ngValue]="user">
-                  {{user.username}}
-                </option>
+                <ng-container *ngFor="let user of deactivatedUsers">
+                  <option [ngValue]="user">
+                    {{user.username}}
+                  </option>
+                </ng-container>
+
               </select>
-              <div *ngIf="(activateUserFormSubmitted && activateUserForm.controls.user.invalid) || (activateUserForm.dirty && activateUserForm.controls.user.touched && activateUserForm.controls.user.invalid)">
+              <ng-container *ngIf="(activateUserFormSubmitted && activateUserForm.controls.user.invalid) || (activateUserForm.dirty && activateUserForm.controls.user.touched && activateUserForm.controls.user.invalid)">
                 <label class="validation-message">This field is required.</label>
-              </div>
+              </ng-container>
             </div>
           </div>
         </form>
@@ -300,7 +299,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editUserModalLabel">Fill in your information </h5>
+        <h5 class="modal-title" id="editUserModalLabel">Modify a User </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -317,48 +316,87 @@
                   <select formControlName="user"
                           class="form-control user-form-control"
                           id="editUser_user" name="editUser_user">
-                    <option [ngValue]="null" disabled="true">Select a User</option>
-                    <option *ngFor="let user of (userQuery.selectAll() | async)" [ngValue]="user">
-                      {{user.username}}
-                    </option>
+                    <option [ngValue]="null" disabled="true">Select a User to Modify</option>
+                    <ng-container *ngFor="let user of users; trackBy: trackByFunction" >
+                      <option [ngValue]="user">
+                        {{user.firstName}} {{user.lastName}} ({{user.username}})
+                      </option>
+                    </ng-container>
+
                   </select>
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.user.invalid) || (editUserForm.dirty && editUserForm.controls.user.touched && editUserForm.controls.user.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.user.invalid) || (editUserForm.dirty && editUserForm.controls.user.touched && editUserForm.controls.user.invalid)">
                     <label class="validation-message">This field is required.</label>
-                  </div>
+                  </ng-container>
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="editUser_securityRole" class="form-label">Security Role</label>
+                  <label for="editUser_securityRole" class="form-label">Role</label>
                   <select formControlName="securityRole" class="form-control user-form-control" id="editUser_securityRole" name="editUser_securityRole" >
-                    <option [ngValue]="null" [disabled]="true">Security Role</option>
-                    <option *ngFor="let securityRole of securityRoles" [ngValue]="securityRole">
-                      {{securityRole.Name}}
-                    </option>
+                    <option [ngValue]="null" [disabled]="true">Role</option>
+                    <ng-container *ngFor="let securityRole of securityRoles">
+                      <option [ngValue]="securityRole">
+                        {{securityRole.Name}}
+                      </option>
+                    </ng-container>
+
                   </select>
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.securityRole.invalid) || (editUserForm.dirty && editUserForm.controls.securityRole.touched && editUserForm.controls.securityRole.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.securityRole.invalid) || (editUserForm.dirty && editUserForm.controls.securityRole.touched && editUserForm.controls.securityRole.invalid)">
                     <label class="validation-message">This field is required.</label>
-                  </div>
+                  </ng-container>
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_department" class="form-label">Department</label>
                   <select formControlName="department" class="form-control user-form-control" id="editUser_department" name="editUser_department">
                     <option [ngValue]="null" [disabled]="true">Department</option>
-                    <option *ngFor="let department of departments" [ngValue]="department">
-                      {{department.Name}}
-                    </option>
+                    <ng-container *ngFor="let department of departments">
+                      <option [ngValue]="department">
+                        {{department.Name}}
+                      </option>
+                    </ng-container>
+
                   </select>
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.securityRole.invalid) || (editUserForm.dirty && editUserForm.controls.securityRole.touched && editUserForm.controls.securityRole.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.securityRole.invalid) || (editUserForm.dirty && editUserForm.controls.securityRole.touched && editUserForm.controls.securityRole.invalid)">
                     <label class="validation-message">This field is required.</label>
-                  </div>
+                  </ng-container>
                 </div>
               </div>
+
+              <ng-container *ngIf="editUserForm.controls.securityRole.value?.Id !== 3">
+                <div class="form-row">
+                  <ng-container *ngIf="editUserForm.controls.securityRole.value?.Id === 1 || !editUserForm.controls.securityRole.value">
+                    <div class="form-group col-sm-12 col-md-6 col-log-6">
+                      <label for="editUser_points" class="form-label">Points Amount</label>
+                      <input class="form-control user-form-control" type="number" id="editUser_points" placeholder="0" formControlName="points" value="0">
+                      <ng-container *ngIf="(editUserFormSubmitted) || (editUserForm.dirty && editUserForm.controls.points.touched && editUserForm.controls.points.value < 0)">
+                        <label class="validation-message">The value cannot be less than 0.</label>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="editUserForm.controls.securityRole.value?.Id === 2">
+                    <div class="form-group col-sm-12 col-md-6 col-log-6">
+                      <label for="editUser_pointsPool" class="form-label">Points Pool Amount (out of 5000)</label>
+                      <input class="form-control user-form-control" type="number" id="editUser_pointsPool" placeholder="5000" formControlName="pointsPool" value="5000">
+                      <ng-container *ngIf="(editUserFormSubmitted) || (editUserForm.dirty && editUserForm.controls.pointsPool.touched && (editUserForm.controls.pointsPool.value < 0) || (editUserForm.controls.pointsPool.value > 5000))">
+                        <label class="validation-message">The value cannot be less than 0 or greater than 5000.</label>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                    <label for="editUser_position" class="form-label">Position</label>
+                    <input type="text" class="form-control user-form-control black" id="editUser_position" placeholder="Position" formControlName="position" >
+                  </div>
+                </div>
+
+              </ng-container>
 
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_firstName" class="form-label">First Name</label>
                   <input class="form-control user-form-control" id="editUser_firstName" placeholder="First Name" formControlName="firstName">
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.firstName.invalid) || (editUserForm.dirty && editUserForm.controls.firstName.touched && editUserForm.controls.firstName.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.firstName.invalid) || (editUserForm.dirty && editUserForm.controls.firstName.touched && editUserForm.controls.firstName.invalid)">
                     <label class="validation-message">This field is required.</label>
-                  </div>
+                  </ng-container>
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_middleName" class="form-label">Middle Name</label>
@@ -367,9 +405,9 @@
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_lastName" class="form-label">Last Name</label>
                   <input class="form-control user-form-control" id="editUser_lastName" placeholder="Last Name" formControlName="lastName">
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.lastName.invalid) || (editUserForm.dirty && editUserForm.controls.lastName.touched && editUserForm.controls.lastName.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.lastName.invalid) || (editUserForm.dirty && editUserForm.controls.lastName.touched && editUserForm.controls.lastName.invalid)">
                     <label class="validation-message">This field is required.</label>
-                  </div>
+                  </ng-container>
                 </div>
               </div>
 
@@ -381,17 +419,17 @@
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_birthdate" class="form-label">Date of Birth</label>
 
-                  <input type="text" [matDatepicker]="editUser_birthdate"
+                  <input type="text" [matDatepicker]="editUser_birthdate" (dateChange)="logDate($event)"
                          (click)="editUser_birthdate.open()"
                          placeholder="Date of Birth"
                          formControlName="birthdate"
                          class="form-control user-form-control datepicker"
                          id="editUser_birthdate">
-
                   <mat-datepicker #editUser_birthdate [startView]="'year'"></mat-datepicker>
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.birthdate.invalid) || (editUserForm.dirty && editUserForm.controls.birthdate.touched && editUserForm.controls.birthdate.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.birthdate.invalid) || (editUserForm.dirty && editUserForm.controls.birthdate.touched && editUserForm.controls.birthdate.invalid)">
                     <label class="validation-message">This field is required.</label>
-                  </div>
+                  </ng-container>
+
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_dateOfHire" class="form-label">Date of Hire</label>
@@ -404,33 +442,22 @@
                   <mat-datepicker #editUser_dateOfHire [startView]="'month'"></mat-datepicker>
                 </div>
               </div>
+              <ng-container *ngIf="editUserForm.controls.birthdate.value && getAge(editUserForm.controls.birthdate.value) < 18">
+                <div class="form-row justify-content-center">
+                  <div class="col-sm-12 col-md-12 col-lg-8 text-left">
+                    <label class="validation-message">This employee is under 18 years of age. Please make certain you have their parent or legal guardian's permission to create this account!</label>
+                  </div>
+                </div>
+              </ng-container>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_prefix" class="form-label">Prefix</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_prefix" placeholder="Prefix" formControlName="prefix">
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_suffix" class="form-label">Suffix</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_suffix" placeholder="Suffix" formControlName="suffix">
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_sex" class="form-label">Sex</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_sex" placeholder="Sex" formControlName="sex">
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_gender" class="form-label">Gender</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_gender" placeholder="Gender" formControlName="gender">
-                </div>
-              </div>
 
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_email" class="form-label">Email</label>
                   <input type="email" class="form-control user-form-control" id="editUser_email" placeholder="Email" formControlName="email">
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.email.invalid) || (editUserForm.dirty && editUserForm.controls.email.touched && editUserForm.controls.email.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.email.invalid) || (editUserForm.dirty && editUserForm.controls.email.touched && editUserForm.controls.email.invalid)">
                     <label class="validation-message">This field is required.</label>
-                  </div>
+                  </ng-container>
                 </div>
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label for="editUser_phone" class="form-label">Phone</label>
@@ -443,49 +470,17 @@
                          maxLength="14"
                          [ngClass]="{'invalid-textbox' : editUserForm.dirty && editUserForm.controls.phone.touched && editUserForm.controls.phone.invalid}"
                          id="editUser_phone">
-                  <div *ngIf="(editUserFormSubmitted && editUserForm.controls.phone.invalid) || (editUserForm.dirty && editUserForm.controls.phone.touched && phoneValidationError)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.phone.invalid) || (editUserForm.dirty && editUserForm.controls.phone.touched && phoneValidationError)">
                     <label class="validation-message">This field is required.</label>
-                    <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
-                  </div>
+                    <ng-container *ngIf="phoneValidationError" >
+                      <label class="validation-message">{{phoneValidationError}}</label>
+
+                    </ng-container>
+                  </ng-container>
                 </div>
               </div>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <label for="editUser_address1" class="form-label">Address 1</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_address1" placeholder="Address 1" formControlName="address1">
-                </div>
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <label for="editUser_address2" class="form-label">Address 2</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_address2" placeholder="Address 2" formControlName="address2">
-                </div>
-              </div>
 
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_city" class="form-label">City</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_city" placeholder="City" formControlName="city">
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_state" class="form-label">State</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_state" placeholder="State" formControlName="state">
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_country" class="form-label">Country</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_country" placeholder="Country" formControlName="country">
-                </div>
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_zip" class="form-label">Zip</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_zip" placeholder="Zip" formControlName="zip">
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-3 col-lg-3">
-                  <label for="editUser_position" class="form-label">Position</label>
-                  <input type="text" class="form-control user-form-control" id="editUser_position" placeholder="Position" formControlName="position">
-                </div>
-              </div>
             </form>
 
           </div>
