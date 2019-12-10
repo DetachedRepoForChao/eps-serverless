@@ -6,7 +6,7 @@ import {AuthService} from '../../../login/auth.service';
 import {resetStores} from '@datorama/akita';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {take, takeUntil, tap} from 'rxjs/operators';
 import {Department} from '../../../shared/department.model';
@@ -18,7 +18,25 @@ import {NotifierService} from 'angular-notifier';
 import {environment} from '../../../../environments/environment';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
+import {requireCheckboxesToBeCheckedValidator} from '../point-items-card/point-items-card.component';
 
+export function managerValidation(pointPoolMax): ValidatorFn {
+  return function validate(formGroup: FormGroup) {
+    const securityRoleId = (formGroup.controls.securityRole && formGroup.controls.securityRole.value) ? formGroup.controls.securityRole.value.Id : null;
+    if (securityRoleId === 2) {
+      const pointPoolControl = formGroup.controls['pointsPool'];
+      console.log(pointPoolControl);
+      if (!pointPoolControl.value || pointPoolControl.value < 0 || pointPoolControl.value > pointPoolMax) {
+        return {
+          pointPoolValidation: true
+        };
+      } else {
+      }
+
+    }
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-users-card',
@@ -120,12 +138,21 @@ export class UsersCardComponent implements OnInit, OnDestroy {
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i];
 
-          if (this.editUserForm.get(key)) {
+          if (this.editUserForm.get(key) || this.editUserForm.controls.roleGroup.get(key)) {
             // We must take special consideration for selection objects like securityRole and department
             switch (key) {
               case 'securityRole': {
                 const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
-                this.editUserForm.patchValue({[key]: securityRole});
+                // this.editUserForm.patchValue({[key]: securityRole});
+                console.log(this.editUserForm.controls.roleGroup.get(key));
+                this.editUserForm.controls.roleGroup.patchValue({[key]: securityRole});
+                break;
+              }
+              case 'pointsPool': {
+                // const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
+                // this.editUserForm.patchValue({[key]: securityRole});
+                console.log(this.editUserForm.controls.roleGroup.get(key));
+                this.editUserForm.controls.roleGroup.patchValue({[key]: user[keys[i]]});
                 break;
               }
               case 'department': {
@@ -182,7 +209,11 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       // preferredPronoun: [null],
       // sex: [null],
       gender: [null],
-      securityRole: [null, Validators.required],
+      // The below FormGroup validation allows us to validate the form depending on whether the user being added is a manager or not
+      roleGroup: new FormGroup({
+        securityRole: new FormControl(),
+        pointsPool: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(this.pointPoolMax)]),
+      }, managerValidation(this.pointPoolMax)),
       department: [null, Validators.required],
       dateOfHire: [null],
       // address1: [null],
@@ -194,8 +225,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required],
-      points: [null],
-      pointsPool: [null],
+      points: [null, Validators.compose([Validators.required, Validators.min(0)])],
     });
   }
 
@@ -212,7 +242,13 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       // preferredPronoun: [null],
       // sex: [null],
       gender: [null],
-      securityRole: [null, Validators.required],
+
+      // The below FormGroup validation allows us to validate the form depending on whether the user being added is a manager or not
+      roleGroup: new FormGroup({
+        securityRole: new FormControl(),
+        pointsPool: new FormControl(this.pointPoolMax, [Validators.required, Validators.min(0), Validators.max(this.pointPoolMax)]),
+      }, managerValidation(this.pointPoolMax)),
+
       department: [null, Validators.required],
       dateOfHire: [null],
       // address1: [null],
@@ -224,8 +260,8 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required],
-      points: [0, Validators.compose([Validators.required, Validators.min(0)])],
-      pointsPool: [this.pointPoolMax, Validators.compose([Validators.required, Validators.min(0)])],
+      points: [null, Validators.compose([Validators.required, Validators.min(0)])],
+
     });
   }
 
@@ -386,13 +422,14 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
   onAddUserFormSubmit(form: FormGroup) {
     console.log(form);
-
+    return;
     this.addUserFormSubmitted = true;
 
     const user = {};
     const keys = Object.keys(form.controls);
 
     console.log(user);
+
 
     if (!form.invalid) {
       // Format the phone number

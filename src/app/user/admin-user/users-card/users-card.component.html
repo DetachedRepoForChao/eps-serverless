@@ -44,7 +44,7 @@
                       <label class="validation-message">This field is required.</label>
                     </ng-container>
                   </div>
-                  <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                  <div class="form-group col-sm-12 col-md-4 col-lg-4" formGroupName="roleGroup">
                     <label for="addUser_securityRole" class="form-label">Role</label>
                     <select formControlName="securityRole" class="form-control user-form-control black" id="addUser_securityRole" name="addUser_securityRole" required>
                       <option [ngValue]="null" [disabled]="true">Role</option>
@@ -55,7 +55,7 @@
                       </ng-container>
 
                     </select>
-                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.securityRole.invalid) || (addUserForm.dirty && addUserForm.controls.securityRole.touched && addUserForm.controls.securityRole.invalid)">
+                    <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.roleGroup.get('securityRole')?.invalid) || (addUserForm.dirty && addUserForm.controls.roleGroup.get('securityRole')?.touched && addUserForm.controls.roleGroup.get('securityRole')?.invalid)">
                       <label class="validation-message">This field is required.</label>
                     </ng-container>
                   </div>
@@ -75,24 +75,24 @@
                     </ng-container>
                   </div>
                 </div>
-                <ng-container *ngIf="addUserForm.controls.securityRole.value?.Id !== 3">
+                <ng-container *ngIf="addUserForm.controls.roleGroup.get('securityRole')?.value?.Id !== 3">
                   <div class="form-row">
-                    <ng-container *ngIf="addUserForm.controls.securityRole.value?.Id === 1 || !addUserForm.controls.securityRole.value">
-                      <div class="form-group col-sm-12 col-md-6 col-log-6">
+                    <ng-container *ngIf="addUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 1 || !addUserForm.controls.roleGroup.get('securityRole')?.value">
+                      <div class="form-group col-sm-12 col-md-6 col-log-6" >
                         <label for="addUser_points" class="form-label">Starting Points Amount</label>
-                        <input class="form-control user-form-control" id="addUser_points" placeholder="0" formControlName="points" value="0">
+                        <input class="form-control user-form-control" type="number" min="0" step="1" id="addUser_points" placeholder="0" formControlName="points" value="0">
                         <ng-container *ngIf="(addUserFormSubmitted) || (addUserForm.dirty && addUserForm.controls.points.touched && addUserForm.controls.points.value < 0)">
-                          <label class="validation-message">The value cannot be less than 0.</label>
+                          <label class="validation-message">The value must be a whole number and cannot be less than 0.</label>
                         </ng-container>
                       </div>
                     </ng-container>
 
-                    <ng-container *ngIf="addUserForm.controls.securityRole.value?.Id === 2">
-                      <div class="form-group col-sm-12 col-md-6 col-log-6">
+                    <ng-container *ngIf="addUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 2">
+                      <div class="form-group col-sm-12 col-md-6 col-log-6" formGroupName="roleGroup">
                         <label for="addUser_pointsPool" class="form-label">Starting Points Pool Amount (out of {{pointPoolMax}})</label>
-                        <input class="form-control user-form-control" id="addUser_pointsPool" placeholder="{{pointPoolMax}}" formControlName="pointsPool" value="{{pointPoolMax}}">
-                        <ng-container *ngIf="(addUserFormSubmitted) || (addUserForm.dirty && addUserForm.controls.pointsPool.touched && (addUserForm.controls.pointsPool.value < 0) || (addUserForm.controls.pointsPool.value > pointPoolMax))">
-                          <label class="validation-message">The value cannot be less than 0 or greater than {{pointPoolMax}}.</label>
+                        <input class="form-control user-form-control" id="addUser_pointsPool" type="number" min="0" max="{{pointPoolMax}}" step="1" placeholder="{{pointPoolMax}}" formControlName="pointsPool" value="{{pointPoolMax}}">
+                        <ng-container *ngIf="(addUserFormSubmitted) || (addUserForm.dirty && addUserForm.controls.roleGroup.get('pointsPool')?.touched && (addUserForm.controls.roleGroup.get('pointsPool')?.value < 0) || (addUserForm.controls.roleGroup.get('pointsPool')?.value > pointPoolMax))">
+                          <label class="validation-message">The value must be a whole number between 0 and {{pointPoolMax}}, inclusive.</label>
                         </ng-container>
                       </div>
                     </ng-container>
@@ -328,7 +328,7 @@
                     <label class="validation-message">This field is required.</label>
                   </ng-container>
                 </div>
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                <div class="form-group col-sm-12 col-md-4 col-lg-4" formGroupName="roleGroup">
                   <label for="editUser_securityRole" class="form-label">Role</label>
                   <select formControlName="securityRole" class="form-control user-form-control" id="editUser_securityRole" name="editUser_securityRole" >
                     <option [ngValue]="null" [disabled]="true">Role</option>
@@ -339,7 +339,7 @@
                     </ng-container>
 
                   </select>
-                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.securityRole.invalid) || (editUserForm.dirty && editUserForm.controls.securityRole.touched && editUserForm.controls.securityRole.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.roleGroup.get('securityRole')?.invalid) || (editUserForm.dirty && editUserForm.controls.roleGroup.get('securityRole')?.touched && editUserForm.controls.roleGroup.get('securityRole')?.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </ng-container>
                 </div>
@@ -354,30 +354,30 @@
                     </ng-container>
 
                   </select>
-                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.securityRole.invalid) || (editUserForm.dirty && editUserForm.controls.securityRole.touched && editUserForm.controls.securityRole.invalid)">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.roleGroup.get('securityRole')?.invalid) || (editUserForm.dirty && editUserForm.controls.roleGroup.get('securityRole')?.touched && editUserForm.controls.roleGroup.get('securityRole')?.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </ng-container>
                 </div>
               </div>
 
-              <ng-container *ngIf="editUserForm.controls.securityRole.value?.Id !== 3">
+              <ng-container *ngIf="editUserForm.controls.roleGroup.get('securityRole')?.value?.Id !== 3">
                 <div class="form-row">
-                  <ng-container *ngIf="editUserForm.controls.securityRole.value?.Id === 1 || !editUserForm.controls.securityRole.value">
+                  <ng-container *ngIf="editUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 1 || !editUserForm.controls.roleGroup.get('securityRole')?.value">
                     <div class="form-group col-sm-12 col-md-6 col-log-6">
                       <label for="editUser_points" class="form-label">Points Amount</label>
-                      <input class="form-control user-form-control" type="number" id="editUser_points" placeholder="0" formControlName="points" value="0">
+                      <input class="form-control user-form-control" type="number" id="editUser_points" min="0" step="1" placeholder="0" formControlName="points" value="0">
                       <ng-container *ngIf="(editUserFormSubmitted) || (editUserForm.dirty && editUserForm.controls.points.touched && editUserForm.controls.points.value < 0)">
                         <label class="validation-message">The value cannot be less than 0.</label>
                       </ng-container>
                     </div>
                   </ng-container>
 
-                  <ng-container *ngIf="editUserForm.controls.securityRole.value?.Id === 2">
-                    <div class="form-group col-sm-12 col-md-6 col-log-6">
-                      <label for="editUser_pointsPool" class="form-label">Points Pool Amount (out of 5000)</label>
-                      <input class="form-control user-form-control" type="number" id="editUser_pointsPool" placeholder="5000" formControlName="pointsPool" value="5000">
-                      <ng-container *ngIf="(editUserFormSubmitted) || (editUserForm.dirty && editUserForm.controls.pointsPool.touched && (editUserForm.controls.pointsPool.value < 0) || (editUserForm.controls.pointsPool.value > 5000))">
-                        <label class="validation-message">The value cannot be less than 0 or greater than 5000.</label>
+                  <ng-container *ngIf="editUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 2">
+                    <div class="form-group col-sm-12 col-md-6 col-log-6" formGroupName="roleGroup">
+                      <label for="editUser_pointsPool" class="form-label">Points Pool Amount (out of {{pointPoolMax}})</label>
+                      <input class="form-control user-form-control" type="number" id="editUser_pointsPool" min="0" max="{{pointPoolMax}}" step="1" placeholder="{{pointPoolMax}}" formControlName="pointsPool" value="5000">
+                      <ng-container *ngIf="(editUserFormSubmitted) || (editUserForm.dirty && editUserForm.controls.roleGroup.get('pointsPool')?.touched && (editUserForm.controls.roleGroup.get('pointsPool')?.value < 0) || (editUserForm.controls.roleGroup.get('pointsPool')?.value > pointPoolMax))">
+                        <label class="validation-message">The value must be a whole number between 0 and {{pointPoolMax}}, inclusive.</label>
                       </ng-container>
                     </div>
                   </ng-container>

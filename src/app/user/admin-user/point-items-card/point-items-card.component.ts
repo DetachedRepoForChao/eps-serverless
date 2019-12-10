@@ -168,7 +168,7 @@ export class PointItemsCardComponent implements OnInit {
 
   private loadPointPoolMaxForm() {
     this.pointPoolMaxForm = this.formBuilder.group({
-      maxAmount: [this.pointPoolMax, Validators.required],
+      maxAmount: [null, Validators.compose([Validators.required, Validators.min(1)])],
     });
   }
 
@@ -338,7 +338,7 @@ export class PointItemsCardComponent implements OnInit {
     console.log(form);
     this.pointPoolMaxFormSubmitted = true;
     const maxAmount = form.controls.maxAmount.value;
-    if (!form.invalid) {
+    if (!form.invalid || form.controls.maxAmount.value > 0) {
 
       this.userService.setPointPoolMax(maxAmount)
         .pipe(take(1))

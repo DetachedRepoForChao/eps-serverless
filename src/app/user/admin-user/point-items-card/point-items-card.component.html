@@ -25,7 +25,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addPointItemModalLabel">Add a new Point Item</h5>
+        <h5 class="modal-title" id="addPointItemModalLabel">Add a New Point Item</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -292,9 +292,9 @@
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-8 col-lg-8 col-xl-8">
                   <label for="setPointPoolMax_maxAmount" class="form-label">The current Point Pool max is <span class="text-primary">{{this.pointPoolMax}}</span>. Set a new one?</label>
-                  <input class="form-control user-form-control" id="setPointPoolMax_maxAmount" type="number" placeholder="New Point Pool Max Amount" formControlName="maxAmount" value="5000">
-                  <ng-container *ngIf="(pointPoolMaxFormSubmitted) || (pointPoolMaxForm.dirty && pointPoolMaxForm.controls.maxAmount.touched && pointPoolMaxForm.controls.maxAmount.value < 0)">
-                    <label class="validation-message">The value cannot be less than 0.</label>
+                  <input class="form-control user-form-control" id="setPointPoolMax_maxAmount" type="number" min="1" step="1" placeholder="New Point Pool Max Amount" formControlName="maxAmount" value="5000">
+                  <ng-container *ngIf="(pointPoolMaxFormSubmitted) || (pointPoolMaxForm.dirty && pointPoolMaxForm.controls.maxAmount.touched && pointPoolMaxForm.controls.maxAmount.value < 1)">
+                    <label class="validation-message">The value must be a whole number greater than 0.</label>
                   </ng-container>
                 </div>
               </div>
