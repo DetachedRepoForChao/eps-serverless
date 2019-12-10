@@ -68,7 +68,7 @@
                         <div class="col-auto">
                           <!-- Avatar -->
                           <img class="rounded-circle" width="48px"
-                               [src]="(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)[0]?.avatarResolvedUrl" alt="">
+                               [src]="(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)?.avatarResolvedUrl" alt="">
                         </div>
                         <div class="col ml--2">
                           <div class="d-flex justify-content-between align-items-center">
