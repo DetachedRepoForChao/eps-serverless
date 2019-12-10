@@ -44,7 +44,7 @@
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>-->
 
-        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notiModal" [ngClass]="{'btn-primary': unseenNotifications.length === 0, 'btn-danger': unseenNotifications.length > 0}">
+        <button id="notification_button" type="button" class="btn btn-icon btn-round"  data-toggle="modal" data-target="#notiModal" >
           <i class="tim-icons icon-bell-55" title="Notifications"></i>
         </button>
 
@@ -76,7 +76,7 @@
 
                             <div *ngIf="(entityUserQuery.selectLoading() | async) === false">
                               <div>
-                                <h4 class="mb-0 text-sm black" >{{(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)[0]?.username}}</h4>
+                                <h4 class="mb-0 text-sm black" >{{(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)?.username}}</h4>
                               </div>
                             </div>
                           </div>
