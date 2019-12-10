@@ -85,7 +85,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       });
 
 
-/*    this.notificationService.getNotifications().subscribe(result => {
+    this.notificationService.getNotifications().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
       for (let notification of result){
@@ -111,7 +111,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         $('#notification_button').addClass('btn-danger');
       }
       console.log('Notification-log Initial' + this.Notifications);
-    });*/
+    });
     this.isCardLoading = false;
   }
 
