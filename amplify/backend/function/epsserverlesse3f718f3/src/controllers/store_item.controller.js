@@ -65,7 +65,7 @@ const getUserHasStoreItemRecords = function (requestUser) {
       } else {
         console.log(`${functionFullName}: Records found`);
         console.log(result);
-        return {status: true, userHasStoreItemRecords: result};
+        return {status: true, purchaseRequests: result};
       }
     })
     .catch( err => {
@@ -110,7 +110,7 @@ const getUserHasStoreItemManagerRecords = function (managerUser) {
       } else {
         console.log(`${functionFullName}: Records found`);
         console.log(result);
-        return {status: true, userHasStoreItemRecords: result};
+        return {status: true, purchaseRequests: result};
       }
     })
     .catch( err => {
@@ -122,6 +122,48 @@ const getUserHasStoreItemManagerRecords = function (managerUser) {
 
 module.exports.getUserHasStoreItemManagerRecords = getUserHasStoreItemManagerRecords;
 
+
+const getPurchaseRequestsAdmin = function (managerUser) {
+  const functionName = 'getPurchaseRequestsAdmin';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+  console.log(managerUser);
+  return sqlUserHasStoreItemModel.findAll({
+    include: [
+      {
+        model: Models.User,
+        as: 'requestUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.User,
+        as: 'managerUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },
+      {
+        model: Models.StoreItem,
+        attributes: ['id', 'name', 'description', 'cost']
+      },
+    ],
+  })
+    .then(result => {
+      if (!result) {
+        console.log(`${functionFullName}: No records found`);
+        return {status: false, message: 'No records found'};
+      } else {
+        console.log(`${functionFullName}: Records found`);
+        console.log(result);
+        return {status: true, purchaseRequests: result};
+      }
+    })
+    .catch( err => {
+      console.log(`${functionFullName}: Error retrieving records`);
+      console.log(err);
+      return {status: false, message: err};
+    });
+};
+
+module.exports.getPurchaseRequestsAdmin = getPurchaseRequestsAdmin;
 
 const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId) {
   const functionName = 'newUserHasStoreItemRecord';

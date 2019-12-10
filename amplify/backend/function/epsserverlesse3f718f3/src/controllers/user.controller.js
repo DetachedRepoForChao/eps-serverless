@@ -618,3 +618,98 @@ const deleteUser = function (user) {
 module.exports.deleteUser = deleteUser;
 
 
+const newPurchaseApprover = function (userId) {
+  const functionName = 'newPurchaseApprover';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.findOne({
+    where: {
+      userId: userId,
+    }
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: This user is already a purchase approver`);
+        return {status: false, message: 'This user is already a purchase approver'};
+      } else {
+        return Models.PurchaseApprovers.create({
+          userId: userId
+        })
+          .then(newApprover => {
+            console.log(`${functionFullName}: Successfully created new purchase approver`);
+            return {status: true, newApprover: newApprover};
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: Database error`);
+            console.log(err);
+            return {status: false, message: 'Database error', error: err};
+          });
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.newPurchaseApprover = newPurchaseApprover;
+
+const deletePurchaseApprover = function (userId) {
+  const functionName = 'deletePurchaseApprover';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.destroy({
+    where: {
+      userId: userId
+    }
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: Successfully deleted purchase approver`);
+        return {status: true, deletedApprover: userId};
+      } else {
+        console.log(`${functionFullName}: Nothing to delete`);
+        return {status: false, message: 'Nothing to delete'};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.deletePurchaseApprover = deletePurchaseApprover;
+
+const getPurchaseApprovers = function () {
+  const functionName = 'getPurchaseApprovers';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.findAll({
+    include: [
+      {
+        model: Models.User
+      }
+    ]
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: Retrieved purchase approver records successfully`);
+        return {status: true, message: 'Retrieved purchase approver records successfully', purchaseApprovers: result};
+      } else {
+        console.log(`${functionFullName}: No purchase approver records found`);
+        return {status: false, message: 'No purchase approver records found'};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.getPurchaseApprovers = getPurchaseApprovers;
