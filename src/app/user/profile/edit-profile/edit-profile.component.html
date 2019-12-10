@@ -4,23 +4,23 @@
       <form [formGroup]="editUserForm">
         <div *ngIf="isUserDataRetrieved; else placeholderForm">
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label class="form-label"><a href="javascript:void(0)" (click)="avatarClick()">Change Avatar</a></label>
             </div>
           </div>
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label for="editUser_preferredName" class="form-label">Preferred Name</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <input type="text" class="form-control user-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
             </div>
           </div>
           <div class="form-row">
-            <div class="col-3">
+            <div class="col-lg-3 col-md-3 col-sm-3">
               <label for="editUser_birthdate" class="form-label">Date of Birth</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <input type="text" [matDatepicker]="editUser_birthdate"
                      (click)="editUser_birthdate.open()"
                      placeholder="Date of Birth"
@@ -36,10 +36,10 @@
           </div>
 
           <div class="form-row">
-            <div class="col-2 aligncentercontent">
+            <div class="col-lg-2 col-md-2 col-sm-2 aligncentercontent">
               <label class="form-label">Email</label>
             </div>
-            <div class="confirm-col text-right col-1">
+            <div class="confirm-col text-right col-lg-1 col-md-1 col-sm-1">
               <div *ngIf="emailConfirmed; else emailUnconfirmedIcon">
                 <i class="fas fa-check confirmed"></i>
               </div>
@@ -47,30 +47,30 @@
                 <i class="fas fa-times unconfirmed"></i>
               </ng-template>
             </div>
-            <div *ngIf="emailConfirmed; else emailUnconfirmedInput" class="col-7">
+            <div *ngIf="emailConfirmed; else emailUnconfirmedInput" class="col-lg-7 col-md-7 col-sm-7">
               <input type="email" class="form-control user-form-control" id="editUser_confirmedEmail" placeholder="Email" formControlName="email">
               <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
                 <label class="validation-message">This field is required.</label>
               </div>
             </div>
-            <ng-template #emailUnconfirmedInput class="col-5">
-              <div class="col-5">
+            <ng-template #emailUnconfirmedInput class="col-lg-5 col-md-5 col-sm-5">
+              <div class="col-lg-5 col-md-5 col-sm-5">
                 <input type="email" class="form-control user-form-control" id="editUser_unconfirmedEmail" placeholder="Email" formControlName="email">
                 <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
                   <label class="validation-message">This field is required.</label>
                 </div>
               </div>
             </ng-template>
-            <div *ngIf="!emailConfirmed" class="confirm-col col-2">
+            <div *ngIf="!emailConfirmed" class="confirm-col col-lg-2 col-md-2 col-sm-2">
               <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmEmailModal" (click)="onEmailConfirmClick()">Confirm</button>
             </div>
           </div>
 
           <div class="form-row">
-            <div class="col-2 aligncentercontent">
+            <div class="col-lg-2 col-md-2 col-sm-2 aligncentercontent">
               <label class="form-label">Phone</label>
             </div>
-            <div class="confirm-col text-right col-1">
+            <div class="confirm-col text-right col-lg-1 col-md-1 col-sm-1">
               <div *ngIf="phoneConfirmed; else phoneUnconfirmedIcon">
                 <i class="fas fa-check confirmed"></i>
               </div>
@@ -78,7 +78,7 @@
                 <i class="fas fa-times unconfirmed"></i>
               </ng-template>
             </div>
-            <div *ngIf="phoneConfirmed; else phoneUnconfirmedInput" class="col-7">
+            <div *ngIf="phoneConfirmed; else phoneUnconfirmedInput" class="col-lg-7 col-md-7 col-sm-7">
               <input class="form-control user-form-control"
                      placeholder="Phone"
                      formControlName="phone"
@@ -93,8 +93,8 @@
                 <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
               </div>
             </div>
-            <ng-template #phoneUnconfirmedInput class="col-5">
-              <div class="col-5">
+            <ng-template #phoneUnconfirmedInput class="col-lg-5 col-md-5 col-sm-5">
+              <div class="col-lg-5 col-md-5 col-sm-5">
                 <input class="form-control user-form-control"
                        placeholder="Phone"
                        formControlName="phone"
@@ -110,12 +110,12 @@
                 </div>
               </div>
             </ng-template>
-            <div *ngIf="!phoneConfirmed" class="confirm-col col-2">
+            <div *ngIf="!phoneConfirmed" class="confirm-col col-lg-2 col-md-2 col-sm-2">
               <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmPhoneModal" (click)="onPhoneConfirmClick()">Confirm</button>
             </div>
           </div>
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <div *ngIf="(!option || option !== 'quote') && !optionExecuted; else quoteGlow">
                 <label for="editUser_quote" class="form-label">Favorite Quote</label>
               </div>
@@ -123,7 +123,7 @@
                 <label for="editUser_quote" id="glowing_quote" class="form-label glow">Favorite Quote</label>
               </ng-template>
             </div>
-            <div class="col-7">
+            <div class="">
               <textarea rows="5" class="form-control user-form-control" id="editUser_quote" placeholder="Favorite Quote" formControlName="quote" (focus)="executeOption('quote')"></textarea>
               <div *ngIf="editUserForm?.controls.quote.value && editUserForm?.controls.quote.valid">
                 <label class="validation-message" id="quote-length-message">{{quoteLengthMax - editUserForm?.controls.quote.value.length}} characters remaining.</label>
@@ -136,10 +136,10 @@
 
           </div>
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label for="editUser_gender" class="form-label">Gender</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <select formControlName="gender" class="form-control user-form-control" id="editUser_gender" name="editUser_gender">
                 <option [ngValue]="null" [disabled]="true">Gender</option>
                 <option class="black">Male</option>
@@ -159,18 +159,18 @@
 
         <ng-template #placeholderForm>
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label for="editUser_phPreferredName" class="form-label">Preferred Name</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <input type="text" class="form-control user-form-control" id="editUser_phPreferredName" placeholder="Preferred Name">
             </div>
           </div>
           <div class="form-row">
-            <div class="col-3">
+            <div class="col-lg-3 col-md-3 col-sm-3">
               <label for="editUser_phBirthdate" class="form-label">Date of Birth</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <input type="text"
                      placeholder="Date of Birth"
                      class="form-control user-form-control datepicker"
@@ -179,20 +179,20 @@
           </div>
 
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label class="form-label">Email</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <input type="email" class="form-control user-form-control" id="editUser_phConfirmedEmail" placeholder="Email">
             </div>
 
           </div>
 
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label class="form-label">Phone</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <input class="form-control user-form-control"
                      placeholder="Phone"
                      appPhoneMask
@@ -202,10 +202,10 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="col-3 aligncentercontent">
+            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label for="editUser_phGender" class="form-label">Gender</label>
             </div>
-            <div class="col-7">
+            <div class="col-lg-7 col-md-7 col-sm-7">
               <input type="text" class="form-control user-form-control" id="editUser_phGender" placeholder="Gender">
             </div>
           </div>
@@ -238,6 +238,7 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
@@ -274,7 +275,7 @@
               <div class="col-5">
                 <label for="emailCode" class="modal-form-label2">Confirmation Code</label>
               </div>
-              <div class="col-5">
+              <div class="col-lg-5 col-md-5 col-sm-5">
                 <input type="text"
                        placeholder="######"
                        id="emailCode"
@@ -322,10 +323,10 @@
             <br>
             <br>
             <div class="row">
-              <div class="col-5">
+              <div class="col-lg-5 col-md-5 col-sm-5">
                 <label for="phoneCode" class="modal-form-label2">Confirmation Code</label>
               </div>
-              <div class="col-5">
+              <div class="col-lg-5 col-md-5 col-sm-5">
                 <input type="text"
                        placeholder="######"
                        id="phoneCode"

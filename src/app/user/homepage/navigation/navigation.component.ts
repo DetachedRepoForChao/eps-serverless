@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../../../shared/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
@@ -12,10 +12,13 @@ import { EntityUserQuery } from '../../../entity-store/user/state/entity-user.qu
 
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
-import {NotificationService} from '../../../shared/notifications/notification.service';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {NavigationService} from '../../../shared/navigation.service';
 import { NotifierService } from 'angular-notifier';
+import {NotificationService} from '../../../entity-store/notification/state/notification.service';
+import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
+import {Subscription} from 'rxjs';
+import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -31,7 +34,7 @@ declare var $: any;
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css'],
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
   componentName = 'navigation.component';
 
   public config: PerfectScrollbarConfigInterface = {};
@@ -41,6 +44,10 @@ export class NavigationComponent implements OnInit {
   Detail;
   notificationNums;
   showDetail;
+  notifications: NotificationModel[];
+  unseenNotifications: NotificationModel[];
+  notificationSubscription: Subscription;
+  unseenNotificationSubscription: Subscription;
   isCardLoading: boolean;
 
   constructor(private userService: UserService,
@@ -51,8 +58,9 @@ export class NavigationComponent implements OnInit {
               private entityUserService: EntityUserService,
               private authService: AuthService,
               private notificationService: NotificationService,
-              private navigationService: NavigationService,
-              
+              public notificationQuery: NotificationQuery,
+              public navigationService: NavigationService,
+
               ) { }
 
   ngOnInit() {
@@ -66,15 +74,24 @@ export class NavigationComponent implements OnInit {
     this.entityUserService.cacheUsers().subscribe();
     this.entityCurrentUserService.cacheCurrentUser().subscribe();
     this.currentUser$ = this.currentUserQuery.selectAll();
-    
-    this.notificationService.getNotification().subscribe(result => {
+
+    this.notificationService.cacheNotifications().subscribe();
+    this.unseenNotificationSubscription = this.notificationQuery.selectAll({
+      filterBy: e => e.timeSeen === null
+    })
+      .subscribe(unseenNotifications => {
+        this.unseenNotifications = unseenNotifications;
+      });
+
+
+/*    this.notificationService.getNotifications().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
       for (let notification of result){
         if(size<5){
           if (notification.timeSeen == null) {
             size++;
-            
+
             // console.log("notification.sourceUserId:" + notification['sourceUserId']);
             // notification.avatar = this.entityUserQuery.selectUserByUserId(notification.sourceUserId)
             template.push(notification)
@@ -93,12 +110,12 @@ export class NavigationComponent implements OnInit {
         $('#notification_button').addClass('btn-danger');
       }
       console.log('Notification-log Initial' + this.Notifications);
-    });
+    });*/
     this.isCardLoading = false;
   }
 
-  onShowAll(){
-    this.notificationService.getNotification().subscribe(result => {
+  onShowAll() {
+    this.notificationService.getNotifications().subscribe(result => {
       let size = this.notificationNums+5;
       size = Math.min(size,result.length);
       this.Notifications = result.slice(0,size);
@@ -110,7 +127,7 @@ export class NavigationComponent implements OnInit {
 
   close(){
 
-    this.notificationService.getNotification().subscribe(result => {
+    this.notificationService.getNotifications().subscribe(result => {
 
       let size = 0;
       let template: Array<number> = new Array<number>();
@@ -141,6 +158,7 @@ export class NavigationComponent implements OnInit {
 
   }
 
+
   onLogout() {
     this.navigationService.onLogout();
   }
@@ -160,7 +178,7 @@ export class NavigationComponent implements OnInit {
        console.log('onSeenNotificationClick');
        if (true) {
          // tslint:disable-next-line:no-shadowed-variable
-         this.notificationService.getNotification().subscribe(result => {
+         this.notificationService.getNotifications().subscribe(result => {
            if (result === '') {
              $('#notification_button').removeClass('btn-danger');
              if (!$('#notification_button').hasClass('btn-danger')) {
@@ -287,5 +305,9 @@ export class NavigationComponent implements OnInit {
 
   clearAchievementComponentInputUser(event) {
     this.navigationService.achievementComponentInputUser = null;
+  }
+
+  ngOnDestroy(): void {
+    this.unseenNotificationSubscription.unsubscribe();
   }
 }

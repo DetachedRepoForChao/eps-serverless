@@ -1,16 +1,16 @@
 
 export class Notification  {
-    constructor( ){ }
+    constructor( ) { }
     id: String;
-    Title: string;
-    Description: string;
+    title: string;
+    description: string;
     audience: string;
     targetUserId: string;
     sourceUserId: string;
     status: string;
     event: string;
     groupId: string;
-    
+
 }
 
 

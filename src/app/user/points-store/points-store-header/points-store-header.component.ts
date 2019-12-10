@@ -43,10 +43,10 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
               private storeItemService: StoreItemService,
               private userHasStoreItemService: UserHasStoreItemService,
               private userQuery: EntityUserQuery,
-              private currentUserQuery: EntityCurrentUserQuery,
+              public currentUserQuery: EntityCurrentUserQuery,
               private achievementQuery: AchievementQuery,
               private router: Router,
-              private navigationService: NavigationService) { }
+              public navigationService: NavigationService) { }
 
   ngOnInit() {
     const observables: Observable<any>[] = [];

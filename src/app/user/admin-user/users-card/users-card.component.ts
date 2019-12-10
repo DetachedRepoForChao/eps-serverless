@@ -44,7 +44,7 @@ export class UsersCardComponent implements OnInit {
               private achievementService: AchievementService,
               private authService: AuthService,
               private userService: EntityUserService,
-              private userQuery: EntityUserQuery,
+              public userQuery: EntityUserQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,

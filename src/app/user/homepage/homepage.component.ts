@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, OnInit} from '@angular/core';
+import {Component, EventEmitter, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {NotifierService} from 'angular-notifier';
 import {MetricsService} from '../../entity-store/metrics/state/metrics.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
@@ -10,16 +10,21 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {PointItemTransactionService} from '../../entity-store/point-item-transaction/state/point-item-transaction.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Observable, Subscription} from 'rxjs';
+import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css']
 })
-export class HomepageComponent implements OnInit {
+export class HomepageComponent implements OnInit, OnDestroy {
   componentName = 'homepage.component';
-  currentUser$;
+  currentUser$: Observable<EntityCurrentUserModel[]>;
+  currentUser: EntityCurrentUserModel;
+  currentUserSubscription: Subscription;
   pendingBalance$;
+  pendingBalanceSubscription: Subscription;
 
   private codeEntered: EventEmitter<boolean> = new EventEmitter<boolean>();
   private sequence: number[] = [];
@@ -52,7 +57,7 @@ export class HomepageComponent implements OnInit {
     private notifierService: NotifierService,
     private metricsService: MetricsService,
     private currentUserService: EntityCurrentUserService,
-    private currentUserQuery: EntityCurrentUserQuery,
+    public currentUserQuery: EntityCurrentUserQuery,
     private storeItemService: StoreItemService,
     private userHasStoreItemService: UserHasStoreItemService,
     private userHasStoreItemQuery: UserHasStoreItemQuery,
@@ -70,45 +75,56 @@ export class HomepageComponent implements OnInit {
     //  console.log(this.socketService.onSessionCreate());
     //  this.notifierService.notify('success', 'Session created!');
     // }
-    
+
 
 
     this.currentUser$ = this.currentUserQuery.selectAll({
       limitTo: 1
     });
 
-    this.pendingBalance$ = this.userHasStoreItemQuery.selectAll();
-    this.pendingBalance$.subscribe(() => {
-      this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
+    // this.pendingBalance$ = this.userHasStoreItemQuery.selectAll();
+    // this.pendingBalance$.subscribe(() => {
+/*      this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
         console.log('balance: ' + balance);
         this.currentUserService.updatePointsBalance(balance);
-      });
-    });
+      }).unsubscribe();*/
+    // }).unsubscribe();
 
     this.currentUserService.cacheCurrentUser().subscribe(() => {
       this.storeItemService.cacheStoreItems().subscribe(() => {
         this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
-/*          this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-            console.log('balance: ' + balance);
-            this.currentUserService.updatePointsBalance(balance);
-          });*/
+
         });
       });
     });
 
-    this.currentUser$.subscribe((currentUser) => {
+
+    this.currentUserSubscription = this.currentUser$.subscribe((currentUser) => {
+      this.currentUser = currentUser[0];
       if (currentUser[0]) {
         console.log(currentUser);
-        this.metricsService.cacheMetrics().subscribe(() => {
+/*        this.metricsService.cacheMetrics().subscribe(() => {
           this.metricsService.startHomepageTimer();
-        });
+        });*/
+
       }
     });
+
+    /*this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
+      console.log('balance: ' + balance);
+      this.currentUserService.updatePointsBalance(balance);
+    }).unsubscribe();*/
 
     // this.pointItemTransactionService.cacheCurrentUserPointItemTransactions().subscribe();
   }
 
   private isKonamiCode(): boolean {
     return this.konamiCode.every((code: number, index: number) => code === this.sequence[index]);
+  }
+
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy');
+    console.log('unsubscribing from current user');
+    this.currentUserSubscription.unsubscribe();
   }
 }

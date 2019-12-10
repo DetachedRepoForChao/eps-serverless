@@ -191,8 +191,8 @@ export class PointItemTransactionService {
   }
 
 
-  getPointItemTransactionsRange(startIndex: number, numberRecords: number): Observable<any> {
-    const functionName = 'getPointItemTransactionsRange';
+  getAddPointItemTransactionsRange(startIndex: number, numberRecords: number): Observable<any> {
+    const functionName = 'getAddPointItemTransactionsRange';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -207,7 +207,7 @@ export class PointItemTransactionService {
             numberRecords: numberRecords
           };
 
-          API.post(this.apiName, this.apiPath + '/getPointTransactionRange', myInit).then(response => {
+          API.post(this.apiName, this.apiPath + '/getAddPointTransactionRange', myInit).then(response => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(response);
             observer.next(response.data);
@@ -298,7 +298,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;
@@ -384,7 +384,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;
@@ -439,8 +439,8 @@ export class PointItemTransactionService {
     });
   }
 
-  cachePointItemTransactionsBatch() {
-    const functionName = 'cachePointItemTransactionsBatch';
+  cacheAddPointItemTransactionsBatch() {
+    const functionName = 'cacheAddPointItemTransactionsBatch';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -458,14 +458,14 @@ export class PointItemTransactionService {
         .then(currentUser => {
           const username = currentUser.username;
 
-          // Check if point transactions for this user have already been cached
+          // Check if transactions for this batch have already been cached
           if (this.numBatchRetrieved && (this.numBatchRetrieved * 10) >= startIndex) {
-            // Point transactions for this batch has already been retrieved
+            // Point transactions for this batch have already been retrieved
             console.log(`${functionFullName}: Point transactions for range [${startIndex} - ${startIndex + numberRecords}] have already been retrieved`);
             observer.next(false);
             observer.complete();
           } else {
-            const request$ = this.getPointItemTransactionsRange(startIndex, numberRecords)
+            const request$ = this.getAddPointItemTransactionsRange(startIndex, numberRecords)
               .pipe(tap((pointItemTransactions: any) => {
                 console.log(`${functionFullName}: caching for range [${startIndex} - ${startIndex + numberRecords}]:`);
                 console.log(pointItemTransactions);
@@ -480,7 +480,7 @@ export class PointItemTransactionService {
                     // Duplicate. Ignore this one.
                     console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
-                    console.log(`${functionFullName}: adding transaction: ${transactionId}`);
+                    // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
                     const amount = pointItemTransaction.amount;
                     const sourceUserId = pointItemTransaction.sourceUserId;

@@ -141,7 +141,7 @@ export class LeaderboardCardComponent implements OnInit {
     const metrics$ = this.metricsQuery.selectAll();
     metrics$.subscribe(metrics => {
       console.log(metrics);
-    }).unsubscribe();
+    });
 
     // this.entityUserQuery.getUserCompleteAchievementCount(47);
 

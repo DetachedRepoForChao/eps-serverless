@@ -31,11 +31,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CustomMaterialModule } from './core/material.module';
-import { StandardUserComponent } from './user/standard-user/standard-user.component';
 import { AdminUserComponent } from './user/admin-user/admin-user.component';
-import { NotificationCardComponent } from './user/admin-user/notification-card/notification-card.component'
+import { NotificationCardComponent } from './user/admin-user/notification-card/notification-card.component';
 import { Globals } from './globals';
-import { ManagerUserComponent } from './user/manager-user/manager-user.component';
 import { GiftPointsComponent } from './user/manager-user/gift-points/gift-points.component';
 import { RegisterUserComponent } from './user/admin-user/register-user/register-user.component';
 import { NotifierModule } from 'angular-notifier';
@@ -70,9 +68,6 @@ import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
-import { UserFiltersComponent} from './entity-store/user/filter/user-filters.component';
-import { AchievementFiltersComponent} from './entity-store/achievement/filter/achievement-filters.component';
-import { DepartmentFilterComponent } from './entity-store/department/filter/department-filter.component';
 import { AvatarComponent } from './shared/avatar/avatar.component';
 import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
@@ -84,7 +79,6 @@ import { PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import { FreshPipe } from './pipe/fresh.pipe';
 import { ConfirmItemPurchaseComponent } from 'src/app/user/confirm-item-purchase/confirm-item-purchase.component';
-import { FeedcardFiltersComponent } from './entity-store/feedcard/filter/feedcard-filter.component';
 import { NewPasswordComponent} from './login/new-password/new-password.component';
 import { UsersCardComponent } from './user/admin-user/users-card/users-card.component';
 import { PointItemsCardComponent } from './user/admin-user/point-items-card/point-items-card.component';
@@ -105,6 +99,7 @@ import {PointItemComponent} from './shared/point-item/point-item.component';
 import { OtherUserManagerComponent } from './user/profile/other-user-manager/other-user-manager.component';
 import { PointsStoreHeaderComponent } from './user/points-store/points-store-header/points-store-header.component';
 import { PurchaseHistoryComponent } from './user/points-store/purchase-history/purchase-history.component';
+import { NotificationsComponent } from './shared/notifications/notifications.component';
 akitaConfig({
   resettable: true
 });
@@ -114,7 +109,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   declarations: [
-    DepartmentFilterComponent,
     EventCardComponent,
     ReportComponent,
     AppComponent,
@@ -122,10 +116,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SignUpComponent,
     UserComponent,
     SignInComponent,
-    StandardUserComponent,
     AdminUserComponent,
     AchievementComponent,
-    ManagerUserComponent,
     GiftPointsComponent,
     RegisterUserComponent,
     ProfileComponent,
@@ -148,8 +140,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AwesomeTooltipDirectiveDirective,
     AwesomeTooltipComponent,
     PointsStoreComponent,
-    UserFiltersComponent,
-    AchievementFiltersComponent,
     AvatarComponent,
     ImageCropperComponent,
     ForgotPasswordComponent,
@@ -157,7 +147,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PhoneMaskDirective,
     FreshPipe,
     ConfirmItemPurchaseComponent,
-    FeedcardFiltersComponent,
     NewPasswordComponent,
     UsersCardComponent,
     PointItemsCardComponent,
@@ -175,7 +164,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PointItemComponent,
     OtherUserManagerComponent,
     PointsStoreHeaderComponent,
-    PurchaseHistoryComponent
+    PurchaseHistoryComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,

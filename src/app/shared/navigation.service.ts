@@ -12,6 +12,7 @@ import {OtherUserAchievementService} from '../entity-store/other-user-achievemen
 import {Observable} from 'rxjs';
 import {UserHasStoreItemModel} from '../entity-store/user-has-store-item/state/user-has-store-item.model';
 import {UserHasStoreItemQuery} from '../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {NotificationModel} from '../entity-store/notification/state/notification.model';
 
 declare var $: any;
 
@@ -24,6 +25,8 @@ export class NavigationService {
   public purchaseHistoryComponentInputUser: EntityCurrentUserModel;
   public purchaseHistoryModalActive = false;
   public purchaseRequestDataSource$: Observable<UserHasStoreItemModel[]>;
+  public notificationDetailsModalActive = false;
+  public notificationDetailsInput: NotificationModel;
 
   constructor(private router: Router,
               private achievementService: AchievementService,
@@ -74,6 +77,20 @@ export class NavigationService {
     console.log('closing purchase history modal');
     this.purchaseHistoryModalActive = false;
     $('#purchaseHistoryModal').modal('hide');
+  }
+
+  openNotificationDetailsModal() {
+    console.log('opening notification details modal');
+    console.log(`navigation service component... showing #notificationDetailsModal with the following input:`);
+    console.log(this.notificationDetailsInput);
+    this.notificationDetailsModalActive = true;
+    $('#notificationDetailsModal').modal('show');
+  }
+
+  closeNotificationDetailsModal() {
+    console.log('closing notification details modal');
+    this.notificationDetailsModalActive = false;
+    $('#notificationDetailsModal').modal('hide');
   }
 
   navigateToProfile(username) {

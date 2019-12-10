@@ -759,16 +759,34 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull:false,
       field: 'targetUserId'
-    }, 
+    },
     sourceUserId: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
       field: 'sourceUserId'
     },
+    departmentId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      field: 'departmentId'
+    },
+    securityRoleId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      field: 'securityRoleId'
+    },
   }, {
     tableName: 'notification'
   });
 
+  Notification.belongsTo(User, {foreignKey: 'targetUserId', targetKey: 'id', as: 'notificationTargetUser'});
+  Notification.belongsTo(User, {foreignKey: 'sourceUserId', targetKey: 'id', as: 'notificationSourceUser'});
+  User.hasMany(Notification, {foreignKey: 'targetUserId', sourceKey: 'id', as: 'notificationTargetUser'});
+  User.hasMany(Notification, {foreignKey: 'sourceUserId', sourceKey: 'id', as: 'notificationSourceUser'});
+  Notification.belongsTo(Department, {foreignKey: 'departmentId', targetKey: 'id'});
+  Notification.belongsTo(SecurityRole, {foreignKey: 'securityRoleId', targetKey: 'id'});
+  Department.hasMany(Notification, {foreignKey: 'departmentId', sourceKey: 'id'});
+  SecurityRole.hasMany(Notification, {foreignKey: 'securityRoleId', sourceKey: 'id'});
 
   // metrics table
   const Metrics = sequelize.define('metrics', {
@@ -1210,35 +1228,20 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'cancel_description'
     },
-    accepted: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      field: 'accepted'
-    },
-    declined: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      field: 'declined'
-    },
-    approvedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'approvedAt'
-    },
-    declinedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'declinedAt'
-    },
-    fulfilledAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      field: 'fulfilledAt'
-    },
     cancelledAt: {
       type: DataTypes.DATE,
       allowNull: true,
       field: 'cancelledAt'
+    },
+    readyForPickupAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'ready_for_pickupAt'
+    },
+    pickedUpAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'picked_upAt'
     },
   }, {
     tableName: 'user_has_store_item'

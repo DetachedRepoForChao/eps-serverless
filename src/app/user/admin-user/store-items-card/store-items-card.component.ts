@@ -44,7 +44,7 @@ export class StoreItemsCardComponent implements OnInit {
               private userService: EntityUserService,
               private userQuery: EntityUserQuery,
               private storeItemService: StoreItemService,
-              private storeItemQuery: StoreItemQuery,
+              public storeItemQuery: StoreItemQuery,
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,

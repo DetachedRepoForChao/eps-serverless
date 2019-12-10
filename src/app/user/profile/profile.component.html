@@ -16,7 +16,7 @@
       <div class="wrapper">
 
         <section class="section section-lg section-coins">
-          <img src="../../../assets/img/path3.png" class="path">
+          <img src="../../../assets/img/path3.png" class="path position-fixed">
           <div class="container align-items-center wrapper-width">
             <div class="row" >
               <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="profile">
@@ -37,7 +37,7 @@
                       </ngx-spinner>-->
 
                       <div class="row">
-                        <div class="col-4 textl">
+                        <div class="col-lg-4 col-md-4 col-sm-4 textl">
                           <ul class="nobullets">
                             <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile" class="toggled">
                               Edit Profile
@@ -50,7 +50,7 @@
                             </li>
                           </ul>
                         </div>
-                        <div class="col-8">
+                        <div class="col-lg-8 col-md-8 col-sm-8">
                           <app-edit-profile *ngIf="currentView === 'editProfile'" [option]="option" (clearOption)="clearOption($event)"></app-edit-profile>
                           <app-change-password *ngIf="currentView === 'changePassword'"></app-change-password>
                           <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>

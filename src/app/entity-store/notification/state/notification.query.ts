@@ -5,7 +5,7 @@ import { QueryEntity } from '@datorama/akita';
 import { combineLatest } from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/notification-filter.model';
 import { map } from 'rxjs/operators';
-import {NotificationModel} from './entity-notification.model';
+import {NotificationModel} from './notification.model';
 
 @Injectable({
   providedIn: 'root'

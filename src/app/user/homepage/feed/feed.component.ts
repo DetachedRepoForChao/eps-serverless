@@ -40,7 +40,7 @@ export class FeedComponent implements OnInit {
               private userStore: UserStore,
               private entityUserQuery: EntityUserQuery,
               private achievementService: AchievementService,
-              private pointItemTransactionService: PointItemTransactionService,
+              public pointItemTransactionService: PointItemTransactionService,
               private pointItemTransactionQuery: PointItemTransactionQuery,
               private pointItemService: PointItemService,
               private pointItemQuery: PointItemQuery) { }
@@ -77,7 +77,7 @@ export class FeedComponent implements OnInit {
   populatePointTransactionData() {
     if (!this.pointTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointTransactionsRetrieving = true;
-      this.pointItemTransactionService.cachePointItemTransactionsBatch()
+      this.pointItemTransactionService.cacheAddPointItemTransactionsBatch()
         .subscribe((result: Observable<any> | any) => {
           if (result !== false) {
             console.log('Received observable response... subscribing...');
@@ -155,7 +155,7 @@ export class FeedComponent implements OnInit {
 
   loadMore() {
     console.log('loading next batch of posts');
-    this.pointItemTransactionService.cachePointItemTransactionsBatch()
+    this.pointItemTransactionService.cacheAddPointItemTransactionsBatch()
       .subscribe((result) => {
         if (result !== false) {
           console.log('Received observable response... subscribing...');

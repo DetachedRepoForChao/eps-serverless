@@ -7,14 +7,17 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatSort, MatTableModule, MatTableDataSource, MatDialog} from '@angular/material';
+import {MatSort, MatTableModule, MatTableDataSource, MatDialog, MatTable, MatCheckboxChange} from '@angular/material';
 import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
 import {Router } from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
 
 
-import { from } from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
+import {UserHasStoreItemModel} from '../../entity-store/user-has-store-item/state/user-has-store-item.model';
+import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
+import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 
 declare var $: any;
 
@@ -24,33 +27,39 @@ declare var $: any;
   styleUrls: ['./confirm-item-purchase.component.css']
 })
 export class ConfirmItemPurchaseComponent implements OnInit {
+  @ViewChild('requestTable') requestTable: MatTable<UserHasStoreItemModel>;
   componentName = 'confirm-item-purchase.component';
 
 
-  currentUser$;
+  currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser;
   items: StoreItemModel[] = [];
   numRows: number;
   rows = [];
-  requestedStoreItem;
+  requestedStoreItem: UserHasStoreItemModel;
   dialogResult = " ";
-  managerRequests$;
-  displayedColumns= ['recordId', 'userUsername', 'storeItemName','storeItemCost','status','acceptRequest'];
-  approveOptions = [
-    {name: 'Approve', checked: false},
-    {name: 'Decline', checked: false},
-    {name: 'Pending', checked: true}
+  managerRequests$: Observable<UserHasStoreItemModel[]>;
+  displayedColumns = ['createdAt', 'userUsername', 'storeItemName', 'status', 'action'];
+
+  actionList = [];
+  currentTabItem = 'allActive';
+  tabItems = [
+    'allActive',
+    'readyForPickup',
+    'pickedUp',
+    'cancelled',
+    'archived'
   ];
 
-  approveList = [];
 
   @ViewChild(MatSort) sort: MatSort;
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
+                private entityUserQuery: EntityUserQuery,
                 private userHasStoreItemService: UserHasStoreItemService,
                 private storeItemStore: StoreItemStore,
-                private storeItemQuery: StoreItemQuery,
+                public storeItemQuery: StoreItemQuery,
                 private storeItemService: StoreItemService,
                 public dialog: MatDialog,
                 public currentUserQuery: EntityCurrentUserQuery,
@@ -70,91 +79,186 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    console.log(this.requestTable);
 
     this.currentUser$ = this.currentUserQuery.selectAll();
     this.entityUserService.cacheUsers().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
-    this.userHasStoreItemService.cacheUserHasStoreItemManagerRecords().subscribe(() => {
+    this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe((result) => {
+      console.log(result);
     });
 
-    this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
+    this.userHasStoreItemQuery.selectLoading()
+      .subscribe(isLoading => {
+        console.log('isLoading?: ' + isLoading);
+        if (!isLoading) {
+          this.filterDataSourceByStatus(this.currentTabItem);
+          // this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
+        }
+      });
 
       // this.dataSource.sort = this.sort;
   }
 
 
-  approvalToggle(row, event){
+  actionToggle(row, event: MatCheckboxChange) {
+    console.log(this.requestTable);
     console.log('row:');
     console.log(row);
     console.log('event:');
     console.log(event);
-    const approveItem = {
+
+    const eventItem: MatCheckboxChange = event;
+    const actionItem = {
       item: row,
-      approveAction: event.value.name
+      action: event.source.value,
+      event: eventItem,
     };
 
-    if (this.approveList.find(x => x.item === row)) {
-      console.log(`Record ID ${row.recordId} already exists in the approveList`);
-      console.log(this.approveList.find(x => x.item === row));
-      this.approveList.find(x => x.item === row).approveAction = event.value.name;
+/*    if (event.source && event.source.value === 'Fulfill' && event.checked === true) {
+      actionItem.action = 'Fulfill';
+    } else if (event.source && event.source.value === 'Fulfill' && event.checked === false) {
+      if (this.actionList.find(x => x.item === row)) {
+        console.log(`Record ID ${row.recordId} already exists in the action list. We're going to remove it from the list.`);
+        this.actionList = this.actionList.filter(x => x.item !== row);
+      }
+      return;
     } else {
-      this.approveList.push(approveItem);
+      actionItem.action = event.value;
+    }*/
+
+    if (this.actionList.find(x => x.item === row) && event.checked === false) {
+      console.log(`Record ID ${row.recordId} already exists in the action list. Removing.`);
+      // console.log(this.actionList.find(x => x.item === row));
+      this.actionList = this.actionList.filter(x => x.item !== row);
+    } else {
+      this.actionList.push(actionItem);
     }
 
-    console.log(this.approveList);
-
-
+    console.log(this.actionList);
   }
 
   cancelApproval(): void {
     console.log('cancelled');
-    this.router.navigate(['/store']);
+    console.log(this.actionList);
+    for (const action of this.actionList) {
+      action.event.source.toggle();
+    }
+    this.router.navigate(['/', 'user', 'store']);
 
   }
 
-  test() {
-
-  }
-
-  approveRequest(request) {
-    console.log(request);
-    this.userHasStoreItemService.approveStoreItemRequest(request).subscribe();
-
+  untoggleAll() {
+    for (const actionItem of this.actionList) {
+      actionItem.event.source.toggle();
+    }
   }
 
   openDialog(): void {
     console.log(`confirm approval?`);
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '350px',
-      data: "Would you like to save your changes?"
+      data: {action: 'confirmPurchaseRequestSave', actionList: this.actionList}
     });
+
+    // width: '600px',
+    // data: "Would you like to save your changes?",
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog closed: ${result}`);
       this.dialogResult = result;
       if (result === 'Confirm') {
         const onSave = this.onSaveClick();
-        }
-       else if (result === 'Cancel') {
+      } else if (result === 'Cancel') {
         console.log('Cancelled');
       }
     });
-    }
+  }
 
   onSaveClick() {
-    console.log(this.approveList);
-    const approvedItems = this.approveList.filter(x => x.approveAction === 'Approve');
-    const declinedItems = this.approveList.filter(x => x.approveAction === 'Decline');
-    console.log('Approved Items:');
-    console.log(approvedItems);
-    console.log('Declined Items:');
-    console.log(declinedItems);
+    console.log(this.actionList);
 
-    // Do something with the approved items
+    const actionList = [];
+    this.actionList.forEach((actionItem) => {
+      actionList.push(actionItem);
+    });
 
+    this.userHasStoreItemService.processRequests(actionList)
+      .subscribe(result => {
+        console.log('processRequests result');
+        console.log(result);
+      });
 
-    // Do something the declined items
-
+    this.untoggleAll();
   }
+
+
+  onUserClick(userId: number) {
+    const user = this.entityUserQuery.getAll({
+      filterBy: e => e.userId === userId
+    });
+
+    console.log(`navigating to /user/profile/${user[0].username}`);
+    this.router.navigate(['/', 'user', 'profile', user[0].username]).then();
+  }
+
+
+  onTabItemClick(clickedItem: string) {
+    if (this.currentTabItem === clickedItem) {
+      // Already there, do nothing.
+    } else {
+      for (const item of this.tabItems) {
+        if (item === clickedItem) {
+          this.currentTabItem = clickedItem;
+          document.getElementById(`confirmItemPurchaseTab_${item}`).className = document.getElementById(`confirmItemPurchaseTab_${item}`).className += ' toggled';
+        } else {
+          document.getElementById(`confirmItemPurchaseTab_${item}`).className = document.getElementById(`confirmItemPurchaseTab_${item}`).className.replace('toggled', '').trim();
+        }
+      }
+    }
+  }
+
+  filterDataSourceByStatus(status: string) {
+    console.log('filterDataSourceByStatus');
+    const currentDate = Date.now();
+    let otherDate;
+    let dayDiff;
+
+    if (status === 'allActive') {
+      this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+        filterBy: e => {
+          if (e.status === 'pickedUp') {
+            otherDate = new Date(e.pickedUpAt);
+            dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (dayDiff >= 5) {
+              return false;
+            }
+          }
+          return true;
+        }
+      });
+      return;
+    } else if (status === 'archived') {
+
+      this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+        filterBy: e => {
+          if (e.status === 'pickedUp') {
+            otherDate = new Date(e.pickedUpAt);
+            dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (dayDiff >= 5) {
+              return true;
+            }
+          }
+          return false;
+        }
+      });
+
+      return;
+    }
+
+    this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+      filterBy: e => e.status === status
+    });
+  }
+
 }

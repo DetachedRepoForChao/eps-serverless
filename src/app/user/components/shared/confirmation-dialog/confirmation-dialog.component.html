@@ -1,7 +1,43 @@
-<div mat-dialog-content>
-  {{message}}
- </div>
- <div mat-dialog-actions>
+<div *ngIf="isConfirmPurchaseRequestSave">
+  <h1 mat-dialog-title class="text-black-50">Confirm changes</h1>
+  <div mat-dialog-content>
+    <div class="row">
+      <div class="col-12">
+        <div>Clicking <span class="font-weight-bold">Yes</span> will make the following changes:</div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <br>
+    <div class="row">
+      <div class="col-12">
+        <ul>
+          <li *ngFor="let dataItem of confirmPurchaseRequestData">
+            <div><span class="font-weight-bold">{{dataItem.item.userFirstName}} {{dataItem.item.userLastName}}'s</span> purchase of <span class="font-italic">{{dataItem.item.storeItemName}}</span> for {{dataItem.item.storeItemCost}}pts</div>
+            <div class="text-center">
+              <span *ngIf="dataItem.item.status === 'pending'" class="pending-style">PENDING</span>
+              <span *ngIf="dataItem.item.status === 'readyForPickup'" class="approved-style">READY FOR PICKUP</span>
+              ->
+              <span *ngIf="dataItem.action === 'readyForPickup'" class="approved-style">READY FOR PICKUP</span>
+              <span *ngIf="dataItem.action === 'pickedUp'" class="fulfilled-style">PICKED UP!</span>
+            </div>
+            <br>
+            <mat-divider></mat-divider>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
     <button mat-button (click)="onCloseConfirm()"cdkFocusInitial>Yes</button>
-   <button mat-button (click)="onCloseCancel()" >No</button>
- </div>
+    <button mat-button (click)="onCloseCancel()" >No</button>
+  </div>
+</div>
+<div *ngIf="isDefault">
+  <div mat-dialog-content>
+    {{message}}
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onCloseConfirm()"cdkFocusInitial>Yes</button>
+    <button mat-button (click)="onCloseCancel()" >No</button>
+  </div>
+</div>
