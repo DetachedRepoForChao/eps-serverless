@@ -45,6 +45,10 @@
 /*  transform: translate(0, 0);*/
 /*}*/
 
+.modal.show .modal-dialog {
+  transform: translate(0, 4em) !important;
+}
+
 @media (max-width: 575.98px) {
   .modal.show .modal-dialog {
     transform: translate(0, 0) !important;

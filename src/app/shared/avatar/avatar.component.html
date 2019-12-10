@@ -28,7 +28,7 @@
 
     <div class="row">
       <div class="col-md-12 text-center marginzero">
-        <div *ngIf="avatarUpload textc">
+        <ng-container *ngIf="avatarUpload">
           <!--        <app-image-cropper></app-image-cropper>-->
           <input type="file" (change)="fileChangeEvent($event)" />
           <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>
@@ -47,11 +47,11 @@
           ></image-cropper>
 
 
-        </div>
+        </ng-container>
 
-        <div *ngIf="avatarSelect">
+        <ng-container *ngIf="avatarSelect">
           <app-image-gallery (selected)="onSuperheroSelected($event)"></app-image-gallery>
-        </div>
+        </ng-container>
 
       </div>
     </div>
@@ -59,7 +59,7 @@
   </div>
 
   <!--<div class="card-footer text-center">-->
-  <div *ngIf="avatarPreview">
+  <ng-container *ngIf="avatarPreview">
     <img [src]="avatarUrl"
          alt="Avatar"
          class="img-center img-fluid rounded-circle"
@@ -77,7 +77,7 @@
                class="img-center img-fluid rounded-circle"
                id="avatarPlaceholder">
         </ng-template>-->
-  </div>
+  </ng-container>
 
   <!--  </div>-->
   <!--</div>-->

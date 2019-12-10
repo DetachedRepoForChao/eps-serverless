@@ -25,6 +25,7 @@ export class NavigationService {
   public purchaseHistoryComponentInputUser: EntityCurrentUserModel;
   public purchaseHistoryModalActive = false;
   public purchaseRequestDataSource$: Observable<UserHasStoreItemModel[]>;
+  public purchaseRequestDataSource: UserHasStoreItemModel[];
   public notificationDetailsModalActive = false;
   public notificationDetailsInput: NotificationModel;
 
@@ -119,42 +120,58 @@ export class NavigationService {
 
   setPurchaseRequestDataSourceAll(userId: number) {
     console.log('setPurchaseRequestDataSourceAll');
-    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserRequests(userId);
+    // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserRequests(userId);
+    this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserRequests(userId);
 
   }
+
+  setPurchaseRequestDataSourceAllActive(userId: number) {
+    console.log('setPurchaseRequestDataSourceAllActive');
+    // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserRequests(userId);
+    this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserActiveRequests(userId);
+
+  }
+
 
   setPurchaseRequestDataSourcePending(userId: number) {
     console.log('setPurchaseRequestDataSourcePending');
 
-    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserPendingRequests(userId);
+    // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserPendingRequests(userId);
+    this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserPendingRequests(userId);
 
   }
 
-  setPurchaseRequestDataSourceApproved(userId: number) {
-    console.log('setPurchaseRequestDataSourceApproved');
+  setPurchaseRequestDataSourceReadyForPickup(userId: number) {
+    console.log('setPurchaseRequestDataSourceReadyForPickup');
 
-    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserApprovedRequests(userId);
-
-  }
-
-  setPurchaseRequestDataSourceDeclined(userId: number) {
-    console.log('setPurchaseRequestDataSourceDeclined');
-
-    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserDeclinedRequests(userId);
+    // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserApprovedRequests(userId);
+    this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserReadyForPickupRequests(userId);
 
   }
 
-  setPurchaseRequestDataSourceFulfilled(userId: number) {
+  setPurchaseRequestDataSourcePickedUp(userId: number) {
+    console.log('setPurchaseRequestDataSourcePickedUp');
+
+    // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserDeclinedRequests(userId);
+    this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserPickedUpRequests(userId);
+
+  }
+
+  setPurchaseRequestDataSourceArchived(userId: number) {
     console.log('setPurchaseRequestDataSourceFulfilled');
 
-    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserFulfilledRequests(userId);
+    // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserFulfilledRequests(userId);
+    this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserArchivedRequests(userId);
+
 
   }
 
   setPurchaseRequestDataSourceCancelled(userId: number) {
     console.log('setPurchaseRequestDataSourceCancelled');
 
-    this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserCancelledRequests(userId);
+    // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserCancelledRequests(userId);
+    this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserCancelledRequests(userId);
+
   }
 
 }

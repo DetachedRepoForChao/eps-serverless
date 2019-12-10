@@ -3,22 +3,19 @@
     <img alt="Bootstrap Image Preview" width="165" height="165" src="../../../assets/img/point.png" class="rounded-circle" />
   </h5>
   <div class="card-body">
-
     <H1 class="card-text3">
       Manage Point Items
     </H1>
-
   </div>
   <div class="card-footer3 marginbottom">
 
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addPointItemModal">Add Point Item</button>
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#editPointItemModal">Edit Point Item</button>
-
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deletePointItemModal">Delete Point Item</button>
     <br><br>
-    <br><br>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#setPointPoolMaxModal">Set Point Pool Max</button>
     <br><br>
   </div>
 </div>
@@ -28,7 +25,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addPointItemModalLabel">Add a new Point Item</h5>
+        <h5 class="modal-title" id="addPointItemModalLabel">Add a New Point Item</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -270,6 +267,44 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" (click)="onDeletePointItemFormSubmit(deletePointItemForm)">Delete Point Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Set Point Pool -->
+<div class="modal fade bd-example-modal-lg" id="setPointPoolMaxModal" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="setPointPoolModalLabel">Set Point Pool Max</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pointItem-modal-body">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+          <div class="pointItem-form-container">
+            <form [formGroup]="pointPoolMaxForm">
+              <div class="form-row">
+                <div class="form-group col-sm-12 col-md-8 col-lg-8 col-xl-8">
+                  <label for="setPointPoolMax_maxAmount" class="form-label">The current Point Pool max is <span class="text-primary">{{this.pointPoolMax}}</span>. Set a new one?</label>
+                  <input class="form-control user-form-control" id="setPointPoolMax_maxAmount" type="number" min="1" step="1" placeholder="New Point Pool Max Amount" formControlName="maxAmount" value="5000">
+                  <ng-container *ngIf="(pointPoolMaxFormSubmitted) || (pointPoolMaxForm.dirty && pointPoolMaxForm.controls.maxAmount.touched && pointPoolMaxForm.controls.maxAmount.value < 1)">
+                    <label class="validation-message">The value must be a whole number greater than 0.</label>
+                  </ng-container>
+                </div>
+              </div>
+            </form>
+          </div>
+        </perfect-scrollbar>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="onSetPointPoolMaxSubmit(pointPoolMaxForm)">Set New Point Pool Max</button>
       </div>
     </div>
   </div>

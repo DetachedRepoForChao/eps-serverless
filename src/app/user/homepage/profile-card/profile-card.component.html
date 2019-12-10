@@ -111,7 +111,7 @@
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
           <h4 class="mb-0" *ngIf="leaderboardUsers">
-            {{leaderboardUsers.indexOf(entityUserQuery.getUserByUsername(currentUser?.username)[0]) + 1}}
+            {{leaderboardUsers.indexOf(entityUserQuery.getUserByUsername(currentUser?.username)) + 1}}
           </h4>
         </div>
       </div>

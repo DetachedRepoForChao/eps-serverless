@@ -41,4 +41,10 @@ export class PointItemQuery extends QueryEntity<PointItemState, PointItemModel> 
       filterBy: e => e.itemId === itemId
     });
   }
+
+  public getPointItemByItemId(itemId: number) {
+    return this.getAll({
+      filterBy: e => e.itemId === itemId
+    })[0];
+  }
 }

@@ -1,24 +1,24 @@
 <div class="container align-items-center max-height-600">
 
-  <div *ngIf="pointItemTransactions$; else noTransactions">
+  <ng-container *ngIf="pointItemTransactions; else noTransactions">
     <div class="row justify-content-md-center ">
 
-      <div *ngFor="let transaction of (pointItemTransactions$ | async).slice(0, showLimit); let i = index" class="col-10 achievlist point-item-container">
+      <div *ngFor="let transaction of pointItemTransactions.slice(0, showLimit); let i = index" class="col-10 achievlist point-item-container">
 
         <div class="row">
           <div class="col-2 text-left avatar-col">
             <div *ngIf="!isManager; else managerAvatar">
-              <div *ngIf="(this.userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]; else avatarLoading">
-                <img [src]="(this.userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.avatarResolvedUrl"
+              <ng-container *ngIf="userQuery.getUserByUserId(transaction?.sourceUserId); else avatarLoading">
+                <img [src]="userQuery.getUserByUserId(transaction?.sourceUserId)?.avatarResolvedUrl"
                      alt="Avatar"
                      class="img-center img-fluid rounded-circle avatar-img"
                      id="avatar-user">
-              </div>
+              </ng-container>
             </div>
 
             <ng-template #managerAvatar>
-              <div *ngIf="(this.userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]; else avatarLoading">
-                <img [src]="(this.userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]?.avatarResolvedUrl"
+              <div *ngIf="userQuery.getUserByUserId(transaction?.targetUserId); else avatarLoading">
+                <img [src]="userQuery.getUserByUserId(transaction?.targetUserId)?.avatarResolvedUrl"
                      alt="Avatar"
                      class="img-center img-fluid rounded-circle avatar-img"
                      id="avatar-manager">
@@ -37,15 +37,15 @@
             <div class="col-12">
               <div class="form-row">
 
-                <h5 class="point-content italics">{{(pointItemQuery.selectPointItemByItemId(transaction?.pointItemId) | async)[0]?.name}}</h5>
+                <h5 class="point-content italics">{{pointItemQuery.getPointItemByItemId(transaction?.pointItemId)?.name}}</h5>
 
               </div>
               <div class="form-row">
                 <div *ngIf="!isManager; else managerContent">
-                  <h5 class="point-content">- Awarded by <a href="javascript:void(0)" (click)="onUserClick(transaction?.sourceUserId)">{{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(transaction?.sourceUserId) | async)[0]?.lastName}}</a> on {{transaction?.createdAt | date:'longDate'}}</h5>
+                  <h5 class="point-content">- Awarded by <a href="javascript:void(0)" (click)="onUserClick(transaction?.sourceUserId)">{{userQuery.getUserByUserId(transaction?.sourceUserId)?.firstName}} {{userQuery.getUserByUserId(transaction?.sourceUserId)?.lastName}}</a> on {{transaction?.createdAt | date:'longDate'}}</h5>
                 </div>
                 <ng-template #managerContent>
-                  <h5 class="point-content">- Awarded to <a href="javascript:void(0)" (click)="onUserClick(transaction?.targetUserId)">{{(userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]?.firstName}} {{(userQuery.selectUserByUserId(transaction?.targetUserId) | async)[0]?.lastName}}</a> on {{transaction?.createdAt | date:'longDate'}}</h5>
+                  <h5 class="point-content">- Awarded to <a href="javascript:void(0)" (click)="onUserClick(transaction?.targetUserId)">{{userQuery.getUserByUserId(transaction?.targetUserId)?.firstName}} {{userQuery.getUserByUserId(transaction?.targetUserId)?.lastName}}</a> on {{transaction?.createdAt | date:'longDate'}}</h5>
 
                 </ng-template>
 
@@ -61,15 +61,15 @@
     </div>
 
     <div class="row justify-content-md-center">
-      <div *ngIf="(pointItemTransactions$ | async)?.length >= showLimit; else noMore" >
-        Displaying {{showLimit}} out of {{(pointItemTransactions$ | async)?.length}} points awards. <a href="javascript:void(0)" (click)="showLimit = showLimit + 6">Show more...</a>
-      </div>
+      <ng-container *ngIf="pointItemTransactions?.length >= showLimit; else noMore" >
+        Displaying {{showLimit}} out of {{pointItemTransactions?.length}} points awards. <a href="javascript:void(0)" (click)="showLimit = showLimit + 6">Show more...</a>
+      </ng-container>
       <ng-template #noMore>
-        Displaying all {{(pointItemTransactions$ | async)?.length}} points awards.
+        Displaying all {{pointItemTransactions?.length}} points awards.
       </ng-template>
     </div>
 
-  </div>
+  </ng-container>
 
   <ng-template #noTransactions>
     <div class="row justify-content-md-center ">

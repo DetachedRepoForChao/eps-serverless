@@ -9,7 +9,7 @@
 
         <div class="row purchase-request-row">
           <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="confirmRequest">
-            <div *ngIf="(this.storeItemQuery.selectLoading() | async) === false && managerRequests$; else storeLoading">
+            <ng-container *ngIf="(this.storeItemQuery.selectLoading() | async) === false && managerRequests; else storeLoading">
             <div class="card">
               <div class="card card-coin card-plain card-custom">
                 <div class="card-body">
@@ -41,7 +41,7 @@
                   </div>
 
                   <div class="table-container mat-elevation-z8">
-                    <table mat-table  #requestTable [dataSource]="managerRequests$"  >
+                    <table mat-table  #requestTable [dataSource]="managerRequests"  >
                         <ng-container matColumnDef="createdAt">
                           <th mat-header-cell *matHeaderCellDef  >Activity</th>
                           <td mat-cell *matCellDef="let UserHasStoreItemModel">
@@ -49,7 +49,7 @@
                               <div class="row">
                                 Created On: {{UserHasStoreItemModel.createdAt | date:'shortDate'}}
                               </div>
-                              <div *ngIf="UserHasStoreItemModel.createdAt !==UserHasStoreItemModel.updatedAt" class="row font-italic">
+                              <div *ngIf="UserHasStoreItemModel.createdAt !== UserHasStoreItemModel.updatedAt" class="row font-italic">
                                 Updated On: {{UserHasStoreItemModel.updatedAt | date:'shortDate'}}
                               </div>
                             </div>
@@ -63,14 +63,14 @@
                             <div class="col-12">
                               <div class="row">
                                 <div class="col-4 img-col">
-                                  <img class="rounded-circle avatar-img" [src]="(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.avatarResolvedUrl">
+                                  <img class="rounded-circle avatar-img" [src]="entityUserQuery.getUserByUserId(UserHasStoreItemModel.userId)?.avatarResolvedUrl">
                                 </div>
                                 <div class="col-8">
                                   <div class="row">
-                                    <a href="javascript:void(0)" (click)="onUserClick(UserHasStoreItemModel?.userId)">{{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}</a>
+                                    <a href="javascript:void(0)" (click)="onUserClick(UserHasStoreItemModel.userId)">{{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}</a>
                                   </div>
                                   <div class="row font-italic">
-                                    {{(entityUserQuery.selectUserByUserId(UserHasStoreItemModel.userId) | async)[0]?.department.Name}}
+                                    {{entityUserQuery.getUserByUserId(UserHasStoreItemModel.userId)?.department.Name}}
                                   </div>
                                 </div>
                               </div>
@@ -87,7 +87,7 @@
                             <div class="col-12">
                               <div class="row">
                                 <div class="col-4 img-col">
-                                  <img class="avatar-img" [src]="(storeItemQuery.selectStoreItemById(UserHasStoreItemModel.storeItemId) | async)[0]?.imageResolvedUrl">
+                                  <img class="avatar-img" [src]="storeItemQuery.getStoreItemById(UserHasStoreItemModel.storeItemId)?.imageResolvedUrl">
                                 </div>
                                 <div class="col-8">
                                   <div class="row">
@@ -135,15 +135,6 @@
                           <td mat-cell *matCellDef="let UserHasStoreItemModel">
                             <div *ngIf="UserHasStoreItemModel.status === 'pending'">
                               <mat-checkbox [value]="'readyForPickup'" (change)="actionToggle(UserHasStoreItemModel, $event)">Ready for Pickup</mat-checkbox>
-<!--                              <mat-radio-group >
-
-                                <mat-radio-button [value]="'Approve'" (change)="actionToggle(UserHasStoreItemModel, $event)">Approve</mat-radio-button>
-                                <mat-radio-button [value]="'Decline'" (change)="actionToggle(UserHasStoreItemModel, $event)">Decline</mat-radio-button>
-                                <mat-radio-button checked [value]="'Pending'" (change)="actionToggle(UserHasStoreItemModel, $event)">Pending</mat-radio-button>
-                                &lt;!&ndash;                            <mat-radio-button *ngFor="let approveOption of approveOptions" [checked]="approveOption === approveOptions[0]" (change)="approvalToggle(UserHasStoreItemModel, $event)" [value]="approveOption">
-                                                              {{approveOption.name}}
-                                                            </mat-radio-button>&ndash;&gt;
-                              </mat-radio-group>-->
                             </div>
                             <div *ngIf="UserHasStoreItemModel.status === 'approved'" >
                               <mat-checkbox [value]="'Fulfill'" (change)="actionToggle(UserHasStoreItemModel, $event)">Fulfill</mat-checkbox>
@@ -161,12 +152,6 @@
 
 
 
-                      <!--                      <ng-container matColumnDef="declineRequest">
-                                              <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-                      &lt;!&ndash;                        <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-checkbox (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-checkbox> {{UserHasStoreItemModel.declineRequest}}</mat-cell>&ndash;&gt;
-                                              <mat-cell *matCellDef="let UserHasStoreItemModel"> <mat-radio-button (change)="$event ? approvalToggle(UserHasStoreItemModel) : null" [(ngModel)]="UserHasStoreItemModel.declineRequest"></mat-radio-button> {{UserHasStoreItemModel.declineRequest}}</mat-cell>
-
-                                            </ng-container>-->
 
                       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -180,19 +165,13 @@
                     <button type="button" class="btn btn-danger mx-3" (click)="cancelApproval()" >Cancel</button>
                   </div>
 
-<!--                  <mat-paginator
-                    [length] ="100"
-                    [pageSize]= "10"
-                    [pageSizeOptions] ="[5, 10, 25, 100]">
-                  </mat-paginator>-->
-
                 </div>
               </div>
 
 
             </div>
 
-            </div>
+            </ng-container>
 
             <ng-template #storeLoading>
               Loading...

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnChanges, OnInit, SimpleChanges,} from '@angular/core';
+import {AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
@@ -7,13 +7,14 @@ import {StoreItemService} from '../../../entity-store/store-item/state/store-ite
 import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, Subject, Subscription} from 'rxjs';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {NavigationService} from '../../../shared/navigation.service';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {ConfirmItemPurchaseComponent} from '../../confirm-item-purchase/confirm-item-purchase.component';
 import {PointsStoreComponent} from '../points-store.component';
 import {Router} from '@angular/router';
+import {takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -22,19 +23,21 @@ declare var $: any;
   templateUrl: './points-store-header.component.html',
   styleUrls: ['./points-store-header.component.css']
 })
-export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewInit {
+export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   public config: PerfectScrollbarConfigInterface = {};
+  private subscription = new Subscription();
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
   currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
-  currentPurchaseRequestTabItem = 'all';
+  currentPurchaseRequestTabItem = 'allActive';
   purchaseRequestTabItems = [
-    'all',
+    'allActive',
     'pending',
-    'approved',
-    'declined',
-    'fulfilled',
-    'cancelled'
+    'readyForPickup',
+    'pickedUp',
+    'archived',
   ];
 
   constructor(private currentUserService: EntityCurrentUserService,
@@ -49,50 +52,22 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
               public navigationService: NavigationService) { }
 
   ngOnInit() {
-    const observables: Observable<any>[] = [];
-    observables.push(
-      this.currentUserService.cacheCurrentUser(),
-      this.userService.cacheUsers(),
-      this.achievementService.cacheAchievements(),
-      this.storeItemService.cacheStoreItems(),
-      this.userHasStoreItemService.cacheUserHasStoreItemRecords()
-    );
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
 
-    forkJoin(observables)
-      .subscribe(() => {
-
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
       });
-
-    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });
-
-    this.currentUserQuery.selectAll({
-      limitTo: 1
-    }).subscribe(currentUser => {
-      this.currentUser = currentUser[0];
-    });
-
-    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-      console.log('balance: ' + balance);
-      this.currentUserService.updatePointsBalance(balance);
-    });
   }
 
-  getPendingBalance(): Observable<any> {
-    return new Observable(observer => {
-      this.currentUserQuery.selectAll()
-        .subscribe(user => {
-          if (user[0]) {
-            observer.next(user[0].pointsBalance);
-            observer.complete();
-          } else {
-            observer.complete();
-          }
-
-        });
-    });
-  }
 
   viewPurchaseHistory() {
     console.log('view purchase history');
@@ -114,7 +89,7 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
 
   confirmStoreItemPurchaseRequest(): void {
     console.log(`Received request to purchase store item`);
-    this.router.navigate(['/confirm-item-purchase']);
+    this.router.navigate(['/', 'user', 'confirm-item-purchase']);
 
   }
 
@@ -140,4 +115,13 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
       }
     }
   }
+
+  ngOnDestroy(): void {
+    // this.subscription.unsubscribe();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }
+

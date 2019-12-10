@@ -96,6 +96,32 @@ perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
 }
 
 
+//#notificationModal > div > div > div.modal-body.modalclass > app-notifications > div > div:nth-child(3) > perfect-scrollbar
+#notificationModal > div > div > div.modal-body.modalclass > app-notifications > div > div:nth-child(3) > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#notificationModal > div > div > div.modal-body.modalclass > app-notifications > div > div:nth-child(3) > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#notificationModal > div > div > div.modal-body.modalclass > app-notifications > div > div:nth-child(3) > perfect-scrollbar .ps.ps--scrolling-y > .ps__rail-y,
+#notificationModal > div > div > div.modal-body.modalclass > app-notifications > div > div:nth-child(3) > perfect-scrollbar .ps.ps--scrolling-x > .ps__rail-x {
+  opacity: 0.9;
+
+  background-color: #eee0 !important;
+}
+
+#notificationModal > div > div > div.modal-body.modalclass > app-notifications > div > div:nth-child(3) > perfect-scrollbar .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: #eee0 !important;
+  opacity: 0.9;
+}
+
+
 .mat-tooltip {
   font-size: 16px;
   white-space: pre-line !important;

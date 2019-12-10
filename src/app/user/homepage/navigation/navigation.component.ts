@@ -19,6 +19,7 @@ import {NotificationService} from '../../../entity-store/notification/state/noti
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {Subscription} from 'rxjs';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
+import {take} from 'rxjs/operators';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -71,11 +72,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
     this.isCardLoading = true;
-    this.entityUserService.cacheUsers().subscribe();
-    this.entityCurrentUserService.cacheCurrentUser().subscribe();
+/*    this.entityUserService.cacheUsers().subscribe();
+    this.entityCurrentUserService.cacheCurrentUser().subscribe();*/
     this.currentUser$ = this.currentUserQuery.selectAll();
 
-    this.notificationService.cacheNotifications().subscribe();
+    // this.notificationService.cacheNotifications().subscribe();
     this.unseenNotificationSubscription = this.notificationQuery.selectAll({
       filterBy: e => e.timeSeen === null
     })
@@ -84,7 +85,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       });
 
 
-/*    this.notificationService.getNotifications().subscribe(result => {
+    this.notificationService.getNotifications().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
       for (let notification of result){
@@ -110,7 +111,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         $('#notification_button').addClass('btn-danger');
       }
       console.log('Notification-log Initial' + this.Notifications);
-    });*/
+    });
     this.isCardLoading = false;
   }
 
@@ -305,6 +306,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   clearAchievementComponentInputUser(event) {
     this.navigationService.achievementComponentInputUser = null;
+  }
+
+  clearNotificationDetailComponentInput(event) {
+    this.navigationService.notificationDetailsInput = null;
+  }
+
+  deleteNotification(notification: NotificationModel) {
+    console.log(`Deleting notification ${notification.notificationId}`);
+    this.notificationService.deleteNotification(notification)
+      .pipe(take(1))
+      .subscribe(result => {
+        console.log(`Notification delete result: `);
+        console.log(result);
+        this.navigationService.closeNotificationDetailsModal();
+      });
   }
 
   ngOnDestroy(): void {

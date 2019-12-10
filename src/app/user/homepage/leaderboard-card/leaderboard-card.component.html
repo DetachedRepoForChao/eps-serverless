@@ -37,41 +37,44 @@
           </thead>
           <tbody>
 
-          <tr *ngFor="let user of (leaderboardUsers$ | async).slice(0, 4)" class="leaderboard-table-row" [routerLink]="['/', 'user', 'profile', user.username]">
-            <td *ngFor="let col of this.displayedColumns" >
-              <div *ngIf="col === 'avatar'" class="avatar-container">
-                <div class="circle-container ">
-                  <img src="{{user?.avatarResolvedUrl}}"/>
-                  <div *ngIf="user?.username === (entityCurrentUserQuery.selectAll() | async)[0]?.username; else otherUser">
+          <ng-container *ngIf="leaderboardUsers?.length > 0">
+            <tr *ngFor="let user of leaderboardUsers.slice(0, 4)" class="leaderboard-table-row" [routerLink]="['/', 'user', 'profile', user.username]">
+              <td *ngFor="let col of this.displayedColumns" >
+                <div *ngIf="col === 'avatar'" class="avatar-container">
+                  <div class="circle-container ">
+                    <img src="{{user?.avatarResolvedUrl}}"/>
+                    <div *ngIf="user?.username === currentUserQuery.getAll()[0]?.username; else otherUser">
 
                     <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
                         <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
                         <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal"></i>
                         <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
                     </span>
-                  </div>
-                  <ng-template #otherUser>
-                    <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
+                    </div>
+                    <ng-template #otherUser>
+                    <span *ngFor="let star of userQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
                         <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow" ></i>
                         <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal" ></i>
                         <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
                     </span>
+                    </ng-template>
+                  </div>
+                </div>
+                <div *ngIf="col === 'rank'" class="text-center">{{leaderboardUsers.indexOf(user) + 1}}</div>
+                <div *ngIf="col === 'name'">
+                  <div *ngIf="user['preferredName']; else noPreferredName">
+                    <div>{{user['preferredName']}}</div>
+                  </div>
+                  <ng-template #noPreferredName>
+                    <div>{{user['firstName'] + ' ' + user['lastName']}}</div>
                   </ng-template>
                 </div>
-              </div>
-              <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>
-              <div *ngIf="col === 'name'">
-                <div *ngIf="user['preferredName']; else noPreferredName">
-                  <div>{{user['preferredName']}}</div>
-                </div>
-                <ng-template #noPreferredName>
-                  <div>{{user['firstName'] + ' ' + user['lastName']}}</div>
-                </ng-template>
-              </div>
-              <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
+                <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
 
-            </td>
-          </tr>
+              </td>
+            </tr>
+          </ng-container>
+
           </tbody>
         </table>
 
@@ -94,8 +97,8 @@
                     <div class="card card-coin card-plain card-custom">
                       <div class="card-header">
 
-                        <div *ngIf="(entityUserQuery.selectLoading() | async) === false; else selectedAvatarLoading">
-                          <img src="{{(entityUserQuery.selectUser(selectedRow.username) | async)[0]?.avatarResolvedUrl}}"
+                        <div *ngIf="leaderboardUsers?.length > 0; else selectedAvatarLoading">
+                          <img src="{{userQuery.getUserByUsername(selectedRow.username)?.avatarResolvedUrl}}"
                                alt="Place image title"
                                class="img-center img-fluid rounded-circle"
                                id="avatar">
@@ -131,11 +134,11 @@
                           </div>
                           <div class="col p-2">
                             <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-                            <h4 class="mb-0">{{entityUserQuery.getUserCompleteAchievementCount(selectedRow?.userId).length}} / {{achievementQuery.getAll().length}}</h4>
+                            <h4 class="mb-0">{{userQuery.getUserCompleteAchievementCount(selectedRow?.userId).length}} / {{achievementQuery.getAll().length}}</h4>
                           </div>
                           <div class="col p-2">
                             <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-                            <h4 class="mb-0">{{(leaderboardUsers$ | async).indexOf(selectedRow) + 1}}</h4>
+                            <h4 class="mb-0">{{leaderboardUsers.indexOf(selectedRow) + 1}}</h4>
                           </div>
                         </div>
                         <div class="card-footer text-center">
@@ -204,18 +207,18 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of (leaderboardUsers$ | async)">
+          <tr *ngFor="let user of leaderboardUsers">
             <td *ngFor="let col of this.displayedColumnsAll">
               <!--              <div *ngIf="col === 'avatar'"><img src="{{user[col]}}" class="img-row"></div>-->
               <div *ngIf="col === 'avatar'" class="avatar-container">
                 <div class="circle-container ">
                   <img src="{{user?.avatarResolvedUrl}}" class="img-row "/>
-                  <span *ngFor="let star of entityUserQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
+                  <span *ngFor="let star of userQuery.getUserCompleteAchievementCount(user?.userId); let i = index">
                     <i class="fas fa-star deg{{i * 45}}"></i>
                   </span>
                 </div>
               </div>
-              <div *ngIf="col === 'rank'" class="text-center">{{(leaderboardUsers$ | async).indexOf(user) + 1}}</div>
+              <div *ngIf="col === 'rank'" class="text-center">{{leaderboardUsers.indexOf(user) + 1}}</div>
               <div *ngIf="col === 'name'">{{user['firstName'] + ' ' + user['lastName']}}</div>
               <div *ngIf="col === 'points'" class="text-center">{{user[col]}}</div>
               <div *ngIf="col === 'username'">{{user[col]}}</div>

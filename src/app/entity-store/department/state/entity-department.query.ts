@@ -36,6 +36,18 @@ export class EntityDepartmentQuery extends QueryEntity<EntityDepartmentState, En
     }
   }
 
+  public getDepartmentByDepartmentId(departmentId: number): EntityDepartmentModel {
+    return this.getAll({
+      filterBy: e => e.departmentId === departmentId
+    })[0];
+  }
+
+  public getDepartmentByDepartmentName(departmentName: string): EntityDepartmentModel {
+    return this.getAll({
+      filterBy: e => e.name === departmentName
+    })[0];
+  }
+
   // public getUser(username: string): EntityUserAvatarModel {
 /*  public getCurrentUser() {
     const currentUserAvatar = this.getAll();

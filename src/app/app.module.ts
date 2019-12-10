@@ -100,6 +100,7 @@ import { OtherUserManagerComponent } from './user/profile/other-user-manager/oth
 import { PointsStoreHeaderComponent } from './user/points-store/points-store-header/points-store-header.component';
 import { PurchaseHistoryComponent } from './user/points-store/purchase-history/purchase-history.component';
 import { NotificationsComponent } from './shared/notifications/notifications.component';
+import { NotificationDetailsComponent } from './shared/notification-details/notification-details.component';
 akitaConfig({
   resettable: true
 });
@@ -165,7 +166,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     OtherUserManagerComponent,
     PointsStoreHeaderComponent,
     PurchaseHistoryComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    NotificationDetailsComponent
   ],
   imports: [
     BrowserModule,

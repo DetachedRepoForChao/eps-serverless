@@ -101,7 +101,7 @@ export class ProfileComponent implements OnInit {
 
 
 
-    const observables: Observable<any>[] = [];
+/*    const observables: Observable<any>[] = [];
     observables.push(
       this.currentUserService.cacheCurrentUser(),
       this.userService.cacheUsers(),
@@ -113,7 +113,7 @@ export class ProfileComponent implements OnInit {
     forkJoin(observables)
       .subscribe(() => {
 
-      });
+      });*/
 
     this.leaderboardUsers$ = this.userQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,

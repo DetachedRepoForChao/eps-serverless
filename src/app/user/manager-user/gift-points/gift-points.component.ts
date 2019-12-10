@@ -111,11 +111,11 @@ export class GiftPointsComponent implements OnInit {
 
     this.populateCoreValueButtonList();
 
-    this.pointItemService.cachePointItems().subscribe();
+    // this.pointItemService.cachePointItems().subscribe();
     this.pointItemList$ = this.pointItemQuery.selectAll();
     // this.filteredPointItemList$ = this.pointItemQuery.selectAll();
 
-    this.entityUserService.cacheUsers().subscribe();
+    // this.entityUserService.cacheUsers().subscribe();
     this.employees$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });

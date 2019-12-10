@@ -42,8 +42,8 @@ export class AlertCardComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Starting ${functionFullName}`);
 
-    this.userService.cacheUsers().subscribe();
-    this.notificationService.cacheNotifications().subscribe();
+/*    this.userService.cacheUsers().subscribe();
+    this.notificationService.cacheNotifications().subscribe();*/
 
     this.alertSubscription = this.notificationQuery.selectAll({
       filterBy: e => e.event === 'Alert'

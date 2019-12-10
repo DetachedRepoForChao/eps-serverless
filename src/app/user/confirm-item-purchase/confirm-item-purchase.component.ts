@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CurrentUserStore} from '../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
@@ -13,11 +13,12 @@ import {Router } from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
 
 
-import {from, Observable} from 'rxjs';
+import {from, Observable, Subject, Subscription} from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {UserHasStoreItemModel} from '../../entity-store/user-has-store-item/state/user-has-store-item.model';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
+import {take, takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -26,19 +27,23 @@ declare var $: any;
   templateUrl: './confirm-item-purchase.component.html',
   styleUrls: ['./confirm-item-purchase.component.css']
 })
-export class ConfirmItemPurchaseComponent implements OnInit {
+export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
   @ViewChild('requestTable') requestTable: MatTable<UserHasStoreItemModel>;
   componentName = 'confirm-item-purchase.component';
 
+  private subscription = new Subscription();
+  private requestsLoading$ = new Subject();
+  private unsubscribe$ = new Subject();
 
   currentUser$: Observable<EntityCurrentUserModel[]>;
-  currentUser;
+  currentUser: EntityCurrentUserModel;
   items: StoreItemModel[] = [];
   numRows: number;
   rows = [];
   requestedStoreItem: UserHasStoreItemModel;
   dialogResult = " ";
   managerRequests$: Observable<UserHasStoreItemModel[]>;
+  managerRequests: UserHasStoreItemModel[];
   displayedColumns = ['createdAt', 'userUsername', 'storeItemName', 'status', 'action'];
 
   actionList = [];
@@ -81,14 +86,17 @@ export class ConfirmItemPurchaseComponent implements OnInit {
 
     console.log(this.requestTable);
 
-    this.currentUser$ = this.currentUserQuery.selectAll();
-    this.entityUserService.cacheUsers().subscribe();
+    // this.currentUser$ = this.currentUserQuery.selectAll();
+/*    this.entityUserService.cacheUsers().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
     this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe((result) => {
       console.log(result);
-    });
+    });*/
+
+    // this.subscription;
 
     this.userHasStoreItemQuery.selectLoading()
+      .pipe(takeUntil(this.requestsLoading$))
       .subscribe(isLoading => {
         console.log('isLoading?: ' + isLoading);
         if (!isLoading) {
@@ -158,13 +166,15 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     console.log(`confirm approval?`);
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: {action: 'confirmPurchaseRequestSave', actionList: this.actionList}
+      data: {action: 'updatePurchaseRequestStatusSave', actionList: this.actionList}
     });
 
     // width: '600px',
     // data: "Would you like to save your changes?",
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+      .pipe(take(1))
+      .subscribe(result => {
       console.log(`Dialog closed: ${result}`);
       this.dialogResult = result;
       if (result === 'Confirm') {
@@ -184,6 +194,7 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     });
 
     this.userHasStoreItemService.processRequests(actionList)
+      .pipe(take(1))
       .subscribe(result => {
         console.log('processRequests result');
         console.log(result);
@@ -225,7 +236,8 @@ export class ConfirmItemPurchaseComponent implements OnInit {
     let dayDiff;
 
     if (status === 'allActive') {
-      this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+
+      this.userHasStoreItemQuery.selectAll({
         filterBy: e => {
           if (e.status === 'pickedUp') {
             otherDate = new Date(e.pickedUpAt);
@@ -236,29 +248,50 @@ export class ConfirmItemPurchaseComponent implements OnInit {
           }
           return true;
         }
-      });
+      })
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((requests: UserHasStoreItemModel[]) => {
+          this.managerRequests = requests;
+        });
+
       return;
     } else if (status === 'archived') {
 
-      this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
-        filterBy: e => {
-          if (e.status === 'pickedUp') {
-            otherDate = new Date(e.pickedUpAt);
-            dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
-            if (dayDiff >= 5) {
-              return true;
-            }
-          }
-          return false;
-        }
-      });
 
+        this.userHasStoreItemQuery.selectAll({
+          filterBy: e => {
+            if (e.status === 'pickedUp') {
+              otherDate = new Date(e.pickedUpAt);
+              dayDiff = (currentDate - otherDate.getTime()) / (1000 * 60 * 60 * 24);
+              if (dayDiff >= 5) {
+                return true;
+              }
+            }
+            return false;
+          }
+        })
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe((requests: UserHasStoreItemModel[]) => {
+            this.managerRequests = requests;
+          });
       return;
     }
 
-    this.managerRequests$ = this.userHasStoreItemQuery.selectAll({
+    this.userHasStoreItemQuery.selectAll({
       filterBy: e => e.status === status
-    });
+    })
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((requests: UserHasStoreItemModel[]) => {
+        this.managerRequests = requests;
+      });
+
   }
 
+  ngOnDestroy(): void {
+    // this.subscription.unsubscribe();
+    this.requestsLoading$.next();
+    this.requestsLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

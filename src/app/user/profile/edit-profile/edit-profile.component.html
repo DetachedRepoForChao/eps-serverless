@@ -242,14 +242,16 @@
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"></app-avatar>
-      </div>
+      <ng-container *ngIf="currentUser; else avatarModalLoading">
+        <div class="modal-body" >
+          <app-avatar [avatarUrl]="currentUser.avatarResolvedUrl"></app-avatar>
+        </div>
+      </ng-container>
+
       <ng-template #avatarModalLoading>
 
       </ng-template>
       <!----End Mod Bod---->
-
     </div>
   </div>
 </div>

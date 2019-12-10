@@ -17,7 +17,7 @@ import {AuthService} from '../../../login/auth.service';
 })
 export class EntityDepartmentService {
 
-  componentName = 'EntityDepartment.service';
+  componentName = 'entity-department.service';
   apiName = awsconfig.aws_cloud_logic_custom[0].name;
   apiPath = '/items';
   myInit = {
@@ -42,9 +42,9 @@ export class EntityDepartmentService {
   }
 
 
-  add(name: string,departmentId:number) {
-    const department = createEntityDepartmentModel({name,departmentId});
-    console.log(department)
+  add(name: string, departmentId: number) {
+    const department = createEntityDepartmentModel({name, departmentId});
+    console.log(department);
     this.entityDepartmentStore.add(department);
   }
 
@@ -81,7 +81,7 @@ export class EntityDepartmentService {
               const id = addDepartmentResult.data.newDepartment.departmentId;
               const name = addDepartmentResult.data.newDepartment.departmentName;
 
-              this.add(name,id);
+              this.add(name, id);
               observer.next(addDepartmentResult.data);
               observer.complete();
             } else {
@@ -93,8 +93,8 @@ export class EntityDepartmentService {
     });
   }
 
-  getEntityDepartmemt(): Observable<any> {
-    const functionName = 'getEntityDepartment';
+  getDepartments(): Observable<any> {
+    const functionName = 'getDepartments';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -105,7 +105,7 @@ export class EntityDepartmentService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
 
-          API.get(this.apiName, this.apiPath + '/departments', myInit).then(data => {
+          API.get(this.apiName, this.apiPath + '/getDepartments', myInit).then(data => {
             console.log(`${functionFullName}: successfully retrieved data from API`);
             console.log(data);
             observer.next(data.data);
@@ -140,7 +140,7 @@ export class EntityDepartmentService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            department:department
+            department: department
           };
 
           API.post(this.apiName, this.apiPath + '/deleteDepartment', myInit).then(deleteDepartmentResult => {
@@ -163,26 +163,26 @@ export class EntityDepartmentService {
   }
 
 
-  cacheEntityDepartments() {
-    const functionName = 'cacheEntityDepartments';
+  cacheDepartments() {
+    const functionName = 'cacheDepartments';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const request$ = this.getEntityDepartmemt()
-      .pipe(tap((entityDepartments: any) => {
+    const request$ = this.getDepartments()
+      .pipe(tap((departments: any) => {
         console.log(`${functionFullName}: caching:`);
-        console.log(entityDepartments);
+        console.log(departments);
 
-        const EntityDepartmentsArray: EntityDepartmentModel[] = [];
+        const departmentsArray: EntityDepartmentModel[] = [];
 
-        for (let i = 0; i < entityDepartments.length; i++) {
-          const departmentId = entityDepartments[i].feature.id;
-          const name = entityDepartments[i].feature.name;
-          const feature = createEntityDepartmentModel({departmentId, name});
-          EntityDepartmentsArray.push(feature);
+        for (const department of departments) {
+          const departmentId = department.id;
+          const name = department.name;
+          const departmentModel = createEntityDepartmentModel({departmentId, name});
+          departmentsArray.push(departmentModel);
         }
 
-        this.entityDepartmentStore.set(EntityDepartmentsArray);
+        this.entityDepartmentStore.set(departmentsArray);
       }));
 
     return cacheable(this.entityDepartmentStore, request$);

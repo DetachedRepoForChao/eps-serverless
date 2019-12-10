@@ -52,7 +52,7 @@ export class StoreItemsCardComponent implements OnInit {
 
   ngOnInit() {
 
-    this.storeItemService.cacheStoreItems().subscribe();
+    // this.storeItemService.cacheStoreItems().subscribe();
 
     // Load the reactive forms
     this.loadAddStoreItemForm();

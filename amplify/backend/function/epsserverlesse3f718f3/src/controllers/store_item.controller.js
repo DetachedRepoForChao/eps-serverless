@@ -368,7 +368,7 @@ const setStoreItemRequestPickedUp = function (requestUser, request) {
   console.log(`Start ${functionFullName}`);
 
   const time = Date.now();
-  request.status = 'readyForPickup';
+  request.status = 'pickedUp';
   request.pickedUpAt = time;
 
   // Update user_has_store_item record

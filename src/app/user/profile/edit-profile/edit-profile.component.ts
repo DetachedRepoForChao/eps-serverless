@@ -1,5 +1,5 @@
-import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BehaviorSubject, forkJoin, Observable, pipe} from 'rxjs';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {BehaviorSubject, forkJoin, Observable, pipe, Subject} from 'rxjs';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {HttpClient} from '@angular/common/http';
 
@@ -26,7 +26,8 @@ import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/
 import {NotifierService} from 'angular-notifier';
 import Auth from '@aws-amplify/auth';
 import {CognitoUser} from 'amazon-cognito-identity-js';
-import {tap} from 'rxjs/operators';
+import {take, takeUntil, tap} from 'rxjs/operators';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 
 
 declare var $: any;
@@ -36,17 +37,24 @@ declare var $: any;
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
-export class EditProfileComponent implements OnInit, AfterViewInit {
+export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() option;
   @Output() clearOption = new EventEmitter<any>();
+
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private userLoading$ = new Subject();
 
   optionExecuted = false;
   componentName = 'edit-profile.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
+  leaderboardUsers: EntityUserModel[];
 
   pendingBalance$;
   currentUser$;
+  currentUser: EntityCurrentUserModel;
+
   isCardLoading: boolean;
 
   // public config: PerfectScrollbarConfigInterface = {};
@@ -116,17 +124,51 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         this.isUserDataRetrieved = true;
       });
 
-    this.leaderboardUsers$ = this.userQuery.selectAll({
+/*    this.leaderboardUsers$ = this.userQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
+    });*/
 
-    this.currentUser$ = this.currentUserQuery.selectAll({
+/*    this.currentUser$ = this.currentUserQuery.selectAll({
       limitTo: 1
     });
 
     this.currentUser$.subscribe(() => {
       this.populateFormData();
-    });
+    });*/
+
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.userLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll({
+            filterBy: e => e.securityRole.Id === 1,
+          })
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.leaderboardUsers = users;
+            });
+
+          this.userLoading$.next();
+          this.userLoading$.complete();
+        }
+      });
+
+
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+              this.populateFormData();
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
 
 
 
@@ -135,65 +177,78 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     this.spinner.hide('edit-profile-spinner');
   }
 
+  // This is used to make Angular display the date correctly instead of being 1 day off due to
+  // the way time zones work...
+  fudgeDate(date): Date {
+    const offset = new Date().getTimezoneOffset() * 60000;
+    return new Date(new Date(date).getTime() + offset);
+  }
+
   populateFormData() {
     const functionName = 'populateFormData';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-    this.currentUser$.subscribe(currentUser => {
-      const user = currentUser[0];
-      // console.log(user);
-      this.editUserForm.patchValue({user: user});
-      const keys = Object.keys(user);
-      for (let i = 0; i < keys.length; i++) {
 
-        const key = keys[i];
-        if (this.editUserForm.get(key)) {
-          // We must take special consideration for selection objects like securityRole and department
-          switch (key) {
-            case 'gender': {
-              // console.log('gender');
-              // console.log(user[keys[i]]);
-              if (((user[keys[i]] !== 'Male') && (user[keys[i]] !== 'Female') && (user[keys[i]] !== 'Prefer Not to Say')) && (user[keys[i]])) {
-                this.editUserForm.patchValue({[key]: 'Custom'});
-                this.editUserForm.patchValue({genderCustom: user[keys[i]]});
-              } else {
-                this.editUserForm.patchValue({[key]: user[keys[i]]});
-              }
-              break;
-            }
-            case 'email': {
-              this.editUserForm.patchValue({[key]: user[keys[i]]});
-              this.email = user[keys[i]];
-              break;
-            }
-            case 'phone': {
-              this.editUserForm.patchValue({[key]: user[keys[i]]});
-              this.phone = user[keys[i]];
-              break;
-            }
-            case 'preferredName': {
-              if (user[keys[i]]) {
-                this.editUserForm.patchValue({[key]: user[keys[i]]});
-              } else {
-                this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
-                // console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
-              }
-              break;
-            }
-            case 'quote': {
-              // console.log('quote: ');
-              // console.log(key);
-              // console.log(user[keys[i]]);
-              this.editUserForm.patchValue({[key]: user[keys[i]]});
-              break;
-            }
-            default: {
+    const user = this.currentUser;
+    // console.log(user);
+    this.editUserForm.patchValue({user: user});
+    const keys = Object.keys(user);
+    for (let i = 0; i < keys.length; i++) {
+
+      const key = keys[i];
+      if (this.editUserForm.get(key)) {
+        // We must take special consideration for selection objects like securityRole and department
+        switch (key) {
+          case 'gender': {
+            // console.log('gender');
+            // console.log(user[keys[i]]);
+            if (((user[keys[i]] !== 'Male') && (user[keys[i]] !== 'Female') && (user[keys[i]] !== 'Prefer Not to Say')) && (user[keys[i]])) {
+              this.editUserForm.patchValue({[key]: 'Custom'});
+              this.editUserForm.patchValue({genderCustom: user[keys[i]]});
+            } else {
               this.editUserForm.patchValue({[key]: user[keys[i]]});
             }
+            break;
+          }
+          case 'email': {
+            this.editUserForm.patchValue({[key]: user[keys[i]]});
+            this.email = user[keys[i]];
+            break;
+          }
+          case 'phone': {
+            this.editUserForm.patchValue({[key]: user[keys[i]]});
+            this.phone = user[keys[i]];
+            break;
+          }
+          case 'preferredName': {
+            if (user[keys[i]]) {
+              this.editUserForm.patchValue({[key]: user[keys[i]]});
+            } else {
+              this.editUserForm.patchValue({[key]: `${user['firstName']} ${user['lastName']}`});
+              // console.log('setting ' + key + ' to ' + user['firstName'] + ' ' + user['lastName']);
+            }
+            break;
+          }
+          case 'birthdate': {
+            this.editUserForm.patchValue({[key]: this.fudgeDate(user[keys[i]])});
+            break;
+          }
+          case 'quote': {
+            // console.log('quote: ');
+            // console.log(key);
+            // console.log(user[keys[i]]);
+            this.editUserForm.patchValue({[key]: user[keys[i]]});
+            break;
+          }
+          default: {
+            this.editUserForm.patchValue({[key]: user[keys[i]]});
           }
         }
       }
-    });
+    }
+/*    this.currentUser$.subscribe(currentUser => {
+
+    });*/
   }
 
   ngAfterViewInit(): void {
@@ -231,10 +286,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
     this.editUserForm = this.formBuilder.group({
       user: [null, Validators.required],
       preferredName: [null],
-      prefix: [null],
-      suffix: [null],
-      position: [null],
-      preferredPronoun: [null],
+      // prefix: [null],
+      // suffix: [null],
+      // position: [null],
+      // preferredPronoun: [null],
       gender: [null],
       genderCustom: [null],
       birthdate: [null],
@@ -373,6 +428,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
         user['userId'] = sourceUser.userId;
         user['username'] = sourceUser.username;
         this.currentUserService.modifyUser(user)
+          .pipe(take(1))
           .subscribe(modifyResult => {
             console.log(modifyResult);
             if (modifyResult.status !== false) {
@@ -538,6 +594,15 @@ export class EditProfileComponent implements OnInit, AfterViewInit {
       console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
+  }
+
+  ngOnDestroy(): void {
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.userLoading$.next();
+    this.userLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
 

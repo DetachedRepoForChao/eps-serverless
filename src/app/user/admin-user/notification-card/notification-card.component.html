@@ -35,14 +35,20 @@
           <div class="notification-form-container">
             <form [formGroup]="notificationForm" (ngSubmit)="sendNotification()">
               <div class="form-row">
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                <div class="form-group col-sm-12 col-md-4 col-lg-12">
                   <mat-radio-group >
-                    <mat-radio-button checked="true" [value]="'department'" (change)="audienceToggle('department')">Department</mat-radio-button>
-                    <mat-radio-button [value]="'individual'" (change)="audienceToggle('individual')">Individual</mat-radio-button>
-                    <mat-radio-button [value]="'system'" (change)="audienceToggle('system')">System Wide</mat-radio-button>
+                    <mat-radio-button class="pr-2" checked="true" [value]="'department'" (change)="audienceToggle('department')">Department </mat-radio-button>
+                    <mat-radio-button class="pr-2" [value]="'employee'" (change)="audienceToggle('employee')">Employee </mat-radio-button>
+                    <mat-radio-button class="pr-2" [value]="'role'" (change)="audienceToggle('role')">Role </mat-radio-button>
+                    <mat-radio-button class="pr-2" [value]="'system'" (change)="audienceToggle('system')">System Wide </mat-radio-button>
                   </mat-radio-group>
                 </div>
 
+              </div>
+              <div class="form-row">
+                <div class="form-group col-sm-12 col-md-4 col-lg-4 text-primary">
+                  <mat-checkbox formControlName="alertFlag">Send As Alert</mat-checkbox>
+                </div>
               </div>
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-6 col-lg-6">
@@ -54,12 +60,13 @@
                   <select formControlName="department"  class="form-control user-form-control black" id="notification_department"
                           name="notification_department">
                     <option [ngValue]="null" [disabled]="true">Department</option>
-                    <option *ngFor="let department of departments" class="black" [ngValue]="department?.Id">
-                      {{department?.Name}}
+                    <option [ngValue]="departmentQuery.getDepartmentByDepartmentName('all')">All Departments</option>
+                    <option *ngFor="let department of departments" class="black" [ngValue]="department?.id">
+                      {{department?.name}}
                     </option>
                   </select>
                 </div>
-                <div *ngIf="audience === 'individual'" class="form-group col-sm-12 col-md-4 col-lg-4">
+                <div *ngIf="audience === 'employee'" class="form-group col-sm-12 col-md-4 col-lg-4">
                   <label class="form-label">Employee</label>
                   <select formControlName="user"  class="form-control user-form-control black" id="notification_user"
                           name="notification_user">
@@ -69,10 +76,18 @@
                     </option>
                   </select>
                 </div>
-
-                <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <mat-checkbox formControlName="alertFlag">Send As Alert</mat-checkbox>
+                <div *ngIf="audience === 'role'" class="form-group col-sm-12 col-md-4 col-lg-4">
+                  <label class="form-label">Role</label>
+                  <select formControlName="role"  class="form-control user-form-control black" id="notification_role"
+                          name="notification_role">
+                    <option [ngValue]="null" [disabled]="true">Role</option>
+                    <option *ngFor="let role of securityRoles" class="black" [ngValue]="role?.Id">
+                      {{role?.Name}}
+                    </option>
+                  </select>
                 </div>
+
+
               </div>
               <div class="form-row">
                 <div class="form-group col-md-4 col-lg-12">

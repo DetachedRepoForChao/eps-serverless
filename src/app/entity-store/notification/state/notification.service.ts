@@ -42,6 +42,7 @@ export class NotificationService {
     const keys = Object.keys(notification);
 
     for (let i = 0; i < keys.length; i++) {
+      console.log(`setting ${notificationUpdate[keys[i]]} to ${notification[keys[i]]}`);
       notificationUpdate[keys[i]] = notification[keys[i]];
     }
 
@@ -50,6 +51,15 @@ export class NotificationService {
     this.notificationStore.update((e) => e.notificationId === notification.notificationId, notificationUpdate);
   }
 
+  delete(notification) {
+    const functionName = 'delete';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    console.log(notification);
+
+    this.notificationStore.remove((e) => e.notificationId === notification.notificationId);
+  }
   /**
    * Get notifications by user token, fetch all the notifications
    */
@@ -222,5 +232,98 @@ export class NotificationService {
     });
   }
 
+  deleteNotification(notification: NotificationModel): Observable<any> {
+    const functionName = 'deleteNotification';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+          myInit['body'] = {
+            notificationId: notification.notificationId
+          };
+
+          API.post(this.apiName, this.apiPath + '/deleteNotification', myInit).then(data => {
+            console.log(`${functionFullName}: API call invoked successfully`);
+            console.log(data);
+            if (data.status !== false) {
+              this.delete(notification);
+              observer.next(true);
+              observer.complete();
+            } else {
+              console.log('Error removing notification from db');
+              observer.next(false);
+              observer.complete();
+            }
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: Error invoking API call`);
+              console.log(err);
+              observer.next(false);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Error getting current authenticated user`);
+          console.log(err);
+          observer.next(false);
+          observer.complete();
+        });
+    });
+  }
+
+
+  deleteNotifications(notifications: NotificationModel[]): Observable<any> {
+    const functionName = 'deleteNotifications';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(user => {
+          const token = user.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          const notificationIds = notifications.map(x => x.notificationId);
+          myInit['body'] = {
+            notificationIds: notificationIds
+          };
+
+          API.post(this.apiName, this.apiPath + '/deleteNotifications', myInit).then(data => {
+            console.log(`${functionFullName}: API call invoked successfully`);
+            console.log(data);
+            if (data.status !== false) {
+              for (const notification of notifications) {
+                this.delete(notification);
+              }
+
+              observer.next(true);
+              observer.complete();
+            } else {
+              console.log('Error removing notification from db');
+              observer.next(false);
+              observer.complete();
+            }
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: Error invoking API call`);
+              console.log(err);
+              observer.next(false);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Error getting current authenticated user`);
+          console.log(err);
+          observer.next(false);
+          observer.complete();
+        });
+    });
+  }
 
 }

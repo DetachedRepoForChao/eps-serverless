@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {forkJoin, Observable} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {forkJoin, Observable, Subject} from 'rxjs';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
@@ -10,6 +10,7 @@ import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/e
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
+import {takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -18,10 +19,17 @@ declare var $: any;
   templateUrl: './profile-header.component.html',
   styleUrls: ['./profile-header.component.css']
 })
-export class ProfileHeaderComponent implements OnInit {
+export class ProfileHeaderComponent implements OnInit, OnDestroy {
+
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private userLoading$ = new Subject();
 
   leaderboardUsers$: Observable<EntityUserModel[]>;
   currentUser$: Observable<EntityCurrentUserModel[]>;
+
+  currentUser: EntityCurrentUserModel;
+  leaderboardUsers: EntityUserModel[];
 
   constructor(private currentUserService: EntityCurrentUserService,
               private userService: EntityUserService,
@@ -33,35 +41,45 @@ export class ProfileHeaderComponent implements OnInit {
               public achievementQuery: AchievementQuery) { }
 
   ngOnInit() {
-    const observables: Observable<any>[] = [];
-    observables.push(
-      this.currentUserService.cacheCurrentUser(),
-      this.userService.cacheUsers(),
-      this.achievementService.cacheAchievements(),
-      this.storeItemService.cacheStoreItems(),
-      this.userHasStoreItemService.cacheUserHasStoreItemRecords()
-    );
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
 
-    forkJoin(observables)
-      .subscribe(() => {
-
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
       });
 
-    this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.userLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll({
+            filterBy: e => e.securityRole.Id === 1,
+          })
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.leaderboardUsers = users;
+            });
 
-    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });
+          this.userLoading$.next();
+          this.userLoading$.complete();
+        }
+      });
 
-    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
+/*    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
       console.log('balance: ' + balance);
       this.currentUserService.updatePointsBalance(balance);
-    });
+    });*/
   }
 
-  getPendingBalance(): Observable<any> {
+/*  getPendingBalance(): Observable<any> {
     return new Observable(observer => {
       this.currentUserQuery.selectAll()
         .subscribe(user => {
@@ -74,7 +92,7 @@ export class ProfileHeaderComponent implements OnInit {
 
         });
     });
-  }
+  }*/
 
   avatarClick() {
     $('#avatarModal').modal('show');
@@ -83,5 +101,14 @@ export class ProfileHeaderComponent implements OnInit {
   getFirstDigit(number: number) {
     const one = String(number).charAt(0);
     return Number(one);
+  }
+
+  ngOnDestroy(): void {
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.userLoading$.next();
+    this.userLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

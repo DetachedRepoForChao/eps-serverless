@@ -1,10 +1,14 @@
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+/*@import '@angular/material/prebuilt-themes/deeppurple-amber.css';*/
 
 li {
   color: black;
 }
 
-
+.store-item-img {
+  max-width: 350px;
+  max-height: 350px;
+  /*padding: 0 !important;;*/
+}
 
 .pending-style {
   color: #5603ad;
