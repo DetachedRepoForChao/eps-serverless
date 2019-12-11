@@ -57,43 +57,49 @@
               </div>
               <!-- Dropdown header -->
               <div class="px-3 py-3">
-                <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">&nbsp; {{notificationNums}} &nbsp;</strong>unread notifications.</h6>
+                <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">&nbsp; {{TotalUnReadNotificationNums}} &nbsp;</strong>unread notifications.</h6>
               </div>
               <div *ngIf="!isCardLoading">
                 <!-- List group -->
-                <div class="list-group list-group-flush">
+                <div class="list-group list-group-flush" style="overflow:scroll; height:500px; width:100%">
+              
                   <div *ngFor="let notification of Notifications ">
-                    <a  class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(notification)">
-                      <div class="row align-items-center">
-                        <div class="col-auto">
-                          <!-- Avatar -->
-                          <img class="rounded-circle" width="48px"
-                               [src]="(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)?.avatarResolvedUrl" alt="">
-                        </div>
-                        <div class="col ml--2">
-                          <div class="d-flex justify-content-between align-items-center">
+                    <li >
+                      <a  [ngClass]="notification.timeSeen != null ? 'unreadNotification': ''" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(notification)">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <!-- Avatar -->
+                            <img class="rounded-circle" width="48px"
+                                [src]="(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)?.avatarResolvedUrl" alt="">
+                          </div>
+                          <div class="col ml--2">
+                            <div class="d-flex justify-content-between align-items-center">
 
 
-                            <div *ngIf="(entityUserQuery.selectLoading() | async) === false">
-                              <div>
-                                <h4 class="mb-0 text-sm black" >{{(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)?.username}}</h4>
+                              <div *ngIf="(entityUserQuery.selectLoading() | async) === false">
+                                <div>
+                                  <h4 class="mb-0 text-sm black" >{{(entityUserQuery.selectUserByUserId(+notification.sourceUserId) | async)?.username}}</h4>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="text-right text-muted">
-                            <small>{{notification.createdAt | timeAgo}}</small>
-                            <!-- <small>{{notification.createdAt}}</small> -->
-                          </div>
+                            <div class="text-right text-muted">
+                              <small>{{notification.createdAt | timeAgo}}</small>
+                              <!-- <small>{{notification.createdAt}}</small> -->
+                            </div>
 
-                          <p class="text-sm mb-0 black">{{notification.title}}</p>
+                            <p class="text-sm mb-0 black">{{notification.title}}</p>
+                          </div>
                         </div>
-                      </div>
-                    </a>
+                      </a>
+                    </li>
+                
                   </div>
+             
+
                 </div>
               </div>
               <!-- View all -->
-              <a (click)="onShowAll()" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+              <a  class="dropdown-item text-center text-primary font-weight-bold py-3"></a>
             </div>
           </div>
 

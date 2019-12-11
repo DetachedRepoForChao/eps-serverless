@@ -45,30 +45,30 @@ export class AlertCardComponent implements OnInit, OnDestroy {
 /*    this.userService.cacheUsers().subscribe();
     this.notificationService.cacheNotifications().subscribe();*/
 
-    this.alertSubscription = this.notificationQuery.selectAll({
-      filterBy: e => e.event === 'Alert'
-    })
-      .subscribe(alerts => {
-        console.log(alerts);
-        this.alerts = alerts;
-      });
+    // this.alertSubscription = this.notificationQuery.selectAll({
+    //   filterBy: e => e.event === 'Alert'
+    // })
+    //   .subscribe(alerts => {
+    //     console.log(alerts);
+    //     this.alerts = alerts;
+    //   });
 
-    this.unseenAlertSubscription = this.notificationQuery.selectAll({
-      filterBy: e => (e.event === 'Alert') && (e.timeSeen === null)
-    })
-      .subscribe(unseenAlerts => {
-        console.log(unseenAlerts);
-        this.unseenAlerts = unseenAlerts;
-        if (this.unseenAlerts.length > 0) {
-          this.currentAlert = this.unseenAlerts[0];
-          this.showAlert();
-        } else {
-          this.currentAlert = null;
-          this.closeAlert();
-        }
-      });
+    // this.unseenAlertSubscription = this.notificationQuery.selectAll({
+    //   filterBy: e => (e.event === 'Alert') && (e.timeSeen === null)
+    // })
+    //   .subscribe(unseenAlerts => {
+    //     console.log(unseenAlerts);
+    //     this.unseenAlerts = unseenAlerts;
+    //     if (this.unseenAlerts.length > 0) {
+    //       this.currentAlert = this.unseenAlerts[0];
+    //       this.showAlert();
+    //     } else {
+    //       this.currentAlert = null;
+    //       this.closeAlert();
+    //     }
+    //   });
 
-/*    this.notificationService.getAlerts().subscribe(result => {
+   this.notificationService.getAlerts().subscribe(result => {
        let size = 0;
        let alertList = new Array<Object>();
         for (let notification of result){
@@ -86,7 +86,7 @@ export class AlertCardComponent implements OnInit, OnDestroy {
         this.Index=0;
 
         console.log("Alert Size:"+size);
-    });*/
+    });
   }
 
   showNext(notification) {

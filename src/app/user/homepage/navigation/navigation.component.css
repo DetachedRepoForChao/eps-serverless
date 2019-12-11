@@ -91,3 +91,8 @@ a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
 .notification-details-modal {
   z-index: 1100 !important;
 }
+
+
+.unreadNotification {
+  background-color: #efeaea;
+}
