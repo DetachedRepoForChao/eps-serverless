@@ -15,11 +15,13 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {NavigationService} from '../../../shared/navigation.service';
 import { NotifierService } from 'angular-notifier';
-import {NotificationService} from '../../../entity-store/notification/state/notification.service';
+// import {NotificationService} from '../../../entity-store/notification/state/notification.service';
+
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {Subscription} from 'rxjs';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
 import {take} from 'rxjs/operators';
+import {NotificationService} from '../../../shared/notifications/notification.service';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -85,7 +87,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       });
 
 
-    this.notificationService.getNotifications().subscribe(result => {
+    this.notificationService.getNotification().subscribe(result => {
       let size = 0;
       let template: Array<number> = new Array<number>();
       for (let notification of result){
@@ -116,7 +118,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   onShowAll() {
-    this.notificationService.getNotifications().subscribe(result => {
+    this.notificationService.getNotification().subscribe(result => {
       let size = this.notificationNums+5;
       size = Math.min(size,result.length);
       this.Notifications = result.slice(0,size);
@@ -128,7 +130,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   close(){
 
-    this.notificationService.getNotifications().subscribe(result => {
+    this.notificationService.getNotification().subscribe(result => {
 
       let size = 0;
       let template: Array<number> = new Array<number>();
@@ -179,7 +181,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
        console.log('onSeenNotificationClick');
        if (true) {
          // tslint:disable-next-line:no-shadowed-variable
-         this.notificationService.getNotifications().subscribe(result => {
+         this.notificationService.getNotification().subscribe(result => {
            if (result === '') {
              $('#notification_button').removeClass('btn-danger');
              if (!$('#notification_button').hasClass('btn-danger')) {
@@ -312,6 +314,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.navigationService.notificationDetailsInput = null;
   }
 
+/*
   deleteNotification(notification: NotificationModel) {
     console.log(`Deleting notification ${notification.notificationId}`);
     this.notificationService.deleteNotification(notification)
@@ -322,6 +325,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navigationService.closeNotificationDetailsModal();
       });
   }
+*/
 
   ngOnDestroy(): void {
     this.unseenNotificationSubscription.unsubscribe();

@@ -1612,7 +1612,7 @@ app.post('/items/cancelStoreItemRequest', function(req, res) {
   });
 });
 
-// Notifications Routes
+/*// Notifications Routes
 app.get('/items/getAlerts', function (req, res) {
   console.log('starting get getAlerts');
 
@@ -1663,8 +1663,134 @@ app.get('/items/getNotifications', function(req, res) {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
   });
+});*/
+
+
+// Notifications Routes
+app.get('/items/getAlerts', function (req, res) {
+  console.log('starting get getAlerts');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      // const targetUserId = req.body.targetUserId;
+      console.log(tokenResult.claims)
+      const targetUserId = tokenResult.claims['cognito:username'];
+      console.log("cognito:username:" + targetUserId)
+      ctrlUser.getUserProfile(targetUserId).then(userProfile => {
+        ctrlNotifications.getAlerts(userProfile.user.id)
+          .then(data => {
+            res.json({ status: 'get call succeed!', data: data.notifications });
+          })
+          .catch(err => {
+            res.json({ status: 'post call failed!', error: err });
+          });
+      })
+
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
 });
 
+app.get('/items/getNotifications', function(req, res) {
+  console.log('starting get getNotifications');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      // const targetUserId = req.body.targetUserId;
+      console.log(tokenResult.claims)
+      const targetUserId = tokenResult.claims['cognito:username'];
+      console.log("cognito:username:" + targetUserId)
+      ctrlUser.getUserProfile(targetUserId).then(userProfile => {
+        ctrlNotifications.getNotifications(userProfile.user.id)
+          .then(data => {
+            res.json({ status: 'get call succeed!', data: data.notifications });
+          })
+          .catch(err => {
+            res.json({ status: 'post call failed!', error: err });
+          });
+      })
+
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+app.post('/items/setNotificationsToPerson', function (req, res) {
+  console.log('starting get setNotificationsToPerson');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      ctrlUser.getUserProfile(tokenResult.claims['cognito:username']).then(user => {
+        const sourceUserId = user.user.id;
+        const title = req.body.title;
+        const event = req.body.event;
+        const targetUserId = req.body.targetUserId;
+        const description = req.body.description;
+        ctrlNotifications.setNotificationsToPerson(targetUserId, title, event, description, sourceUserId)
+          .then(data => {
+            res.json({ status: 'get call succeed!', data: data.notifications });
+          })
+          .catch(err => {
+            res.json({ status: 'post call failed!', error: err });
+          });
+      })
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+app.post('/items/setNotificationsToGroup', function (req, res) {
+  console.log('starting get setNotificationsToGroup');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      ctrlUser.getUserProfile(tokenResult.claims['cognito:username']).then(user => {
+        const sourceUserId = user.user.id;
+        const title = req.body.title;
+        const event = req.body.event;
+        const description = req.body.description;
+        const GroupId  = req.body.groupid;
+        const status = req.body.status;
+        ctrlNotifications.setNotificationsToGroup(GroupId, title, event, description, sourceUserId,status)
+          .then(data => {
+            res.json({ status: 200, data: data });
+          })
+          .catch(err => {
+            res.json({ status: 500, data: err });
+          });
+      })
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+
+app.post('/items/setNotificationSeenTime', function (req, res) {
+  console.log('starting get getNotifications');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function (tokenResult) {
+    if (tokenResult.message === 'Success') {
+      const notificationid = req.body.notificationId;
+      ctrlNotifications.setNotifictaionSeenTime(notificationid)
+        .then(data => {
+          res.json({ status: 'get call succeed!', data: data.notifications });
+        })
+        .catch(err => {
+          res.json({ status: 'post call failed!', error: err });
+        });
+    } else {
+      res.json({ status: 'Unauthorized', data: tokenResult.message });
+    }
+  });
+});
+
+/*
 app.post('/items/setNotificationsToPerson', function (req, res) {
   console.log('starting post setNotificationsToPerson');
   const token = req.headers.authorization;
@@ -1688,8 +1814,8 @@ app.post('/items/setNotificationsToPerson', function (req, res) {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
   });
-});
-
+});*/
+/*
 app.post('/items/setNotificationsToDepartment', function (req, res) {
   console.log('starting post setNotificationsToDepartment');
   const token = req.headers.authorization;
@@ -1714,9 +1840,9 @@ app.post('/items/setNotificationsToDepartment', function (req, res) {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
   });
-});
+});*/
 
-
+/*
 app.post('/items/setNotificationSeenTime', function (req, res) {
   console.log('starting post setNotificationSeenTime');
   const token = req.headers.authorization;
@@ -1734,7 +1860,7 @@ app.post('/items/setNotificationSeenTime', function (req, res) {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
   });
-});
+});*/
 
 app.post('/items/deleteNotification', function (req, res) {
   console.log('starting post deleteNotification');
