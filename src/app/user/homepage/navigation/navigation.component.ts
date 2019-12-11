@@ -97,7 +97,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
       this.Detail = result[0];
       this.showDetail = false;
-      if (totalSize === 0) {
+      if (unReadSize === 0) {
         $('#notification_button').addClass('btn-primary');
       } else {
         $('#notification_button').addClass('btn-danger');
@@ -180,7 +180,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.Detail = result[0];
         this.showDetail = false;
         console.log("onClickNotificationDetail:unReadSize:" + unReadSize)
-        if (totalSize === 0) {
+        if (unReadSize === 0) {
           $('#notification_button').addClass('btn-primary');
         } else {
           $('#notification_button').addClass('btn-danger');
