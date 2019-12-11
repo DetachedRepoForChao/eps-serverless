@@ -73,7 +73,7 @@ export class UserHasStoreItemService {
     this.userHasStoreItemStore.reset();
   }
 
-  update(recordId: number, status: string, cancelDescription: string, actionAt: any) {
+  update(recordId: number, status: string, cancelDescription: string, actionAt: any, updatedByUser: any) {
     const functionName = 'update';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -85,6 +85,7 @@ export class UserHasStoreItemService {
       status: status,
       cancelDescription: cancelDescription,
       [actionAtString]: actionAt,
+      updatedByUser: updatedByUser
     });
   }
 
@@ -113,28 +114,25 @@ export class UserHasStoreItemService {
                   observer.next(data.data.purchaseRequests);
                   observer.complete();
                 } else {
-                  observer.next(data.data.status);
+                  observer.error(data.data.status);
                   observer.complete();
                 }
               })
                 .catch(err => {
-                  console.log(`${functionFullName}: error retrieving user / store-item records  from API`);
-                  console.log(err);
-                  observer.next(err);
+                  console.log(`${functionFullName}: error retrieving user / store-item records  from API`, err);
+                  observer.error(err);
                   observer.complete();
                 });
             })
             .catch(err => {
-              console.log(`${functionFullName}: error getting current user info from auth service`);
-              console.log(err);
-              observer.next(err);
+              console.log(`${functionFullName}: error getting current user info from auth service`, err);
+              observer.error(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
-          observer.next(err);
+          console.log(`${functionFullName}: error getting current authenticated user from auth service`, err);
+          observer.error(err);
           observer.complete();
         });
     });
@@ -159,11 +157,11 @@ export class UserHasStoreItemService {
           const userFirstName = userHasStoreItemRecords[i].requestUser.firstName;
           const userLastName = userHasStoreItemRecords[i].requestUser.lastName;
           const userEmail = userHasStoreItemRecords[i].requestUser.email;
-          const managerId = userHasStoreItemRecords[i].managerUser.id;
-          const managerUsername = userHasStoreItemRecords[i].managerUser.username;
+          // const managerId = userHasStoreItemRecords[i].managerUser.id;
+/*          const managerUsername = userHasStoreItemRecords[i].managerUser.username;
           const managerFirstName = userHasStoreItemRecords[i].managerUser.firstName;
-          const managerLastName = userHasStoreItemRecords[i].managerUser.lastName;
-          const managerEmail = userHasStoreItemRecords[i].managerUser.email;
+          const managerLastName = userHasStoreItemRecords[i].managerUser.lastName;*/
+          // const managerEmail = userHasStoreItemRecords[i].managerUser.email;
           const storeItemId = userHasStoreItemRecords[i].storeItemId;
           const storeItemName = userHasStoreItemRecords[i].storeItem.name;
           const storeItemDescription = userHasStoreItemRecords[i].storeItem.description;
@@ -175,8 +173,9 @@ export class UserHasStoreItemService {
           const pickedUpAt = userHasStoreItemRecords[i].pickedUpAt;
           const createdAt = userHasStoreItemRecords[i].createdAt;
           const updatedAt = userHasStoreItemRecords[i].updatedAt;
+          const updatedByUser = (userHasStoreItemRecords[i].updatedByUser) ? userHasStoreItemRecords[i].updatedByUser : null;
           const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
-            managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
+            storeItemId, storeItemName, storeItemDescription,
             storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt, updatedAt});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
@@ -187,7 +186,7 @@ export class UserHasStoreItemService {
     return cacheable(this.userHasStoreItemStore, request$);
   }
 
-  newUserHasStoreItemRecord(managerId: number, storeItemId: number): Observable<any> {
+  newUserHasStoreItemRecord(storeItemId: number): Observable<any> {
     const functionName = 'newUserHasStoreItemRecord';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -200,7 +199,6 @@ export class UserHasStoreItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            managerId: managerId,
             storeItemId: storeItemId
           };
 
@@ -210,30 +208,30 @@ export class UserHasStoreItemService {
 
             if (response.data.status !== false) {
               console.log(`${functionFullName}: status returned true. Updating entity store with new record`);
-              const recordId = response.data.userHasStoreItemRecord.id;
-              const userId = response.data.userHasStoreItemRecord.userId;
-              const userUsername = response.data.userHasStoreItemRecord.requestUser.username;
-              const userFirstName = response.data.userHasStoreItemRecord.requestUser.firstName;
-              const userLastName = response.data.userHasStoreItemRecord.requestUser.lastName;
-              const userEmail = response.data.userHasStoreItemRecord.requestUser.email;
+              const recordId = response.data.purchaseRequest.id;
+              const userId = response.data.purchaseRequest.userId;
+              const userUsername = response.data.purchaseRequest.requestUser.username;
+              const userFirstName = response.data.purchaseRequest.requestUser.firstName;
+              const userLastName = response.data.purchaseRequest.requestUser.lastName;
+              const userEmail = response.data.purchaseRequest.requestUser.email;
               // const managerId = response.data.userHasStoreItemRecord.managerUser.id;
-              const managerUsername = response.data.userHasStoreItemRecord.managerUser.username;
-              const managerFirstName = response.data.userHasStoreItemRecord.managerUser.firstName;
-              const managerLastName = response.data.userHasStoreItemRecord.managerUser.lastName;
-              const managerEmail = response.data.userHasStoreItemRecord.managerUser.email;
+              // const managerUsername = response.data.purchaseRequest.managerUser.username;
+              // const managerFirstName = response.data.purchaseRequest.managerUser.firstName;
+              // const managerLastName = response.data.purchaseRequest.managerUser.lastName;
+              // const managerEmail = response.data.purchaseRequest.managerUser.email;
               // const storeItemId = response.data.userHasStoreItemRecord.storeItemId;
-              const storeItemName = response.data.userHasStoreItemRecord.storeItem.name;
-              const storeItemDescription = response.data.userHasStoreItemRecord.storeItem.description;
-              const storeItemCost = response.data.userHasStoreItemRecord.storeItem.cost;
-              const status = response.data.userHasStoreItemRecord.status;
-              const cancelDescription = response.data.userHasStoreItemRecord.cancelDescription;
-              const cancelledAt = response.data.userHasStoreItemRecord.cancelledAt;
-              const readyForPickupAt = response.data.userHasStoreItemRecord.readyForPickupAt;
-              const pickedUpAt = response.data.userHasStoreItemRecord.pickedUpAt;
-              const createdAt = response.data.userHasStoreItemRecord.createdAt;
-              const updatedAt = response.data.userHasStoreItemRecord.updatedAt;
+              const storeItemName = response.data.purchaseRequest.storeItem.name;
+              const storeItemDescription = response.data.purchaseRequest.storeItem.description;
+              const storeItemCost = response.data.purchaseRequest.storeItem.cost;
+              const status = response.data.purchaseRequest.status;
+              const cancelDescription = response.data.purchaseRequest.cancelDescription;
+              const cancelledAt = response.data.purchaseRequest.cancelledAt;
+              const readyForPickupAt = response.data.purchaseRequest.readyForPickupAt;
+              const pickedUpAt = response.data.purchaseRequest.pickedUpAt;
+              const createdAt = response.data.purchaseRequest.createdAt;
+              const updatedAt = response.data.purchaseRequest.updatedAt;
               const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
-                managerId, managerUsername, managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName,
+                storeItemId, storeItemName,
                 storeItemDescription, storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt,
                 updatedAt});
 
@@ -298,8 +296,9 @@ export class UserHasStoreItemService {
               const recordId = response.data.updatedRecord.recordId;
               const status = response.data.updatedRecord.status;
               const actionAt = response.data.updatedRecord.updatedAt;
+              const updatedByUser = response.data.updatedByUser;
               const cancelDescription = null;
-              this.update(recordId, status, cancelDescription, actionAt);
+              this.update(recordId, status, cancelDescription, actionAt, updatedByUser);
 
               observer.next(response.data);
               observer.complete();
@@ -345,8 +344,9 @@ export class UserHasStoreItemService {
                 const recordId = result.updatedRecord.recordId;
                 const status = result.updatedRecord.status;
                 const actionAt = result.updatedRecord.updatedAt;
+                const updatedByUser = response.data.updatedByUser;
                 const cancelDescription = null;
-                this.update(recordId, status, cancelDescription, actionAt);
+                this.update(recordId, status, cancelDescription, actionAt, updatedByUser);
                 console.log(`record id ${recordId} updated with status ${status} for user ${result.updatedRecord.userUsername}`);
 
                 if (result.status !== false) {
@@ -395,8 +395,9 @@ export class UserHasStoreItemService {
               const recordId = response.data.updatedRecord.recordId;
               const status = response.data.updatedRecord.status;
               const actionAt = response.data.updatedRecord.updatedAt;
+              const updatedByUser = response.data.updatedByUser;
               const cancelDescription = null;
-              this.update(recordId, status, cancelDescription, actionAt);
+              this.update(recordId, status, cancelDescription, actionAt, updatedByUser);
 
               observer.next(response.data);
               observer.complete();
@@ -436,8 +437,9 @@ export class UserHasStoreItemService {
                 const recordId = updatedRecord.recordId;
                 const status = updatedRecord.status;
                 const actionAt = updatedRecord.updatedAt;
+                const updatedByUser = response.data.updatedByUser;
                 const cancelDescription = null;
-                this.update(recordId, status, cancelDescription, actionAt);
+                this.update(recordId, status, cancelDescription, actionAt, updatedByUser);
               }
 
               observer.next(response.data);
@@ -452,7 +454,7 @@ export class UserHasStoreItemService {
     });
   }
 
-  cancelStoreItemRequest(request: UserHasStoreItemModel, cancelDescription: string): Observable<any> {
+/*  cancelStoreItemRequest(request: UserHasStoreItemModel, cancelDescription: string): Observable<any> {
     const functionName = 'cancelStoreItemRequest';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -490,7 +492,7 @@ export class UserHasStoreItemService {
           });
         });
     });
-  }
+  }*/
 
   processRequests(requests: any[]): Observable<any> {
     const functionName = 'processRequests';

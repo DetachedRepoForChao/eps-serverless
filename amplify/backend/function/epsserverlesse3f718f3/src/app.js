@@ -1469,9 +1469,9 @@ app.post('/items/newUserHasStoreItemRecord', function(req, res) {
       ctrlUser.getUserProfile(username)
         .then(userResult => {
           const requestUser = userResult.user;
-          const managerId = req.body.managerId;
+          // const managerId = req.body.managerId;
           const storeItemId = req.body.storeItemId;
-          ctrlStoreItem.newUserHasStoreItemRecord(requestUser, managerId, storeItemId)
+          ctrlStoreItem.newUserHasStoreItemRecord(requestUser, storeItemId)
             .then(data => {
               res.json({status: 'post call succeed!', data: data});
             })
@@ -1494,9 +1494,9 @@ app.post('/items/setStoreItemRequestReadyForPickup', function(req, res) {
       const username = tokenResult.claims['cognito:username'];
       ctrlUser.getUserProfile(username)
         .then(userResult => {
-          const managerUser = userResult.user;
+          const updatedByUser = userResult.user;
           const request = req.body.request;
-          ctrlStoreItem.setStoreItemRequestReadyForPickup(managerUser, request)
+          ctrlStoreItem.setStoreItemRequestReadyForPickup(updatedByUser, request)
             .then(data => {
               res.json({status: 'post call succeed!', data: data});
             })
@@ -1519,9 +1519,9 @@ app.post('/items/setStoreItemRequestPickedUp', function(req, res) {
       const username = tokenResult.claims['cognito:username'];
       ctrlUser.getUserProfile(username)
         .then(userResult => {
-          const requestUser = userResult.user;
+          const updatedByUser = userResult.user;
           const request = req.body.request;
-          ctrlStoreItem.setStoreItemRequestPickedUp(requestUser, request)
+          ctrlStoreItem.setStoreItemRequestPickedUp(updatedByUser, request)
             .then(data => {
               res.json({status: 'post call succeed!', data: data});
             })
@@ -1541,13 +1541,19 @@ app.post('/items/setStoreItemRequestsReadyForPickup', function(req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      const requests = req.body.requests;
-      ctrlStoreItem.setStoreItemRequestsReadyForPickup(requests)
-        .then(data => {
-          res.json({status: 'post call succeed!', data: data});
-        })
-        .catch(err => {
-          res.json({status: 'post call failed!', error: err});
+
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const updatedByUser = userResult.user;
+          const requests = req.body.requests;
+          ctrlStoreItem.setStoreItemRequestsReadyForPickup(updatedByUser, requests)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
         });
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
@@ -1561,13 +1567,18 @@ app.post('/items/setStoreItemRequestsPickedUp', function(req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      const requests = req.body.requests;
-      ctrlStoreItem.setStoreItemRequestsPickedUp(requests)
-        .then(data => {
-          res.json({status: 'post call succeed!', data: data});
-        })
-        .catch(err => {
-          res.json({status: 'post call failed!', error: err});
+      const username = tokenResult.claims['cognito:username'];
+      ctrlUser.getUserProfile(username)
+        .then(userResult => {
+          const updatedByUser = userResult.user;
+          const requests = req.body.requests;
+          ctrlStoreItem.setStoreItemRequestsPickedUp(updatedByUser, requests)
+            .then(data => {
+              res.json({status: 'post call succeed!', data: data});
+            })
+            .catch(err => {
+              res.json({status: 'post call failed!', error: err});
+            });
         });
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});

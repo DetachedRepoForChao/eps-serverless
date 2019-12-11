@@ -44,9 +44,14 @@ const getUserHasStoreItemRecords = function (requestUser) {
         as: 'requestUser',
         attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
       },
-      {
+/*      {
         model: Models.User,
         as: 'managerUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },*/
+      {
+        model: Models.User,
+        as: 'updatedByUser',
         attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
       },
       {
@@ -89,9 +94,14 @@ const getUserHasStoreItemManagerRecords = function (managerUser) {
         as: 'requestUser',
         attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
       },
-      {
+/*      {
         model: Models.User,
         as: 'managerUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },*/
+      {
+        model: Models.User,
+        as: 'updatedByUser',
         attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
       },
       {
@@ -135,9 +145,14 @@ const getPurchaseRequestsAdmin = function (managerUser) {
         as: 'requestUser',
         attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
       },
-      {
+/*      {
         model: Models.User,
         as: 'managerUser',
+        attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
+      },*/
+      {
+        model: Models.User,
+        as: 'updatedByUser',
         attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
       },
       {
@@ -165,7 +180,7 @@ const getPurchaseRequestsAdmin = function (managerUser) {
 
 module.exports.getPurchaseRequestsAdmin = getPurchaseRequestsAdmin;
 
-const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId) {
+const newUserHasStoreItemRecord = function (requestUser, storeItemId) {
   const functionName = 'newUserHasStoreItemRecord';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -173,7 +188,7 @@ const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId)
   // Create user_has_store_item record
   return sqlUserHasStoreItemModel.create({
     userId: requestUser.id,
-    managerId: managerId,
+    // managerId: managerId,
     storeItemId: storeItemId
   })
     .then(newUserHasStoreItemRecord => {
@@ -185,11 +200,11 @@ const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId)
             as: 'requestUser',
             attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
           },
-          {
+/*          {
             model: Models.User,
             as: 'managerUser',
             attributes: ['id', 'username', 'firstName', 'lastName', 'email', 'avatarUrl', 'points']
-          },
+          },*/
           {
             model: Models.StoreItem,
             attributes: ['id', 'name', 'description', 'cost']
@@ -200,7 +215,27 @@ const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId)
         }
       })
         .then(userHasStoreItemRecord => {
-          return {status: true, userHasStoreItemRecord: userHasStoreItemRecord};
+          console.log(userHasStoreItemRecord);
+          const description = `User (id: ${userHasStoreItemRecord.userId}; username: ${userHasStoreItemRecord.requestUser.username}) purchased item (id: ${userHasStoreItemRecord.storeItem.id}; name: ${userHasStoreItemRecord.storeItem.name}; cost: ${userHasStoreItemRecord.storeItem.cost}; request id: ${userHasStoreItemRecord.id})`;
+
+          return ctrlPoints.removePointsFromEmployee(requestUser.id, requestUser.id, storeItemId, userHasStoreItemRecord.storeItem.cost, description)
+            .then(removeResult => {
+              console.log(`${functionFullName}: Remove points result:`);
+              console.log(removeResult);
+              if (removeResult.status !== false) {
+                console.log(`${functionFullName}: Points removed from user's total successfully. User's new point total is ${removeResult.newPointAmount}`);
+                return {status: true, purchaseRequest: userHasStoreItemRecord, newPointTotal: removeResult.newPointAmount};
+              } else {
+                console.log(`${functionFullName}: Error removing points from user's total:`);
+                console.log(removeResult.message); // TODO: Rollback purchase request record
+                return {status: false, updatedRecord: request, error: removeResult};
+              }
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: Database error`);
+              console.log(err);
+              return {status: false, message: err};
+            });
         })
         .catch( err => {
           console.log(`${functionFullName}: Error returning new user / store item request`);
@@ -209,7 +244,7 @@ const newUserHasStoreItemRecord = function (requestUser, managerId, storeItemId)
         });
     })
     .catch( err => {
-      console.log(`${functionFullName}: Error creating new user / store item request`);
+      console.log(`${functionFullName}: Database error creating new user / store item request`);
       console.log(err);
       return {status: false, message: err};
     });
@@ -352,7 +387,7 @@ const cancelStoreItemRequest = function (requestUser, request, cancelDescription
 
 module.exports.cancelStoreItemRequest = cancelStoreItemRequest;
 
-const setStoreItemRequestReadyForPickup = function (managerUser, request) {
+const setStoreItemRequestReadyForPickup = function (updatedByUser, request) {
   const functionName = 'setStoreItemRequestReadyForPickup';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -364,19 +399,21 @@ const setStoreItemRequestReadyForPickup = function (managerUser, request) {
   // Update user_has_store_item record
   return sqlUserHasStoreItemModel.update({
     status: 'readyForPickup',
-    readyForPickupAt: time
+    readyForPickupAt: time,
+    updatedByUsername: updatedByUser.username
   }, {
     where: {
       id: request.recordId,
-      managerId: managerUser.id
     }
   })
     .then(() => {
       console.log(`${functionFullName}: Store item request updated successfully`);
+      const description = `Manager (id: ${updatedByUser.userId}; username: ${updatedByUser.username}) changed user (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId}) status from 'Pending' to 'Ready For Pickup'`;
 
-      const description = `Manager (id: ${request.managerId}; username: ${request.managerUsername}) procured user's (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId})`;
+      return {status: true, updatedRecord: request, message: description};
 
-      return ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description)
+
+/*      return ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description)
         .then(removeResult => {
           console.log(`${functionFullName}: Remove points result:`);
           console.log(removeResult);
@@ -393,7 +430,7 @@ const setStoreItemRequestReadyForPickup = function (managerUser, request) {
           console.log(`${functionFullName}: Database error`);
           console.log(err);
           return {status: false, message: err};
-        });
+        });*/
     })
     .catch( err => {
       console.log(`${functionFullName}: Error updating store item request`);
@@ -404,7 +441,7 @@ const setStoreItemRequestReadyForPickup = function (managerUser, request) {
 
 module.exports.setStoreItemRequestReadyForPickup = setStoreItemRequestReadyForPickup;
 
-const setStoreItemRequestPickedUp = function (requestUser, request) {
+const setStoreItemRequestPickedUp = function (updatedByUser, request) {
   const functionName = 'setStoreItemRequestPickedUp';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -417,15 +454,15 @@ const setStoreItemRequestPickedUp = function (requestUser, request) {
   return sqlUserHasStoreItemModel.update({
     status: 'pickedUp',
     pickedUpAt: time,
+    updatedByUsername: updatedByUser.username
   }, {
     where: {
       id: request.recordId,
-      userId: requestUser.id
     }
   })
     .then(() => {
       console.log(`${functionFullName}: Store item request updated successfully`);
-      return {status: true, updatedRecord: request};
+      return {status: true, updatedRecord: request, updatedByUser: updatedByUser};
     })
     .catch( err => {
       console.log(`${functionFullName}: Error updating store item request`);
@@ -437,7 +474,7 @@ const setStoreItemRequestPickedUp = function (requestUser, request) {
 module.exports.setStoreItemRequestPickedUp = setStoreItemRequestPickedUp;
 
 
-const setStoreItemRequestsReadyForPickup = function (requests) {
+const setStoreItemRequestsReadyForPickup = function (updatedByUser, requests) {
   const functionName = 'setStoreItemRequestsReadyForPickup';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -458,6 +495,7 @@ const setStoreItemRequestsReadyForPickup = function (requests) {
   return sqlUserHasStoreItemModel.update({
     status: status,
     readyForPickupAt: time,
+    updatedByUsername: updatedByUser.username
   }, {
     where: {
       id: ids,
@@ -467,36 +505,23 @@ const setStoreItemRequestsReadyForPickup = function (requests) {
       console.log(`${functionFullName}: Store item requests updated successfully`);
 
       const promises = [];
+      const resultsArray = [];
+      let completionErrors = false;
       for (const request of requests) {
-        const description = `Manager (id: ${request.managerId}; username: ${request.managerUsername}) procured user's (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId})`;
-        promises.push(ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description));
+        const description = `Manager (id: ${updatedByUser.id}; username: ${updatedByUser.username}) changed user (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId}) status from 'Pending' to 'Ready For Pickup'`;
+        const result = {
+          updatedRecord: request,
+          message: description
+        };
+        if (request.status !== true) {
+          completionErrors = true;
+        }
+        resultsArray.push(result);
+        // promises.push(ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description));
       }
 
-      return Promise.all(promises)
-        .then(removeResults => {
-          console.log(`${functionFullName}: Remove points result:`);
-          console.log(removeResults);
-          const resultsArray = [];
-          for (let i = 0; i < removeResults.length; i++) {
-            if (removeResults[i].status !== false) {
-              console.log(`${functionFullName}: Points removed from ${removeResults[i].user.username}'s total successfully. User's new point total is ${removeResults[i].newPointAmount}`);
-              resultsArray.push({status: true, updatedRecord: requests[i], newPointTotal: removeResults[i].newPointAmount});
-              // return {status: true, updatedRecords: requests, newPointTotal: removeResults.newPointAmount};
-            } else {
-              console.log(`${functionFullName}: Error removing points from ${removeResults[i].user.username}'s total:`);
-              console.log(removeResults[i].message);
-              resultsArray.push({status: false, updatedRecord: requests[i], error: removeResults[i]});
-              // return {status: false, updatedRecords: requests, error: removeResults};
-            }
-          }
+      return {status: true, completionErrors: completionErrors, results: resultsArray, updatedByUser: updatedByUser}
 
-          return {status: true, results: resultsArray};
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: Error`);
-          console.log(err);
-          return {status: false, message: err};
-        });
     })
     .catch( err => {
       console.log(`${functionFullName}: Error updating store item request`);
@@ -507,7 +532,7 @@ const setStoreItemRequestsReadyForPickup = function (requests) {
 
 module.exports.setStoreItemRequestsReadyForPickup = setStoreItemRequestsReadyForPickup;
 
-const setStoreItemRequestsPickedUp = function (requests) {
+const setStoreItemRequestsPickedUp = function (updatedByUser, requests) {
   const functionName = 'setStoreItemRequestsPickedUp';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -526,6 +551,7 @@ const setStoreItemRequestsPickedUp = function (requests) {
   return sqlUserHasStoreItemModel.update({
     status: status,
     pickedUpAt: time,
+    updatedByUsername: updatedByUser.username
   }, {
     where: {
       id: ids,
@@ -533,7 +559,7 @@ const setStoreItemRequestsPickedUp = function (requests) {
   })
     .then(() => {
       console.log(`${functionFullName}: Store item request updated successfully`);
-      return {status: true, updatedRecords: requests};
+      return {status: true, updatedRecords: requests, updatedByUser: updatedByUser};
     })
     .catch( err => {
       console.log(`${functionFullName}: Error updating store item request`);

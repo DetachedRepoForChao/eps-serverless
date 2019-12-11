@@ -1185,7 +1185,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     managerId: {
       type: DataTypes.INTEGER(11),
-      allowNull: false,
+      allowNull: true,
       primaryKey: false,
       references: {
         model: 'user',
@@ -1249,6 +1249,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       field: 'picked_upAt'
     },
+    updatedByUsername: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'updated_by_username'
+    }
   }, {
     tableName: 'user_has_store_item'
   });
@@ -1259,6 +1264,8 @@ module.exports = function(sequelize, DataTypes) {
   User.hasMany(UserHasStoreItem, {foreignKey: 'userId', sourceKey: 'id', as: 'requestUser'});
   User.hasMany(UserHasStoreItem, {foreignKey: 'managerId', sourceKey: 'id', as: 'managerUser'});
   StoreItem.hasMany(UserHasStoreItem, {foreignKey: 'storeItemId', sourceKey: 'id'});
+  UserHasStoreItem.belongsTo(User, {foreignKey: 'updatedByUsername', sourceKey: 'username', as: 'updatedByUser'});
+  User.hasMany(UserHasStoreItem, {foreignKey: 'updatedByUsername', targetKey: 'username', as: 'updatedByUser'});
 
   // achievement_has_role_audience table
   const AchievementHasRoleAudience = sequelize.define('achievementHasRoleAudience', {
