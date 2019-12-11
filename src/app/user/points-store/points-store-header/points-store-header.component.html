@@ -9,7 +9,7 @@
           </div>
 
           <div class="col-3 profile-points-section ml-4">
-            <div [matTooltip]="'Points: ' + currentUser?.points + '&#13;Pending Balance: ' + currentUser?.pointsBalance"
+<!--            <div [matTooltip]="'Points: ' + currentUser?.points + '&#13;Pending Balance: ' + currentUser?.pointsBalance"
                  matTooltipPosition="above">
               <div class="row">
                 <div class="col-6">
@@ -39,6 +39,32 @@
                 <div *ngIf="currentUser?.securityRole.Id === 2">
                   <a href="javascript:void(0)" (click)="confirmStoreItemPurchaseRequest();" >Approve Purchase</a>
                 </div>
+                </div>
+              </div>
+
+            </div>-->
+
+            <div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
+                </div>
+                <div class="col-4">
+                  <div>
+                    <div class="mb-0">{{currentUser?.points}}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <a href="javascript:void(0)" (click)="showPurchaseHistoryModal()">View Purchase History</a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div *ngIf="currentUser?.securityRole.Id === 2">
+                    <a href="javascript:void(0)" (click)="confirmStoreItemPurchaseRequest();" >Approve Purchase</a>
+                  </div>
                 </div>
               </div>
 

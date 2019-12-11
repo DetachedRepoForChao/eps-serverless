@@ -217,61 +217,12 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
     // load reactive forms
     this.loadEditUserForm();
+    this.initializeEditUserForm();
     this.loadDeleteUserForm();
     this.loadActivateUserForm();
     this.loadPurchaseApproverForm();
 
-    // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
-    this.editUserForm.get('user').valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(user => {
-        console.log(user);
 
-        const keys = Object.keys(user);
-        for (let i = 0; i < keys.length; i++) {
-          const key = keys[i];
-
-          if (this.editUserForm.get(key) || this.editUserForm.controls.roleGroup.get(key)) {
-            // We must take special consideration for selection objects like securityRole and department
-            switch (key) {
-              case 'securityRole': {
-                const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
-                // this.editUserForm.patchValue({[key]: securityRole});
-                console.log(this.editUserForm.controls.roleGroup.get(key));
-                this.editUserForm.controls.roleGroup.patchValue({[key]: securityRole});
-                break;
-              }
-              case 'pointsPool': {
-                // const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
-                // this.editUserForm.patchValue({[key]: securityRole});
-                console.log(this.editUserForm.controls.roleGroup.get(key));
-                this.editUserForm.controls.roleGroup.patchValue({[key]: user[keys[i]]});
-                break;
-              }
-              case 'department': {
-                const department = this.departments.find(x => x.Id === user[keys[i]].Id);
-                this.editUserForm.patchValue({[key]: department});
-                break;
-              }
-              case 'birthdate': {
-                const birthdate = (user[keys[i]]) ? this.fudgeDate(user[keys[i]]) : null;
-
-                this.editUserForm.patchValue({[key]: birthdate});
-                break;
-              }
-              case 'dateOfHire': {
-                const dateOfHire = (user[keys[i]]) ? this.fudgeDate(user[keys[i]]) : null;
-
-                this.editUserForm.patchValue({[key]: dateOfHire});
-                break;
-              }
-              default: {
-                this.editUserForm.patchValue({[key]: user[keys[i]]});
-              }
-            }
-          }
-        }
-      });
 
     this.purchaseApproverForm.controls.group.get('purchaseApprover').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
@@ -341,6 +292,60 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           console.log('Completed.');
         }
       );
+  }
+
+  initializeEditUserForm() {
+    // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
+    this.editUserForm.get('user').valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        console.log(user);
+
+        const keys = Object.keys(user);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+
+          if (this.editUserForm.get(key) || this.editUserForm.controls.roleGroup.get(key)) {
+            // We must take special consideration for selection objects like securityRole and department
+            switch (key) {
+              case 'securityRole': {
+                const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
+                // this.editUserForm.patchValue({[key]: securityRole});
+                console.log(this.editUserForm.controls.roleGroup.get(key));
+                this.editUserForm.controls.roleGroup.patchValue({[key]: securityRole});
+                break;
+              }
+              case 'pointsPool': {
+                // const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
+                // this.editUserForm.patchValue({[key]: securityRole});
+                console.log(this.editUserForm.controls.roleGroup.get(key));
+                this.editUserForm.controls.roleGroup.patchValue({[key]: user[keys[i]]});
+                break;
+              }
+              case 'department': {
+                const department = this.departments.find(x => x.Id === user[keys[i]].Id);
+                this.editUserForm.patchValue({[key]: department});
+                break;
+              }
+              case 'birthdate': {
+                const birthdate = (user[keys[i]]) ? this.fudgeDate(user[keys[i]]) : null;
+
+                this.editUserForm.patchValue({[key]: birthdate});
+                break;
+              }
+              case 'dateOfHire': {
+                const dateOfHire = (user[keys[i]]) ? this.fudgeDate(user[keys[i]]) : null;
+
+                this.editUserForm.patchValue({[key]: dateOfHire});
+                break;
+              }
+              default: {
+                this.editUserForm.patchValue({[key]: user[keys[i]]});
+              }
+            }
+          }
+        }
+      });
   }
 
   // Creates the Edit User reactive form
@@ -475,26 +480,51 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       this will let our function know that those fields should be cleared.
       */
       for (let i = 0; i < keys.length; i++) {
-        if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
-          console.log(keys[i]);
-          // Special consideration for nested objects like securityRole and department
-          if (sourceUser[keys[i]].Id === form.controls[keys[i]].value.Id) {
-            // No change
-          } else {
-            console.log('Value changed:');
-            console.log(form.controls[keys[i]].value);
-            switch (keys[i]) { // we need to account for securityRole and department objects
+        console.log(keys[i]);
+        if (keys[i] === 'roleGroup') {
+          const groupKeys = Object.keys(form.controls.roleGroup.value);
+          for (const groupKey of groupKeys) {
+            const groupKeyValue = form.controls.roleGroup.get(groupKey).value;
+            console.log(groupKey);
+            // Special consideration for nested objects like securityRole and department
+            switch (groupKey) { // we need to account for securityRole and department objects
               case 'securityRole': {
-                user['securityRoleId'] = form.controls[keys[i]].value.Id;
-                user['securityRoleName'] = form.controls[keys[i]].value.Name;
+                if (sourceUser[groupKey].Id === groupKeyValue.Id) {
+                  // No change
+                } else {
+                  console.log('Value changed:');
+                  console.log(groupKeyValue);
+                  user['securityRoleId'] = groupKeyValue.Id;
+                  user['securityRoleName'] = groupKeyValue.Name;
+                }
+
                 break;
               }
-              case 'department': {
-                user['departmentId'] = form.controls[keys[i]].value.Id;
-                user['departmentName'] = form.controls[keys[i]].value.Name;
+              case 'pointsPool': {
+                if (sourceUser[groupKey] === groupKeyValue) {
+                  // No change
+                } else {
+                  console.log('Value changed:');
+                  console.log(groupKeyValue);
+                  user[groupKey] = groupKeyValue;
+                }
+
                 break;
               }
             }
+          }
+        } else if (keys[i] === 'department') {
+          const keyValue = form.controls[keys[i]].value;
+          console.log(keys[i]);
+          // Special consideration for nested objects like securityRole and department
+          if (sourceUser[keys[i]].Id === keyValue.Id) {
+            // No change
+          } else {
+            console.log('Value changed:');
+            console.log(keyValue);
+
+            user['departmentId'] = keyValue.Id;
+            user['departmentName'] = keyValue.Name;
           }
         } else if ((keys[i] === 'birthdate') || (keys[i] === 'dateOfHire')) {
           const date = new Date(form.controls[keys[i]].value);
@@ -537,12 +567,24 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           .pipe(take(1))
           .subscribe(modifyResult => {
             console.log(modifyResult);
-            if (modifyResult.status !== false) {
-              this.notifierService.notify('success', 'User record updated successfully.');
-              this.editUserFormSubmitted = false;
+            if (modifyResult.data.status !== false) {
+              if (modifyResult.errors.length > 0) {
+                this.notifierService.notify('warning', 'User record updated with errors.');
+                for (const error of modifyResult.errors) {
+                  this.notifierService.notify('error', error.message);
+                }
+
+                this.editUserFormSubmitted = false;
+              } else {
+                this.notifierService.notify('success', 'User record updated successfully.');
+                this.editUserFormSubmitted = false;
+              }
             } else {
               this.notifierService.notify('error', `Submission error: ${modifyResult.message}`);
             }
+
+            form.reset();
+            this.initializeEditUserForm();
           });
 
       } else {

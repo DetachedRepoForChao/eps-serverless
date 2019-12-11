@@ -31,6 +31,7 @@ export class PointItemTransactionService {
   retrievedManagerIds: number[] = [];
   numBatchRetrieved: number = null;
   public initialBatchRetrieved = false;
+  coreValues = [];
 
   constructor(private pointItemTransactionStore: PointItemTransactionStore,
               private pointItemTransactionQuery: PointItemTransactionQuery,
@@ -88,34 +89,46 @@ export class PointItemTransactionService {
     console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          const token = user.signInUserSession.idToken.jwtToken;
-          const myInit = this.myInit;
-          myInit.headers['Authorization'] = token;
-          myInit['body'] = {
-            userId: userId
-          };
+      const coreValues = this.coreValues.find(x => x.userId === userId);
+      if (coreValues) {
+        console.log(`${functionFullName}: Core values for user ${userId} already retrieved`, coreValues);
+        observer.next(coreValues);
+        observer.complete();
+      } else {
+        this.authService.currentAuthenticatedUser()
+          .then(user => {
+            const token = user.signInUserSession.idToken.jwtToken;
+            const myInit = this.myInit;
+            myInit.headers['Authorization'] = token;
+            myInit['body'] = {
+              userId: userId
+            };
 
-          API.post(this.apiName, this.apiPath + '/getUserCoreValues', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
-            observer.next(data.data.coreValues);
-            observer.complete();
-          })
-            .catch(err => {
-              console.log(`${functionFullName}: error retrieving features data from API`);
-              console.log(err);
-              observer.next(err);
+            API.post(this.apiName, this.apiPath + '/getUserCoreValues', myInit).then(response => {
+              console.log(`${functionFullName}: successfully retrieved data from API`);
+              console.log(response);
+              const userCoreValues = {
+                userId: userId,
+                coreValues: response.data.coreValues,
+              };
+
+              this.coreValues.push(userCoreValues);
+
+              observer.next(response.data.coreValues);
               observer.complete();
-            });
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
-          observer.next(err);
-          observer.complete();
-        });
+            })
+              .catch(err => {
+                console.log(`${functionFullName}: error retrieving features data from API`, err);
+                observer.error(err);
+                observer.complete();
+              });
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: error getting current authenticated user from auth service`, err);
+            observer.error(err);
+            observer.complete();
+          });
+      }
     });
   }
 

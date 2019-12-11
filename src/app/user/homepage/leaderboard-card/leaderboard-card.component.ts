@@ -122,9 +122,9 @@ export class LeaderboardCardComponent implements OnInit, OnDestroy {
     this.spinner.show('avatar-loading-spinner');
   }
 
-  test1() {
+/*  test1() {
     this.currentUserService.updatePointsBalance(123);
-  }
+  }*/
 
   getFirstDigit(number: number) {
     const one = String(number).charAt(0);

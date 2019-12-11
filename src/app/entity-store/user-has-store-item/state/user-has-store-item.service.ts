@@ -251,7 +251,7 @@ export class UserHasStoreItemService {
     });
   }
 
-  getPendingBalance(): Observable<any> {
+/*  getPendingBalance(): Observable<any> {
     return new Observable<any>(observer => {
       const pending$ = this.userHasStoreItemQuery.selectPending();
       pending$.subscribe(pendingRecords => {
@@ -271,7 +271,7 @@ export class UserHasStoreItemService {
         observer.complete();
       });
     });
-  }
+  }*/
 
   setStoreItemRequestReadyForPickup(request: UserHasStoreItemModel): Observable<any> {
     const functionName = 'setStoreItemRequestReadyForPickup';

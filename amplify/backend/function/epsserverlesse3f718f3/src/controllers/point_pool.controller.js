@@ -107,6 +107,33 @@ const initializePointPool = function (amount, managerId) {
 
 module.exports.initializePointPool = initializePointPool;
 
+const updatePointPool = function (managerId, amount) {
+  console.log('updatePointPool');
+
+  return sqlPointPoolModel.update({
+    pointsRemaining: amount,
+  }, {
+    where: {
+      managerId: managerId
+    }
+  })
+    .then(updateResult => {
+      if(!updateResult) {
+        console.log('Something went wrong');
+        return {status: false, message: 'Something went wrong'};
+      } else {
+        console.log('Updated point pool successfully');
+        return {status: true, message: 'Updated point pool successfully', updatedPointPoolAmount: amount};
+      }
+    })
+    .catch(err => {
+      console.log('Database error');
+      console.log(err);
+      return {status: false, message: err};
+    })
+};
+
+module.exports.updatePointPool = updatePointPool;
 
 const getPointPoolMax = function () {
   console.log('getPointPoolMax');

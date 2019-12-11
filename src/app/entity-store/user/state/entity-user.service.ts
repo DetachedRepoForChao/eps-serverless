@@ -623,11 +623,23 @@ export class EntityUserService {
             user: user
           };
 
-          API.post(this.apiName, this.apiPath + '/modifyUser', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+          API.post(this.apiName, this.apiPath + '/modifyUser', myInit)
+            .then(response => {
+            console.log(`${functionFullName}: API call successful`);
+            console.log(response);
+            const errorArray = [];
+            if (response.data.status !== false) {
+              if (response.data.completionErrors === true) {
+                console.log(`${functionFullName}: Completed with errors`);
 
-            if (data.data.status !== false) {
+                for (const result of response.data.results) {
+                  if (result.status !== true) {
+                    console.log(`${functionFullName}: Result with error`, result);
+                    errorArray.push(result);
+                  }
+                }
+              }
+
               // Update the user in the local Akita store
               this.update(user);
 
@@ -637,13 +649,23 @@ export class EntityUserService {
                   console.log(cognitoResult);
                 });
 
-              observer.next(data.data);
+              observer.next({data: response.data, errors: errorArray});
               observer.complete();
             } else {
-              observer.next(data.data);
+              observer.error(response.data);
               observer.complete();
             }
-          });
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: API call error`, err);
+              observer.error(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Auth error`, err);
+          observer.error(err);
+          observer.complete();
         });
     });
   }

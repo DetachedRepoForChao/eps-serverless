@@ -28,8 +28,8 @@ declare var $: any;
 })
 export class ProfileCardManagerComponent implements OnInit, OnDestroy {
   componentName = 'profile-card-manager.component';
-  private unsubscribe$ = new Subject();
-  private currentUserLoading$ = new Subject();
+  private unsubscribe$ = new Subject<any>();
+  private currentUserLoading$ = new Subject<any>();
 
   isImageLoading: boolean;
   isCardLoading: boolean;
@@ -50,7 +50,7 @@ export class ProfileCardManagerComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private currentUserStore: CurrentUserStore,
               private entityUserService: EntityCurrentUserService,
-              public entityCurrentUserQuery: EntityCurrentUserQuery) { }
+              public currentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -64,13 +64,14 @@ export class ProfileCardManagerComponent implements OnInit, OnDestroy {
     // this.entityUserService.cacheCurrentUser().subscribe();
     // this.currentUser$ = this.entityCurrentUserQuery.selectCurrentUser();
 
-    this.entityCurrentUserQuery.selectLoading()
+    this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
       .subscribe(isLoading => {
         if (!isLoading) {
-          this.entityCurrentUserQuery.selectCurrentUser()
+          this.currentUserQuery.selectCurrentUser()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((currentUser: EntityCurrentUserModel) => {
+              console.log('Current user changed', currentUser);
               this.currentUser = currentUser;
             });
 
@@ -78,6 +79,8 @@ export class ProfileCardManagerComponent implements OnInit, OnDestroy {
           this.currentUserLoading$.complete();
         }
       });
+
+
 /*    if (!this.globals.userDetails) {
       this.userService.getUserProfile()
         .subscribe(userDetails => {
@@ -163,9 +166,10 @@ export class ProfileCardManagerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentUserLoading$.next();
+    console.log('profile-card-manager ngOnDestroy');
+    this.currentUserLoading$.next(console.log('profile-card-manager current user loading unsub'));
     this.currentUserLoading$.complete();
-    this.unsubscribe$.next();
+    this.unsubscribe$.next(console.log('profile-card-manager unsub'));
     this.unsubscribe$.complete();
   }
 }

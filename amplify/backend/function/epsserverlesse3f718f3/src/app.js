@@ -234,7 +234,7 @@ app.post('/items/modifyUser', function(req, res) {
       const user = req.body.user;
       ctrlUser.modifyUser(user)
         .then(data => {
-          res.json({status: 'post call succeed!', data: data.user});
+          res.json({status: 'post call succeed!', data: data});
         })
         .catch(err => {
           res.json({status: 'post call failed!', error: err});

@@ -89,7 +89,7 @@
         </div>
       </div>-->
       <div class="row text-center mt-4">
-        <div class="col p-2"
+<!--        <div class="col p-2"
              [matTooltip]="'Points: ' + currentUser?.points + '&#13;Pending Balance: ' + currentUser?.pointsBalance"
              matTooltipPosition="above">
           <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
@@ -101,6 +101,12 @@
               {{currentUser?.points - currentUser?.pointsBalance}}
             </h4>
           </ng-template>
+        </div>-->
+        <div class="col p-2">
+          <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
+          <h4 class="mb-0">
+            {{currentUser?.points}}
+          </h4>
         </div>
         <div class="col p-2">
           <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>

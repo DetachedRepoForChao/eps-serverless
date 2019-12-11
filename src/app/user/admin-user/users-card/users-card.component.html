@@ -477,6 +477,8 @@
                          maxLength="14"
                          [ngClass]="{'invalid-textbox' : editUserForm.dirty && editUserForm.controls.phone.touched && editUserForm.controls.phone.invalid}"
                          id="editUser_phone">
+
+
                   <ng-container *ngIf="(editUserFormSubmitted && editUserForm.controls.phone.invalid) || (editUserForm.dirty && editUserForm.controls.phone.touched && phoneValidationError)">
                     <label class="validation-message">This field is required.</label>
                     <ng-container *ngIf="phoneValidationError" >

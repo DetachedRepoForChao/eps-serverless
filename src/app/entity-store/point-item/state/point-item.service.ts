@@ -140,12 +140,29 @@ export class PointItemService {
             userPointObjectArray: userPointObjectArray
           };
 
-          API.post(this.apiName, this.apiPath + '/giftPointsToEmployees', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
-            observer.next(data.data);
-            observer.complete();
-          });
+          API.post(this.apiName, this.apiPath + '/giftPointsToEmployees', myInit)
+            .then(response => {
+            console.log(`${functionFullName}: API call successfull`);
+            console.log(response);
+            if (response.data.status !== false) {
+              observer.next(response.data);
+              observer.complete();
+            } else {
+              console.log(`${functionFullName}: API call returned with an error`, response.data);
+              observer.error(response.data);
+              observer.complete();
+            }
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: API call error`, err);
+              observer.error(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Auth error`, err);
+          observer.error(err);
+          observer.complete();
         });
     });
   }

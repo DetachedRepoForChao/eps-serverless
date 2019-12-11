@@ -123,10 +123,10 @@ export class ProfileComponent implements OnInit {
       limitTo: 1
     });
 
-    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
+/*    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
       console.log('balance: ' + balance);
       this.currentUserService.updatePointsBalance(balance);
-    });
+    });*/
 
     this.isImageLoading = false;
     this.isCardLoading = false;

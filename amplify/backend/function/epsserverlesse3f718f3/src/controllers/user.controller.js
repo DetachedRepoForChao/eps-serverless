@@ -302,36 +302,7 @@ const getUserProfile = function (username) {
         console.log(`${functionFullName}: User record found`);
         console.log(user);
 
-        // Get the user's pending balance
-        let pendingBalance = 0;
-        return Models.UserHasStoreItem.findAll({
-          include: [
-            {
-              model: Models.StoreItem
-            }
-          ],
-          where: {
-            userId: user.id,
-            status: 'pending',
-          }
-        })
-          .then(requests => {
-            if (!requests) {
-              // No requests. Leaving pending balance at 0
-
-            } else {
-              for (request of requests) {
-                pendingBalance += request.storeItem.cost;
-              }
-            }
-
-            return  {status: true, user: user, pendingBalance: pendingBalance};
-          })
-          .catch(err => {
-            console.log('Error retrieving user store item requests. Returning user object anyway');
-            console.log(err);
-            return  {status: true, error: err, user: user, pendingBalance: pendingBalance};
-          });
+        return  {status: true, user: user};
       }
     })
     .catch(err => {
@@ -480,31 +451,93 @@ const modifyUser = function (user) {
   console.log(`${functionFullName}: Modifying User:`);
   console.log(user);
 
-  // Build the user update object
+  const promiseArray = [];
   const userUpdate = {};
   const keys = Object.keys(user);
 
-  for (let i = 0; i < keys.length; i++) {
-    let key;
-    switch (keys[i]) {
-      case 'birthdate': {
-        key = 'dateOfBirth';
-        break;
-      }
-      default: {
-        key = keys[i];
-        break;
-      }
+  // Find the user
+  return sqlUserModel.findOne({
+    where: {
+      id: user.userId
     }
+  })
+    .then(userResult => {
+      if (!userResult) {
+        console.log(`${functionFullName}: Unable to find user record`);
+        return {status: false, message: 'Unable to find user record'};
+      } else {
+        // Build the user update object
+        for (let i = 0; i < keys.length; i++) {
+          let key;
+          switch (keys[i]) {
+            case 'birthdate': {
+              key = 'dateOfBirth';
+              break;
+            }
+            case 'pointsPool': {
+              if (userResult.securityRoleId === 2) {
+                promiseArray.push(
+                  ctrlPointPool.updatePointPool(user.userId, user[keys[i]])
+                )
+              }
+              key = keys[i];
+              break;
+            }
+            default: {
+              key = keys[i];
+              break;
+            }
+          }
 
-    if (user[keys[i]] === '') {
-      userUpdate[key] = null;
-    } else {
-      userUpdate[key] = user[keys[i]];
-    }
-  }
+          if (user[keys[i]] === '') {
+            userUpdate[key] = null;
+          } else {
+            userUpdate[key] = user[keys[i]];
+          }
+        }
 
-  return sqlUserModel.update(userUpdate, {
+        promiseArray.push(
+          updateUser(userUpdate)
+        );
+
+        return Promise.all(promiseArray)
+          .then((promiseArrayResults) => {
+            let completionErrors = false;
+            for (const promiseArrayResult of promiseArrayResults) {
+              if (promiseArrayResult.status !== true) {
+                console.log('Action completed with errors', promiseArrayResult);
+                completionErrors = true;
+              }
+            }
+
+            console.log(`${functionFullName}: Successfully updated User`);
+            return {status: true, completionErrors: completionErrors, results: promiseArrayResults, user: user};
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: Database error`);
+            console.log(err);
+            return {status: false, message: err};
+          });
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+
+
+};
+
+module.exports.modifyUser = modifyUser;
+
+const updateUser = function (user) {
+  const functionName = 'updateUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  // Find the user
+  return sqlUserModel.update(user, {
     include: [
       {
         model: Models.Department,
@@ -519,18 +552,23 @@ const modifyUser = function (user) {
       id: user.userId,
     }
   })
-    .then(() => {
-      console.log(`${functionFullName}: Successfully updated User`);
-      return {status: true, user: user};
+    .then(updateResult => {
+      if (!updateResult) {
+        console.log(`${functionFullName}: No records to update`);
+        return {status: false, message: 'No records to update'};
+      } else {
+        console.log(`${functionFullName}: Successfully updated User`);
+        return {status: true, message: 'Successfully updated user', user: user};
+      }
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      return {status: false, message: err};
+      return {status: false, message: 'Database error', error: err};
     });
 };
 
-module.exports.modifyUser = modifyUser;
+module.exports.updateUser = updateUser;
 
 const terminateUser = function (user) {
   const functionName = 'terminateUser';
