@@ -8,10 +8,10 @@ import {EntityUserService} from '../../../entity-store/user/state/entity-user.se
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
-import {take, takeUntil, tap} from 'rxjs/operators';
+import {catchError, take, takeUntil, tap} from 'rxjs/operators';
 import {Department} from '../../../shared/department.model';
 import {SecurityRole} from '../../../shared/securityrole.model';
-import {forkJoin, Observable, Subject} from 'rxjs';
+import {forkJoin, Observable, of, Subject, throwError} from 'rxjs';
 import {DepartmentService} from '../../../shared/department.service';
 import {SecurityRoleService} from '../../../shared/securityRole.service';
 import {NotifierService} from 'angular-notifier';
@@ -19,8 +19,11 @@ import {environment} from '../../../../environments/environment';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {requireCheckboxesToBeCheckedValidator} from '../point-items-card/point-items-card.component';
+import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
+import {CurrentUserFilterModel} from '../../../entity-store/current-user/filter/current-user-filter.model';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 
-export function managerValidation(pointPoolMax): ValidatorFn {
+export function managerValidation(pointPoolMax: number): ValidatorFn {
   return function validate(formGroup: FormGroup) {
     const securityRoleId = (formGroup.controls.securityRole && formGroup.controls.securityRole.value) ? formGroup.controls.securityRole.value.Id : null;
     if (securityRoleId === 2) {
@@ -38,6 +41,8 @@ export function managerValidation(pointPoolMax): ValidatorFn {
   };
 }
 
+
+
 @Component({
   selector: 'app-users-card',
   templateUrl: './users-card.component.html',
@@ -48,6 +53,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
   public config: PerfectScrollbarConfigInterface = {};
   private unsubscribe$ = new Subject();
   private usersLoading$ = new Subject();
+  private currentUserLoading$ = new Subject();
 
   zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
   phoneValidationError: string;
@@ -59,12 +65,22 @@ export class UsersCardComponent implements OnInit, OnDestroy {
   deleteUserFormSubmitted = false;
   activateUserForm: FormGroup;
   activateUserFormSubmitted = false;
+  purchaseApproverForm: FormGroup;
+  newPurchaseApproverFormSubmitted = false;
   today = new Date(Date.now());
   departments: Department[];
   securityRoles: SecurityRole[];
   users: EntityUserModel[];
+  adminUsers: EntityUserModel[];
   deactivatedUsers: EntityUserModel[];
+  currentUser: EntityCurrentUserModel;
   public pointPoolMax: number;
+  public purchaseApprovers = [];
+  public purchaseApproverToDelete: any;
+  // public currentUserEmailConfirmed = false;
+  // public currentUserPhoneConfirmed = false;
+  public emailConfirmed = false;
+  public phoneConfirmed = false;
 
 
   constructor(public globals: Globals,
@@ -76,22 +92,77 @@ export class UsersCardComponent implements OnInit, OnDestroy {
               private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               private securityRoleService: SecurityRoleService,
+              private currentUserQuery: EntityCurrentUserQuery,
               private notifierService: NotifierService) { }
 
   ngOnInit() {
     // this.userService.cacheUsers().subscribe();
-    // Read in the list of departments from the DepartmentService
-    this.departmentService.getDepartments()
-      .pipe(take(1))
-      .subscribe((departments: Department[]) => {
-        this.departments = departments;
+
+    this.authService.currentUserInfo()
+      .then(currentUserInfo => {
+        console.log(currentUserInfo);
+        this.emailConfirmed = currentUserInfo.attributes['email_verified'];
+        this.phoneConfirmed = currentUserInfo.attributes['phone_number_verified'];
+      })
+      .catch(err => {
+        console.log('Error...', err);
       });
 
-    this.securityRoleService.getSecurityRoles()
-      .pipe(take(1))
-      .subscribe((securityRoles: SecurityRole[]) => {
-        this.securityRoles = securityRoles;
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
       });
+
+    // Read in the list of departments from the DepartmentService
+    this.departmentService.getDepartments()
+      .pipe(
+        take(1),
+        catchError(err => {
+          console.log('Error...', err);
+          return throwError(err);
+        })
+      )
+      .subscribe((departments: Department[]) => {
+          this.departments = departments;
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          console.log('Completed.');
+        }
+      );
+
+
+    this.securityRoleService.getSecurityRoles()
+      .pipe(
+        take(1),
+        catchError(err => {
+          console.log('Error...', err);
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (securityRoles: SecurityRole[]) => {
+          this.securityRoles = securityRoles;
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          console.log('Completed.');
+        }
+      );
 
     this.userQuery.selectLoading()
       .pipe(takeUntil(this.usersLoading$))
@@ -109,24 +180,46 @@ export class UsersCardComponent implements OnInit, OnDestroy {
               this.deactivatedUsers = deactivatedUsers;
             });
 
+          this.userQuery.selectAdminUsers()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((adminUsers: EntityUserModel[]) => {
+              this.adminUsers = adminUsers;
+            });
+
           this.usersLoading$.next();
           this.usersLoading$.complete();
         }
       });
 
     this.userService.getPointPoolMax()
-      .pipe(take(1))
-      .subscribe(pointPoolMax => {
-        console.log(pointPoolMax);
-        this.pointPoolMax = pointPoolMax;
-        this.loadAddUserForm();
-      });
+      .pipe(
+        take(1),
+        catchError(err => {
+          console.log('Error...', err);
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (response) => {
+          console.log(response);
+          this.pointPoolMax = response;
+          this.loadAddUserForm();
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          console.log('Completed.');
+        }
+      );
+
+    this.retrievePurchaseApprovers();
 
     // load reactive forms
     this.loadEditUserForm();
-
     this.loadDeleteUserForm();
     this.loadActivateUserForm();
+    this.loadPurchaseApproverForm();
 
     // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
     this.editUserForm.get('user').valueChanges
@@ -179,6 +272,38 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           }
         }
       });
+
+    this.purchaseApproverForm.controls.group.get('purchaseApprover').valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(user => {
+        console.log(user);
+
+        this.userService.getCognitoUser(user.username)
+          .pipe(
+            take(1),
+            catchError(err => {
+              console.log('Error...', err);
+              return throwError(err);
+            })
+          )
+          .subscribe(
+            (cognitoUser) => {
+              console.log(cognitoUser);
+              this.emailConfirmed = (cognitoUser.UserAttributes.find(x => x.Name === 'email_verified').Value === 'true');
+              this.phoneConfirmed = (cognitoUser.UserAttributes.find(x => x.Name === 'phone_number_verified').Value === 'true');
+              console.log('email confirmed', this.emailConfirmed);
+              console.log('email confirmed', false);
+              console.log('phone confirmed', this.phoneConfirmed);
+
+            },
+            (err) => {
+              console.log(err);
+            },
+            () => {
+              console.log('Completed.');
+            }
+          );
+      });
   }
 
   // This is used to make Angular display the date correctly instead of being 1 day off due to
@@ -193,6 +318,29 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       return null;
     }
     return item.userId;
+  }
+
+  retrievePurchaseApprovers() {
+    this.userService.getPurchaseApprovers()
+      .pipe(
+        take(1),
+        catchError(err => {
+          console.log('Error...', err);
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (response) => {
+          console.log(response);
+          this.purchaseApprovers = response;
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          console.log('Completed.');
+        }
+      );
   }
 
   // Creates the Edit User reactive form
@@ -277,6 +425,16 @@ export class UsersCardComponent implements OnInit, OnDestroy {
     });
   }
 
+  private loadPurchaseApproverForm() {
+    this.purchaseApproverForm = this.formBuilder.group({
+      phoneNotifications:  new FormControl(false),
+      emailNotifications:  new FormControl(true),
+      group: new FormGroup({
+        purchaseApprover: new FormControl(null, Validators.required),
+      }, this.isPurchaseManagerValidation()),
+    });
+  }
+
 // Validates and formats the phone number by stripping out anything except number characters
   validatePhoneNumber(phone: string): (string | null) {
     console.log(phone);
@@ -299,10 +457,6 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
   onEditUserFormSubmit(form: FormGroup) {
     console.log(form);
-    console.log(form.controls.birthdate.value);
-    console.log(new Date(form.controls.birthdate.value));
-    console.log(form.controls.user.value.birthdate);
-    console.log(new Date(form.controls.user.value.birthdate));
     this.editUserFormSubmitted = true;
 
     const sourceUser = form.controls.user.value;
@@ -422,7 +576,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
   onAddUserFormSubmit(form: FormGroup) {
     console.log(form);
-    return;
+
     this.addUserFormSubmitted = true;
 
     const user = {};
@@ -582,10 +736,126 @@ export class UsersCardComponent implements OnInit, OnDestroy {
     }
   }
 
+  onNewPurchaseApproverFormSubmit(form: FormGroup) {
+    console.log(form);
+    this.newPurchaseApproverFormSubmitted = true;
+
+    const purchaseApprover = {
+      userId: null,
+      phoneNotifications: false,
+      emailNotifications: true,
+    };
+
+    if (!form.invalid) {
+      const user = form.controls.group.get('purchaseApprover').value;
+      purchaseApprover.userId = user.userId;
+      purchaseApprover.phoneNotifications = form.controls.phoneNotifications.value;
+      purchaseApprover.emailNotifications = form.controls.emailNotifications.value;
+      this.userService.newPurchaseApprover(purchaseApprover)
+        .pipe(
+          take(1),
+          catchError(err => {
+            console.log('Error...', err);
+            return throwError(err);
+          })
+        )
+        .subscribe(
+          (response) => {
+            console.log(response);
+            this.notifierService.notify('success', 'User successfully added as a Purchase Manager.');
+            this.newPurchaseApproverFormSubmitted = false;
+            this.retrievePurchaseApprovers();
+            form.reset();
+          },
+          (err) => {
+            console.log(err);
+            if (err.error) {
+              this.notifierService.notify('error', `Submission error: ${err.error}`);
+            }
+
+            if (err.message) {
+              this.notifierService.notify('error', `Submission error message: ${err.message}`);
+            }
+
+          },
+          () => {
+            console.log('Completed.');
+          }
+        );
+
+      console.log(user);
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
+
+  purchaseApproverDeleteToggle(purchaseApprover: any) {
+    if (this.purchaseApproverToDelete === purchaseApprover) {
+      this.purchaseApproverToDelete = null;
+      return;
+    }
+    this.purchaseApproverToDelete = purchaseApprover;
+  }
+
+  deletePurchaseApprover(purchaseApprover: any) {
+    console.log(`Deleting purchase approver ${purchaseApprover.userId}`);
+    this.userService.deletePurchaseApprover(purchaseApprover.userId)
+      .pipe(
+        take(1),
+        catchError(err => {
+          console.log('Error...', err);
+          return throwError(err);
+        })
+      )
+      .subscribe(
+        (response) => {
+          console.log(response);
+          this.notifierService.notify('success', 'Purchase Manager deleted successfully.');
+          this.retrievePurchaseApprovers();
+        },
+        (err) => {
+          console.log(err);
+          if (err.error) {
+            this.notifierService.notify('error', `Error: ${err.error}`);
+          }
+
+          if (err.message) {
+            this.notifierService.notify('error', `Error message: ${err.message}`);
+          }
+
+        },
+        () => {
+          console.log('Completed.');
+        }
+      );
+  }
+
+  isPurchaseManagerValidation(): ValidatorFn {
+    const parentScope = this;
+    return function validate(formGroup: FormGroup) {
+      const userId = (formGroup.controls.purchaseApprover.value) ? formGroup.controls.purchaseApprover.value.userId : null;
+      if (parentScope.isUserPurchaseManager(userId)) {
+        console.log('invalid');
+        return {
+          isPurchaseManager: true
+        };
+      }
+      console.log('valid');
+      return null;
+    };
+  }
+
+  isUserPurchaseManager(userId) {
+    return !!this.purchaseApprovers.find(x => x.userId === userId);
+  }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     this.usersLoading$.next();
     this.usersLoading$.complete();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
   }
 }

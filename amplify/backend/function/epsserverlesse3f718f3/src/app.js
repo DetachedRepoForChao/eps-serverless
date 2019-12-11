@@ -325,8 +325,27 @@ app.post('/items/newPurchaseApprover', function(req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function(tokenResult) {
     if(tokenResult.message === 'Success') {
-      const userId = req.body.userId;
-      ctrlUser.newPurchaseApprover(userId)
+      const purchaseApprover = req.body.purchaseApprover;
+      ctrlUser.newPurchaseApprover(purchaseApprover)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/updatePurchaseApprover', function(req, res) {
+  console.log('starting post updatePurchaseApprover');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const purchaseApprover = req.body.purchaseApprover;
+      ctrlUser.updatePurchaseApprover(purchaseApprover)
         .then(data => {
           res.json({status: 'post call succeed!', data: data});
         })

@@ -55,27 +55,34 @@ export class DepartmentService {
       console.log(`${functionFullName}: departments cache does not exist`);
       return new Observable<Department[]>( (observer) => {
         console.log(`${functionFullName}: retrieve departments from API`);
-        API.get(this.apiName, this.apiPath + '/getDepartments', {}).then(data => {
-          console.log(`${functionFullName}: successfully retrieved data from API`);
-          console.log(data);
-          console.log(`${functionFullName}: caching departments`);
-          const departmentObjList: Department[] = [];
-          data.data.forEach((department: any) => {
-            const departmentObj: Department = {
-              Id: department.id,
-              Name: department.name
-            };
+        API.get(this.apiName, this.apiPath + '/getDepartments', {})
+          .then(response => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(response);
+            console.log(`${functionFullName}: caching departments`);
+            const departmentObjList: Department[] = [];
+            response.data.forEach((department: any) => {
+              const departmentObj: Department = {
+                Id: department.id,
+                Name: department.name
+              };
 
-            departmentObjList.push(departmentObj);
+              departmentObjList.push(departmentObj);
+            });
+
+            this.globals.departments = departmentObjList;
+
+            console.log(`${functionFullName}: returning departments from API`);
+            // resolve(departmentObjList);
+            observer.next(departmentObjList);
+            observer.complete();
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: HTTP error`);
+            console.log(err);
+            observer.error(err);
+            observer.complete();
           });
-
-          this.globals.departments = departmentObjList;
-
-          console.log(`${functionFullName}: returning departments from API`);
-          // resolve(departmentObjList);
-          observer.next(departmentObjList);
-          observer.complete();
-        });
       });
     }
   }

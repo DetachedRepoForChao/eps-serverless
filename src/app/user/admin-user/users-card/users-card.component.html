@@ -12,11 +12,18 @@
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addUserModal">Add User</button>
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#editUserModal">Edit User</button>
-     <br><br>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#activateUserModal">Activate User</button>
     <br><br>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deleteUserModal">Delete / Disable User</button>
+    <div class="row">
+      <div class="col-6">
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#activateUserModal">Activate User</button>
+      </div>
+      <div class="col-6">
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deleteUserModal">Delete / Disable User</button>
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#managePurchaseApproversModal">Manage Purchase Request Managers</button>
     <br><br>
+
   </div>
 </div>
 
@@ -32,7 +39,7 @@
       </div>
 
       <div class="modal-body user-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="true">
           <div class="user-form-container">
             <ng-container *ngIf="addUserForm">
               <form [formGroup]="addUserForm">
@@ -306,7 +313,7 @@
       </div>
 
       <div class="modal-body user-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="true">
           <div class="user-form-container">
 
             <form [formGroup]="editUserForm">
@@ -495,3 +502,146 @@
   </div>
 </div>
 
+<!-- Manage Purchase Request Managers -->
+<div class="modal fade bd-example-modal-lg" id="managePurchaseApproversModal" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="managePurchaseApproversModalLabel">Manage Purchase Request Managers</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body user-modal-body">
+        <ng-container *ngIf="purchaseApprovers && purchaseApproverForm">
+          <h4 class="text-dark">Current Purchase Request Managers</h4>
+          <perfect-scrollbar class="purchase-manager-scroll-container" [config]="config" [scrollIndicators]="true">
+          <div>
+
+            <div class="row">
+              <ng-container *ngFor="let purchaseApprover of purchaseApprovers">
+                <div class="col-3 purchase-manager-item mb-2">
+                  <h5 class="text-dark">{{purchaseApprover.user.firstName}} {{purchaseApprover.user.lastName}} ({{purchaseApprover.user.username}})</h5>
+                  <h5 class="text-dark">{{purchaseApprover.user.email}}</h5>
+                  <h5 class="text-dark">{{purchaseApprover.user.phone}}</h5>
+                  <div class="purchase-manager-item-footer text-right">
+                    <ng-container *ngIf="purchaseApproverToDelete === purchaseApprover">
+                      <span class="text-primary delete-prompt pr-4" (click)="deletePurchaseApprover(purchaseApprover)">Delete?</span>
+                    </ng-container>
+                    <ng-container *ngIf="purchaseApprovers.length > 1; else onlyOnePurchaseManager">
+                      <i class="far fa-trash-alt text-primary trash-icon pr-2" (click)="purchaseApproverDeleteToggle(purchaseApprover)"></i>
+                    </ng-container>
+                    <ng-template #onlyOnePurchaseManager>
+                      <i [matTooltip]="'Unable to delete. There must exist at least one Purchase Request Manager.'"
+                         matTooltipPosition="above" class="far fa-trash-alt text-muted trash-icon pr-2"></i>
+                    </ng-template>
+
+
+                  </div>
+                </div>
+
+              </ng-container>
+            </div>
+
+          </div>
+          </perfect-scrollbar>
+          <mat-divider></mat-divider>
+
+          <form [formGroup]="purchaseApproverForm">
+            <div class="form-row">
+              <div class="form-group col-sm-12 col-md-5 col-lg-5 col-xl-5" formGroupName="group">
+                <label for="purchaseApprover_user" class="form-label">Add a new Purchase Request Manager</label>
+                <select formControlName="purchaseApprover"
+                        class="form-control user-form-control"
+                        id="purchaseApprover_user" name="purchaseApprover_user">
+                  <option [ngValue]="null" disabled="true">Select a User</option>
+                  <ng-container *ngFor="let adminUser of adminUsers">
+                    <option [ngValue]="adminUser">
+                      {{adminUser.firstName}} {{adminUser.lastName}} ({{adminUser.username}})
+                    </option>
+                  </ng-container>
+
+                </select>
+                <ng-container *ngIf="(newPurchaseApproverFormSubmitted && purchaseApproverForm.controls.group.get('purchaseApprover').invalid) || (purchaseApproverForm.dirty && purchaseApproverForm.controls.group.get('purchaseApprover').touched && purchaseApproverForm.controls.group.get('purchaseApprover').invalid)">
+                  <label class="validation-message">This field is required.</label>
+                </ng-container>
+                <ng-container *ngIf="purchaseApproverForm.controls.group.getError('isPurchaseManager')">
+                  <label class="validation-message">This user account is already a Purchase Request Manager.</label>
+                </ng-container>
+              </div>
+              <div class="form-group col-7">
+                <label class="form-label">New Purchase Requests will appear as notifications within the app. Select any additional new Purchase Requests notification methods.</label>
+                <div class="row">
+                  <div class="col-5">
+                    <div class="row">
+                      <div class="form-check form-check-inline">
+                        <ng-container *ngIf="this.phoneConfirmed; else phoneUnconfirmed">
+                          <label class="form-check-label text-dark">
+                            <input class="form-check-input" type="checkbox" id="purchaseApprover_phoneNotifications" formControlName="phoneNotifications">Text
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </ng-container>
+                        <ng-template #phoneUnconfirmed>
+                          <label class="form-check-label text-dark">
+                            <input class="form-check-input" type="checkbox" formControlName="phoneNotifications" [value]="false" disabled><span class="font-disabled text-black-50 pr-2">Text</span>
+                            <ng-container *ngIf="this.currentUser?.userId === purchaseApproverForm.controls.group.get('purchaseApprover').value?.userId">
+                              <a href="javascript:void(0)">Confirm?</a>
+                            </ng-container>
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </ng-template>
+
+                      </div>
+                    </div>
+                    <div class="row">
+                      <ng-container *ngIf="!this.phoneConfirmed">
+                        <span class="pr-2">Phone number is not confirmed</span>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="row">
+                      <div class="form-check form-check-inline">
+                        <ng-container *ngIf="this.emailConfirmed; else emailUnconfirmed">
+                          <label class="form-check-label text-dark">
+                            <input class="form-check-input" type="checkbox" id="purchaseApprover_emailNotifications" formControlName="emailNotifications">Email
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </ng-container>
+                        <ng-template #emailUnconfirmed>
+                          <label class="form-check-label text-dark">
+                            <input class="form-check-input" type="checkbox" formControlName="emailNotifications" [value]="false" disabled><span class="font-disabled text-black-50 pr-2">Email</span>
+                            <ng-container *ngIf="this.currentUser?.userId === purchaseApproverForm.controls.group.get('purchaseApprover').value?.userId">
+                              <a href="javascript:void(0)">Confirm?</a>
+                            </ng-container>
+                            <span class="form-check-sign"></span>
+                          </label>
+                        </ng-template>
+
+                      </div>
+                    </div>
+                    <div class="row">
+                      <ng-container *ngIf="!this.emailConfirmed">
+                        <span class="pr-2">Email is not confirmed</span>
+
+                      </ng-container>
+                    </div>
+
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </form>
+        </ng-container>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="onNewPurchaseApproverFormSubmit(purchaseApproverForm)">Add Purchase Request Manager</button>
+      </div>
+    </div>
+  </div>
+</div>

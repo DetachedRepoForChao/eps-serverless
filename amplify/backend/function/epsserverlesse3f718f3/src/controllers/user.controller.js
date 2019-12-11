@@ -618,26 +618,24 @@ const deleteUser = function (user) {
 module.exports.deleteUser = deleteUser;
 
 
-const newPurchaseApprover = function (userId) {
+const newPurchaseApprover = function (purchaseApprover) {
   const functionName = 'newPurchaseApprover';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
   return Models.PurchaseApprovers.findOne({
     where: {
-      userId: userId,
+      userId: purchaseApprover.userId,
     }
   })
     .then(result => {
       if (result) {
-        console.log(`${functionFullName}: This user is already a purchase approver`);
-        return {status: false, message: 'This user is already a purchase approver'};
+        console.log(`${functionFullName}: This user account is already a purchase request manager`);
+        return {status: false, message: 'This user account is already a purchase request manager'};
       } else {
-        return Models.PurchaseApprovers.create({
-          userId: userId
-        })
+        return Models.PurchaseApprovers.create(purchaseApprover)
           .then(newApprover => {
-            console.log(`${functionFullName}: Successfully created new purchase approver`);
+            console.log(`${functionFullName}: Successfully created new purchase request manager`);
             return {status: true, newApprover: newApprover};
           })
           .catch(err => {
@@ -656,6 +654,34 @@ const newPurchaseApprover = function (userId) {
 
 module.exports.newPurchaseApprover = newPurchaseApprover;
 
+const updatePurchaseApprover = function (purchaseApprover) {
+  const functionName = 'updatePurchaseApprover';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.update(purchaseApprover, {
+    where: {
+      userId: purchaseApprover.userId
+    }
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: Successfully updated purchase request manager.`);
+        return {status: true, updatedApprover: purchaseApprover};
+      } else {
+        console.log(`${functionFullName}: Nothing to update`);
+        return {status: false, message: 'Nothing to update'};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.updatePurchaseApprover = updatePurchaseApprover;
+
 const deletePurchaseApprover = function (userId) {
   const functionName = 'deletePurchaseApprover';
   const functionFullName = `${componentName} ${functionName}`;
@@ -668,7 +694,7 @@ const deletePurchaseApprover = function (userId) {
   })
     .then(result => {
       if (result) {
-        console.log(`${functionFullName}: Successfully deleted purchase approver`);
+        console.log(`${functionFullName}: Successfully deleted purchase request manager`);
         return {status: true, deletedApprover: userId};
       } else {
         console.log(`${functionFullName}: Nothing to delete`);
@@ -698,11 +724,11 @@ const getPurchaseApprovers = function () {
   })
     .then(result => {
       if (result) {
-        console.log(`${functionFullName}: Retrieved purchase approver records successfully`);
-        return {status: true, message: 'Retrieved purchase approver records successfully', purchaseApprovers: result};
+        console.log(`${functionFullName}: Retrieved purchase request manager records successfully`);
+        return {status: true, message: 'Retrieved purchase request manager records successfully', purchaseApprovers: result};
       } else {
-        console.log(`${functionFullName}: No purchase approver records found`);
-        return {status: false, message: 'No purchase approver records found'};
+        console.log(`${functionFullName}: No purchase request manager records found`);
+        return {status: false, message: 'No purchase request manager records found'};
       }
     })
     .catch(err => {

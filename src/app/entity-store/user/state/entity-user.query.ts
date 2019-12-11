@@ -6,6 +6,7 @@ import {combineLatest, Observable} from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/user-filter.model';
 import {map, take} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../current-user/state/entity-current-user.model';
+import {NotificationModel} from '../../notification/state/notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -92,12 +93,18 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
     });
   }
 
+  public selectAdminUsers() {
+    return this.selectAll({
+      filterBy: e => e.securityRole.Id === 3
+    });
+  }
 
   public selectDeactivatedUsers() {
     return this.selectAll({
       filterBy: e => !(e.active)
     });
   }
+
 
   public getDeactivatedUsers() {
     return this.getAll({
@@ -134,4 +141,6 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
 
     return manager;
   }
+
+
 }

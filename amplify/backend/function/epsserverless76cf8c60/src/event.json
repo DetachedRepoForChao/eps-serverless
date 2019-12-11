@@ -1,6 +1,6 @@
 {
   "resource": "/things",
-  "path": "/things/setCognitoUserAttributes",
+  "path": "/things/getCognitoUser",
   "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -41,6 +41,6 @@
     "extendedRequestId": "dNOeFFpRoAMFUmw=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"username\": \"max\"}",
+  "body": "{\"username\": \"test\"}",
   "isBase64Encoded": false
 }
