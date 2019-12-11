@@ -5,8 +5,7 @@ import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import { EntityUserService } from '../../../entity-store/user/state/entity-user.service';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
-import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
-import {resetStores} from '@datorama/akita';
+
 import {AuthService} from '../../../login/auth.service';
 import { EntityUserQuery } from '../../../entity-store/user/state/entity-user.query';
 
@@ -15,13 +14,11 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {NavigationService} from '../../../shared/navigation.service';
 import { NotifierService } from 'angular-notifier';
-// import {NotificationService} from '../../../entity-store/notification/state/notification.service';
-
+import {NotificationService} from '../../../entity-store/notification/state/notification.service';
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {Subscription} from 'rxjs';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
 import {take} from 'rxjs/operators';
-import {NotificationService} from '../../../shared/notifications/notification.service';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -46,6 +43,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
   currentUser$;
   Detail;
   notificationNums;
+  TotalNotificationNums;
+  TotalUnReadNotificationNums
   showDetail;
   notifications: NotificationModel[];
   unseenNotifications: NotificationModel[];
@@ -63,51 +62,42 @@ export class NavigationComponent implements OnInit, OnDestroy {
               private notificationService: NotificationService,
               public notificationQuery: NotificationQuery,
               public navigationService: NavigationService,
-
               ) { }
 
   ngOnInit() {
-
     // Initialize the navbar script
     if ($('.navbar[color-on-scroll]').length !== 0) {
       blackKit.checkScrollForTransparentNavbar();
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
     this.isCardLoading = true;
-/*    this.entityUserService.cacheUsers().subscribe();
-    this.entityCurrentUserService.cacheCurrentUser().subscribe();*/
     this.currentUser$ = this.currentUserQuery.selectAll();
 
     // this.notificationService.cacheNotifications().subscribe();
     this.unseenNotificationSubscription = this.notificationQuery.selectAll({
       filterBy: e => e.timeSeen === null
     })
-      .subscribe(unseenNotifications => {
-        this.unseenNotifications = unseenNotifications;
-      });
+    .subscribe(unseenNotifications => {
+      this.unseenNotifications = unseenNotifications;
+    });
 
 
-    this.notificationService.getNotification().subscribe(result => {
-      let size = 0;
-      let template: Array<number> = new Array<number>();
-      for (let notification of result){
-        if(size<5){
-          if (notification.timeSeen == null) {
-            size++;
-
-            // console.log("notification.sourceUserId:" + notification['sourceUserId']);
-            // notification.avatar = this.entityUserQuery.selectUserByUserId(notification.sourceUserId)
-            template.push(notification)
-          }
-        }else{
-          break;
+    this.notificationService.getNotifications().subscribe(result => {
+      let totalSize = result.length;
+      let unReadSize = 0;
+      for (let notification of result) {
+        if (notification.timeSeen == null) {
+          unReadSize++;
         }
       }
-      this.Detail  = template[0];
-      this.Notifications = template;
-      this.notificationNums = size;
+
+      this.TotalNotificationNums = totalSize;
+      this.Notifications = result;
+      this.TotalUnReadNotificationNums = unReadSize;
+
+      this.Detail = result[0];
       this.showDetail = false;
-      if (size === 0) {
+      if (unReadSize === 0) {
         $('#notification_button').addClass('btn-primary');
       } else {
         $('#notification_button').addClass('btn-danger');
@@ -117,45 +107,34 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.isCardLoading = false;
   }
 
-  onShowAll() {
-    this.notificationService.getNotification().subscribe(result => {
-      let size = this.notificationNums+5;
-      size = Math.min(size,result.length);
-      this.Notifications = result.slice(0,size);
-
-      console.log('Notification-log Initial' + this.Notifications);
-      this.notificationNums = size;
-    });
-  }
 
   close(){
+    this.notificationService.getNotifications().subscribe(result => {
 
-    this.notificationService.getNotification().subscribe(result => {
+    //   let size = 0;
+    //   let template: Array<number> = new Array<number>();
+    //   for (let notification of result) {
+    //     if (size < 5) {
+    //       if (notification.timeSeen == null) {
+    //         size++;
+    //         template.push(notification)
+    //       }
+    //     } else {
+    //       break;
+    //     }
+    //   }
 
-      let size = 0;
-      let template: Array<number> = new Array<number>();
-      for (let notification of result) {
-        if (size < 5) {
-          if (notification.timeSeen == null) {
-            size++;
-            template.push(notification)
-          }
-        } else {
-          break;
-        }
-      }
+    //   this.Notifications = template;
+    //   this.notificationNums = size;
 
-      this.Notifications = template;
-      this.notificationNums = size;
-
-      if (size === 0) {
-        $('#notification_button').removeClass('btn-danger');
-        if (!$('#notification_button').hasClass('btn-danger')) {
-          $('#notification_button').addClass('btn-primary');
-        }
-      } else {
-        $('#notification_button').removeClass('btn-primary');
-      }
+    //   if (size === 0) {
+    //     $('#notification_button').removeClass('btn-danger');
+    //     if (!$('#notification_button').hasClass('btn-danger')) {
+    //       $('#notification_button').addClass('btn-primary');
+    //     }
+    //   } else {
+    //     $('#notification_button').removeClass('btn-primary');
+    //   }
     });
 
 
@@ -175,47 +154,41 @@ export class NavigationComponent implements OnInit, OnDestroy {
     // this.router.navigate(['/user']);
   }
 
-  onSeenNotificationClick(notification) {
-    console.log('notificationID:' + notification.id);
-    this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
-       console.log('onSeenNotificationClick');
-       if (true) {
-         // tslint:disable-next-line:no-shadowed-variable
-         this.notificationService.getNotification().subscribe(result => {
-           if (result === '') {
-             $('#notification_button').removeClass('btn-danger');
-             if (!$('#notification_button').hasClass('btn-danger')) {
-               $('#notification_button').addClass('btn-primary');
-             }
-           } else {
-             $('#notification_button').removeClass('btn-primary');
-           }
-           this.Notifications = result;
-         });
-       }
-     });
-  }
-
 
   onClickNotificationDetail(notification){
-    let numsofUnread = this.notificationNums;
-        console.log('onClickNotificationDetail:' + notification.id);
-        if(notification.timeSeen==null){
-          this.notificationService.setNotificationSeenTime(notification.id).subscribe(result => {
-            console.log('onSeenNotificationClick');
-            if (true) {
-              numsofUnread-=1;
-              this.notificationNums = numsofUnread;
-            }
-          });
-        }
-        let id = notification.id;
-        for (let temp of this.Notifications){
-          if(temp.id === id){
-                this.Detail = temp;
-                console.log('onClickNotificationDetail:' + notification.id);
+    const unreadNotificationId = notification.id;
+    // let numsofUnread = this.notificationNums;
+    // let localNotificationLists = this.notifications;
+    // make this notification as unread
+    this.Detail  = notification;
+    this.notificationService.setNotificationSeenTime(unreadNotificationId).subscribe(result => {
+      console.log("onClickNotificationDetail:" + unreadNotificationId)
+      this.notificationService.getNotifications().subscribe(result => {
+
+        let totalSize = result.length;
+        let unReadSize = 0;
+        for (let notification of result) {
+          if (notification.timeSeen == null) {
+            unReadSize++;
           }
         }
+
+        this.TotalNotificationNums = totalSize;
+        this.Notifications = result;
+        this.TotalUnReadNotificationNums = unReadSize;
+
+        this.Detail = result[0];
+        this.showDetail = false;
+        console.log("onClickNotificationDetail:unReadSize:" + unReadSize)
+        if (unReadSize === 0) {
+          $('#notification_button').addClass('btn-primary');
+        } else {
+          $('#notification_button').addClass('btn-danger');
+        }
+        console.log('Notification-log Initial' + this.Notifications);
+      });
+    });
+
   }
 
   navigateHome() {
@@ -314,7 +287,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.navigationService.notificationDetailsInput = null;
   }
 
-/*
   deleteNotification(notification: NotificationModel) {
     console.log(`Deleting notification ${notification.notificationId}`);
     this.notificationService.deleteNotification(notification)
@@ -325,7 +297,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.navigationService.closeNotificationDetailsModal();
       });
   }
-*/
 
   ngOnDestroy(): void {
     this.unseenNotificationSubscription.unsubscribe();
