@@ -1,11 +1,12 @@
 import {Component, OnInit, ElementRef, OnDestroy} from '@angular/core';
 import { Notification } from 'src/app/shared/notifications/notification';
-import {NotificationService} from '../../../entity-store/notification/state/notification.service';
+// import {NotificationService} from '../../../entity-store/notification/state/notification.service';
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
 import {Subscription} from 'rxjs';
+import {NotificationService} from '../../../shared/notifications/notification.service';
 declare var $: any;
 
 @Component({
@@ -68,7 +69,7 @@ export class AlertCardComponent implements OnInit, OnDestroy {
     //     }
     //   });
 
-   this.notificationService.getAlerts().subscribe(result => {
+   this.notificationService.getAlert().subscribe(result => {
        let size = 0;
        let alertList = new Array<Object>();
         for (let notification of result){
@@ -115,7 +116,7 @@ export class AlertCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.alertSubscription.unsubscribe();
-    this.unseenAlertSubscription.unsubscribe();
+    // this.alertSubscription.unsubscribe();
+    // this.unseenAlertSubscription.unsubscribe();
   }
 }

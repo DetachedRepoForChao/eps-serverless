@@ -14,11 +14,12 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {NavigationService} from '../../../shared/navigation.service';
 import { NotifierService } from 'angular-notifier';
-import {NotificationService} from '../../../entity-store/notification/state/notification.service';
+// import {NotificationService} from '../../../entity-store/notification/state/notification.service';
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {Subscription} from 'rxjs';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
 import {take} from 'rxjs/operators';
+import {NotificationService} from '../../../shared/notifications/notification.service';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -62,7 +63,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
               private notificationService: NotificationService,
               public notificationQuery: NotificationQuery,
               public navigationService: NavigationService,
-              ) { }
+  ) { }
 
   ngOnInit() {
     // Initialize the navbar script
@@ -77,12 +78,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.unseenNotificationSubscription = this.notificationQuery.selectAll({
       filterBy: e => e.timeSeen === null
     })
-    .subscribe(unseenNotifications => {
-      this.unseenNotifications = unseenNotifications;
-    });
+      .subscribe(unseenNotifications => {
+        this.unseenNotifications = unseenNotifications;
+      });
 
 
-    this.notificationService.getNotifications().subscribe(result => {
+    this.notificationService.getNotification().subscribe(result => {
       let totalSize = result.length;
       let unReadSize = 0;
       for (let notification of result) {
@@ -109,32 +110,32 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
 
   close(){
-    this.notificationService.getNotifications().subscribe(result => {
+    this.notificationService.getNotification().subscribe(result => {
 
-    //   let size = 0;
-    //   let template: Array<number> = new Array<number>();
-    //   for (let notification of result) {
-    //     if (size < 5) {
-    //       if (notification.timeSeen == null) {
-    //         size++;
-    //         template.push(notification)
-    //       }
-    //     } else {
-    //       break;
-    //     }
-    //   }
+      //   let size = 0;
+      //   let template: Array<number> = new Array<number>();
+      //   for (let notification of result) {
+      //     if (size < 5) {
+      //       if (notification.timeSeen == null) {
+      //         size++;
+      //         template.push(notification)
+      //       }
+      //     } else {
+      //       break;
+      //     }
+      //   }
 
-    //   this.Notifications = template;
-    //   this.notificationNums = size;
+      //   this.Notifications = template;
+      //   this.notificationNums = size;
 
-    //   if (size === 0) {
-    //     $('#notification_button').removeClass('btn-danger');
-    //     if (!$('#notification_button').hasClass('btn-danger')) {
-    //       $('#notification_button').addClass('btn-primary');
-    //     }
-    //   } else {
-    //     $('#notification_button').removeClass('btn-primary');
-    //   }
+      //   if (size === 0) {
+      //     $('#notification_button').removeClass('btn-danger');
+      //     if (!$('#notification_button').hasClass('btn-danger')) {
+      //       $('#notification_button').addClass('btn-primary');
+      //     }
+      //   } else {
+      //     $('#notification_button').removeClass('btn-primary');
+      //   }
     });
 
 
@@ -163,7 +164,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.Detail  = notification;
     this.notificationService.setNotificationSeenTime(unreadNotificationId).subscribe(result => {
       console.log("onClickNotificationDetail:" + unreadNotificationId)
-      this.notificationService.getNotifications().subscribe(result => {
+      this.notificationService.getNotification().subscribe(result => {
 
         let totalSize = result.length;
         let unReadSize = 0;
@@ -287,7 +288,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.navigationService.notificationDetailsInput = null;
   }
 
-  deleteNotification(notification: NotificationModel) {
+/*  deleteNotification(notification: NotificationModel) {
     console.log(`Deleting notification ${notification.notificationId}`);
     this.notificationService.deleteNotification(notification)
       .pipe(take(1))
@@ -296,7 +297,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
         console.log(result);
         this.navigationService.closeNotificationDetailsModal();
       });
-  }
+  }*/
 
   ngOnDestroy(): void {
     this.unseenNotificationSubscription.unsubscribe();
