@@ -504,23 +504,20 @@ const setStoreItemRequestsReadyForPickup = function (updatedByUser, requests) {
     .then(() => {
       console.log(`${functionFullName}: Store item requests updated successfully`);
 
-      const promises = [];
       const resultsArray = [];
-      let completionErrors = false;
+
       for (const request of requests) {
         const description = `Manager (id: ${updatedByUser.id}; username: ${updatedByUser.username}) changed user (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId}) status from 'Pending' to 'Ready For Pickup'`;
         const result = {
           updatedRecord: request,
           message: description
         };
-        if (request.status !== true) {
-          completionErrors = true;
-        }
+
         resultsArray.push(result);
         // promises.push(ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description));
       }
 
-      return {status: true, completionErrors: completionErrors, results: resultsArray, updatedByUser: updatedByUser}
+      return {status: true, results: resultsArray, updatedByUser: updatedByUser}
 
     })
     .catch( err => {
