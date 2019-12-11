@@ -302,36 +302,7 @@ const getUserProfile = function (username) {
         console.log(`${functionFullName}: User record found`);
         console.log(user);
 
-        // Get the user's pending balance
-        let pendingBalance = 0;
-        return Models.UserHasStoreItem.findAll({
-          include: [
-            {
-              model: Models.StoreItem
-            }
-          ],
-          where: {
-            userId: user.id,
-            status: 'pending',
-          }
-        })
-          .then(requests => {
-            if (!requests) {
-              // No requests. Leaving pending balance at 0
-
-            } else {
-              for (request of requests) {
-                pendingBalance += request.storeItem.cost;
-              }
-            }
-
-            return  {status: true, user: user, pendingBalance: pendingBalance};
-          })
-          .catch(err => {
-            console.log('Error retrieving user store item requests. Returning user object anyway');
-            console.log(err);
-            return  {status: true, error: err, user: user, pendingBalance: pendingBalance};
-          });
+        return  {status: true, user: user};
       }
     })
     .catch(err => {
@@ -480,31 +451,93 @@ const modifyUser = function (user) {
   console.log(`${functionFullName}: Modifying User:`);
   console.log(user);
 
-  // Build the user update object
+  const promiseArray = [];
   const userUpdate = {};
   const keys = Object.keys(user);
 
-  for (let i = 0; i < keys.length; i++) {
-    let key;
-    switch (keys[i]) {
-      case 'birthdate': {
-        key = 'dateOfBirth';
-        break;
-      }
-      default: {
-        key = keys[i];
-        break;
-      }
+  // Find the user
+  return sqlUserModel.findOne({
+    where: {
+      id: user.userId
     }
+  })
+    .then(userResult => {
+      if (!userResult) {
+        console.log(`${functionFullName}: Unable to find user record`);
+        return {status: false, message: 'Unable to find user record'};
+      } else {
+        // Build the user update object
+        for (let i = 0; i < keys.length; i++) {
+          let key;
+          switch (keys[i]) {
+            case 'birthdate': {
+              key = 'dateOfBirth';
+              break;
+            }
+            case 'pointsPool': {
+              if (userResult.securityRoleId === 2) {
+                promiseArray.push(
+                  ctrlPointPool.updatePointPool(user.userId, user[keys[i]])
+                )
+              }
+              key = keys[i];
+              break;
+            }
+            default: {
+              key = keys[i];
+              break;
+            }
+          }
 
-    if (user[keys[i]] === '') {
-      userUpdate[key] = null;
-    } else {
-      userUpdate[key] = user[keys[i]];
-    }
-  }
+          if (user[keys[i]] === '') {
+            userUpdate[key] = null;
+          } else {
+            userUpdate[key] = user[keys[i]];
+          }
+        }
 
-  return sqlUserModel.update(userUpdate, {
+        promiseArray.push(
+          updateUser(userUpdate)
+        );
+
+        return Promise.all(promiseArray)
+          .then((promiseArrayResults) => {
+            let completionErrors = false;
+            for (const promiseArrayResult of promiseArrayResults) {
+              if (promiseArrayResult.status !== true) {
+                console.log('Action completed with errors', promiseArrayResult);
+                completionErrors = true;
+              }
+            }
+
+            console.log(`${functionFullName}: Successfully updated User`);
+            return {status: true, completionErrors: completionErrors, results: promiseArrayResults, user: user};
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: Database error`);
+            console.log(err);
+            return {status: false, message: err};
+          });
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+
+
+};
+
+module.exports.modifyUser = modifyUser;
+
+const updateUser = function (user) {
+  const functionName = 'updateUser';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  // Find the user
+  return sqlUserModel.update(user, {
     include: [
       {
         model: Models.Department,
@@ -519,18 +552,23 @@ const modifyUser = function (user) {
       id: user.userId,
     }
   })
-    .then(() => {
-      console.log(`${functionFullName}: Successfully updated User`);
-      return {status: true, user: user};
+    .then(updateResult => {
+      if (!updateResult) {
+        console.log(`${functionFullName}: No records to update`);
+        return {status: false, message: 'No records to update'};
+      } else {
+        console.log(`${functionFullName}: Successfully updated User`);
+        return {status: true, message: 'Successfully updated user', user: user};
+      }
     })
     .catch(err => {
       console.log(`${functionFullName}: Database error`);
       console.log(err);
-      return {status: false, message: err};
+      return {status: false, message: 'Database error', error: err};
     });
 };
 
-module.exports.modifyUser = modifyUser;
+module.exports.updateUser = updateUser;
 
 const terminateUser = function (user) {
   const functionName = 'terminateUser';
@@ -618,3 +656,124 @@ const deleteUser = function (user) {
 module.exports.deleteUser = deleteUser;
 
 
+const newPurchaseApprover = function (purchaseApprover) {
+  const functionName = 'newPurchaseApprover';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.findOne({
+    where: {
+      userId: purchaseApprover.userId,
+    }
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: This user account is already a purchase request manager`);
+        return {status: false, message: 'This user account is already a purchase request manager'};
+      } else {
+        return Models.PurchaseApprovers.create(purchaseApprover)
+          .then(newApprover => {
+            console.log(`${functionFullName}: Successfully created new purchase request manager`);
+            return {status: true, newApprover: newApprover};
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: Database error`);
+            console.log(err);
+            return {status: false, message: 'Database error', error: err};
+          });
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.newPurchaseApprover = newPurchaseApprover;
+
+const updatePurchaseApprover = function (purchaseApprover) {
+  const functionName = 'updatePurchaseApprover';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.update(purchaseApprover, {
+    where: {
+      userId: purchaseApprover.userId
+    }
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: Successfully updated purchase request manager.`);
+        return {status: true, updatedApprover: purchaseApprover};
+      } else {
+        console.log(`${functionFullName}: Nothing to update`);
+        return {status: false, message: 'Nothing to update'};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.updatePurchaseApprover = updatePurchaseApprover;
+
+const deletePurchaseApprover = function (userId) {
+  const functionName = 'deletePurchaseApprover';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.destroy({
+    where: {
+      userId: userId
+    }
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: Successfully deleted purchase request manager`);
+        return {status: true, deletedApprover: userId};
+      } else {
+        console.log(`${functionFullName}: Nothing to delete`);
+        return {status: false, message: 'Nothing to delete'};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.deletePurchaseApprover = deletePurchaseApprover;
+
+const getPurchaseApprovers = function () {
+  const functionName = 'getPurchaseApprovers';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  return Models.PurchaseApprovers.findAll({
+    include: [
+      {
+        model: Models.User
+      }
+    ]
+  })
+    .then(result => {
+      if (result) {
+        console.log(`${functionFullName}: Retrieved purchase request manager records successfully`);
+        return {status: true, message: 'Retrieved purchase request manager records successfully', purchaseApprovers: result};
+      } else {
+        console.log(`${functionFullName}: No purchase request manager records found`);
+        return {status: false, message: 'No purchase request manager records found'};
+      }
+    })
+    .catch(err => {
+      console.log(`${functionFullName}: Database error`);
+      console.log(err);
+      return {status: false, message: 'Database error', error: err};
+    });
+};
+
+module.exports.getPurchaseApprovers = getPurchaseApprovers;

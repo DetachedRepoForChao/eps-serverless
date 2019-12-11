@@ -49,27 +49,34 @@ export class SecurityRoleService {
       console.log(`${functionFullName}: securityRoles cache does not exist`);
       return new Observable<SecurityRole[]>( observer => {
         console.log(`${functionFullName}: retrieve securityRoles from API`);
-        API.get(this.apiName, this.apiPath + '/getSecurityRoles', {}).then(data => {
-          console.log(`${functionFullName}: successfully retrieved data from API`);
-          console.log(data);
-          console.log(`${functionFullName}: caching securityRoles`);
-          const securityRoleObjList: SecurityRole[] = [];
-          data.data.forEach((securityRole: any) => {
-            const securityRoleObj: SecurityRole = {
-              Id: securityRole.id,
-              Name: securityRole.name,
-              Description: securityRole.description
-            };
+        API.get(this.apiName, this.apiPath + '/getSecurityRoles', {})
+          .then(data => {
+            console.log(`${functionFullName}: successfully retrieved data from API`);
+            console.log(data);
+            console.log(`${functionFullName}: caching securityRoles`);
+            const securityRoleObjList: SecurityRole[] = [];
+            data.data.forEach((securityRole: any) => {
+              const securityRoleObj: SecurityRole = {
+                Id: securityRole.id,
+                Name: securityRole.name,
+                Description: securityRole.description
+              };
 
-            securityRoleObjList.push(securityRoleObj);
+              securityRoleObjList.push(securityRoleObj);
+            });
+
+            this.globals.securityRoles = securityRoleObjList;
+
+            console.log(`${functionFullName}: returning securityRoles from API`);
+            observer.next(securityRoleObjList);
+            observer.complete();
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: HTTP error`);
+            console.log(err);
+            observer.error(err);
+            observer.complete();
           });
-
-          this.globals.securityRoles = securityRoleObjList;
-
-          console.log(`${functionFullName}: returning securityRoles from API`);
-          observer.next(securityRoleObjList);
-          observer.complete();
-        });
       });
     }
   }
@@ -118,14 +125,14 @@ export class SecurityRoleService {
       });
     }
 
-/*    console.log('getSecurityRoleById');
-    console.log('securityRoleService.getSecurityRoleById: ' + securityRoleId);
-    this.myInit['body'] = {securityRoleId: securityRoleId};
-    return API.post(this.apiName, this.apiPath + '/getSecurityRoles', this.myInit).then(data => {
-      console.log('serverless getSecurityRoleById');
-      console.log(data);
-      return data.data;
-    });*/
+    /*    console.log('getSecurityRoleById');
+        console.log('securityRoleService.getSecurityRoleById: ' + securityRoleId);
+        this.myInit['body'] = {securityRoleId: securityRoleId};
+        return API.post(this.apiName, this.apiPath + '/getSecurityRoles', this.myInit).then(data => {
+          console.log('serverless getSecurityRoleById');
+          console.log(data);
+          return data.data;
+        });*/
     // return this.http.post(environment.apiBaseUrl + '/getSecurityRoles', {securityRoleId: securityRoleId}, this.noAuthHeader);
   }
 }

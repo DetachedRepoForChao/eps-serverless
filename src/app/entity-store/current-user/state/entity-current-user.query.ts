@@ -48,10 +48,10 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
     return new Observable<EntityCurrentUserModel>(observer => {
 
       this.selectAll()
-        .pipe(take(1))
         .subscribe((currentUser: EntityCurrentUserModel[]) => {
+          console.log('current user emitting value');
           observer.next(currentUser[0]);
-          observer.complete();
+          // observer.complete();
         });
     });
   }

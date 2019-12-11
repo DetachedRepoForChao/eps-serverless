@@ -281,4 +281,9 @@ export class StoreItemsCardComponent implements OnInit {
     // show message
   }
 
+  confirmStoreItemPurchaseRequest(): void {
+    console.log(`Received request to purchase store item`);
+    this.router.navigate(['/', 'user', 'confirm-item-purchase']);
+  }
+
 }

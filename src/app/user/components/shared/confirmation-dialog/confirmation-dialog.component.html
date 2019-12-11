@@ -52,7 +52,17 @@
     <br>
     <div class="row">
       <div class="col-12 text-left">
-        <ng-container *ngIf="(currentUser.points - currentUser.pointsBalance) >= selectedStoreItem.cost; else notEnoughPoints">
+<!--        <ng-container *ngIf="(currentUser.points - currentUser.pointsBalance) >= selectedStoreItem.cost; else notEnoughPoints">
+          <div>
+            Would you like to make this purchase?
+          </div>
+        </ng-container>
+        <ng-template #notEnoughPoints>
+          <div class="text-primary">
+            You do not have enough points to make this purchase.
+          </div>
+        </ng-template>-->
+        <ng-container *ngIf="(currentUser.points) >= selectedStoreItem.cost; else notEnoughPoints">
           <div>
             Would you like to make this purchase?
           </div>
@@ -62,13 +72,13 @@
             You do not have enough points to make this purchase.
           </div>
         </ng-template>
-
       </div>
     </div>
 
   </div>
   <div mat-dialog-actions>
-    <button mat-button [disabled]="(currentUser.points - currentUser.pointsBalance) < selectedStoreItem.cost" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>
+<!--    <button mat-button [disabled]="(currentUser.points - currentUser.pointsBalance) < selectedStoreItem.cost" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>-->
+    <button mat-button [disabled]="(currentUser.points ) < selectedStoreItem.cost" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>
     <button mat-button (click)="onCloseCancel()" >Cancel</button>
   </div>
 

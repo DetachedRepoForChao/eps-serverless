@@ -1419,6 +1419,46 @@ module.exports = function(sequelize, DataTypes) {
   });
 
 
+  // purchase_approvers table
+  const PurchaseApprovers = sequelize.define('purchaseApprovers', {
+    id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id'
+    },
+    userId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      field: 'user_id'
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+      field: 'is_active'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'createdAt'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'updatedAt'
+    },
+  }, {
+    tableName: 'purchase_approvers',
+  });
+
+  PurchaseApprovers.hasOne(User, {foreignKey: 'id', sourceKey: 'userId'});
+  User.belongsTo(PurchaseApprovers, {foreignKey: 'id', targetKey: 'userId'});
+
+
   return {
     Achievement: Achievement,
     AchievementTransaction: AchievementTransaction,
@@ -1439,5 +1479,6 @@ module.exports = function(sequelize, DataTypes) {
     Feature: Feature,
     AchievementUnlocksFeature: AchievementUnlocksFeature,
     PointPoolMax: PointPoolMax,
+    PurchaseApprovers: PurchaseApprovers
   };
 };

@@ -131,11 +131,13 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
                   }
                 });
 
-              this.getCoreValues(this.currentUser.userId)
-                .pipe(take(1))
-                .subscribe(coreValues => {
-                  this.coreValueData = coreValues;
-                });
+              if (currentUser.securityRole.Id === 1) {
+                this.getCoreValues(this.currentUser.userId)
+                  .pipe(take(1))
+                  .subscribe(coreValues => {
+                    this.coreValueData = coreValues;
+                  });
+              }
             });
 
           this.currentUserLoading$.next();

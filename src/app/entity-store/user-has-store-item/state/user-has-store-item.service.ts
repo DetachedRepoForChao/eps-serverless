@@ -99,8 +99,8 @@ export class UserHasStoreItemService {
           Auth.currentUserInfo()
             .then(userAttributes => {
               let apiCall = '/getUserHasStoreItemRecords';
-              if (+userAttributes.attributes['custom:security_role_id'] === 2) {
-                apiCall = '/getUserHasStoreItemManagerRecords';
+              if (+userAttributes.attributes['custom:security_role_id'] === 3) {
+                apiCall = '/getPurchaseRequestsAdmin';
               }
               const token = user.signInUserSession.idToken.jwtToken;
               const myInit = this.myInit;
@@ -109,8 +109,13 @@ export class UserHasStoreItemService {
               API.get(this.apiName, this.apiPath + apiCall, myInit).then(data => {
                 console.log(`${functionFullName}: successfully retrieved data from API`);
                 console.log(data);
-                observer.next(data.data);
-                observer.complete();
+                if (data.data.status !== false) {
+                  observer.next(data.data.purchaseRequests);
+                  observer.complete();
+                } else {
+                  observer.next(data.data.status);
+                  observer.complete();
+                }
               })
                 .catch(err => {
                   console.log(`${functionFullName}: error retrieving user / store-item records  from API`);
@@ -246,7 +251,7 @@ export class UserHasStoreItemService {
     });
   }
 
-  getPendingBalance(): Observable<any> {
+/*  getPendingBalance(): Observable<any> {
     return new Observable<any>(observer => {
       const pending$ = this.userHasStoreItemQuery.selectPending();
       pending$.subscribe(pendingRecords => {
@@ -266,7 +271,7 @@ export class UserHasStoreItemService {
         observer.complete();
       });
     });
-  }
+  }*/
 
   setStoreItemRequestReadyForPickup(request: UserHasStoreItemModel): Observable<any> {
     const functionName = 'setStoreItemRequestReadyForPickup';

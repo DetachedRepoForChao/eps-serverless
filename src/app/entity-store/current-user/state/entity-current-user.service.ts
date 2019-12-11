@@ -102,12 +102,12 @@ export class EntityCurrentUserService {
   }
 
 
-  updatePointsBalance(pointsBalance: number) {
+/*  updatePointsBalance(pointsBalance: number) {
     console.log('updating points balance with: ' + pointsBalance);
     this.currentUserStore.update(null, {
       pointsBalance: pointsBalance
     });
-  }
+  }*/
 
   cacheCurrentUser() {
     console.log(`Retrieving current user`);
@@ -153,7 +153,7 @@ export class EntityCurrentUserService {
         const achievementsPublic = userDataResult.achievementsPublic;
         const pointsPublic = userDataResult.pointsPublic;
         const coreValuesPublic = userDataResult.coreValuesPublic;
-        const pointsBalance = userDataResult.pointsBalance;
+        // const pointsBalance = userDataResult.pointsBalance;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
@@ -162,8 +162,7 @@ export class EntityCurrentUserService {
             const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, prefix,
               suffix, position, points, pointsPool, email, address1, address2, city, state, country, zip, birthdate, preferredPronoun, sex,
               gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl, quote, phonePublic,
-              emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic,
-              pointsBalance});
+              emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -276,7 +275,7 @@ export class EntityCurrentUserService {
                   const achievementsPublic = currentUserData.user.achievementsPublic;
                   const pointsPublic = currentUserData.user.pointsPublic;
                   const coreValuesPublic = currentUserData.user.coreValuesPublic;
-                  const pointsBalance = currentUserData.pendingBalance;
+                  // const pointsBalance = currentUserData.pendingBalance;
 
                   const data = {
                     userId: userId,
@@ -315,7 +314,7 @@ export class EntityCurrentUserService {
                     achievementsPublic: achievementsPublic,
                     pointsPublic: pointsPublic,
                     coreValuesPublic: coreValuesPublic,
-                    pointsBalance: pointsBalance,
+                    // pointsBalance: pointsBalance,
                   };
 
                   console.log('userData:');

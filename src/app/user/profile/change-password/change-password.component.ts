@@ -112,6 +112,7 @@ export class ChangePasswordComponent implements OnInit {
     this.spinner.hide('change-password-spinner');
   }
 
+/*
   getPendingBalance(): Observable<any> {
     return new Observable(observer => {
       this.currentUserQuery.selectAll()
@@ -126,6 +127,7 @@ export class ChangePasswordComponent implements OnInit {
         });
     });
   }
+*/
 
   avatarClick() {
     $('#avatarModal').modal('show');

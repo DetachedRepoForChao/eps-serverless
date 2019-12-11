@@ -90,7 +90,6 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
   confirmStoreItemPurchaseRequest(): void {
     console.log(`Received request to purchase store item`);
     this.router.navigate(['/', 'user', 'confirm-item-purchase']);
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {

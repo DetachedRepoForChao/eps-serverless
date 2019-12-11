@@ -142,30 +142,38 @@ app.post('/things/getCognitoUser', function(req, res) {
   console.log(req.body);
   console.log(username);
 
-  var params = {
-    UserPoolId: 'us-east-1_vOg4HSZc8',
+  const params = {
+    UserPoolId: userPoolId,
     Username: username
   };
 
-  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-  var cognitoidentity = new AWS.CognitoIdentity();
+  const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
-
-  cognitoidentityserviceprovider.adminGetUser(params, (err, data) => {
+  cognitoidentityserviceprovider.adminGetUser(params, (err, user) => {
     if (err) {
       console.log(err);
       // reject(err)
-      res.json({success: 'post call failed!', data: err})
+      const data = {
+        status: false,
+        error: err
+      };
+
+      res.json({success: 'post call failed!', data: data})
     }
     else {
-      console.log("User", data);
+      console.log("User", user);
 /*      data.Users.forEach(user => {
         console.log(user.Attributes);
       });*/
       // resolve(data)
+      const data = {
+        status: true,
+        user: user
+      };
+
       res.json({success: 'post call succeed!', data: data})
     }
-  })
+  });
 
   // res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });

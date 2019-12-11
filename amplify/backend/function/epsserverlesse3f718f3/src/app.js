@@ -234,7 +234,7 @@ app.post('/items/modifyUser', function(req, res) {
       const user = req.body.user;
       ctrlUser.modifyUser(user)
         .then(data => {
-          res.json({status: 'post call succeed!', data: data.user});
+          res.json({status: 'post call succeed!', data: data});
         })
         .catch(err => {
           res.json({status: 'post call failed!', error: err});
@@ -302,7 +302,80 @@ app.post('/items/deleteUser', function(req, res) {
   });
 });
 
+app.get('/items/getPurchaseApprovers', function(req, res) {
+  console.log('starting get getPurchaseApprovers');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      ctrlUser.getPurchaseApprovers()
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
 
+app.post('/items/newPurchaseApprover', function(req, res) {
+  console.log('starting post newPurchaseApprover');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const purchaseApprover = req.body.purchaseApprover;
+      ctrlUser.newPurchaseApprover(purchaseApprover)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/updatePurchaseApprover', function(req, res) {
+  console.log('starting post updatePurchaseApprover');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const purchaseApprover = req.body.purchaseApprover;
+      ctrlUser.updatePurchaseApprover(purchaseApprover)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.post('/items/deletePurchaseApprover', function(req, res) {
+  console.log('starting post deletePurchaseApprover');
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const userId = req.body.userId;
+      ctrlUser.deletePurchaseApprover(userId)
+        .then(data => {
+          res.json({status: 'post call succeed!', data: data});
+        })
+        .catch(err => {
+          res.json({status: 'post call failed!', error: err});
+        });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
 
 // Department Routes
 app.get('/items/departments', function(req, res) {
@@ -1326,7 +1399,7 @@ app.get('/items/getUserHasStoreItemRecords', function(req, res) {
           const requestUser = userResult.user;
           ctrlStoreItem.getUserHasStoreItemRecords(requestUser)
             .then(data => {
-              res.json({status: 'get call succeed!', data: data.userHasStoreItemRecords});
+              res.json({status: 'get call succeed!', data: data});
             })
             .catch(err => {
               res.json({status: 'get call failed!', error: err});
@@ -1350,12 +1423,36 @@ app.get('/items/getUserHasStoreItemManagerRecords', function(req, res) {
           const managerUser = userResult.user;
           ctrlStoreItem.getUserHasStoreItemManagerRecords(managerUser)
             .then(data => {
-              res.json({status: 'get call succeed!', data: data.userHasStoreItemRecords});
+              res.json({status: 'get call succeed!', data: data});
             })
             .catch(err => {
               res.json({status: 'get call failed!', error: err});
             });
         });
+    } else {
+      res.json({status: 'Unauthorized', data: tokenResult.message});
+    }
+  });
+});
+
+app.get('/items/getPurchaseRequestsAdmin', function(req, res) {
+  console.log('starting get getPurchaseRequestsAdmin');
+
+  const token = req.headers.authorization;
+  jwtVerify.parseToken(token, function(tokenResult) {
+    if(tokenResult.message === 'Success') {
+      const role = +tokenResult.claims['custom:security_role_id'];
+      if (role === 3) {
+        ctrlStoreItem.getPurchaseRequestsAdmin()
+          .then(data => {
+            res.json({status: 'get call succeed!', data: data});
+          })
+          .catch(err => {
+            res.json({status: 'get call failed!', error: err});
+          });
+      } else {
+        res.json({status: 'Unauthorized', data: tokenResult.message});
+      }
     } else {
       res.json({status: 'Unauthorized', data: tokenResult.message});
     }

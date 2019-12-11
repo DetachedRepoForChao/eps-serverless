@@ -252,6 +252,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((requests: UserHasStoreItemModel[]) => {
           this.managerRequests = requests;
+          console.log(requests);
         });
 
       return;
@@ -273,6 +274,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe((requests: UserHasStoreItemModel[]) => {
             this.managerRequests = requests;
+            console.log(requests);
           });
       return;
     }
@@ -283,6 +285,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((requests: UserHasStoreItemModel[]) => {
         this.managerRequests = requests;
+        console.log(requests);
       });
 
   }

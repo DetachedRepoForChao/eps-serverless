@@ -6,6 +6,7 @@ import {combineLatest, Observable} from 'rxjs';
 import { VISIBILITY_FILTER } from '../filter/user-filter.model';
 import {map, take} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../current-user/state/entity-current-user.model';
+import {NotificationModel} from '../../notification/state/notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -71,10 +72,10 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
       this.selectAll({
         filterBy: e => e.userId === userId
       })
-        .pipe(take(1))
+        // .pipe(take(1))
         .subscribe((user: EntityUserModel[]) => {
           observer.next(user[0]);
-          observer.complete();
+          // observer.complete();
         });
     });
   }
@@ -84,20 +85,26 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
       this.selectAll({
         filterBy: e => e.username === username
       })
-        .pipe(take(1))
+        // .pipe(take(1))
         .subscribe((user: EntityUserModel[]) => {
           observer.next(user[0]);
-          observer.complete();
+          // observer.complete();
         });
     });
   }
 
+  public selectAdminUsers() {
+    return this.selectAll({
+      filterBy: e => e.securityRole.Id === 3
+    });
+  }
 
   public selectDeactivatedUsers() {
     return this.selectAll({
       filterBy: e => !(e.active)
     });
   }
+
 
   public getDeactivatedUsers() {
     return this.getAll({
@@ -122,7 +129,7 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
 
           const numArray = Array(user[0].completeAchievementsTotal).map((x, i) => i);
           observer.next(numArray);
-          observer.complete();
+          // observer.complete();
         });
     });
   }
@@ -134,4 +141,6 @@ export class EntityUserQuery extends QueryEntity<UserState, EntityUserModel> {
 
     return manager;
   }
+
+
 }

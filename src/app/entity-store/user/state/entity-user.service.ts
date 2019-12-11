@@ -34,6 +34,7 @@ export class EntityUserService {
 
   usersRetrieved = false;
   usersRetrieving = false;
+  cognitoUsers = [];
 
 
   constructor(private userStore: UserStore,
@@ -124,6 +125,59 @@ export class EntityUserService {
   setInactive(userId: number) {
     this.userStore.update((e) => e.userId === userId, {
       active: false
+    });
+  }
+
+  getCognitoUser(username: string): Observable<any> {
+    const functionName = 'getCognitoUser';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      // Check if we already cached this user
+      const cognitoUser = this.cognitoUsers.find(x => x.Username === username);
+      if (cognitoUser) {
+        observer.next(cognitoUser);
+        observer.complete();
+      } else {
+        this.authService.currentAuthenticatedUser()
+          .then(currentUser => {
+            const token = currentUser.signInUserSession.idToken.jwtToken;
+            const myInit = this.myInit;
+            myInit.headers['Authorization'] = token;
+
+            myInit['body'] = {
+              username: username
+            };
+
+
+            API.post(this.apiName, this.apiPath2 + '/getCognitoUser', myInit)
+              .then(response => {
+                console.log(`${functionFullName}: API call successfull`);
+                console.log(response);
+                if (response.data.status !== false) {
+                  this.cognitoUsers.push(response.data.user);
+                  observer.next(response.data.user);
+                  observer.complete();
+                } else {
+                  observer.error(response.data);
+                  observer.complete();
+                }
+              })
+              .catch(err => {
+                console.log(`${functionFullName}: API call error`);
+                console.log(err);
+                observer.error(err);
+                observer.complete();
+              });
+          })
+          .catch(err => {
+            console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+            console.log(err);
+            observer.error(err);
+            observer.complete();
+          });
+      }
     });
   }
 
@@ -569,11 +623,23 @@ export class EntityUserService {
             user: user
           };
 
-          API.post(this.apiName, this.apiPath + '/modifyUser', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+          API.post(this.apiName, this.apiPath + '/modifyUser', myInit)
+            .then(response => {
+            console.log(`${functionFullName}: API call successful`);
+            console.log(response);
+            const errorArray = [];
+            if (response.data.status !== false) {
+              if (response.data.completionErrors === true) {
+                console.log(`${functionFullName}: Completed with errors`);
 
-            if (data.data.status !== false) {
+                for (const result of response.data.results) {
+                  if (result.status !== true) {
+                    console.log(`${functionFullName}: Result with error`, result);
+                    errorArray.push(result);
+                  }
+                }
+              }
+
               // Update the user in the local Akita store
               this.update(user);
 
@@ -583,13 +649,23 @@ export class EntityUserService {
                   console.log(cognitoResult);
                 });
 
-              observer.next(data.data);
+              observer.next({data: response.data, errors: errorArray});
               observer.complete();
             } else {
-              observer.next(data.data);
+              observer.error(response.data);
               observer.complete();
             }
-          });
+          })
+            .catch(err => {
+              console.log(`${functionFullName}: API call error`, err);
+              observer.error(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Auth error`, err);
+          observer.error(err);
+          observer.complete();
         });
     });
   }
@@ -771,19 +847,19 @@ export class EntityUserService {
                 observer.complete();
 
               } else {
-                observer.next(response.data);
+                observer.error(response.data);
                 observer.complete();
               }
             })
             .catch(err => {
               console.log(`${functionFullName}: API call error`);
-              observer.next(err);
+              observer.error(err);
               observer.complete();
             });
         })
         .catch(err => {
           console.log(`${functionFullName}: Auth error`);
-          observer.next(err);
+          observer.error(err);
           observer.complete();
         });
     });
@@ -828,6 +904,178 @@ export class EntityUserService {
         .catch(err => {
           console.log(`${functionFullName}: Auth error`);
           observer.next(err);
+          observer.complete();
+        });
+    });
+  }
+
+  getPurchaseApprovers(): Observable<any> {
+    const functionName = 'getPurchaseApprovers';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          API.get(this.apiName, this.apiPath + '/getPurchaseApprovers', myInit)
+            .then(response => {
+              console.log(`${functionFullName}: API call successful`);
+              console.log(response);
+
+              if (response.data.status !== false) {
+                observer.next(response.data.purchaseApprovers);
+                observer.complete();
+
+              } else {
+                observer.error(response.data);
+                observer.complete();
+              }
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: API call error`);
+              observer.error(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Auth error`);
+          observer.error(err);
+          observer.complete();
+        });
+    });
+  }
+
+  newPurchaseApprover(purchaseApprover: any): Observable<any> {
+    const functionName = 'newPurchaseApprover';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            purchaseApprover: purchaseApprover,
+          };
+
+          API.post(this.apiName, this.apiPath + '/newPurchaseApprover', myInit)
+            .then(response => {
+              console.log(`${functionFullName}: API call successful`);
+              console.log(response);
+
+              if (response.data.status !== false) {
+                observer.next(response.data.newApprover);
+                observer.complete();
+
+              } else {
+                observer.error(response.data);
+                observer.complete();
+              }
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: API call error`);
+              observer.error(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Auth error`);
+          observer.error(err);
+          observer.complete();
+        });
+    });
+  }
+
+  updatePurchaseApprover(purchaseApprover: any): Observable<any> {
+    const functionName = 'updatePurchaseApprover';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            purchaseApprover: purchaseApprover,
+          };
+
+          API.post(this.apiName, this.apiPath + '/updatePurchaseApprover', myInit)
+            .then(response => {
+              console.log(`${functionFullName}: API call successful`);
+              console.log(response);
+
+              if (response.data.status !== false) {
+                observer.next(response.data.updatedApprover);
+                observer.complete();
+
+              } else {
+                observer.error(response.data);
+                observer.complete();
+              }
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: API call error`);
+              observer.error(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Auth error`);
+          observer.error(err);
+          observer.complete();
+        });
+    });
+  }
+
+  deletePurchaseApprover(userId: number): Observable<any> {
+    const functionName = 'deletePurchaseApprover';
+    const functionFullName = `${this.componentName} ${functionName}`;
+    console.log(`Start ${functionFullName}`);
+
+    return new Observable<any>(observer => {
+      this.authService.currentAuthenticatedUser()
+        .then(currentUser => {
+          const token = currentUser.signInUserSession.idToken.jwtToken;
+          const myInit = this.myInit;
+          myInit.headers['Authorization'] = token;
+
+          myInit['body'] = {
+            userId: userId,
+          };
+
+          API.post(this.apiName, this.apiPath + '/deletePurchaseApprover', myInit)
+            .then(response => {
+              console.log(`${functionFullName}: API call successful`);
+              console.log(response);
+
+              if (response.data.status !== false) {
+                observer.next(response.data.deletedApprover);
+                observer.complete();
+
+              } else {
+                observer.error(response.data);
+                observer.complete();
+              }
+            })
+            .catch(err => {
+              console.log(`${functionFullName}: API call error`);
+              observer.error(err);
+              observer.complete();
+            });
+        })
+        .catch(err => {
+          console.log(`${functionFullName}: Auth error`);
+          observer.error(err);
           observer.complete();
         });
     });

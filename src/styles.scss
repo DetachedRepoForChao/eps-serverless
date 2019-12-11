@@ -121,6 +121,79 @@ perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
   opacity: 0.9;
 }
 
+#managePurchaseApproversModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#managePurchaseApproversModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#managePurchaseApproversModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps.ps--scrolling-y > .ps__rail-y,
+#managePurchaseApproversModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps.ps--scrolling-x > .ps__rail-x {
+  opacity: 0.9;
+
+  background-color: #eee0 !important;
+}
+
+#managePurchaseApproversModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: #eee0 !important;
+  opacity: 0.9;
+}
+
+
+
+#addUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#addUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#addUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps.ps--scrolling-y > .ps__rail-y,
+#addUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps.ps--scrolling-x > .ps__rail-x {
+  opacity: 0.9;
+
+  background-color: #eee0 !important;
+}
+
+#addUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: #eee0 !important;
+  opacity: 0.9;
+}
+
+#editUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#editUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to bottom, rgb(255, 255, 255) 0%, rgba(255, 255, 255, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#editUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps.ps--scrolling-y > .ps__rail-y,
+#editUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps.ps--scrolling-x > .ps__rail-x {
+  opacity: 0.9;
+
+  background-color: #eee0 !important;
+}
+
+#editUserModal > div > div > div.modal-body.user-modal-body > perfect-scrollbar .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: #eee0 !important;
+  opacity: 0.9;
+}
 
 .mat-tooltip {
   font-size: 16px;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
 import { Globals} from '../../../globals';
 import { DepartmentService} from '../../../shared/department.service';
@@ -11,7 +11,7 @@ import {PointItem} from '../../../shared/point-item.model';
 import {NgForm} from '@angular/forms';
 import {componentRefresh} from '@angular/core/src/render3/instructions';
 import {Router} from '@angular/router';
-import {Observable, forkJoin} from 'rxjs';
+import {Observable, forkJoin, Subject} from 'rxjs';
 import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {GiftPointsService} from './gift-points.service';
@@ -27,6 +27,8 @@ import {PointItemModel} from '../../../entity-store/point-item/state/point-item.
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {FreshPipe} from '../../../pipe/fresh.pipe';
+import {take, takeUntil} from 'rxjs/operators';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 
 
 declare var $: any;
@@ -51,8 +53,13 @@ export interface CoreValueButton {
   templateUrl: './gift-points.component.html',
   styleUrls: ['./gift-points.component.scss'],
 })
-export class GiftPointsComponent implements OnInit {
+export class GiftPointsComponent implements OnInit, OnDestroy {
   componentName = 'gift-points.component';
+  private pointItemsLoading$ = new Subject<void>();
+  private usersLoading$ = new Subject<void>();
+  private currentUserLoading$ = new Subject<void>();
+  private unsubscribe$ = new Subject<void>();
+
   // departmentEmployees = [];
   // department: Department;
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
@@ -60,6 +67,7 @@ export class GiftPointsComponent implements OnInit {
   selection = new SelectionModel<EntityUserModel>(true, []);
   // dataSource = new MatTableDataSource<DepartmentEmployee>();
   pointItemList$: Observable<PointItemModel[]>;
+  pointItems: PointItemModel[];
   filteredPointItemList: PointItemModel[] = [];
   // selectedPointItem = {};
   selectedEmployees = [];
@@ -68,6 +76,8 @@ export class GiftPointsComponent implements OnInit {
   coreValueButtonList: CoreValueButton[] = [];
   selectedPointItem: PointItemModel;
   employees$: Observable<EntityUserModel[]>;
+  employees: EntityUserModel[];
+  currentUser: EntityCurrentUserModel;
   isCardLoading: boolean;
   formSubmitted = false;
   showLimit = 8;
@@ -96,8 +106,8 @@ export class GiftPointsComponent implements OnInit {
     private entityUserService: EntityUserService,
     private userStore: UserStore,
     private entityUserQuery: EntityUserQuery,
-    private entityCurrentUserQuery: EntityCurrentUserQuery,
-    private entityCurrentUserService: EntityCurrentUserService) { }
+    private currentUserQuery: EntityCurrentUserQuery,
+    private currentUserService: EntityCurrentUserService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -112,13 +122,60 @@ export class GiftPointsComponent implements OnInit {
     this.populateCoreValueButtonList();
 
     // this.pointItemService.cachePointItems().subscribe();
-    this.pointItemList$ = this.pointItemQuery.selectAll();
+    // this.pointItemList$ = this.pointItemQuery.selectAll();
     // this.filteredPointItemList$ = this.pointItemQuery.selectAll();
 
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
+
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
+
+    this.pointItemQuery.selectLoading()
+      .pipe(takeUntil(this.pointItemsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.pointItemQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((pointItems: PointItemModel[]) => {
+              this.pointItems = pointItems;
+            });
+
+          this.pointItemsLoading$.next();
+          this.pointItemsLoading$.complete();
+        }
+      });
+
+    this.entityUserQuery.selectLoading()
+      .pipe(takeUntil(this.usersLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.entityUserQuery.selectAll({
+            filterBy: e => e.securityRole.Id === 1,
+          })
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.employees = users;
+            });
+
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
+
     // this.entityUserService.cacheUsers().subscribe();
-    this.employees$ = this.entityUserQuery.selectAll({
+/*    this.employees$ = this.entityUserQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
+    });*/
 
     this.isCardLoading = false;
     this.spinner.hide('gift-points-spinner');
@@ -147,7 +204,7 @@ export class GiftPointsComponent implements OnInit {
     }
   }
 
-  pointItemOnSubmit(form: NgForm) {
+  pointItemOnSubmit(form: NgForm, currentUser: EntityCurrentUserModel) {
     const functionName = 'pointItemOnSubmit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -158,7 +215,7 @@ export class GiftPointsComponent implements OnInit {
     console.log(`${functionFullName}: this.selection.selected:`);
     console.log(this.selection.selected);
 
-    const sourceUser = this.entityCurrentUserQuery.getAll()[0];
+    const sourceUser = currentUser;
 
     if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
     } else {
@@ -189,20 +246,24 @@ export class GiftPointsComponent implements OnInit {
       }
 
       // Check if the manager has enough points in his points pool to complete the transaction
-      const currentPointsPool = this.entityCurrentUserQuery.getCurrentUserPointsPool();
+      const currentPointsPool = sourceUser.pointsPool;
       if (totalAmount > currentPointsPool) {
         console.log('Not enough points in the points pool to complete transaction. Stopping...');
+        this.notifierService.notify('error', 'Not enough points in your Points Pool!');
         this.selection.clear();
       } else {
         console.log('Sufficient points in the points pool to complete the transaction. Continuing...');
         console.log(userPointObjectArray);
         this.pointItemService.awardPointsToEmployees(userPointObjectArray)
-          .subscribe((giftPointsResult: any) => {
+          .pipe(take(1))
+          .subscribe(
+            (giftPointsResult: any) => {
             console.log('giftPointsResult');
             console.log(giftPointsResult);
             const newPointPoolAmount = giftPointsResult.newPointPoolAmount;
             const resultObjectArray = giftPointsResult.resultObjectArray;
-            this.entityCurrentUserService.updatePointPool(+newPointPoolAmount);
+            this.currentUserService.updatePointPool(+newPointPoolAmount);
+            this.notifierService.notify('success', 'Points awarded successfully!');
 
             for (let i = 0; i < resultObjectArray.length; i++) {
               // If the backend function call returned true, update points for user and send them an email notification
@@ -210,6 +271,7 @@ export class GiftPointsComponent implements OnInit {
                 const targetUser = this.selection.selected.filter(x => x.userId === resultObjectArray[i].targetUserId)[0];
                 this.entityUserService.updatePoints(+resultObjectArray[i].targetUserId, +resultObjectArray[i].newPointAmount);
                 this.pointItemService.sendAwardPointsEmail(targetUser, sourceUser, this.selectedPointItem)
+                  .pipe(take(1))
                   .subscribe(emailResult => {
                     console.log(`${functionFullName}: email result`);
                     console.log(emailResult);
@@ -218,11 +280,18 @@ export class GiftPointsComponent implements OnInit {
 
             }
 
-            this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length).subscribe();
+            this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length)
+              .pipe(take(1))
+              .subscribe();   // TODO Earned achievement notification
             this.selection.clear();
-          });
+          },
+            (err) => {
+            console.log(`${functionFullName}: award points threw an error`, err);
+              this.notifierService.notify('error', 'Error awarding points!');   // TODO Send error log to administrator?
+            });
       }
     }
+
   }
 
   toggleCoreValueButtonFilter(coreValue: string) {
@@ -280,44 +349,59 @@ export class GiftPointsComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    const pointItemList: PointItemModel[] = this.pointItemQuery.getAll();
     this.filteredPointItemList = [];
-    // const toggledCoreValues = this.coreValueButtonList.filter(x => x.Toggled);
-    const toggledCoreValues = this.appliedFilters;
-    if (toggledCoreValues.length === 0) {
-      for (let i = 0; i < pointItemList.length; i++) {
-        this.filteredPointItemList = [];
-      }
-    } else {
-      for (let i = 0; i < pointItemList.length; i++) {
-        // Only add point item to the filtered list if it contains ALL the toggled core values
-        let noMatch = false;
-        for (let j = 0; j < toggledCoreValues.length; j++) {
-          console.log(`Checking if ${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
-          if (pointItemList[i].coreValues.find(x => x === toggledCoreValues[j])) {
-            // filteredPointItem contains current toggled core value
-            console.log(`${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
 
-          } else {
-            // filteredPointItem does NOT contain current toggled core value. Break out of loop
-            console.log(`${pointItemList[i].name} does NOT contain core value ${toggledCoreValues[j]}`);
-            noMatch = true;
-            break;
-          }
+    this.pointItemQuery.selectLoading()
+      .pipe(takeUntil(this.pointItemsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.pointItemQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((pointItems: PointItemModel[]) => {
+              const pointItemList: PointItemModel[] = pointItems;
+
+              // const toggledCoreValues = this.coreValueButtonList.filter(x => x.Toggled);
+              const toggledCoreValues = this.appliedFilters;
+              if (toggledCoreValues.length === 0) {
+                for (let i = 0; i < pointItemList.length; i++) {
+                  this.filteredPointItemList = [];
+                }
+              } else {
+                for (let i = 0; i < pointItemList.length; i++) {
+                  // Only add point item to the filtered list if it contains ALL the toggled core values
+                  let noMatch = false;
+                  for (let j = 0; j < toggledCoreValues.length; j++) {
+                    console.log(`Checking if ${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
+                    if (pointItemList[i].coreValues.find(x => x === toggledCoreValues[j])) {
+                      // filteredPointItem contains current toggled core value
+                      console.log(`${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
+
+                    } else {
+                      // filteredPointItem does NOT contain current toggled core value. Break out of loop
+                      console.log(`${pointItemList[i].name} does NOT contain core value ${toggledCoreValues[j]}`);
+                      noMatch = true;
+                      break;
+                    }
+                  }
+
+                  if (!noMatch) {
+                    console.log(`Adding ${pointItemList[i].name} to the filtered list`);
+                    this.filteredPointItemList.push(pointItemList[i]);
+                  }
+                }
+              }
+
+              if (this.selectedPointItem && !this.filteredPointItemList.find(x => x.itemId === this.selectedPointItem.itemId)) {
+                console.log('filtered point item list does not contain the currently selected point item. Setting selected point item to null and untoggling all core values');
+                this.selectedPointItem = null;
+                this.untoggleAllCoreValueButtons();
+              }
+            });
+
+          this.pointItemsLoading$.next();
+          this.pointItemsLoading$.complete();
         }
-
-        if (!noMatch) {
-          console.log(`Adding ${pointItemList[i].name} to the filtered list`);
-          this.filteredPointItemList.push(pointItemList[i]);
-        }
-      }
-    }
-
-    if (this.selectedPointItem && !this.filteredPointItemList.find(x => x.itemId === this.selectedPointItem.itemId)) {
-      console.log('filtered point item list does not contain the currently selected point item. Setting selected point item to null and untoggling all core values');
-      this.selectedPointItem = null;
-      this.untoggleAllCoreValueButtons();
-    }
+      });
   }
 
   selectPointItem(pointItem: PointItemModel) {
@@ -397,5 +481,17 @@ export class GiftPointsComponent implements OnInit {
 
   toggle() {
     this.showMore(); this.showLess();
+  }
+
+  ngOnDestroy(): void {
+    // this.subscription.unsubscribe();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.pointItemsLoading$.next();
+    this.pointItemsLoading$.complete();
+    this.usersLoading$.next();
+    this.usersLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
