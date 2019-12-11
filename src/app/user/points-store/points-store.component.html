@@ -24,7 +24,7 @@
                   </div>-->
                   <div class="row">
                     <div class="col-md-12 text-center">
-                      <div *ngIf="storeItems; else storeLoading">
+                      <ng-container *ngIf="storeItems; else storeLoading">
                         <div class="row">
                           <div *ngFor="let storeItem of storeItems" class="col-4">
                             <div *ngIf="storeItem" class="row">
@@ -55,7 +55,7 @@
                           </div>
                         </div>
 
-                      </div>
+                      </ng-container>
 
                       <ng-template #storeLoading>
                         Loading...

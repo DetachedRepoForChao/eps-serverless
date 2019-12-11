@@ -11,11 +11,11 @@ export type UserHasStoreItemModel = {
   userFirstName: string;
   userLastName: string;
   userEmail: string;
-  managerId: number;
-  managerUsername: string;
-  managerFirstName: string;
-  managerLastName: string;
-  managerEmail: string;
+  // managerId: number;
+  // managerUsername: string;
+  // managerFirstName: string;
+  // managerLastName: string;
+  // managerEmail: string;
   storeItemId: number;
   storeItemName: string;
   storeItemDescription: string;
@@ -27,13 +27,14 @@ export type UserHasStoreItemModel = {
   readyForPickupAt: any;
   pickedUpAt: any;
   createdAt: any;
-  updatedAt: any
+  updatedAt: any;
+  updatedByUser: any;
 };
 
-export function createStoreItemModel({ recordId, userId, userUsername, userFirstName, userLastName, userEmail, managerId, managerUsername,
-                                       managerFirstName, managerLastName, managerEmail, storeItemId, storeItemName, storeItemDescription,
+export function createStoreItemModel({ recordId, userId, userUsername, userFirstName, userLastName, userEmail, storeItemId, storeItemName,
+                                       storeItemDescription,
                                        storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt,
-                                       updatedAt }: Partial<UserHasStoreItemModel>) {
+                                       updatedAt, updatedByUser }: Partial<UserHasStoreItemModel>) {
 
   return {
     id: guid(),
@@ -43,11 +44,11 @@ export function createStoreItemModel({ recordId, userId, userUsername, userFirst
     userFirstName,
     userLastName,
     userEmail,
-    managerId,
-    managerUsername,
-    managerFirstName,
-    managerLastName,
-    managerEmail,
+    // managerId,
+    // managerUsername,
+    // managerFirstName,
+    // managerLastName,
+    // managerEmail,
     storeItemId,
     storeItemName,
     storeItemDescription,
@@ -59,6 +60,7 @@ export function createStoreItemModel({ recordId, userId, userUsername, userFirst
     pickedUpAt,
     createdAt,
     updatedAt,
+    updatedByUser,
     dateModified: Date.now()
   } as UserHasStoreItemModel;
 }

@@ -37,6 +37,7 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
 
   currentUser: EntityCurrentUserModel;
   storeItems: StoreItemModel[] = [];
+  purchaseRequestManagers = [];
   numRows: number;
   rows = [];
   selectedStoreItem;
@@ -91,6 +92,21 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
         }
       });
 
+    if (this.purchaseRequestManagers.length === 0) {
+      this.userService.getPurchaseApprovers()
+        .pipe(take(1))
+        .subscribe(
+          (purchaseRequestManagers) => {
+          console.log('Purchase Request Managers', purchaseRequestManagers);
+          this.purchaseRequestManagers = purchaseRequestManagers;
+        },
+          (error) => {
+            console.log('Error retrieving purchase request managers', error);
+
+          },
+          () => {});
+    }
+
 /*    this.entityCurrentUserService.cacheCurrentUser().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
     this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe();*/
@@ -129,7 +145,7 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
     });
   }*/
 
-  openDialog(): void {
+  openDialog(storeItem: StoreItemModel, currentUser: EntityCurrentUserModel, purchaseRequestManagers: any[]): void {
     console.log(`confirm approval?`);
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -150,37 +166,37 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
         console.log(`Dialog closed: ${result}`);
         this.dialogResult = result;
         if (result === 'Confirm') {
-          this.onSaveClick();
+          this.onSaveClick(storeItem, currentUser, purchaseRequestManagers);
         } else if (result === 'Cancel') {
           console.log('Cancelled');
         }
       });
   }
 
-  onSaveClick() {
+  onSaveClick(storeItem: StoreItemModel, currentUser: EntityCurrentUserModel, purchaseRequestManagers: any[]) {
     const checkPointsResult = this.checkPoints();
     if (checkPointsResult !== true) {
       console.log('Not enough points.');
     } else {
       console.log('Enough points. Submitting request');
-      this.submitStoreItemPurchaseRequest(this.selectedStoreItem);
+      this.submitStoreItemPurchaseRequest(storeItem, currentUser, purchaseRequestManagers);
     }
   }
 
-  selectStoreItem(storeItem) {
+  selectStoreItem(storeItem: StoreItemModel, currentUser: EntityCurrentUserModel, purchaseRequestManagers: any[]) {
     this.selectedStoreItem = storeItem;
     console.log(this.selectedStoreItem);
-    this.openDialog();
+    this.openDialog(storeItem, currentUser, purchaseRequestManagers);
   }
 
-  submitStoreItemPurchaseRequest(storeItem: StoreItemModel) {
+  submitStoreItemPurchaseRequest(storeItem: StoreItemModel, currentUser: EntityCurrentUserModel, purchaseRequestManagers: any[]) {
     const functionName = 'submitStoreItemPurchaseRequest';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-    const requestUser = this.currentUserQuery.getAll()[0]; // Retrieve current user info
-    const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
+    const requestUser = currentUser; // Retrieve current user info
+    // const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
     console.log(storeItem);
-    this.userHasStoreItemService.newUserHasStoreItemRecord(managerUser.userId, storeItem.itemId)
+    this.userHasStoreItemService.newUserHasStoreItemRecord(storeItem.itemId)
       .pipe(take(1))
       .subscribe((result: any) => {
         console.log(`${functionFullName}: result:`);
@@ -188,13 +204,13 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
         if (result.status === true) {
           // Send the manager an email
           console.log(`${functionFullName}: Trying to send an email to user's manager:`);
-          console.log(managerUser);
-          this.storeItemService.sendStoreItemPurchaseRequestEmail(managerUser, requestUser, storeItem)
+          // console.log(managerUser);
+/*          this.storeItemService.sendStoreItemPurchaseRequestEmail(managerUser, requestUser, storeItem)
             .pipe(take(1))
             .subscribe(emailResult => {
               console.log(`${functionFullName}: email result:`);
               console.log(emailResult);
-            });
+            });*/
         } else {
           console.log(`${functionFullName}: Something went wrong...`);
         }
