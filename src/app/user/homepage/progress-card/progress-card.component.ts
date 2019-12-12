@@ -161,7 +161,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
 
     return new Observable<any[]>(observer => {
       this.pointItemTransactionService.getUserCoreValues(userId)
-        .pipe(take(1))
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(coreValues => {
           console.log(coreValues);
           const keys = Object.keys(coreValues);

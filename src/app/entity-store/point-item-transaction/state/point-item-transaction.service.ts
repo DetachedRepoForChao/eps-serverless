@@ -89,11 +89,11 @@ export class PointItemTransactionService {
     console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
-      const coreValues = this.coreValues.find(x => x.userId === userId);
-      if (coreValues) {
-        console.log(`${functionFullName}: Core values for user ${userId} already retrieved`, coreValues);
-        observer.next(coreValues);
-        observer.complete();
+      const coreValuesItem = this.coreValues.find(x => x.userId === userId);
+      if (coreValuesItem) {
+        console.log(`${functionFullName}: Core values for user ${userId} already retrieved`, coreValuesItem.coreValues);
+        observer.next(coreValuesItem.coreValues);
+        // observer.complete();
       } else {
         this.authService.currentAuthenticatedUser()
           .then(user => {

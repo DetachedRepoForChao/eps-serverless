@@ -151,42 +151,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
 
 
-/*    const observables: Observable<any>[] = [];
-    observables.push(
-      this.currentUserService.cacheCurrentUser(),
-      this.userService.cacheUsers(),
-      this.achievementService.cacheAchievements(),
-      this.storeItemService.cacheStoreItems(),
-      this.userHasStoreItemService.cacheUserHasStoreItemRecords()
-    );
-
-    forkJoin(observables)
-      .subscribe(() => {
-
-      });*/
-
-  /*  this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
-*/
-/*    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });*/
-
-/*    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-      console.log('balance: ' + balance);
-      this.currentUserService.updatePointsBalance(balance);
-    });*/
 
     this.isImageLoading = false;
     this.isCardLoading = false;
   }
 
-/*
-
-  ngAfterViewInit(): void {
-    this.onViewItemClick('editProfile');
-  }*/
 
   onViewItemClick(clickedItem: string) {
     if (this.currentView === clickedItem) {
