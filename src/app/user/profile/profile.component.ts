@@ -60,10 +60,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   email;
   phone;
   currentView = 'editProfile';
+
   viewItems = [
     'editProfile',
     'changePassword',
     'privacySettings',
+    'notificationSettings',
   ];
 
   public option;
@@ -158,15 +160,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 
   onViewItemClick(clickedItem: string) {
+    console.log(clickedItem);
+    console.log(this.viewItems);
+    console.log(document.getElementById('viewItem_notifications').className);
     if (this.currentView === clickedItem) {
       // Already there, do nothing.
     } else {
       for (const item of this.viewItems) {
+        console.log(item);
         if (item === clickedItem) {
           this.currentView = clickedItem;
-          document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className += ' toggled';
+
+          // document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className += ' toggled';
+          // document.getElementById(`viewItem_${item}`).className = 'toggled';
         } else {
-          document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className.replace('toggled', '').trim();
+          // document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className.replace('toggled', '').trim();
+          // document.getElementById(`viewItem_${item}`).className = '';
         }
       }
     }

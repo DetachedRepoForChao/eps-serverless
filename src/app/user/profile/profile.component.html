@@ -37,23 +37,38 @@
                       </ngx-spinner>-->
 
                       <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-4 textl">
+                        <div class="col-lg-4 col-md-4 col-sm-4 text-left">
                           <ul class="nobullets">
-                            <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile" class="toggled">
+                            <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile" [ngClass]="{'toggled': currentView === 'editProfile'}">
                               Edit Profile
                             </li>
-                            <li (click)="onViewItemClick('changePassword')" id="viewItem_changePassword">
+                            <li (click)="onViewItemClick('changePassword')" id="viewItem_changePassword" [ngClass]="{'toggled': currentView === 'changePassword'}">
                               Change Password
                             </li>
-                            <li (click)="onViewItemClick('privacySettings')" id="viewItem_privacySettings">
-                              Privacy Settings
+                            <ng-container *ngIf="profileUser.securityRole.Id !== 3">
+                              <li (click)="onViewItemClick('privacySettings')" id="viewItem_privacySettings" [ngClass]="{'toggled': currentView === 'privacySettings'}">
+                                Privacy Settings
+                              </li>
+                            </ng-container>
+                            <li (click)="onViewItemClick('notificationSettings')" id="viewItem_notifications" [ngClass]="{'toggled': currentView === 'notificationSettings'}">
+                              Notification Settings
                             </li>
                           </ul>
                         </div>
                         <div class="col-lg-8 col-md-8 col-sm-8">
-                          <app-edit-profile *ngIf="currentView === 'editProfile'" [option]="option" (clearOption)="clearOption($event)"></app-edit-profile>
-                          <app-change-password *ngIf="currentView === 'changePassword'"></app-change-password>
-                          <app-privacy-settings *ngIf="currentView === 'privacySettings'"></app-privacy-settings>
+                          <ng-container *ngIf="currentView === 'editProfile'">
+                            <app-edit-profile  [option]="option" (clearOption)="clearOption($event)"></app-edit-profile>
+                          </ng-container>
+                          <ng-container *ngIf="currentView === 'changePassword'">
+                            <app-change-password ></app-change-password>
+                          </ng-container>
+                          <ng-container *ngIf="currentView === 'privacySettings'">
+                            <app-privacy-settings ></app-privacy-settings>
+                          </ng-container>
+                          <ng-container *ngIf="currentView === 'notificationSettings'">
+                            <app-notification-settings></app-notification-settings>
+                          </ng-container>
+
                         </div>
 
                       </div>

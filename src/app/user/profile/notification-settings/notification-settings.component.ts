@@ -27,12 +27,12 @@ import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/e
 declare var $: any;
 
 @Component({
-  selector: 'app-privacy-settings',
-  templateUrl: './privacy-settings.component.html',
-  styleUrls: ['./privacy-settings.component.css']
+  selector: 'app-notification-settings',
+  templateUrl: './notification-settings.component.html',
+  styleUrls: ['./notification-settings.component.css']
 })
-export class PrivacySettingsComponent implements OnInit, OnDestroy {
-  componentName = 'privacy-settings.component';
+export class NotificationSettingsComponent implements OnInit, OnDestroy {
+  componentName = 'notification-settings.component';
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
 
@@ -203,5 +203,3 @@ export class PrivacySettingsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 }
-
-

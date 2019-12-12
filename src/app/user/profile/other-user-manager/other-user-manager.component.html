@@ -193,10 +193,17 @@
                                     <h5 class="user-attribute font-italic">{{completedAchievements[0].description}}</h5>
                                   </div>
                                   <div class="col-2 y-margin-auto textr">
-                            <span *ngFor="let star of achievementQuery.getAchievementFamilyCount(completedAchievements[0])">
-                              <i *ngIf="star.progressStatus === 'complete' || star.progressStatus === 'complete acknowledged'" class="fas fa-star"></i>
-                              <i *ngIf="star.progressStatus === 'in progress' || star.progressStatus === 'not started'" class="far fa-star"></i>
-                            </span>
+                                    <ng-container *ngFor="let star of achievementQuery.getAchievementFamilyCount(completedAchievements[0])">
+                                        <span>
+                                          <ng-container *ngIf="star.progressStatus === 'complete' || star.progressStatus === 'complete acknowledged'">
+                                            <i  class="fas fa-star"></i>
+                                          </ng-container>
+                                          <ng-container *ngIf="star.progressStatus === 'in progress' || star.progressStatus === 'not started'">
+                                            <i  class="far fa-star"></i>
+                                          </ng-container>
+                                        </span>
+                                    </ng-container>
+
                                   </div>
 
                                 </div>
@@ -265,26 +272,3 @@
     </ngx-spinner>
   </div>
 </ng-template>
-
-<!--<div class="modal fade modal-black" id="pointsModal" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-
-    &lt;!&ndash; Modal content&ndash;&gt;
-    <div class="modal-content" >
-      <div class="modal-header">
-        <h4 class="modal-title">Your Point Item Awards</h4>
-      </div>
-      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
-      <div class="modal-body modalclass">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
-          <app-point-item [inputUser]="user"></app-point-item>
-        </perfect-scrollbar>
-      </div>
-
-      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
-
-    </div>
-  </div>
-
-
-</div>-->

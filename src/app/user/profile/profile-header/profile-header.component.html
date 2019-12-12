@@ -3,20 +3,31 @@
   <div class="card">
     <div class="card card-coin card-plain card-custom">
       <div class="card-body">
-        <div class="row profile-body">
+        <div class="row pl-2" [ngClass]="{'justify-content-center pl-5': currentUser.securityRole.Id === 3}">
+          <ng-container *ngIf="currentUser.securityRole.Id !== 3">
           <div class="col-lg-2 col-md-2 col-sm-2 text-left avatar-col circle-container">
             <ng-container *ngIf="currentUser; else avatarLoading">
-              <img [src]="currentUser.avatarResolvedUrl"
-                   alt="Avatar"
-                   class="img-center img-fluid rounded-circle"
-                   id="avatar">
 
-              <span *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
-                        <i *ngIf="(i * 45) < 360" class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
-                        <i *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal"></i>
-                        <i *ngIf="(i * 45) >= 720" class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
-              </span>
-            </ng-container>
+                <img [src]="currentUser.avatarResolvedUrl"
+                     alt="Avatar"
+                     class="img-center img-fluid rounded-circle"
+                     id="avatar">
+
+                <ng-container *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
+                  <span >
+                    <ng-container *ngIf="(i * 45) < 360" >
+                      <i class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
+                    </ng-container>
+                    <ng-container *ngIf="((i * 45) >= 360) && ((i * 45) < 720)" >
+                      <i class="fas fa-star level-two deg{{getFirstDigit(i) * 45}} teal"></i>
+                    </ng-container>
+                    <ng-container *ngIf="(i * 45) >= 720">
+                      <i class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
+                    </ng-container>
+                  </span>
+                </ng-container>
+              </ng-container>
+
 
             <ng-template #avatarLoading >
               <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
@@ -24,10 +35,10 @@
                    class="img-center img-fluid rounded-circle"
                    id="avatarPlaceholder">
             </ng-template>
-
-
           </div>
-          <div class="col-lg-5 col-md-5 col-sm-5 text-left profile-details">
+          </ng-container>
+
+          <div class="col-lg-5 col-md-5 col-sm-5 text-left profile-details" >
             <div class="row">
               <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="mb-1 line-height-3 font-weight-200">Name:</div>
@@ -49,77 +60,74 @@
                 <div>{{currentUser?.username}}</div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-lg-4 col-md-4 col-sm-4">
-                <div class="mb-1 line-height-3 font-weight-200">Department:</div>
+            <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+              <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="mb-1 line-height-3 font-weight-200">Department:</div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div>{{currentUser?.department.Name}}</div>
+                </div>
               </div>
-              <div class="col-lg-8 col-md-8 col-sm-8">
-                <div>{{currentUser?.department.Name}}</div>
+            </ng-container>
+            <ng-container *ngIf="currentUser.securityRole.Id === 3">
+              <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="mb-1 line-height-3 font-weight-200">Role:</div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <div>Administrator</div>
+                </div>
               </div>
-            </div>
+            </ng-container>
+
 
           </div>
 
-          <div class="col-lg-3 col-md-3 col-sm-3 profile-points-section">
-            <!--<div [matTooltip]="'Points: ' + currentUser?.points + '&#13;Pending Balance: ' + currentUser?.pointsBalance"
-                 matTooltipPosition="above">
-              <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                  <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                  <div *ngIf="currentUser?.pointsBalance === 0; else pointsWithBalance">
-                    <div class="mb-0">{{currentUser?.points}}</div>
+          <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+            <div class="col-lg-3 col-md-3 col-sm-3 profile-points-section">
+              <div >
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
                   </div>
-                  <ng-template #pointsWithBalance >
-                    <div *ngIf="currentUser?.points - currentUser?.pointsBalance"
-                         class="mb-0 red"
-                    >
-                      {{currentUser?.points - currentUser?.pointsBalance}}
+                  <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div >
+                      <div class="mb-0">{{currentUser?.points}}</div>
                     </div>
-
-                  </ng-template>
+                  </div>
                 </div>
-              </div>
 
-            </div>-->
-            <div >
+              </div>
               <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                  <div class="mb-1 line-height-3 font-weight-200" >Points:</div>
+                  <div class="mb-1 line-height-3 font-weight-200">Trophies:</div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4">
-                  <div >
-                    <div class="mb-0">{{currentUser?.points}}</div>
-                  </div>
+                  <ng-container *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
+                    <div class="mb-0" >
+                      {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
+                    </div>
+                  </ng-container>
+
                 </div>
               </div>
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <div class="mb-1 line-height-3 font-weight-200">Rank:</div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <ng-container *ngIf="currentUser">
+                    <div class="mb-0" >
+                      {{leaderboardUsers.indexOf(userQuery.getUserByUsername(currentUser?.username)) + 1}}
+                    </div>
+                  </ng-container>
 
-            </div>
-            <div class="row">
-              <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="mb-1 line-height-3 font-weight-200">Trophies:</div>
-              </div>
-              <div class="col-lg-4 col-md-4 col-sm-4">
-                <div class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
-                  {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="mb-1 line-height-3 font-weight-200">Rank:</div>
-              </div>
-              <div class="col-lg-4 col-md-4 col-sm-4">
-                <ng-container *ngIf="currentUser">
-                  <div class="mb-0" >
-                    {{leaderboardUsers.indexOf(userQuery.getUserByUsername(currentUser?.username)) + 1}}
-                  </div>
-                </ng-container>
+          </ng-container>
 
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="card-footer"></div>

@@ -1,13 +1,16 @@
-<div *ngIf="!isCardLoading; else cardLoading">
+<ng-container *ngIf="!isCardLoading; else cardLoading">
   <div class="row">
     <div class="user-form-container col-12">
       <form [formGroup]="editUserForm">
-        <div *ngIf="isUserDataRetrieved; else placeholderForm">
-          <div class="form-row">
-            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
-              <label class="form-label"><a href="javascript:void(0)" (click)="avatarClick()">Change Avatar</a></label>
+        <ng-container *ngIf="isUserDataRetrieved; else placeholderForm">
+          <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+            <div class="form-row">
+              <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
+                <label class="form-label"><a href="javascript:void(0)" (click)="avatarClick()">Change Avatar</a></label>
+              </div>
             </div>
-          </div>
+          </ng-container>
+
           <div class="form-row">
             <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
               <label for="editUser_preferredName" class="form-label">Preferred Name</label>
@@ -29,9 +32,9 @@
                      id="editUser_birthdate">
 
               <mat-datepicker #editUser_birthdate [startView]="'year'"></mat-datepicker>
-              <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.birthdate.invalid) || (editUserForm?.dirty && editUserForm?.controls.birthdate.touched && editUserForm?.controls.birthdate.invalid)">
+              <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.birthdate.invalid) || (editUserForm?.dirty && editUserForm?.controls.birthdate.touched && editUserForm?.controls.birthdate.invalid)">
                 <label class="validation-message">This field is required.</label>
-              </div>
+              </ng-container>
             </div>
           </div>
 
@@ -40,30 +43,36 @@
               <label class="form-label">Email</label>
             </div>
             <div class="confirm-col text-right col-lg-1 col-md-1 col-sm-1">
-              <div *ngIf="emailConfirmed; else emailUnconfirmedIcon">
+              <ng-container *ngIf="emailConfirmed; else emailUnconfirmedIcon">
                 <i class="fas fa-check confirmed"></i>
-              </div>
+              </ng-container>
               <ng-template #emailUnconfirmedIcon>
                 <i class="fas fa-times unconfirmed"></i>
               </ng-template>
             </div>
-            <div *ngIf="emailConfirmed; else emailUnconfirmedInput" class="col-lg-7 col-md-7 col-sm-7">
-              <input type="email" class="form-control user-form-control" id="editUser_confirmedEmail" placeholder="Email" formControlName="email">
-              <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
-                <label class="validation-message">This field is required.</label>
+            <ng-container *ngIf="emailConfirmed; else emailUnconfirmedInput">
+              <div class="col-lg-7 col-md-7 col-sm-7">
+                <input type="email" class="form-control user-form-control" id="editUser_confirmedEmail" placeholder="Email" formControlName="email">
+                <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
+                  <label class="validation-message">This field is required.</label>
+                </ng-container>
               </div>
-            </div>
+            </ng-container>
+
             <ng-template #emailUnconfirmedInput class="col-lg-5 col-md-5 col-sm-5">
               <div class="col-lg-5 col-md-5 col-sm-5">
                 <input type="email" class="form-control user-form-control" id="editUser_unconfirmedEmail" placeholder="Email" formControlName="email">
-                <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
+                <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
                   <label class="validation-message">This field is required.</label>
-                </div>
+                </ng-container>
               </div>
             </ng-template>
-            <div *ngIf="!emailConfirmed" class="confirm-col col-lg-2 col-md-2 col-sm-2">
-              <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmEmailModal" (click)="onEmailConfirmClick()">Confirm</button>
-            </div>
+            <ng-container *ngIf="!emailConfirmed">
+              <div class="confirm-col col-lg-2 col-md-2 col-sm-2">
+                <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmEmailModal" (click)="onEmailConfirmClick()">Confirm</button>
+              </div>
+            </ng-container>
+
           </div>
 
           <div class="form-row">
@@ -78,22 +87,28 @@
                 <i class="fas fa-times unconfirmed"></i>
               </ng-template>
             </div>
-            <div *ngIf="phoneConfirmed; else phoneUnconfirmedInput" class="col-lg-7 col-md-7 col-sm-7">
-              <input class="form-control user-form-control"
-                     placeholder="Phone"
-                     formControlName="phone"
-                     name="editUser_confirmedPhone"
-                     appPhoneMask
-                     type="tel"
-                     maxLength="14"
-                     [ngClass]="{'invalid-textbox' : editUserForm?.dirty && editUserForm?.controls.phone.touched && editUserForm?.controls.phone.invalid}"
-                     id="editUser_confirmedPhone">
-              <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
-                <label class="validation-message">This field is required.</label>
-                <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
+            <ng-container *ngIf="phoneConfirmed; else phoneUnconfirmedInput">
+              <div class="col-lg-7 col-md-7 col-sm-7">
+                <input class="form-control user-form-control"
+                       placeholder="Phone"
+                       formControlName="phone"
+                       name="editUser_confirmedPhone"
+                       appPhoneMask
+                       type="tel"
+                       maxLength="14"
+                       [ngClass]="{'invalid-textbox' : editUserForm?.dirty && editUserForm?.controls.phone.touched && editUserForm?.controls.phone.invalid}"
+                       id="editUser_confirmedPhone">
+                <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
+                  <label class="validation-message">This field is required.</label>
+                  <ng-container *ngIf="phoneValidationError">
+                    <label class="validation-message">{{phoneValidationError}}</label>
+                  </ng-container>
+
+                </ng-container>
               </div>
-            </div>
-            <ng-template #phoneUnconfirmedInput class="col-lg-5 col-md-5 col-sm-5">
+            </ng-container>
+
+            <ng-template #phoneUnconfirmedInput>
               <div class="col-lg-5 col-md-5 col-sm-5">
                 <input class="form-control user-form-control"
                        placeholder="Phone"
@@ -104,58 +119,72 @@
                        maxLength="14"
                        [ngClass]="{'invalid-textbox' : editUserForm?.dirty && editUserForm?.controls.phone.touched && editUserForm?.controls.phone.invalid}"
                        id="editUser_unconfirmedPhone">
-                <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
+                <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.phone.invalid) || (editUserForm?.dirty && editUserForm?.controls.phone.touched && phoneValidationError)">
                   <label class="validation-message">This field is required.</label>
-                  <label *ngIf="phoneValidationError" class="validation-message">{{phoneValidationError}}</label>
-                </div>
+                  <ng-container *ngIf="phoneValidationError">
+                    <label class="validation-message">{{phoneValidationError}}</label>
+                  </ng-container>
+                </ng-container>
               </div>
             </ng-template>
-            <div *ngIf="!phoneConfirmed" class="confirm-col col-lg-2 col-md-2 col-sm-2">
-              <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmPhoneModal" (click)="onPhoneConfirmClick()">Confirm</button>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
-              <div *ngIf="(!option || option !== 'quote') && !optionExecuted; else quoteGlow">
-                <label for="editUser_quote" class="form-label">Favorite Quote</label>
+            <ng-container *ngIf="!phoneConfirmed">
+              <div class="confirm-col col-lg-2 col-md-2 col-sm-2">
+                <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmPhoneModal" (click)="onPhoneConfirmClick()">Confirm</button>
               </div>
-              <ng-template #quoteGlow>
-                <label for="editUser_quote" id="glowing_quote" class="form-label glow">Favorite Quote</label>
-              </ng-template>
-            </div>
-            <div class="">
-              <textarea rows="5" class="form-control user-form-control" id="editUser_quote" placeholder="Favorite Quote" formControlName="quote" (focus)="executeOption('quote')"></textarea>
-              <div *ngIf="editUserForm?.controls.quote.value && editUserForm?.controls.quote.valid">
-                <label class="validation-message" id="quote-length-message">{{quoteLengthMax - editUserForm?.controls.quote.value.length}} characters remaining.</label>
-              </div>
-
-              <div *ngIf="(editUserFormSubmitted && editUserForm?.controls.quote.invalid) || (editUserForm?.controls.quote.touched && editUserForm?.controls.quote.invalid)">
-                <label class="validation-message">Your quote must be 1000 characters or fewer in length.</label>
-              </div>
-            </div>
+            </ng-container>
 
           </div>
-          <div class="form-row">
-            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
-              <label for="editUser_gender" class="form-label">Gender</label>
+          <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+            <div class="form-row">
+              <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
+                <ng-container *ngIf="(!option || option !== 'quote') && !optionExecuted; else quoteGlow">
+                  <label for="editUser_quote" class="form-label">Favorite Quote</label>
+                </ng-container>
+                <ng-template #quoteGlow>
+                  <label for="editUser_quote" id="glowing_quote" class="form-label glow">Favorite Quote</label>
+                </ng-template>
+              </div>
+              <div class="form-row">
+                <textarea rows="5" class="form-control user-form-control" id="editUser_quote" placeholder="Favorite Quote" formControlName="quote" (focus)="executeOption('quote')"></textarea>
+                <ng-container *ngIf="editUserForm?.controls.quote.value && editUserForm?.controls.quote.valid">
+                  <label class="validation-message" id="quote-length-message">{{quoteLengthMax - editUserForm?.controls.quote.value.length}} characters remaining.</label>
+                </ng-container>
+
+                <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.quote.invalid) || (editUserForm?.controls.quote.touched && editUserForm?.controls.quote.invalid)">
+                  <label class="validation-message">Your quote must be 1000 characters or fewer in length.</label>
+                </ng-container>
+              </div>
+
             </div>
-            <div class="col-lg-7 col-md-7 col-sm-7">
-              <select formControlName="gender" class="form-control user-form-control" id="editUser_gender" name="editUser_gender">
-                <option [ngValue]="null" [disabled]="true">Gender</option>
-                <option class="black">Male</option>
-                <option class="black">Female</option>
-                <option class="black">Custom</option>
-                <option class="black">Prefer Not to Say</option>
-              </select>
-              <div *ngIf="editUserForm.controls.gender.value === 'Custom'" class="row gender-custom-row">
-                <div class="col-12">
-                  <input type="text" class="form-control user-form-control" id="editUser_customGender" placeholder="Gender" formControlName="genderCustom">
-                </div>
+          </ng-container>
+
+          <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+            <div class="form-row">
+              <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
+                <label for="editUser_gender" class="form-label">Gender</label>
+              </div>
+              <div class="col-lg-7 col-md-7 col-sm-7">
+                <select formControlName="gender" class="form-control user-form-control" id="editUser_gender" name="editUser_gender">
+                  <option [ngValue]="null" [disabled]="true">Gender</option>
+                  <option class="black">Male</option>
+                  <option class="black">Female</option>
+                  <option class="black">Custom</option>
+                  <option class="black">Prefer Not to Say</option>
+                </select>
+                <ng-container *ngIf="editUserForm.controls.gender.value === 'Custom'">
+                  <div class="row gender-custom-row">
+                    <div class="col-12">
+                      <input type="text" class="form-control user-form-control" id="editUser_customGender" placeholder="Gender" formControlName="genderCustom">
+                    </div>
+                  </div>
+                </ng-container>
+
               </div>
             </div>
-          </div>
+          </ng-container>
 
-        </div>
+
+        </ng-container>
 
         <ng-template #placeholderForm>
           <div class="form-row">
@@ -213,10 +242,10 @@
 
       </form>
       <button type="button" class="btn btn-primary" (click)="onEditUserFormSubmit(editUserForm)">Save Changes</button>
-      <button type="button" class="btn btn-primary" (click)="highlightFormField('quote')">TEST</button>
+<!--      <button type="button" class="btn btn-primary" (click)="highlightFormField('quote')">TEST</button>-->
     </div>
   </div>
-</div>
+</ng-container>
 
 <ng-template #cardLoading>
   <ngx-spinner
@@ -285,10 +314,10 @@
                        class="form-control modal-form-control"
                        formControlName="code"
                        required>
-                <div *ngIf="(confirmEmailFormSubmitted && confirmEmailForm.controls.code.invalid) || (confirmEmailForm.dirty && confirmEmailForm.controls.code.touched && confirmEmailForm.controls.code.invalid)">
+                <ng-container *ngIf="(confirmEmailFormSubmitted && confirmEmailForm.controls.code.invalid) || (confirmEmailForm.dirty && confirmEmailForm.controls.code.touched && confirmEmailForm.controls.code.invalid)">
                   <label class="modal-validation-message">This field is required.</label>
                   <label class="modal-validation-message">The Confirmation Code must be 6 digits long.</label>
-                </div>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -336,10 +365,10 @@
                        class="form-control modal-form-control"
                        formControlName="code"
                        required>
-                <div *ngIf="(confirmPhoneFormSubmitted && confirmPhoneForm.controls.code.invalid) || (confirmPhoneForm.dirty && confirmPhoneForm.controls.code.touched && confirmPhoneForm.controls.code.invalid)">
+                <ng-container *ngIf="(confirmPhoneFormSubmitted && confirmPhoneForm.controls.code.invalid) || (confirmPhoneForm.dirty && confirmPhoneForm.controls.code.touched && confirmPhoneForm.controls.code.invalid)">
                   <label class="modal-validation-message">This field is required.</label>
                   <label class="modal-validation-message">The Confirmation Code must be 6 digits long.</label>
-                </div>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -368,20 +397,20 @@
       </div>
       <!---modal body---->
       <div class="modal-body">
-        <div *ngIf="phoneChanged && !emailChanged">
+        <ng-container *ngIf="phoneChanged && !emailChanged">
           <label class="modal-form-label">Looks like you just changed your phone number.</label>
           <label class="modal-form-label">Please click the <b>Confirm</b> button next to the phone field to confirm the new number.</label>
-        </div>
+        </ng-container>
 
-        <div *ngIf="emailChanged && !phoneChanged">
+        <ng-container *ngIf="emailChanged && !phoneChanged">
           <label class="modal-form-label">Looks like you just changed your email address.</label>
           <label class="modal-form-label">Please click the <b>Confirm</b> button next to the email field to confirm the new email address.</label>
-        </div>
+        </ng-container>
 
-        <div *ngIf="phoneChanged && emailChanged">
+        <ng-container *ngIf="phoneChanged && emailChanged">
           <label class="modal-form-label">Looks like you just changed your phone number and email address.</label>
           <label class="modal-form-label">Please click the <b>Confirm</b> button next to each field to confirm the changes.</label>
-        </div>
+        </ng-container>
 
         <div class="modal-footer">
           <!--<a href="javascript:void(0)" class="btn btn-info btn-round btn-lg">Get Started</a>-->
