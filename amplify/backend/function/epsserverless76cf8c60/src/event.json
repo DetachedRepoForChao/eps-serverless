@@ -1,11 +1,11 @@
 {
   "resource": "/things",
-  "path": "/things/sendRequestStoreItemNotice",
+  "path": "/things/sendReadyForPickupNotice",
   "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYTExYWRhYi1iODIzLTQ0NWUtYmMxOS1kMGE1YWRjNWIwNTIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImJpcnRoZGF0ZSI6IjE5ODUtMDMtMDgiLCJnZW5kZXIiOiJTdXBlciBTYXlhbiIsImN1c3RvbTpkZXBhcnRtZW50IjoiSG91c2VrZWVwaW5nIiwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfdk9nNEhTWmM4IiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjp0cnVlLCJjb2duaXRvOnVzZXJuYW1lIjoibWF4IiwiY3VzdG9tOnNlY3VyaXR5X3JvbGUiOiJlbXBsb3llZSIsImdpdmVuX25hbWUiOiJNYXgiLCJwaWN0dXJlIjoicHJvdGVjdGVkXC91cy1lYXN0LTE6N2IxYmYxYjMtOWMxNS00YjAzLWJiOWYtNzRkY2RkNzg5YTg0XC9hdmF0YXJfdzQyNHE5N3pwOGtrNDFpMGgwNy5wbmciLCJjdXN0b206ZGVwYXJ0bWVudF9pZCI6IjMiLCJhdWQiOiI3dmdjNWdkN3EyMGsxcDRtOGFyOWJjcWQ4bSIsImN1c3RvbTpzZWN1cml0eV9yb2xlX2lkIjoiMSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNTc2MTc3ODUyLCJuYW1lIjoiTWF4aW1pbGlhbiBCYWRvIiwicGhvbmVfbnVtYmVyIjoiKzE3MzI4NTk3ODM5IiwiZXhwIjoxNTc2MTgxNDUzLCJpYXQiOjE1NzYxNzc4NTMsImZhbWlseV9uYW1lIjoiQmFkbyIsImVtYWlsIjoibWJhZG9AbW9ubW91dGguZWR1In0.M_JNaVGKBRzFAdr7L0AR8aFEUKUP8J_Os1Vlv3uC24Gw2cxSKrWNqVOkdpZHjerwGBen0P1KGnbJGU1_i8OR2LnL926fnyUykYyFq0Ag5JnALKqgPALry47zdg788HbvzTQ2SQpnLEN8LAgFC4f1PdUdPcnwe6fT6YPiLknBsdkg_WGhpt4wSj_1Ea23xHwWrg20yjbyYLpkDr-J6uNp4xAtPJGs0VPI-Hyugiya4W15Lih1xScm9IrZjK3usPir9WzmGevI1i74eV-bzx1d6tTQSDQS5WqRHAPu1b_YUJFtvkyWAahOn_vv3lzKWk0X6qCFcAkO9ok-M4o-Uk9hgw"
+    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwNTA4MTdhNS1iNWM4LTQ1ZmMtYmY2MS1hMTdlMGIyZTc5MzciLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYmlydGhkYXRlIjoiMTk3MC0wMS0wMSIsImN1c3RvbTpkZXBhcnRtZW50IjoiSG91c2VrZWVwaW5nIiwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfdk9nNEhTWmM4IiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjp0cnVlLCJjb2duaXRvOnVzZXJuYW1lIjoibWF4LWFkbWluIiwiY3VzdG9tOnNlY3VyaXR5X3JvbGUiOiJhZG1pbiIsImdpdmVuX25hbWUiOiJNYXgiLCJjdXN0b206ZGVwYXJ0bWVudF9pZCI6IjMiLCJhdWQiOiI3dmdjNWdkN3EyMGsxcDRtOGFyOWJjcWQ4bSIsImN1c3RvbTpzZWN1cml0eV9yb2xlX2lkIjoiMyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNTc2MTkyNzAzLCJuYW1lIjoiTWF4IEJhZG8gQWRtaW4iLCJwaG9uZV9udW1iZXIiOiIrMTczMjg1OTc4MzkiLCJleHAiOjE1NzYxOTYzMDMsImlhdCI6MTU3NjE5MjcwMywiZmFtaWx5X25hbWUiOiJCYWRvIiwiZW1haWwiOiJtYXguYmFkb0BnbWFpbC5jb20ifQ.hsWMDXd2uRBKue0bW_RAgwFETvWsGEGEeMPQeGIlz1k_e3XaJ5Sur3gJIkKq28gEzJpl2kzdqZgB_ks6yjW0ocMoJA3lbmUVfw_kOgRxxJuspy58mPo0vleLoCLw0vodO7MsrXMORlpGnqSs9ZpJwZnd-iR8TgeqeOph3kh8vTPaiVn9sCPkTlcJN8hKM3BAAqKb_w_fR64hH2JDjN3z06Eq8PYzD7u_OQna1dfpy0gBIo1ZFrhYPfdIgzb_2drTWHVmyEwzXNFJY42r72RTtDC_TB4cfcqL8cWzSBhr1nC7mFK5hUKFWXs-ArmUZh_uLeEXbwZ_40sFyVYixPZfSA"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -41,6 +41,6 @@
     "extendedRequestId": "dNOeFFpRoAMFUmw=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"purchaseRequestManagers\":[{\"isActive\":true,\"userId\":71,\"username\":\"max-admin\",\"firstName\":\"Max\",\"lastName\":\"Bado\",\"email\":\"max.bado@gmail.com\",\"phone\":\"+17328597839\",\"emailConfirmed\":true,\"phoneConfirmed\":true}],\"requestUser\":{\"userId\":78,\"username\":\"max\",\"firstName\":\"Max\",\"lastName\":\"Bado\",\"email\":\"mbado@monmouth.edu\",\"phone\":\"7328597839\"},\"storeItem\":{\"itemId\":1,\"name\":\"Rook Coffee\",\"description\":\"A $10 Rook Coffee gift card\"}}",
+  "body": "{\"purchaseRequestManager\":{\"username\":\"max-admin\",\"firstName\":\"Max\",\"lastName\":\"Bado\",\"email\":\"max.bado@gmail.com\",\"phone\":\"+17328597839\",\"emailNotifications\":false,\"phoneNotifications\":false},\"requestUser\":{\"userId\":78,\"username\":\"max\",\"email\":\"mbado@monmouth.edu\",\"phone\":\"7328597839\",\"emailNotifications\":false,\"phoneNotifications\":true,\"firstName\":\"Max\",\"lastName\":\"Bado\"},\"storeItems\":[{\"storeItemName\":\"Rook Coffee\",\"storeItemCost\":150,\"storeItemId\":1,\"storeItemDescription\":\"A $10 Rook Coffee gift card\"}]}",
   "isBase64Encoded": false
 }

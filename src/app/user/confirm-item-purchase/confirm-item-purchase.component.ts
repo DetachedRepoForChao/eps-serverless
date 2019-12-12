@@ -19,6 +19,7 @@ import {UserHasStoreItemModel} from '../../entity-store/user-has-store-item/stat
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {take, takeUntil} from 'rxjs/operators';
+import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 
 declare var $: any;
 
@@ -33,10 +34,13 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
   private requestsLoading$ = new Subject();
+  private usersLoading$ = new Subject();
   private unsubscribe$ = new Subject();
+
 
   currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
+  users: EntityUserModel[];
   items: StoreItemModel[] = [];
   numRows: number;
   rows = [];
@@ -61,7 +65,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
 
   constructor ( private currentUserStore: CurrentUserStore,
                 private entityUserService: EntityUserService,
-                private entityUserQuery: EntityUserQuery,
+                private userQuery: EntityUserQuery,
                 private userHasStoreItemService: UserHasStoreItemService,
                 private storeItemStore: StoreItemStore,
                 public storeItemQuery: StoreItemQuery,
@@ -105,7 +109,19 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
         }
       });
 
-      // this.dataSource.sort = this.sort;
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.usersLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.users = users;
+            });
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
   }
 
 
@@ -202,17 +218,69 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
         for (const result of results) {
           console.log(result);
 
-          if (result.results && result.status !== false) {
-            const readyForPickupRequests = result.results;
+          if (result.newStatus === 'readyForPickup' && result.status !== false) {
+            const purchaseRequestManager = result.updatedByUser;
 
-            for (const readyForPickupRequest of readyForPickupRequests) {
+            const purchaseRequestManagerObject = {
+              userId: purchaseRequestManager.userId,
+              username: purchaseRequestManager.username,
+              firstName: purchaseRequestManager.firstName,
+              lastName: purchaseRequestManager.lastName,
+              email: purchaseRequestManager.email,
+              phone: purchaseRequestManager.phone,
+              emailNotifications: purchaseRequestManager.emailNotifications,
+              phoneNotifications: purchaseRequestManager.phoneNotifications,
+            };
 
+            const readyForPickupRequests = result.updatedRecords;
+
+            const groups = readyForPickupRequests.reduce(function (obj, item) {
+              obj[item.userId] = obj[item.userId] || [];
+              obj[item.userId].push(item);
+              return obj;
+            }, {});
+
+            const groupedArray = Object.keys(groups).map(function(key) {
+              return {userId: key, requests: groups[key]};
+            });
+
+            console.log(groupedArray);
+
+            for (const userRequests of groupedArray) {
+
+              const requestUser = this.users.find(x => x.userId === +userRequests.userId);
+              const requestUserObject = {
+                userId: requestUser.userId,
+                username: requestUser.username,
+                email: requestUser.email,
+                phone: requestUser.phone,
+                emailNotifications: requestUser.emailNotifications,
+                phoneNotifications: requestUser.phoneNotifications,
+                firstName: requestUser.firstName,
+                lastName: requestUser.lastName,
+              };
+
+              const storeItems = [];
+
+              for (const request of userRequests.requests) {
+                const storeItem = {
+                  storeItemName: request.storeItemName,
+                  storeItemCost: request.storeItemCost,
+                  storeItemId: request.storeItemId,
+                  storeItemDescription: request.storeItemDescription,
+                };
+
+                storeItems.push(storeItem);
+              }
+
+              this.userHasStoreItemService.sendReadyForPickupNotice(purchaseRequestManagerObject, requestUserObject, storeItems)
+                .pipe(take(1))
+                .subscribe(sendNoticeResult => {
+                  console.log(`Results from sending notices to ${requestUser.username}`, sendNoticeResult);
+                });
             }
+          }
 
-          }
-          if (result.status !== false) {
-            // Do stuff
-          }
         }
       });
 
@@ -221,7 +289,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
 
 
   onUserClick(userId: number) {
-    const user = this.entityUserQuery.getAll({
+    const user = this.userQuery.getAll({
       filterBy: e => e.userId === userId
     });
 

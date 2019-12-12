@@ -24,6 +24,7 @@ app.use(function(req, res, next) {
 });
 
 const ctrlNotifications = require('./controllers/notification.controller');
+const ctrlCognito = require('./controllers/cognito.controller');
 const jwtVerify = require('./config/decode-verify-jwt');
 const componentName = 'app';
 
@@ -116,32 +117,49 @@ app.post('/things/sendReadyForPickupNotice' , function (req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      const purchaseRequestManager = req.body.purchaseRequestManager;
       const requestUser = req.body.requestUser;
-      const storeItems = req.body.storeItems;
+      ctrlCognito.getCognitoUser(requestUser.username)
+        .then((user) => {
+          console.log(user);
+            const data = {
+              status: true,
+              user: user
+            };
 
-      // const username = tokenResult.claims['cognito:username'];
-      const promises = [];
-      const emailConfirmed = requestUser.emailConfirmed;
-      const emailNotifications = requestUser.emailNotifications;
-      const phoneConfirmed = requestUser.phoneConfirmed;
-      const phoneNotifications = requestUser.phoneNotifications;
+            const emailConfirmed = (user.UserAttributes.find(x => x.Name === 'email_verified').Value === 'true');
+            const phoneConfirmed = (user.UserAttributes.find(x => x.Name === 'phone_number_verified').Value === 'true');
+            requestUser['email'] = user.UserAttributes.find(x => x.Name === 'email').Value;
+            requestUser['phone'] = user.UserAttributes.find(x => x.Name === 'phone_number').Value;
+            const emailNotifications = requestUser.emailNotifications;
+            const phoneNotifications = requestUser.phoneNotifications;
+            const purchaseRequestManager = req.body.purchaseRequestManager;
+            const storeItems = req.body.storeItems;
 
-      if (emailConfirmed && emailNotifications) {
-        promises.push(ctrlNotifications.sendReadyForPickupEmail(purchaseRequestManager, requestUser, storeItems));
-      }
+            const promises = [];
 
-      if (phoneConfirmed && phoneNotifications) {
-        promises.push(ctrlNotifications.sendReadyForPickupSMS(purchaseRequestManager, requestUser, storeItems));
-      }
+            console.log('emailConfirmed', emailConfirmed);
+            console.log('emailNotifications', requestUser.emailNotifications);
+            console.log('phoneConfirmed', phoneConfirmed);
+            console.log('phoneNotifications', requestUser.phoneNotifications);
 
-      Promise.all(promises)
-        .then(results => {
-          res.json({ status: 'post call succeed!', results: results });
-        })
-        .catch(err => {
-          res.json({ status: 'post call failed!', error: err });
+            if (emailConfirmed && emailNotifications) {
+              promises.push(ctrlNotifications.sendReadyForPickupEmail(purchaseRequestManager, requestUser, storeItems));
+            }
+
+            if (phoneConfirmed && phoneNotifications) {
+              promises.push(ctrlNotifications.sendReadyForPickupSMS(purchaseRequestManager, requestUser, storeItems));
+            }
+
+            Promise.all(promises)
+              .then(results => {
+                res.json({ status: 'post call succeed!', results: results });
+              })
+              .catch(err => {
+                res.json({ status: 'post call failed!', error: err });
+              });
+
         });
+
 
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });

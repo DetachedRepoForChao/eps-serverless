@@ -59,7 +59,7 @@ export class EntityUserService {
 
 
   add(username: string, avatarBase64String: string, avatarPath: string, avatarResolvedUrl: string) {
-    const user = createEntityUserModel({ username, avatarBase64String, avatarPath, avatarResolvedUrl });
+    const user = createEntityUserModel({ username, avatarPath, avatarResolvedUrl });
     this.userStore.add(user);
   }
 
@@ -266,7 +266,6 @@ export class EntityUserService {
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
               const pointsPool = (+usersMerged[i].securityRole.id === 2 && usersMerged[i].pointPool.pointsRemaining) ? usersMerged[i].pointPool.pointsRemaining : null;
-              // const preferredPronoun = usersMerged[i].preferredPronoun;
               const birthdate = (usersMerged[i].birthdatePublic) ? usersMerged[i].dateOfBirth : null;
               const email = (usersMerged[i].emailPublic) ? usersMerged[i].email : null;
               const securityRole: SecurityRole = {
@@ -287,29 +286,23 @@ export class EntityUserService {
               const achievementsPublic = usersMerged[i].achievementsPublic;
               const pointsPublic = usersMerged[i].pointsPublic;
               const coreValuesPublic = usersMerged[i].coreValuesPublic;
+              const emailNotifications = usersMerged[i].emailNotifications;
+              const phoneNotifications = usersMerged[i].phoneNotifications;
               // Properties visible to admins
-              // const address1 = (usersMerged[i].address1) ? usersMerged[i].address1 : null;
-              // const address2 = (usersMerged[i].address2) ? usersMerged[i].address2 : null;
-              // const city = (usersMerged[i].city) ? usersMerged[i].city : null;
-              // const state = (usersMerged[i].state) ? usersMerged[i].state : null;
-              // const country = (usersMerged[i].country) ? usersMerged[i].country : null;
-              // const zip = (usersMerged[i].zip) ? usersMerged[i].zip : null;
               const dateOfHire = (usersMerged[i].dateOfHire) ? usersMerged[i].dateOfHire : null;
               const dateOfTermination = (usersMerged[i].dateOfTermination) ? usersMerged[i].dateOfTermination : null;
               const phone = (usersMerged[i].phone || usersMerged[i].phonePublic) ? usersMerged[i].phone.substring(2) : null;
               const active = (usersMerged[i].active) ? usersMerged[i].active : null;
-              // const sex = (usersMerged[i].sex) ? usersMerged[i].sex : null;
               const gender = (usersMerged[i].gender || usersMerged[i].genderPublic) ? usersMerged[i].gender : null;
 
 
               const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
-              const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
               const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
-                securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
-                preferredName, dateOfHire, dateOfTermination, phone, active, gender, quote, phonePublic, emailPublic, genderPublic,
-                birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool});
+                securityRole, department, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName, dateOfHire,
+                dateOfTermination, phone, active, gender, quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic,
+                achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, emailNotifications, phoneNotifications});
               usersArray.push(userModel);
             }
 
@@ -363,7 +356,6 @@ export class EntityUserService {
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
               const pointsPool = (+usersMerged[i].securityRole.id === 2) ? usersMerged[i].pointPool.pointsRemaining : null;
-              // const preferredPronoun = usersMerged[i].preferredPronoun;
               const birthdate = usersMerged[i].dateOfBirth;
               const email = usersMerged[i].email;
               const securityRole: SecurityRole = {
@@ -384,29 +376,22 @@ export class EntityUserService {
               const achievementsPublic = usersMerged[i].achievementsPublic;
               const pointsPublic = usersMerged[i].pointsPublic;
               const coreValuesPublic = usersMerged[i].coreValuesPublic;
-              // Properties visible to admins
-              // const address1 = (usersMerged[i].address1) ? usersMerged[i].address1 : null;
-              // const address2 = (usersMerged[i].address2) ? usersMerged[i].address2 : null;
-              // const city = (usersMerged[i].city) ? usersMerged[i].city : null;
-              // const state = (usersMerged[i].state) ? usersMerged[i].state : null;
-              // const country = (usersMerged[i].country) ? usersMerged[i].country : null;
-              // const zip = (usersMerged[i].zip) ? usersMerged[i].zip : null;
               const dateOfHire = (usersMerged[i].dateOfHire) ? usersMerged[i].dateOfHire : null;
               const dateOfTermination = (usersMerged[i].dateOfTermination) ? usersMerged[i].dateOfTermination : null;
               const phone = usersMerged[i].phone.substring(2);
               const active = (usersMerged[i].active) ? usersMerged[i].active : null;
-              // const sex = (usersMerged[i].sex) ? usersMerged[i].sex : null;
-              // const gender = (usersMerged[i].gender || usersMerged[i].genderPublic) ? usersMerged[i].gender : null;
-
+              const gender = (usersMerged[i].gender) ? usersMerged[i].gender : null;
+              const phoneNotifications = usersMerged[i].phoneNotifications;
+              const emailNotifications = usersMerged[i].emailNotifications;
 
               const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
               const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
-              const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points,
-                birthdate, securityRole, department, avatarBase64String, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email,
-                preferredName, dateOfHire, dateOfTermination, phone, active, quote, phonePublic, emailPublic, genderPublic, birthdatePublic,
-                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool});
+              const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
+                securityRole, department, gender, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName,
+                dateOfHire, dateOfTermination, phone, active, quote, phonePublic, emailPublic, genderPublic, birthdatePublic,
+                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, phoneNotifications, emailNotifications });
               usersArray.push(userModel);
             }
 

@@ -175,8 +175,8 @@ export class UserHasStoreItemService {
           const updatedAt = userHasStoreItemRecords[i].updatedAt;
           const updatedByUser = (userHasStoreItemRecords[i].updatedByUser) ? userHasStoreItemRecords[i].updatedByUser : null;
           const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
-            storeItemId, storeItemName, storeItemDescription,
-            storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt, updatedAt});
+            storeItemId, storeItemName, storeItemDescription, storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt,
+            pickedUpAt, createdAt, updatedAt, updatedByUser});
           userHasStoreItemRecordsArray.push(userHasStoreItemModel);
         }
 
@@ -230,10 +230,10 @@ export class UserHasStoreItemService {
               const pickedUpAt = response.data.purchaseRequest.pickedUpAt;
               const createdAt = response.data.purchaseRequest.createdAt;
               const updatedAt = response.data.purchaseRequest.updatedAt;
+
               const userHasStoreItemModel = createStoreItemModel({recordId, userId, userUsername, userFirstName, userLastName, userEmail,
-                storeItemId, storeItemName,
-                storeItemDescription, storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt,
-                updatedAt});
+                storeItemId, storeItemName, storeItemDescription, storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt,
+                pickedUpAt, createdAt, updatedAt});
 
               // Add new record to local store
               this.userHasStoreItemStore.add(userHasStoreItemModel);
@@ -252,28 +252,6 @@ export class UserHasStoreItemService {
         });
     });
   }
-
-/*  getPendingBalance(): Observable<any> {
-    return new Observable<any>(observer => {
-      const pending$ = this.userHasStoreItemQuery.selectPending();
-      pending$.subscribe(pendingRecords => {
-        let sum = 0;
-
-        for (let i = 0; i < pendingRecords.length; i++) {
-          const storeItem = this.storeItemQuery.getAll({
-            filterBy: entity => entity.itemId === pendingRecords[i].storeItemId
-          })[0];
-
-          if (storeItem) {
-            sum += storeItem.cost;
-          }
-        }
-
-        observer.next(sum);
-        observer.complete();
-      });
-    });
-  }*/
 
   setStoreItemRequestReadyForPickup(request: UserHasStoreItemModel): Observable<any> {
     const functionName = 'setStoreItemRequestReadyForPickup';
@@ -338,27 +316,15 @@ export class UserHasStoreItemService {
 
             if (response.data.status !== false) {
               console.log(`${functionFullName}: status returned true. Updating records in entity store`);
-              console.log('results');
-              console.log(response.data.results);
 
-              for (const result of response.data.results) {
-                console.log('result');
-                console.log(result);
-
-                const recordId = result.updatedRecord.recordId;
-                const status = result.updatedRecord.status;
-                const actionAt = result.updatedRecord.updatedAt;
+              for (const updatedRecord of response.data.updatedRecords) {
+                const recordId = updatedRecord.recordId;
+                const status = updatedRecord.status;
+                const actionAt = updatedRecord.updatedAt;
                 const updatedByUser = response.data.updatedByUser;
                 const cancelDescription = null;
                 this.update(recordId, status, cancelDescription, actionAt, updatedByUser);
-                console.log(`record id ${recordId} updated with status ${status} for user ${result.updatedRecord.userUsername}`);
-
-                if (result.status !== false) {
-                  console.log(`${result.updatedRecord.userUsername}'s points were adjusted to ${result.newPointTotal}`);
-
-                } else {
-                  console.log(`Ran into an error trying to adjust ${result.updatedRecord.userUsername}'s points`);
-                }
+                console.log(`record id ${recordId} updated with status ${status} for user ${updatedRecord.userUsername}`);
               }
 
               observer.next(response.data);
@@ -482,10 +448,13 @@ export class UserHasStoreItemService {
 
           API.post(this.apiName, this.apiPath2 + '/sendReadyForPickupNotice', myInit).then(response => {
             console.log(response);
-
-
-            observer.next();
-            observer.complete();
+            if (response.results.status !== false) {
+              observer.next(response.results);
+              observer.complete();
+            } else {
+              observer.error(response);
+              observer.complete();
+            }
           });
         });
 

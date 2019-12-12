@@ -9,7 +9,7 @@
 
         <div class="row purchase-request-row">
           <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="confirmRequest">
-            <ng-container *ngIf="managerRequests; else storeLoading">
+            <ng-container *ngIf="managerRequests && users; else storeLoading">
             <div class="card">
               <div class="card card-coin card-plain card-custom">
                 <div class="card-body">
@@ -63,14 +63,14 @@
                             <div class="col-12">
                               <div class="row">
                                 <div class="col-4 img-col">
-                                  <img class="rounded-circle avatar-img" [src]="entityUserQuery.getUserByUserId(UserHasStoreItemModel.userId)?.avatarResolvedUrl">
+                                  <img class="rounded-circle avatar-img" [src]="userQuery.getUserByUserId(UserHasStoreItemModel.userId)?.avatarResolvedUrl">
                                 </div>
                                 <div class="col-8">
                                   <div class="row">
                                     <a href="javascript:void(0)" (click)="onUserClick(UserHasStoreItemModel.userId)">{{UserHasStoreItemModel.userFirstName}} {{UserHasStoreItemModel.userLastName}}</a>
                                   </div>
                                   <div class="row font-italic">
-                                    {{entityUserQuery.getUserByUserId(UserHasStoreItemModel.userId)?.department.Name}}
+                                    {{userQuery.getUserByUserId(UserHasStoreItemModel.userId)?.department.Name}}
                                   </div>
                                 </div>
                               </div>

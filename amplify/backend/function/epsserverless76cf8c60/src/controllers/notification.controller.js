@@ -20,7 +20,7 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
   // Get target user details
   const sendTo = targetUser.email;
   const targetUserFirstName = targetUser.firstName;
-  const targetUserPoints = targetUser.points;
+  // const targetUserPoints = targetUser.points;
   const managerFullName = `${sourceUser.firstName} ${sourceUser.lastName}`;
   const pointItemName = pointItem.name;
   const points = pointItem.amount;
@@ -73,13 +73,13 @@ const sendAwardPointsSMS = function (targetUser, sourceUser, pointItem) {
   console.log(`${functionFullName}: pointItem:`, pointItem);
 
   // Get target user details
-  const sendTo = targetUser.email;
+  // const sendTo = targetUser.email;
   const phone = targetUser.phone;
-  const targetUserFirstName = targetUser.firstName;
-  const targetUserPoints = targetUser.points;
+  // const targetUserFirstName = targetUser.firstName;
+  // const targetUserPoints = targetUser.points;
   const managerFullName = `${sourceUser.firstName} ${sourceUser.lastName}`;
-  const pointItemName = pointItem.name;
-  const points = pointItem.amount;
+  // const pointItemName = pointItem.name;
+  // const points = pointItem.amount;
   let description = '';
   if (pointItem.description && pointItem.description.length > 0) {
     description = `Manager's comment: ${pointItem.description}`
@@ -110,7 +110,7 @@ const sendAwardPointsSMS = function (targetUser, sourceUser, pointItem) {
 // The sender ID to use when sending the message. Support for sender ID
 // varies by country or region. For more information, see
 // https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-countries.html
-//   var senderId = "MySenderID";
+  var senderId = "pineaplpts";
 
 // Specify that you're using a shared credentials file, and optionally specify
 // the profile that you want to use.
@@ -138,7 +138,7 @@ const sendAwardPointsSMS = function (targetUser, sourceUser, pointItem) {
           Keyword: registeredKeyword,
           MessageType: messageType,
           OriginationNumber: originationNumber,
-          // SenderId: senderId,
+          SenderId: senderId,
         }
       }
     }
@@ -270,7 +270,7 @@ const sendRequestStoreItemSMS = function (purchaseRequestManager, requestUser, s
 // The sender ID to use when sending the message. Support for sender ID
 // varies by country or region. For more information, see
 // https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-countries.html
-//   var senderId = "MySenderID";
+  var senderId = "pineaplpts";
 
 // Specify that you're using a shared credentials file, and optionally specify
 // the profile that you want to use.
@@ -298,7 +298,7 @@ const sendRequestStoreItemSMS = function (purchaseRequestManager, requestUser, s
           Keyword: registeredKeyword,
           MessageType: messageType,
           OriginationNumber: originationNumber,
-          // SenderId: senderId,
+          SenderId: senderId,
         }
       }
     }
@@ -431,7 +431,7 @@ const sendReadyForPickupSMS = function (purchaseRequestManager, requestUser, sto
       `by ${purchaseRequestManagerFirstName} ${purchaseRequestManagerLastName}! Log in to ` +
       `https://pineapplepoints.net to check the status of your purchase requests.`;
   } else {
-    const itemName = storeItems[0].name;
+    const itemName = storeItems[0].storeItemName;
     message = `Your Pineapple Points 🍍 purchase of ${itemName} has been marked as Ready for Pickup ` +
       `by ${purchaseRequestManagerFirstName} ${purchaseRequestManagerLastName}! Log in to ` +
       `https://pineapplepoints.net to check the status of your purchase requests.`;
@@ -456,7 +456,7 @@ const sendReadyForPickupSMS = function (purchaseRequestManager, requestUser, sto
 // The sender ID to use when sending the message. Support for sender ID
 // varies by country or region. For more information, see
 // https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-countries.html
-//   var senderId = "MySenderID";
+  var senderId = "pineaplpts";
 
 // Specify that you're using a shared credentials file, and optionally specify
 // the profile that you want to use.
@@ -484,7 +484,7 @@ const sendReadyForPickupSMS = function (purchaseRequestManager, requestUser, sto
           Keyword: registeredKeyword,
           MessageType: messageType,
           OriginationNumber: originationNumber,
-          // SenderId: senderId,
+          SenderId: senderId,
         }
       }
     }
