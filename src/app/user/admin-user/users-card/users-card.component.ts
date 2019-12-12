@@ -892,6 +892,16 @@ export class UsersCardComponent implements OnInit, OnDestroy {
     return !!this.purchaseApprovers.find(x => x.userId === userId);
   }
 
+  onConfirmEmailClick(username: string) {
+    console.log('confirm email clicked');
+    this.router.navigate(['/', 'user', 'profile', username], {state: {option: 'email'}});
+  }
+
+  onConfirmPhoneClick(username: string) {
+    console.log('confirm phone clicked');
+    this.router.navigate(['/', 'user', 'profile', username], {state: {option: 'phone'}});
+  }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

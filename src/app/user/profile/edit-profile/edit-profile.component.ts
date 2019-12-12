@@ -27,6 +27,7 @@ import {NotifierService} from 'angular-notifier';
 import Auth from '@aws-amplify/auth';
 import {CognitoUser} from 'amazon-cognito-identity-js';
 import {take, takeUntil, tap} from 'rxjs/operators';
+import 'rxjs/add/observable/interval';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 
 
@@ -263,17 +264,30 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   executeOption(field) {
-    console.log('start executeOption');
+    // console.log('start executeOption');
     if (!this.option) {
       // Don't do anything since no option was passed
     } else {
       console.log('current optionExecuted: ' + this.optionExecuted);
-      this.optionExecuted = true;
-      this.option = null;
+      // this.optionExecuted = true;
 
-      console.log(`removing glow to glowing_${field}`);
-      document.getElementById(`glowing_${field}`).className = document.getElementById(`glowing_${field}`).className.replace('glow', '').trim();
-      this.clearOption.emit(true);
+      if (this.option === field) {
+        // console.log('starting observable');
+        Observable.interval(5000)
+          .pipe(take(1))
+          .subscribe(() => {
+            // console.log('setting option to null');
+            this.option = null;
+          });
+
+        // console.log(`removing glow to glowing_${field}`);
+        // document.getElementById(`glowing_${field}`).className = document.getElementById(`glowing_${field}`).className.replace('glow', '').trim();
+        if (field === 'quote') {
+          this.clearOption.emit(true);
+        }
+      }
+
+
     }
   }
 

@@ -588,7 +588,7 @@
                           <label class="form-check-label text-dark">
                             <input class="form-check-input" type="checkbox" formControlName="phoneNotifications" [value]="false" disabled><span class="font-disabled text-black-50 pr-2">Text</span>
                             <ng-container *ngIf="this.currentUser?.userId === purchaseApproverForm.controls.group.get('purchaseApprover').value?.userId">
-                              <a href="javascript:void(0)">Confirm?</a>
+<!--                              <a href="javascript:void(0)" (click)="onConfirmPhoneClick(currentUser.username)">Confirm?</a>-->
                             </ng-container>
                             <span class="form-check-sign"></span>
                           </label>
@@ -615,7 +615,7 @@
                           <label class="form-check-label text-dark">
                             <input class="form-check-input" type="checkbox" formControlName="emailNotifications" [value]="false" disabled><span class="font-disabled text-black-50 pr-2">Email</span>
                             <ng-container *ngIf="this.currentUser?.userId === purchaseApproverForm.controls.group.get('purchaseApprover').value?.userId">
-                              <a href="javascript:void(0)">Confirm?</a>
+<!--                              <a href="javascript:void(0)" (click)="onConfirmEmailClick(currentUser.username)">Confirm?</a>-->
                             </ng-container>
                             <span class="form-check-sign"></span>
                           </label>

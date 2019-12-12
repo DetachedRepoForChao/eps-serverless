@@ -210,6 +210,7 @@ export class StoreItemService {
             itemId: storeItem.itemId,
             name: storeItem.name,
             description: storeItem.description,
+            cost: storeItem.cost,
           };
 
           myInit['body'] = {

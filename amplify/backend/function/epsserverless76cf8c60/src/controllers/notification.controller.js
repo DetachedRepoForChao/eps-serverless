@@ -98,7 +98,7 @@ const sendRequestStoreItemEmail = function (purchaseRequestManager, requestUser,
     },
     Template: 'RequestItemPurchase',
     ConfigurationSetName: "Default",
-    TemplateData: `{\"requestUserFullName\":\"${requestUserFullName}\", \"managerUserFirstName\":\"${managerUserFirstName}\", \"requestUserFirstName\":\"${requestUserFirstName}\", \"itemName\": \"${itemName}\", \"itemDescription\": \"${itemDescription}\", \"cost\": \"${cost}\"}`,
+    TemplateData: `{\"requestUserFullName\":\"${requestUserFullName}\", \"managerUserFirstName\":\"${purchaseRequestManagerFirstName}\", \"requestUserFirstName\":\"${requestUserFirstName}\", \"itemName\": \"${itemName}\", \"itemDescription\": \"${itemDescription}\", \"cost\": \"${cost}\"}`,
     Source: sourceEmail, /* required */
 
   };

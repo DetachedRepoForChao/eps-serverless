@@ -160,9 +160,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 
   onViewItemClick(clickedItem: string) {
-    console.log(clickedItem);
-    console.log(this.viewItems);
-    console.log(document.getElementById('viewItem_notifications').className);
     if (this.currentView === clickedItem) {
       // Already there, do nothing.
     } else {
@@ -183,6 +180,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   clearOption(event) {
     this.option = null;
+  }
+
+  returnFromConfirmClick(event) {
+    this.onViewItemClick('editProfile');
+    this.option = event;
   }
 
   ngOnDestroy(): void {

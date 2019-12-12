@@ -205,3 +205,7 @@ textarea.form-control:active {
 .important-note-text {
   display: inline;
 }
+
+.font-disabled {
+  text-decoration: line-through;
+}

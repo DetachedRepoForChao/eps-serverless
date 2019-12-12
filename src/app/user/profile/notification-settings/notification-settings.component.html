@@ -11,111 +11,84 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_email" class="form-label">Email</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.emailPublic" name="privacy_email" (change)="toggleFieldPrivacy('emailPublic')" id="privacy_email" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.emailPublic; else toggledPublic">
-                  <div>Private</div>
-                </ng-container>
-              </mat-slide-toggle>
-            </div>
+            <ng-container *ngIf="this.emailConfirmed; else emailUnconfirmed">
+              <div class="col-8 aligncentercontent">
+                <label for="email_notifications" class="form-label">Email Notifications</label>
+              </div>
+              <div class="col-2 toggle-col">
+                <mat-slide-toggle [(ngModel)]="fieldNotificationsList.emailNotifications" name="email_notifications" (change)="toggleFieldPrivacy('emailNotifications')" id="email_notifications" [color]="color">
+                  <ng-container *ngIf="!fieldNotificationsList.emailNotifications; else toggledOn">
+                    <div>Off</div>
+                  </ng-container>
+                </mat-slide-toggle>
+              </div>
+            </ng-container>
+            <ng-template #emailUnconfirmed>
+              <div class="col-8 aligncentercontent">
+                <label for="email_notifications" class="form-label font-disabled">Email Notifications</label>
+              </div>
+              <div class="col-2 toggle-col">
+                <mat-slide-toggle [(ngModel)]="fieldNotificationsList.emailNotifications" [disabled]="true" name="email_notifications" (change)="toggleFieldPrivacy('emailNotifications')" [color]="color">
+                  <ng-container *ngIf="!fieldNotificationsList.emailNotifications; else toggledOn">
+                    <div>Off</div>
+                  </ng-container>
+                </mat-slide-toggle>
+              </div>
+            </ng-template>
           </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_phone" class="form-label">Phone</label>
+          <ng-container *ngIf="!this.emailConfirmed">
+            <div class="form-row">
+              <div class="col-12">
+                <span class="pr-2">Email is not confirmed</span>
+                <a href="javascript:void(0)" (click)="onConfirmEmailClick(currentUser.username)">Confirm?</a>
+              </div>
             </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.phonePublic" name="privacy_phone" (change)="toggleFieldPrivacy('phonePublic')" id="privacy_phone" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.phonePublic; else toggledPublic">
-                  <div >Private</div>
-                </ng-container>
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_birthdate" class="form-label">In-App Notifications</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.birthdatePublic" name="privacy_birthdate" (change)="toggleFieldPrivacy('birthdatePublic')" id="privacy_birthdate" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.birthdatePublic; else toggledPublic">
-                  <div >Private</div>
-                </ng-container>
-
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_gender" class="form-label">Gender</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.genderPublic" name="privacy_gender" (change)="toggleFieldPrivacy('genderPublic')" id="privacy_gender" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.genderPublic; else toggledPublic">
-                  <div >Private</div>
-                </ng-container>
-
-              </mat-slide-toggle>
-            </div>
-          </div>
-
+          </ng-container>
 
           <div class="form-row">
-            <div class="col-12">
-              <label class="form-label">Other Preferences</label><br>
-              <!--            <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>-->
-
-            </div>
+            <ng-container *ngIf="this.phoneConfirmed; else phoneUnconfirmed">
+              <div class="col-8 aligncentercontent">
+                <label for="phone_notifications" class="form-label">Text Notifications</label>
+              </div>
+              <div class="col-2 toggle-col">
+                <mat-slide-toggle [(ngModel)]="fieldNotificationsList.phoneNotifications" name="phone_notifications" (change)="toggleFieldPrivacy('phoneNotifications')" id="phone_notifications" [color]="color">
+                  <ng-container *ngIf="!fieldNotificationsList.phoneNotifications; else toggledOn">
+                    <div >Off</div>
+                  </ng-container>
+                </mat-slide-toggle>
+              </div>
+            </ng-container>
+            <ng-template #phoneUnconfirmed>
+              <div class="col-8 aligncentercontent">
+                <label class="form-label font-disabled">Text Notifications</label>
+              </div>
+              <div class="col-2 toggle-col">
+                <mat-slide-toggle [(ngModel)]="fieldNotificationsList.phoneNotifications" [disabled]="true" name="phone_notifications" (change)="toggleFieldPrivacy('phoneNotifications')" [color]="color">
+                  <ng-container *ngIf="!fieldNotificationsList.phoneNotifications; else toggledOn">
+                    <div>Off</div>
+                  </ng-container>
+                </mat-slide-toggle>
+              </div>
+            </ng-template>
           </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_share_point_awards" class="form-label">Point awards shared in the app's feed</label>
+          <ng-container *ngIf="!this.phoneConfirmed">
+            <div class="form-row">
+              <div class="col-12">
+                <span class="pr-2">Phone number is not confirmed</span>
+                <a href="javascript:void(0)" (click)="onConfirmPhoneClick(currentUser.username)">Confirm?</a>
+              </div>
             </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.pointAwardsPublic" name="privacy_share_point_awards" (change)="toggleFieldPrivacy('pointAwardsPublic')" id="privacy_share_point_awards" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.pointAwardsPublic; else toggledYes">
-                  <div >No</div>
-                </ng-container>
+          </ng-container>
 
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_points_visible" class="form-label">Others can view your awarded points</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.pointsPublic" name="privacy_points_visible" (change)="toggleFieldPrivacy('pointsPublic')" id="privacy_points_visible" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.pointsPublic; else toggledYes">
-                  <div >No</div>
-                </ng-container>
 
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
+          <div class="form-row" >
             <div class="col-8 aligncentercontent">
-              <label for="privacy_achievements_visible" class="form-label">Others can view your achievements</label>
+              <label for="in-app_notifications" class="form-label">In-App Notifications</label>
             </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.achievementsPublic" name="privacy_achievements_visible" (change)="toggleFieldPrivacy('achievementsPublic')" id="privacy_achievements_visible" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.achievementsPublic; else toggledYes">
-                  <div >No</div>
-                </ng-container>
-
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_coreValues_visible" class="form-label">Others can view your Core Values</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [(ngModel)]="fieldPrivacyList.coreValuesPublic" name="privacy_achievements_visible" (change)="toggleFieldPrivacy('coreValuesPublic')" id="privacy_coreValues_visible" [color]="color">
-                <ng-container *ngIf="!fieldPrivacyList.coreValuesPublic; else toggledYes">
-                  <div >No</div>
+            <div class="col-2 toggle-col" matTooltipPosition="below" [matTooltip]="'In-App Notifications are on by default and cannot be turned off.'">
+              <mat-slide-toggle [(ngModel)]="fieldNotificationsList.inApp" [disabled]="true" name="in-app_notifications" (change)="toggleFieldPrivacy('inApp')" id="in-app_notifications" [color]="color">
+                <ng-container *ngIf="!fieldNotificationsList.inApp; else toggledOn">
+                  <div >Off</div>
                 </ng-container>
 
               </mat-slide-toggle>
@@ -126,114 +99,60 @@
         <ng-template #placeholderForm>
           <div class="form-row">
             <div class="col-10">
-              <label class="form-label">Choose which fields you want to set as public.</label><br>
-              <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>
+              <label class="form-label">Choose how you would like to receive app notifications.</label><br>
+              <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you enable text notifications, please note that you may be charged per-text fees from your cell phone service provider.</h5>
 
             </div>
           </div>
           <div class="form-row">
             <div class="col-8 aligncentercontent">
-              <label for="privacy_email" class="form-label">Email</label>
+              <label class="form-label">Email</label>
             </div>
             <div class="col-2 toggle-col">
               <mat-slide-toggle [color]="color">
-                <div>Private</div>
+                <div>Off</div>
               </mat-slide-toggle>
             </div>
           </div>
           <div class="form-row">
             <div class="col-8 aligncentercontent">
-              <label for="privacy_phone" class="form-label">Phone</label>
+              <label class="form-label">Phone Text</label>
             </div>
             <div class="col-2 toggle-col">
               <mat-slide-toggle [color]="color">
-                <div>Private</div>
+                <div>Off</div>
               </mat-slide-toggle>
             </div>
           </div>
           <div class="form-row">
             <div class="col-8 aligncentercontent">
-              <label for="privacy_birthdate" class="form-label">Date of Birth</label>
+              <label class="form-label">In-App Notifications</label>
             </div>
             <div class="col-2 toggle-col">
               <mat-slide-toggle [color]="color">
-                <div>Private</div>
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_gender" class="form-label">Gender</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [color]="color">
-                <div>Private</div>
-              </mat-slide-toggle>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="col-12">
-              <label class="form-label">Other Preferences</label><br>
-              <!--            <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>-->
-
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_share_point_awards" class="form-label">Point awards shared in the app's feed</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [color]="color">
-                <div>Yes</div>
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_points_visible" class="form-label">Others can view your awarded points</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [color]="color">
-                <div>Yes</div>
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_achievements_visible" class="form-label">Others can view your achievements</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [color]="color">
-                <div>Yes</div>
-              </mat-slide-toggle>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-8 aligncentercontent">
-              <label for="privacy_coreValues_visible" class="form-label">Others can view your Core Values</label>
-            </div>
-            <div class="col-2 toggle-col">
-              <mat-slide-toggle [color]="color">
-                <div>Yes</div>
+                <div>Off</div>
               </mat-slide-toggle>
             </div>
           </div>
         </ng-template>
 
       </form>
-      <button type="button" class="btn btn-primary" (click)="onFieldPrivacyListSubmit()">Save Changes</button>
+      <ng-container *ngIf="currentUser.securityRole.Id === 3">
+        <button type="button" class="btn btn-primary" (click)="onFieldNotificationListSubmitAdmin()">Save Changes</button>
+      </ng-container>
+      <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+        <button type="button" class="btn btn-primary" (click)="onFieldNotificationListSubmit()">Save Changes</button>
+      </ng-container>
 
     </div>
   </div>
 </ng-container>
 
-<ng-template #toggledPublic>Public</ng-template>
-<ng-template #toggledYes>Yes</ng-template>
+<ng-template #toggledOn>On</ng-template>
 
 <ng-template #cardLoading>
   <ngx-spinner
-    name="privacy-settings-spinner"
+    name="notification-settings-spinner"
     [fullScreen]="true"
     bdColor="rgba(51,51,51,0.8)"
     size="medium"
