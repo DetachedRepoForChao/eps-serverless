@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
@@ -23,6 +23,7 @@ import Auth from '@aws-amplify/auth';
 import {CognitoUser} from "amazon-cognito-identity-js";
 import {ThemePalette} from '@angular/material';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -33,10 +34,14 @@ declare var $: any;
 })
 export class NotificationSettingsComponent implements OnInit, OnDestroy {
   componentName = 'notification-settings.component';
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
 
   currentUser$;
+  currentUser: EntityCurrentUserModel;
   userPlaceholder: EntityCurrentUserModel;
   isCardLoading: boolean;
 
@@ -49,18 +54,16 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
   disabled = false;
   toggled = false;
 
-  fieldPrivacyList = {
+  fieldNotificationsList = {
     user: this.userPlaceholder,
-    emailPublic: false,
-    phonePublic: false,
-    birthdatePublic: false,
-    genderPublic: false,
-    pointAwardsPublic: true,
-    achievementsPublic: true,
-    pointsPublic: true,
-    coreValuesPublic: true,
+    email: false,
+    phone: false,
+    inApp: false,
   };
-  fieldPrivacyListSubmitted = false;
+  fieldNotificationsListSubmitted = false;
+
+  public emailConfirmed = false;
+  public phoneConfirmed = false;
 
   constructor(private http: HttpClient,
               private spinner: NgxSpinnerService,
@@ -92,18 +95,34 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
     this.spinner.show('privacy-settings-spinner');
 
     this.authService.currentUserInfo()
-      .then(userInfo => {
-        console.log(userInfo);
+      .then(currentUserInfo => {
+        console.log(currentUserInfo);
+        this.emailConfirmed = currentUserInfo.attributes['email_verified'];
+        this.phoneConfirmed = currentUserInfo.attributes['phone_number_verified'];
+
         this.isUserDataRetrieved = true;
+      })
+      .catch(err => {
+        console.log('Error...', err);
       });
 
-    this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
 
-    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
+
+
+
 
     this.currentUser$.subscribe(() => {
       this.populatePrivacyData();

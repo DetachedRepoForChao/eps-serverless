@@ -284,11 +284,11 @@ const getUserProfile = function (username) {
         attributes: ['id', 'managerId', 'pointsRemaining']
       }
     ],
-    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
-      'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
-      'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl',
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName',
+      'position', 'points', 'email', 'dateOfBirth',
+      'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl',
       'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic', 'pointAwardsPublic',
-      'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
+      'achievementsPublic', 'pointsPublic', 'coreValuesPublic', 'emailNotifications', 'phoneNotifications'],
     where: {
       username: username,
       active: 1
@@ -366,10 +366,11 @@ const getUsersPublicDetails = function () {
         attributes: ['id', 'managerId', 'pointsRemaining']
       }
     ],
-    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
-      'position', 'points', 'dateOfBirth', 'preferredPronoun', 'securityRoleId', 'departmentId', 'avatarUrl',
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName',
+      'points', 'dateOfBirth', 'securityRoleId', 'departmentId', 'avatarUrl',
       'email', 'gender', 'phone', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
-      'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
+      'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic', 'emailNotifications',
+      'phoneNotifications'],
     where: {
       securityRoleId: [1, 2, 3],
       active: 1,
@@ -416,11 +417,11 @@ const adminGetUsersDetails = function () {
         attributes: ['id', 'managerId', 'pointsRemaining']
       }
     ],
-    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'prefix', 'suffix',
-      'position', 'points', 'email', 'address1', 'address2', 'city', 'state', 'country', 'zip', 'dateOfBirth',
-      'preferredPronoun', 'sex', 'gender', 'dateOfHire', 'dateOfTermination', 'phone', 'securityRoleId',
-      'departmentId', 'avatarUrl', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
-      'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic'],
+    attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'position', 'points',
+      'email', 'gender', 'dateOfBirth', 'dateOfHire', 'dateOfTermination', 'phone', 'securityRoleId', 'departmentId',
+      'avatarUrl', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
+      'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic', 'emailNotifications',
+      'phoneNotifications'],
     order: [
       ['id', 'ASC'],
     ],

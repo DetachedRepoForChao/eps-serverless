@@ -5,8 +5,8 @@
         <ng-container *ngIf="isUserDataRetrieved; else placeholderForm">
           <div class="form-row">
             <div class="col-10">
-              <label class="form-label">Choose which fields you want to set as public.</label><br>
-              <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you set a field as public, this information will be visible to anyone using this app. The System Administrator can view your information even if it is not set as Public.</h5>
+              <label class="form-label">Choose how you would like to receive app notifications.</label><br>
+              <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you enable text notifications, please note that you may be charged per-text fees from your cell phone service provider.</h5>
 
             </div>
           </div>
@@ -36,7 +36,7 @@
           </div>
           <div class="form-row">
             <div class="col-8 aligncentercontent">
-              <label for="privacy_birthdate" class="form-label">Date of Birth</label>
+              <label for="privacy_birthdate" class="form-label">In-App Notifications</label>
             </div>
             <div class="col-2 toggle-col">
               <mat-slide-toggle [(ngModel)]="fieldPrivacyList.birthdatePublic" name="privacy_birthdate" (change)="toggleFieldPrivacy('birthdatePublic')" id="privacy_birthdate" [color]="color">

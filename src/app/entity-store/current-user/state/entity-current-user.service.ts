@@ -129,21 +129,11 @@ export class EntityCurrentUserService {
         const middleName = userDataResult.middleName;
         const lastName = userDataResult.lastName;
         const preferredName = userDataResult.preferredName;
-        const prefix = userDataResult.prefix;
-        const suffix = userDataResult.suffix;
         const position = userDataResult.position;
         const points = +userDataResult.points;
         const pointsPool = +userDataResult.pointsPool;
         const email = userDataResult.email;
-        const address1 = userDataResult.address1;
-        const address2 = userDataResult.address2;
-        const city = userDataResult.city;
-        const state = userDataResult.state;
-        const country = userDataResult.country;
-        const zip = userDataResult.zip;
         const birthdate = userDataResult.birthdate;
-        const preferredPronoun = userDataResult.preferredPronoun;
-        const sex = userDataResult.sex;
         const gender = userDataResult.gender;
         const dateOfHire = userDataResult.dateOfHire;
         const department = userDataResult.department;
@@ -159,16 +149,16 @@ export class EntityCurrentUserService {
         const achievementsPublic = userDataResult.achievementsPublic;
         const pointsPublic = userDataResult.pointsPublic;
         const coreValuesPublic = userDataResult.coreValuesPublic;
-        // const pointsBalance = userDataResult.pointsBalance;
+        const emailNotifications = userDataResult.emailNotifications;
+        const phoneNotifications = userDataResult.phoneNotifications;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
-            const avatarBase64String = '';
             const avatarResolvedUrl = result.avatarResolvedUrl;
-            const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, prefix,
-              suffix, position, points, pointsPool, email, address1, address2, city, state, country, zip, birthdate, preferredPronoun, sex,
-              gender, dateOfHire, department, securityRole, phone, avatarBase64String, avatarPath, avatarResolvedUrl, quote, phonePublic,
-              emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic});
+            const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, position,
+              points, pointsPool, email, birthdate, gender, dateOfHire, department, securityRole, phone, avatarPath, avatarResolvedUrl,
+              quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic,
+              coreValuesPublic, emailNotifications, phoneNotifications});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -241,24 +231,13 @@ export class EntityCurrentUserService {
                   const lastName = currentUserData.user.lastName;
                   const middleName = currentUserData.user.middleName;
                   const preferredName = currentUserData.user.preferredName;
-                  const prefix = currentUserData.user.prefix;
-                  const suffix = currentUserData.user.suffix;
                   const position = currentUserData.user.position;
                   const points = currentUserData.user.points;
                   let pointsPool = null;
                   if (currentUserData.user.pointPool) {
-                    pointsPool = (currentUserData.user.pointPool.pointsRemaining) ? currentUserData.user.pointPool.pointsRemaining : null;
-                  }
+                    pointsPool = (currentUserData.user.pointPool.pointsRemaining) ? currentUserData.user.pointPool.pointsRemaining : null;                  }
                   const email = currentUserData.user.email;
-                  const address1 = currentUserData.user.address1;
-                  const address2 = currentUserData.user.address2;
-                  const city = currentUserData.user.city;
-                  const state = currentUserData.user.state;
-                  const country = currentUserData.user.country;
-                  const zip = currentUserData.user.zip;
                   const dateOfBirth = currentUserData.user.dateOfBirth;
-                  const preferredPronoun = currentUserData.user.preferredPronoun;
-                  const sex = currentUserData.user.sex;
                   const gender = currentUserData.user.gender;
                   const dateOfHire = currentUserData.user.dateOfHire;
                   const phone = currentUserData.user.phone;
@@ -281,7 +260,8 @@ export class EntityCurrentUserService {
                   const achievementsPublic = currentUserData.user.achievementsPublic;
                   const pointsPublic = currentUserData.user.pointsPublic;
                   const coreValuesPublic = currentUserData.user.coreValuesPublic;
-                  // const pointsBalance = currentUserData.pendingBalance;
+                  const emailNotifications = currentUserData.user.emailNotifications;
+                  const phoneNotifications = currentUserData.user.phoneNotifications;
 
                   const data = {
                     userId: userId,
@@ -290,21 +270,11 @@ export class EntityCurrentUserService {
                     middleName: middleName,
                     lastName: lastName,
                     preferredName: preferredName,
-                    prefix: prefix,
-                    suffix: suffix,
                     position: position,
                     points: points,
                     pointsPool: pointsPool,
                     email: email,
-                    address1: address1,
-                    address2: address2,
-                    city: city,
-                    state: state,
-                    country: country,
-                    zip: zip,
                     birthdate: dateOfBirth,
-                    preferredPronoun: preferredPronoun,
-                    sex: sex,
                     gender: gender,
                     dateOfHire: dateOfHire,
                     phone: phone,
@@ -320,7 +290,8 @@ export class EntityCurrentUserService {
                     achievementsPublic: achievementsPublic,
                     pointsPublic: pointsPublic,
                     coreValuesPublic: coreValuesPublic,
-                    // pointsBalance: pointsBalance,
+                    emailNotifications: emailNotifications,
+                    phoneNotifications: phoneNotifications,
                   };
 
                   console.log('userData:');
