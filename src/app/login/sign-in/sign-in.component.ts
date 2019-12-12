@@ -5,7 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { UserService } from '../../shared/user.service';
 import {Department} from '../../shared/department.model';
 import {promise} from 'selenium-webdriver';
-import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import {map, filter, catchError, mergeMap, take} from 'rxjs/operators';
 import { NotifierService} from 'angular-notifier';
 import {SecurityRoleService} from '../../shared/securityRole.service';
 import {DepartmentService} from '../../shared/department.service';
@@ -25,9 +25,10 @@ import {AchievementService} from '../../entity-store/achievement/state/achieveme
 export class SignInComponent implements OnInit {
   componentName = 'sign-in.component';
   hide = true;
-  // returnUrl: string;
+  returnUrl: string;
   private userDetails;
-  // private departments: Department[];
+
+
   constructor(private achievementService: AchievementService,
               public userService: UserService,
               private router: Router,
@@ -53,11 +54,13 @@ export class SignInComponent implements OnInit {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/user';
+
     this.authService.isLoggedIn()
       .then(result => {
         // console.log(result);
         if (result) {
-          this.router.navigateByUrl('/user').then();
+          this.router.navigateByUrl(this.returnUrl);
         }
       });
 
@@ -84,6 +87,7 @@ export class SignInComponent implements OnInit {
 
           // this.achievementService.incrementAchievementSignIn(userDetails.id)
           this.achievementService.incrementAchievement('SignIn')
+            .pipe(take(1))
             .subscribe((result: any) => {
               console.log(`${functionFullName}: incrementAchievementSignIn result:`);
               console.log(result);
@@ -103,7 +107,7 @@ export class SignInComponent implements OnInit {
 
           console.log(`${functionFullName}: Hiding sign-in-onSubmit-spinner`);
           this.spinner.hide('sign-in-onSubmit-spinner');
-          this.router.navigate(['/user']);
+          this.router.navigateByUrl(this.returnUrl);
         }
 
       })

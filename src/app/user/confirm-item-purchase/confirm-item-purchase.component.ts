@@ -195,9 +195,25 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
 
     this.userHasStoreItemService.processRequests(actionList)
       .pipe(take(1))
-      .subscribe(result => {
-        console.log('processRequests result');
-        console.log(result);
+      .subscribe(results => {
+        console.log('processRequests results', results);
+
+        // Find the response the corresponds with items that were changed to ReadyForPickup
+        for (const result of results) {
+          console.log(result);
+
+          if (result.results && result.status !== false) {
+            const readyForPickupRequests = result.results;
+
+            for (const readyForPickupRequest of readyForPickupRequests) {
+
+            }
+
+          }
+          if (result.status !== false) {
+            // Do stuff
+          }
+        }
       });
 
     this.untoggleAll();

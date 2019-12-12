@@ -35,24 +35,37 @@ AWS.config.update({
 
 const userPoolId = 'us-east-1_vOg4HSZc8';
 
-app.post('/things/sendAwardPointsEmail' , function (req, res) {
-  console.log('starting post sendAwardPointsEmail');
+app.post('/things/sendAwardPointsNotice' , function (req, res) {
+  console.log('starting post sendAwardPointsNotice');
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
+
       const sourceUser = req.body.sourceUser;
       const targetUser = req.body.targetUser;
       const pointItem = req.body.pointItem;
-      // const username = tokenResult.claims['cognito:username'];
 
-      ctrlNotifications.sendAwardPointsEmail(targetUser, sourceUser, pointItem)
-        .then(data => {
-          res.json({ status: 'post call succeed!', data: data });
+      const promises = [];
+      const emailConfirmed = targetUser.emailConfirmed;
+      const emailNotifications = targetUser.emailNotifications;
+      const phoneConfirmed = targetUser.phoneConfirmed;
+      const phoneNotifications = targetUser.phoneNotifications;
+
+      if (emailConfirmed && emailNotifications) {
+        promises.push(ctrlNotifications.sendAwardPointsEmail(targetUser, sourceUser, pointItem));
+      }
+
+      if (phoneConfirmed && phoneNotifications) {
+        promises.push(ctrlNotifications.sendAwardPointsSMS(targetUser, sourceUser, pointItem));
+      }
+
+      Promise.all(promises)
+        .then(results => {
+          res.json({ status: 'post call succeed!', results: results });
         })
         .catch(err => {
           res.json({ status: 'post call failed!', error: err });
         });
-
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
@@ -98,19 +111,33 @@ app.post('/things/sendRequestStoreItemNotice' , function (req, res) {
 });
 
 
-app.post('/things/sendFulfillStoreItemEmail' , function (req, res) {
-  console.log('starting post sendFulfillStoreItemEmail');
+app.post('/things/sendReadyForPickupNotice' , function (req, res) {
+  console.log('starting post sendReadyForPickupNotice');
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      const sourceUser = req.body.sourceUser;
-      const targetUser = req.body.targetUser;
-      const pointItem = req.body.pointItem;
-      // const username = tokenResult.claims['cognito:username'];
+      const purchaseRequestManager = req.body.purchaseRequestManager;
+      const requestUser = req.body.requestUser;
+      const storeItems = req.body.storeItems;
 
-      ctrlNotifications.sendFulfillStoreItemEmail(targetUser, sourceUser, pointItem)
-        .then(data => {
-          res.json({ status: 'post call succeed!', data: data });
+      // const username = tokenResult.claims['cognito:username'];
+      const promises = [];
+      const emailConfirmed = requestUser.emailConfirmed;
+      const emailNotifications = requestUser.emailNotifications;
+      const phoneConfirmed = requestUser.phoneConfirmed;
+      const phoneNotifications = requestUser.phoneNotifications;
+
+      if (emailConfirmed && emailNotifications) {
+        promises.push(ctrlNotifications.sendReadyForPickupEmail(purchaseRequestManager, requestUser, storeItems));
+      }
+
+      if (phoneConfirmed && phoneNotifications) {
+        promises.push(ctrlNotifications.sendReadyForPickupSMS(purchaseRequestManager, requestUser, storeItems));
+      }
+
+      Promise.all(promises)
+        .then(results => {
+          res.json({ status: 'post call succeed!', results: results });
         })
         .catch(err => {
           res.json({ status: 'post call failed!', error: err });

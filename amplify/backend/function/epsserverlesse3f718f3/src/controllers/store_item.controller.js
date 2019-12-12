@@ -408,29 +408,8 @@ const setStoreItemRequestReadyForPickup = function (updatedByUser, request) {
   })
     .then(() => {
       console.log(`${functionFullName}: Store item request updated successfully`);
-      const description = `Manager (id: ${updatedByUser.userId}; username: ${updatedByUser.username}) changed user (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId}) status from 'Pending' to 'Ready For Pickup'`;
+      return {status: true, updatedRecord: request, updatedByUser: updatedByUser, newStatus: 'readyForPickup'};
 
-      return {status: true, updatedRecord: request, message: description};
-
-
-/*      return ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description)
-        .then(removeResult => {
-          console.log(`${functionFullName}: Remove points result:`);
-          console.log(removeResult);
-          if (removeResult.status !== false) {
-            console.log(`${functionFullName}: Points removed from user's total successfully. User's new point total is ${removeResult.newPointAmount}`);
-            return {status: true, updatedRecord: request, newPointTotal: removeResult.newPointAmount};
-          } else {
-            console.log(`${functionFullName}: Error removing points from user's total:`);
-            console.log(removeResult.message);
-            return {status: false, updatedRecord: request, error: removeResult};
-          }
-        })
-        .catch(err => {
-          console.log(`${functionFullName}: Database error`);
-          console.log(err);
-          return {status: false, message: err};
-        });*/
     })
     .catch( err => {
       console.log(`${functionFullName}: Error updating store item request`);
@@ -462,7 +441,7 @@ const setStoreItemRequestPickedUp = function (updatedByUser, request) {
   })
     .then(() => {
       console.log(`${functionFullName}: Store item request updated successfully`);
-      return {status: true, updatedRecord: request, updatedByUser: updatedByUser};
+      return {status: true, updatedRecord: request, updatedByUser: updatedByUser, newStatus: 'pickedUp'};
     })
     .catch( err => {
       console.log(`${functionFullName}: Error updating store item request`);
@@ -504,20 +483,7 @@ const setStoreItemRequestsReadyForPickup = function (updatedByUser, requests) {
     .then(() => {
       console.log(`${functionFullName}: Store item requests updated successfully`);
 
-      const resultsArray = [];
-
-      for (const request of requests) {
-        const description = `Manager (id: ${updatedByUser.id}; username: ${updatedByUser.username}) changed user (id: ${request.userId}; username: ${request.userUsername}) item (id: ${request.storeItemId}; name: ${request.storeItemName}; cost: ${request.storeItemCost}; request id: ${request.recordId}) status from 'Pending' to 'Ready For Pickup'`;
-        const result = {
-          updatedRecord: request,
-          message: description
-        };
-
-        resultsArray.push(result);
-        // promises.push(ctrlPoints.removePointsFromEmployee(request.userId, request.userId, request.storeItemId, request.storeItemCost, description));
-      }
-
-      return {status: true, results: resultsArray, updatedByUser: updatedByUser}
+      return {status: true, updatedRecords: requests, updatedByUser: updatedByUser, newStatus: 'readyForPickup'}
 
     })
     .catch( err => {
@@ -556,7 +522,7 @@ const setStoreItemRequestsPickedUp = function (updatedByUser, requests) {
   })
     .then(() => {
       console.log(`${functionFullName}: Store item request updated successfully`);
-      return {status: true, updatedRecords: requests, updatedByUser: updatedByUser};
+      return {status: true, updatedRecords: requests, updatedByUser: updatedByUser, newStatus: 'pickedUp'};
     })
     .catch( err => {
       console.log(`${functionFullName}: Error updating store item request`);

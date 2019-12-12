@@ -103,7 +103,7 @@ export const appRoutes: Routes = [
       {
         path: 'confirm-item-purchase',
         component: ConfirmItemPurchaseComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
         data: {
           roles: ['admin', 'manager']
         }

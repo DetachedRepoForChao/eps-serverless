@@ -446,6 +446,10 @@ export class UserHasStoreItemService {
                 this.update(recordId, status, cancelDescription, actionAt, updatedByUser);
               }
 
+              // Notify user that items are ready for pickup
+
+
+
               observer.next(response.data);
               observer.complete();
             } else {
@@ -458,8 +462,8 @@ export class UserHasStoreItemService {
     });
   }
 
-/*  cancelStoreItemRequest(request: UserHasStoreItemModel, cancelDescription: string): Observable<any> {
-    const functionName = 'cancelStoreItemRequest';
+  sendReadyForPickupNotice(purchaseRequestManager: any, requestUser: any, storeItems: any ): Observable<any> {
+    const functionName = 'sendReadyForPickupNotice';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -471,32 +475,22 @@ export class UserHasStoreItemService {
           myInit.headers['Authorization'] = token;
 
           myInit['body'] = {
-            request: request,
-            cancelDescription: cancelDescription,
+            purchaseRequestManager: purchaseRequestManager,
+            requestUser: requestUser,
+            storeItems: storeItems
           };
 
-          API.post(this.apiName, this.apiPath + '/cancelStoreItemRequest', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
+          API.post(this.apiName, this.apiPath2 + '/sendReadyForPickupNotice', myInit).then(response => {
             console.log(response);
 
-            if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating record in entity store`);
-              const recordId = response.data.updatedRecord.recordId;
-              const status = response.data.updatedRecord.status;
-              const actionAt = response.data.updatedRecord.updatedAt;
-              this.update(recordId, status, cancelDescription, actionAt);
 
-              observer.next(response.data);
-              observer.complete();
-            } else {
-              console.log(`${functionFullName}: status did not return true`);
-              observer.next(false);
-              observer.complete();
-            }
+            observer.next();
+            observer.complete();
           });
         });
+
     });
-  }*/
+  }
 
   processRequests(requests: any[]): Observable<any> {
     const functionName = 'processRequests';
@@ -519,10 +513,13 @@ export class UserHasStoreItemService {
         }
       }
 
-      observables.push(
-        this.setStoreItemRequestsReadyForPickup(readyForPickupArray),
-        this.setStoreItemRequestsPickedUp(pickedUpArray),
-      );
+      if (readyForPickupArray.length > 0) {
+        observables.push(this.setStoreItemRequestsReadyForPickup(readyForPickupArray));
+      }
+
+      if (pickedUpArray.length > 0) {
+        observables.push(this.setStoreItemRequestsPickedUp(pickedUpArray));
+      }
 
       forkJoin(observables).subscribe((result) => {
         console.log('Observables result');

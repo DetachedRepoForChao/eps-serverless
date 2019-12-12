@@ -1,8 +1,8 @@
 {
   "Template": {
     "TemplateName": "AwardPointsTemplate",
-    "SubjectPart": "You were awarded points!",
-    "HtmlPart": "<h1>Hello {{name}},</h1><p>{{managerName}} awarded you {{points}} points for:</p><p>{{pointItemName}}</p><p>{{description}}</p>",
-    "TextPart": "Hello {{name}},\r\n{{managerName}} awarded you {{points}} points for:\r\n{{pointItemName}}\r\n{{description}}"
+    "SubjectPart": "You received Pineapple Points \uD83C\uDF4D!",
+    "HtmlPart": "<h1>Hello {{targetUserFirstName}},</h1><p>{{managerFullName}} awarded you {{points}} \uD83C\uDF4D for:</p><p>{{pointItemName}}</p><p>{{description}}</p><p>Log in to https://pineapplepoints.net to get rewards for being awesome!</p>",
+    "TextPart": "Hello {{targetUserFirstName}},\r\n{{managerFullName}} awarded you {{points}} \uD83C\uDF4D for:\r\n{{pointItemName}}\r\n{{description}}\r\nLog in to https://pineapplepoints.net to get rewards for being awesome!"
   }
 }

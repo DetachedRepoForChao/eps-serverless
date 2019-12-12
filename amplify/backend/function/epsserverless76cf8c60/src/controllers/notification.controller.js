@@ -13,18 +13,15 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
-  console.log(`${functionFullName}: targetUser:`);
-  console.log(targetUser);
-  console.log(`${functionFullName}: sourceUser:`);
-  console.log(sourceUser);
-  console.log(`${functionFullName}: pointItem:`);
-  console.log(pointItem);
+  console.log(`${functionFullName}: targetUser:`, targetUser);
+  console.log(`${functionFullName}: sourceUser:`, sourceUser);
+  console.log(`${functionFullName}: pointItem:`, pointItem);
 
   // Get target user details
   const sendTo = targetUser.email;
-  const targetUserName = targetUser.firstName;
+  const targetUserFirstName = targetUser.firstName;
   const targetUserPoints = targetUser.points;
-  const managerName = `${sourceUser.firstName} ${sourceUser.lastName}`;
+  const managerFullName = `${sourceUser.firstName} ${sourceUser.lastName}`;
   const pointItemName = pointItem.name;
   const points = pointItem.amount;
   let description = '';
@@ -42,7 +39,7 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
     },
     Template: 'AwardPointsTemplate',
     ConfigurationSetName: "Default",
-    TemplateData: `{\"name\":\"${targetUserName}\", \"managerName\":\"${managerName}\", \"points\": \"${points}\", \"pointItemName\": \"${pointItemName}\", \"description\": \"${description}\"}`,
+    TemplateData: `{\"targetUserFirstName\":\"${targetUserFirstName}\", \"managerFullName\":\"${managerFullName}\", \"points\": \"${points}\", \"pointItemName\": \"${pointItemName}\", \"description\": \"${description}\"}`,
     Source: sourceEmail, /* required */
 
   };
@@ -66,6 +63,107 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
 
 module.exports.sendAwardPointsEmail = sendAwardPointsEmail;
 
+const sendAwardPointsSMS = function (targetUser, sourceUser, pointItem) {
+  const functionName = 'sendAwardPointsSMS';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: targetUser:`, targetUser);
+  console.log(`${functionFullName}: sourceUser:`, sourceUser);
+  console.log(`${functionFullName}: pointItem:`, pointItem);
+
+  // Get target user details
+  const sendTo = targetUser.email;
+  const phone = targetUser.phone;
+  const targetUserFirstName = targetUser.firstName;
+  const targetUserPoints = targetUser.points;
+  const managerFullName = `${sourceUser.firstName} ${sourceUser.lastName}`;
+  const pointItemName = pointItem.name;
+  const points = pointItem.amount;
+  let description = '';
+  if (pointItem.description && pointItem.description.length > 0) {
+    description = `Manager's comment: ${pointItem.description}`
+  }
+
+
+// The recipient's phone number.  For best results, you should specify the
+// phone number in E.164 format.
+  var destinationNumber = phone;
+
+// The content of the SMS message.
+  var message = `You were awarded Pineapple Points 🍍 by ${managerFullName}! Log in to https://pineapplepoints.net ` +
+    `to get rewards for being awesome!`;
+
+// The Amazon Pinpoint project/application ID to use when you send this message.
+// Make sure that the SMS channel is enabled for the project or application
+// that you choose.
+  var applicationId = "49967c53c42141d8a27b7a335ab1945d";
+
+// The type of SMS message that you want to send. If you plan to send
+// time-sensitive content, specify TRANSACTIONAL. If you plan to send
+// marketing-related content, specify PROMOTIONAL.
+  var messageType = "TRANSACTIONAL";
+
+// The registered keyword associated with the originating short code.
+  var registeredKeyword = "keyword_644955040906";
+
+// The sender ID to use when sending the message. Support for sender ID
+// varies by country or region. For more information, see
+// https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-countries.html
+//   var senderId = "MySenderID";
+
+// Specify that you're using a shared credentials file, and optionally specify
+// the profile that you want to use.
+//   var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+//   AWS.config.credentials = credentials;
+
+// Specify the region.
+//   AWS.config.update({region:aws_region});
+
+//Create a new Pinpoint object.
+  var pinpoint = new AWS.Pinpoint();
+
+// Specify the parameters to pass to the API.
+  var params = {
+    ApplicationId: applicationId,
+    MessageRequest: {
+      Addresses: {
+        [destinationNumber]: {
+          ChannelType: 'SMS'
+        }
+      },
+      MessageConfiguration: {
+        SMSMessage: {
+          Body: message,
+          Keyword: registeredKeyword,
+          MessageType: messageType,
+          OriginationNumber: originationNumber,
+          // SenderId: senderId,
+        }
+      }
+    }
+  };
+
+  //Try to send the message.
+  const sendPromise = pinpoint.sendMessages(params).promise();
+
+  return sendPromise.then(
+    function(data) {
+      console.log("Message sent! "
+        + data['MessageResponse']['Result'][destinationNumber]['StatusMessage']);
+      return ({status: true, data: data});
+    })
+    .catch(
+      function(err) {
+        console.log(`Error sending SMS`);
+        console.error(err, err.stack);
+        return ({status: false, message: err});
+      });
+};
+
+module.exports.sendAwardPointsSMS = sendAwardPointsSMS;
+
+
 
 const sendRequestStoreItemEmail = function (purchaseRequestManager, requestUser, storeItem) {
   const functionName = 'sendRequestStoreItemEmail';
@@ -79,14 +177,14 @@ const sendRequestStoreItemEmail = function (purchaseRequestManager, requestUser,
   // Get target user details
   const sendTo = purchaseRequestManager.email;
   const requestUserFullName = `${requestUser.firstName} ${requestUser.lastName}`;
-  const requestUserFirstName = `${requestUser.firstName}`;
+  // const requestUserFirstName = `${requestUser.firstName}`;
   const purchaseRequestManagerFirstName = `${purchaseRequestManager.firstName}`;
-  const purchaseRequestManagerLastName = `${purchaseRequestManager.lastName}`;
-  const emailConfirmed = purchaseRequestManager.emailConfirmed;
-  const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
+  // const purchaseRequestManagerLastName = `${purchaseRequestManager.lastName}`;
+  // const emailConfirmed = purchaseRequestManager.emailConfirmed;
+  // const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
   const itemName = storeItem.name;
-  const itemDescription = storeItem.description;
-  const cost = storeItem.cost;
+  // const itemDescription = storeItem.description;
+  // const cost = storeItem.cost;
 
   // Create sendEmail params
   const params = {
@@ -98,7 +196,7 @@ const sendRequestStoreItemEmail = function (purchaseRequestManager, requestUser,
     },
     Template: 'RequestItemPurchase',
     ConfigurationSetName: "Default",
-    TemplateData: `{\"requestUserFullName\":\"${requestUserFullName}\", \"managerUserFirstName\":\"${purchaseRequestManagerFirstName}\", \"requestUserFirstName\":\"${requestUserFirstName}\", \"itemName\": \"${itemName}\", \"itemDescription\": \"${itemDescription}\", \"cost\": \"${cost}\"}`,
+    TemplateData: `{\"requestUserFullName\":\"${requestUserFullName}\", \"managerUserFirstName\":\"${purchaseRequestManagerFirstName}\", \"itemName\": \"${itemName}\"}`,
     Source: sourceEmail, /* required */
 
   };
@@ -133,18 +231,18 @@ const sendRequestStoreItemSMS = function (purchaseRequestManager, requestUser, s
   console.log(`${functionFullName}: storeItem:`, storeItem);
 
   // Get target user details
-  const sendTo = purchaseRequestManager.email;
+  // const sendTo = purchaseRequestManager.email;
   const requestUserFullName = `${requestUser.firstName} ${requestUser.lastName}`;
-  const requestUserFirstName = `${requestUser.firstName}`;
-  const purchaseRequestManagerFirstName = `${purchaseRequestManager.firstName}`;
-  const purchaseRequestManagerLastName = `${purchaseRequestManager.lastName}`;
-  const emailConfirmed = purchaseRequestManager.emailConfirmed;
-  const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
-  const email = purchaseRequestManager.email;
+  // const requestUserFirstName = `${requestUser.firstName}`;
+  // const purchaseRequestManagerFirstName = `${purchaseRequestManager.firstName}`;
+  // const purchaseRequestManagerLastName = `${purchaseRequestManager.lastName}`;
+  // const emailConfirmed = purchaseRequestManager.emailConfirmed;
+  // const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
+  // const email = purchaseRequestManager.email;
   const phone = purchaseRequestManager.phone;
-  const itemName = storeItem.name;
-  const itemDescription = storeItem.description;
-  const cost = storeItem.cost;
+  // const itemName = storeItem.name;
+  // const itemDescription = storeItem.description;
+  // const cost = storeItem.cost;
 
 
 // The recipient's phone number.  For best results, you should specify the
@@ -152,8 +250,9 @@ const sendRequestStoreItemSMS = function (purchaseRequestManager, requestUser, s
   var destinationNumber = phone;
 
 // The content of the SMS message.
-  var message = "A new purchase request has been submitted. " +
-    "You can check on new requests by logging into https://pineapplepoints.net.";
+  var message = `A new Pineapple Points 🍍 purchase request has been submitted by ${requestUserFullName}. ` +
+    "You can check on new requests by going to https://pineapplepoints.net/user/confirm-item-purchase " +
+    "and logging in with your admin account.";
 
 // The Amazon Pinpoint project/application ID to use when you send this message.
 // Make sure that the SMS channel is enabled for the project or application
@@ -224,43 +323,57 @@ const sendRequestStoreItemSMS = function (purchaseRequestManager, requestUser, s
 
 module.exports.sendRequestStoreItemSMS = sendRequestStoreItemSMS;
 
-const sendFulfillStoreItemEmail = function (managerUser, requestUser, storeItem) {
-  const functionName = 'sendFulfillStoreItemEmail';
+const sendReadyForPickupEmail = function (purchaseRequestManager, requestUser, storeItems) {
+  const functionName = 'sendReadyForPickupEmail';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
-  console.log(`${functionFullName}: managerUser:`);
-  console.log(managerUser);
-  console.log(`${functionFullName}: requestUser:`);
-  console.log(requestUser);
-  console.log(`${functionFullName}: storeItem:`);
-  console.log(storeItem);
+  console.log(`${functionFullName}: managerUser:`, purchaseRequestManager);
+  console.log(`${functionFullName}: requestUser:`, requestUser);
+  console.log(`${functionFullName}: storeItems:`, storeItems);
 
   // Get target user details
   const sendTo = requestUser.email;
-  const requestUserFullName = `${requestUser.firstName} ${requestUser.lastName}`;
+  // const requestUserFullName = `${requestUser.firstName} ${requestUser.lastName}`;
   const requestUserFirstName = `${requestUser.firstName}`;
-  const managerUserFirstName = `${managerUser.firstName}`;
-  const managerUserFullName = `${managerUser.firstName} ${managerUser.lastName}`;
-  const itemName = storeItem.name;
-  const itemDescription = storeItem.description;
-  const cost = storeItem.cost;
-  const newPointTotal = requestUser.points;
+  // const managerUserFirstName = `${managerUser.firstName}`;
+  const managerUserFullName = `${purchaseRequestManager.firstName} ${purchaseRequestManager.lastName}`;
 
-  // Create sendEmail params
-  const params = {
-    Destination: { /* required */
-      ToAddresses: [
-        sendTo,
-        /* more items */
-      ]
-    },
-    Template: 'FulfillItemPurchase',
-    ConfigurationSetName: "Default",
-    TemplateData: `{\"managerUserFullName\":\"${managerUserFullName}\", \"requestUserFirstName\":\"${requestUserFirstName}\", \"itemName\": \"${itemName}\", \"cost\": \"${cost}\", \"newPointTotal\": \"${newPointTotal}\"}`,
-    Source: sourceEmail, /* required */
+  let params;
 
-  };
+  if (storeItems.length > 1) {
+    // Create sendEmail params
+    params = {
+      Destination: { /* required */
+        ToAddresses: [
+          sendTo,
+          /* more items */
+        ]
+      },
+      Template: 'ReadyForPickupMultiple',
+      ConfigurationSetName: "Default",
+      TemplateData: `{\"managerUserFullName\":\"${managerUserFullName}\", \"requestUserFirstName\":\"${requestUserFirstName}\"}`,
+      Source: sourceEmail, /* required */
+
+    };
+  } else {
+    const itemName = storeItems[0].name;
+
+    // Create sendEmail params
+    params = {
+      Destination: { /* required */
+        ToAddresses: [
+          sendTo,
+          /* more items */
+        ]
+      },
+      Template: 'ReadyForPickup',
+      ConfigurationSetName: "Default",
+      TemplateData: `{\"managerUserFullName\":\"${managerUserFullName}\", \"requestUserFirstName\":\"${requestUserFirstName}\", \"itemName\": \"${itemName}\"}`,
+      Source: sourceEmail, /* required */
+
+    };
+  }
 
   // Create the promise and SES service object
   const sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendTemplatedEmail(params).promise();
@@ -279,4 +392,119 @@ const sendFulfillStoreItemEmail = function (managerUser, requestUser, storeItem)
     });
 };
 
-module.exports.sendFulfillStoreItemEmail = sendFulfillStoreItemEmail;
+module.exports.sendReadyForPickupEmail = sendReadyForPickupEmail;
+
+
+const sendReadyForPickupSMS = function (purchaseRequestManager, requestUser, storeItems) {
+  const functionName = 'sendReadyForPickupSMS';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: purchaseRequestManager:`, purchaseRequestManager);
+  console.log(`${functionFullName}: requestUser:`, requestUser);
+  console.log(`${functionFullName}: storeItems:`, storeItems);
+
+  // Get target user details
+  // const sendTo = purchaseRequestManager.email;
+  // const requestUserFullName = `${requestUser.firstName} ${requestUser.lastName}`;
+  // const requestUserFirstName = `${requestUser.firstName}`;
+  const purchaseRequestManagerFirstName = `${purchaseRequestManager.firstName}`;
+  const purchaseRequestManagerLastName = `${purchaseRequestManager.lastName}`;
+  // const emailConfirmed = purchaseRequestManager.emailConfirmed;
+  // const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
+  // const email = purchaseRequestManager.email;
+  const phone = requestUser.phone;
+
+  // const itemDescription = storeItem.description;
+  // const cost = storeItem.cost;
+
+
+// The recipient's phone number.  For best results, you should specify the
+// phone number in E.164 format.
+  var destinationNumber = phone;
+
+  // The content of the SMS message.
+  let message;
+
+  if (storeItems.length > 1) {
+    message = `Your Pineapple Points 🍍 purchases have been marked as Ready for Pickup ` +
+      `by ${purchaseRequestManagerFirstName} ${purchaseRequestManagerLastName}! Log in to ` +
+      `https://pineapplepoints.net to check the status of your purchase requests.`;
+  } else {
+    const itemName = storeItems[0].name;
+    message = `Your Pineapple Points 🍍 purchase of ${itemName} has been marked as Ready for Pickup ` +
+      `by ${purchaseRequestManagerFirstName} ${purchaseRequestManagerLastName}! Log in to ` +
+      `https://pineapplepoints.net to check the status of your purchase requests.`;
+  }
+
+
+
+
+// The Amazon Pinpoint project/application ID to use when you send this message.
+// Make sure that the SMS channel is enabled for the project or application
+// that you choose.
+  var applicationId = "49967c53c42141d8a27b7a335ab1945d";
+
+// The type of SMS message that you want to send. If you plan to send
+// time-sensitive content, specify TRANSACTIONAL. If you plan to send
+// marketing-related content, specify PROMOTIONAL.
+  var messageType = "TRANSACTIONAL";
+
+// The registered keyword associated with the originating short code.
+  var registeredKeyword = "keyword_644955040906";
+
+// The sender ID to use when sending the message. Support for sender ID
+// varies by country or region. For more information, see
+// https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-countries.html
+//   var senderId = "MySenderID";
+
+// Specify that you're using a shared credentials file, and optionally specify
+// the profile that you want to use.
+//   var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+//   AWS.config.credentials = credentials;
+
+// Specify the region.
+//   AWS.config.update({region:aws_region});
+
+//Create a new Pinpoint object.
+  var pinpoint = new AWS.Pinpoint();
+
+// Specify the parameters to pass to the API.
+  var params = {
+    ApplicationId: applicationId,
+    MessageRequest: {
+      Addresses: {
+        [destinationNumber]: {
+          ChannelType: 'SMS'
+        }
+      },
+      MessageConfiguration: {
+        SMSMessage: {
+          Body: message,
+          Keyword: registeredKeyword,
+          MessageType: messageType,
+          OriginationNumber: originationNumber,
+          // SenderId: senderId,
+        }
+      }
+    }
+  };
+
+  //Try to send the message.
+  const sendPromise = pinpoint.sendMessages(params).promise();
+
+  return sendPromise.then(
+    function(data) {
+      console.log("Message sent! "
+        + data['MessageResponse']['Result'][destinationNumber]['StatusMessage']);
+      return ({status: true, data: data});
+    })
+    .catch(
+      function(err) {
+        console.log(`Error sending SMS`);
+        console.error(err, err.stack);
+        return ({status: false, message: err});
+      });
+};
+
+module.exports.sendReadyForPickupSMS = sendReadyForPickupSMS;
