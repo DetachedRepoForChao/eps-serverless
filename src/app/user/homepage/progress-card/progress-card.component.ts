@@ -70,7 +70,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
   };
 
   currentUser$;
-  currentUser;
+  currentUser: EntityCurrentUserModel;
 
   constructor(private spinner: NgxSpinnerService,
               public achievementService: AchievementService,

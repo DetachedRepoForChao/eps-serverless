@@ -185,8 +185,8 @@ export class StoreItemService {
     return cacheable(this.storeItemStore, request$);
   }
 
-  sendStoreItemPurchaseRequestEmail(managerUser: EntityUserModel, requestUser: EntityCurrentUserModel, storeItem: StoreItemModel): Observable<any> {
-    const functionName = 'sendStoreItemPurchaseRequest';
+  sendStoreItemPurchaseRequestNotice(purchaseRequestManagers: EntityUserModel[], requestUser: EntityCurrentUserModel, storeItem: StoreItemModel): Observable<any> {
+    const functionName = 'sendStoreItemPurchaseRequestNotice';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
@@ -197,13 +197,28 @@ export class StoreItemService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
 
-          myInit['body'] = {
-            managerUser: managerUser,
-            requestUser: requestUser,
-            storeItem: storeItem
+          const requestor = {
+            userId: requestUser.userId,
+            username: requestUser.username,
+            firstName: requestUser.firstName,
+            lastName: requestUser.lastName,
+            email: requestUser.email,
+            phone: requestUser.phone,
           };
 
-          API.post(this.apiName, this.apiPath2 + '/sendRequestStoreItemEmail', myInit).then(data => {
+          const item = {
+            itemId: storeItem.itemId,
+            name: storeItem.name,
+            description: storeItem.description,
+          };
+
+          myInit['body'] = {
+            purchaseRequestManagers: purchaseRequestManagers,
+            requestUser: requestor,
+            storeItem: item
+          };
+
+          API.post(this.apiName, this.apiPath2 + '/sendRequestStoreItemNotice', myInit).then(data => {
             console.log(`${functionFullName}: data retrieved from API`);
             console.log(data);
             observer.next(data.data);

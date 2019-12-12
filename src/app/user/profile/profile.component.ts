@@ -1,5 +1,5 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {forkJoin, Observable} from 'rxjs';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {forkJoin, Observable, Subject} from 'rxjs';
 import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 import {HttpClient} from '@angular/common/http';
 import {ImageService} from '../../shared/image.service';
@@ -31,6 +31,7 @@ import {environment} from '../../../environments/environment';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {switchMap} from 'rxjs-compat/operator/switchMap';
+import {take, takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -39,12 +40,19 @@ declare var $: any;
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   componentName = 'profile.component';
   isImageLoading: boolean;
+  private currentUserLoading$ = new Subject();
+  private usersLoading$ = new Subject();
+  private unsubscribe$ = new Subject();
   leaderboardUsers$: Observable<EntityUserModel[]>;
   otherUser: false;
   user$: Observable<any> = null;
+  users: EntityUserModel[];
+  leaderboardUsers: EntityUserModel[];
+  currentUser: EntityCurrentUserModel;
+  profileUser: EntityUserModel;
   otherUserId: null;
   pendingBalance$;
   currentUser$: Observable<EntityCurrentUserModel[]>;
@@ -88,7 +96,22 @@ export class ProfileComponent implements OnInit {
     console.log('route');
     console.log(this.route);
 
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
+
+/*    this.route.paramMap.subscribe((params: ParamMap) => {
       console.log(params);
       this.user$ = this.userQuery.selectAll({
           filterBy: e => e.username === params.get('username')
@@ -97,8 +120,35 @@ export class ProfileComponent implements OnInit {
       this.user$.subscribe(user => {
         console.log(user);
       });
-    });
+    });*/
 
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.usersLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.users = users;
+              this.route.paramMap
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((params: ParamMap) => {
+                  this.profileUser = this.users.find(x => x.username === params.get('username'));
+              });
+            });
+
+          this.userQuery.selectAll({
+            filterBy: e => e.securityRole.Id === 1,
+          })
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.leaderboardUsers = users;
+            });
+
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
 
 
 /*    const observables: Observable<any>[] = [];
@@ -115,13 +165,13 @@ export class ProfileComponent implements OnInit {
 
       });*/
 
-    this.leaderboardUsers$ = this.userQuery.selectAll({
+  /*  this.leaderboardUsers$ = this.userQuery.selectAll({
       filterBy: userEntity => userEntity.securityRole.Id === 1,
     });
-
-    this.currentUser$ = this.currentUserQuery.selectAll({
+*/
+/*    this.currentUser$ = this.currentUserQuery.selectAll({
       limitTo: 1
-    });
+    });*/
 
 /*    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
       console.log('balance: ' + balance);
@@ -157,7 +207,12 @@ export class ProfileComponent implements OnInit {
     this.option = null;
   }
 
-
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+  }
 
 }
 

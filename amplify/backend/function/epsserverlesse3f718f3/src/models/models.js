@@ -1446,6 +1446,18 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: true,
       field: 'is_active'
     },
+    phoneNotifications: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'phone_notifications'
+    },
+    emailNotifications: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+      field: 'email_notifications'
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

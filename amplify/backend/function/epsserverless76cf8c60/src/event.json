@@ -1,11 +1,11 @@
 {
   "resource": "/things",
-  "path": "/things/getCognitoUser",
+  "path": "/things/sendRequestStoreItemNotice",
   "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYTExYWRhYi1iODIzLTQ0NWUtYmMxOS1kMGE1YWRjNWIwNTIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImJpcnRoZGF0ZSI6IjAzXC8wN1wvMTk4NSIsImN1c3RvbTpkZXBhcnRtZW50IjoiSG91c2VrZWVwaW5nIiwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfdk9nNEhTWmM4IiwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjp0cnVlLCJjb2duaXRvOnVzZXJuYW1lIjoibWF4IiwiY3VzdG9tOnNlY3VyaXR5X3JvbGUiOiJlbXBsb3llZSIsImdpdmVuX25hbWUiOiJNYXgiLCJwaWN0dXJlIjoicHJvdGVjdGVkXC91cy1lYXN0LTE6N2IxYmYxYjMtOWMxNS00YjAzLWJiOWYtNzRkY2RkNzg5YTg0XC9hdmF0YXJfZ3BobXIzeTNnMGprMWZpZzh5eC5wbmciLCJjdXN0b206ZGVwYXJ0bWVudF9pZCI6IjMiLCJhdWQiOiI3dmdjNWdkN3EyMGsxcDRtOGFyOWJjcWQ4bSIsImV2ZW50X2lkIjoiMzdmNDI5ZjgtMzlmOS00NzVkLTlmNWUtMmJiZjE2OTI4NzMyIiwiY3VzdG9tOnNlY3VyaXR5X3JvbGVfaWQiOiIxIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1NzEyODE1OTksIm5hbWUiOiJNYXggQmFkbyIsInBob25lX251bWJlciI6IisxNzMyODU5NzgzOSIsImV4cCI6MTU3MTI4NTIwMCwiaWF0IjoxNTcxMjgxNjAwLCJmYW1pbHlfbmFtZSI6IkJhZG8iLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.Gp8JCfbz5WQwOGdyMTlj5yt7DsKbRIg_RzJyAgS5CsACWnF79ExO9jXTT0YkJkh-HOlCA6DZn1dXdtKEsnUMfgY0VxJMDA6UUSNjAG2TPO3ETYZ0tyBv1ldsqSpqSXV9uyTdPLvO0jXrUV-Nq0uRtTInWdw654heHVf8R9zkdOTlC_GA2dOkVKcFGpyuCotnLgBWILKXVoz94xP1Qx0qnuQHhHhZFghbsHuumDmRXIE0q7s_-g9u7DVvSy04raLXhmKg7KrkpKUNK78SGLESDfb_KWirkj5LRK7Siptzj-8AtqPl2mggF12JsvWaybvOW6X-tEkdOrn-pM6zTz-Dmw"
+    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYTExYWRhYi1iODIzLTQ0NWUtYmMxOS1kMGE1YWRjNWIwNTIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYmlydGhkYXRlIjoiMTk4NS0wMy0wOCIsImdlbmRlciI6IlN1cGVyIFNheWFuIiwiY3VzdG9tOmRlcGFydG1lbnQiOiJIb3VzZWtlZXBpbmciLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV92T2c0SFNaYzgiLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOnRydWUsImNvZ25pdG86dXNlcm5hbWUiOiJtYXgiLCJjdXN0b206c2VjdXJpdHlfcm9sZSI6ImVtcGxveWVlIiwiZ2l2ZW5fbmFtZSI6Ik1heCIsInBpY3R1cmUiOiJwcm90ZWN0ZWRcL3VzLWVhc3QtMTo3YjFiZjFiMy05YzE1LTRiMDMtYmI5Zi03NGRjZGQ3ODlhODRcL2F2YXRhcl93NDI0cTk3enA4a2s0MWkwaDA3LnBuZyIsImN1c3RvbTpkZXBhcnRtZW50X2lkIjoiMyIsImF1ZCI6Ijd2Z2M1Z2Q3cTIwazFwNG04YXI5YmNxZDhtIiwiY3VzdG9tOnNlY3VyaXR5X3JvbGVfaWQiOiIxIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1NzYxMTY1MzAsIm5hbWUiOiJNYXhpbWlsaWFuIEJhZG8iLCJwaG9uZV9udW1iZXIiOiIrMTczMjg1OTc4MzkiLCJleHAiOjE1NzYxMjkzMjMsImlhdCI6MTU3NjEyNTcyMywiZmFtaWx5X25hbWUiOiJCYWRvIiwiZW1haWwiOiJtYXguYmFkb0BnbWFpbC5jb20ifQ.Q4QUgw9MVOcbSKzbb8monm8cZtyhOxY52523tIoUHOvMexCP-a7NofHARFGnCjYlUyQl-Daeaaxhet2ocwWK8lJV_FuSuu2Q7saQ9QYC_xVbtDAlW4g9Sk_4KKKZjEKZPiHip3EG9TE4EA21AwlhszpY5gozDQgRv4iwsh82eYCjIG-psEgENYX13gdyzQP4lzgeBZrjruGz9_yd8R5NARRfyx-rYiHPjDgGYiFaXljxrmz3PTnEM6I-1CPnCBh7GM2cXQ-rkcQ_dCb_c1stshx1Ouc5-mwxf2VFaJkih_AglWHVqawpqKOpSNAJ834vs0_CpochkAJ8oTA_PlKGZw"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -41,6 +41,6 @@
     "extendedRequestId": "dNOeFFpRoAMFUmw=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"username\": \"test\"}",
+  "body": "{\"purchaseRequestManagers\":[{\"isActive\":true,\"userId\":71,\"username\":\"max-admin\",\"firstName\":\"Max\",\"lastName\":\"Bado\",\"email\":\"max.bado@gmail.com\",\"phone\":\"+17328597839\",\"emailConfirmed\":false,\"phoneConfirmed\":true}],\"requestUser\":{\"userId\":78,\"username\":\"max\",\"firstName\":\"Max\",\"lastName\":\"Bado\",\"email\":\"max.bado@gmail.com\",\"phone\":\"7328597839\"},\"storeItem\":{\"itemId\":1,\"name\":\"Rook Coffee\",\"description\":\"A $10 Rook Coffee gift card\"}}",
   "isBase64Encoded": false
 }

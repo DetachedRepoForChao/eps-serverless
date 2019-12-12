@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import awsconfig from '../../../aws-exports';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
-import {Observable, from, Subscription, Subject} from 'rxjs';
+import {Observable, from, Subscription, Subject, forkJoin, throwError} from 'rxjs';
 import {StoreItemStore} from '../../entity-store/store-item/state/store-item.store';
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
@@ -17,8 +17,9 @@ import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/stat
 import {Router } from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
-import {take, takeUntil} from 'rxjs/operators';
+import {catchError, take, takeUntil} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
+import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 
 
 @Component({
@@ -32,10 +33,12 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   private currentUserLoading$ = new Subject();
   private storeItemsLoading$ = new Subject();
+  private usersLoading$ = new Subject();
   dialogResult = " ";
   version = VERSION;
 
   currentUser: EntityCurrentUserModel;
+  users: EntityUserModel[];
   storeItems: StoreItemModel[] = [];
   purchaseRequestManagers = [];
   numRows: number;
@@ -92,20 +95,106 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
         }
       });
 
+    // Retrieve Purchase Request Managers and merge their data with their user details
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.usersLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.users = users;
+
+/*              if (this.purchaseRequestManagers.length === 0) {
+                this.userService.getPurchaseApprovers()
+                  .pipe(take(1))
+                  .subscribe(
+                    (purchaseRequestManagers) => {
+                      console.log('Purchase Request Managers', purchaseRequestManagers);
+                      const purchaseRequestManagersArray = [];
+                      for (const purchaseRequestManager of purchaseRequestManagers) {
+                        const purchaseRequestManagerObject = {
+
+                        };
+                      }
+                      this.purchaseRequestManagers = purchaseRequestManagers;
+                    },
+                    (error) => {
+                      console.log('Error retrieving purchase request managers', error);
+
+                    },
+                    () => {});
+              }*/
+            });
+
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
+
     if (this.purchaseRequestManagers.length === 0) {
       this.userService.getPurchaseApprovers()
         .pipe(take(1))
         .subscribe(
           (purchaseRequestManagers) => {
-          console.log('Purchase Request Managers', purchaseRequestManagers);
-          this.purchaseRequestManagers = purchaseRequestManagers;
-        },
+            console.log('Purchase Request Managers', purchaseRequestManagers);
+            const observables = [];
+            for (let i = 0; i < purchaseRequestManagers.length; i++) {
+              observables.push(this.userService.getCognitoUser(purchaseRequestManagers[i].user.username));
+            }
+
+            forkJoin(observables)
+              .pipe(
+                take(1),
+                catchError(err => {
+                  console.log('Error...', err);
+                  return throwError(err);
+                })
+              )
+              .subscribe(
+                (cognitoUsers: any) => {
+                  console.log(cognitoUsers);
+
+                  for (let i = 0; i < cognitoUsers.length; i++) {
+                    console.log(cognitoUsers[i]);
+                    const emailConfirmed = (cognitoUsers[i].UserAttributes.find(x => x.Name === 'email_verified').Value === 'true');
+                    const phoneConfirmed = (cognitoUsers[i].UserAttributes.find(x => x.Name === 'phone_number_verified').Value === 'true');
+                    const purchaseRequestManagerObject = {
+                      isActive: purchaseRequestManagers[i].isActive,
+                      userId: purchaseRequestManagers[i].userId,
+                      username: purchaseRequestManagers[i].user.username,
+                      firstName: purchaseRequestManagers[i].user.firstName,
+                      lastName: purchaseRequestManagers[i].user.lastName,
+                      email: purchaseRequestManagers[i].user.email,
+                      phone: purchaseRequestManagers[i].user.phone,
+                      emailConfirmed: emailConfirmed,
+                      phoneConfirmed: phoneConfirmed,
+                    };
+
+                    this.purchaseRequestManagers.push(purchaseRequestManagerObject);
+                  }
+
+                  console.log(this.purchaseRequestManagers);
+
+                },
+                (err) => {
+                  console.log(err);
+                },
+                () => {
+                  console.log('Completed.');
+                }
+              );
+
+            // this.purchaseRequestManagers = purchaseRequestManagers;
+          },
           (error) => {
             console.log('Error retrieving purchase request managers', error);
 
           },
           () => {});
     }
+
+
 
 /*    this.entityCurrentUserService.cacheCurrentUser().subscribe();
     this.storeItemService.cacheStoreItems().subscribe();
@@ -194,6 +283,7 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
     const requestUser = currentUser; // Retrieve current user info
+    console.log(requestUser);
     // const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
     console.log(storeItem);
     this.userHasStoreItemService.newUserHasStoreItemRecord(storeItem.itemId)
@@ -203,14 +293,14 @@ export class PointsStoreComponent implements OnInit, OnDestroy {
         console.log(result);
         if (result.status === true) {
           // Send the manager an email
-          console.log(`${functionFullName}: Trying to send an email to user's manager:`);
+          console.log(`${functionFullName}: Trying to the send email to designated Purchase Request Managers:`);
           // console.log(managerUser);
-/*          this.storeItemService.sendStoreItemPurchaseRequestEmail(managerUser, requestUser, storeItem)
+          this.storeItemService.sendStoreItemPurchaseRequestNotice(purchaseRequestManagers, requestUser, storeItem)
             .pipe(take(1))
             .subscribe(emailResult => {
               console.log(`${functionFullName}: email result:`);
               console.log(emailResult);
-            });*/
+            });
         } else {
           console.log(`${functionFullName}: Something went wrong...`);
         }

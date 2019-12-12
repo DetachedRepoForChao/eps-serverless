@@ -235,7 +235,11 @@ export class UserHasStoreItemService {
                 storeItemDescription, storeItemCost, status, cancelDescription, cancelledAt, readyForPickupAt, pickedUpAt, createdAt,
                 updatedAt});
 
+              // Add new record to local store
               this.userHasStoreItemStore.add(userHasStoreItemModel);
+
+              // Update current user's points with new amount within the local store
+              this.currentUserService.updatePoints(response.data.newPointTotal);
 
               observer.next(response.data);
               observer.complete();

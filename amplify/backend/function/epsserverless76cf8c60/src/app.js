@@ -60,24 +60,37 @@ app.post('/things/sendAwardPointsEmail' , function (req, res) {
 });
 
 
-app.post('/things/sendRequestStoreItemEmail' , function (req, res) {
-  console.log('starting post sendRequestStoreItemEmail');
+app.post('/things/sendRequestStoreItemNotice' , function (req, res) {
+  console.log('starting post sendRequestStoreItemNotice');
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-      const managerUser = req.body.managerUser;
+      const purchaseRequestManagers = req.body.purchaseRequestManagers;
       const requestUser = req.body.requestUser;
       const storeItem = req.body.storeItem;
-      // const username = tokenResult.claims['cognito:username'];
+      console.log(purchaseRequestManagers);
+      const promises = [];
+      // Send notice to each manager according to their preference
+      for (const purchaseRequestManager of purchaseRequestManagers) {
+        const emailConfirmed = purchaseRequestManager.emailConfirmed;
+        const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
 
-      ctrlNotifications.sendRequestStoreItemEmail(managerUser, requestUser, storeItem)
-        .then(data => {
-          res.json({ status: 'post call succeed!', data: data });
+        if (emailConfirmed) {
+          promises.push(ctrlNotifications.sendRequestStoreItemEmail(purchaseRequestManager, requestUser, storeItem));
+        }
+
+        if (phoneConfirmed) {
+          promises.push(ctrlNotifications.sendRequestStoreItemSMS(purchaseRequestManager, requestUser, storeItem));
+        }
+      }
+
+      Promise.all(promises)
+        .then(results => {
+          res.json({ status: 'post call succeed!', results: results });
         })
         .catch(err => {
           res.json({ status: 'post call failed!', error: err });
         });
-
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }
@@ -110,29 +123,74 @@ app.post('/things/sendFulfillStoreItemEmail' , function (req, res) {
 });
 
 
-app.get('/things/getCognitoUsers', function(req, res) {
-  var params = {
-    UserPoolId: 'us-east-1_vOg4HSZc8'
-  };
 
-  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-  var cognitoidentity = new AWS.CognitoIdentity();
+app.post('/things/getCognitoUsers', function(req, res) {
+  const usernames = req.body.usernames;
+  // console.log(req.body);
+  // console.log(username);
 
-  cognitoidentityserviceprovider.listUsers(params, (err, data) => {
-    if (err) {
-      console.log(err);
-      // reject(err)
-      res.json({success: 'post call failed!', data: err})
-    }
-    else {
-      console.log("Users", data);
-      data.Users.forEach(user => {
-        console.log(user.Attributes);
-      });
-      // resolve(data)
-      res.json({success: 'post call succeed!', data: data})
-    }
-  })
+  const promiseArray = [];
+  const resultArray = [];
+
+
+  for (const username of usernames) {
+    const resultObject = {
+      username: username,
+      data: null
+    };
+
+    const params = {
+      UserPoolId: userPoolId,
+      Username: username
+    };
+
+    const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+
+    promiseArray.push(
+      cognitoidentityserviceprovider.adminGetUser(params, (err, user) => {
+        if (err) {
+          console.log(err);
+          // reject(err)
+          const data = {
+            status: false,
+            error: err
+          };
+
+          resultObject.data = data;
+
+          // res.json({success: 'post call failed!', data: data})
+        } else {
+          // console.log("User", user);
+          /*      data.Users.forEach(user => {
+                  console.log(user.Attributes);
+                });*/
+          // resolve(data)
+          const data = {
+            status: true,
+            user: user
+          };
+
+          resultObject.data = data;
+
+          // res.json({success: 'post call succeed!', data: data})
+        }
+
+        resultArray.push(resultObject);
+        console.log('test123');
+        // return resultObject;
+      })
+    );
+
+  }
+
+  Promise.all(promiseArray)
+    .then(results => {
+      console.log('test');
+      // console.log('promise results', results);
+      res.json({success: 'post call succeed!', results: resultArray});
+    });
+
+
 
   // res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });

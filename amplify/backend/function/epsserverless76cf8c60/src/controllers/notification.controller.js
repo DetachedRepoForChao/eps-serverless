@@ -5,7 +5,8 @@ const componentName = 'notification.controller';
 // Set the region
 AWS.config.update({region: 'us-east-1'});
 
-const sourceEmail = 'eps.hawkware@gmail.com';
+const sourceEmail = 'admin@pineapplepoints.net';
+const originationNumber = "+12014310746";
 
 const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
   const functionName = 'sendAwardPointsEmail';
@@ -66,23 +67,23 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
 module.exports.sendAwardPointsEmail = sendAwardPointsEmail;
 
 
-const sendRequestStoreItemEmail = function (managerUser, requestUser, storeItem) {
+const sendRequestStoreItemEmail = function (purchaseRequestManager, requestUser, storeItem) {
   const functionName = 'sendRequestStoreItemEmail';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
 
-  console.log(`${functionFullName}: managerUser:`);
-  console.log(managerUser);
-  console.log(`${functionFullName}: requestUser:`);
-  console.log(requestUser);
-  console.log(`${functionFullName}: storeItem:`);
-  console.log(storeItem);
+  console.log(`${functionFullName}: purchaseRequestManager:`, purchaseRequestManager);
+  console.log(`${functionFullName}: requestUser:`, requestUser);
+  console.log(`${functionFullName}: storeItem:`, storeItem);
 
   // Get target user details
-  const sendTo = managerUser.email;
+  const sendTo = purchaseRequestManager.email;
   const requestUserFullName = `${requestUser.firstName} ${requestUser.lastName}`;
   const requestUserFirstName = `${requestUser.firstName}`;
-  const managerUserFirstName = `${managerUser.firstName}`;
+  const purchaseRequestManagerFirstName = `${purchaseRequestManager.firstName}`;
+  const purchaseRequestManagerLastName = `${purchaseRequestManager.lastName}`;
+  const emailConfirmed = purchaseRequestManager.emailConfirmed;
+  const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
   const itemName = storeItem.name;
   const itemDescription = storeItem.description;
   const cost = storeItem.cost;
@@ -121,6 +122,107 @@ const sendRequestStoreItemEmail = function (managerUser, requestUser, storeItem)
 
 module.exports.sendRequestStoreItemEmail = sendRequestStoreItemEmail;
 
+
+const sendRequestStoreItemSMS = function (purchaseRequestManager, requestUser, storeItem) {
+  const functionName = 'sendRequestStoreItemSMS';
+  const functionFullName = `${componentName} ${functionName}`;
+  console.log(`Start ${functionFullName}`);
+
+  console.log(`${functionFullName}: purchaseRequestManager:`, purchaseRequestManager);
+  console.log(`${functionFullName}: requestUser:`, requestUser);
+  console.log(`${functionFullName}: storeItem:`, storeItem);
+
+  // Get target user details
+  const sendTo = purchaseRequestManager.email;
+  const requestUserFullName = `${requestUser.firstName} ${requestUser.lastName}`;
+  const requestUserFirstName = `${requestUser.firstName}`;
+  const purchaseRequestManagerFirstName = `${purchaseRequestManager.firstName}`;
+  const purchaseRequestManagerLastName = `${purchaseRequestManager.lastName}`;
+  const emailConfirmed = purchaseRequestManager.emailConfirmed;
+  const phoneConfirmed = purchaseRequestManager.phoneConfirmed;
+  const email = purchaseRequestManager.email;
+  const phone = purchaseRequestManager.phone;
+  const itemName = storeItem.name;
+  const itemDescription = storeItem.description;
+  const cost = storeItem.cost;
+
+
+// The recipient's phone number.  For best results, you should specify the
+// phone number in E.164 format.
+  var destinationNumber = phone;
+
+// The content of the SMS message.
+  var message = "A new purchase request has been submitted. " +
+    "You can check on new requests by logging into https://pineapplepoints.net.";
+
+// The Amazon Pinpoint project/application ID to use when you send this message.
+// Make sure that the SMS channel is enabled for the project or application
+// that you choose.
+  var applicationId = "49967c53c42141d8a27b7a335ab1945d";
+
+// The type of SMS message that you want to send. If you plan to send
+// time-sensitive content, specify TRANSACTIONAL. If you plan to send
+// marketing-related content, specify PROMOTIONAL.
+  var messageType = "TRANSACTIONAL";
+
+// The registered keyword associated with the originating short code.
+  var registeredKeyword = "keyword_644955040906";
+
+// The sender ID to use when sending the message. Support for sender ID
+// varies by country or region. For more information, see
+// https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms-countries.html
+//   var senderId = "MySenderID";
+
+// Specify that you're using a shared credentials file, and optionally specify
+// the profile that you want to use.
+//   var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+//   AWS.config.credentials = credentials;
+
+// Specify the region.
+//   AWS.config.update({region:aws_region});
+
+//Create a new Pinpoint object.
+  var pinpoint = new AWS.Pinpoint();
+
+// Specify the parameters to pass to the API.
+  var params = {
+    ApplicationId: applicationId,
+    MessageRequest: {
+      Addresses: {
+        [destinationNumber]: {
+          ChannelType: 'SMS'
+        }
+      },
+      MessageConfiguration: {
+        SMSMessage: {
+          Body: message,
+          Keyword: registeredKeyword,
+          MessageType: messageType,
+          OriginationNumber: originationNumber,
+          // SenderId: senderId,
+        }
+      }
+    }
+  };
+
+  //Try to send the message.
+  const sendPromise = pinpoint.sendMessages(params).promise();
+
+  return sendPromise.then(
+    function(data) {
+      console.log("Message sent! "
+        + data['MessageResponse']['Result'][destinationNumber]['StatusMessage']);
+      return ({status: true, data: data});
+    })
+    .catch(
+      function(err) {
+        console.log(`Error sending SMS`);
+        console.error(err, err.stack);
+        return ({status: false, message: err});
+      });
+};
+
+module.exports.sendRequestStoreItemSMS = sendRequestStoreItemSMS;
 
 const sendFulfillStoreItemEmail = function (managerUser, requestUser, storeItem) {
   const functionName = 'sendFulfillStoreItemEmail';

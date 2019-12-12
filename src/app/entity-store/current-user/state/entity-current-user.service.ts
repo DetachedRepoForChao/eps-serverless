@@ -101,6 +101,12 @@ export class EntityCurrentUserService {
     });
   }
 
+  updatePoints(newAmount: number) {
+    this.currentUserStore.update(null, {
+      points: newAmount
+    });
+  }
+
 
 /*  updatePointsBalance(pointsBalance: number) {
     console.log('updating points balance with: ' + pointsBalance);
