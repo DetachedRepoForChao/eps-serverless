@@ -62,8 +62,7 @@ export class PointItemsCardComponent implements OnInit {
   pointPoolMaxFormSubmitted = false;
   public pointPoolMax: number;
 
-  constructor(public globals: Globals,
-              private router: Router,
+  constructor(private router: Router,
               private achievementService: AchievementService,
               private authService: AuthService,
               private userService: EntityUserService,
@@ -92,7 +91,7 @@ export class PointItemsCardComponent implements OnInit {
         this.pointPoolMax = pointPoolMax;
       });
 
-    // Subscribe to change events for the 'user' field. Every time a new user is selected, the corresponding fields will populate with data
+    // Subscribe to change events for the 'pointItem' field. Every time a new pointItem is selected, the corresponding fields will populate with data
     this.editPointItemForm.get('pointItem').valueChanges.subscribe(pointItem => {
       console.log(pointItem);
       this.editPointItemForm.controls.coreValuesGroup.reset();

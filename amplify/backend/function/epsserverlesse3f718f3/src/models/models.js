@@ -215,6 +215,12 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: false,
       field: 'phone_notifications'
     },
+    awardManager: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: 'award_manager'
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

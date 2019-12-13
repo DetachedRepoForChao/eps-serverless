@@ -34,13 +34,14 @@ export type EntityCurrentUserModel = {
   coreValuesPublic: boolean;
   emailNotifications: boolean;
   phoneNotifications: boolean;
+  awardsManager: boolean;
 };
 
 export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, preferredName, birthdate, position,
                                                gender, dateOfHire, points, pointsPool, securityRole, department, email, phone, avatarPath,
                                                avatarResolvedUrl, quote, phonePublic, emailPublic, genderPublic, birthdatePublic,
                                                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, emailNotifications,
-                                               phoneNotifications }: Partial<EntityCurrentUserModel>) {
+                                               phoneNotifications, awardsManager }: Partial<EntityCurrentUserModel>) {
 
   return {
     id: guid(),
@@ -73,6 +74,7 @@ export function createEntityCurrentUserModel({ userId, username, firstName, last
     coreValuesPublic,
     emailNotifications,
     phoneNotifications,
+    awardsManager,
     dateModified: Date.now(),
   } as EntityCurrentUserModel;
 }

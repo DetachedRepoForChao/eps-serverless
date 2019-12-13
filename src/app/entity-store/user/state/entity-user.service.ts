@@ -288,6 +288,7 @@ export class EntityUserService {
               const coreValuesPublic = usersMerged[i].coreValuesPublic;
               const emailNotifications = usersMerged[i].emailNotifications;
               const phoneNotifications = usersMerged[i].phoneNotifications;
+              const awardsManager = usersMerged[i].awardsManager;
               // Properties visible to admins
               const dateOfHire = (usersMerged[i].dateOfHire) ? usersMerged[i].dateOfHire : null;
               const dateOfTermination = (usersMerged[i].dateOfTermination) ? usersMerged[i].dateOfTermination : null;
@@ -302,7 +303,7 @@ export class EntityUserService {
               const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName, dateOfHire,
                 dateOfTermination, phone, active, gender, quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic,
-                achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, emailNotifications, phoneNotifications});
+                achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, emailNotifications, phoneNotifications, awardsManager});
               usersArray.push(userModel);
             }
 
@@ -383,15 +384,16 @@ export class EntityUserService {
               const gender = (usersMerged[i].gender) ? usersMerged[i].gender : null;
               const phoneNotifications = usersMerged[i].phoneNotifications;
               const emailNotifications = usersMerged[i].emailNotifications;
+              const awardsManager = usersMerged[i].awardsManager;
 
               const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
-              const avatarBase64String = '';
               const avatarResolvedUrl = obsResult[i].avatarResolvedUrl;
               const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, gender, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName,
                 dateOfHire, dateOfTermination, phone, active, quote, phonePublic, emailPublic, genderPublic, birthdatePublic,
-                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, phoneNotifications, emailNotifications });
+                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, phoneNotifications, emailNotifications,
+                awardsManager });
               usersArray.push(userModel);
             }
 

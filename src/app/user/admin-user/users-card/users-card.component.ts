@@ -356,11 +356,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       middleName: [null],
       lastName: [null, Validators.required],
       preferredName: [null],
-      // prefix: [null],
-      // suffix: [null],
       position: [null],
-      // preferredPronoun: [null],
-      // sex: [null],
       gender: [null],
       // The below FormGroup validation allows us to validate the form depending on whether the user being added is a manager or not
       roleGroup: new FormGroup({
@@ -369,16 +365,11 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       }, managerValidation(this.pointPoolMax)),
       department: [null, Validators.required],
       dateOfHire: [null],
-      // address1: [null],
-      // address2: [null],
-      // city: [null],
-      // state: [null],
-      // country: [null],
-      // zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
       birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required],
       points: [null, Validators.compose([Validators.required, Validators.min(0)])],
+      awardsManager: [false, Validators.required],
     });
   }
 
@@ -389,31 +380,20 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       middleName: [null],
       lastName: [null, Validators.required],
       preferredName: [null],
-      // prefix: [null],
-      // suffix: [null],
       position: [null],
-      // preferredPronoun: [null],
-      // sex: [null],
       gender: [null],
-
       // The below FormGroup validation allows us to validate the form depending on whether the user being added is a manager or not
       roleGroup: new FormGroup({
         securityRole: new FormControl(),
         pointsPool: new FormControl(this.pointPoolMax, [Validators.required, Validators.min(0), Validators.max(this.pointPoolMax)]),
       }, managerValidation(this.pointPoolMax)),
-
       department: [null, Validators.required],
       dateOfHire: [null],
-      // address1: [null],
-      // address2: [null],
-      // city: [null],
-      // state: [null],
-      // country: [null],
-      // zip: [null, Validators.compose([Validators.pattern(this.zipPattern)])],
       birthdate: [null, Validators.required],
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required],
       points: [null, Validators.compose([Validators.required, Validators.min(0)])],
+      awardsManager: [false, Validators.required],
 
     });
   }

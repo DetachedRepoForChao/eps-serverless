@@ -8,7 +8,7 @@ import { Department} from '../../../shared/department.model';
 import {MatTableDataSource, ThemePalette} from '@angular/material';
 
 import {PointItem} from '../../../shared/point-item.model';
-import {NgForm} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, NgForm, ValidatorFn, Validators} from '@angular/forms';
 import {componentRefresh} from '@angular/core/src/render3/instructions';
 import {Router} from '@angular/router';
 import {Observable, forkJoin, Subject} from 'rxjs';
@@ -28,9 +28,9 @@ import {AchievementService} from '../../../entity-store/achievement/state/achiev
 import {FreshPipe} from '../../../pipe/fresh.pipe';
 import {take, takeUntil} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
+import {requireCheckboxesToBeCheckedValidator} from '../../admin-user/point-items-card/point-items-card.component';
 
-
-declare var $: any;
 
 export interface DepartmentEmployee {
   id: number;
@@ -58,6 +58,12 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   private usersLoading$ = new Subject<void>();
   private currentUserLoading$ = new Subject<void>();
   private unsubscribe$ = new Subject<void>();
+
+  public config: PerfectScrollbarConfigInterface = {};
+  addPointItemForm: FormGroup;
+  addPointItemFormSubmitted = false;
+  editPointItemForm: FormGroup;
+  editPointItemFormSubmitted = false;
 
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
   // selection = new SelectionModel<DepartmentEmployee>(true, []);
@@ -88,22 +94,22 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
 
   appliedFilters = [];
 
-  constructor(
-    private departmentService: DepartmentService,
-    private globals: Globals,
-    private userService: UserService,
-    private pointItemService: PointItemService,
-    private pointItemQuery: PointItemQuery,
-    private router: Router,
-    private achievementService: AchievementService,
-    private notifierService: NotifierService,
-    private leaderboardService: LeaderboardService,
-    private spinner: NgxSpinnerService,
-    private entityUserService: EntityUserService,
-    private userStore: UserStore,
-    private entityUserQuery: EntityUserQuery,
-    private currentUserQuery: EntityCurrentUserQuery,
-    private currentUserService: EntityCurrentUserService) { }
+  constructor(private formBuilder: FormBuilder,
+              private departmentService: DepartmentService,
+              private globals: Globals,
+              private userService: UserService,
+              private pointItemService: PointItemService,
+              private pointItemQuery: PointItemQuery,
+              private router: Router,
+              private achievementService: AchievementService,
+              private notifierService: NotifierService,
+              private leaderboardService: LeaderboardService,
+              private spinner: NgxSpinnerService,
+              private entityUserService: EntityUserService,
+              private userStore: UserStore,
+              private entityUserQuery: EntityUserQuery,
+              private currentUserQuery: EntityCurrentUserQuery,
+              private currentUserService: EntityCurrentUserService) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -113,7 +119,8 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     console.log(`${functionFullName}: setting isCardLoading to true:`);
     this.isCardLoading = true;
     this.spinner.hide('gift-points-spinner');
-    const observables: Observable<any>[] = [];
+
+    this.loadAddPointItemForm();
 
     this.populateCoreValueButtonList();
 
@@ -171,6 +178,77 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.showLimit = 7;
   }
 
+  private loadAddPointItemForm() {
+    this.addPointItemForm = this.formBuilder.group({
+      name: [null, Validators.required],
+      description: [null],
+      amount: [null, Validators.required],
+      coreValuesGroup: new FormGroup({
+        coreValue_happy: new FormControl(false),
+        coreValue_fun: new FormControl(false),
+        coreValue_genuine: new FormControl(false),
+        coreValue_caring: new FormControl(false),
+        coreValue_respect: new FormControl(false),
+        coreValue_honest: new FormControl(false),
+      }, requireCheckboxesToBeCheckedValidator(1))
+    });
+  }
+
+
+  onAddPointItemFormSubmit(form: FormGroup) {
+    console.log(form);
+    this.addPointItemFormSubmitted = true;
+    const pointItem = {};
+    let coreValues = [];
+    const keys = Object.keys(form.controls);
+
+    // Proceed only if the form is valid
+    if (!form.invalid) {
+      /*
+      Iterate over the form field keys and add the key/value pair to the pointItem object we'll be passing
+      to the modifyPointItem function.
+      */
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i] === 'coreValuesGroup') {
+          // Special consideration for the Core Values field
+          const formCoreValuesGroup = form.controls[keys[i]].value;
+          const formCoreValueKeys = Object.keys(formCoreValuesGroup);
+
+          // Loop the Core Values and add them to the newCoreValues array if they are selected
+          for (let j = 0; j < formCoreValueKeys.length; j++) {
+            const formCoreValueKey = formCoreValueKeys[j];
+            const coreValue = formCoreValueKey.split('_')[1];
+            const coreValueStatus = formCoreValuesGroup[formCoreValueKey];
+
+            if (coreValueStatus === true) {
+              coreValues.push(coreValue);
+            }
+          }
+
+          coreValues = coreValues.sort();
+          pointItem['coreValues'] = coreValues;
+
+        } else {
+          pointItem[keys[i]] = form.controls[keys[i]].value;
+        }
+      }
+
+      this.pointItemService.newPointItem(pointItem).subscribe(addResult => {
+        console.log(addResult);
+        if (addResult.status !== false) {
+          this.notifierService.notify('success', 'Point item record added successfully.');
+          this.addPointItemFormSubmitted = false;
+        } else {
+          this.notifierService.notify('error', `Submission error: ${addResult.message}`);
+        }
+      });
+
+      console.log(pointItem);
+    } else {
+      console.log('The form submission is invalid');
+      this.notifierService.notify('error', 'Please fix the errors and try again.');
+    }
+  }
 
 
   onChange() {

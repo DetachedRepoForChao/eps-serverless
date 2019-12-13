@@ -67,18 +67,24 @@
           <!------- Search form -------->
           <div class="row heighted">
             <div class="col-md-4">
-              <form class="form py-4">
+              <div class="col-12">
+                <form class="form py-4">
 
-                <input class="form-control form-rounded w-100 border-neutral" type="text"
-                       placeholder="Search Point Items" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
-              </form>
+                  <input class="form-control form-rounded w-100 border-neutral" type="text"
+                         placeholder="Search Point Items" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
+                </form>
+              </div>
+
             </div>
             <div class="col-md-5 fluid">
-              <form class="form py-4">
+              <div class="col-12">
+                <form class="form py-4">
 
-                <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
-                       [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
-              </form>
+                  <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
+                         [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
+                </form>
+              </div>
+
             </div>
 
             <div class="col-md-3 search">
@@ -93,6 +99,7 @@
                 <div class="row">
                   <div class="col-md-4">
                     <div class="container text-center">
+                      <div><a href="javascript:void(0)" data-toggle="modal" data-target="#addPointItemModal">Create a custom 🍍 award</a></div>
                       <form #giftPointsForm="ngForm" class="form text-left">
                         <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
                           <div class="selection" >
@@ -130,8 +137,7 @@
                           </ng-template>
                         </ng-template>
                         <div class="gift-points-container text-center">
-                          <button type="button" class="btn-lg btn-info btn-round"
-                                  (click)="pointItemOnSubmit(giftPointsForm, currentUser)">Award Points</button>
+                          <button type="button" class="btn btn-primary" (click)="pointItemOnSubmit(giftPointsForm, currentUser)">Award 🍍</button>
                         </div>
                       </form>
                     </div>
@@ -201,6 +207,104 @@
 
   </div>
 </div>
+
+<!-- Add Point Item -->
+<div class="modal fade bd-example-modal-lg" id="addPointItemModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPointItemModalLabel">Add a New 🍍 Award</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body pointItem-modal-body">
+        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+          <div class="pointItem-form-container">
+            <form [formGroup]="addPointItemForm">
+              <div class="form-row">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6 text-dark text-left" >
+                  <label for="addPointItem_name">🍍 Award Name</label>
+                  <input type="text" class="form-control pointItem-form-control text-dark text-left" formControlName="name"  id="addPointItem_name" placeholder="Point Item Name">
+                  <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.name.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.name.touched && addPointItemForm.controls.name.invalid)">
+                    <label class="validation-message">This field is required.</label>
+                  </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6 text-dark">
+                  <label for="addPointItem_amount">🍍 Amount</label>
+                  <input type="number" min="1" class="form-control pointItem-form-control text-dark text-left" formControlName="amount" id="addPointItem_amount" placeholder="Point Amount">
+                  <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.amount.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.amount.touched && addPointItemForm.controls.amount.invalid)">
+                    <label class="validation-message">This field is required.</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-12 text-left text-dark">
+                  <label for="addPointItem_description">Description</label>
+                  <input type="text" class="form-control pointItem-form-control text-dark text-left" formControlName="description" id="addPointItem_description" placeholder="Description">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-12 text-dark">
+                  <label>Core Values</label>
+                  <div class="form-group" formGroupName="coreValuesGroup">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label text-dark">
+                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_happy" formControlName="coreValue_happy">Happy
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label text-dark">
+                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_fun" formControlName="coreValue_fun">Fun
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label text-dark">
+                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_genuine" formControlName="coreValue_genuine">Genuine
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label text-dark">
+                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_caring" formControlName="coreValue_caring">Caring
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label text-dark">
+                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_respect" formControlName="coreValue_respect">Respect
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label text-dark">
+                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_honest" formControlName="coreValue_honest">Honest
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </div>
+                    <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (addPointItemForm.dirty && addPointItemForm.controls['coreValuesGroup'].errors && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
+                      <label class="validation-message">Please select at least one Core Value.</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </perfect-scrollbar>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="onAddPointItemFormSubmit(addPointItemForm)">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <ng-template #cardLoading>
   <div class="card-body">

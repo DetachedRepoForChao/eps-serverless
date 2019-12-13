@@ -46,12 +46,6 @@ export class EntityCurrentUserService {
   }
 
 
-
-/*  add(username: string, avatarBase64String: string, avatarPath: string, avatarResolvedUrl: string) {
-    const userAvatar = createEntityCurrentUserModel({ username, avatarBase64String, avatarPath, avatarResolvedUrl });
-    this.currentUserStore.add(userAvatar);
-  }*/
-
   update(user) {
     const functionName = 'update';
     const functionFullName = `${this.componentName} ${functionName}`;
@@ -108,13 +102,6 @@ export class EntityCurrentUserService {
   }
 
 
-/*  updatePointsBalance(pointsBalance: number) {
-    console.log('updating points balance with: ' + pointsBalance);
-    this.currentUserStore.update(null, {
-      pointsBalance: pointsBalance
-    });
-  }*/
-
   cacheCurrentUser() {
     console.log(`Retrieving current user`);
     // this.userStore.setLoading(true);  // this is the initial state before doing anything
@@ -151,6 +138,7 @@ export class EntityCurrentUserService {
         const coreValuesPublic = userDataResult.coreValuesPublic;
         const emailNotifications = userDataResult.emailNotifications;
         const phoneNotifications = userDataResult.phoneNotifications;
+        const awardsManager = userDataResult.awardsManager;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
@@ -158,7 +146,7 @@ export class EntityCurrentUserService {
             const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, position,
               points, pointsPool, email, birthdate, gender, dateOfHire, department, securityRole, phone, avatarPath, avatarResolvedUrl,
               quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic,
-              coreValuesPublic, emailNotifications, phoneNotifications});
+              coreValuesPublic, emailNotifications, phoneNotifications, awardsManager});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -262,6 +250,7 @@ export class EntityCurrentUserService {
                   const coreValuesPublic = currentUserData.user.coreValuesPublic;
                   const emailNotifications = currentUserData.user.emailNotifications;
                   const phoneNotifications = currentUserData.user.phoneNotifications;
+                  const awardsManager = currentUserData.user.awardsManager;
 
                   const data = {
                     userId: userId,
@@ -292,6 +281,7 @@ export class EntityCurrentUserService {
                     coreValuesPublic: coreValuesPublic,
                     emailNotifications: emailNotifications,
                     phoneNotifications: phoneNotifications,
+                    awardsManager: awardsManager,
                   };
 
                   console.log('userData:');
