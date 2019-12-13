@@ -82,6 +82,32 @@
                     </ng-container>
                   </div>
                 </div>
+                <ng-container *ngIf="addUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 2">
+                  <div class="form-row">
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12" >
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label text-dark">
+                          <input class="form-check-input" type="checkbox" id="addUser_awardManager" formControlName="awardManager">Enable 🍍 Award Management
+                          <span class="form-check-sign"></span>
+                        </label>
+
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="addUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 1;">
+                  <div class="form-row">
+                    <div class="form-group col-sm-12 col-md-12 col-lg-12" >
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label text-dark font-disabled">
+                          <input class="form-check-input" type="checkbox" id="addUser_awardManagerDisabled" formControlName="awardManager" [disabled]="true" [ngModel]="false">Enable 🍍 Award Management (Not Applicable)
+                          <span class="form-check-sign"></span>
+                        </label>
+
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
                 <ng-container *ngIf="addUserForm.controls.roleGroup.get('securityRole')?.value?.Id !== 3">
                   <div class="form-row">
                     <ng-container *ngIf="addUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 1 || !addUserForm.controls.roleGroup.get('securityRole')?.value">
@@ -366,7 +392,32 @@
                   </ng-container>
                 </div>
               </div>
+              <ng-container *ngIf="editUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 2;">
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-12 col-lg-12" >
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label text-dark">
+                        <input class="form-check-input" type="checkbox" id="editUser_awardManager" formControlName="awardManager" >Enable 🍍 Award Management
+                        <span class="form-check-sign"></span>
+                      </label>
 
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="editUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 1;">
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-12 col-lg-12" >
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label text-dark font-disabled">
+                      <input class="form-check-input " type="checkbox" id="editUser_awardManagerDisabled" formControlName="awardManager" [disabled]="true" [ngModel]="false">Enable 🍍 Award Management (Not Applicable)
+                      <span class="form-check-sign"></span>
+                    </label>
+
+                  </div>
+                  </div>
+                </div>
+              </ng-container>
               <ng-container *ngIf="editUserForm.controls.roleGroup.get('securityRole')?.value?.Id !== 3">
                 <div class="form-row">
                   <ng-container *ngIf="editUserForm.controls.roleGroup.get('securityRole')?.value?.Id === 1 || !editUserForm.controls.roleGroup.get('securityRole')?.value">

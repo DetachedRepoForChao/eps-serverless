@@ -99,7 +99,9 @@
                 <div class="row">
                   <div class="col-md-4">
                     <div class="container text-center">
-                      <div><a href="javascript:void(0)" data-toggle="modal" data-target="#addPointItemModal">Create a custom 🍍 award</a></div>
+                      <ng-container *ngIf="currentUser.awardManager">
+                        <div><a href="javascript:void(0)" data-toggle="modal" data-target="#addPointItemModal">Manage 🍍 awards</a></div>
+                      </ng-container>
                       <form #giftPointsForm="ngForm" class="form text-left">
                         <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
                           <div class="selection" >

@@ -543,6 +543,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
         // User object changes exist. Add the userId to the user object and invoke modifyUser function
         user['userId'] = sourceUser.userId;
         user['username'] = sourceUser.username;
+
         this.userService.modifyUser(user)
           .pipe(take(1))
           .subscribe(modifyResult => {
