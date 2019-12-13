@@ -41,32 +41,44 @@ app.post('/things/sendAwardPointsNotice' , function (req, res) {
   const token = req.headers.authorization;
   jwtVerify.parseToken(token, function (tokenResult) {
     if (tokenResult.message === 'Success') {
-
       const sourceUser = req.body.sourceUser;
       const targetUser = req.body.targetUser;
       const pointItem = req.body.pointItem;
+      ctrlCognito.getCognitoUser(targetUser.username)
+        .then((user) => {
+          console.log(user);
+          const data = {
+            status: true,
+            user: user
+          };
 
-      const promises = [];
-      const emailConfirmed = targetUser.emailConfirmed;
-      const emailNotifications = targetUser.emailNotifications;
-      const phoneConfirmed = targetUser.phoneConfirmed;
-      const phoneNotifications = targetUser.phoneNotifications;
+          const emailConfirmed = (user.UserAttributes.find(x => x.Name === 'email_verified').Value === 'true');
+          const phoneConfirmed = (user.UserAttributes.find(x => x.Name === 'phone_number_verified').Value === 'true');
+          targetUser['email'] = user.UserAttributes.find(x => x.Name === 'email').Value;
+          targetUser['phone'] = user.UserAttributes.find(x => x.Name === 'phone_number').Value;
 
-      if (emailConfirmed && emailNotifications) {
-        promises.push(ctrlNotifications.sendAwardPointsEmail(targetUser, sourceUser, pointItem));
-      }
+          const emailNotifications = targetUser.emailNotifications;
+          const phoneNotifications = targetUser.phoneNotifications;
 
-      if (phoneConfirmed && phoneNotifications) {
-        promises.push(ctrlNotifications.sendAwardPointsSMS(targetUser, sourceUser, pointItem));
-      }
+          const promises = [];
 
-      Promise.all(promises)
-        .then(results => {
-          res.json({ status: 'post call succeed!', results: results });
-        })
-        .catch(err => {
-          res.json({ status: 'post call failed!', error: err });
+          if (emailConfirmed && emailNotifications) {
+            promises.push(ctrlNotifications.sendAwardPointsEmail(targetUser, sourceUser, pointItem));
+          }
+
+          if (phoneConfirmed && phoneNotifications) {
+            promises.push(ctrlNotifications.sendAwardPointsSMS(targetUser, sourceUser, pointItem));
+          }
+
+          Promise.all(promises)
+            .then(results => {
+              res.json({ status: 'post call succeed!', results: results });
+            })
+            .catch(err => {
+              res.json({ status: 'post call failed!', error: err });
+            });
         });
+
     } else {
       res.json({ status: 'Unauthorized', data: tokenResult.message });
     }

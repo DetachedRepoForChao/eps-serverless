@@ -270,7 +270,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
               if (resultObjectArray[i].status === true) {
                 const targetUser = this.selection.selected.filter(x => x.userId === resultObjectArray[i].targetUserId)[0];
                 this.entityUserService.updatePoints(+resultObjectArray[i].targetUserId, +resultObjectArray[i].newPointAmount);
-                this.pointItemService.sendAwardPointsEmail(targetUser, sourceUser, this.selectedPointItem)
+                this.pointItemService.sendAwardPointsNotice(targetUser, sourceUser, this.selectedPointItem)
                   .pipe(take(1))
                   .subscribe(emailResult => {
                     console.log(`${functionFullName}: email result`);

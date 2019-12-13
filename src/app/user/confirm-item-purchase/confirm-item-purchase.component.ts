@@ -7,19 +7,20 @@ import {StoreItemStore} from '../../entity-store/store-item/state/store-item.sto
 import {StoreItemQuery} from '../../entity-store/store-item/state/store-item.query';
 import {StoreItemService} from '../../entity-store/store-item/state/store-item.service';
 import {StoreItemModel} from '../../entity-store/store-item/state/store-item.model';
-import {MatSort, MatTableModule, MatTableDataSource, MatDialog, MatTable, MatCheckboxChange} from '@angular/material';
-import { ConfirmationDialogComponent } from '../components/shared/confirmation-dialog/confirmation-dialog.component';
-import {Router } from '@angular/router';
+import {MatCheckboxChange, MatDialog, MatSort, MatTable} from '@angular/material';
+import {ConfirmationDialogComponent} from '../components/shared/confirmation-dialog/confirmation-dialog.component';
+import {Router} from '@angular/router';
 import {NavigationService} from '../../shared/navigation.service';
 
 
-import {from, Observable, Subject, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {UserHasStoreItemModel} from '../../entity-store/user-has-store-item/state/user-has-store-item.model';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {take, takeUntil} from 'rxjs/operators';
 import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
+import {Order} from '@datorama/akita';
 
 declare var $: any;
 
@@ -331,7 +332,9 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
             }
           }
           return true;
-        }
+        },
+        sortBy: 'createdAt',
+        sortByOrder: Order.DESC,
       })
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((requests: UserHasStoreItemModel[]) => {
@@ -353,7 +356,9 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
               }
             }
             return false;
-          }
+          },
+          sortBy: 'createdAt',
+          sortByOrder: Order.DESC,
         })
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe((requests: UserHasStoreItemModel[]) => {
@@ -364,7 +369,9 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
     }
 
     this.userHasStoreItemQuery.selectAll({
-      filterBy: e => e.status === status
+      filterBy: e => e.status === status,
+      sortBy: 'createdAt',
+      sortByOrder: Order.DESC,
     })
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((requests: UserHasStoreItemModel[]) => {

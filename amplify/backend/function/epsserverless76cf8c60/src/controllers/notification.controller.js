@@ -357,7 +357,7 @@ const sendReadyForPickupEmail = function (purchaseRequestManager, requestUser, s
 
     };
   } else {
-    const itemName = storeItems[0].name;
+    const itemName = storeItems[0].storeItemName;
 
     // Create sendEmail params
     params = {

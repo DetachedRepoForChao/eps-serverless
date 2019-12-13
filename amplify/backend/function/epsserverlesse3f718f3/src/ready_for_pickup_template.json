@@ -2,7 +2,7 @@
   "Template": {
     "TemplateName": "ReadyForPickup",
     "SubjectPart": "Pineapple Points \uD83C\uDF4D Purchase Ready for Pickup!",
-    "HtmlPart": "<h1>Hello {{requestUserFirstName}},</h1><p>Your Pineapple Points \uD83C\uDF4D purchase of '{{itemName}}' has been marked as Ready for Pickup by {{managerUserFullName}}!</p><p>Log in to https://pineapplepoints.net to check the status of your purchase requests.</p>",
+    "HtmlPart": "<h1>Hello {{requestUserFirstName}},</h1><p>Your Pineapple Points \uD83C\uDF4D purchase of '{{itemName}}' has been marked as Ready for Pickup by {{managerUserFullName}}!</p><p>Log in to <a href='https://pineapplepoints.net'>https://pineapplepoints.net</a> to check the status of your purchase requests.</p>",
     "TextPart": "Hello {{requestUserFirstName}},\r\nYour Pineapple Points \uD83C\uDF4D purchase of '{{itemName}}' has been marked as Ready for Pickup by {{managerUserFullName}}!\n\rLog in to https://pineapplepoints.net to check the status of your purchase requests."
   }
 }

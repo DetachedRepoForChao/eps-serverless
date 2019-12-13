@@ -35,7 +35,6 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
   componentName = 'notification-settings.component';
   private unsubscribe$ = new Subject();
   private currentUserLoading$ = new Subject();
-  private navigationSubscription: Subscription;
 
   isImageLoading: boolean;
 
@@ -333,6 +332,5 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
     this.currentUserLoading$.next();
     this.currentUserLoading$.complete();
-    this.navigationSubscription.unsubscribe();
   }
 }
