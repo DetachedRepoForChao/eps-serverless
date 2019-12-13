@@ -7,7 +7,7 @@ import {guid, ID} from '@datorama/akita';
 import { cacheable} from '@datorama/akita';
 import {API, Auth, Storage} from 'aws-amplify';
 import {forkJoin, Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {take, tap} from 'rxjs/operators';
 import {Globals} from '../../../globals';
 import awsconfig from '../../../../aws-exports';
 import {AuthService} from '../../../login/auth.service';
@@ -244,25 +244,33 @@ export class PointItemService {
             pointItem: pointItem
           };
 
-          API.post(this.apiName, this.apiPath + '/newPointItem', myInit).then(data => {
+          API.post(this.apiName, this.apiPath + '/newPointItem', myInit).then(response => {
             console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            console.log(response);
 
-            if (data.data.status !== false) {
-              const itemId = data.data.id;
-              const name = data.data.name;
-              const description = data.data.description;
-              const amount = data.data.amount;
-              const coreValues: string[] = data.data.coreValues.split(';');
+            if (response.data.status !== false) {
+/*              const itemId = response.data.id;
+              const name = response.data.name;
+              const description = response.data.description;
+              const amount = response.data.amount;
+              const coreValues: string[] = response.data.coreValues.split(';');
               for (let j = 0; j < coreValues.length; j++) {
                 coreValues[j] = coreValues[j].trim();
               }
+              const createdByUsername = response.data.createdByUsername;
+              const updatedByUsername = response.data.updatedByUsername;*/
 
-              this.add(itemId, name, description, amount, coreValues);
-              observer.next(data.data);
+              // this.add(itemId, name, description, amount, coreValues, createdByUsername, updatedByUsername);
+
+              this.pointItemStore.reset();
+              this.cachePointItems()
+                .pipe(take(1))
+                .subscribe();
+
+              observer.next(response.data);
               observer.complete();
             } else {
-              observer.next(data.data);
+              observer.error(response.data);
               observer.complete();
             }
           });

@@ -20,292 +20,299 @@
   </div>
 </div>
 
-<!-- Add Point Item -->
-<div class="modal fade bd-example-modal-lg" id="addPointItemModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addPointItemModalLabel">Add a New 🍍 Award</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+<ng-container *ngIf="currentUser && pointItems">
+  <!-- Add Point Item -->
+  <div class="modal fade bd-example-modal-lg" id="addPointItemModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addPointItemModalLabel">Add a New 🍍 Award</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
 
-      <div class="modal-body pointItem-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
-          <div class="pointItem-form-container">
-            <form [formGroup]="addPointItemForm">
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6" >
-                  <label for="addPointItem_name">🍍 Award Name</label>
-                  <input type="text" class="form-control pointItem-form-control" formControlName="name"  id="addPointItem_name" placeholder="Point Item Name">
-                  <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.name.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.name.touched && addPointItemForm.controls.name.invalid)">
-                    <label class="validation-message">This field is required.</label>
+        <div class="modal-body pointItem-modal-body">
+          <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+            <div class="pointItem-form-container">
+              <form [formGroup]="addPointItemForm">
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6" >
+                    <label for="addPointItem_name">🍍 Award Name</label>
+                    <input type="text" class="form-control pointItem-form-control" formControlName="name"  id="addPointItem_name" placeholder="Point Item Name">
+                    <ng-container *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.name.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.name.touched && addPointItemForm.controls.name.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
+                  </div>
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <label for="addPointItem_amount">🍍 Amount</label>
+                    <input type="text" class="form-control pointItem-form-control" formControlName="amount" id="addPointItem_amount" placeholder="Point Amount">
+                    <ng-container *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.amount.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.amount.touched && addPointItemForm.controls.amount.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
                 </div>
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <label for="addPointItem_amount">🍍 Amount</label>
-                  <input type="text" class="form-control pointItem-form-control" formControlName="amount" id="addPointItem_amount" placeholder="Point Amount">
-                  <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls.amount.invalid) || (addPointItemForm.dirty && addPointItemForm.controls.amount.touched && addPointItemForm.controls.amount.invalid)">
-                    <label class="validation-message">This field is required.</label>
+                <div class="form-row">
+                  <div class="form-group col-12 textl">
+                    <label for="addPointItem_description">Description</label>
+                    <input type="text" class="form-control pointItem-form-control" formControlName="description" id="addPointItem_description" placeholder="Description">
                   </div>
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-12 textl">
-                  <label for="addPointItem_description">Description</label>
-                  <input type="text" class="form-control pointItem-form-control" formControlName="description" id="addPointItem_description" placeholder="Description">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-12">
-                  <label>Core Values</label>
-                  <div class="form-group" formGroupName="coreValuesGroup">
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_happy" formControlName="coreValue_happy">Happy
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_fun" formControlName="coreValue_fun">Fun
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_genuine" formControlName="coreValue_genuine">Genuine
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_caring" formControlName="coreValue_caring">Caring
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
+                <div class="form-row">
+                  <div class="col-12">
+                    <label>Core Values</label>
+                    <div class="form-group" formGroupName="coreValuesGroup">
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_happy" formControlName="coreValue_happy">Happy
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_fun" formControlName="coreValue_fun">Fun
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_genuine" formControlName="coreValue_genuine">Genuine
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_caring" formControlName="coreValue_caring">Caring
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
 
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_respect" formControlName="coreValue_respect">Respect
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_honest" formControlName="coreValue_honest">Honest
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (addPointItemForm.dirty && addPointItemForm.controls['coreValuesGroup'].errors && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
-                      <label class="validation-message">Please select at least one Core Value.</label>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_respect" formControlName="coreValue_respect">Respect
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_honest" formControlName="coreValue_honest">Honest
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <ng-container *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (addPointItemForm.dirty && addPointItemForm.controls['coreValuesGroup'].errors && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
+                        <label class="validation-message">Please select at least one Core Value.</label>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        </perfect-scrollbar>
+              </form>
+            </div>
+          </perfect-scrollbar>
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="onAddPointItemFormSubmit(addPointItemForm)">Save Changes</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="onAddPointItemFormSubmit(addPointItemForm)">Save Changes</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Edit Point Item -->
-<div class="modal fade bd-example-modal-lg" id="editPointItemModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editPointItemModalLabel">Edit 🍍 Award</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+  <!-- Edit Point Item -->
+  <div class="modal fade bd-example-modal-lg" id="editPointItemModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPointItemModalLabel">Edit 🍍 Award</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
 
-      <div class="modal-body pointItem-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
-          <div class="pointItem-form-container">
-            <form [formGroup]="editPointItemForm">
-              <div class="form-row">
-                <div class="form-group col-12" >
-                  <label for="editPointItem_pointItem" class="form-label">🍍 Award to Modify</label>
-                  <select formControlName="pointItem"
-                          class="form-control pointItem-form-control"
-                          id="editPointItem_pointItem" name="editPointItem_pointItem">
-                    <option [ngValue]="null" disabled="true">Select a 🍍 Award</option>
-                    <option *ngFor="let pointItem of (pointItemQuery.selectAll() | async)" [ngValue]="pointItem">
-                      {{pointItem.name}} {{pointItem.amount}}pts
-                    </option>
-                  </select>
-                  <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.pointItem.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.pointItem.touched && editPointItemForm.controls.pointItem.invalid)">
-                    <label class="validation-message">This field is required.</label>
+        <div class="modal-body pointItem-modal-body">
+          <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+            <div class="pointItem-form-container">
+              <form [formGroup]="editPointItemForm">
+                <div class="form-row">
+                  <div class="form-group col-12" >
+                    <label for="editPointItem_pointItem" class="form-label">🍍 Award to Modify</label>
+                    <select formControlName="pointItem"
+                            class="form-control pointItem-form-control"
+                            id="editPointItem_pointItem" name="editPointItem_pointItem">
+                      <option [ngValue]="null" disabled="true">Select a 🍍 Award</option>
+                      <option *ngFor="let pointItem of pointItems" [ngValue]="pointItem">
+                        {{pointItem.name}} {{pointItem.amount}}pts
+                      </option>
+                    </select>
+                    <ng-container *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.pointItem.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.pointItem.touched && editPointItemForm.controls.pointItem.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6" >
-                  <label for="editPointItem_name" class="l2">🍍 Award Name</label>
-                  <input type="text" class="form-control pointItem-form-control" formControlName="name"  id="editPointItem_name" placeholder="Point Item Name">
-                  <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.name.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.name.touched && editPointItemForm.controls.name.invalid)">
-                    <label class="validation-message">This field is required.</label>
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6" >
+                    <label for="editPointItem_name" class="l2">🍍 Award Name</label>
+                    <input type="text" class="form-control pointItem-form-control" formControlName="name"  id="editPointItem_name" placeholder="Point Item Name">
+                    <ng-container *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.name.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.name.touched && editPointItemForm.controls.name.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
+                  </div>
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <label for="editPointItem_amount" class="l2">🍍 Amount</label>
+                    <input type="text" class="form-control pointItem-form-control" formControlName="amount" id="editPointItem_amount" placeholder="Point Amount">
+                    <ng-container *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.amount.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.amount.touched && editPointItemForm.controls.amount.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
                 </div>
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <label for="editPointItem_amount" class="l2">🍍 Amount</label>
-                  <input type="text" class="form-control pointItem-form-control" formControlName="amount" id="editPointItem_amount" placeholder="Point Amount">
-                  <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.amount.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.amount.touched && editPointItemForm.controls.amount.invalid)">
-                    <label class="validation-message">This field is required.</label>
+                <div class="form-row">
+                  <div class="form-group col-12 textl">
+                    <label for="editPointItem_description">Description</label>
+                    <input type="text" class="form-control pointItem-form-control" formControlName="description" id="editPointItem_description" placeholder="Description">
                   </div>
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-12 textl">
-                  <label for="editPointItem_description">Description</label>
-                  <input type="text" class="form-control pointItem-form-control" formControlName="description" id="editPointItem_description" placeholder="Description">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-12">
-                  <label>Core Values</label>
-                  <div class="form-group" formGroupName="coreValuesGroup">
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_happy" formControlName="coreValue_happy">Happy
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_fun" formControlName="coreValue_fun">Fun
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_genuine" formControlName="coreValue_genuine">Genuine
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_caring" formControlName="coreValue_caring">Caring
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
+                <div class="form-row">
+                  <div class="col-12">
+                    <label>Core Values</label>
+                    <div class="form-group" formGroupName="coreValuesGroup">
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_happy" formControlName="coreValue_happy">Happy
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_fun" formControlName="coreValue_fun">Fun
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_genuine" formControlName="coreValue_genuine">Genuine
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_caring" formControlName="coreValue_caring">Caring
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
 
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_respect" formControlName="coreValue_respect">Respect
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_honest" formControlName="coreValue_honest">Honest
-                        <span class="form-check-sign"></span>
-                      </label>
-                    </div>
-                    <div *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (editPointItemForm.dirty && editPointItemForm.controls['coreValuesGroup'].errors && editPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
-                      <label class="validation-message">Please select at least one Core Value.</label>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_respect" formControlName="coreValue_respect">Respect
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_honest" formControlName="coreValue_honest">Honest
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                      <ng-container *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (editPointItemForm.dirty && editPointItemForm.controls['coreValuesGroup'].errors && editPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
+                        <label class="validation-message">Please select at least one Core Value.</label>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        </perfect-scrollbar>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="onEditPointItemFormSubmit(editPointItemForm)">Save Changes</button>
+              </form>
+            </div>
+          </perfect-scrollbar>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="onEditPointItemFormSubmit(editPointItemForm)">Save Changes</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Delete Point Item -->
-<div class="modal fade bd-example-modal-lg" id="deletePointItemModal" tabindex="-1" role="dialog"
-     aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deletePointItemModalLabel">Delete a 🍍 Award</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body pointItem-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
-          <div class="pointItem-form-container">
-            <form [formGroup]="deletePointItemForm">
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <label for="deletePointItem_pointItem" class="form-label">Select a 🍍 Award to Delete</label>
-                  <select formControlName="pointItem"
-                          class="form-control pointItem-form-control"
-                          id="deletePointItem_pointItem" name="deletePointItem_pointItem">
-                    <option [ngValue]="null" disabled="true">Select a 🍍 Award</option>
-                    <option *ngFor="let pointItem of (pointItemQuery.selectAll() | async)" [ngValue]="pointItem">
-                      {{pointItem.name}} {{pointItem.amount}}pts
-                    </option>
-                  </select>
-                  <div *ngIf="(deletePointItemFormSubmitted && deletePointItemForm.controls.pointItem.invalid) || (deletePointItemForm.dirty && deletePointItemForm.controls.pointItem.touched && deletePointItemForm.controls.pointItem.invalid)">
-                    <label class="validation-message">This field is required.</label>
+  <!-- Delete Point Item -->
+  <div class="modal fade bd-example-modal-lg" id="deletePointItemModal" tabindex="-1" role="dialog"
+       aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deletePointItemModalLabel">Delete a 🍍 Award</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pointItem-modal-body">
+          <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+            <div class="pointItem-form-container">
+              <form [formGroup]="deletePointItemForm">
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <label for="deletePointItem_pointItem" class="form-label">Select a 🍍 Award to Delete</label>
+                    <select formControlName="pointItem"
+                            class="form-control pointItem-form-control"
+                            id="deletePointItem_pointItem" name="deletePointItem_pointItem">
+                      <option [ngValue]="null" disabled="true">Select a 🍍 Award</option>
+                      <ng-container *ngFor="let pointItem of pointItems">
+                        <option  [ngValue]="pointItem">
+                          {{pointItem.name}} {{pointItem.amount}}pts
+                        </option>
+                      </ng-container>
+
+                    </select>
+                    <ng-container *ngIf="(deletePointItemFormSubmitted && deletePointItemForm.controls.pointItem.invalid) || (deletePointItemForm.dirty && deletePointItemForm.controls.pointItem.touched && deletePointItemForm.controls.pointItem.invalid)">
+                      <label class="validation-message">This field is required.</label>
+                    </ng-container>
                   </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        </perfect-scrollbar>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="onDeletePointItemFormSubmit(deletePointItemForm)">Delete Point Item</button>
+              </form>
+            </div>
+          </perfect-scrollbar>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="onDeletePointItemFormSubmit(deletePointItemForm)">Delete Point Item</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
 
-<!-- Set Point Pool -->
-<div class="modal fade bd-example-modal-lg" id="setPointPoolMaxModal" tabindex="-1" role="dialog"
-     aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="setPointPoolModalLabel">Set Point Pool Max</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body pointItem-modal-body">
-        <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
-          <div class="pointItem-form-container">
-            <form [formGroup]="pointPoolMaxForm">
-              <div class="form-row">
-                <div class="form-group col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                  <label for="setPointPoolMax_maxAmount" class="form-label">The current Point Pool max is <span class="text-primary">{{this.pointPoolMax}}</span>. Set a new one?</label>
-                  <input class="form-control user-form-control" id="setPointPoolMax_maxAmount" type="number" min="1" step="1" placeholder="New Point Pool Max Amount" formControlName="maxAmount" value="5000">
-                  <ng-container *ngIf="(pointPoolMaxFormSubmitted) || (pointPoolMaxForm.dirty && pointPoolMaxForm.controls.maxAmount.touched && pointPoolMaxForm.controls.maxAmount.value < 1)">
-                    <label class="validation-message">The value must be a whole number greater than 0.</label>
-                  </ng-container>
+  <!-- Set Point Pool -->
+  <div class="modal fade bd-example-modal-lg" id="setPointPoolMaxModal" tabindex="-1" role="dialog"
+       aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="setPointPoolModalLabel">Set Point Pool Max</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pointItem-modal-body">
+          <perfect-scrollbar class="scroll-container" fxFlex="auto" [config]="config" [scrollIndicators]="false">
+            <div class="pointItem-form-container">
+              <form [formGroup]="pointPoolMaxForm">
+                <div class="form-row">
+                  <div class="form-group col-sm-12 col-md-8 col-lg-8 col-xl-8">
+                    <label for="setPointPoolMax_maxAmount" class="form-label">The current Point Pool max is <span class="text-primary">{{this.pointPoolMax}}</span>. Set a new one?</label>
+                    <input class="form-control user-form-control" id="setPointPoolMax_maxAmount" type="number" min="1" step="1" placeholder="New Point Pool Max Amount" formControlName="maxAmount" value="5000">
+                    <ng-container *ngIf="(pointPoolMaxFormSubmitted) || (pointPoolMaxForm.dirty && pointPoolMaxForm.controls.maxAmount.touched && pointPoolMaxForm.controls.maxAmount.value < 1)">
+                      <label class="validation-message">The value must be a whole number greater than 0.</label>
+                    </ng-container>
+                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        </perfect-scrollbar>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="onSetPointPoolMaxSubmit(pointPoolMaxForm)">Set New Point Pool Max</button>
+              </form>
+            </div>
+          </perfect-scrollbar>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="onSetPointPoolMaxSubmit(pointPoolMaxForm)">Set New Point Pool Max</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+</ng-container>
+

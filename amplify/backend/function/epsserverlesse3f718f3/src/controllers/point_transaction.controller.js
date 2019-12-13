@@ -60,7 +60,7 @@ const getPointTransaction = function () {
       },
       {
         model: Models.PointItem,
-        attributes: ['name', 'coreValues']
+        attributes: ['id', 'name', 'coreValues', 'description', 'amount']
       },
       {
         model: Models.StoreItem,
@@ -118,7 +118,7 @@ const getPointTransactionRange = function (startIndex, numberRecords) {
       },
       {
         model: Models.PointItem,
-        attributes: ['name', 'coreValues']
+        attributes: ['id', 'name', 'coreValues', 'description', 'amount']
       },
       {
         model: Models.StoreItem,
@@ -176,7 +176,7 @@ const getAddPointTransactionRange = function (startIndex, numberRecords) {
       },
       {
         model: Models.PointItem,
-        attributes: ['name', 'coreValues']
+        attributes: ['id', 'name', 'coreValues', 'description', 'amount']
       },
       {
         model: Models.StoreItem,
@@ -236,7 +236,7 @@ const getUserPointTransactions = function (userId) {
       },
       {
         model: Models.PointItem,
-        attributes: ['name', 'coreValues']
+        attributes: ['id', 'name', 'coreValues', 'description', 'amount']
       },
       {
         model: Models.StoreItem,
@@ -294,7 +294,7 @@ const getManagerPointTransactions = function (userId) {
       },
       {
         model: Models.PointItem,
-        attributes: ['name', 'coreValues']
+        attributes: ['id', 'name', 'coreValues', 'description', 'amount']
       },
       {
         model: Models.LikeInfo,

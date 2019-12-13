@@ -540,6 +540,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       field: 'amount'
     },
+    createdBy: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'SYSTEM',
+      field: 'created_by'
+    },
+    updatedBy: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'SYSTEM',
+      field: 'updated_by'
+    },
     coreValues: {
       type: DataTypes.STRING(255),
       allowNull: true,
@@ -548,6 +560,11 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'point_item'
   });
+
+  PointItem.hasOne(User, {foreignKey: 'username', sourceKey: 'createdBy', as: 'createdByUser'});
+  User.belongsTo(PointItem, {foreignKey: 'username', targetKey: 'createdBy'});
+  PointItem.hasOne(User, {foreignKey: 'username', sourceKey: 'updatedBy', as: 'updatedByUser'});
+  User.belongsTo(PointItem, {foreignKey: 'username', targetKey: 'updatedBy'});
 
   // point_transaction table
   const PointTransaction = sequelize.define('pointTransaction', {

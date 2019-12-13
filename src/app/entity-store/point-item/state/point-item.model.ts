@@ -8,9 +8,14 @@ export type PointItemModel = {
   amount: number;
   coreValues: string[];
   dateModified: any;
+  createdByUsername: string;
+  createdByUser: any;
+  updatedByUsername: string;
+  updatedByUser: any;
 };
 
-export function createPointItemModel({ itemId, name, description, amount, coreValues, }: Partial<PointItemModel>) {
+export function createPointItemModel({ itemId, name, description, amount, coreValues, createdByUsername, createdByUser, updatedByUsername,
+                                       updatedByUser}: Partial<PointItemModel>) {
 
   return {
     id: guid(),
@@ -19,6 +24,10 @@ export function createPointItemModel({ itemId, name, description, amount, coreVa
     description,
     amount,
     coreValues,
+    createdByUsername,
+    createdByUser,
+    updatedByUsername,
+    updatedByUser,
     dateModified: Date.now(),
   } as PointItemModel;
 }

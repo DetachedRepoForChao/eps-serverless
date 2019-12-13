@@ -1,11 +1,11 @@
 {
   "resource": "/items",
-  "path": "/items/updatePurchaseApprover",
+  "path": "/items/modifyPointItem",
   "httpMethod": "POST",
   "headers": {
     "Accept": "application/hal+json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Content-Type": "application/json;charset=UTF-8",
-    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwNTA4MTdhNS1iNWM4LTQ1ZmMtYmY2MS1hMTdlMGIyZTc5MzciLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYmlydGhkYXRlIjoiMDNcLzA3XC8xOTg1IiwiY3VzdG9tOmRlcGFydG1lbnQiOiJIb3VzZWtlZXBpbmciLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV92T2c0SFNaYzgiLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOnRydWUsImNvZ25pdG86dXNlcm5hbWUiOiJtYXgtYWRtaW4iLCJjdXN0b206c2VjdXJpdHlfcm9sZSI6ImFkbWluIiwiZ2l2ZW5fbmFtZSI6Ik1heCIsImN1c3RvbTpkZXBhcnRtZW50X2lkIjoiMyIsImF1ZCI6Ijd2Z2M1Z2Q3cTIwazFwNG04YXI5YmNxZDhtIiwiY3VzdG9tOnNlY3VyaXR5X3JvbGVfaWQiOiIzIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1NzYxNzMzODksIm5hbWUiOiJNYXggQmFkbyIsInBob25lX251bWJlciI6IisxNzMyODU5NzgzOSIsImV4cCI6MTU3NjE3Njk4OSwiaWF0IjoxNTc2MTczMzg5LCJmYW1pbHlfbmFtZSI6IkJhZG8iLCJlbWFpbCI6Im1heC5iYWRvQGdtYWlsLmNvbSJ9.Ggi50nwJZmm4BY1JFL9HO0jZ_uelR-fqVunRrjdfR91N6jlDBDKPvil5kEAM7P5DedVA71PLhwGUcEL_hThQpRiwwnfq7hmf3mol3-YV2fINvqij6MRnzEdFRdLsdXztsZlvy1oW1MFlEzINpsFfMxm5aLa634hdRzasfuUIVm8l02jyolfej0dvq_NhZ4kE85AaMD3WKqH0s9UYqveBnPJqFwSLLyD9u4-Yti5B0Z0eURgFWJaH5BVLStZDa_Bgb_qLS0XrQ4sR9eSSA8BVvHO7nwq1x0-2x_ZoJuNQJpGdzOSCk3jjTLHV3lG0xHhp7KCx6leEadw5VNmCGcoNkg"
+    "Authorization": "eyJraWQiOiI5NkIzYnMwblRMMnpKdHliUzg2REtJK1FEUHVkZ2FCeUM0bFwvSUQ0aFpYTT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhMTk4YTA1Zi05ZmFmLTQzMjctOTNlMS05ZWU3MmFkNTRkZDIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYmlydGhkYXRlIjoiMTk5MS0wNS0yNCIsImdlbmRlciI6IkF2ZW5nZXIiLCJjdXN0b206ZGVwYXJ0bWVudCI6IkhvdXNla2VlcGluZyIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX3ZPZzRIU1pjOCIsInBob25lX251bWJlcl92ZXJpZmllZCI6dHJ1ZSwiY29nbml0bzp1c2VybmFtZSI6ImNhcCIsImN1c3RvbTpzZWN1cml0eV9yb2xlIjoibWFuYWdlciIsImdpdmVuX25hbWUiOiJTdGV2ZSIsInBpY3R1cmUiOiJwcm90ZWN0ZWRcL3VzLWVhc3QtMTo2YThhNDQ0Ny02MzU3LTRjYmEtOTM1NC1iNzJkMTM5YzA5NWZcL2F2YXRhcl93aDBjamVqdWNvZWs0MWlhMXM4LnBuZyIsImN1c3RvbTpkZXBhcnRtZW50X2lkIjoiMyIsImF1ZCI6Ijd2Z2M1Z2Q3cTIwazFwNG04YXI5YmNxZDhtIiwiY3VzdG9tOnNlY3VyaXR5X3JvbGVfaWQiOiIyIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1NzYyNTEyNjEsIm5hbWUiOiJTdGV2ZSBSb2dlcnMiLCJwaG9uZV9udW1iZXIiOiIrMTczMjg1OTc4MzkiLCJleHAiOjE1NzYyNTQ4NjEsImlhdCI6MTU3NjI1MTI2MSwiZmFtaWx5X25hbWUiOiJSb2dlcnMiLCJlbWFpbCI6Im1iYWRvQG1vbm1vdXRoLmVkdSJ9.RcSrCTUc3HRwAku9UKRPw48jDYIeXbfVP51R_n9A7K9VcC8l9m6UWUd_8wwxuRoj2RFZEzoQdXFQDyQ61q5iKs1RMtsgNVzjY-RdDNjcv-UPOP5Ni_NRYsosDUbExxdp8z91UiJnjn6grwkBk4ThiWZf8WDoDvp6SFsePLMdWuzbz10kCYjc3vtGzzDUaO3FrHsOChEESKt2qCnGGRTLSHJJBiI7FOZYfNM9fEq8lXXALfJ7tLTtHXOq6QmdLFDcs_d2h50fwps1yf37DB9XbSuxnSqMhrKB6MtvuIX2A-OiOaxqMyxDTiZd2vUWdbZ-xmV16OVm39ClqCZ59ZF5iQ"
   },
   "multiValueHeaders": null,
   "queryStringParameters": null,
@@ -41,6 +41,6 @@
     "extendedRequestId": "cX72iF6IoAMFTUA=",
     "apiId": "ku6y30qtm8"
   },
-  "body": "{\"purchaseApprover\":{\"emailNotifications\":false,\"phoneNotifications\":true,\"inApp\":true,\"username\":\"max-admin\"}}",
+  "body": "{\"pointItem\":{\"amount\":\"25\",\"coreValues\":[\"caring\",\"genuine\"],\"updatedByUsername\":\"cap\",\"itemId\":2}}",
   "isBase64Encoded": false
 }

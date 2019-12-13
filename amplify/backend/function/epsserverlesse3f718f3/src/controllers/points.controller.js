@@ -15,7 +15,17 @@ const getPointItems = function () {
   console.log(`Start ${functionFullName}`);
 
   return sqlPointItemModel.findAll({
-    attributes: ['id', 'name', 'description', 'amount', 'coreValues']
+    include: [
+      {
+        model: Models.User,
+        as: 'createdByUser',
+      },
+      {
+        model: Models.User,
+        as: 'updatedByUser',
+      }
+    ],
+    attributes: ['id', 'name', 'description', 'amount', 'coreValues', 'createdBy', 'updatedBy']
   })
     .then(pointItems => {
       if(!pointItems) {
@@ -43,7 +53,17 @@ const getPointItem = function (pointItemId) {
   console.log(`${functionFullName}: pointItemId: ${pointItemId}`);
 
   return sqlPointItemModel.findOne({
-    attributes: ['id', 'name', 'description', 'amount', 'coreValues'],
+    include: [
+      {
+        model: Models.User,
+        as: 'createdByUser',
+      },
+      {
+        model: Models.User,
+        as: 'updatedByUser',
+      }
+    ],
+    attributes: ['id', 'name', 'description', 'amount', 'coreValues', 'createdBy', 'updatedBy'],
     where: {
       id: pointItemId
     }
@@ -363,7 +383,9 @@ const newPointItem = function (pointItem) {
     name: pointItem.name,
     description: pointItem.description,
     amount: pointItem.amount,
-    coreValues: coreValues
+    coreValues: coreValues,
+    createdBy: pointItem.createdByUsername,
+    updatedBy: pointItem.updatedByUsername
   })
     .then(newPointItem => {
       console.log(newPointItem);
@@ -407,10 +429,12 @@ const modifyPointItem = function (pointItem) {
 
     if (pointItem[keys[i]] === '') {
       pointItemUpdate[key] = null;
-    } else {
+    } else if (pointItem[keys[i]]) {
       pointItemUpdate[key] = value;
     }
   }
+
+  pointItemUpdate['updatedBy'] = pointItem.updatedByUsername;
 
   return sqlPointItemModel.update(pointItemUpdate, {
     where: {

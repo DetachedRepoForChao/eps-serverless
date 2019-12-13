@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Globals} from '../../../globals';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
@@ -8,16 +8,19 @@ import {EntityUserService} from '../../../entity-store/user/state/entity-user.se
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
-import {take, tap} from 'rxjs/operators';
+import {take, takeUntil, tap} from 'rxjs/operators';
 import {Department} from '../../../shared/department.model';
 import {SecurityRole} from '../../../shared/securityrole.model';
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, Subject} from 'rxjs';
 import {DepartmentService} from '../../../shared/department.service';
 import {SecurityRoleService} from '../../../shared/securityRole.service';
 import {NotifierService} from 'angular-notifier';
 import {environment} from '../../../../environments/environment';
 import {PointItemService} from '../../../entity-store/point-item/state/point-item.service';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
+import {PointItemModel} from '../../../entity-store/point-item/state/point-item.model';
 
 
 export function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
@@ -48,10 +51,14 @@ export function requireCheckboxesToBeCheckedValidator(minRequired = 1): Validato
   styleUrls: ['./point-items-card.component.css']
 })
 
-export class PointItemsCardComponent implements OnInit {
+export class PointItemsCardComponent implements OnInit, OnDestroy {
 
   componentName = 'point-items-card.component';
   public config: PerfectScrollbarConfigInterface = {};
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private pointItemsLoading$ = new Subject();
+
   addPointItemForm: FormGroup;
   addPointItemFormSubmitted = false;
   editPointItemForm: FormGroup;
@@ -61,8 +68,11 @@ export class PointItemsCardComponent implements OnInit {
   pointPoolMaxForm: FormGroup;
   pointPoolMaxFormSubmitted = false;
   public pointPoolMax: number;
+  currentUser: EntityCurrentUserModel;
+  pointItems: PointItemModel[];
 
   constructor(private router: Router,
+              private currentUserQuery: EntityCurrentUserQuery,
               private achievementService: AchievementService,
               private authService: AuthService,
               private userService: EntityUserService,
@@ -76,7 +86,35 @@ export class PointItemsCardComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.pointItemService.cachePointItems().subscribe();
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
+
+    this.pointItemQuery.selectLoading()
+      .pipe(takeUntil(this.pointItemsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.pointItemQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((pointItems: PointItemModel[]) => {
+              this.pointItems = pointItems;
+            });
+
+          this.pointItemsLoading$.next();
+          this.pointItemsLoading$.complete();
+        }
+      });
 
     // Build the reactive Edit User form
     this.loadAddPointItemForm();
@@ -92,7 +130,9 @@ export class PointItemsCardComponent implements OnInit {
       });
 
     // Subscribe to change events for the 'pointItem' field. Every time a new pointItem is selected, the corresponding fields will populate with data
-    this.editPointItemForm.get('pointItem').valueChanges.subscribe(pointItem => {
+    this.editPointItemForm.get('pointItem').valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(pointItem => {
       console.log(pointItem);
       this.editPointItemForm.controls.coreValuesGroup.reset();
 
@@ -112,7 +152,9 @@ export class PointItemsCardComponent implements OnInit {
       }
     });
 
-    this.deletePointItemForm.get('pointItem').valueChanges.subscribe(pointItem => {
+    this.deletePointItemForm.get('pointItem').valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(pointItem => {
       console.log(pointItem);
 
       const keys = Object.keys(pointItem);
@@ -232,7 +274,10 @@ export class PointItemsCardComponent implements OnInit {
 
       if (Object.keys(pointItem).length > 0) {
         // Point Item object changes exist. Add the itemId to the pointItem object and invoke modifyPointItem function
+
+        pointItem['updatedByUsername'] = this.currentUser.username;
         pointItem['itemId'] = sourcePointItem.itemId;
+
         this.pointItemService.modifyPointItem(pointItem).subscribe(modifyResult => {
           console.log(modifyResult);
           if (modifyResult.status !== false) {
@@ -293,6 +338,9 @@ export class PointItemsCardComponent implements OnInit {
           pointItem[keys[i]] = form.controls[keys[i]].value;
         }
       }
+
+      pointItem['createdByUsername'] = this.currentUser.username;
+      pointItem['updatedByUsername'] = this.currentUser.username;
 
       this.pointItemService.newPointItem(pointItem).subscribe(addResult => {
         console.log(addResult);
@@ -356,4 +404,15 @@ export class PointItemsCardComponent implements OnInit {
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
+
+  ngOnDestroy(): void {
+    // this.subscription.unsubscribe();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.pointItemsLoading$.next();
+    this.pointItemsLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
 }
