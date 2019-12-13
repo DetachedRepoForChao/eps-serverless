@@ -138,7 +138,7 @@ export class EntityCurrentUserService {
         const coreValuesPublic = userDataResult.coreValuesPublic;
         const emailNotifications = userDataResult.emailNotifications;
         const phoneNotifications = userDataResult.phoneNotifications;
-        const awardsManager = userDataResult.awardsManager;
+        const awardManager = userDataResult.awardManager;
 
         this.getAvatarFromStorage(avatarPath)
           .subscribe((result: any) => {
@@ -146,7 +146,7 @@ export class EntityCurrentUserService {
             const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, position,
               points, pointsPool, email, birthdate, gender, dateOfHire, department, securityRole, phone, avatarPath, avatarResolvedUrl,
               quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic,
-              coreValuesPublic, emailNotifications, phoneNotifications, awardsManager});
+              coreValuesPublic, emailNotifications, phoneNotifications, awardManager});
             this.currentUserStore.set([currentUser]);
             // this.userStore.setLoading(false);  // this gets set to false automatically after store is set
           });
@@ -250,7 +250,7 @@ export class EntityCurrentUserService {
                   const coreValuesPublic = currentUserData.user.coreValuesPublic;
                   const emailNotifications = currentUserData.user.emailNotifications;
                   const phoneNotifications = currentUserData.user.phoneNotifications;
-                  const awardsManager = currentUserData.user.awardsManager;
+                  const awardManager = currentUserData.user.awardManager;
 
                   const data = {
                     userId: userId,
@@ -281,7 +281,7 @@ export class EntityCurrentUserService {
                     coreValuesPublic: coreValuesPublic,
                     emailNotifications: emailNotifications,
                     phoneNotifications: phoneNotifications,
-                    awardsManager: awardsManager,
+                    awardManager: awardManager,
                   };
 
                   console.log('userData:');

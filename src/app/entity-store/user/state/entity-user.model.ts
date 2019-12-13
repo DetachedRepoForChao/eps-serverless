@@ -37,7 +37,7 @@ export type EntityUserModel = {
   coreValuesPublic: boolean;
   phoneNotifications: boolean;
   emailNotifications: boolean;
-  awardsManager: boolean;
+  awardManager: boolean;
 
 };
 
@@ -46,7 +46,7 @@ export function createEntityUserModel({ userId, username, firstName, lastName, m
                                         completeAchievementsTotal, active, dateOfHire, dateOfTermination, quote, phonePublic,  emailPublic,
                                         genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic,
                                         coreValuesPublic, phoneNotifications, emailNotifications,
-                                        awardsManager}: Partial<EntityUserModel>) {
+                                        awardManager}: Partial<EntityUserModel>) {
   return {
     id: guid(),
     userId,
@@ -81,7 +81,7 @@ export function createEntityUserModel({ userId, username, firstName, lastName, m
     coreValuesPublic,
     phoneNotifications,
     emailNotifications,
-    awardsManager,
+    awardManager,
     dateModified: Date.now(),
   } as EntityUserModel;
 }

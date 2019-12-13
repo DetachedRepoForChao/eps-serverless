@@ -288,7 +288,7 @@ export class EntityUserService {
               const coreValuesPublic = usersMerged[i].coreValuesPublic;
               const emailNotifications = usersMerged[i].emailNotifications;
               const phoneNotifications = usersMerged[i].phoneNotifications;
-              const awardsManager = usersMerged[i].awardsManager;
+              const awardManager = usersMerged[i].awardManager;
               // Properties visible to admins
               const dateOfHire = (usersMerged[i].dateOfHire) ? usersMerged[i].dateOfHire : null;
               const dateOfTermination = (usersMerged[i].dateOfTermination) ? usersMerged[i].dateOfTermination : null;
@@ -303,7 +303,7 @@ export class EntityUserService {
               const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName, dateOfHire,
                 dateOfTermination, phone, active, gender, quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic,
-                achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, emailNotifications, phoneNotifications, awardsManager});
+                achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, emailNotifications, phoneNotifications, awardManager});
               usersArray.push(userModel);
             }
 
@@ -384,7 +384,7 @@ export class EntityUserService {
               const gender = (usersMerged[i].gender) ? usersMerged[i].gender : null;
               const phoneNotifications = usersMerged[i].phoneNotifications;
               const emailNotifications = usersMerged[i].emailNotifications;
-              const awardsManager = usersMerged[i].awardsManager;
+              const awardManager = usersMerged[i].awardManager;
 
               const completeAchievementsTotal = usersMerged[i].completeAchievementsTotal;
               const avatarPath = usersMerged[i].avatarUrl;
@@ -393,7 +393,7 @@ export class EntityUserService {
                 securityRole, department, gender, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName,
                 dateOfHire, dateOfTermination, phone, active, quote, phonePublic, emailPublic, genderPublic, birthdatePublic,
                 pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, phoneNotifications, emailNotifications,
-                awardsManager });
+                awardManager });
               usersArray.push(userModel);
             }
 

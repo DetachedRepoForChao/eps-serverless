@@ -369,7 +369,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required],
       points: [null, Validators.compose([Validators.required, Validators.min(0)])],
-      awardsManager: [false, Validators.required],
+      awardManager: [false, Validators.required],
     });
   }
 
@@ -393,7 +393,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       email: [null, Validators.compose([Validators.required, Validators.email])],
       phone: [null, Validators.required],
       points: [null, Validators.compose([Validators.required, Validators.min(0)])],
-      awardsManager: [false, Validators.required],
+      awardManager: [false, Validators.required],
 
     });
   }

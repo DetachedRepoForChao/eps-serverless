@@ -188,7 +188,7 @@ const adminRegisterUser = function (user) {
     phonePublic = true;
     emailPublic = true;
   }
-  let awardsManager = (user.awardsManager) ? user.awardsManager : false;
+  let awardManager = (user.awardManager) ? user.awardManager : false;
 
   return sqlUserModel.findOne({
     where: {
@@ -235,7 +235,7 @@ const adminRegisterUser = function (user) {
           achievementsPublic: achievementsPublic,
           pointsPublic: pointsPublic,
           coreValuesPublic: coreValuesPublic,
-          awardsManager: awardsManager,
+          awardManager: awardManager,
           active: 1,
         })
           .then(newUser => {
@@ -289,7 +289,7 @@ const getUserProfile = function (username) {
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'position', 'points',
       'email', 'dateOfBirth', 'gender', 'dateOfHire', 'phone', 'securityRoleId', 'departmentId', 'avatarUrl', 'quote',
       'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic', 'pointAwardsPublic', 'achievementsPublic',
-      'pointsPublic', 'coreValuesPublic', 'emailNotifications', 'phoneNotifications', 'awardsManager'],
+      'pointsPublic', 'coreValuesPublic', 'emailNotifications', 'phoneNotifications', 'awardManager'],
     where: {
       username: username,
       active: 1
@@ -370,7 +370,7 @@ const getUsersPublicDetails = function () {
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'points', 'dateOfBirth',
       'securityRoleId', 'departmentId', 'avatarUrl', 'email', 'gender', 'phone', 'active', 'quote', 'phonePublic',
       'emailPublic', 'genderPublic', 'birthdatePublic', 'pointAwardsPublic', 'achievementsPublic', 'pointsPublic',
-      'coreValuesPublic', 'emailNotifications', 'phoneNotifications', 'awardsManager'],
+      'coreValuesPublic', 'emailNotifications', 'phoneNotifications', 'awardManager'],
     where: {
       securityRoleId: [1, 2, 3],
       active: 1,
@@ -421,7 +421,7 @@ const adminGetUsersDetails = function () {
       'email', 'gender', 'dateOfBirth', 'dateOfHire', 'dateOfTermination', 'phone', 'securityRoleId', 'departmentId',
       'avatarUrl', 'active', 'quote', 'phonePublic', 'emailPublic', 'genderPublic', 'birthdatePublic',
       'pointAwardsPublic', 'achievementsPublic', 'pointsPublic', 'coreValuesPublic', 'emailNotifications',
-      'phoneNotifications', 'awardsManager'],
+      'phoneNotifications', 'awardManager'],
     order: [
       ['id', 'ASC'],
     ],
