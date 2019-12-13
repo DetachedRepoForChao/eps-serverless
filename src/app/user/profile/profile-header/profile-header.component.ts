@@ -72,31 +72,8 @@ export class ProfileHeaderComponent implements OnInit, OnDestroy {
           this.userLoading$.complete();
         }
       });
-
-/*    this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-      console.log('balance: ' + balance);
-      this.currentUserService.updatePointsBalance(balance);
-    });*/
   }
 
-/*  getPendingBalance(): Observable<any> {
-    return new Observable(observer => {
-      this.currentUserQuery.selectAll()
-        .subscribe(user => {
-          if (user[0]) {
-            observer.next(user[0].pointsBalance);
-            observer.complete();
-          } else {
-            observer.complete();
-          }
-
-        });
-    });
-  }*/
-
-  avatarClick() {
-    $('#avatarModal').modal('show');
-  }
 
   getFirstDigit(number: number) {
     const one = String(number).charAt(0);

@@ -14,7 +14,6 @@ import {Router} from '@angular/router';
 import {Observable, forkJoin, Subject} from 'rxjs';
 import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
-import {GiftPointsService} from './gift-points.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {UserStore} from '../../../entity-store/user/state/user.store';
@@ -60,8 +59,6 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   private currentUserLoading$ = new Subject<void>();
   private unsubscribe$ = new Subject<void>();
 
-  // departmentEmployees = [];
-  // department: Department;
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
   // selection = new SelectionModel<DepartmentEmployee>(true, []);
   selection = new SelectionModel<EntityUserModel>(true, []);
@@ -101,7 +98,6 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     private achievementService: AchievementService,
     private notifierService: NotifierService,
     private leaderboardService: LeaderboardService,
-    private giftPointsService: GiftPointsService,
     private spinner: NgxSpinnerService,
     private entityUserService: EntityUserService,
     private userStore: UserStore,
@@ -120,10 +116,6 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     const observables: Observable<any>[] = [];
 
     this.populateCoreValueButtonList();
-
-    // this.pointItemService.cachePointItems().subscribe();
-    // this.pointItemList$ = this.pointItemQuery.selectAll();
-    // this.filteredPointItemList$ = this.pointItemQuery.selectAll();
 
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
@@ -172,10 +164,6 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
         }
       });
 
-    // this.entityUserService.cacheUsers().subscribe();
-/*    this.employees$ = this.entityUserQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });*/
 
     this.isCardLoading = false;
     this.spinner.hide('gift-points-spinner');
@@ -436,20 +424,13 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
       const border = '1px solid rgb(81, 203, 238)';
       return {
         'box-shadow': boxShadow,
-      'padding': padding,
-      'margin': margin,
-      'border': border,
+        'padding': padding,
+        'margin': margin,
+        'border': border,
       };
     }
     return {
-/*      '-webkit-transition': 'all 0.30s ease-in-out',
-    '-moz-transition': 'all 0.30s ease-in-out',
-    '-ms-transition': 'all 0.30s ease-in-out',
-    '-o-transition': 'all 0.30s ease-in-out',
-    'outline': 'none',
-    'padding': '3px 0px 3px 3px',
-    'margin': '5px 1px 3px 0px',
-    'border': '1px solid #DDDDDD',*/
+
     };
   }
 

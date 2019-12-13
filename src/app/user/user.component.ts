@@ -16,7 +16,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {SecurityRole} from '../shared/securityrole.model';
 import {FeedcardService} from '../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {GiftPointsService} from './manager-user/gift-points/gift-points.service';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import 'rxjs/add/operator/takeWhile';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
@@ -86,7 +85,6 @@ export class UserComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
-              private giftPointsService: GiftPointsService,
               private achievementService: AchievementService,
               private departmentService: EntityDepartmentService,
               private userService: EntityUserService,

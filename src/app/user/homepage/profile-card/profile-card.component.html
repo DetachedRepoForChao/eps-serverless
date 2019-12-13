@@ -2,22 +2,13 @@
   <div class="card card-coin card-plain card-custom">
     <div class="card-header profile-card-header">
 
-<!--      <div *ngIf="(this.currentUserQuery.selectLoading() | async) === false; else avatarLoading">-->
-<!--      <div *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarLoading">
-        <img [src]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"
-             alt="Avatar"
-             class="img-center img-fluid rounded-circle"
-             id="avatar"
-             (click)="avatarClick()">
-      </div>-->
-
-      <div *ngIf="currentUser; else avatarLoading">
+      <ng-container *ngIf="currentUser; else avatarLoading">
         <img [src]="currentUser?.avatarResolvedUrl"
              alt="Avatar"
              class="img-center img-fluid rounded-circle"
              id="avatar"
              (click)="avatarClick()">
-      </div>
+      </ng-container>
 
       <ng-template #avatarLoading >
         <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
@@ -27,141 +18,78 @@
       </ng-template>
     </div>
 
-    <div class="card-body" *ngIf="!isCardLoading; else cardLoading">
-      <ngx-spinner
-        name="profile-card-spinner"
-        [fullScreen]="false"
-        bdColor="rgba(51,51,51,0.8)"
-        size="medium"
-        color="#fff"
-        type="pacman"
-      >
-        <p class="loadingstyle">Loading...</p>
-      </ngx-spinner>
+    <ng-container *ngIf="!isCardLoading; else cardLoading">
+      <div class="card-body" >
+        <ngx-spinner
+          name="profile-card-spinner"
+          [fullScreen]="false"
+          bdColor="rgba(51,51,51,0.8)"
+          size="medium"
+          color="#fff"
+          type="pacman"
+        >
+          <p class="loadingstyle">Loading...</p>
+        </ngx-spinner>
 
-      <div class="row">
-<!--        <div class="col-md-12 text-center">
-          <div *ngIf="(currentUser$ | async)[0]?.preferredName; else noPreferredName">
-            <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.preferredName}}</h4>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <ng-container *ngIf="currentUser?.preferredName; else noPreferredName">
+              <h4 class="text-uppercase">{{currentUser?.preferredName}}</h4>
+            </ng-container>
+            <ng-template #noPreferredName>
+              <h4 class="text-uppercase">{{currentUser?.firstName}} {{currentUser?.lastName}}</h4>
+            </ng-template>
+            <span>{{currentUser?.department.Name}}</span>
+            <hr class="line-success">
           </div>
-          <ng-template #noPreferredName>
-            <h4 class="text-uppercase">{{(currentUser$ | async)[0]?.firstName}} {{(currentUser$ | async)[0]?.lastName}}</h4>
-          </ng-template>
-          <span>{{(currentUser$ | async)[0]?.department.Name}}</span>
-          <hr class="line-success">
-        </div>-->
-        <div class="col-md-12 text-center">
-          <div *ngIf="currentUser?.preferredName; else noPreferredName">
-            <h4 class="text-uppercase">{{currentUser?.preferredName}}</h4>
-          </div>
-          <ng-template #noPreferredName>
-            <h4 class="text-uppercase">{{currentUser?.firstName}} {{currentUser?.lastName}}</h4>
-          </ng-template>
-          <span>{{currentUser?.department.Name}}</span>
-          <hr class="line-success">
         </div>
-      </div>
-<!--      <div class="row text-center mt-4">
-        <div class="col p-2"
-             [matTooltip]="'Points: ' + (currentUser$ | async)[0]?.points + '&#13;Pending Balance: ' + (getPendingBalance() | async)"
-             matTooltipPosition="above">
-          <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
-          <h4 class="mb-0" *ngIf="(currentUser$ | async)[0]?.pointsBalance === 0; else pointsWithBalance">
-            {{(currentUser$ | async)[0]?.points}}
-          </h4>
-          <ng-template #pointsWithBalance class="mb-0">
-            <h4 class="red" *ngIf="(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance">
-              {{(currentUser$ | async)[0]?.points - (currentUser$ | async)[0]?.pointsBalance}}
+
+        <div class="row text-center mt-4">
+
+          <div class="col p-2">
+            <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
+            <h4 class="mb-0">
+              {{currentUser?.points}}
             </h4>
-          </ng-template>
-        </div>
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-          <h4 class="mb-0" *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
-            {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
-          </h4>
-        </div>
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-          <h4 class="mb-0" *ngIf="(entityUserQuery.selectLoading() | async) === false">
-            {{(leaderboardUsers$ | async).indexOf((entityUserQuery.selectUser((currentUserQuery.selectAll() | async)[0]?.username) | async)[0]) + 1}}
-          </h4>
-        </div>
-      </div>-->
-      <div class="row text-center mt-4">
-<!--        <div class="col p-2"
-             [matTooltip]="'Points: ' + currentUser?.points + '&#13;Pending Balance: ' + currentUser?.pointsBalance"
-             matTooltipPosition="above">
-          <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
-          <h4 class="mb-0" *ngIf="currentUser?.pointsBalance === 0; else pointsWithBalance">
-            {{currentUser?.points}}
-          </h4>
-          <ng-template #pointsWithBalance class="mb-0">
-            <h4 class="red" *ngIf="currentUser?.points - currentUser?.pointsBalance">
-              {{currentUser?.points - currentUser?.pointsBalance}}
+          </div>
+          <div class="col p-2">
+            <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
+            <h4 class="mb-0" *ngIf="achievements">
+              {{finishedAchievements.length}} / {{achievements.length}}
             </h4>
-          </ng-template>
-        </div>-->
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold" >Points</h3>
-          <h4 class="mb-0">
-            {{currentUser?.points}}
-          </h4>
-        </div>
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold">Trophies</h3>
-          <h4 class="mb-0" *ngIf="achievements">
-            {{finishedAchievements.length}} / {{achievements.length}}
-          </h4>
-        </div>
-        <div class="col p-2">
-          <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
-          <h4 class="mb-0" *ngIf="leaderboardUsers">
-            {{leaderboardUsers.indexOf(entityUserQuery.getUserByUsername(currentUser?.username)) + 1}}
-          </h4>
-        </div>
-      </div>
-
-      <!--<div class="row">
-        <div class="col-2 quote-box-quotation-mark" >
-          <div>&ldquo;</div>
-        </div>
-        <div class="col-8 quote-box-text">
-          <div *ngIf="(currentUser$ | async)[0]?.quote; else noQuote">
-            <h4 class="user-attribute">{{(currentUser$ | async)[0]?.quote}}</h4>
           </div>
-          <ng-template #noQuote>
-            <h4 class="user-attribute">Nothing here yet...</h4>
-            <a href="javascript:void(0)" (click)="onSetQuoteClick()" class="user-attribute">Click here to set a favorite quote!</a>
-          </ng-template>
-
-        </div>
-        <div class="col-2">
-
-        </div>
-      </div>-->
-      <div class="row">
-        <div class="col-2 quote-box-quotation-mark" >
-          <div>&ldquo;</div>
-        </div>
-        <div class="col-8 quote-box-text">
-          <div *ngIf="currentUser?.quote; else noQuote">
-            <h4 class="user-attribute">{{currentUser?.quote}}</h4>
+          <div class="col p-2">
+            <h3 class="mb-1 line-height-5 font-weight-bold">Rank</h3>
+            <h4 class="mb-0" *ngIf="leaderboardUsers">
+              {{leaderboardUsers.indexOf(userQuery.getUserByUsername(currentUser?.username)) + 1}}
+            </h4>
           </div>
-          <ng-template #noQuote>
-            <h4 class="user-attribute">Nothing here yet...</h4>
-            <a href="javascript:void(0)" (click)="onSetQuoteClick(currentUser?.username)" class="user-attribute">Click here to set a favorite quote!</a>
-          </ng-template>
-
         </div>
-        <div class="col-2">
 
+        <div class="row">
+          <div class="col-2 quote-box-quotation-mark" >
+            <div>&ldquo;</div>
+          </div>
+          <div class="col-8 quote-box-text">
+            <ng-container *ngIf="currentUser?.quote; else noQuote">
+              <h4 class="user-attribute">{{currentUser?.quote}}</h4>
+            </ng-container>
+            <ng-template #noQuote>
+              <h4 class="user-attribute">Nothing here yet...</h4>
+              <a href="javascript:void(0)" (click)="onSetQuoteClick(currentUser?.username)" class="user-attribute">Click here to set a favorite quote!</a>
+            </ng-template>
+
+          </div>
+          <div class="col-2">
+
+          </div>
         </div>
+
       </div>
+    </ng-container>
 
-    </div>
     <div class="card-footer text-center">
-      <!-----Button----->
+
       <div class="container">
         <div class="row">
         </div>
@@ -194,13 +122,13 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Choose Your Avatar</h4>
       </div>
       <!---modal body---->
-<!--      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"></app-avatar>
-      </div>-->
+      <!--      <div class="modal-body" *ngIf="this.currentUserQuery.getCurrentUser()[0]; else avatarModalLoading">
+              <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0]?.avatarResolvedUrl"></app-avatar>
+            </div>-->
       <div class="modal-body" *ngIf="currentUser; else avatarModalLoading">
         <app-avatar [avatarUrl]="currentUser?.avatarResolvedUrl"></app-avatar>
       </div>

@@ -1,29 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LeaderboardService, LeaderboardUser} from '../../../shared/leaderboard.service';
-import {MatTableDataSource} from '@angular/material';
-import {SelectionModel} from '@angular/cdk/collections';
-import {DepartmentEmployee} from '../../manager-user/gift-points/gift-points.component';
-import {DepartmentService} from '../../../shared/department.service';
-import {Department} from '../../../shared/department.model';
-import {Storage} from 'aws-amplify';
-import {ImageService} from '../../../shared/image.service';
 import {forkJoin, observable, Observable, Subject, Subscription} from 'rxjs';
-import {NgxSpinnerService} from 'ngx-spinner';
-import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
-import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
-import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
-import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
-import {MetricsQuery} from '../../../entity-store/metrics/state/metrics.query';
-import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
-import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
-import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
-import {FeatureQuery} from '../../../entity-store/feature/state/feature.query';
-import {AuthService} from '../../../login/auth.service';
 import {takeUntil} from 'rxjs/operators';
 
 // Create a variable to interact with jquery
@@ -36,42 +17,20 @@ declare var $: any;
 })
 export class LeaderboardCardComponent implements OnInit, OnDestroy {
   componentName = 'leaderboard-card.component';
-  private subscription = new Subscription();
+  private unsubscribe$ = new Subject();
   private usersLoading$ = new Subject();
-  // leaderboardUsers: LeaderboardUser[] = [];
-  // leaderboardUsersTop: LeaderboardUser[] = [];
-
-  // public leaderboardUsers$: Observable<LeaderboardUser[]>;
-  // public leaderboardUsersTop$: Observable<LeaderboardUser[]>;
-  // private leaderboardUsers: LeaderboardUser[];
-  // private leaderboardUsersTop: LeaderboardUser[];
 
   isCardLoading: boolean;
 
   displayedColumns: string[] = ['rank', 'avatar', 'name', 'points'];
-  displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'username', 'email', 'department'];
+  displayedColumnsAll: string[] = ['rank', 'avatar', 'name', 'points', 'department'];
 
-  leaderboardUsers$: Observable<EntityUserModel[]>;
   leaderboardUsers: EntityUserModel[];
-  selectedRow;
 
-  constructor(public leaderboardService: LeaderboardService,
-              private departmentService: DepartmentService,
-              private imageService: ImageService,
-              private spinner: NgxSpinnerService,
-              private userService: EntityUserService,
-              private userStore: UserStore,
-              public userQuery: EntityUserQuery,
+  constructor(public userQuery: EntityUserQuery,
               public achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
-              public currentUserQuery: EntityCurrentUserQuery,
-              private userHasStoreItemQuery: UserHasStoreItemQuery,
-              private currentUserService: EntityCurrentUserService,
-              private storeItemQuery: StoreItemQuery,
-              private pointItemQuery: PointItemQuery,
-              private metricsQuery: MetricsQuery,
-              private featureQuery: FeatureQuery,
-              private authService: AuthService) { }
+              public currentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
     const functionName = 'ngOnInit';
@@ -79,29 +38,20 @@ export class LeaderboardCardComponent implements OnInit, OnDestroy {
     console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
-    console.log(`${functionFullName}: showing leaderboard-card-spinner`);
-    this.spinner.show('leaderboard-card-spinner');
-    this.spinner.show('avatar-loading-spinner');
-
-    // this.entityUserService.cacheUsers().subscribe();
-
-/*    this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });*/
 
     this.userQuery.selectLoading()
       .pipe(takeUntil(this.usersLoading$))
       .subscribe(isLoading => {
         console.log('achievements loading: ' + isLoading);
         if (!isLoading) {
-          this.subscription.add(
-            this.userQuery.selectAll({
-              filterBy: e => e.securityRole.Id === 1,
-            })
-              .subscribe(users => {
-                this.leaderboardUsers = users;
-              })
-          );
+          this.userQuery.selectAll({
+            filterBy: e => e.securityRole.Id === 1,
+          })
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(users => {
+              this.leaderboardUsers = users;
+            });
+
           this.usersLoading$.next();
           this.usersLoading$.complete();
         }
@@ -109,83 +59,18 @@ export class LeaderboardCardComponent implements OnInit, OnDestroy {
 
     this.isCardLoading = false;
 
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
   }
 
-  onRowClick(user) {
-    this.selectedRow = user;
-  }
-
-  showAvatarLoadingSpinner() {
-    this.spinner.show('avatar-loading-spinner');
-  }
-
-/*  test1() {
-    this.currentUserService.updatePointsBalance(123);
-  }*/
 
   getFirstDigit(number: number) {
     const one = String(number).charAt(0);
     return Number(one);
   }
 
-  test2() {
-    console.log('achievement family');
-    console.log(this.achievementQuery.getAchievementFamily('SignIn'));
-    console.log('get all');
-    console.log(this.achievementQuery.getAll());
-    console.log('filtered achievements');
-    this.achievementQuery.filterAchievements().subscribe(result => console.log(result));
-    console.log('completed');
-    console.log(this.achievementQuery.getCompleteAchievements());
-    console.log('user query select all');
-    const users$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
-
-    users$.subscribe(users => {
-      console.log(users);
-    });
-
-    const currentUser$ = this.currentUserQuery.selectAll();
-    currentUser$.subscribe(currentUser => {
-      console.log(currentUser);
-    });
-
-    const pointItems$ = this.pointItemQuery.selectAll();
-    pointItems$.subscribe(pointItems => {
-      console.log(pointItems);
-    });
-    // console.log(this.achievementQuery.filterAchievements());
-
-    const metrics$ = this.metricsQuery.selectAll();
-    metrics$.subscribe(metrics => {
-      console.log(metrics);
-    });
-
-    // this.entityUserQuery.getUserCompleteAchievementCount(47);
-
-    console.log(this.achievementQuery.getCompleteAchievements());
-    console.log(this.achievementQuery.getCompleteAchievementById(1));
-
-    this.achievementQuery.selectAll().subscribe(x => {
-      console.log(x);
-    });
-
-    console.log(this.achievementQuery.getAchievementFamilies());
-    // console.log(Object.keys(this.achievementQuery.getAchievementFamilies()));
-
-    this.featureQuery.selectAll()
-      .subscribe(x => {
-        console.log(x);
-      });
-  }
-
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.usersLoading$.next();
     this.usersLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

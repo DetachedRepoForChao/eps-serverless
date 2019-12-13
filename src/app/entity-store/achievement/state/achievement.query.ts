@@ -68,6 +68,12 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
     return finishedAchievements;
   }
 
+  public selectFinishedAchievements() {
+    return this.selectAll({
+      filterBy: achievement => achievement.progressStatus === 'complete' || achievement.progressStatus === 'complete acknowledged'
+    });
+  }
+
   public getNotStartedAchievements() {
     const notStartedAchievements = this.getAll({
       filterBy: achievement => achievement.progressStatus === 'not started'

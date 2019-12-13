@@ -64,14 +64,18 @@
         </div>
 
 
-        <div *ngIf="currentUser?.quote" class="row">
+        <div class="row">
           <div class="col-2 quote-box-quotation-mark" >
             <div>&ldquo;</div>
           </div>
           <div class="col-8 quote-box-text">
-            <div>
-              {{currentUser?.quote}}
-            </div>
+            <ng-container *ngIf="currentUser?.quote; else noQuote">
+              <h4 class="user-attribute">{{currentUser?.quote}}</h4>
+            </ng-container>
+            <ng-template #noQuote>
+              <h4 class="user-attribute">Nothing here yet...</h4>
+              <a href="javascript:void(0)" (click)="onSetQuoteClick(currentUser?.username)" class="user-attribute">Click here to set a favorite quote!</a>
+            </ng-template>
 
           </div>
           <div class="col-2">
@@ -80,20 +84,9 @@
         </div>
       </div>
 
-
     </ng-container>
     <div class="card-footer text-center">
-      <!-----Button----->
-<!--      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="padding-right: 10px; padding-left: 10px">Upload Avatar</button>
-          </div>
-          <div class="col-sm">
-            <button type="button" class="btn btn-danger" (click)="showGallery()" style="padding-right: 10px; padding-left: 10px">Select Avatar</button>
-          </div>
-        </div>
-      </div>-->
+
     </div>
   </div>
 
@@ -136,95 +129,3 @@
     </div>
   </div>
 </div>
-
-<!--<div class="modal fade modal-black" id="myModal" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    &lt;!&ndash; Modal content&ndash;&gt;
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Settings</h4>
-      </div>
-      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
-      <div class="modal-body" style="text-align: center">
-        <input type="file" (change)="fileChangeEvent($event)" />
-        <button type="button" class="btn btn-success" (click)="onImageSelected($event)">Upload</button>
-
-        <image-cropper
-                       [imageChangedEvent]="imageChangedEvent"
-                       format="png"
-                       outputType="both"
-                       (imageCropped)="imageCropped($event)"
-                       (imageLoaded)="imageLoaded()"
-                       (cropperReady)="cropperReady()"
-                       (loadImageFailed)="loadImageFailed()"
-        ></image-cropper>
-
-        <div>
-          <img [src]="croppedImageToShow" style="max-width: 150px"/>
-        </div>
-      </div>
-
-      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
-      <div class="modal-footer">
-&lt;!&ndash;        <button type="button" class="btn btn-success">Save</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>&ndash;&gt;
-      </div>
-    </div>
-  </div>
-
-  &lt;!&ndash; Blank card to display while loading &ndash;&gt;
-  <ng-template #cardLoading>
-    <div class="card-body">
-      <ngx-spinner
-        name="profile-card-manager-spinner"
-        [fullScreen]="false"
-        bdColor="rgba(51,51,51,0.8)"
-        size="medium"
-        color="#fff"
-        type="pacman"
-      >
-        <p style="font-size: 20px; color: white">Loading...</p>
-      </ngx-spinner>
-    </div>
-  </ng-template>
-
-</div>
-<div class="modal fade modal-black" id="imageSelectorModal" role="dialog" tabindex="-1" aria-labelledby="imageSelectorModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-sm" role="document">
-
-    &lt;!&ndash; Modal content&ndash;&gt;
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Choose Your Avatar</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
-      <div class="modal-body">
-        <app-image-gallery></app-image-gallery>
-      </div>
-      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
-
-    </div>
-  </div>
-</div>
-
-<div class="modal fade modal-black" id="avatarModal" role="dialog" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-lg" role="document">
-
-    &lt;!&ndash; Modal content&ndash;&gt;
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Choose Your Avatar</h4>
-      </div>
-      &lt;!&ndash;-modal body&#45;&#45;&ndash;&gt;
-      <div class="modal-body">
-        <app-avatar [avatarUrl]="this.currentUserQuery.getCurrentUser()[0].avatarResolvedUrl"></app-avatar>
-      </div>
-      &lt;!&ndash;&#45;&#45;End Mod Bod&#45;&#45;&ndash;&gt;
-
-    </div>
-  </div>
-</div>-->

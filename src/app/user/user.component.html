@@ -11,22 +11,27 @@
       </div>
       <!---modal body---->
       <div class="modal-body">
-        <div *ngIf="(timeout - timerCount) > 0">
+        <ng-container *ngIf="(timeout - timerCount) > 0">
           <p>Are you still there? Your session has been idle for {{idle}} seconds...</p>
           <p>Please click the Continue button in the next {{timeout - timerCount}} seconds to keep your session alive...</p>
-        </div>
-        <div *ngIf="(timeout - timerCount) === 0">
+        </ng-container>
+        <ng-container *ngIf="(timeout - timerCount) === 0">
           <p>Your session has ended. To continue, please log back in again</p>
-        </div>
+        </ng-container>
 
       </div>
       <!----End Mod Bod---->
-      <div class="modal-footer" *ngIf="(timeout - timerCount) > 0">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onResetTimer()">Continue</button>
-      </div>
-      <div class="modal-footer" *ngIf="(timeout - timerCount) === 0">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onLogout()">Login</button>
-      </div>
+      <ng-container *ngIf="(timeout - timerCount) > 0">
+        <div class="modal-footer" >
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onResetTimer()">Continue</button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="(timeout - timerCount) === 0">
+        <div class="modal-footer" >
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="onLogout()">Login</button>
+        </div>
+      </ng-container>
+
     </div>
   </div>
 </div>
@@ -53,7 +58,7 @@
 </div>-->
 <!--<div class="footer">-->
 <app-footer></app-footer>
-<div class="col-md-12" style="text-align: center;">
-  <div class="credits" style="margin-top: 15px;"> © 2019 Pineapple Points, all rights reserved. Made with 🍍 for a better web. </div>
+<div class="col-md-12 text-center" >
+  <div class="credits mt-3" > © 2019 Pineapple Points 🍍, all rights reserved. Made with 🍍 for a better web. </div>
 </div>
 <!--</div>-->

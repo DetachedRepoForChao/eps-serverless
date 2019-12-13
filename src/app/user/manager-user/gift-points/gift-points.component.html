@@ -3,14 +3,12 @@
     <ng-container *ngIf="!isCardLoading && currentUser; else cardLoading">
       <div class="card-body">
         <div class="col-lg-12 col-md-12 col-sm-12">
-          <h4 class="text-uppercase">Award Employee Points</h4>
+          <h4 class="text-uppercase">Award Pineapple Points 🍍</h4>
           <div class="container">
             <div class="row">
               <div class="col-sm">
                 <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
                         id="button_happy" (click)="toggleCoreValueButtonFilter('happy')">HAPPY</button>
-                <!--                      [ngStyle]="{border: this.isCoreValueButtonToggled('happy') === true ? 'green' : 'red'}"
-                        (click)="toggleCoreValueButton('happy')">HAPPY</button>-->
               </div>
               <div class="col-sm">
                 <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
@@ -35,21 +33,24 @@
                         id="button_honest" (click)="toggleCoreValueButtonFilter('honest')">HONEST</button>
               </div>
             </div>
-            <div *ngIf="appliedFilters.length > 0; else noFilters">
+            <ng-container *ngIf="appliedFilters.length > 0; else noFilters">
               <div class="row">
                 <div class="col-1">
                   <div>Filters:</div>
                 </div>
                 <div class="col-8">
-                  <div *ngFor="let filter of appliedFilters" class="col-2 filter-col">
-                <span class="filter-item" (click)="toggleCoreValueButtonFilter(filter)">
-                  <i class="fas fa-times" ></i> {{filter}}
-                </span>
-                  </div>
+                  <ng-container *ngFor="let filter of appliedFilters">
+                    <div class="col-2 filter-col">
+                      <span class="filter-item" (click)="toggleCoreValueButtonFilter(filter)">
+                        <i class="fas fa-times" ></i> {{filter}}
+                      </span>
+                    </div>
+                  </ng-container>
+
                 </div>
               </div>
 
-            </div>
+            </ng-container>
             <ng-template #noFilters>
               <div class="row">
                 <div class="col-1">
@@ -80,98 +81,11 @@
               </form>
             </div>
 
-            <!--<div *ngIf="!toggled; else search1" class="col-md-3">
-            </div>
-            <div *ngIf="!toggled; else search2" class="col-md-6 fluid">
-              <form class="form py-4">
-
-                <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
-                  [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
-              </form>
-            </div>
-
-            <ng-template #search1>
-              <div class="col-md-4">
-                <form class="form py-4">
-
-                  <input class="form-control form-rounded w-100 border-neutral" type="text"
-                    placeholder="Search Point Items" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
-                </form>
-              </div>
-            </ng-template>
-            <ng-template #search2>
-              <div class="col-md-5 fluid">
-                <form class="form py-4">
-
-                  <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
-                    [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
-                </form>
-              </div>
-            </ng-template>-->
-
             <div class="col-md-3 search">
-              <!-----Toggle button for multi-users-->
-              <!--            <mat-slide-toggle class="test" [color]="color" [checked]="toggled" [disabled]="disabled"
-                            (change)="onChange()">Select Multiple Employees
-                          </mat-slide-toggle>-->
 
             </div>
 
           </div>
-          <!--        <div *ngIf="!toggled; else selectMultiple">
-
-
-                    <div class="row">
-                      <div class="container" [class.show]="show">
-                        <div class="row">
-                          <div class="col-md-2">
-
-                          </div>
-                          <div class="col-md-8">
-                            <div class="row">
-                              <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
-                                <div *ngIf="i <= showLimit">
-                                  <div class="single-user mx-2 px-1">
-                                    <span [ngStyle]="{background: user.firstName}">
-                                      <img src="{{user.avatarResolvedUrl}}" class="img-row"
-                                        title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
-
-                                    </span>
-                                    <div class="row togstyle">
-                                      <div class="col-2">
-                                        <mat-checkbox *ngIf="toggled" [color]="'warn'"></mat-checkbox>
-                                      </div>
-                                      <div class="col-10 textr">
-                                        <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-
-
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-2"></div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-4"></div>
-
-                          <div class="col-md-4 text-center">
-                            <div *ngIf="!showFlag; else buttonViewLess">
-                              <button class="btn btn-success textc" (click)="showMore()">View More</button>
-                            </div>
-                            <ng-template #buttonViewLess>
-                              <button class="btn btn-success textc" (click)="showLess()">View Less</button>
-                            </ng-template>
-                          </div>
-
-                          <div class="col-md-4"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>-->
 
           <div>
             <div class="row">
@@ -180,20 +94,10 @@
                   <div class="col-md-4">
                     <div class="container text-center">
                       <form #giftPointsForm="ngForm" class="form text-left">
-                        <div class="selection" *ngIf="appliedFilters.length === 0; else filteredList">
-                          <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItems | pointItem:term2)">
-                            <label class="form-check-label" style="color: #f1f1f1">
-                              <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
-                                     (click)="selectPointItem(pointItem)">
-                              {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
-                              <span class="form-check-sign"></span>
-                            </label>
-                          </div>
-                        </div>
-                        <ng-template #filteredList class="selection">
-                          <div *ngIf="filteredPointItemList.length > 0; else noFilteredMatches">
-                            <div class="form-check form-check-radio" *ngFor="let pointItem of (filteredPointItemList | pointItem:term2)">
-                              <label class="form-check-label" style="color: #f1f1f1">
+                        <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
+                          <div class="selection" >
+                            <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItems | pointItem:term2)">
+                              <label class="form-check-label form-check-label-color" >
                                 <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
                                        (click)="selectPointItem(pointItem)">
                                 {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
@@ -201,9 +105,25 @@
                               </label>
                             </div>
                           </div>
+                        </ng-container>
+
+                        <ng-template #filteredList class="selection">
+                          <ng-container *ngIf="filteredPointItemList.length > 0; else noFilteredMatches">
+                            <div >
+                              <div class="form-check form-check-radio" *ngFor="let pointItem of (filteredPointItemList | pointItem:term2)">
+                                <label class="form-check-label form-check-label-color" >
+                                  <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
+                                         (click)="selectPointItem(pointItem)">
+                                  {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
+                                  <span class="form-check-sign"></span>
+                                </label>
+                              </div>
+                            </div>
+                          </ng-container>
+
                           <ng-template #noFilteredMatches>
                             <div class="text-center">
-                              <label class="form-check-label" style="color: #f1f1f1">
+                              <label class="form-check-label form-check-label-color">
                                 <span class="form-check-sign">Nothing matching these filters</span>
                               </label>
                             </div>
@@ -218,44 +138,54 @@
                   </div>
                   <div class="col-lg-8 col-md-8 col-sm-8">
                     <div class="row">
-                      <div *ngFor="let user of employees | fresh:term; let i = index" class="">
-                        <div *ngIf="i <= showLimit">
+                      <ng-container *ngFor="let user of employees | fresh:term; let i = index" class="">
+                        <ng-container *ngIf="i <= showLimit">
                           <div class="single-user mx-2 px-1">
                             <img src="{{user.avatarResolvedUrl}}" class="img-row user-selection" [ngClass]="{selected: (selection.isSelected(user))}"
                                  title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick($event, user)" />
-                            <div class="row togstyle">
-                              <div class="col-2">
-                                <!--                              <mat-checkbox [color]="'warn'" (click)="$event.stopPropagation()"
-                                                                            (change)="$event ? selection.toggle(user) : null"
-                                                                            [checked]="selection.isSelected(user)"></mat-checkbox>-->
+                            <div class="row info-plate-row">
+                              <div class="col-12 info-plate-color text-right">
+                                <div class="row">
+                                  <div class="col-12 pl-0">
+                                    <h5 class="text-primary py-0 my-0">{{user.firstName + " " + user.lastName | fresh}}</h5>
+                                  </div>
+                                  <div class="col-12">
+                                    <h5 class="py-0 my-0">{{user.points}} 🍍</h5>
+                                  </div>
+                                  <div class="col-12">
+                                    <h5 class="py-0 my-0">{{user.department.Name}}</h5>
+                                  </div>
+
+
+
+                                </div>
+
                               </div>
-                              <div class="col-10 textr">
-                                <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
+<!--                              <div class="col-12 text-right">
+
                               </div>
+                              <div class="col-12 text-right">
+
+                              </div>-->
                             </div>
-                            <div class="row dep-row">
-                              <div class="col-12">
-                                {{user.department.Name}}
-                              </div>
-                            </div>
+
                           </div>
-                        </div>
+                        </ng-container>
 
-
-                      </div>
+                      </ng-container>
                     </div>
                   </div>
-                  <!--              <div class="col-md-1"></div>-->
+
                 </div>
                 <div class="row">
                   <div class="col-md-4"></div>
 
                   <div class="col-md-4 text-center">
-                    <div *ngIf="!showFlag; else buttonViewLess">
-                      <button class="btn btn-success textc" (click)="showMore()">View More</button>
-                    </div>
+                    <ng-container *ngIf="!showFlag; else buttonViewLess">
+                      <button class="btn btn-success text-center" (click)="showMore()">View More</button>
+                    </ng-container>
                     <ng-template #buttonViewLess>
-                      <button class="btn btn-success textc" (click)="showLess()">View Less</button>
+                      <button class="btn btn-success text-center" (click)="showLess()">View Less</button>
                     </ng-template>
                   </div>
 
@@ -264,85 +194,8 @@
               </div>
             </div>
           </div>
-          <!--
-          <ng-template #selectMultiple>
-            <div class="row">
-              <div class="container" [class.show]="show">
-                <div class="row">
-                  <div class="col-md-4">
-                    <div class="container text-center">
-                      <form #giftPointsForm="ngForm" class="form text-left">
-                        <div class="selection">
-                          <div class="form-check form-check-radio"
-                            *ngFor="let pointItem of (pointItemList$ | async | pointItem:term2)">
-                            <label class="form-check-label"
-                              [ngStyle]="{color: filteredPointItemList.indexOf(pointItem) !== -1 ? '#FF83F6' : '#f1f1f1' }">
-                              <input class="form-check-input" type="radio" name="selectedPointItem"
-                                (click)="selectPointItem(pointItem)">
-                              {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
-                              <span class="form-check-sign"></span>
-                            </label>
-                          </div>
-                        </div>
-                        <div class="gift-points-container text-center">
-                          <button type="button" class="btn-lg btn-info btn-round"
-                            (click)="pointItemOnSubmit(giftPointsForm)">Award Points</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                  <div class="col-md-8">
-                    <div class="row">
-                      <div *ngFor="let user of (employees$) | async | fresh:term; let i = index" class="">
-                        <div *ngIf="i <= showLimit">
-                          <div class="single-user mx-2 px-1">
-                            <span [ngStyle]="{background: user.firstName}">
-                              <img src="{{user.avatarResolvedUrl}}" class="img-row"
-                                title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick(user)" />
 
-                            </span>
-                            <div class="row togstyle">
-                              <div class="col-2">
-                                <mat-checkbox *ngIf="toggled" [color]="'warn'" (click)="$event.stopPropagation()"
-                                  (change)="$event ? selection.toggle(user) : null"
-                                  [checked]="selection.isSelected(user)"></mat-checkbox>
-                              </div>
-                              <div class="col-10 textr">
-                                <h5>{{user.firstName + " " + user.lastName | fresh}}</h5>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-
-                      </div>
-                    </div>
-                  </div>
-                  &lt;!&ndash;              <div class="col-md-1"></div>&ndash;&gt;
-                </div>
-                <div class="row">
-                  <div class="col-md-4"></div>
-
-                  <div class="col-md-4 text-center">
-                    <div *ngIf="!showFlag; else buttonViewLess">
-                      <button class="btn btn-success textc" (click)="showMore()">View More</button>
-                    </div>
-                    <ng-template #buttonViewLess>
-                      <button class="btn btn-success textc" (click)="showLess()">View Less</button>
-                    </ng-template>
-                  </div>
-
-                  <div class="col-md-4"></div>
-                </div>
-              </div>
-            </div>
-          </ng-template>
-  -->
         </div>
-
-
-
-
       </div>
     </ng-container>
 
