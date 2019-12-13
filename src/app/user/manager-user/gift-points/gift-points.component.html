@@ -64,30 +64,56 @@
             </ng-template>
           </div>
 
-          <!------- Search form -------->
+          <!------- Point Item Search form -------->
           <div class="row heighted">
             <div class="col-md-4">
               <div class="col-12">
-                <form class="form py-4">
+                <ng-container *ngIf="pointSearchForm">
+                  <form [formGroup]="pointSearchForm" class="form py-4">
 
-                  <input class="form-control form-rounded w-100 border-neutral" type="text"
-                         placeholder="Search Point Items" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
-                </form>
+                    <input class="form-control form-rounded w-100 border-neutral" type="text"
+                           placeholder="Search Point Items" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
+                  </form>
+                </ng-container>
+
               </div>
 
             </div>
-            <div class="col-md-5 fluid">
+            <!------- Employee Search form -------->
+            <div class="col-md-3 fluid">
               <div class="col-12">
-                <form class="form py-4">
+                <ng-container *ngIf="employeeSearchForm">
+                  <form [formGroup]="employeeSearchForm" class="form py-4">
 
-                  <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
-                         [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
-                </form>
+                    <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
+                           [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
+                  </form>
+                </ng-container>
+
               </div>
 
             </div>
 
-            <div class="col-md-3 search">
+            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+              <form [formGroup]="departmentSelectionForm">
+                <label class="form-label">Select Entire Department</label>
+                <select formControlName="departmentSelection" class="form-control department-form-control" id="departmentSelection" name="departmentSelection" >
+                  <option [ngValue]="null" [disabled]="true">Department</option>
+                  <ng-container *ngFor="let department of departments">
+                    <option [ngValue]="department">
+                      {{department.Name}}
+                    </option>
+                  </ng-container>
+
+                </select>
+              </form>
+
+<!--              <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.department.invalid) || (addUserForm.dirty && addUserForm.controls.department.touched && addUserForm.controls.department.invalid)">
+                <label class="validation-message">This field is required.</label>
+              </ng-container>-->
+            </div>
+            <div class="form-group col-sm-12 col-md-2 col-lg-2 pb-1">
+              <button type="button" class="btn btn-primary">All Employees</button>
 
             </div>
 
@@ -95,51 +121,63 @@
 
           <div>
             <div class="row">
+              <div class="col-12">
+                <button type="button" class="btn btn-warning">Clear Selection</button>
+              </div>
+            </div>
+            <div class="row">
               <div class="container" [class.show]="show">
                 <div class="row">
                   <div class="col-md-4">
-                    <div class="container text-center">
-                      <ng-container *ngIf="currentUser.awardManager">
-                        <div><a href="javascript:void(0)" data-toggle="modal" data-target="#managePointItemModal">Manage 🍍 awards</a></div>
-                      </ng-container>
-                      <form #giftPointsForm="ngForm" class="form text-left">
-                        <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
-                          <div class="selection" >
-                            <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItems | pointItem:term2)">
-                              <label class="form-check-label form-check-label-color" >
-                                <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
-                                       (click)="selectPointItem(pointItem)">
-                                {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
-                                <span class="form-check-sign"></span>
-                              </label>
-                            </div>
-                          </div>
-                        </ng-container>
+                    <div class="container text-center ">
 
-                        <ng-template #filteredList class="selection">
-                          <ng-container *ngIf="filteredPointItemList.length > 0; else noFilteredMatches">
-                            <div >
-                              <div class="form-check form-check-radio" *ngFor="let pointItem of (filteredPointItemList | pointItem:term2)">
-                                <label class="form-check-label form-check-label-color" >
-                                  <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
-                                         (click)="selectPointItem(pointItem)">
-                                  {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
-                                  <span class="form-check-sign"></span>
-                                </label>
+                      <form #giftPointsForm="ngForm" class="form text-left ">
+                        <div class="">
+                          <perfect-scrollbar id="point-items-scroll" class="point-item-scroll-container" [config]="config" [scrollIndicators]="true">
+                            <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
+                              <div class="selection pr-3" >
+                                <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItems | pointItem:term2)">
+                                  <label class="form-check-label form-check-label-color" >
+                                    <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
+                                           (click)="selectPointItem(pointItem)">
+                                    {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
+                                    <span class="form-check-sign"></span>
+                                  </label>
+                                </div>
                               </div>
-                            </div>
-                          </ng-container>
+                            </ng-container>
 
-                          <ng-template #noFilteredMatches>
-                            <div class="text-center">
-                              <label class="form-check-label form-check-label-color">
-                                <span class="form-check-sign">Nothing matching these filters</span>
-                              </label>
-                            </div>
-                          </ng-template>
-                        </ng-template>
+                            <ng-template #filteredList class="selection">
+                              <ng-container *ngIf="filteredPointItemList.length > 0; else noFilteredMatches">
+                                <div >
+                                  <div class="form-check form-check-radio" *ngFor="let pointItem of (filteredPointItemList | pointItem:term2)">
+                                    <label class="form-check-label form-check-label-color" >
+                                      <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
+                                             (click)="selectPointItem(pointItem)">
+                                      {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
+                                      <span class="form-check-sign"></span>
+                                    </label>
+                                  </div>
+                                </div>
+                              </ng-container>
+
+                              <ng-template #noFilteredMatches>
+                                <div class="text-center">
+                                  <label class="form-check-label form-check-label-color">
+                                    <span class="form-check-sign">Nothing matching these filters</span>
+                                  </label>
+                                </div>
+                              </ng-template>
+                            </ng-template>
+                          </perfect-scrollbar>
+                        </div>
+
+
                         <div class="gift-points-container text-center">
                           <button type="button" class="btn btn-primary" (click)="pointItemOnSubmit(giftPointsForm, currentUser)">Award 🍍</button>
+                          <ng-container *ngIf="currentUser.awardManager">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#managePointItemModal">Manage 🍍 Awards</button>
+                          </ng-container>
                         </div>
                       </form>
                     </div>

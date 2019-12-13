@@ -11,7 +11,7 @@ import {PointItem} from '../../../shared/point-item.model';
 import {FormBuilder, FormControl, FormGroup, NgForm, ValidatorFn, Validators} from '@angular/forms';
 import {componentRefresh} from '@angular/core/src/render3/instructions';
 import {Router} from '@angular/router';
-import {Observable, forkJoin, Subject} from 'rxjs';
+import {Observable, forkJoin, Subject, throwError} from 'rxjs';
 import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
@@ -26,7 +26,7 @@ import {PointItemModel} from '../../../entity-store/point-item/state/point-item.
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {FreshPipe} from '../../../pipe/fresh.pipe';
-import {take, takeUntil} from 'rxjs/operators';
+import {catchError, take, takeUntil} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {requireCheckboxesToBeCheckedValidator} from '../../admin-user/point-items-card/point-items-card.component';
@@ -66,6 +66,10 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   editPointItemFormSubmitted = false;
   deletePointItemForm: FormGroup;
   deletePointItemFormSubmitted = false;
+  departmentSelectionForm: FormGroup;
+  departmentSelectionFormSubmitted = false;
+  employeeSearchForm: FormGroup;
+  pointSearchForm: FormGroup;
 
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
   // selection = new SelectionModel<DepartmentEmployee>(true, []);
@@ -83,6 +87,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   employees$: Observable<EntityUserModel[]>;
   employees: EntityUserModel[];
   currentUser: EntityCurrentUserModel;
+  departments: Department[];
   isCardLoading: boolean;
   formSubmitted = false;
   showLimit = 8;
@@ -124,6 +129,10 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.spinner.hide('gift-points-spinner');
 
     this.populateCoreValueButtonList();
+
+    this.loadPointSearchForm();
+    this.loadEmployeeSearchForm();
+    this.loadDepartmentSelectionForm();
 
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
@@ -216,6 +225,40 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
         }
       });
 
+    // Read in the list of departments from the DepartmentService
+    this.departmentService.getDepartments()
+      .pipe(
+        take(1),
+        catchError(err => {
+          console.log('Error...', err);
+          return throwError(err);
+        })
+      )
+      .subscribe((departments: Department[]) => {
+          this.departments = departments;
+
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          console.log('Completed.');
+        }
+      );
+
+    this.departmentSelectionForm.get('departmentSelection').valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(department => {
+        console.log(department);
+        this.selection.clear();
+
+        const departmentUsers = this.employees.filter(x => x.department.Id === department.Id);
+
+        for (const departmentUser of departmentUsers) {
+          this.selection.toggle(departmentUser);
+        }
+
+      });
 
     this.isCardLoading = false;
     this.spinner.hide('gift-points-spinner');
@@ -260,6 +303,24 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   private loadDeletePointItemForm() {
     this.deletePointItemForm = this.formBuilder.group({
       pointItem: [null, Validators.required],
+    });
+  }
+
+  private loadDepartmentSelectionForm() {
+    this.departmentSelectionForm = this.formBuilder.group({
+      departmentSelection: [null],
+    });
+  }
+
+  private loadEmployeeSearchForm() {
+    this.employeeSearchForm = this.formBuilder.group({
+      employeeSearch: [null],
+    });
+  }
+
+  private loadPointSearchForm() {
+    this.pointSearchForm = this.formBuilder.group({
+      pointSearch: [null],
     });
   }
 

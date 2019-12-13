@@ -121,9 +121,9 @@ input{
   }
 
   .selection{
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    //max-height: 400px;
+    //overflow-y: auto;
+    //overflow-x: hidden;
   }
 
   .search{
@@ -226,3 +226,15 @@ input{
   transform: translate(0, 4em) !important;
 }
 
+.point-item-scroll-container {
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.max-height-200 {
+  max-height: 200px;
+}
+
+.department-form-control {
+  border-color: white;
+}
