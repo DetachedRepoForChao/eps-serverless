@@ -1,5 +1,5 @@
 <ng-container *ngIf="isUpdatePurchaseRequestStatusSave">
-  <h1 mat-dialog-title class="text-black-50">Confirm changes</h1>
+  <h1 mat-dialog-title class="text-black-50">Confirm Changes</h1>
   <div mat-dialog-content>
     <div class="row">
       <div class="col-12">
@@ -34,7 +34,7 @@
 </ng-container>
 
 <ng-container *ngIf="isConfirmStoreItemPurchase && selectedStoreItem">
-  <h1 mat-dialog-title class="text-black-50">Confirm purchase</h1>
+  <h1 mat-dialog-title class="text-black-50">Confirm Purchase</h1>
   <div mat-dialog-content>
     <div class="row">
       <div class="col-12 text-center">
@@ -44,7 +44,7 @@
     </div>
     <div class="row text-left">
       <div class="col-12 text-left">
-        <h4 class="text-muted">{{selectedStoreItem.cost}}pts | {{selectedStoreItem.name}}</h4>
+        <h4 class="text-muted">{{selectedStoreItem.cost}} 🍍 | {{selectedStoreItem.name}}</h4>
         <h5 class="text-muted">{{selectedStoreItem.description}}</h5>
       </div>
     </div>
@@ -62,23 +62,30 @@
             You do not have enough points to make this purchase.
           </div>
         </ng-template>-->
-        <ng-container *ngIf="(currentUser.points) >= selectedStoreItem.cost; else notEnoughPoints">
-          <div>
-            Would you like to make this purchase?
-          </div>
+        <ng-container *ngIf="currentUser.securityRole.Id === 1">
+          <ng-container *ngIf="(currentUser.points) >= selectedStoreItem.cost; else notEnoughPoints">
+            <div>
+              Would you like to make this purchase?
+            </div>
+          </ng-container>
+          <ng-template #notEnoughPoints>
+            <div class="text-primary">
+              You do not have enough points to make this purchase.
+            </div>
+          </ng-template>
         </ng-container>
-        <ng-template #notEnoughPoints>
-          <div class="text-primary">
-            You do not have enough points to make this purchase.
-          </div>
-        </ng-template>
+        <ng-container *ngIf="currentUser.securityRole.Id === 2">
+          Sorry! Managers are not able to purchase items from the Pineapple Points 🍍 Store!
+        </ng-container>
+
+
       </div>
     </div>
 
   </div>
   <div mat-dialog-actions>
 <!--    <button mat-button [disabled]="(currentUser.points - currentUser.pointsBalance) < selectedStoreItem.cost" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>-->
-    <button mat-button [disabled]="(currentUser.points ) < selectedStoreItem.cost" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>
+    <button mat-button [disabled]="((currentUser.points ) < selectedStoreItem.cost) || (currentUser.securityRole.Id !== 1)" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>
     <button mat-button (click)="onCloseCancel()" >Cancel</button>
   </div>
 

@@ -163,8 +163,9 @@
               <ul class="list-group nobullets" >
                 <li>
                   <ng-container *ngIf="selectedAchievement.progressStatus === 'complete'">
-                    <div class="progress-container progress-success achievementstatus"
-                         [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': selectedAchievement.description}">
+                    <div class="progress-container progress-primary paddingleft"
+                         matTooltipPosition="above"
+                         [matTooltip]="selectedAchievement.description">
 
                       <div class="progress">
                         <div class="progress-bar progress-bar-warning"
@@ -182,7 +183,8 @@
 
                   <ng-container *ngIf="selectedAchievement.progressStatus === 'in progress'">
                     <div class="progress-container progress-primary paddingleft"
-                         [appAwesomeTooltipDirective]="{'type': 'achiev', 'data': selectedAchievement.description}">
+                         matTooltipPosition="above"
+                         [matTooltip]="selectedAchievement.description">
                       <div class="progress">
                         <div class="progress-bar progress-bar-warning"
                              role="progressbar"

@@ -1,9 +1,16 @@
 <div class="card">
   <div class="card card-coin card-plain">
+<!--    <div class="card-header text-center">-->
+<!--      <h4 class="text-uppercase">Award Pineapple Points 🍍</h4>-->
+<!--    </div>-->
     <ng-container *ngIf="!isCardLoading && currentUser && employees && pointItems; else cardLoading">
       <div class="card-body">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="text-center">
           <h4 class="text-uppercase">Award Pineapple Points 🍍</h4>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
           <div class="container">
             <div class="row">
               <div class="col-sm">
@@ -87,7 +94,7 @@
 
           <!------- Point Item Search form -------->
           <div class="row height-80">
-            <div class="col-md-4">
+            <div class="col-md-4 my-auto">
               <div class="col-12">
                 <ng-container *ngIf="pointSearchForm">
                   <form [formGroup]="pointSearchForm" class="form text-center">
@@ -101,7 +108,7 @@
 
             </div>
             <!------- Employee Search form -------->
-            <div class="col-md-3 fluid">
+            <div class="col-md-3 fluid my-auto">
               <div class="col-12">
                 <ng-container *ngIf="employeeSearchForm">
                   <form [formGroup]="employeeSearchForm" class="form text-center">
@@ -115,7 +122,7 @@
 
             </div>
 
-            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
+            <div class="col-sm-12 col-md-2 col-lg-2 text-center my-auto">
               <form [formGroup]="departmentSelectionForm">
                 <label class="form-label">Select Entire Department</label>
                 <select formControlName="departmentSelection" class="form-control department-form-control text-left" id="departmentSelection" name="departmentSelection" >
@@ -133,7 +140,7 @@
                 <label class="validation-message">This field is required.</label>
               </ng-container>-->
             </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 pb-3 text-center">
+            <div class="col-sm-12 col-md-2 col-lg-2 pb-3 text-center my-auto">
               <label class="form-label mb-0">Select All Employees</label>
               <button type="button" class="btn btn-primary" (click)="selectAll()">All Employees</button>
 

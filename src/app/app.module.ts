@@ -61,8 +61,6 @@ import { TrophyComponent } from './shared/trophy/trophy.component';
 import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
 import { ImageCropperModule} from 'ngx-image-cropper';
 import { NgxSpinnerModule} from 'ngx-spinner';
-import { AwesomeTooltipDirectiveDirective } from './shared/awesome-tooltip/awesome-tooltip-directive.directive';
-import { AwesomeTooltipComponent } from './shared/awesome-tooltip/awesome-tooltip.component';
 import { PointsStoreComponent } from './user/points-store/points-store.component';
 import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -139,8 +137,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProfileCardManagerComponent,
     TrophyComponent,
     ConfirmCodeComponent,
-    AwesomeTooltipDirectiveDirective,
-    AwesomeTooltipComponent,
     PointsStoreComponent,
     AvatarComponent,
     ImageCropperComponent,
@@ -221,8 +217,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AwesomeTooltipComponent,
-    ConfirmationDialogComponent,
+  entryComponents: [ConfirmationDialogComponent,
     PointItemComponent,
   ]
 })

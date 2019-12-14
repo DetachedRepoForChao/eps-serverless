@@ -1,33 +1,22 @@
-<!--<div class="card">-->
-<!--  <div class="card card-coin card-plain card-custom">-->
-
-
-<!--    <div class="card-header">
-      <h4 class="text-uppercase">Avatars</h4>
-
-    </div>-->
-
-<!--    </div>-->
-<!--    <div class="card-body">-->
 <div class="container min-height">
   <div>
     <div class="row">
       <div class="col-md-12 text-center">
         <button type="button"
-          class="btn btn-success paddingright"
+          class="btn btn-success px-2"
           (click)="toggleAvatarUpload()"
           matTooltipPosition="above"
           [matTooltipDisabled]="getCompleteAchievementById(4)"
           [matTooltip]="matfunction()"
           [disabled]="!getCompleteAchievementById(4)"
           >upload avatar</button>
-        <button type="button" class="btn btn-danger paddingright" (click)="toggleAvatarSelect()" >Superhero Avatar</button>
-        <button type="button" class="btn btn-primary paddingright" (click)="generateRandomAvatar()" >Random Avatar</button>
+        <button type="button" class="btn btn-danger px-2" (click)="toggleAvatarSelect()" >Superhero Avatar</button>
+        <button type="button" class="btn btn-primary px-2" (click)="generateRandomAvatar()" >Random Avatar</button>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12 text-center marginzero">
+      <div class="col-md-12 text-center m-0 p-0">
         <ng-container *ngIf="avatarUpload">
           <!--        <app-image-cropper></app-image-cropper>-->
           <input type="file" (change)="fileChangeEvent($event)" />
@@ -65,18 +54,6 @@
          class="img-center img-fluid rounded-circle"
          id="avatar">
 
-    <!--    <img [src]="avatarUrl"
-             alt="Avatar"
-             *ngIf="(this.currentUserQuery.selectLoading() | async) === false; else avatarLoading"
-             class="img-center img-fluid rounded-circle"
-             id="avatar">-->
-
-    <!--    <ng-template #avatarLoading >
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-               alt="Loading..."
-               class="img-center img-fluid rounded-circle"
-               id="avatarPlaceholder">
-        </ng-template>-->
   </ng-container>
 
   <!--  </div>-->

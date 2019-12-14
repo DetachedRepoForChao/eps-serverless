@@ -12,24 +12,19 @@
         <div class="row">
           <!-- Profile Card -->
           <div class="col-lg-4 col-md-6 col-sm-12 ml-auto mr-auto" id="profile-card">
-<!--            <div *ngIf="!(this.currentUserQuery.selectAll() | async)[0]">
+
+            <ng-container *ngIf="!this.currentUser">
               <app-placeholder-card></app-placeholder-card>
-            </div>
-            <div *ngIf="(this.currentUserQuery.selectAll() | async)[0]?.securityRole.Id === 1">
+            </ng-container>
+
+            <ng-container *ngIf="this.currentUser?.securityRole.Id === 1">
               <app-profile-card></app-profile-card>
-            </div>
-            <div *ngIf="(this.currentUserQuery.selectAll() | async)[0]?.securityRole.Id === 2">
+            </ng-container>
+
+            <ng-container *ngIf="this.currentUser?.securityRole.Id === 2">
               <app-profile-card-manager></app-profile-card-manager>
-            </div>-->
-            <div *ngIf="!this.currentUser">
-              <app-placeholder-card></app-placeholder-card>
-            </div>
-            <div *ngIf="this.currentUser?.securityRole.Id === 1">
-              <app-profile-card></app-profile-card>
-            </div>
-            <div *ngIf="this.currentUser?.securityRole.Id === 2">
-              <app-profile-card-manager></app-profile-card-manager>
-            </div>
+            </ng-container>
+
           </div>
           <div class="col-lg-4 ml-auto mr-auto" id="progress-card">
             <app-progress-card></app-progress-card>
@@ -39,14 +34,12 @@
           </div>
           <!-- END Profile Card -->
 
-<!--          <div *ngIf="(this.currentUserQuery.selectAll() | async)[0]?.securityRole.Id === 2"
-               class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto">
-            <app-gift-points></app-gift-points>
-          </div>-->
-          <div *ngIf="this.currentUser?.securityRole.Id === 2"
-               class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto">
-            <app-gift-points></app-gift-points>
-          </div>
+          <ng-container *ngIf="this.currentUser?.securityRole.Id === 2">
+            <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto">
+              <app-gift-points></app-gift-points>
+            </div>
+          </ng-container>
+
           <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto">
             <app-feed></app-feed>
           </div>
@@ -56,7 +49,7 @@
 
      <!-- <app-footer></app-footer>s -->
     <app-alert-card></app-alert-card>
-    
+
   </div>
 
 </div>

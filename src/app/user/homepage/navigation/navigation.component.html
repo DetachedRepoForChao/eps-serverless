@@ -62,7 +62,7 @@
               <div *ngIf="!isCardLoading">
                 <!-- List group -->
                 <div class="list-group list-group-flush" style="overflow:scroll; height:500px; width:100%">
-              
+
                   <div *ngFor="let notification of Notifications ">
                     <li >
                       <a  [ngClass]="notification.timeSeen != null ? 'unreadNotification': ''" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#notificationdetail" (click)="onClickNotificationDetail(notification)">
@@ -92,9 +92,9 @@
                         </div>
                       </a>
                     </li>
-                
+
                   </div>
-             
+
 
                 </div>
               </div>
@@ -430,11 +430,11 @@
       </div>
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
-        <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+
           <ng-container *ngIf="navigationService.pointItemModalActive">
             <app-point-item  [inputUser]="navigationService.pointItemComponentInputUser" (clearInputUser)="clearPointItemComponentInputUser($event)"></app-point-item>
           </ng-container>
-        </perfect-scrollbar>
+
       </div>
 
       <!----End Mod Bod---->

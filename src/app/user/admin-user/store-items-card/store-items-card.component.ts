@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Globals} from '../../../globals';
 import {AchievementService} from '../../../shared/achievement/achievement.service';
@@ -13,15 +13,21 @@ import {NotifierService} from 'angular-notifier';
 import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
 import {StoreItemQuery} from '../../../entity-store/store-item/state/store-item.query';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
+import {StoreItemModel} from '../../../entity-store/store-item/state/store-item.model';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {FeatureModel} from '../../../entity-store/feature/state/feature.model';
 
 @Component({
   selector: 'app-store-items-card',
   templateUrl: './store-items-card.component.html',
   styleUrls: ['./store-items-card.component.css']
 })
-export class StoreItemsCardComponent implements OnInit {
+export class StoreItemsCardComponent implements OnInit, OnDestroy {
   componentName = 'store-items-card.component';
   public config: PerfectScrollbarConfigInterface = {};
+  private unsubscribe$ = new Subject();
+  private storeItemsLoading$ = new Subject();
   addStoreItemForm: FormGroup;
   addStoreItemFormSubmitted = false;
   editStoreItemForm: FormGroup;
@@ -36,9 +42,9 @@ export class StoreItemsCardComponent implements OnInit {
   addItemCroppedImage: any = '';
   editItemCroppedImageToShow: any = '';
   editItemCroppedImage: any = '';
+  storeItems: StoreItemModel[];
 
-  constructor(public globals: Globals,
-              private router: Router,
+  constructor(private router: Router,
               private achievementService: AchievementService,
               private authService: AuthService,
               private userService: EntityUserService,
@@ -54,6 +60,20 @@ export class StoreItemsCardComponent implements OnInit {
 
     // this.storeItemService.cacheStoreItems().subscribe();
 
+    this.storeItemQuery.selectLoading()
+      .pipe(takeUntil(this.storeItemsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.storeItemQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((storeItems: StoreItemModel[]) => {
+              this.storeItems = storeItems;
+            });
+          this.storeItemsLoading$.next();
+          this.storeItemsLoading$.complete();
+        }
+      });
+
     // Load the reactive forms
     this.loadAddStoreItemForm();
     this.loadEditStoreItemForm();
@@ -61,7 +81,9 @@ export class StoreItemsCardComponent implements OnInit {
 
     // Subscribe to change events for the 'storeItem' field. Every time a new storeItem is selected,
     // the corresponding fields will populate with data
-    this.editStoreItemForm.get('storeItem').valueChanges.subscribe(storeItem => {
+    this.editStoreItemForm.get('storeItem').valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(storeItem => {
       console.log(storeItem);
       this.editItemImageChangedEvent = null;
       this.editItemCroppedImage = null;
@@ -286,4 +308,10 @@ export class StoreItemsCardComponent implements OnInit {
     this.router.navigate(['/', 'user', 'confirm-item-purchase']);
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.storeItemsLoading$.next();
+    this.storeItemsLoading$.complete();
+  }
 }

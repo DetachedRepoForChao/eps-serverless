@@ -19,6 +19,7 @@ import {Order} from '@datorama/akita';
 import {PointItemService} from '../../../entity-store/point-item/state/point-item.service';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {take, takeUntil} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class FeedComponent implements OnInit, OnDestroy {
 
 
   constructor(private spinner: NgxSpinnerService,
-              private globals: Globals,
+              private router: Router,
               private entityUserService: EntityUserService,
               private userStore: UserStore,
               private userQuery: EntityUserQuery,
@@ -84,11 +85,24 @@ export class FeedComponent implements OnInit, OnDestroy {
       this.populatePointTransactionData();
     }
 
-/*    this.feedcardService.populatePointTransactions().subscribe(() => {
-      this.isCardLoading = false;
-      console.log(`${functionFullName}: hiding feed-card-spinner`);
-      this.spinner.hide('feed-card-spinner');
-    });*/
+    this.pointItemTransactionQuery.selectLoading()
+      .pipe(takeUntil(this.transactionsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.pointItemTransactionQuery.selectAllAddTransactions()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((transactions: PointItemTransactionModel[]) => {
+              this.pointItemTransactions = transactions;
+              console.log('point item transactions');
+              console.log(this.pointItemTransactions);
+            });
+
+
+          this.transactionsLoading$.next();
+          this.transactionsLoading$.complete();
+        }
+
+      });
 
     this.isCardLoading = false;
     console.log(`${functionFullName}: hiding feed-card-spinner`);
@@ -109,78 +123,13 @@ export class FeedComponent implements OnInit, OnDestroy {
               .subscribe((response) => {
               console.log('Subscribed to point transaction caching...');
               console.log(response);
-/*              this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
-                filterBy: e => e.type === 'Add',
-                sortBy: 'transactionId',
-                sortByOrder: Order.DESC
-              });
-              console.log('point item transactions');
-              console.log(this.pointItemTransactions);*/
+
             });
-
-            this.pointItemTransactionQuery.selectLoading()
-              .pipe(takeUntil(this.transactionsLoading$))
-              .subscribe(isLoading => {
-                if (!isLoading) {
-                  this.pointItemTransactionQuery.selectAllAddTransactions()
-                    .pipe(takeUntil(this.unsubscribe$))
-                    .subscribe((transactions: PointItemTransactionModel[]) => {
-                      this.pointItemTransactions = transactions;
-                      console.log('point item transactions');
-                      console.log(this.pointItemTransactions);
-                    });
-
-
-                  this.transactionsLoading$.next();
-                  this.transactionsLoading$.complete();
-                }
-
-              });
-/*            this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
-              filterBy: e => e.type === 'Add',
-              sortBy: 'transactionId',
-              sortByOrder: Order.DESC
-            });
-            console.log('point item transactions');
-            console.log(this.pointItemTransactions);*/
 
             this.pointItemTransactionService.setInitialBatchRetrievedTrue();
 
           } else {
             console.log(`Cache Point Item Transactions returned ${result}`);
-            // We may have retrieved the data but the pointItemTransactions variable may be null... this accounts for that
-/*            if (!this.pointItemTransactions) {
-              this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
-                filterBy: e => e.type === 'Add',
-                sortBy: 'transactionId',
-                sortByOrder: Order.DESC
-              });
-
-              this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
-                filterBy: e => e.type === 'Add',
-                sortBy: 'transactionId',
-                sortByOrder: Order.DESC
-              });
-            }*/
-
-            this.pointItemTransactionQuery.selectLoading()
-              .pipe(takeUntil(this.transactionsLoading$))
-              .subscribe(isLoading => {
-                if (!isLoading) {
-                  this.pointItemTransactionQuery.selectAllAddTransactions()
-                    .pipe(takeUntil(this.unsubscribe$))
-                    .subscribe((transactions: PointItemTransactionModel[]) => {
-                      this.pointItemTransactions = transactions;
-                      console.log('point item transactions');
-                      console.log(this.pointItemTransactions);
-                    });
-
-
-                  this.transactionsLoading$.next();
-                  this.transactionsLoading$.complete();
-                }
-
-              });
           }
         });
     } else {
@@ -192,10 +141,6 @@ export class FeedComponent implements OnInit, OnDestroy {
     const functionName = 'onLikeClick';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
-
-    // this.feedcardService.addLike(pointTransaction.targetUserId, pointTransaction.transactionId).subscribe(() => {
-    //   this.achievementService.incrementAchievement('LikePost').subscribe();
-    // });
 
     this.pointItemTransactionService.addLike(pointTransaction.targetUserId, pointTransaction.transactionId)
       .pipe(take(1))
@@ -211,9 +156,6 @@ export class FeedComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    // this.feedcardService.removeLike(pointTransaction.transactionId).subscribe(() => {
-    //   this.achievementService.incrementAchievement('UnlikePost').subscribe();
-    // });
     this.pointItemTransactionService.removeLike(pointTransaction.transactionId)
       .pipe(take(1))
       .subscribe(() => {
@@ -235,45 +177,20 @@ export class FeedComponent implements OnInit, OnDestroy {
             .subscribe((response) => {
             console.log('Subscribed to point transaction caching...');
             console.log(response);
-/*            this.pointItemTransactions = this.pointItemTransactionQuery.getAll({
-              filterBy: e => e.type === 'Add',
-              sortBy: 'transactionId',
-              sortByOrder: Order.DESC
-            });
-            console.log('point item transactions');
-            console.log(this.pointItemTransactions);*/
+
             console.log(`loaded batch ${this.pointItemTransactionService.numBatchRetrieved}`);
           });
 
-          this.pointItemTransactionQuery.selectLoading()
-            .pipe(takeUntil(this.transactionsLoading$))
-            .subscribe(isLoading => {
-              if (!isLoading) {
-                this.pointItemTransactionQuery.selectAllAddTransactions()
-                  .pipe(takeUntil(this.unsubscribe$))
-                  .subscribe((transactions: PointItemTransactionModel[]) => {
-                    this.pointItemTransactions = transactions;
-                    console.log('point item transactions');
-                    console.log(this.pointItemTransactions);
-                  });
-
-
-                this.transactionsLoading$.next();
-                this.transactionsLoading$.complete();
-              }
-
-            });
-
-/*          this.pointItemTransactions$ = this.pointItemTransactionQuery.selectAll({
-            filterBy: e => e.type === 'Add',
-            sortBy: 'transactionId',
-            sortByOrder: Order.DESC
-          });*/
 
         } else {
           console.log(`Cache Point Item Transactions returned ${result}`);
         }
       });
+  }
+
+  onUserClick(userId: number) {
+    const user = this.userQuery.getUserByUserId(userId);
+    this.router.navigate(['/', 'user', 'profile', user.username]);
   }
 
   function(d, s, id) {

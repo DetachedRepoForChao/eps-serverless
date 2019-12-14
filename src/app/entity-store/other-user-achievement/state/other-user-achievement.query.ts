@@ -77,6 +77,12 @@ export class OtherUserAchievementQuery extends QueryEntity<OtherUserAchievementS
   }
 
   public getAchievementFamily(achievementFamily: string, userId: number) {
+    return this.getAll({
+      filterBy: achievement => (achievement.family === achievementFamily) && (achievement.userId === userId)
+    });
+  }
+
+  public selectAchievementFamily(achievementFamily: string, userId: number) {
     return this.selectAll({
       filterBy: achievement => (achievement.family === achievementFamily) && (achievement.userId === userId)
     });
