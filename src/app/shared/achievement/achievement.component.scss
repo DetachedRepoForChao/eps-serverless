@@ -38,21 +38,55 @@
 }
 
 .star-col {
-  line-height: 100px; height: 100px; text-align: center
+  //line-height: 100px;
+  //height: 100px;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: center
 }
 
 .award-col {
-  line-height: 100px; height: 100px; text-align: center; padding: 0
+  line-height: 100px;
+  height: 100px;
+  text-align: center;
+  padding: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+
+}
+
+.award-img {
+  max-width: 100%;
+  max-height: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .bronze-star {
-  font-size: 40pt; color: #a88218; vertical-align: middle; display: inline-block; line-height: 1.5
+  font-size: 3em;
+  color: #a88218;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1.5;
+  text-shadow: 0 0 20px #2196F3, 0 0 0px #bdad1f;
+  -webkit-text-stroke-color: #E1BEE7;
+  -webkit-text-stroke-width: thin;
 }
 
 .silver-star {
-  font-size: 40pt; color: #c3c3c3; vertical-align: middle; display: inline-block; line-height: 1.5
+  font-size: 3em; color: #c3c3c3; vertical-align: middle; display: inline-block; line-height: 1.5;
+  text-shadow: 0 0 20px #2196F3, 0 0 0px #bdad1f;
+  -webkit-text-stroke-color: #E1BEE7;
+  -webkit-text-stroke-width: thin;
 }
 
 .gold-star {
-  font-size: 40pt; color: #ffef13; vertical-align: middle; display: inline-block; line-height: 1.5
+  font-size: 3em; color: #ffef13; vertical-align: middle; display: inline-block; line-height: 1.5;
+  text-shadow: 0 0 20px #2196F3, 0 0 0px #bdad1f;
+  -webkit-text-stroke-color: #E1BEE7;
+  -webkit-text-stroke-width: thin;
+}
+
+.scroll-container {
+  height: 540px
 }
