@@ -131,18 +131,18 @@ input{
     text-align: left;
   }
 
-  .togstyle {
-    max-width: 180px;
-    overflow: hidden;
-  }
+  //.togstyle {
+  //  max-width: 180px;
+  //  overflow: hidden;
+  //}
 
 
 
-  .dep-row {
-    max-width: 180px;
-    overflow: hidden;
-    margin-top: -10px
-  }
+  //.dep-row {
+  //  max-width: 180px;
+  //  overflow: hidden;
+  //  margin-top: -10px
+  //}
 
   .heighted {
     height: 100px;
@@ -219,7 +219,8 @@ input{
 
 .point-item-scroll-container {
   overflow-y: auto;
-  max-height: 400px;
+  height: 400px;
+
 }
 
 .max-height-200 {
@@ -267,4 +268,10 @@ input{
   -ms-transition: all 0.30s ease-in-out;
   -o-transition: all 0.30s ease-in-out;
   color: azure !important;
+}
+
+.core-value-button-icon {
+  position: absolute;
+  left: 1em;
+  color: #00f2c3;
 }

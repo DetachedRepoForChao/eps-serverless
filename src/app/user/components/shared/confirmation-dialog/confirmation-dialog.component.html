@@ -89,20 +89,26 @@
   <div mat-dialog-content>
     <div class="row text-left">
       <div class="col-12 text-left">
-        <ng-container *ngIf="selectedEmployees.length === 1">
-          <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award <span class="text-primary">{{selectedEmployees[0].firstName}} {{selectedEmployees[0].lastName}}</span> the following Award:</h5>
+        <ng-container *ngIf="selectedDepartment">
+          <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award the <a href="javascript:void(0)" data-toggle="modal" data-target="#employeeListModal">{{selectedDepartment.Name}} Department</a> (<span class="text-primary">{{selectedEmployees.length}}</span> {{(selectedEmployees.length > 1) ? 'employees' : 'employee'}}) the following Award:</h5>
         </ng-container>
-        <ng-container *ngIf="selectedEmployees.length > 1 && selectedEmployees.length <= 5">
-          <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award
-            <ng-container *ngFor="let selectedEmployee of selectedEmployees">
-              <span class="text-primary">{{selectedEmployee.firstName}} {{selectedEmployee.lastName}}</span>,
-            </ng-container>
-            the following 🍍 Award:
-          </h5>
+        <ng-container *ngIf="!selectedDepartment">
+          <ng-container *ngIf="selectedEmployees.length === 1">
+            <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award <span class="text-primary">{{selectedEmployees[0].firstName}} {{selectedEmployees[0].lastName}}</span> the following Award:</h5>
+          </ng-container>
+          <ng-container *ngIf="selectedEmployees.length > 1 && selectedEmployees.length <= 5">
+            <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award
+              <ng-container *ngFor="let selectedEmployee of selectedEmployees">
+                <span class="text-primary">{{selectedEmployee.firstName}} {{selectedEmployee.lastName}}</span>,
+              </ng-container>
+              the following 🍍 Award:
+            </h5>
+          </ng-container>
+          <ng-container *ngIf="selectedEmployees.length > 5">
+            <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award <span class="text-primary">{{selectedEmployees.length}}</span> <a href="javascript:void(0)" data-toggle="modal" data-target="#employeeListModal"> employees</a> the following Award:</h5>
+          </ng-container>
         </ng-container>
-        <ng-container *ngIf="selectedEmployees.length > 5">
-          <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award <span class="text-primary">{{selectedEmployees.length}}</span> <a href="javascript:void(0)" data-toggle="modal" data-target="#employeeListModal"> employees</a> the following Award:</h5>
-        </ng-container>
+
       </div>
     </div>
     <div class="row text-left">

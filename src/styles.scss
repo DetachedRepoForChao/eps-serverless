@@ -227,6 +227,32 @@ perfect-scrollbar > .ps.ps--scrolling-x > .ps__rail-x {
   opacity: 0.9;
 }
 
+
+#point-item-employees-scroll.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-bottom) .ps-indicator-bottom {
+  opacity: 1;
+  background: linear-gradient(to top,  #3f3274 0%,  rgba(63, 50, 116, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+
+#point-item-employees-scroll.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top) .ps-indicator-top {
+  opacity: 1;
+  background: linear-gradient(to bottom,  #3f3274 0%,  rgba(63, 50, 116, 0) 100%) !important;
+  min-height: 50px !important;
+}
+
+#point-item-employees-scroll > .ps.ps--scrolling-y > .ps__rail-y,
+#point-item-employees-scroll > .ps.ps--scrolling-x > .ps__rail-x {
+  opacity: 0.9;
+
+  background-color: #eee0 !important;
+}
+
+#point-item-employees-scroll.ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: #eee0 !important;
+  opacity: 0.9;
+}
+
 /* Set the tooltip Z index to be above modals */
 .cdk-overlay-container {
   z-index: 1051 !important;

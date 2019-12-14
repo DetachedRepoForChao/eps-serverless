@@ -540,6 +540,25 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Check to see if there was a department selected, and if it has but the selected employees have been
+    // modified, clear out the selected department
+    if (selectedDepartment) {
+      const departmentEmployees = this.employees.filter(x => x.department.Id === selectedDepartment.Id);
+      if (selectedEmployees.length !== departmentEmployees.length) {
+        console.log(`Selected Employees and Department Employees lists are different lengths`);
+        this.selectedDepartment = null;
+        selectedDepartment = null;
+      } else {
+        for (const selectedEmployee of selectedEmployees) {
+          if (departmentEmployees.indexOf(selectedEmployee) === -1) {
+            console.log(`${selectedEmployee.username} is not in ${selectedDepartment.Name} department`);
+            this.selectedDepartment = null;
+            selectedDepartment = null;
+            break;
+          }
+        }
+      }
+    }
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       maxWidth: 600,
@@ -698,6 +717,9 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
 
   }
 
+  isCoreValueSelected(coreValue: string) {
+    return !!(this.appliedFilters.find(x => x === coreValue));
+  }
 
   untoggleAllCoreValueButtons() {
     const functionName = 'untoggleAllCoreValueButtons';
@@ -738,28 +760,28 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
                   // Only add point item to the filtered list if it contains ALL the toggled core values
                   let noMatch = false;
                   for (let j = 0; j < toggledCoreValues.length; j++) {
-                    console.log(`Checking if ${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
+                    // console.log(`Checking if ${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
                     if (pointItemList[i].coreValues.find(x => x === toggledCoreValues[j])) {
                       // filteredPointItem contains current toggled core value
-                      console.log(`${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
+                      // console.log(`${pointItemList[i].name} contains core value ${toggledCoreValues[j]}`);
 
                     } else {
                       // filteredPointItem does NOT contain current toggled core value. Break out of loop
-                      console.log(`${pointItemList[i].name} does NOT contain core value ${toggledCoreValues[j]}`);
+                      // console.log(`${pointItemList[i].name} does NOT contain core value ${toggledCoreValues[j]}`);
                       noMatch = true;
                       break;
                     }
                   }
 
                   if (!noMatch) {
-                    console.log(`Adding ${pointItemList[i].name} to the filtered list`);
+                    // console.log(`Adding ${pointItemList[i].name} to the filtered list`);
                     this.filteredPointItemList.push(pointItemList[i]);
                   }
                 }
               }
 
               if (this.selectedPointItem && !this.filteredPointItemList.find(x => x.itemId === this.selectedPointItem.itemId)) {
-                console.log('filtered point item list does not contain the currently selected point item. Setting selected point item to null and untoggling all core values');
+                // console.log('filtered point item list does not contain the currently selected point item. Setting selected point item to null and untoggling all core values');
                 this.selectedPointItem = null;
                 this.untoggleAllCoreValueButtons();
               }
@@ -782,7 +804,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.untoggleAllCoreValueButtons();
 
     for (let i = 0; i < pointItem.coreValues.length; i++) {
-      console.log(`${functionFullName}: Toggling core value '${pointItem.coreValues[i]}' for point item '${pointItem.name}'`);
+      // console.log(`${functionFullName}: Toggling core value '${pointItem.coreValues[i]}' for point item '${pointItem.name}'`);
       this.toggleCoreValueButton(pointItem.coreValues[i]);
     }
   }
