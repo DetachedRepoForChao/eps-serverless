@@ -84,6 +84,94 @@
 
 </ng-container>
 
+<ng-container *ngIf="isAwardPoints">
+  <h1 mat-dialog-title class="text-black-50">Confirm Award</h1>
+  <div mat-dialog-content>
+    <div class="row text-left">
+      <div class="col-12 text-left">
+        <ng-container *ngIf="selectedEmployees.length === 1">
+          <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award <span class="text-primary">{{selectedEmployees[0].firstName}} {{selectedEmployees[0].lastName}}</span> the following Award:</h5>
+        </ng-container>
+        <ng-container *ngIf="selectedEmployees.length > 1 && selectedEmployees.length <= 5">
+          <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award
+            <ng-container *ngFor="let selectedEmployee of selectedEmployees">
+              <span class="text-primary">{{selectedEmployee.firstName}} {{selectedEmployee.lastName}}</span>,
+            </ng-container>
+            the following 🍍 Award:
+          </h5>
+        </ng-container>
+        <ng-container *ngIf="selectedEmployees.length > 5">
+          <h5 class="text-muted">You are {{(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length) ? 'about' : 'trying'}} to award <span class="text-primary">{{selectedEmployees.length}}</span> <a href="javascript:void(0)" data-toggle="modal" data-target="#employeeListModal"> employees</a> the following Award:</h5>
+        </ng-container>
+      </div>
+    </div>
+    <div class="row text-left">
+      <div class="col-12 text-left point-item-container">
+        <h4 class="text-primary">{{selectedPointItem.amount}} 🍍 - {{selectedPointItem.name}}</h4>
+        <ng-container *ngIf="selectedPointItem.description;">
+          <h4 class="text-muted">{{selectedPointItem.description}}</h4>
+        </ng-container>
+        <mat-divider></mat-divider>
+        <h5 class="text-muted">This Award exemplifies the following Core Values:</h5>
+        <div>
+          <ng-container *ngFor="let coreValue of selectedPointItem.coreValues">
+            <span class="text-primary d-inline">{{coreValue | uppercase}} </span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row text-left">
+      <div class="col-12 text-left">
+
+        <ng-container *ngIf="(currentUser.pointsPool ) > (selectedPointItem.amount * selectedEmployees.length); else notEnoughPointsInPool">
+          <form [formGroup]="awardCommentForm">
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 text-dark text-left" >
+<!--              <label for="awardComment"></label>-->
+              <textarea rows="3" class="form-control user-form-control text-dark" id="awardComment" placeholder="If you like, you can write a short comment to go along with the Award" formControlName="awardComment"></textarea>
+
+<!--                <input type="text" class="form-control pointItem-form-control text-dark text-left" formControlName="awardComment"  id="awardComment" placeholder="Comment">-->
+            </div>
+
+          </form>
+<!--          <div class="col-6">
+            Current Pineapple Points 🍍 Pool <span class="text-primary">{{currentUser.pointsPool}} 🍍</span>
+          </div>
+          <div class="col-6">
+            Pineapple Points 🍍 Pool after <span class="text-primary">{{currentUser.pointsPool - (selectedPointItem.amount * selectedEmployees.length)}} 🍍</span>
+          </div>-->
+<!--          <div>
+            You currently have <span class="text-primary">{{currentUser.pointsPool}} 🍍</span> in your Pineapple Points 🍍 pool.
+          </div>
+          <div>
+            After awarding <span class="text-primary">{{selectedPointItem.amount}} 🍍</span> to <span class="text-primary">{{selectedEmployees.length}} </span>{{(selectedEmployees.length > 1) ? 'employees' : 'employee'}}. Your pool will go down to <span class="text-primary">{{currentUser.pointsPool - (selectedPointItem.amount * selectedEmployees.length)}} 🍍</span>.
+          </div>-->
+        </ng-container>
+        <ng-template #notEnoughPointsInPool>
+          <div class="mt-4 text-danger">
+            <span class="font-weight-bold">Not enough in your points pool!</span>
+          </div>
+          <div>
+            You currently have <span class="text-primary">{{currentUser.pointsPool}} 🍍</span>.
+          </div>
+          <div>
+            You need <span class="text-primary">{{(selectedPointItem.amount * selectedEmployees.length)}} 🍍</span>! (<span class="text-primary">{{selectedPointItem.amount}} 🍍</span> times <span class="text-primary">{{selectedEmployees.length}}</span> {{(selectedEmployees.length > 1) ? 'employees' : 'employee'}})
+
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+  </div>
+  <div mat-dialog-actions>
+    <!--    <button mat-button [disabled]="(currentUser.points - currentUser.pointsBalance) < selectedStoreItem.cost" (click)="onCloseConfirm()"cdkFocusInitial>GIVE ME!</button>-->
+    <button mat-button [disabled]="(currentUser.pointsPool ) < (selectedPointItem.amount * selectedEmployees.length)" (click)="onAwardPointsCloseConfirm(awardCommentForm.value.awardComment)" >Award 🍍</button>
+    <button mat-button (click)="onCloseCancel()" >Cancel</button>
+  </div>
+
+</ng-container>
+
 <ng-container *ngIf="isDefault">
   <div mat-dialog-content>
     {{message}}
@@ -93,3 +181,32 @@
     <button mat-button (click)="onCloseCancel()" >No</button>
   </div>
 </ng-container>
+
+<div class="modal fade bd-example-modal-lg" id="employeeListModal" tabindex="-1" role="dialog" aria-labelledby="employeeListModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="employeeListModalLabel">Selected Employees</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body pointItem-modal-body">
+        <ng-container *ngFor="let selectedEmployee of selectedEmployees">
+          <div class="row">
+            <div class="col-12 text-left">
+              {{selectedEmployee.firstName}} {{selectedEmployee.lastName}}
+            </div>
+
+          </div>
+
+        </ng-container>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -30,3 +30,8 @@ li {
   font-style: italic;
   font-weight: bold;
 }
+
+.point-item-container {
+  background-color: aliceblue;
+  border-radius: 5px;
+}

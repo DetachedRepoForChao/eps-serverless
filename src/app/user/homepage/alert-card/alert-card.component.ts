@@ -106,6 +106,22 @@ export class AlertCardComponent implements OnInit, OnDestroy {
       });
   }
 
+  shownext(notification) {
+    // set current notification as readed
+    console.log("this.Index" + this.Index)
+    this.notificationService.setNotificationSeenTime(notification.notificationId).subscribe(result => {
+      this.Index++;
+      if (this.Index < this.alerts.length) {
+        this.AlertDetail = this.alert[this.Index];
+      } else {
+        $('#alert-button').text("Close");
+        if (this.Index > this.alertSize - 1) {
+          $('#button_close').click();
+        }
+      }
+    });
+  }
+
 
   showAlert() {
     $('#alertModal').modal('show');

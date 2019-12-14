@@ -167,7 +167,7 @@ export class PointItemService {
     });
   }
 
-  sendAwardPointsNotice(targetUser: any, sourceUser: any, pointItem: PointItemModel): Observable<any> {
+  sendAwardPointsNotice(targetUser: any, sourceUser: any, pointItem: PointItemModel, comment: string): Observable<any> {
     const functionName = 'sendAwardPointsNotice';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
@@ -182,7 +182,8 @@ export class PointItemService {
           myInit['body'] = {
             targetUser: targetUser,
             sourceUser: sourceUser,
-            pointItem: pointItem
+            pointItem: pointItem,
+            comment: comment,
           };
 
           API.post(this.apiName, this.apiPath2 + '/sendAwardPointsNotice', myInit).then(data => {

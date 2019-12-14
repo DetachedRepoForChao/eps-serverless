@@ -8,6 +8,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { EntityUserService } from 'src/app/entity-store/user/state/entity-user.service';
 import { Notification } from 'src/app/shared/notifications/notification';
 import { NotifierService } from 'angular-notifier';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 
 declare var $: any;
@@ -19,7 +20,7 @@ declare var $: any;
 
 
 export class NotificationCardComponent implements OnInit {
-
+  public config: PerfectScrollbarConfigInterface = {};
   userForm = new FormGroup({
     title: new FormControl(),
     content: new FormControl(),

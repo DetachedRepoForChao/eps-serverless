@@ -5,7 +5,7 @@ import { DepartmentService} from '../../../shared/department.service';
 import { UserService} from '../../../shared/user.service';
 import {User} from '../../../shared/user.model';
 import { Department} from '../../../shared/department.model';
-import {MatTableDataSource, ThemePalette} from '@angular/material';
+import {MatDialog, MatTableDataSource, ThemePalette} from '@angular/material';
 
 import {PointItem} from '../../../shared/point-item.model';
 import {FormBuilder, FormControl, FormGroup, NgForm, ValidatorFn, Validators} from '@angular/forms';
@@ -30,6 +30,8 @@ import {catchError, take, takeUntil} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {requireCheckboxesToBeCheckedValidator} from '../../admin-user/point-items-card/point-items-card.component';
+import {StoreItemModel} from '../../../entity-store/store-item/state/store-item.model';
+import {ConfirmationDialogComponent} from '../../components/shared/confirmation-dialog/confirmation-dialog.component';
 
 
 export interface DepartmentEmployee {
@@ -102,9 +104,12 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   appliedFilters = [];
   currentManagePointItemView = 'addPointItem';
 
+  selectedAll = false;
+  selectedDepartment: Department;
+
   constructor(private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
-              private globals: Globals,
+              public dialog: MatDialog,
               private userService: UserService,
               private pointItemService: PointItemService,
               private pointItemQuery: PointItemQuery,
@@ -246,12 +251,14 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
         }
       );
 
+    // When a department is selected, toggle all employees belonging to that department
     this.departmentSelectionForm.get('departmentSelection').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(department => {
+      .subscribe((department: Department) => {
         console.log(department);
         this.selection.clear();
 
+        this.selectedDepartment = department;
         const departmentUsers = this.employees.filter(x => x.department.Id === department.Id);
 
         for (const departmentUser of departmentUsers) {
@@ -263,7 +270,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.isCardLoading = false;
     this.spinner.hide('gift-points-spinner');
 
-    this.showLimit = 7;
+    // this.showLimit = 7;
   }
 
   private loadAddPointItemForm() {
@@ -514,48 +521,132 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     }
   }
 
-  pointItemOnSubmit(form: NgForm, currentUser: EntityCurrentUserModel) {
+  onAwardPointsClick() {
+
+  }
+
+  openDialog(currentUser: EntityCurrentUserModel, selectedPointItem: PointItemModel, selectedEmployees: EntityUserModel[],
+             selectedDepartment?: Department, selectedAll?: boolean): void {
+    console.log(`confirm approval?`);
+
+    if (!selectedPointItem && (!selectedEmployees || selectedEmployees.length === 0)) {
+      this.notifierService.notify('warning', 'Please select a 🍍 Award and its recipient(s)!');
+      return;
+    } else if (!selectedPointItem) {
+      this.notifierService.notify('warning', 'Please select a 🍍 Award');
+      return;
+    } else if (!selectedEmployees || selectedEmployees.length === 0) {
+      this.notifierService.notify('warning', 'Please select recipient(s) for the 🍍 Award');
+      return;
+    }
+
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: 600,
+      data: {
+        action: 'confirmAwardPoints',
+        selectedPointItem: selectedPointItem,
+        selectedEmployees: selectedEmployees,
+        selectedDepartment: selectedDepartment,
+        selectedAll: selectedAll,
+      }
+    });
+
+    // width: '600px',
+    // data: "Would you like to save your changes?",
+
+    dialogRef.backdropClick().subscribe(() => {
+      // Close the dialog
+      dialogRef.close('Cancel');
+    });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(result => {
+        console.log(`Dialog closed:`, result);
+        if (result.action && result.action === 'Confirm') {
+          this.pointItemOnSubmit(currentUser, selectedPointItem, selectedEmployees, result.comment, selectedDepartment, selectedAll);
+        } else if (result === 'Cancel') {
+          console.log('Cancelled');
+        }
+      });
+  }
+
+  pointItemOnSubmit(currentUser: EntityCurrentUserModel, selectedPointItem: PointItemModel, selectedEmployees: EntityUserModel[], comment: string,
+                    selectedDepartment?: Department, selectedAll?: boolean) {
     const functionName = 'pointItemOnSubmit';
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: this.selectedPointItem:`);
-    console.log(this.selectedPointItem);
+    // console.log(`${functionFullName}: this.selectedPointItem:`);
+    // console.log(this.selectedPointItem);
 
-    console.log(`${functionFullName}: this.selection.selected:`);
-    console.log(this.selection.selected);
+    // console.log(`${functionFullName}: this.selection.selected:`);
+    // console.log(this.selection.selected);
 
-    const sourceUser = currentUser;
+    // const sourceUser = currentUser;
 
-    if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
-    } else {
-      const data = {
+    // Create an object array to send to the backend API in one bulk operation
+    const userPointObjectArray = [];
+    // const totalAmount = selectedPointItem.amount * selectedEmployees.length;
+    // let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
+    for (const selectedEmployee of selectedEmployees) {
+      console.log('gifting points to: ' + selectedEmployee.username);
+      // totalAmount = totalAmount + selectedPointItem.amount;
+
+      const userPointObject = {
+        userId: selectedEmployee.userId,
+        pointItemName: this.selectedPointItem.name,
         pointItemId: this.selectedPointItem.itemId,
         amount: this.selectedPointItem.amount,
+        coreValues: this.selectedPointItem.coreValues,
+        description: comment,
       };
 
-      // Create an object array to send to the backend API in one bulk operation
-      const userPointObjectArray = [];
-      let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
-      console.log('selected.length');
-      console.log(this.selection.selected.length);
-      for ( let i = 0; i < this.selection.selected.length; i++) {
-        console.log('gifting points to: ' + this.selection.selected[i].username);
-        totalAmount = totalAmount + this.selectedPointItem.amount;
+      userPointObjectArray.push(userPointObject);
+    }
 
-        const userPointObject = {
-          userId: this.selection.selected[i].userId,
-          pointItemName: this.selectedPointItem.name,
-          pointItemId: this.selectedPointItem.itemId,
-          amount: this.selectedPointItem.amount,
-          coreValues: this.selectedPointItem.coreValues,
-          description: 'Test',
-        };
+    this.pointItemService.awardPointsToEmployees(userPointObjectArray)
+      .pipe(take(1))
+      .subscribe(
+        (giftPointsResult: any) => {
+          console.log('giftPointsResult');
+          console.log(giftPointsResult);
+          const newPointPoolAmount = giftPointsResult.newPointPoolAmount;
+          const resultObjectArray = giftPointsResult.resultObjectArray;
+          this.currentUserService.updatePointPool(+newPointPoolAmount);
+          this.notifierService.notify('success', 'Awards successful!');
 
-        userPointObjectArray.push(userPointObject);
-      }
+          for (const resultObject of resultObjectArray) {
+            // If the backend function call returned true, update points for user and send them an email notification
+            if (resultObject.status === true) {
+              const targetUser = selectedEmployees.filter(x => x.userId === resultObject.targetUserId)[0];
+              this.entityUserService.updatePoints(+resultObject.targetUserId, +resultObject.newPointAmount);
+              this.pointItemService.sendAwardPointsNotice(targetUser, currentUser, selectedPointItem, comment)
+                .pipe(take(1))
+                .subscribe(emailResult => {
+                  console.log(`${functionFullName}: email result`);
+                  console.log(emailResult);
+                });
+            }
 
-      // Check if the manager has enough points in his points pool to complete the transaction
+          }
+
+          this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length)
+            .pipe(take(1))
+            .subscribe();   // TODO Earned achievement notification
+          this.selection.clear();
+        },
+        (err) => {
+          console.log(`${functionFullName}: award points threw an error`, err);
+          this.notifierService.notify('error', 'Error awarding points!');   // TODO Send error log to administrator?
+        });
+
+/*    if (!this.selectedPointItem || (this.selection.selected.length === 0)) {
+    } else {
+
+
+/!*      // Check if the manager has enough points in his points pool to complete the transaction
       const currentPointsPool = sourceUser.pointsPool;
       if (totalAmount > currentPointsPool) {
         console.log('Not enough points in the points pool to complete transaction. Stopping...');
@@ -564,43 +655,9 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
       } else {
         console.log('Sufficient points in the points pool to complete the transaction. Continuing...');
         console.log(userPointObjectArray);
-        this.pointItemService.awardPointsToEmployees(userPointObjectArray)
-          .pipe(take(1))
-          .subscribe(
-            (giftPointsResult: any) => {
-            console.log('giftPointsResult');
-            console.log(giftPointsResult);
-            const newPointPoolAmount = giftPointsResult.newPointPoolAmount;
-            const resultObjectArray = giftPointsResult.resultObjectArray;
-            this.currentUserService.updatePointPool(+newPointPoolAmount);
-            this.notifierService.notify('success', 'Points awarded successfully!');
 
-            for (let i = 0; i < resultObjectArray.length; i++) {
-              // If the backend function call returned true, update points for user and send them an email notification
-              if (resultObjectArray[i].status === true) {
-                const targetUser = this.selection.selected.filter(x => x.userId === resultObjectArray[i].targetUserId)[0];
-                this.entityUserService.updatePoints(+resultObjectArray[i].targetUserId, +resultObjectArray[i].newPointAmount);
-                this.pointItemService.sendAwardPointsNotice(targetUser, sourceUser, this.selectedPointItem)
-                  .pipe(take(1))
-                  .subscribe(emailResult => {
-                    console.log(`${functionFullName}: email result`);
-                    console.log(emailResult);
-                  });
-              }
-
-            }
-
-            this.achievementService.incrementAchievementByX('AwardPoint', resultObjectArray.length)
-              .pipe(take(1))
-              .subscribe();   // TODO Earned achievement notification
-            this.selection.clear();
-          },
-            (err) => {
-            console.log(`${functionFullName}: award points threw an error`, err);
-              this.notifierService.notify('error', 'Error awarding points!');   // TODO Send error log to administrator?
-            });
-      }
-    }
+      }*!/
+    }*/
 
   }
 
@@ -794,6 +851,20 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     }
   }
 
+  selectAll() {
+    this.selectedDepartment = null;
+    this.selectedAll = true;
+    this.selection.clear();
+    for (const employee of this.employees) {
+      this.selection.toggle(employee);
+    }
+  }
+
+  clearSelection() {
+    this.selectedDepartment = null;
+    this.selectedAll = false;
+    this.selection.clear();
+  }
 
   ngOnDestroy(): void {
     // this.subscription.unsubscribe();

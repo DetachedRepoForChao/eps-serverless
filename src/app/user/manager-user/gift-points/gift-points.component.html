@@ -65,14 +65,14 @@
           </div>
 
           <!------- Point Item Search form -------->
-          <div class="row heighted">
+          <div class="row height-80">
             <div class="col-md-4">
               <div class="col-12">
                 <ng-container *ngIf="pointSearchForm">
-                  <form [formGroup]="pointSearchForm" class="form py-4">
-
+                  <form [formGroup]="pointSearchForm" class="form text-center">
+                    <label class="form-label">Search 🍍 Awards</label>
                     <input class="form-control form-rounded w-100 border-neutral" type="text"
-                           placeholder="Search Point Items" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
+                           placeholder="Search" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
                   </form>
                 </ng-container>
 
@@ -83,9 +83,9 @@
             <div class="col-md-3 fluid">
               <div class="col-12">
                 <ng-container *ngIf="employeeSearchForm">
-                  <form [formGroup]="employeeSearchForm" class="form py-4">
-
-                    <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employee"
+                  <form [formGroup]="employeeSearchForm" class="form text-center">
+                    <label class="form-label">Search Employees</label>
+                    <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search"
                            [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
                   </form>
                 </ng-container>
@@ -94,10 +94,10 @@
 
             </div>
 
-            <div class="form-group col-sm-12 col-md-3 col-lg-3">
+            <div class="col-sm-12 col-md-2 col-lg-2 text-center">
               <form [formGroup]="departmentSelectionForm">
                 <label class="form-label">Select Entire Department</label>
-                <select formControlName="departmentSelection" class="form-control department-form-control" id="departmentSelection" name="departmentSelection" >
+                <select formControlName="departmentSelection" class="form-control department-form-control text-left" id="departmentSelection" name="departmentSelection" >
                   <option [ngValue]="null" [disabled]="true">Department</option>
                   <ng-container *ngFor="let department of departments">
                     <option [ngValue]="department">
@@ -112,8 +112,9 @@
                 <label class="validation-message">This field is required.</label>
               </ng-container>-->
             </div>
-            <div class="form-group col-sm-12 col-md-2 col-lg-2 pb-1">
-              <button type="button" class="btn btn-primary">All Employees</button>
+            <div class="col-sm-12 col-md-2 col-lg-2 pb-3 text-center">
+              <label class="form-label mb-0">Select All Employees</label>
+              <button type="button" class="btn btn-primary" (click)="selectAll()">All Employees</button>
 
             </div>
 
@@ -121,9 +122,29 @@
 
           <div>
             <div class="row">
-              <div class="col-12">
-                <button type="button" class="btn btn-warning">Clear Selection</button>
+              <div class="col-md-4 text-center">
+                <ng-container *ngIf="currentUser.awardManager">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#managePointItemModal">Manage 🍍 Awards</button>
+                </ng-container>
               </div>
+              <div class="col-4 my-auto">
+                <ng-container *ngIf="employees.length >= showLimit; else noMore" >
+                  <span>Displaying {{showLimit}} out of {{employees?.length}} employees</span>
+                </ng-container>
+                <ng-template #noMore>
+                  <span>Displaying all {{employees.length}} employees</span>
+                </ng-template>
+                <ng-container *ngIf="!selection.isEmpty(); else zeroSelected">
+                  <span class="pl-2">({{selection.selected.length}} selected)</span>
+                </ng-container>
+                <ng-template #zeroSelected>
+                  <span class="pl-2">(0 selected)</span>
+                </ng-template>
+              </div>
+              <div class="col-2 text-center">
+                <button type="button" class="btn btn-warning" (click)="clearSelection()">Clear Selection</button>
+              </div>
+
             </div>
             <div class="row">
               <div class="container" [class.show]="show">
@@ -140,7 +161,7 @@
                                   <label class="form-check-label form-check-label-color" >
                                     <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
                                            (click)="selectPointItem(pointItem)">
-                                    {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
+                                    {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
                                     <span class="form-check-sign"></span>
                                   </label>
                                 </div>
@@ -154,7 +175,7 @@
                                     <label class="form-check-label form-check-label-color" >
                                       <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
                                              (click)="selectPointItem(pointItem)">
-                                      {{(pointItem.amount + ' pts - ' + pointItem.name) | pointItem}}
+                                      {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
                                       <span class="form-check-sign"></span>
                                     </label>
                                   </div>
@@ -174,10 +195,8 @@
 
 
                         <div class="gift-points-container text-center">
-                          <button type="button" class="btn btn-primary" (click)="pointItemOnSubmit(giftPointsForm, currentUser)">Award 🍍</button>
-                          <ng-container *ngIf="currentUser.awardManager">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#managePointItemModal">Manage 🍍 Awards</button>
-                          </ng-container>
+                          <button type="button" class="btn btn-primary" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)">Award 🍍</button>
+
                         </div>
                       </form>
                     </div>
@@ -187,13 +206,13 @@
                       <ng-container *ngFor="let user of employees | fresh:term; let i = index" class="">
                         <ng-container *ngIf="i <= showLimit">
                           <div class="single-user mx-2 px-1">
-                            <img src="{{user.avatarResolvedUrl}}" class="img-row user-selection" [ngClass]="{selected: (selection.isSelected(user))}"
+                            <img src="{{user.avatarResolvedUrl}}" class="img-row user-selection" [ngClass]="{selected: selection.isSelected(user)}"
                                  title="{{user['firstName'] + ' ' + user['lastName']}}" (click)="onAvatarClick($event, user)" />
                             <div class="row info-plate-row">
-                              <div class="col-12 info-plate-color text-right">
+                              <div class="col-12 info-plate text-right" [ngClass]="{'info-plate-selected': selection.isSelected(user)}">
                                 <div class="row">
                                   <div class="col-12 pl-0">
-                                    <h5 class="text-primary py-0 my-0">{{user.firstName + " " + user.lastName | fresh}}</h5>
+                                    <h5 class="text-primary py-0 my-0" [ngClass]="{'name-selected': selection.isSelected(user)}">{{user.firstName + " " + user.lastName | fresh}}</h5>
                                   </div>
                                   <div class="col-12">
                                     <h5 class="py-0 my-0">{{user.points}} 🍍</h5>
@@ -264,13 +283,13 @@
         <div class="modal-body pointItem-modal-body">
           <div class="row justify-content-start mb-2">
             <div class="col-auto text-center">
-              <span (click)="onManagePointItemTabItemClick('addPointItem')" class="tab-item text-" id="managePointItemTab_addPointItem" [ngClass]="{'toggled': currentManagePointItemView === 'addPointItem'}">Add Award</span>
+              <span (click)="onManagePointItemTabItemClick('addPointItem')" class="tab-item text-" id="managePointItemTab_addPointItem" [ngClass]="{'tab-toggled': currentManagePointItemView === 'addPointItem'}">Add Award</span>
             </div>
             <div class="col-auto text-center">
-              <span (click)="onManagePointItemTabItemClick('editPointItem')" class="tab-item" id="managePointItemTab_editPointItem" [ngClass]="{'toggled': currentManagePointItemView === 'editPointItem'}">Edit Award</span>
+              <span (click)="onManagePointItemTabItemClick('editPointItem')" class="tab-item" id="managePointItemTab_editPointItem" [ngClass]="{'tab-toggled': currentManagePointItemView === 'editPointItem'}">Edit Award</span>
             </div>
             <div class="col-auto text-center">
-              <span (click)="onManagePointItemTabItemClick('deletePointItem')" class="tab-item" id="managePointItemTab_deletePointItem" [ngClass]="{'toggled': currentManagePointItemView === 'deletePointItem'}">Delete Award</span>
+              <span (click)="onManagePointItemTabItemClick('deletePointItem')" class="tab-item" id="managePointItemTab_deletePointItem" [ngClass]="{'tab-toggled': currentManagePointItemView === 'deletePointItem'}">Delete Award</span>
             </div>
           </div>
 
@@ -369,7 +388,7 @@
                             <option [ngValue]="null" disabled="true">Select a 🍍 Award</option>
                             <ng-container *ngFor="let pointItem of pointItems">
                               <option  [ngValue]="pointItem">
-                                {{pointItem.name}} {{pointItem.amount}}pts
+                                {{pointItem.name}} {{pointItem.amount}}🍍
                               </option>
                             </ng-container>
 
@@ -469,7 +488,7 @@
                             <option [ngValue]="null" [disabled]="true">Select a 🍍 Award</option>
                             <ng-container *ngFor="let pointItem of pointItems" >
                               <option [ngValue]="pointItem">
-                                {{pointItem.name}} {{pointItem.amount}}pts
+                                {{pointItem.name}} {{pointItem.amount}}🍍
                               </option>
                             </ng-container>
 

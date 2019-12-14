@@ -136,16 +136,7 @@ input{
     overflow: hidden;
   }
 
-  .info-plate-row {
-    margin-top: -3em;
-    width: 146px;
-    margin-left: auto;
-    margin-right: auto;
-  }
 
-  .info-plate-color {
-    background-color: #344675e0;
-  }
 
   .dep-row {
     max-width: 180px;
@@ -199,7 +190,7 @@ input{
   border-bottom-style: solid;
 }
 
-.toggled {
+.tab-toggled {
   border-bottom-color: #b350f2;
   border-bottom-style: solid;
 }
@@ -237,4 +228,43 @@ input{
 
 .department-form-control {
   border-color: white;
+}
+
+.height-80 {
+  height: 80px;
+}
+
+.info-plate-row {
+  margin-top: -3em;
+  width: 146px;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.info-plate {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  background-color: #344675e0;
+  box-shadow: 0 0 15px #000000;
+  border: 0;
+  border-radius: 5px;
+}
+
+.info-plate-selected {
+  background-color: #9c27b0e0;
+  box-shadow: 0 0 15px #000000;
+  //margin: 5px 1px 3px 0px;
+  border: 0;
+  border-radius: 5px;
+}
+
+.name-selected {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  color: azure !important;
 }

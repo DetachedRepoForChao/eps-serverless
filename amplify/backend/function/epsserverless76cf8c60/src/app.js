@@ -44,6 +44,7 @@ app.post('/things/sendAwardPointsNotice' , function (req, res) {
       const sourceUser = req.body.sourceUser;
       const targetUser = req.body.targetUser;
       const pointItem = req.body.pointItem;
+      const comment = req.body.comment;
       ctrlCognito.getCognitoUser(targetUser.username)
         .then((user) => {
           console.log(user);
@@ -63,11 +64,11 @@ app.post('/things/sendAwardPointsNotice' , function (req, res) {
           const promises = [];
 
           if (emailConfirmed && emailNotifications) {
-            promises.push(ctrlNotifications.sendAwardPointsEmail(targetUser, sourceUser, pointItem));
+            promises.push(ctrlNotifications.sendAwardPointsEmail(targetUser, sourceUser, pointItem, comment));
           }
 
           if (phoneConfirmed && phoneNotifications) {
-            promises.push(ctrlNotifications.sendAwardPointsSMS(targetUser, sourceUser, pointItem));
+            promises.push(ctrlNotifications.sendAwardPointsSMS(targetUser, sourceUser, pointItem, comment));
           }
 
           Promise.all(promises)

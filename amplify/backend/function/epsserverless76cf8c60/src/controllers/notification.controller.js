@@ -8,7 +8,7 @@ AWS.config.update({region: 'us-east-1'});
 const sourceEmail = 'admin@pineapplepoints.net';
 const originationNumber = "+12014310746";
 
-const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
+const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem, comment) {
   const functionName = 'sendAwardPointsEmail';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -24,10 +24,9 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
   const managerFullName = `${sourceUser.firstName} ${sourceUser.lastName}`;
   const pointItemName = pointItem.name;
   const points = pointItem.amount;
-  let description = '';
-  if (pointItem.description && pointItem.description.length > 0) {
-    description = `Manager's comment: ${pointItem.description}`
-  }
+  const description = (pointItem.description && pointItem.description.length > 0) ? `Award description: ${pointItem.description}` : '';
+  const managerComment = (comment && comment.length > 0) ? `Manager's comment: ${comment}` : '';
+
 
   // Create sendEmail params
   const params = {
@@ -39,7 +38,7 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
     },
     Template: 'AwardPointsTemplate',
     ConfigurationSetName: "Default",
-    TemplateData: `{\"targetUserFirstName\":\"${targetUserFirstName}\", \"managerFullName\":\"${managerFullName}\", \"points\": \"${points}\", \"pointItemName\": \"${pointItemName}\", \"description\": \"${description}\"}`,
+    TemplateData: `{\"targetUserFirstName\":\"${targetUserFirstName}\", \"managerFullName\":\"${managerFullName}\", \"points\": \"${points}\", \"pointItemName\": \"${pointItemName}\", \"description\": \"${description}\", \"managerComment\": \"${managerComment}\"}`,
     Source: sourceEmail, /* required */
 
   };
@@ -63,7 +62,7 @@ const sendAwardPointsEmail = function (targetUser, sourceUser, pointItem) {
 
 module.exports.sendAwardPointsEmail = sendAwardPointsEmail;
 
-const sendAwardPointsSMS = function (targetUser, sourceUser, pointItem) {
+const sendAwardPointsSMS = function (targetUser, sourceUser, pointItem, comment) {
   const functionName = 'sendAwardPointsSMS';
   const functionFullName = `${componentName} ${functionName}`;
   console.log(`Start ${functionFullName}`);
@@ -80,10 +79,9 @@ const sendAwardPointsSMS = function (targetUser, sourceUser, pointItem) {
   const managerFullName = `${sourceUser.firstName} ${sourceUser.lastName}`;
   // const pointItemName = pointItem.name;
   // const points = pointItem.amount;
-  let description = '';
-  if (pointItem.description && pointItem.description.length > 0) {
-    description = `Manager's comment: ${pointItem.description}`
-  }
+
+  const description = (pointItem.description && pointItem.description.length > 0) ? `Award description: ${pointItem.description}` : '';
+  const managerComment = (comment && comment.length > 0) ? `Manager's comment: ${comment}` : '';
 
 
 // The recipient's phone number.  For best results, you should specify the
