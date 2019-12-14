@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card card-coin card-plain">
-    <ng-container *ngIf="!isCardLoading && currentUser; else cardLoading">
+    <ng-container *ngIf="!isCardLoading && currentUser && employees && pointItems; else cardLoading">
       <div class="card-body">
         <div class="col-lg-12 col-md-12 col-sm-12">
           <h4 class="text-uppercase">Award Pineapple Points 🍍</h4>
@@ -128,8 +128,8 @@
                 </ng-container>
               </div>
               <div class="col-4 my-auto">
-                <ng-container *ngIf="employees.length >= showLimit; else noMore" >
-                  <span>Displaying {{showLimit}} out of {{employees?.length}} employees</span>
+                <ng-container *ngIf="employees.length >= (showLimit + 1); else noMore" >
+                  <span>Displaying {{(showLimit + 1)}} out of {{employees.length}} employees</span>
                 </ng-container>
                 <ng-template #noMore>
                   <span>Displaying all {{employees.length}} employees</span>

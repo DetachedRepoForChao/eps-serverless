@@ -92,7 +92,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   departments: Department[];
   isCardLoading: boolean;
   formSubmitted = false;
-  showLimit = 8;
+  showLimit = 7;
   showFlag = false;
   clickedUser;
 
