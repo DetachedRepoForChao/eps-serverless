@@ -51,104 +51,111 @@
 
   <ng-container *ngIf="pointItemTransactionService.initialBatchRetrieved && pointItemTransactions && users; else nothingHere">
     <div class="row justify-evenly pt-1">
+      <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-evenly">
       <ng-container *ngFor="let pointTransaction of pointItemTransactions.slice(0, (this.pointItemTransactionService.numBatchRetrieved * 10))">
 
         <!-- /////// post -->
-        <div class="card card-feed col-5">
-          <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="mr-2">
-                  <ng-container *ngIf="users; else avatarLoading">
-                    <img class="rounded-circle" width="45"
-                         [src]="userQuery.getUserByUserId(pointTransaction.targetUserId)?.avatarResolvedUrl"
-                         alt="">
-                    <!--                {{(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0].avatarResolvedUrl}}-->
-                  </ng-container>
-                  <!-- Placeholder for loading avatar -->
-                  <ng-template #avatarLoading>
-                    <div>
-                      <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..."
-                           class="rounded-circle" width="45">
+
+<!--          <div fxFlex="30" fxHide.lt-sm fxShow.gt-xs fxLayoutAlign="center" >
+
+          </div>-->
+
+          <div fxFlex="45%" fxFlex.lt-md="300px"  fxLayoutAlign="center">
+            <div class="card card-feed">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                      <ng-container *ngIf="users; else avatarLoading">
+                        <img class="rounded-circle" width="45"
+                             [src]="userQuery.getUserByUserId(pointTransaction.targetUserId)?.avatarResolvedUrl"
+                             alt="">
+                        <!--                {{(entityUserQuery.getUser(pointTransaction.targetUserName) | async)[0].avatarResolvedUrl}}-->
+                      </ng-container>
+                      <!-- Placeholder for loading avatar -->
+                      <ng-template #avatarLoading>
+                        <div>
+                          <img src="https://placeholder.pics/svg/100x100/DEDEDE/555555/%20" alt="Loading..."
+                               class="rounded-circle" width="45">
+                        </div>
+                      </ng-template>
+
                     </div>
-                  </ng-template>
-
-                </div>
-                <div class="ml-2">
-                  <div class="h5 m-0">@{{userQuery.getUserByUserId(pointTransaction.targetUserId).firstName}}&nbsp;{{userQuery.getUserByUserId(pointTransaction.targetUserId).lastName}}
+                    <div class="ml-2">
+                      <div class="h5 m-0">@{{userQuery.getUserByUserId(pointTransaction.targetUserId).firstName}}&nbsp;{{userQuery.getUserByUserId(pointTransaction.targetUserId).lastName}}
+                      </div>
+                      <div class="h7 text-muted">
+                        <!--                  <i class="fas fa-clock-o"></i>{{pointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}-->
+                        <i class="fas fa-clock-o"></i>{{pointTransaction.createdAt | date:'medium'}}
+                      </div>
+                    </div>
                   </div>
-                  <div class="h7 text-muted">
-                    <!--                  <i class="fas fa-clock-o"></i>{{pointTransaction.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}-->
-                    <i class="fas fa-clock-o"></i>{{pointTransaction.createdAt | date:'medium'}}
+                  <div>
+                    <div class="dropdown">
+                      <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown"
+                              aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-h"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                        <div class="h6 dropdown-header">Configuration</div>
+                        <a class="dropdown-item">Save</a>
+                        <a class="dropdown-item" href="#">Hide</a>
+                        <a class="dropdown-item" href="#">Report</a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div>
-                <div class="dropdown">
-                  <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-ellipsis-h"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
-                    <div class="h6 dropdown-header">Configuration</div>
-                    <a class="dropdown-item">Save</a>
-                    <a class="dropdown-item" href="#">Hide</a>
-                    <a class="dropdown-item" href="#">Report</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="text-muted h7 mb-2"> </div>
-            <a class="card-link" >
-              <h5 class="card-title">
-                <span class="user-link" (click)="onUserClick(pointTransaction.sourceUserId)">{{userQuery.getUserByUserId(pointTransaction.sourceUserId).firstName}} {{userQuery.getUserByUserId(pointTransaction.sourceUserId).lastName}}</span>
-                awarded {{pointTransaction.amount}} 🍍 to
-                <span class="user-link" (click)="onUserClick(pointTransaction.targetUserId)">{{userQuery.getUserByUserId(pointTransaction.targetUserId).firstName}}&nbsp;{{userQuery.getUserByUserId(pointTransaction.targetUserId).lastName}}</span> for:</h5>
-            </a>
+              <div class="card-body">
+                <div class="text-muted h7 mb-2"> </div>
+                <a class="card-link" >
+                  <h5 class="card-title">
+                    <span class="user-link" (click)="onUserClick(pointTransaction.sourceUserId)">{{userQuery.getUserByUserId(pointTransaction.sourceUserId).firstName}} {{userQuery.getUserByUserId(pointTransaction.sourceUserId).lastName}}</span>
+                    awarded {{pointTransaction.amount}} 🍍 to
+                    <span class="user-link" (click)="onUserClick(pointTransaction.targetUserId)">{{userQuery.getUserByUserId(pointTransaction.targetUserId).firstName}}&nbsp;{{userQuery.getUserByUserId(pointTransaction.targetUserId).lastName}}</span> for:</h5>
+                </a>
 
-            <p class="card-text">
-              {{pointItemQuery.getPointItemByItemId(pointTransaction.pointItemId)?.name}}
-            </p>
-            <ng-container *ngIf="pointTransaction.description">
-              <p>
-                "{{pointTransaction.description}}"
-              </p>
-            </ng-container>
-
-          </div>
-          <div class="card-footer">
-            <div class="row">
-
-              <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                <ng-container *ngIf="pointTransaction.likedByCurrentUser === false; else likedByUser">
-                  <a  href="javascript:void(0)"
-                      (click)="onLikeClick(pointTransaction)" class="card-link">
-                    <i class="far fa-heart"></i> Like
-                    <ng-container *ngIf="pointTransaction.likes?.length > 0">
-                      <span class="badge badge-secondary">{{pointTransaction.likes.length}}</span>
-                    </ng-container>
-
-                  </a>
+                <p class="card-text">
+                  {{pointItemQuery.getPointItemByItemId(pointTransaction.pointItemId)?.name}}
+                </p>
+                <ng-container *ngIf="pointTransaction.description">
+                  <p>
+                    "{{pointTransaction.description}}"
+                  </p>
                 </ng-container>
 
+              </div>
+              <div class="card-footer">
+                <div class="row">
 
-                <ng-template #likedByUser>
-                  <a href="javascript:void(0)" (click)="onUnlikeClick(pointTransaction)" class="card-link">
-                    <!--          <i class="fas fa-heart"></i> Like <span class="badge badge-default">4</span>-->
-                    <i class="fas fa-heart"></i> Like
-                    <ng-container *ngIf="pointTransaction.likes?.length > 0">
-                      <span class="badge badge-secondary">{{pointTransaction.likes.length}}</span>
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+                    <ng-container *ngIf="pointTransaction.likedByCurrentUser === false; else likedByUser">
+                      <a  href="javascript:void(0)"
+                          (click)="onLikeClick(pointTransaction)" class="card-link">
+                        <i class="far fa-heart"></i> Like
+                        <ng-container *ngIf="pointTransaction.likes?.length > 0">
+                          <span class="badge badge-secondary">{{pointTransaction.likes.length}}</span>
+                        </ng-container>
+
+                      </a>
                     </ng-container>
 
-                  </a>
-                </ng-template>
-              </div>
-              <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                <!--              <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>-->
-              </div>
-              <div class="col-lg-6 col-md-3 col-4">
+
+                    <ng-template #likedByUser>
+                      <a href="javascript:void(0)" (click)="onUnlikeClick(pointTransaction)" class="card-link">
+                        <!--          <i class="fas fa-heart"></i> Like <span class="badge badge-default">4</span>-->
+                        <i class="fas fa-heart"></i> Like
+                        <ng-container *ngIf="pointTransaction.likes?.length > 0">
+                          <span class="badge badge-secondary">{{pointTransaction.likes.length}}</span>
+                        </ng-container>
+
+                      </a>
+                    </ng-template>
+                  </div>
+                  <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+                    <!--              <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>-->
+                  </div>
+                  <div class="col-lg-6 col-md-3 col-4">
             <span class="row heights">
                 <div class="col-lg-3 col-md-3 col-sm-4 col-4">
 
@@ -166,15 +173,18 @@
           </div>
           </span>
 
+                  </div>
+
+                </div>
+
               </div>
-
             </div>
-
           </div>
-        </div>
+
+
 
       </ng-container>
-
+    </div>
     </div>
 
     <div class="row justify-content-md-center">

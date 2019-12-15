@@ -1,3 +1,17 @@
 .section-coins {
   margin-top: 100px;
 }
+
+.wrapper {
+
+}
+
+.break {
+  height: 0;
+}
+
+@media (max-width: 1025px) {
+  .break {
+    flex-basis: 100%;
+  }
+}
