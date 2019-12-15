@@ -18,26 +18,13 @@
         <section class="section section-lg section-coins">
           <img src="../../../assets/img/path3.png" class="path position-fixed">
           <div class="container align-items-center wrapper-width">
-            <div class="row" >
-              <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="profile">
 
                 <div class="card">
                   <div class="card card-coin card-plain card-custom">
 
                     <div class="card-body" >
-                      <!--<ngx-spinner
-                        name="profile-spinner"
-                        [fullScreen]="false"
-                        bdColor="rgba(51,51,51,0.8)"
-                        size="medium"
-                        color="#fff"
-                        type="pacman"
-                      >
-                        <p class="loadingstyle">Loading...</p>
-                      </ngx-spinner>-->
-
-                      <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-4 text-left">
+                      <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between">
+                        <div fxFlex="30" fxHide.lt-sm fxShow.gt-xs fxLayoutAlign="start" >
                           <ul class="nobullets">
                             <li (click)="onViewItemClick('editProfile')" id="viewItem_editProfile" [ngClass]="{'toggled': currentView === 'editProfile'}">
                               Edit Profile
@@ -55,10 +42,31 @@
                             </li>
                           </ul>
                         </div>
-                        <div class="col-lg-8 col-md-8 col-sm-8">
+                        <div fxFlex="100%" fxShow.lt-sm fxHide.gt-xs fxLayoutAlign="end">
+                          <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-ellipsis-h"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" >
+                              <div class="h6 dropdown-header">Configuration</div>
+                              <a class="dropdown-item" (click)="onViewItemClick('editProfile')" [ngClass]="{'toggled': currentView === 'editProfile'}">Edit Profile</a>
+                              <a class="dropdown-item" (click)="onViewItemClick('changePassword')" [ngClass]="{'toggled': currentView === 'changePassword'}">Change Password</a>
+                              <ng-container *ngIf="profileUser.securityRole.Id !== 3">
+                                <a class="dropdown-item" (click)="onViewItemClick('privacySettings')" [ngClass]="{'toggled': currentView === 'privacySettings'}">
+                                  Privacy Settings
+                                </a>
+                              </ng-container>
+                              <a class="dropdown-item" (click)="onViewItemClick('notificationSettings')" [ngClass]="{'toggled': currentView === 'notificationSettings'}">Notification Settings</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div fxFlex="70" fxFlex.lt-sm="100%">
+
+
                           <ng-container *ngIf="currentView === 'editProfile'">
                             <app-edit-profile  [option]="option" (clearOption)="clearOption($event)"></app-edit-profile>
                           </ng-container>
+
                           <ng-container *ngIf="currentView === 'changePassword'">
                             <app-change-password ></app-change-password>
                           </ng-container>
@@ -70,9 +78,7 @@
                           </ng-container>
 
                         </div>
-
                       </div>
-
 
                     </div>
                     <div class="card-footer text-center">
@@ -85,26 +91,6 @@
                     </div>
                   </div>
 
-
-                  <!--
-
-                                &lt;!&ndash; Blank card to display while loading &ndash;&gt;
-                                <ng-template #cardLoading>
-                                  <div class="card-body">
-                                    <ngx-spinner
-                                      name="profile-spinner"
-                                      [fullScreen]="false"
-                                      bdColor="rgba(51,51,51,0.8)"
-                                      size="medium"
-                                      color="#fff"
-                                      type="pacman"
-                                    >
-                                      <p class="loadingstyle">Loading...</p>
-                                    </ngx-spinner>
-                                  </div>
-                                </ng-template>
-                  -->
-
                 </div>
 
 
@@ -113,8 +99,6 @@
 
 
 
-              </div>
-            </div>
           </div>
         </section>
 

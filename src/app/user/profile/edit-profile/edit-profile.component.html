@@ -1,29 +1,35 @@
 <ng-container *ngIf="!isCardLoading; else cardLoading">
-  <div class="row">
-    <div class="user-form-container col-12">
+  <div class="flex-container" fxLayout="row wrap" >
+    <div fxFlex="100">
       <form [formGroup]="editUserForm">
         <ng-container *ngIf="isUserDataRetrieved; else placeholderForm">
           <ng-container *ngIf="currentUser.securityRole.Id !== 3">
-            <div class="form-row">
-              <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
+            <div class="flex-container" fxLayout="row wrap" >
+              <div fxFlex="30%" fxFlex.lt-sm="100%">
                 <label class="form-label"><a href="javascript:void(0)" (click)="avatarClick()">Change Avatar</a></label>
               </div>
+              <div fxFlex="auto" fxHide.lt-sm></div>
+
             </div>
           </ng-container>
 
-          <div class="form-row">
-            <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
+          <div class="flex-container form-row"  fxLayout="row wrap" >
+            <div fxFlex="25%" fxFlex.lt-sm="100%" fxLayoutAlign="start">
               <label for="editUser_preferredName" class="form-label">Preferred Name</label>
             </div>
-            <div class="col-lg-7 col-md-7 col-sm-7">
+            <div fxFlex="55%" fxFlex.lt-sm="100%" fxLayoutAlign="start">
               <input type="text" class="form-control user-form-control" id="editUser_preferredName" placeholder="Preferred Name" formControlName="preferredName">
             </div>
+            <div fxFlex="auto" fxHide.lt-sm ></div>
+
           </div>
-          <div class="form-row">
-            <div class="col-lg-3 col-md-3 col-sm-3">
+
+          <div class="flex-container form-row"  fxLayout="row wrap" >
+            <div fxFlex="25%" fxFlex.lt-sm="100%" fxLayoutAlign="start">
               <label for="editUser_birthdate" class="form-label">Date of Birth</label>
             </div>
-            <div class="col-lg-7 col-md-7 col-sm-7">
+            <div fxFlex="55%" fxFlex.lt-sm="100%" fxLayoutAlign="start">
+
               <input type="text" [matDatepicker]="editUser_birthdate"
                      (click)="editUser_birthdate.open()"
                      placeholder="Date of Birth"
@@ -36,10 +42,12 @@
                 <label class="validation-message">This field is required.</label>
               </ng-container>
             </div>
+            <div fxFlex="auto" fxHide.lt-sm ></div>
+
           </div>
 
-          <div class="form-row" (mouseenter)="executeOption('email')" >
-            <div class="col-lg-2 col-md-2 col-sm-2 aligncentercontent">
+          <div class="flex-container form-row"  fxLayout="row wrap" fxLayoutAlign.lt-sm="space-between" (mouseenter)="executeOption('email')" >
+            <div fxFlex="20%" fxFlex.lt-sm="100%" fxLayoutAlign="start">
               <ng-container *ngIf="(!option || option !== 'email'); else emailGlow">
                 <label class="form-label" >Email</label>
               </ng-container>
@@ -47,7 +55,7 @@
                 <label id="glowing_email" class="form-label glow">Email</label>
               </ng-template>
             </div>
-            <div class="confirm-col text-right col-lg-1 col-md-1 col-sm-1">
+            <div fxFlex="5%" fxFlex.lt-sm="10%"  fxLayoutAlign="start" class="confirm-col">
               <ng-container *ngIf="emailConfirmed; else emailUnconfirmedIcon">
                 <i class="fas fa-check confirmed"></i>
               </ng-container>
@@ -56,33 +64,36 @@
               </ng-template>
             </div>
             <ng-container *ngIf="emailConfirmed; else emailUnconfirmedInput">
-              <div class="col-lg-7 col-md-7 col-sm-7">
-                <input type="email" class="form-control user-form-control" id="editUser_confirmedEmail" placeholder="Email" formControlName="email">
-                <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
-                  <label class="validation-message">This field is required.</label>
-                </ng-container>
-              </div>
+            <div fxFlex="55%" fxFlex.lt-sm="90%"  fxLayoutAlign="end">
+              <input type="email" class="form-control user-form-control" id="editUser_confirmedEmail" placeholder="Email" formControlName="email">
+              <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
+                <label class="validation-message">This field is required.</label>
+              </ng-container>
+            </div>
             </ng-container>
 
-            <ng-template #emailUnconfirmedInput class="col-lg-5 col-md-5 col-sm-5">
-              <div class="col-lg-5 col-md-5 col-sm-5">
+            <ng-template #emailUnconfirmedInput>
+              <div fxFlex="40%" fxFlex.lt-sm="90%"  fxLayoutAlign="end">
                 <input type="email" class="form-control user-form-control" id="editUser_unconfirmedEmail" placeholder="Email" formControlName="email">
                 <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.email.invalid) || (editUserForm?.dirty && editUserForm?.controls.email.touched && editUserForm?.controls.email.invalid)">
                   <label class="validation-message">This field is required.</label>
                 </ng-container>
               </div>
             </ng-template>
+
             <ng-container *ngIf="!emailConfirmed">
-              <div class="confirm-col col-lg-2 col-md-2 col-sm-2">
+              <div fxFlex="15%" fxFlex.lt-sm="100%" ngClass.lt-sm="pt-2" class="confirm-col" fxLayoutAlign="center">
                 <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmEmailModal" (click)="onEmailConfirmClick()">Confirm</button>
               </div>
             </ng-container>
 
+            <div fxFlex="auto" fxShow.gt-xs fxHide.lt-sm ></div>
+
           </div>
 
-          <div class="form-row" (mouseenter)="executeOption('phone')" >
-            <div class="col-lg-2 col-md-2 col-sm-2 aligncentercontent">
-<!--              <label class="form-label">Phone</label>-->
+
+          <div class="flex-container form-row"  fxLayout="row wrap" fxLayoutAlign.lt-sm="space-between" (mouseenter)="executeOption('phone')" >
+            <div fxFlex="20%" fxFlex.lt-sm="100%"  fxLayoutAlign="start" >
               <ng-container *ngIf="(!option || option !== 'phone'); else phoneGlow">
                 <label class="form-label">Phone</label>
               </ng-container>
@@ -90,17 +101,16 @@
                 <label id="glowing_phone" class="form-label glow">Phone</label>
               </ng-template>
             </div>
-
-            <div class="confirm-col text-right col-lg-1 col-md-1 col-sm-1">
-              <div *ngIf="phoneConfirmed; else phoneUnconfirmedIcon">
+            <div fxFlex="5%" fxFlex.lt-sm="10%" fxLayoutAlign="start" class="confirm-col">
+              <ng-container *ngIf="phoneConfirmed; else phoneUnconfirmedIcon">
                 <i class="fas fa-check confirmed"></i>
-              </div>
+              </ng-container>
               <ng-template #phoneUnconfirmedIcon>
                 <i class="fas fa-times unconfirmed"></i>
               </ng-template>
             </div>
             <ng-container *ngIf="phoneConfirmed; else phoneUnconfirmedInput">
-              <div class="col-lg-7 col-md-7 col-sm-7">
+              <div fxFlex="55%" fxFlex.lt-sm="90%"  fxLayoutAlign="end">
                 <input class="form-control user-form-control"
                        placeholder="Phone"
                        formControlName="phone"
@@ -121,7 +131,7 @@
             </ng-container>
 
             <ng-template #phoneUnconfirmedInput>
-              <div class="col-lg-5 col-md-5 col-sm-5">
+              <div fxFlex="40%" fxFlex.lt-sm="90%"  fxLayoutAlign="end">
                 <input class="form-control user-form-control"
                        placeholder="Phone"
                        formControlName="phone"
@@ -139,62 +149,86 @@
                 </ng-container>
               </div>
             </ng-template>
+
             <ng-container *ngIf="!phoneConfirmed">
-              <div class="confirm-col col-lg-2 col-md-2 col-sm-2">
+              <div fxFlex="15%" fxFlex.lt-sm="100%"  class="confirm-col" fxLayoutAlign="center">
                 <button class="btn-primary btn-sm" data-toggle="modal" data-target="#confirmPhoneModal" (click)="onPhoneConfirmClick()">Confirm</button>
               </div>
             </ng-container>
 
-          </div>
-          <ng-container *ngIf="currentUser.securityRole.Id !== 3">
-            <div class="form-row">
-              <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
-                <ng-container *ngIf="(!option || option !== 'quote'); else quoteGlow">
-                  <label for="editUser_quote" class="form-label">Favorite Quote</label>
-                </ng-container>
-                <ng-template #quoteGlow>
-                  <label for="editUser_quote" id="glowing_quote" class="form-label glow">Favorite Quote</label>
-                </ng-template>
-              </div>
-              <div class="col-7">
-                <textarea rows="5" class="form-control user-form-control quote-box" id="editUser_quote" placeholder="Favorite Quote" formControlName="quote" (focus)="executeOption('quote')"></textarea>
-                <ng-container *ngIf="editUserForm?.controls.quote.value && editUserForm?.controls.quote.valid">
-                  <label class="validation-message" id="quote-length-message">{{quoteLengthMax - editUserForm?.controls.quote.value.length}} characters remaining.</label>
-                </ng-container>
+            <div fxFlex="auto" fxShow.gt-xs fxHide.lt-sm></div>
 
-                <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.quote.invalid) || (editUserForm?.controls.quote.touched && editUserForm?.controls.quote.invalid)">
-                  <label class="validation-message">Your quote must be 1000 characters or fewer in length.</label>
-                </ng-container>
+          </div>
+
+          <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+          <div class="flex-container form-row"  fxLayout="row wrap" >
+            <div fxFlex="25%" fxFlex.lt-sm="100%"  fxLayoutAlign="start">
+              <ng-container *ngIf="(!option || option !== 'quote'); else quoteGlow">
+                <label for="editUser_quote" class="form-label">Favorite Quote</label>
+              </ng-container>
+              <ng-template #quoteGlow>
+                <label for="editUser_quote" id="glowing_quote" class="form-label glow">Favorite Quote</label>
+              </ng-template>
+            </div>
+            <div fxFlex="55%" fxFlex.lt-sm="100%"  fxLayoutAlign="start">
+              <div class="flex-container width-full" fxLayout="row wrap">
+                <div fxFlex="100%" fxLayoutAlign="start" class="px-0 mx-0">
+                  <textarea rows="5" class="form-control user-form-control quote-box" id="editUser_quote" placeholder="Favorite Quote" formControlName="quote" (focus)="executeOption('quote')"></textarea>
+                </div>
+                <div fxFlex="100%" fxLayoutAlign="start">
+                  <ng-container *ngIf="editUserForm?.controls.quote.value && editUserForm?.controls.quote.valid">
+                    <label class="validation-message" id="quote-length-message">{{quoteLengthMax - editUserForm?.controls.quote.value.length}} characters remaining.</label>
+                  </ng-container>
+                </div>
+
+                <div fxFlex="100%" fxLayoutAlign="start">
+                  <ng-container *ngIf="(editUserFormSubmitted && editUserForm?.controls.quote.invalid) || (editUserForm?.controls.quote.touched && editUserForm?.controls.quote.invalid)">
+                    <label class="validation-message">Your quote must be 1000 characters or fewer in length.</label>
+                  </ng-container>
+                </div>
               </div>
 
             </div>
+
+            <div fxFlex="auto" fxHide.lt-sm ></div>
+
+          </div>
           </ng-container>
 
+
           <ng-container *ngIf="currentUser.securityRole.Id !== 3">
-            <div class="form-row">
-              <div class="col-lg-3 col-md-3 col-sm-3 aligncentercontent">
+            <div class="flex-container form-row"  fxLayout="row wrap" >
+              <div fxFlex="25%" fxFlex.lt-sm="100%"  fxLayoutAlign="start">
                 <label for="editUser_gender" class="form-label">Gender</label>
               </div>
-              <div class="col-lg-7 col-md-7 col-sm-7">
-                <select formControlName="gender" class="form-control user-form-control" id="editUser_gender" name="editUser_gender">
-                  <option [ngValue]="null" [disabled]="true">Gender</option>
-                  <option class="black">Male</option>
-                  <option class="black">Female</option>
-                  <option class="black">Custom</option>
-                  <option class="black">Prefer Not to Say</option>
-                </select>
-                <ng-container *ngIf="editUserForm.controls.gender.value === 'Custom'">
-                  <div class="row gender-custom-row">
-                    <div class="col-12">
-                      <input type="text" class="form-control user-form-control" id="editUser_customGender" placeholder="Gender" formControlName="genderCustom">
-                    </div>
+              <div fxFlex="55%" fxFlex.lt-sm="100%"  fxLayoutAlign="start">
+                <div class="flex-container width-full"  fxLayout="row wrap" >
+                  <select formControlName="gender" class="form-control user-form-control mb-2"  id="editUser_gender" name="editUser_gender">
+                    <option [ngValue]="null" [disabled]="true">Gender</option>
+                    <option class="black">Male</option>
+                    <option class="black">Female</option>
+                    <option class="black">Custom</option>
+                    <option class="black">Prefer Not to Say</option>
+                  </select>
+                  <ng-container *ngIf="editUserForm.controls.gender.value === 'Custom'">
+                    <input type="text" class="form-control user-form-control" id="editUser_customGender" placeholder="Gender" formControlName="genderCustom">
+
+                  </ng-container>
+                  <div fxFlex="100%" fxLayoutAlign="start">
+
                   </div>
-                </ng-container>
+                  <div fxFlex="100%" fxLayoutAlign="start">
+
+                  </div>
+                </div>
+
+
 
               </div>
+
+              <div fxFlex="auto" fxHide.lt-sm ></div>
             </div>
           </ng-container>
-
 
         </ng-container>
 
@@ -253,10 +287,14 @@
         </ng-template>
 
       </form>
+    </div>
+
+    <div fxFlex="100" fxLayoutAlign="center" >
       <button type="button" class="btn btn-primary" (click)="onEditUserFormSubmit(editUserForm)">Save Changes</button>
-<!--      <button type="button" class="btn btn-primary" (click)="highlightFormField('quote')">TEST</button>-->
     </div>
   </div>
+
+
 </ng-container>
 
 <ng-template #cardLoading>

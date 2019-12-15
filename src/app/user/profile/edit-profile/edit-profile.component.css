@@ -210,3 +210,7 @@ textarea.form-control:active {
 .quote-box {
   min-height: 8em;
 }
+
+.width-full {
+  width: 100%;
+}
