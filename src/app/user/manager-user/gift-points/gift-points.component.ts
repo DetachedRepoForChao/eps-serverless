@@ -32,6 +32,7 @@ import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {requireCheckboxesToBeCheckedValidator} from '../../admin-user/point-items-card/point-items-card.component';
 import {StoreItemModel} from '../../../entity-store/store-item/state/store-item.model';
 import {ConfirmationDialogComponent} from '../../components/shared/confirmation-dialog/confirmation-dialog.component';
+import {NavigationService} from '../../../shared/navigation.service';
 
 
 export interface DepartmentEmployee {
@@ -107,6 +108,14 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   selectedAll = false;
   selectedDepartment: Department;
 
+  giftPointsNavTabs = [
+    'selectEmployees',
+    'selectAward',
+    'award'
+  ];
+
+  selectedGiftPointsNavTab = 'selectEmployees';
+
   constructor(private formBuilder: FormBuilder,
               private departmentService: DepartmentService,
               public dialog: MatDialog,
@@ -119,7 +128,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
               private leaderboardService: LeaderboardService,
               private spinner: NgxSpinnerService,
               private entityUserService: EntityUserService,
-              private userStore: UserStore,
+              private navigationService: NavigationService,
               private entityUserQuery: EntityUserQuery,
               private currentUserQuery: EntityCurrentUserQuery,
               private currentUserService: EntityCurrentUserService) { }
@@ -888,17 +897,29 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearSelection() {
+  clearEmployeeSelection() {
     this.selectedDepartment = null;
     this.selectedAll = false;
     this.selection.clear();
   }
 
+  clearPointItemSelection() {
+    this.selectedPointItem = null;
+  }
+
   scroll() {
     // console.log(el);
-    const target = document.getElementById('target');
+    const target = document.getElementById('gift-points-scroll-anchor');
     console.log(target);
     target.scrollIntoView({behavior: 'smooth'});
+  }
+
+  elementInViewport2(el) {
+    return this.navigationService.elementInViewport2(el);
+  }
+
+  selectGiftPointsNavTab(item: string) {
+    this.selectedGiftPointsNavTab = item;
   }
 
   ngOnDestroy(): void {

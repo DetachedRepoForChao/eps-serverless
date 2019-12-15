@@ -331,3 +331,58 @@ input{
 .cursor-pointer {
   cursor: pointer;
 }
+
+.gift-points-nav {
+  background: #8965e0;
+  transition: all .2s ease-in-out;
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.expanded {
+  opacity: 1;
+  transform: translateY(0%);
+  //line-height: 1.5;
+  //padding-top: 1em;
+  //padding-bottom: 1em;
+  //color: black;
+}
+
+.font-size-xs {
+  font-size: x-small;
+}
+
+.font-size-s {
+  font-size: small;
+}
+
+.gift-points-nav-item {
+  cursor: pointer;
+  border-bottom-style: solid;
+  border-color: transparent;
+}
+
+.gift-points-nav-item:hover {
+  color: var(--primary);
+  border-bottom-style: solid;
+  border-color: var(--primary);
+}
+
+.gift-points-nav-item-selected {
+  color: var(--primary);
+  border-bottom-style: solid;
+  border-color: var(--primary);
+}
+
+.award-points-enabled {
+  transition: all .2s ease-in-out;
+  font-size: 16px;
+  color: #fff;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  text-align: center;
+
+}
+

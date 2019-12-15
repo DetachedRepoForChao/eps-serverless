@@ -13,6 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, Subscription} from 'rxjs';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 import {take} from 'rxjs/operators';
+import {NavigationService} from '../../shared/navigation.service';
 
 @Component({
   selector: 'app-homepage',
@@ -67,6 +68,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
     private userHasStoreItemQuery: UserHasStoreItemQuery,
     private achievementService: AchievementService,
     private pointItemTransactionService: PointItemTransactionService,
+    private navigationService: NavigationService,
     private router: Router,
     private route: ActivatedRoute) {  }
 
@@ -128,7 +130,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
     return this.konamiCode.every((code: number, index: number) => code === this.sequence[index]);
   }
 
-
+  elementInViewport2(el) {
+    return this.navigationService.elementInViewport2(el);
+  }
 
   ngOnDestroy(): void {
     console.log('ngOnDestroy');

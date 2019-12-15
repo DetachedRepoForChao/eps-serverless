@@ -7,15 +7,17 @@
 <!--      <h4 class="text-uppercase">Award Pineapple Points 🍍</h4>-->
 <!--    </div>-->
     <ng-container *ngIf="!isCardLoading && currentUser && employees && pointItems; else cardLoading">
-      <div class="card-body">
-        <div class="text-center">
-          <h4 class="text-uppercase" id="target">Award Pineapple Points 🍍</h4>
+      <div  class="card-body">
+        <div  class="text-center">
+          <h4 class="text-uppercase">Award Pineapple Points 🍍</h4>
         </div>
+        <div id="gift-points-scroll-anchor"></div>
 
 
         <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" >
           <div fxFlex="100%" >
 
+<!--            Desktop View Core Value Buttons-->
             <div fxHide.lt-sm class="container">
               <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-evenly" >
 
@@ -100,7 +102,7 @@
               </ng-template>
             </div>
 
-            <!------- Point Item Search form -------->
+            <!------- Desktop View Point Item Search form -------->
             <div fxHide.lt-sm class="row height-80">
               <div class="col-md-4 my-auto">
                 <div class="col-12">
@@ -115,7 +117,7 @@
                 </div>
 
               </div>
-              <!------- Employee Search form -------->
+              <!------- Desktop View Employee Search form -------->
               <div class="col-md-3 fluid my-auto">
                 <div class="col-12">
                   <ng-container *ngIf="employeeSearchForm">
@@ -130,6 +132,7 @@
 
               </div>
 
+<!--              Desktop View Select Department-->
               <div class="col-sm-12 col-md-2 col-lg-2 text-center my-auto">
                 <form [formGroup]="departmentSelectionForm">
                   <label class="form-label">Select Entire Department</label>
@@ -144,9 +147,7 @@
                   </select>
                 </form>
 
-                <!--              <ng-container *ngIf="(addUserFormSubmitted && addUserForm.controls.department.invalid) || (addUserForm.dirty && addUserForm.controls.department.touched && addUserForm.controls.department.invalid)">
-                                <label class="validation-message">This field is required.</label>
-                              </ng-container>-->
+<!--                Desktop View Select All Employees-->
               </div>
               <div class="col-sm-12 col-md-2 col-lg-2 pb-3 text-center my-auto">
                 <label class="form-label mb-0">Select All Employees</label>
@@ -156,7 +157,7 @@
 
             </div>
 
-
+<!--            Desktop View Manage Awards Button-->
               <div fxHide.lt-sm class="row">
                 <div class="col-md-4 text-center my-auto">
                   <ng-container *ngIf="currentUser.awardManager">
@@ -188,15 +189,19 @@
 
                   </ng-container>
                   <ng-container *ngIf="!selection.isEmpty()">
-                    <span class="filter-item pl-2" (click)="clearSelection()"><i class="fas fa-times text-primary pr-2"></i>Clear Selection</span>
+                    <span class="filter-item pl-2" (click)="clearEmployeeSelection()"><i class="fas fa-times text-primary pr-2"></i>Clear Selection</span>
                   </ng-container>
                   <!--                <button type="button" class="btn btn-warning" (click)="clearSelection()">Clear Selection</button>-->
                 </div>
 
               </div>
+
+<!--           Select Point Item / Select Employees Container Desktop and Mobile  -->
               <div class="row">
                 <div class="container" [class.show]="show">
                   <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="center">
+
+<!--                    Desktop View Select Point Item Container-->
                     <div fxFlex="30%" fxHide.lt-sm >
                       <div class="container text-center ">
 
@@ -250,33 +255,112 @@
                       </div>
                     </div>
 
-                    <div fxFlex="100%" fxHide.gt-xs >
+<!--                    Scroll Anchor / NavBar Trigger-->
+                    <div #employeesSelectionContainer></div>
+<!--                    Mobile View Employee Search Form and # of Selected -->
+                    <div fxFlex="100%" fxHide.gt-xs class="mb-2">
+
                       <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="start center" >
-                        <div fxFlex="60%" fxHide.gt-xs >
-                          <!------- Employee Search form -------->
+
+                        <!------- Employee Search form -------->
+                        <div fxFlex="60%" fxHide.gt-xs [fxHide]="selectedGiftPointsNavTab !== 'selectEmployees'">
+
                           <ng-container *ngIf="employeeSearchForm">
                             <form [formGroup]="employeeSearchForm" class="form text-center">
-                              <label class="form-label"></label>
+                              <label class="form-label mb-1"></label>
                               <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employees"
                                      [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
                             </form>
                           </ng-container>
                         </div>
+
+                        <!------- Point Item Search form -------->
+                        <div fxFlex="60%" fxHide.gt-xs [fxHide]="selectedGiftPointsNavTab !== 'selectAward'">
+
+                          <ng-container *ngIf="pointSearchForm">
+                            <form [formGroup]="pointSearchForm" class="form text-center">
+                              <label class="form-label mb-1"></label>
+                              <input class="form-control form-rounded w-100 border-neutral" type="text"
+                                     placeholder="Search 🍍 Awards" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
+                            </form>
+                          </ng-container>
+                        </div>
+
+<!--                        Award Button-->
                         <div fxFlex="40%" fxHide.gt-xs fxLayoutAlign="center">
                           <button type="button" class="btn btn-primary text-sm-center" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)">Award 🍍</button>
                         </div>
+
+                        <ng-container *ngIf="!selection.isEmpty() || appliedFilters.length > 0 || selectedPointItem">
+                          <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="start" >
+                            <!-- # of Employees Selected-->
+                            <div fxFlex="100%" fxLayoutAlign="start" class="py-0 my-0">
+<!--                              <ng-container *ngIf="selection.isEmpty()">-->
+<!--                                <span class="font-size-xxs"><br></span>-->
+<!--                              </ng-container>-->
+                              <ng-container *ngIf="!selection.isEmpty()">
+                                <div (click)="clearEmployeeSelection()">
+                                  <span class="filter-item pl-2 font-size-xxs" ><i class="fas fa-times text-primary pr-2"></i></span>
+                                  <span class="font-size-xxs">{{selection.selected.length}} {{(selection.selected.length > 1) ? 'employees' : 'employee'}} selected</span>
+                                </div>
+                              </ng-container>
+
+                            </div>
+
+<!--                            Selected Point Item-->
+                            <div fxFlex="100%" fxLayoutAlign="start" class="py-0 my-0">
+
+                              <ng-container *ngIf="selectedPointItem">
+                                <div (click)="clearPointItemSelection()">
+                                  <span class="filter-item pl-2 font-size-xxs" ><i class="fas fa-times text-primary pr-2"></i></span>
+                                  <span class="font-size-xxs">{{selectedPointItem?.amount}}🍍 - {{selectedPointItem?.name}}</span>
+                                </div>
+                              </ng-container>
+                            </div>
+
+<!--                            Core Value Filters-->
+                            <div fxFlex="100%" fxLayoutAlign="start" class="py-0 my-0">
+                              <ng-container *ngIf="appliedFilters.length > 0">
+                                <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="start" >
+                                  <div fxFlex="10%" >
+                                    <div>Filters:</div>
+                                  </div>
+                                  <div fxFlex="80%">
+                                    <div fxFlex="100%">
+                                      <ng-container *ngFor="let filter of appliedFilters">
+                                        <div fxFlex="15%" class="filter-col">
+                                          <span class="filter-item" (click)="toggleCoreValueButtonFilter(filter)">
+                                            <i class="fas fa-times" ></i> {{filter}}
+                                          </span>
+                                        </div>
+                                      </ng-container>
+                                    </div>
+
+                                  </div>
+                                </div>
+
+                              </ng-container>
+
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="selection.isEmpty() && appliedFilters.length === 0 && selectedPointItem">
+                          <span class="font-size-xxs">&nbsp;</span>
+                        </ng-container>
+
+
                       </div>
                     </div>
 
-
-                    <div fxFlex="70%" fxFlex.lt-sm="100%">
+<!--                    Desktop and Mobile View Select Employees Container-->
+                    <div fxFlex="70%" fxFlex.lt-sm="100%" [fxHide.lt-sm]="selectedGiftPointsNavTab !== 'selectEmployees'">
 
                       <perfect-scrollbar id="point-item-employees-scroll" class="point-item-scroll-container" [config]="config" [scrollIndicators]="true">
                         <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-evenly">
                           <ng-container *ngFor="let user of employees | fresh:term; let i = index" class="">
                             <ng-container *ngIf="i <= showLimit">
                               <div class="single-user mx-1 cursor-pointer " ngClass.gt-xs="mx-1 px-1" ngClass.lt-sm="pr-1" (click)="onAvatarClick($event, user)">
-                                <img src="{{user.avatarResolvedUrl}}" class="user-selection" [ngClass]="{selected: selection.isSelected(user)}" [ngClass.lt-sm]="{selected: selection.isSelected(user), 'user-selection-img-lt-sm': true}" ngClass.gt-md="user-selection-img"
+                                <img src="{{user.avatarResolvedUrl}}" class="user-selection" [ngClass.gt-xs]="{selected: selection.isSelected(user)}" [ngClass.lt-sm]="{selected: selection.isSelected(user), 'user-selection-img-lt-sm': true}"
                                      title="{{user['firstName'] + ' ' + user['lastName']}}" />
                                 <div class="row " ngClass.lt-sm="info-plate-row-lt-sm" ngClass.gt-xs="info-plate-row">
                                   <div class="col-12 info-plate text-right" [ngClass]="{'info-plate-selected': selection.isSelected(user)}" [ngClass.lt-sm]="{'info-plate-selected': selection.isSelected(user), 'px-0': true}">
@@ -310,6 +394,66 @@
 
                     </div>
 
+<!--                    Mobile View Point Item Search and  Select Point Item Container-->
+                    <ng-container *ngIf="selectedGiftPointsNavTab === 'selectAward'">
+
+
+
+                      <div fxFlex="100%" fxHide fxShow.lt-sm >
+                        <div class="container text-center ">
+
+                          <form #giftPointsForm="ngForm" class="form text-left ">
+                            <div class="">
+                              <perfect-scrollbar id="point-items-scroll-mobile" class="point-item-scroll-container" [config]="config" [scrollIndicators]="true">
+                                <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
+                                  <div class="selection pr-3" >
+                                    <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItems | pointItem:term2)">
+                                      <label class="form-check-label form-check-label-color" >
+                                        <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
+                                               (click)="selectPointItem(pointItem)">
+                                        {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
+                                        <span class="form-check-sign"></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </ng-container>
+
+                                <ng-template #filteredList class="selection">
+                                  <ng-container *ngIf="filteredPointItemList.length > 0; else noFilteredMatches">
+                                    <div >
+                                      <div class="form-check form-check-radio" *ngFor="let pointItem of (filteredPointItemList | pointItem:term2)">
+                                        <label class="form-check-label form-check-label-color" >
+                                          <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
+                                                 (click)="selectPointItem(pointItem)">
+                                          {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
+                                          <span class="form-check-sign"></span>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </ng-container>
+
+                                  <ng-template #noFilteredMatches>
+                                    <div class="text-center">
+                                      <label class="form-check-label form-check-label-color">
+                                        <span class="form-check-sign">Nothing matching these filters</span>
+                                      </label>
+                                    </div>
+                                  </ng-template>
+                                </ng-template>
+                              </perfect-scrollbar>
+                            </div>
+
+
+                            <div class="gift-points-container text-center">
+                              <!--                          <button type="button" class="btn btn-primary" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)">Award 🍍</button>-->
+
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </ng-container>
+
+
                   </div>
                   <div fxHide fxShow.gt-xs class="row">
                     <div class="col-12 text-center">
@@ -329,6 +473,43 @@
 
           </div>
         </div>
+
+      </div>
+      <div fxHide fxShow.lt-sm >
+        <nav class="navbar navbar-expand-lg fixed-bottom gift-points-nav" [ngClass]="{'expanded': elementInViewport2(employeesSelectionContainer), 'hidden': !elementInViewport2(employeesSelectionContainer)  }">
+          <div class="font-size-s gift-points-nav-item" (click)="selectGiftPointsNavTab('selectEmployees')" [ngClass]="{'gift-points-nav-item-selected': selectedGiftPointsNavTab === 'selectEmployees'}">
+            <div class="text-center">
+              Select
+            </div>
+            <div class="text-center">
+              Employees
+            </div>
+          </div>
+          <div class="font-size-s gift-points-nav-item" (click)="selectGiftPointsNavTab('selectAward')" [ngClass]="{'gift-points-nav-item-selected': selectedGiftPointsNavTab === 'selectAward'}">
+            <div class="text-center">
+              Select
+            </div>
+            <div class="text-center">
+              Award
+            </div>
+          </div>
+          <div class="font-size-s gift-points-nav-item" (click)="selectGiftPointsNavTab('award')" [ngClass]="{'gift-points-nav-item-selected': selectedGiftPointsNavTab === 'award', 'award-points-enabled': !selection.isEmpty() && selectedPointItem}">
+            <div class="text-center">
+              Award 🍍
+            </div>
+          </div>
+          <ng-container *ngIf="currentUser.awardManager">
+            <div class="font-size-s gift-points-nav-item" data-toggle="modal" data-target="#managePointItemModal">
+              <div class="text-center">
+                Manage
+              </div>
+              <div class="text-center">
+                Awards
+              </div>
+            </div>
+          </ng-container>
+
+        </nav>
 
       </div>
     </ng-container>
