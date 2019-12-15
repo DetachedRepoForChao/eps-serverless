@@ -4,6 +4,7 @@
   <app-navigation></app-navigation>
   <div class="wrapper">
 
+
     <section class="section section-lg section-coins">
 
       <img src="../../../assets/img/path3.png" class="path">
@@ -36,13 +37,13 @@
             <div fxFlex="31%" fxFlex.lt-lg="365px" fxFlex.lt-md="365px" fxFlex.lt-sm="330px" id="leaderboard-card" >
               <app-leaderboard-card></app-leaderboard-card>
             </div>
-            <div ngClass.lt-lg="break"></div>
 
             <!-- END Profile Card -->
 
             <ng-container *ngIf="this.currentUser?.securityRole.Id === 2">
-              <div fxFlex="98%" id="award-points-card" fxFlexAlign="center" class="mx-auto">
-                <app-gift-points></app-gift-points>
+
+              <div fxFlex="98%" id="award-points-card" fxFlex.lt-sm="350px" fxFlexAlign="center" class="mx-auto">
+                <app-gift-points ></app-gift-points>
               </div>
 
             </ng-container>

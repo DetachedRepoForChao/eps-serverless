@@ -92,7 +92,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   departments: Department[];
   isCardLoading: boolean;
   formSubmitted = false;
-  showLimit = 7;
+  showLimit = 100;
   showFlag = false;
   clickedUser;
 
@@ -270,7 +270,13 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.isCardLoading = false;
     this.spinner.hide('gift-points-spinner');
 
-    // this.showLimit = 7;
+
+    Observable.interval(2000)
+      .pipe(take(1))
+      .subscribe(() => {
+
+        this.scroll();
+      });
   }
 
   private loadAddPointItemForm() {
@@ -886,6 +892,13 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.selectedDepartment = null;
     this.selectedAll = false;
     this.selection.clear();
+  }
+
+  scroll() {
+    // console.log(el);
+    const target = document.getElementById('target');
+    console.log(target);
+    target.scrollIntoView({behavior: 'smooth'});
   }
 
   ngOnDestroy(): void {

@@ -128,6 +128,8 @@ export class HomepageComponent implements OnInit, OnDestroy {
     return this.konamiCode.every((code: number, index: number) => code === this.sequence[index]);
   }
 
+
+
   ngOnDestroy(): void {
     console.log('ngOnDestroy');
     console.log('unsubscribing from current user');

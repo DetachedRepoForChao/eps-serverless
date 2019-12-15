@@ -125,17 +125,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isUserDataRetrieved = true;
       });
 
-/*    this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });*/
-
-/*    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });
-
-    this.currentUser$.subscribe(() => {
-      this.populateFormData();
-    });*/
 
     this.userQuery.selectLoading()
       .pipe(takeUntil(this.userLoading$))
@@ -264,7 +253,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   executeOption(field) {
-    // console.log('start executeOption');
     if (!this.option) {
       // Don't do anything since no option was passed
     } else {
@@ -280,8 +268,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
             this.option = null;
           });
 
-        // console.log(`removing glow to glowing_${field}`);
-        // document.getElementById(`glowing_${field}`).className = document.getElementById(`glowing_${field}`).className.replace('glow', '').trim();
         if (field === 'quote') {
           this.clearOption.emit(true);
         }

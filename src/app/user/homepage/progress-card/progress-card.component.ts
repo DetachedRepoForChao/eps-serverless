@@ -210,6 +210,8 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
     this.selectedAchievement = achievement;
   }
 
+
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.achievementsLoading$.next();

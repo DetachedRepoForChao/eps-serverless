@@ -168,11 +168,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (item === clickedItem) {
           this.currentView = clickedItem;
 
-          // document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className += ' toggled';
-          // document.getElementById(`viewItem_${item}`).className = 'toggled';
         } else {
-          // document.getElementById(`viewItem_${item}`).className = document.getElementById(`viewItem_${item}`).className.replace('toggled', '').trim();
-          // document.getElementById(`viewItem_${item}`).className = '';
+
         }
       }
     }

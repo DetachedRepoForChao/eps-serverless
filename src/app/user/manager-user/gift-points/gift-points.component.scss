@@ -1,11 +1,46 @@
 .card {
-  background: #8656d22e;
+  background: rgba(255, 255, 255, 0);
+}
+
+.card-custom {
+  background-color: #674ba580;
 }
 
 .card-coin {
   margin-bottom: 0;
   border: 0;
   min-height: 600px;
+}
+
+
+@media (max-width: 575.98px) {
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .card.card-coin {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+
+  .card {
+    margin-top: 0px;
+    margin-bottom: 80px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .card.card-coin {
+    margin-bottom: 0px;
+  }
 }
 
 .scroll{
@@ -88,66 +123,73 @@ input{
 
 .form-rounded {
   border-radius: 1rem;
-  }
+}
 
-  .containers {
-    line-height: 16px;
-    // height: 800px;
-    overflow: hidden;
-  }
+.containers {
+  line-height: 16px;
+  // height: 800px;
+  overflow: hidden;
+}
 
-  .show {
-    overflow: visible;
-    height: auto;
-  }
+.show {
+  overflow: visible;
+  height: auto;
+}
 
-  .button {
-    display: flex;
-    align-items: center;
-  }
+.button {
+  display: flex;
+  align-items: center;
+}
 
-  //Toggle buttons
-  .textr {
-    text-align: right;
-  }
+//Toggle buttons
+.textr {
+  text-align: right;
+}
 
-  .textc {
-    text-align: center;
-  }
+.textc {
+  text-align: center;
+}
 
-  .loading {
-    font-size: 20px;
-    color: white;
-  }
+.loading {
+  font-size: 20px;
+  color: white;
+}
 
-  .selection{
-    //max-height: 400px;
-    //overflow-y: auto;
-    //overflow-x: hidden;
-  }
+.selection{
+  //max-height: 400px;
+  //overflow-y: auto;
+  //overflow-x: hidden;
+}
 
-  .search{
-    padding-top: 35px;
-    text-align: left;
-  }
+.search{
+  padding-top: 35px;
+  text-align: left;
+}
 
-  //.togstyle {
-  //  max-width: 180px;
-  //  overflow: hidden;
-  //}
+//.togstyle {
+//  max-width: 180px;
+//  overflow: hidden;
+//}
 
 
 
-  //.dep-row {
-  //  max-width: 180px;
-  //  overflow: hidden;
-  //  margin-top: -10px
-  //}
+//.dep-row {
+//  max-width: 180px;
+//  overflow: hidden;
+//  margin-top: -10px
+//}
 
-  .heighted {
-    height: 100px;
-  }
+.heighted {
+  height: 100px;
+}
 
+.user-selection-img {
+  width: 150px !important;
+}
+
+.user-selection-img-lt-sm {
+  width: 75px !important;
+}
 
 .user-selection {
   cursor: pointer;
@@ -240,7 +282,13 @@ input{
   width: 146px;
   margin-left: auto;
   margin-right: auto;
+}
 
+.info-plate-row-lt-sm {
+  margin-top: -3em;
+  width: 75px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .info-plate {
@@ -252,6 +300,10 @@ input{
   box-shadow: 0 0 15px #000000;
   border: 0;
   border-radius: 5px;
+}
+
+.font-size-xxs {
+  font-size: xx-small;
 }
 
 .info-plate-selected {
@@ -274,4 +326,8 @@ input{
   position: absolute;
   left: 1em;
   color: #00f2c3;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
