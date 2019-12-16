@@ -14,7 +14,7 @@
           <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutAlign.lt-lg="center">
             <!-- Profile Card -->
 
-            <div fxFlex="31%" fxFlex.lt-lg="365px" fxFlex.lt-md="365px" fxFlex.lt-sm="330px" id="profile-card" >
+            <div  class="content-card" id="profile-card" fxFlexAlign.lt-lg="center">
               <ng-container *ngIf="!this.currentUser">
                 <app-placeholder-card></app-placeholder-card>
               </ng-container>
@@ -29,12 +29,12 @@
             </div>
             <div ngClass.lt-lg="break"></div>
 
-            <div fxFlex="31%" fxFlex.lt-lg="365px" fxFlex.lt-md="365px" fxFlex.lt-sm="330px" id="progress-card" >
+            <div  id="progress-card"  class="content-card" fxFlexAlign.lt-lg="center">
               <app-progress-card></app-progress-card>
             </div>
             <div ngClass.lt-lg="break"></div>
 
-            <div fxFlex="31%" fxFlex.lt-lg="365px" fxFlex.lt-md="365px" fxFlex.lt-sm="330px" id="leaderboard-card" >
+            <div  id="leaderboard-card"  class="content-card" fxFlexAlign.lt-lg="center">
               <app-leaderboard-card></app-leaderboard-card>
             </div>
 

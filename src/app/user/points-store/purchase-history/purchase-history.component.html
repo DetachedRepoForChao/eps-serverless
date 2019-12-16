@@ -1,118 +1,144 @@
 <ng-container *ngIf="currentUser && purchaseRequests">
-  <div class="container max-height-700 min-height-400 pb-3">
-    <div class="row justify-content-start mb-2">
-        <div class="col-auto text-center">
-          <span (click)="setPurchaseRequestDataSource('allActive'); onPurchaseRequestTabItemClick('allActive')" class="tab-item toggled" id="purchaseRequestTab_allActive">All Active</span>
+  <div class="min-height-400 pb-3 " ngClass.lt-sm="max-height-600" ngClass.gt-xs="max-height-700">
+    <div class="flex-container pb-2" fxLayout="row wrap" fxLayoutAlign="space-between" >
+      <div fxFlex="auto" fxLayoutAlign="center">
+          <span (click)="setPurchaseRequestDataSource('allActive'); onPurchaseRequestTabItemClick('allActive')" ngClass.lt-sm="font-size-xs" class="tab-item toggled" id="purchaseRequestTab_allActive">All Active</span>
         </div>
-        <div class="col-auto text-center">
-          <span (click)="setPurchaseRequestDataSource('pending'); onPurchaseRequestTabItemClick('pending')" class="tab-item" id="purchaseRequestTab_pending">Pending</span>
+      <div fxFlex="auto" fxLayoutAlign="center">
+          <span (click)="setPurchaseRequestDataSource('pending'); onPurchaseRequestTabItemClick('pending')" ngClass.lt-sm="font-size-xs" class="tab-item" id="purchaseRequestTab_pending">Pending</span>
         </div>
-        <div class="col-auto text-center">
-          <span (click)="setPurchaseRequestDataSource('readyForPickup'); onPurchaseRequestTabItemClick('readyForPickup')" class="tab-item" id="purchaseRequestTab_readyForPickup">Ready for Pickup</span>
+      <div fxFlex="auto" fxLayoutAlign="center">
+          <span (click)="setPurchaseRequestDataSource('readyForPickup'); onPurchaseRequestTabItemClick('readyForPickup')" ngClass.lt-sm="font-size-xs" class="tab-item" id="purchaseRequestTab_readyForPickup">Ready for Pickup</span>
         </div>
-        <div class="col-auto text-center">
-          <span (click)="setPurchaseRequestDataSource('pickedUp'); onPurchaseRequestTabItemClick('pickedUp')" class="tab-item" id="purchaseRequestTab_pickedUp">Picked Up</span>
+      <div fxFlex="auto" fxLayoutAlign="center">
+          <span (click)="setPurchaseRequestDataSource('pickedUp'); onPurchaseRequestTabItemClick('pickedUp')" ngClass.lt-sm="font-size-xs" class="tab-item" id="purchaseRequestTab_pickedUp">Picked Up</span>
         </div>
-        <div class="col-auto text-center">
-          <span (click)="setPurchaseRequestDataSource('archived'); onPurchaseRequestTabItemClick('archived')" class="tab-item" id="purchaseRequestTab_archived">Archived</span>
+      <div fxFlex="auto" fxLayoutAlign="center">
+          <span (click)="setPurchaseRequestDataSource('archived'); onPurchaseRequestTabItemClick('archived')" ngClass.lt-sm="font-size-xs" class="tab-item" id="purchaseRequestTab_archived">Archived</span>
         </div>
-
-
-
     </div>
-    <div class="row">
 
-
-      <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">
+    <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" >
+      <perfect-scrollbar class="perfect-scrollbar-dark" fxFlex="auto" ngClass.lt-sm="scroll-container-sm" ngClass.gt-xs="scroll-container" [config]="config" [scrollIndicators]="true">
         <ng-container *ngIf="purchaseRequests && currentUser; else noPurchaseRequests">
-          <div class="row mx-0 px-3 ">
+          <div class="mx-0 px-3" fxLayout="row wrap">
 
             <ng-container *ngFor="let purchaseRequest of dataSource.slice(0, showLimit); let i = index">
-              <div class="col-12 request-list request-container">
+              <div fxFlex="100%" fxLayoutAlign="center" class="request-list request-container">
 
-                <div class="row">
-                  <div class="col-5 text-left store-item-img-col">
-                    <ng-container *ngIf="storeItemQuery.getStoreItemById(purchaseRequest.storeItemId); else storeItemImageLoading">
-                      <img [src]="storeItemQuery.getStoreItemById(purchaseRequest.storeItemId).imageResolvedUrl"
-                           alt="Store Item Image"
-                           class="img-center img-fluid store-item-img"
-                           id="store-item-image">
-                    </ng-container>
-
-                    <ng-template #storeItemImageLoading >
-                      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                           alt="Loading..."
-                           class="img-center img-fluid rounded-circle"
-                           id="storeItemImagePlaceholder">
-                    </ng-template>
-
-                  </div>
-                  <div class="col-7 text-left margin-top-10">
-                    <div class="col-12">
-                      <div class="form-row">
-                        <div class="col-12">
-                          <div class="form-row">
-                            <div class="col-10">
-                              <h4 class="point-content font-weight-bold">{{purchaseRequest.storeItemName}}</h4>
-                            </div>
-                            <div class="col-2">
-                              <h4 class="point-content">{{purchaseRequest.storeItemCost}}pts</h4>
-                            </div>
-
-                          </div>
-                          <div class="form-row">
-                            <div class="col-12">
-                              <h4 class="point-content italics">{{purchaseRequest.storeItemDescription}}</h4>
-                            </div>
-
-                          </div>
-                          <!--                  <div class="form-row">
-                                              <h4 class="point-content">Cost: {{purchaseRequest.storeItemCost}}pts</h4>
-                                            </div>-->
-                        </div>
-                      </div>
-                      <!--              <div class="form-row">
-                                      <h5 class="point-content">Request Date: {{(purchaseRequest.createdAt) | date:'longDate'}}</h5>
-                                    </div>-->
-<!--                      <div class="form-row margin-top-10">
-                        <div class="col-12">
-                          <h5 class="point-content">Request submitted to <a href="javascript:void(0)" (click)="onUserClick(purchaseRequest.managerId)">{{userQuery.getUserByUserId(purchaseRequest.managerId).firstName}} {{userQuery.getUserByUserId(purchaseRequest.managerId).lastName}}</a></h5>
-
-                        </div>
-                      </div>-->
-                      <div class="form-row">
-                        <div class="col-12">
-                          <h5 class="point-content">Request date: {{purchaseRequest.createdAt | date:'longDate'}}</h5>
-
-                        </div>
-                      </div>
-                      <div class="form-row">
-                        <div class="col-12">
-                          <div *ngIf="purchaseRequest.status === 'pending'">
-                            <h5 class="point-content">Request status: <span class="color-yellow font-weight-bold">PENDING</span></h5>
-                          </div>
-                          <div *ngIf="purchaseRequest.status === 'readyForPickup'">
-                            <h5 class="point-content">Updated on: {{purchaseRequest.readyForPickupAt | date:'longDate'}}</h5>
-                            <h5 class="point-content">Request status: <span class="color-green font-weight-bold">READY FOR PICKUP!</span></h5>
-                          </div>
-                          <div *ngIf="purchaseRequest.status === 'pickedUp'">
-                            <h5 class="point-content">Updated on: {{purchaseRequest.pickedUpAt | date:'longDate'}}</h5>
-                            <h5 class="point-content">Request status: <span class="text-primary font-weight-bold">PICKED UP</span></h5>
-                          </div>
-                        </div>
-
-                      </div>
-                      <ng-container *ngIf="purchaseRequest.status === 'readyForPickup'">
-                        <div class="form-row mt-3">
-                          <div class="col-12">
-                            <h5>Already received your item? Click the button below!</h5>
-                            <button type="button" class="btn btn-primary" (click)="onPickedUpClick(purchaseRequest)">Picked Up!</button>
-                          </div>
-                        </div>
+                <div class="flex-container" fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="center" >
+                  <div fxFlex="100%" fxFlex.lt-sm="80%" fxLayout="row wrap">
+                    <div fxFlex="35%" fxFlex.lt-sm="30%" class="store-item-img-col" ngClass.gt-xs="text-left">
+                      <ng-container *ngIf="storeItemQuery.getStoreItemById(purchaseRequest.storeItemId); else storeItemImageLoading">
+                        <img [src]="storeItemQuery.getStoreItemById(purchaseRequest.storeItemId).imageResolvedUrl"
+                             alt="Store Item Image"
+                             class="img-center img-fluid p-0" ngClass.lt-sm="store-item-img-sm" ngClass.gt-xs="store-item-img"
+                             id="store-item-image">
                       </ng-container>
 
+                      <ng-template #storeItemImageLoading >
+                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                             alt="Loading..."
+                             class="img-center img-fluid rounded-circle"
+                             id="storeItemImagePlaceholder">
+                      </ng-template>
+
+                    </div>
+
+                    <!--                  Desktop Item Info-->
+                    <div fxFlex="65%" fxHide.lt-sm fxShow class="text-left margin-top-10">
+                      <div class="col-12">
+                        <div class="form-row">
+                          <div class="col-12">
+                            <div class="form-row">
+                              <div class="col-10">
+                                <h4 class="point-content font-weight-bold">{{purchaseRequest.storeItemName}}</h4>
+                              </div>
+                              <div class="col-2">
+                                <h4 class="point-content">{{purchaseRequest.storeItemCost}}🍍</h4>
+                              </div>
+
+                            </div>
+                            <div class="form-row">
+                              <div class="col-12">
+                                <h4 class="point-content italics">{{purchaseRequest.storeItemDescription}}</h4>
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="col-12">
+                            <h5 class="point-content">Request date: {{purchaseRequest.createdAt | date:'longDate'}}</h5>
+
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="col-12">
+                            <ng-container *ngIf="purchaseRequest.status === 'pending'">
+                              <h5 class="point-content">Request status: <span class="color-yellow font-weight-bold">PENDING</span></h5>
+                            </ng-container>
+                            <ng-container *ngIf="purchaseRequest.status === 'readyForPickup'">
+                              <h5 class="point-content">Updated on: {{purchaseRequest.readyForPickupAt | date:'longDate'}}</h5>
+                              <h5 class="point-content">Request status: <span class="color-green font-weight-bold">READY FOR PICKUP!</span></h5>
+                            </ng-container>
+                            <ng-container *ngIf="purchaseRequest.status === 'pickedUp'">
+                              <h5 class="point-content">Updated on: {{purchaseRequest.pickedUpAt | date:'longDate'}}</h5>
+                              <h5 class="point-content">Request status: <span class="text-primary font-weight-bold">PICKED UP</span></h5>
+                            </ng-container>
+                          </div>
+
+                        </div>
+                        <ng-container *ngIf="purchaseRequest.status === 'readyForPickup'">
+                          <div class="form-row mt-3">
+                            <div class="col-12">
+                              <h5>Already received your item? Click the button below!</h5>
+                              <button type="button" class="btn btn-primary" (click)="onPickedUpClick(purchaseRequest)">Picked Up!</button>
+                            </div>
+                          </div>
+                        </ng-container>
+
+                      </div>
+                    </div>
+
+                    <div fxShow.lt-sm fxHide fxFlex.lt-sm="70%" fxLayout="row wrap" fxLayoutAlign.lt-sm="start center">
+                      <div fxFlex="100%" class="font-size-smlr">{{purchaseRequest.storeItemCost}}🍍 | {{purchaseRequest.storeItemName}}</div>
+                      <div fxFlex="100%" class="font-size-smlr">{{purchaseRequest.storeItemDescription}}</div>
                     </div>
                   </div>
+
+
+
+
+                  <div fxShow.lt-sm fxHide fxFlex.lt-sm="100%" fxLayout="row wrap" fxLayoutAlign.lt-sm="center" class="pt-2">
+                    <div fxFlex="80%" >
+                      <div class="point-content font-size-s">Request date: {{purchaseRequest.createdAt | date:'longDate'}}</div>
+                    </div>
+                    <div fxFlex="80%" >
+                      <ng-container *ngIf="purchaseRequest.status === 'pending'">
+                        <div class="point-content font-size-s">
+                          Request status: <span class="color-yellow font-weight-bold">PENDING</span>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngIf="purchaseRequest.status === 'readyForPickup'">
+                        <div class="point-content font-size-s">Updated on: {{purchaseRequest.readyForPickupAt | date:'longDate'}}</div>
+                        <div class="point-content font-size-s">Request status: <span class="color-green font-weight-bold">READY FOR PICKUP!</span></div>
+                      </ng-container>
+                      <ng-container *ngIf="purchaseRequest.status === 'pickedUp'">
+                        <div class="point-content font-size-s">Updated on: {{purchaseRequest.pickedUpAt | date:'longDate'}}</div>
+                        <div class="point-content font-size-s">Request status: <span class="text-primary font-weight-bold">PICKED UP</span></div>
+                      </ng-container>
+                    </div>
+                    <ng-container *ngIf="purchaseRequest.status === 'readyForPickup'">
+                      <div fxFlex="80%" class="mt-3 text-center">
+                        <h5>Already received your item? Click the button below!</h5>
+                        <button type="button" class="btn btn-primary btn-sm" (click)="onPickedUpClick(purchaseRequest)">Picked Up!</button>
+                      </div>
+                    </ng-container>
+                  </div>
+
 
                 </div>
               </div>
@@ -126,27 +152,27 @@
       </perfect-scrollbar>
     </div>
 
-    <div class="row pt-2 text-center">
-      <div class="col-12 text-center mx-auto">
+    <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="center" >
+      <div fxFlex="auto" class="mx-auto text-center">
         <ng-container *ngIf="dataSource?.length > 0; else noRequestsToDisplay">
           <ng-container *ngIf="dataSource.length >= showLimit; else noMore" >
-            <div>
+            <div ngClass.lt-sm="font-size-xs">
               Displaying {{showLimit}} out of {{dataSource.length}} purchase requests. <a href="javascript:void(0)" (click)="showLimit = showLimit + 6">Show more...</a>
             </div>
           </ng-container>
           <ng-template #noMore>
-            <div>
+            <div ngClass.lt-sm="font-size-s">
               Displaying all {{dataSource.length}} purchase requests.
             </div>
           </ng-template>
         </ng-container>
         <ng-template #noRequestsToDisplay>
-          <div>
+          <div ngClass.lt-sm="font-size-s">
             No purchase requests to display.
           </div>
         </ng-template>
         <ng-template #noPurchaseRequests>
-          <div>
+          <div ngClass.lt-sm="font-size-s">
             No purchase requests yet...
           </div>
         </ng-template>

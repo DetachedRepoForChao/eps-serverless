@@ -65,6 +65,10 @@
   /*padding: 0 !important;;*/
 }
 
+.store-item-img-sm {
+  width: 75px;
+}
+
 .store-item-img-col {
   padding: 0px;
   margin-top: auto;
@@ -184,6 +188,14 @@ div.card {
   max-height: 550px;
 }
 
+.scroll-container-sm {
+  min-height: 320px;
+  max-height: 450px;
+}
+
+.max-height-500 {
+  max-height: 500px;
+}
 
 .max-height-600 {
   max-height: 600px;

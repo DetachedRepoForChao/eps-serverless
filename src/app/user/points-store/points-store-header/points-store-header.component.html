@@ -1,87 +1,65 @@
 
-<div class="container align-items-center wrapper-width">
-  <div class="card">
-    <div class="card card-coin card-plain card-custom card-header">
-      <div class="card-body card-header-body">
-        <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" >
-          <div fxFlex="70%" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="center">
-            <div ngClass.gt-xs="store-title" ngClass.lt-sm="store-title-sm">
-              <span class="font-weight-bold" >Pineapple Points</span> 🍍 Store
-            </div>
-
-          </div>
-          <div fxFlex="20%" fxFlex.lt-sm="100%" ngClass.gt-xs="ml-4" fxLayoutAlign="start center">
-            <ng-container *ngIf="currentUser.securityRole.Id !== 2">
-              <div class="flex-container" fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="space-between" >
-                <div fxFlex="100%" fxLayoutAlign.lt-sm="flex-end">
-                  <div class="mb-1 line-height-3 font-weight-200" >🍍 <span>{{currentUser?.points}}</span></div>
-                </div>
-                <div fxFlex="100%" fxLayoutAlign.lt-sm="flex-end">
-                  <a href="javascript:void(0)" (click)="showPurchaseHistoryModal()">View Purchase History</a>
-                </div>
-                <ng-container *ngIf="currentUser?.securityRole.Id === 2">
-                  <div fxFlex="100%" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="flex-end">
-                    <a href="javascript:void(0)" (click)="confirmStoreItemPurchaseRequest();" >Approve Purchase</a>
-                  </div>
-
-                </ng-container>
-
+<ng-container *ngIf="currentUser">
+  <div class="container align-items-center wrapper-width">
+    <div class="card">
+      <div class="card card-coin card-plain card-custom card-header">
+        <div class="card-body card-header-body">
+          <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" >
+            <div fxFlex="70%" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="center">
+              <div ngClass.gt-xs="store-title" ngClass.lt-sm="store-title-sm">
+                <span class="font-weight-bold" >Pineapple Points</span> 🍍 Store
               </div>
 
-              <!--                <div class="row">
-                                <div class="col-12">
-                                  <div class="mb-1 line-height-3 font-weight-200" >🍍 <span>{{currentUser?.points}}</span></div>
-                                </div>
-              &lt;!&ndash;                  <div class="col-4">
-                                  <div>
-                                    <div class="mb-0">{{currentUser?.points}}</div>
-                                  </div>
-                                </div>&ndash;&gt;
-                              </div>
-                              <div class="row">
-                                <div class="col-12">
-                                  <a href="javascript:void(0)" (click)="showPurchaseHistoryModal()">View Purchase History</a>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-12">
-                                  <ng-container *ngIf="currentUser?.securityRole.Id === 2">
-                                    <a href="javascript:void(0)" (click)="confirmStoreItemPurchaseRequest();" >Approve Purchase</a>
-                                  </ng-container>
-                                </div>
-                              </div>-->
+            </div>
+            <div fxFlex="20%" fxFlex.lt-sm="100%" ngClass.gt-xs="ml-4" fxLayoutAlign="start center">
+              <ng-container *ngIf="currentUser.securityRole.Id !== 2">
+                <div class="flex-container" fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="space-between" >
+                  <div fxFlex="100%" fxLayoutAlign.lt-sm="flex-end">
+                    <div class="mb-1 line-height-3 font-weight-200" >🍍 <span>{{currentUser?.points}}</span></div>
+                  </div>
+                  <div fxFlex="100%" fxLayoutAlign.lt-sm="flex-end">
+                    <a href="javascript:void(0)" (click)="showPurchaseHistoryModal()">View Purchase History</a>
+                  </div>
+                  <ng-container *ngIf="currentUser?.securityRole.Id === 2">
+                    <div fxFlex="100%" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="flex-end">
+                      <a href="javascript:void(0)" (click)="confirmStoreItemPurchaseRequest();" >Approve Purchase</a>
+                    </div>
 
-            </ng-container>
+                  </ng-container>
+
+                </div>
+
+
+              </ng-container>
+            </div>
           </div>
         </div>
+
       </div>
-
     </div>
-  </div>
 
-</div>
+  </div>
+</ng-container>
+
 
 
 <div class="modal fade modal-black" id="purchaseHistoryModal" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
 
     <!-- Modal content-->
-    <div class="modal-content purchase-request-modal modal-custom" >
+    <div class="modal-content modal-custom" ngClass.gt-xs="purchase-request-modal" ngClass.lt-sm="purchase-request-modal-sm">
       <div class="modal-header">
         <div class="row title-row">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Your Purchase History</h4>
         </div>
       </div>
       <!---modal body---->
-      <div class="modal-body modalclass padding-bottom-0">
+      <div class="modal-body modalclass pb-0 pt-1" ngClass.lt-sm="px-2">
 
-        <div class="content-row">
-<!--          <perfect-scrollbar class="scroll-container perfect-scrollbar-dark" fxFlex="auto" [config]="config" [scrollIndicators]="true">-->
-          <ng-container *ngIf="navigationService.purchaseHistoryModalActive">
-            <app-purchase-history class="mx-auto" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-purchase-history>
-          </ng-container>
-<!--          </perfect-scrollbar>-->
-        </div>
+        <ng-container *ngIf="navigationService.purchaseHistoryModalActive">
+          <app-purchase-history class="mx-auto" [inputUser]="navigationService.purchaseHistoryComponentInputUser" (clearInputUser)="clearPurchaseHistoryComponentInputUser($event)"></app-purchase-history>
+        </ng-container>
 
       </div>
 
