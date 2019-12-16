@@ -78,6 +78,34 @@ export class OtherUserComponent implements OnInit, OnChanges, OnDestroy {
     }
   };
 
+  optionsMobile = {
+    width: '100%',
+    height: '100%',
+    colors: ['#ff8d72', '#fd5d93', '#d528ec', '#8129f3', '#00f2c3', '#4fdef3'],
+    backgroundColor: 'transparent',
+    chartArea: {
+      backgroundColor: 'white'
+    },
+    legend: 'none',
+    pieHole: 0.4,
+    pieSliceText: 'label',
+    pieSliceTextStyle: {
+      color: '#ffffff'
+    },
+    pieSliceBorderColor: 'transparent',
+    slices: {
+
+    },
+    tooltip: {
+      trigger: 'selection',
+      text: 'value',
+      textStyle: {
+        fontSize: 16,
+        fontName: 'Poppins'
+      }
+    }
+  };
+
   privateCoreValueData = [
     ['happy', 1],
     ['fun', 1],

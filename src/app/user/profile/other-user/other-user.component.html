@@ -11,7 +11,291 @@
 
               <div class="card-body" >
                 <ng-container *ngIf="user; else cardLoading">
-                  <div  class="row">
+
+<!--                  Mobile Layout-->
+                  <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" fxHide fxShow.lt-sm>
+
+                    <div fxFlex="20" fxLayoutAlign="center" >
+                      <div class="flex-container" fxLayout="row wrap" >
+                        <div class="avatar-col circle-container">
+                          <img [src]="user.avatarResolvedUrl"
+                               alt="Avatar"
+                               class="img-center img-fluid rounded-circle"
+                               id="avatar-mobile">
+                        </div>
+                      </div>
+
+                      <ng-template #avatarLoading >
+                        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                             alt="Loading..."
+                             class="img-center img-fluid rounded-circle"
+                             id="avatarPlaceholder-mobile">
+                      </ng-template>
+                    </div>
+
+                    <div fxFlex="60"  fxLayoutAlign="center" class=" profile-details" >
+                      <div class="flex-container" fxLayout="row wrap"  >
+                        <div fxFlex="0 0 100%" fxLayoutAlign="center" >
+                          <ng-container *ngIf="user?.preferredName; else noPreferredName">
+                            <h4 class="text-uppercase mb-0">{{user?.preferredName}}</h4>
+                          </ng-container>
+                        </div>
+                        <div fxFlex="0 0 100%" fxLayoutAlign="center">
+                          <ng-template #noPreferredName>
+                            <h4 class="text-uppercase mb-0">{{user?.firstName}} {{user?.lastName}}</h4>
+                          </ng-template>
+                        </div>
+                        <div fxFlex="0 0 100%" fxLayoutAlign="center">
+                          <ng-container *ngIf="user.securityRole.Id !== 3">
+
+                            <div class="mb-0">{{user?.department.Name}}</div>
+
+                          </ng-container>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <!--            Placeholder so that the layout looks correct on mobile-->
+                    <div fxHide.gt-xs fxFlex.lt-sm="20">
+
+                    </div>
+
+
+                    <div fxFlex="20" fxFlex.lt-sm="0 0 100%" class=" profile-points-section" ngClass.lt-sm="mt-3">
+
+
+
+                    </div>
+
+                    <div class="flex-container" fxFlex="100%" fxLayout="row wrap" fxFill fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+
+                      <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+                        <span class="mr-2" >🍍</span>
+                        <span class="mb-0">{{user?.points}}</span>
+                      </div>
+
+                      <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+
+                        <img src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" class="achiev-img mr-2"/>
+                        <span>{{userQuery.getUserCompleteAchievementCount(user.userId).length}} / {{achievementQuery.getAll().length}}</span>
+                      </div>
+                      <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+                        <img src= "../../../../assets/img/sport_badges-02-512.png" class="rounded-circle rank-img mr-2"/>
+                        <ng-container *ngIf="user">
+                      <span class="mb-0" >
+                        {{leaderboardUsers.indexOf(userQuery.getUserByUsername(user?.username)) + 1}}
+                      </span>
+                        </ng-container>
+                      </div>
+
+
+
+                    </div>
+
+                  </div>
+
+                  <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" fxHide fxShow.lt-sm>
+                    <ng-container *ngIf="user">
+                      <div  class="row attributes-row mx-0">
+                        <div class="user-form-container col-12">
+                          <div class="form-row py-0">
+                            <div class="col-4">
+                              <label class="form-label">Email</label>
+                            </div>
+                            <div class="col-8">
+                              <ng-container *ngIf="user.emailPublic; else fieldPrivate">
+                                <h4 class="user-attribute">{{user.email}}</h4>
+                              </ng-container>
+                            </div>
+                          </div>
+                          <div class="form-row py-0">
+                            <div class="col-4">
+                              <label class="form-label">Phone</label>
+                            </div>
+                            <div class="col-8">
+                              <ng-container *ngIf="user.phonePublic; else fieldPrivate">
+                                <h4 class="user-attribute">{{user.phone}}</h4>
+                              </ng-container>
+                            </div>
+                          </div>
+                          <div class="form-row py-0">
+                            <div class="col-4">
+                              <label class="form-label">Gender</label>
+                            </div>
+                            <div class="col-8 py-0">
+                              <ng-container *ngIf="user.genderPublic; else fieldPrivate">
+
+                                <h4  class="user-attribute">{{user?.gender}}</h4>
+
+
+                              </ng-container>
+                            </div>
+                          </div>
+                          <div class="form-row">
+                            <div class="col-4">
+                              <label class="form-label">Birthday</label>
+                            </div>
+                            <div class="col-8">
+                              <ng-container *ngIf="user.birthdatePublic; else fieldPrivate">
+                                <h4 class="user-attribute">{{user?.birthdate}}</h4>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="user">
+                      <div class="flex-container quote-row" fxLayout="row wrap" fxFill fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+                        <div fxFlex="15%" class="quote-box-quotation-mark">
+                          <div class="position-absolute">&ldquo;</div>
+                        </div>
+                        <div fxFlex="70%" class="quote-box-text">
+                          <ng-container *ngIf="user.quote; else noQuote">
+                            <h4 class="user-attribute">{{user.quote}}</h4>
+                          </ng-container>
+                          <ng-template #noQuote>
+                            <h4 class="user-attribute">Nothing here yet...</h4>
+                          </ng-template>
+
+                        </div>
+                        <div  fxFlex="15%">
+
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="user && pointItemTransactions">
+                      <div fxFlex="100%" class="form-row y-padding-0 margin-top-10">
+                        <div class="col-12">
+                          <div class="form-row y-padding-0">
+                            <div class="col-9">
+                              <label class="form-label">Latest points award...</label>
+                            </div>
+                            <ng-container *ngIf="user.pointsPublic">
+                              <div  class="col-3 y-margin-auto text-right">
+                                <a href="javascript:void(0)" (click)="showPointsModal()">...view all</a>
+                              </div>
+                            </ng-container>
+
+                          </div>
+                          <ng-container *ngIf="user.pointsPublic; else fieldPrivate2">
+                            <ng-container *ngIf="pointItemTransactions[0]; else noPointItemTransactions">
+                              <div class="form-row y-padding-0 margin-top--10">
+                                <div class="col-9">
+                                  <h5 class="user-attribute italics">{{pointItemQuery.getPointItemByItemId(pointItemTransactions[0].pointItemId)?.name}}</h5>
+                                </div>
+                                <div class="col-3 text-right">
+                                  <h5 class="user-attribute">{{pointItemTransactions[0].amount}}pts</h5>
+                                </div>
+                              </div>
+                              <div class="form-row y-padding-0 margin-top--10">
+                                <div class="col-12">
+                                  <h5 class="user-attribute">- Awarded by {{userQuery.getUserByUserId(pointItemTransactions[0].sourceUserId)?.firstName}} {{userQuery.getUserByUserId(pointItemTransactions[0].sourceUserId)?.lastName}} on {{pointItemTransactions[0].createdAt | date:'shortDate'}}</h5>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <ng-template #noPointItemTransactions>
+                              <div class="form-row y-padding-0 margin-top--10">
+                                <div class="col-12">
+                                  <h5 class="user-attribute font-italic">No points awards yet...</h5>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="user && achievements && completedAchievements">
+                      <div fxFlex="100%" class="form-row y-padding-0 margin-top-30">
+                        <div class="col-12">
+                          <div class="form-row y-padding-0">
+                            <div class="col-9">
+                              <label class="form-label">Latest achievement...</label>
+                            </div>
+                            <ng-container *ngIf="user.achievementsPublic">
+                              <div class="col-3 y-margin-auto text-right">
+                                <a href="javascript:void(0)" (click)="showAchievementsModal()">...view all</a>
+                              </div>
+                            </ng-container>
+
+                          </div>
+                          <ng-container *ngIf="user.achievementsPublic; else fieldPrivate2">
+                            <ng-container *ngIf="completedAchievements[0]; else noCompletedAchievements">
+                              <div class="form-row y-padding-0 margin-top--10">
+                                <div class="col-9">
+                                  <h5 class="user-attribute font-italic font-weight-bold ">{{completedAchievements[0].name}}</h5>
+                                  <h5 class="user-attribute font-italic">{{completedAchievements[0].description}}</h5>
+                                </div>
+                                <div class="col-3 y-margin-auto text-right">
+                            <span *ngFor="let star of achievementQuery.getAchievementFamilyCount(completedAchievements[0])">
+                              <i *ngIf="star.progressStatus === 'complete' || star.progressStatus === 'complete acknowledged'" class="fas fa-star"></i>
+                              <i *ngIf="star.progressStatus === 'in progress' || star.progressStatus === 'not started'" class="far fa-star"></i>
+                            </span>
+                                </div>
+
+                              </div>
+                              <div class="form-row y-padding-0 margin-top--10">
+                                <div class="col-12">
+                                  <h5 class="user-attribute">- Completed on {{completedAchievements[0].updatedAt | date:'shortDate'}}</h5>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <ng-template #noCompletedAchievements>
+                              <div class="form-row y-padding-0 margin-top--10">
+                                <div class="col-12">
+                                  <h5 class="user-attribute font-italic">No completed achievements yet...</h5>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" fxHide fxShow.lt-sm>
+
+                      <ng-container *ngIf="user.coreValuesPublic; else chartPrivate">
+                        <div fxFlex="100%" class="pb-5">
+                        <ng-container *ngIf="coreValueData && (coreValueData)?.length > 0; else coreValueChartPlaceholder">
+                          <div class="img-center img-fluid">
+                            <div class="positionrelative">
+                              <div class="row text-center">
+                                <h3 class="mb-1 line-height-5 font-weight-bold x-margin-auto">Core Values</h3>
+                              </div>
+                              <div class="row chart-row" >
+                                <google-chart class="x-margin-auto" #chart
+                                              [type]="'PieChart'"
+                                              [data]="coreValueData"
+                                              [columnNames]="myColumnNames"
+                                              [options]="options">
+                                </google-chart>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+
+                        <ng-template #coreValueChartPlaceholder>
+                          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                               alt="Loading..."
+                               class="img-center img-fluid rounded-circle">
+                        </ng-template>
+                        </div>
+                      </ng-container>
+
+
+                  </div>
+
+
+                  <!-- END MOBILE LAYOUT -->
+
+
+<!--               START   Desktop LAYOUT  -->
+                  <div fxShow fxHide.lt-sm class="row">
                     <div class="col-4">
                       <div class="row">
                         <div class="col-12">
@@ -63,7 +347,7 @@
 
                       <div class="row core-value-row">
                         <div class="col-12">
-                          <ng-container *ngIf="user.coreValuesPublic; else chartPrivate">
+                            <ng-container *ngIf="user.coreValuesPublic; else chartPrivate">
                             <ng-container *ngIf="coreValueData && (coreValueData)?.length > 0; else coreValueChartPlaceholder">
                               <div class="img-center img-fluid">
                                 <div class="positionrelative">
@@ -95,8 +379,8 @@
 
                     <div class="col-8">
 
-                      <ng-container>
-                        <div *ngIf="user" class="row attributes-row">
+                      <ng-container *ngIf="user">
+                        <div  class="row attributes-row">
                           <div class="user-form-container col-12">
                             <div class="form-row">
                               <div class="col-3">
@@ -277,12 +561,12 @@
 </div>
 
 <ng-template #fieldPrivate>
-  <h4 class="user-attribute">This information has been set private</h4>
+  <h4 class="user-attribute">Information private</h4>
 </ng-template>
 <ng-template #fieldPrivate2>
   <div class="form-row y-padding-0 margin-top--10">
     <div class="col-8">
-      <h4 class="user-attribute">This information has been set private</h4>
+      <h4 class="user-attribute">Information private</h4>
     </div>
   </div>
 </ng-template>

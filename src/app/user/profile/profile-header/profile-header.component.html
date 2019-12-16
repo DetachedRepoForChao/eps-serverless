@@ -93,7 +93,7 @@
 
                 <img src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" class="achiev-img mr-2"/>
                 <ng-container *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
-                  {{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}
+                  <span>{{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}</span>
                 </ng-container>
               </div>
               <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
