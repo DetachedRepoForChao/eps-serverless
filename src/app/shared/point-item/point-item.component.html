@@ -1,4 +1,4 @@
-<div class="container max-height-600">
+<div class="container max-height-600" ngClass.lt-sm="px-0">
 
   <ng-container *ngIf="pointItemTransactions; else noTransactions">
 
@@ -8,24 +8,25 @@
           <div class="row justify-content-center">
             <div  class="col-10 achievlist point-item-container">
 
-              <div class="row">
-                <div class="col-2 text-left avatar-col">
-                  <div *ngIf="!isManager; else managerAvatar">
+              <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" >
+                <div class="flex-container" fxLayout="row wrap" fxFlex="25%" fxLayoutAlign="space-between" >
+                <div fxFlex="100%" fxLayoutAlign.lt-sm="center" class="text-left avatar-col">
+                  <ng-container *ngIf="!isManager; else managerAvatar">
                     <ng-container *ngIf="userQuery.getUserByUserId(transaction?.sourceUserId); else avatarLoading">
                       <img [src]="userQuery.getUserByUserId(transaction?.sourceUserId)?.avatarResolvedUrl"
                            alt="Avatar"
                            class="img-center img-fluid rounded-circle avatar-img"
                            id="avatar-user">
                     </ng-container>
-                  </div>
+                  </ng-container>
 
                   <ng-template #managerAvatar>
-                    <div *ngIf="userQuery.getUserByUserId(transaction?.targetUserId); else avatarLoading">
+                    <ng-container *ngIf="userQuery.getUserByUserId(transaction?.targetUserId); else avatarLoading">
                       <img [src]="userQuery.getUserByUserId(transaction?.targetUserId)?.avatarResolvedUrl"
                            alt="Avatar"
                            class="img-center img-fluid rounded-circle avatar-img"
                            id="avatar-manager">
-                    </div>
+                    </ng-container>
                   </ng-template>
 
                   <ng-template #avatarLoading >
@@ -36,7 +37,14 @@
                   </ng-template>
 
                 </div>
-                <div class="col-7 text-left my-auto">
+
+                <div fxFlex="100%" fxHide fxShow.lt-sm fxLayoutAlign.lt-sm="center" class="text-center">
+                  <h3 class="point-value-sm font-size-s">{{transaction?.amount}} 🍍</h3>
+                </div>
+                </div>
+
+                <div fxFlex="55%" fxFlex.lt-sm="75%" fxLayoutAlign.lt-sm="center" class="text-left my-auto">
+
                   <div class="col-12">
                     <div class="form-row">
 
@@ -44,9 +52,9 @@
 
                     </div>
                     <div class="form-row">
-                      <div *ngIf="!isManager; else managerContent">
+                      <ng-container *ngIf="!isManager; else managerContent">
                         <h5 class="point-content">- Awarded by <a href="javascript:void(0)" (click)="onUserClick(transaction?.sourceUserId)">{{userQuery.getUserByUserId(transaction?.sourceUserId)?.firstName}} {{userQuery.getUserByUserId(transaction?.sourceUserId)?.lastName}}</a> on {{transaction?.createdAt | date:'shortDate'}}</h5>
-                      </div>
+                      </ng-container>
                       <ng-template #managerContent>
                         <h5 class="point-content">- Awarded to <a href="javascript:void(0)" (click)="onUserClick(transaction?.targetUserId)">{{userQuery.getUserByUserId(transaction?.targetUserId)?.firstName}} {{userQuery.getUserByUserId(transaction?.targetUserId)?.lastName}}</a> on {{transaction?.createdAt | date:'shortDate'}}</h5>
 
@@ -56,8 +64,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-3 text-right my-auto">
-                  <h3 class="point-value">{{transaction?.amount}} 🍍</h3>
+                <div fxFlex="20%" fxShow fxHide.lt-sm fxLayoutAlign.lt-sm="center" class="text-right my-auto">
+                  <h3 class="point-value" ngClass.lt-sm="font-size-s">{{transaction?.amount}} 🍍</h3>
                 </div>
               </div>
 
@@ -73,12 +81,15 @@
 
 
     <div class="row justify-content-md-center">
-      <ng-container *ngIf="pointItemTransactions?.length >= showLimit; else noMore" >
-        Displaying {{showLimit}} out of {{pointItemTransactions?.length}} awards. <a href="javascript:void(0)" (click)="showLimit = showLimit + 6" class="pl-2">Show more...</a>
-      </ng-container>
-      <ng-template #noMore>
-        Displaying all {{pointItemTransactions?.length}} awards.
-      </ng-template>
+      <div class="col text-center">
+        <ng-container *ngIf="pointItemTransactions?.length >= showLimit; else noMore" >
+          Displaying {{showLimit}} out of {{pointItemTransactions?.length}} awards. <a href="javascript:void(0)" (click)="showLimit = showLimit + 6" class="pl-2">Show more...</a>
+        </ng-container>
+        <ng-template #noMore>
+          Displaying all {{pointItemTransactions?.length}} awards.
+        </ng-template>
+      </div>
+
     </div>
 
   </ng-container>

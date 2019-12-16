@@ -28,7 +28,7 @@
 
                 <div class="flex-container" fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="center" >
                   <div fxFlex="100%" fxFlex.lt-sm="80%" fxLayout="row wrap">
-                    <div fxFlex="35%" fxFlex.lt-sm="30%" class="store-item-img-col" ngClass.gt-xs="text-left">
+                    <div fxFlex="40%" fxFlex.lt-sm="30%" class="store-item-img-col" ngClass.gt-xs="text-left">
                       <ng-container *ngIf="storeItemQuery.getStoreItemById(purchaseRequest.storeItemId); else storeItemImageLoading">
                         <img [src]="storeItemQuery.getStoreItemById(purchaseRequest.storeItemId).imageResolvedUrl"
                              alt="Store Item Image"
@@ -46,7 +46,7 @@
                     </div>
 
                     <!--                  Desktop Item Info-->
-                    <div fxFlex="65%" fxHide.lt-sm fxShow class="text-left margin-top-10">
+                    <div fxFlex="60%" fxHide.lt-sm fxShow class="text-left margin-top-10">
                       <div class="col-12">
                         <div class="form-row">
                           <div class="col-12">

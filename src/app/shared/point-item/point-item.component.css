@@ -87,6 +87,10 @@
   margin-right: 10px
 }
 
+.point-value-sm {
+  margin-bottom: 0;
+}
+
 .point-content {
   margin-bottom: 0;
 }

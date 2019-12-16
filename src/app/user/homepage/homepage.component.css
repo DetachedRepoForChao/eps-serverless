@@ -10,11 +10,29 @@
   height: 0;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 1199px) {
   .break {
     flex-basis: 100%;
   }
 }
+
+@media screen and (max-width: 1199px) {
+  .flex-container {
+    place-content: center;
+  }
+}
+
+@media screen and (min-width: 1199px) {
+  .flex-container {
+    place-content: stretch space-between;
+  }
+}
+
+/*@media screen and (min-width: 1199px) {
+  .break {
+    flex-basis: 100%;
+  }
+}*/
 
 .content-card {
   min-width: 345px;

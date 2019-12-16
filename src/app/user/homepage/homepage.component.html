@@ -11,7 +11,7 @@
       <div class="container align-items-center">
 <!--      <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-evenly">-->
 <!--        <div fxFlex.lt-xl="1140px" fxFlex.lt-lg="960px" fxFlex.lt-md="720px" fxFlex.lt-sm="100%" fxFlex.gt-xs="540px"  > -->
-          <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutAlign.lt-lg="center">
+          <div class="flex-container" fxLayout="row wrap">
             <!-- Profile Card -->
 
             <div  class="content-card" id="profile-card" fxFlexAlign.lt-lg="center">
@@ -42,13 +42,13 @@
 
             <ng-container *ngIf="this.currentUser?.securityRole.Id === 2">
 
-              <div fxFlex="98%" id="award-points-card" fxFlex.lt-sm="350px" fxFlexAlign="center" class="mx-auto">
+              <div fxFlex="100%" id="award-points-card" fxFlex.lt-sm="345px" fxFlexAlign="center" class="mx-auto">
                 <app-gift-points ></app-gift-points>
               </div>
 
             </ng-container>
 
-            <div fxFlex="98%" id="feed-card" fxFlex.lt-sm="350px" fxFlexAlign="center" class="mx-auto">
+            <div fxFlex="100%" id="feed-card" fxFlex.lt-sm="345px" fxFlexAlign="center" class="mx-auto">
               <app-feed></app-feed>
             </div>
 
