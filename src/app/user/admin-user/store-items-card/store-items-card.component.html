@@ -7,7 +7,7 @@
       Manage Store Items
     </H1>
   </div>
-  <div class="card-footer3 marginbottom">
+<!--  <div class="card-footer3 marginbottom">
 
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" (click)="confirmStoreItemPurchaseRequest()">Manage Employee Purchases</button>
     <br><br>
@@ -17,7 +17,26 @@
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deleteStoreItemModal">Delete Store Item</button>
     <br><br>
+  </div>-->
+
+  <div class="card-footer3 marginbottom admin-card-footer">
+
+    <div class="row justify-content-center ">
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" (click)="confirmStoreItemPurchaseRequest()">Manage Employee Purchases</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#addStoreItemModal">Add Store Item</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#editStoreItemModal">Edit Store Item</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#deleteStoreItemModal">Delete Store Item</button>
+      </div>
+    </div>
   </div>
+
 </div>
 
 

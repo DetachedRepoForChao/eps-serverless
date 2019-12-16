@@ -48,7 +48,7 @@
                               <i class="fa fa-ellipsis-h"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right" >
-                              <div class="h6 dropdown-header">Configuration</div>
+                              <div class="h6 dropdown-header">Options</div>
                               <a class="dropdown-item" (click)="onViewItemClick('editProfile')" [ngClass]="{'toggled': currentView === 'editProfile'}">Edit Profile</a>
                               <a class="dropdown-item" (click)="onViewItemClick('changePassword')" [ngClass]="{'toggled': currentView === 'changePassword'}">Change Password</a>
                               <ng-container *ngIf="profileUser.securityRole.Id !== 3">

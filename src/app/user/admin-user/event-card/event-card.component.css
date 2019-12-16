@@ -110,3 +110,11 @@
 .card label {
   text-align: left;
 }
+
+.btn-width {
+  min-width: 125px;
+}
+
+.marginbottom{
+  margin-bottom: 20px;
+}

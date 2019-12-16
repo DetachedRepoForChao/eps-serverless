@@ -202,6 +202,10 @@ perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top
   max-height: 400px;
 }
 
+.purchase-manager-scroll-container-sm {
+  max-height: 230px;
+}
+
 .delete-prompt {
   cursor: pointer;
 }
@@ -214,3 +218,6 @@ perfect-scrollbar.ps-show-active > .ps.ps--active-y > .ps-overlay:not(.ps-at-top
   text-decoration: line-through;
 }
 
+.btn-width {
+  min-width: 125px;
+}

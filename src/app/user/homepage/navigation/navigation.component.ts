@@ -16,10 +16,11 @@ import {NavigationService} from '../../../shared/navigation.service';
 import { NotifierService } from 'angular-notifier';
 // import {NotificationService} from '../../../entity-store/notification/state/notification.service';
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
-import {take} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {NotificationService} from '../../../shared/notifications/notification.service';
+import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 // import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
@@ -39,9 +40,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
   componentName = 'navigation.component';
 
   public config: PerfectScrollbarConfigInterface = {};
+  private currentUserLoading$ = new Subject();
+  private unsubscribe$ = new Subject();
   Notifications;
   NotificationStatus;
   currentUser$;
+  currentUser: EntityCurrentUserModel;
   Detail;
   notificationNums;
   TotalNotificationNums;
@@ -72,7 +76,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
     this.isCardLoading = true;
-    this.currentUser$ = this.currentUserQuery.selectAll();
+    // this.currentUser$ = this.currentUserQuery.selectAll();
+
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+            });
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
 
     // this.notificationService.cacheNotifications().subscribe();
     this.unseenNotificationSubscription = this.notificationQuery.selectAll({
@@ -301,5 +319,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unseenNotificationSubscription.unsubscribe();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

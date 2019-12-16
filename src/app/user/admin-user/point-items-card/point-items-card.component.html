@@ -7,7 +7,7 @@
       Manage 🍍 Awards
     </H1>
   </div>
-  <div class="card-footer3 marginbottom">
+<!--  <div class="card-footer3 marginbottom">
 
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addPointItemModal">Add 🍍 Awards</button>
     <br><br>
@@ -17,7 +17,26 @@
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#setPointPoolMaxModal">Set Point Pool Max</button>
     <br><br>
+  </div>-->
+
+  <div class="card-footer3 marginbottom admin-card-footer">
+
+    <div class="row justify-content-center ">
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#addPointItemModal">Add 🍍 Awards</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#editPointItemModal">Edit 🍍 Awards</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#deletePointItemModal">Delete 🍍 Awards</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#setPointPoolMaxModal">Set Point Pool Max</button>
+      </div>
+    </div>
   </div>
+
 </div>
 
 <ng-container *ngIf="currentUser && pointItems">
@@ -59,7 +78,7 @@
                   </div>
                 </div>
                 <div class="form-row">
-                  <div class="col-12">
+                  <div class="col-12" fxShow fxHide.lt-sm>
                     <label>Core Values</label>
                     <div class="form-group" formGroupName="coreValuesGroup">
                       <div class="form-check form-check-inline">
@@ -104,6 +123,69 @@
                       </ng-container>
                     </div>
                   </div>
+
+                  <div class="col-12" fxHide fxShow.lt-sm>
+                    <label>Core Values</label>
+
+                    <div class="form-group" formGroupName="coreValuesGroup">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_happy-mobile" formControlName="coreValue_happy">Happy
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_fun-mobile" formControlName="coreValue_fun">Fun
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_genuine-mobile" formControlName="coreValue_genuine">Genuine
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_caring-mobile" formControlName="coreValue_caring">Caring
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_respect-mobile" formControlName="coreValue_respect">Respect
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="addPointItem_checkbox_honest-mobile" formControlName="coreValue_honest">Honest
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <ng-container *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (addPointItemForm.dirty && addPointItemForm.controls['coreValuesGroup'].errors && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
+                        <label class="validation-message">Please select at least one Core Value.</label>
+                      </ng-container>
+                    </div>
+                  </div>
+
                 </div>
               </form>
             </div>
@@ -172,7 +254,7 @@
                   </div>
                 </div>
                 <div class="form-row">
-                  <div class="col-12">
+                  <div class="col-12" fxHide.lt-sm fxShow>
                     <label>Core Values</label>
                     <div class="form-group" formGroupName="coreValuesGroup">
                       <div class="form-check form-check-inline">
@@ -217,6 +299,69 @@
                       </ng-container>
                     </div>
                   </div>
+
+                  <div class="col-12" fxHide fxShow.lt-sm>
+                    <label>Core Values</label>
+
+                    <div class="form-group" formGroupName="coreValuesGroup">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_happy-mobile" formControlName="coreValue_happy">Happy
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_fun-mobile" formControlName="coreValue_fun">Fun
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_genuine-mobile" formControlName="coreValue_genuine">Genuine
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_caring-mobile" formControlName="coreValue_caring">Caring
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_respect-mobile" formControlName="coreValue_respect">Respect
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="editPointItem_checkbox_honest-mobile" formControlName="coreValue_honest">Honest
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <ng-container *ngIf="(addPointItemFormSubmitted && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked) || (addPointItemForm.dirty && addPointItemForm.controls['coreValuesGroup'].errors && addPointItemForm.controls['coreValuesGroup'].errors?.requireCheckboxesToBeChecked)">
+                        <label class="validation-message">Please select at least one Core Value.</label>
+                      </ng-container>
+                    </div>
+                  </div>
+
                 </div>
               </form>
             </div>

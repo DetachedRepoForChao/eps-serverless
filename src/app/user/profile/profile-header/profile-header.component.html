@@ -3,19 +3,20 @@
   <div class="card">
     <div class="card card-coin card-plain card-custom">
       <div class="card-body" ngClass.lt-sm="pb-0">
-        <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between">
+        <ng-container *ngIf="currentUser">
+          <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between">
 
-          <div fxFlex="20" fxLayoutAlign="center" >
-            <div class="flex-container" fxLayout="row wrap" >
-              <div class="avatar-col circle-container">
-                <ng-container *ngIf="currentUser; else avatarLoading">
+            <div fxFlex="20" fxLayoutAlign="center" >
+              <div class="flex-container" fxLayout="row wrap" >
+                <div class="avatar-col circle-container">
+                  <ng-container *ngIf="currentUser; else avatarLoading">
 
-                  <img [src]="currentUser.avatarResolvedUrl"
-                       alt="Avatar"
-                       class="img-center img-fluid rounded-circle"
-                       id="avatar">
+                    <img [src]="currentUser.avatarResolvedUrl"
+                         alt="Avatar"
+                         class="img-center img-fluid rounded-circle"
+                         id="avatar">
 
-                  <ng-container *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
+                    <ng-container *ngFor="let star of achievementQuery.getCompleteAchievements(); let i = index">
                   <span >
                     <ng-container *ngIf="(i * 45) < 360" >
                       <i class="fas fa-star level-one deg{{getFirstDigit(i) * 45}} yellow"></i>
@@ -27,90 +28,113 @@
                       <i class="fas fa-star level-three deg{{getFirstDigit(i) * 45}} pink" ></i>
                     </ng-container>
                   </span>
+                    </ng-container>
                   </ng-container>
-                </ng-container>
+                </div>
               </div>
+
+              <ng-template #avatarLoading >
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                     alt="Loading..."
+                     class="img-center img-fluid rounded-circle"
+                     id="avatarPlaceholder">
+              </ng-template>
             </div>
 
-            <ng-template #avatarLoading >
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                   alt="Loading..."
-                   class="img-center img-fluid rounded-circle"
-                   id="avatarPlaceholder">
-            </ng-template>
-          </div>
+            <div fxFlex="60"  fxLayoutAlign="center" class=" profile-details" >
+              <div class="flex-container" fxLayout="row wrap"  >
+                <div fxFlex="0 0 100%" fxLayoutAlign="center" >
+                  <ng-container *ngIf="currentUser?.preferredName; else noPreferredName">
+                    <h4 class="text-uppercase">{{currentUser?.preferredName}}</h4>
+                  </ng-container>
+                </div>
+                <div fxFlex="0 0 100%" fxLayoutAlign="center">
+                  <ng-template #noPreferredName>
+                    <h4 class="text-uppercase">{{currentUser?.firstName}} {{currentUser?.lastName}}</h4>
+                  </ng-template>
+                </div>
+                <div fxFlex="0 0 100%" fxLayoutAlign="center">
+                  <ng-container *ngIf="currentUser.securityRole.Id !== 3">
 
-          <div fxFlex="60"  fxLayoutAlign="center" class=" profile-details" >
-            <div class="flex-container" fxLayout="row wrap"  >
-              <div fxFlex="0 0 100%" fxLayoutAlign="center" >
-                <ng-container *ngIf="currentUser?.preferredName; else noPreferredName">
-                  <h4 class="text-uppercase">{{currentUser?.preferredName}}</h4>
+                    <div>{{currentUser?.department.Name}}</div>
+
+                  </ng-container>
+                  <ng-container *ngIf="currentUser.securityRole.Id === 3">
+
+                    <div>Administrator</div>
+
+                  </ng-container>
+                </div>
+
+              </div>
+
+<!--              <ng-container *ngIf="currentUser.securityRole.Id === 3">
+                <div class="row">
+                  <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="mb-1 line-height-3 font-weight-200">Role:</div>
+                  </div>
+                  <div class="col-lg-8 col-md-8 col-sm-8">
+                    <div>Administrator</div>
+                  </div>
+                </div>
+              </ng-container>-->
+
+            </div>
+
+            <!--            Placeholder so that the layout looks correct on mobile-->
+            <div fxHide.gt-xs fxFlex.lt-sm="20">
+
+            </div>
+
+
+            <div fxFlex="20" fxFlex.lt-sm="0 0 100%" class=" profile-points-section" ngClass.lt-sm="mt-4">
+              <div class="flex-container" fxLayout="row wrap" fxFill fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+
+                <ng-container *ngIf="currentUser.securityRole.Id === 1">
+                  <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+                    <span class="mr-2" >🍍</span>
+                    <span class="mb-0">{{currentUser?.points}}</span>
+                  </div>
                 </ng-container>
-              </div>
-              <div fxFlex="0 0 100%" fxLayoutAlign="center">
-                <ng-template #noPreferredName>
-                  <h4 class="text-uppercase">{{currentUser?.firstName}} {{currentUser?.lastName}}</h4>
-                </ng-template>
-              </div>
-              <div fxFlex="0 0 100%" fxLayoutAlign="center">
+
+
+                <ng-container *ngIf="currentUser.securityRole.Id === 2">
+                  <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+                    <span class="mr-2" >🍍</span>
+                    <span class="mb-0">{{currentUser.pointsPool}} / {{currentUser.pointsPoolMax}}</span>
+                  </div>
+                </ng-container>
+
+
                 <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+                  <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
 
-                  <div>{{currentUser?.department.Name}}</div>
-
+                    <img src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" class="achiev-img mr-2"/>
+                    <ng-container *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
+                      <span>{{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}</span>
+                    </ng-container>
+                  </div>
                 </ng-container>
+
+
+                <ng-container *ngIf="currentUser.securityRole.Id === 1">
+                  <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
+                    <img src= "../../../../assets/img/sport_badges-02-512.png" class="rounded-circle rank-img mr-2"/>
+                    <span class="mb-0" >
+                      {{leaderboardUsers.indexOf(userQuery.getUserByUsername(currentUser?.username)) + 1}}
+                    </span>
+                  </div>
+                </ng-container>
+
+
               </div>
 
             </div>
 
-            <ng-container *ngIf="currentUser.securityRole.Id === 3">
-              <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                  <div class="mb-1 line-height-3 font-weight-200">Role:</div>
-                </div>
-                <div class="col-lg-8 col-md-8 col-sm-8">
-                  <div>Administrator</div>
-                </div>
-              </div>
-            </ng-container>
 
           </div>
+        </ng-container>
 
-          <!--            Placeholder so that the layout looks correct on mobile-->
-          <div fxHide.gt-xs fxFlex.lt-sm="20">
-
-          </div>
-
-
-          <div fxFlex="20" fxFlex.lt-sm="0 0 100%" class=" profile-points-section" ngClass.lt-sm="mt-4">
-            <div class="flex-container" fxLayout="row wrap" fxFill fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
-
-              <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
-                <span class="mr-2" >🍍</span>
-                <span class="mb-0">{{currentUser?.points}}</span>
-              </div>
-
-              <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
-
-                <img src="../../../assets/img/Treasure%20Chest-595b40b85ba036ed117dacb5.svg" class="achiev-img mr-2"/>
-                <ng-container *ngIf="achievementQuery.getFinishedAchievements() && achievementQuery.getAll()">
-                  <span>{{achievementQuery.getFinishedAchievements().length}} / {{achievementQuery.getAll().length}}</span>
-                </ng-container>
-              </div>
-              <div ngClass.gt-xs="mb-2" fxFlex="0 0 100%" fxFlex.lt-sm="1 1 auto" fxLayoutAlign="start" fxLayoutAlign.lt-sm="center">
-                <img src= "../../../../assets/img/sport_badges-02-512.png" class="rounded-circle rank-img mr-2"/>
-                <ng-container *ngIf="currentUser">
-                      <span class="mb-0" >
-                        {{leaderboardUsers.indexOf(userQuery.getUserByUsername(currentUser?.username)) + 1}}
-                      </span>
-                </ng-container>
-              </div>
-
-            </div>
-
-          </div>
-
-
-        </div>
 
 
       </div>

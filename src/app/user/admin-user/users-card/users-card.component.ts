@@ -772,8 +772,8 @@ export class UsersCardComponent implements OnInit, OnDestroy {
     if (!form.invalid) {
       const user = form.controls.group.get('purchaseApprover').value;
       purchaseApprover.userId = user.userId;
-      purchaseApprover.phoneNotifications = form.controls.phoneNotifications.value;
-      purchaseApprover.emailNotifications = form.controls.emailNotifications.value;
+      purchaseApprover.phoneNotifications = (form.controls.phoneNotifications.value) ? form.controls.phoneNotifications.value : false;
+      purchaseApprover.emailNotifications = (form.controls.emailNotifications.value) ? form.controls.phoneNotifications.value : false;
       this.userService.newPurchaseApprover(purchaseApprover)
         .pipe(
           take(1),

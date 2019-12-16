@@ -115,3 +115,7 @@
 .textl{
   text-align: left;
 }
+
+.btn-width {
+  min-width: 125px;
+}

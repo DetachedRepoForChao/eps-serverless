@@ -207,9 +207,12 @@
 
 
         <!----- Gift---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickPointItemModal()">
-          <i class="tim-icons icon-gift-2" title="gift"></i>
-        </button>
+        <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+          <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickPointItemModal()">
+            <i class="tim-icons icon-gift-2" title="gift"></i>
+          </button>
+        </ng-container>
+
 
         <!--<div class="modal fade" id="giftModal" role="dialog">
           <div class="modal-dialog">
@@ -248,9 +251,12 @@
           </div>
         </div>-->
         <!-----Achievements----->
-        <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickAchievementModal()">
-          <i class="tim-icons icon-trophy" title="Recent Achievements"></i>
-        </button>
+        <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+          <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickAchievementModal()">
+            <i class="tim-icons icon-trophy" title="Recent Achievements"></i>
+          </button>
+
+        </ng-container>
 
 
 
@@ -352,7 +358,7 @@
           <i class="fas fa-shopping-cart" title="Store"></i>
         </button>
         <!----- Settings---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', (currentUser$ | async)[0]?.username]">
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', currentUser.username]">
           <i class="tim-icons icon-settings-gear-63" title="Settings"></i>
         </button>
 <!--        <div class="modal fade" id="settingsModal" role="dialog">
@@ -400,7 +406,7 @@
     <div class="modal-content modal-custom">
       <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Your Achievements</h4>
+        <h4 class="modal-title">Achievements</h4>
       </div>
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">
@@ -424,7 +430,7 @@
     <div class="modal-content points-modal modal-custom" >
       <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Your 🍍 Awards</h4>
+        <h4 class="modal-title">🍍 Awards</h4>
       </div>
       <!---modal body---->
       <div class="modal-body modalclass padding-bottom-0">

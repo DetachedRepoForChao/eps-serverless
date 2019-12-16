@@ -7,23 +7,25 @@
       Manage Users
     </H1>
   </div>
-  <div class="card-footer3 marginbottom">
+  <div class="card-footer3 marginbottom admin-card-footer">
 
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addUserModal">Add User</button>
-    <br><br>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#editUserModal">Edit User</button>
-    <br><br>
-    <div class="row">
-      <div class="col-6">
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#activateUserModal">Activate User</button>
+    <div class="row justify-content-center ">
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#addUserModal">Add User</button>
       </div>
-      <div class="col-6">
-        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deleteUserModal">Delete / Disable User</button>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#editUserModal">Edit User</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#activateUserModal">Activate User</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#deleteUserModal">Delete / Disable User</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#managePurchaseApproversModal">Manage Purchase Request Managers</button>
       </div>
     </div>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#managePurchaseApproversModal">Manage Purchase Request Managers</button>
-    <br><br>
-
   </div>
 </div>
 
@@ -569,12 +571,11 @@
       <div class="modal-body user-modal-body">
         <ng-container *ngIf="purchaseApprovers && purchaseApproverForm">
           <h4 class="text-dark">Current Purchase Request Managers</h4>
-          <perfect-scrollbar class="purchase-manager-scroll-container" [config]="config" [scrollIndicators]="true">
-          <div>
+          <perfect-scrollbar ngClass.lt-sm="purchase-manager-scroll-container-sm" ngClass.gt-xs="purchase-manager-scroll-container" [config]="config" [scrollIndicators]="true">
 
             <div class="row">
               <ng-container *ngFor="let purchaseApprover of purchaseApprovers">
-                <div class="col-3 purchase-manager-item mb-2">
+                <div class="col-auto col-sm-3 col-md-3 col-lg-3 purchase-manager-item mb-2">
                   <h5 class="text-dark">{{purchaseApprover.user.firstName}} {{purchaseApprover.user.lastName}} ({{purchaseApprover.user.username}})</h5>
                   <h5 class="text-dark">{{purchaseApprover.user.email}}</h5>
                   <h5 class="text-dark">{{purchaseApprover.user.phone}}</h5>
@@ -597,7 +598,7 @@
               </ng-container>
             </div>
 
-          </div>
+
           </perfect-scrollbar>
           <mat-divider></mat-divider>
 
@@ -623,7 +624,7 @@
                   <label class="validation-message">This user account is already a Purchase Request Manager.</label>
                 </ng-container>
               </div>
-              <div class="form-group col-7">
+              <div class="form-group col-12 col-sm-7 col-md-7 col-lg-7">
                 <label class="form-label">New Purchase Requests will appear as notifications within the app. Select any additional new Purchase Requests notification methods.</label>
                 <div class="row">
                   <div class="col-5">

@@ -4,21 +4,42 @@
   </h5>
   <div class="card-body">
     <H1 class="card-text4">
-      Manage events
+      Misc Management
     </H1>
   </div>
-  <div class="card-footer4" style="margin-bottom: 20px">
+<!--  <div class="card-footer4" style="margin-bottom: 20px">
 
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addDepartmentModal">Add Department</button>
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#deleteDepartmentModal">Delete Department</button>
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#renameDepartmentModal">Rename Department</button>
-    <!-- get report -->
+    &lt;!&ndash; get report &ndash;&gt;
     <br><br>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" [routerLink]="['/', 'user', 'report']" routerLinkActive="router-link-active" >report</button>
 
+  </div>-->
+
+  <div class="card-footer4 marginbottom admin-card-footer">
+
+    <div class="row justify-content-center ">
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#addDepartmentModal">Add Department</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#deleteDepartmentModal">Delete Department</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" data-target="#renameDepartmentModal">Rename Department</button>
+      </div>
+      <div class="col-auto text-center">
+        <button type="button" class="btn btn-primary btn-width" ngClass.lt-sm="btn-sm" ngClass.gt-xs="btn-lg" data-toggle="modal" [routerLink]="['/', 'user', 'report']" routerLinkActive="router-link-active" >Report</button>
+      </div>
+    </div>
+
+    <div id="notifications-scroll-anchor"></div>
   </div>
+
 </div>
 
 <!-- Add Departname -->
@@ -26,7 +47,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addDepartmentModalLabel">Add a new departmenmt</h5>
+        <h5 class="modal-title" id="addDepartmentModalLabel">Add a new department</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -38,8 +59,8 @@
             <form [formGroup]="addDepartmentForm">
               <div class="form-row">
                 <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                  <label for="addDepartment_DepartmentName" class="form-label">Department name</label>
-                  <input class="form-control department-form-control" id="addDepartment_DepartmentNam" placeholder="Department name" formControlName="departmentName">
+                  <label for="addDepartment_DepartmentName" class="form-label">Department Name</label>
+                  <input class="form-control department-form-control" id="addDepartment_DepartmentName" placeholder="Department Name" formControlName="departmentName">
                   <!-- <div *ngIf="(addDepartmentFormSubmitted && addDepartmentForm.controls.Departmentname.invalid) || (addDepartmentForm.dirty && addDepartmentForm.controls.Departmentname.touched && addDepartmentForm.controls.Departmentname.invalid)">
                     <label class="validation-message">This field is required.</label>
                   </div> -->
@@ -53,7 +74,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
-        <button type="button" class="btn btn-primary" (click)="onAddDepartmentFormSubmit(addDepartmentForm)">Save changes</button>
+        <button type="button" class="btn btn-primary" (click)="onAddDepartmentFormSubmit(addDepartmentForm)">Save Changes</button>
       </div>
     </div>
   </div>
@@ -65,7 +86,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteDepartmentModalLabel">Select a departmenmt to delete</h5>
+        <h5 class="modal-title" id="deleteDepartmentModalLabel">Select a department to delete</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -74,12 +95,12 @@
         <form [formGroup]="deleteDepartmentForm">
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6 col-lg-6 col-xl-6">
-              <label for="deleteDepartment_department" class="form-label">department to Delete</label>
+              <label for="deleteDepartment_department" class="form-label">Department to delete</label>
               <select formControlName="departmentName"
                       class="form-control department-form-control"
                       id="deleteDepartment_department" name="deleteDepartment_Department">
                     <option [ngValue]="null" [disabled]="true">Department</option>
-                    <option *ngFor="let department of departments" [ngValue]="department" style="color: black;">
+                    <option *ngFor="let department of departments" [ngValue]="department" class="text-dark">
                         {{department.Name}}
                     </option>
               </select>

@@ -115,3 +115,7 @@
 .textc{
   text-align: center;
 }
+
+.btn-width {
+  min-width: 125px;
+}

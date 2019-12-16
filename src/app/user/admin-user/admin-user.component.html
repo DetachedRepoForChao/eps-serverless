@@ -1,39 +1,128 @@
 <!--navbar-->
 
-<nav class="navbar navbar-expand-lg bg-primary">
+<nav class="navbar navbar-expand-lg fixed-top bg-primary">
   <div class="container">
-    <a class="navbar-brand" >EPS | Admin Dashboard</a>
+
+    <div class="navbar-translate">
+      <!--
+      <a class="navbar-brand" href="https://demos.creative-tim.com/blk-design-system/index.html" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
+        <span>The Asbury Hotel </span> Employee Points System
+      </a>
+      -->
+
+      <a class="navbar-brand" target="_blank">
+        <span>Pineapple Points</span>🍍 | Admin
+      </a>
+
+<!--      <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-bar bar1"></span>
+        <span class="navbar-toggler-bar bar2"></span>
+        <span class="navbar-toggler-bar bar3"></span>
+      </button>-->
+<!--      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#dropdownMenuButton" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+      </button>-->
+      <button class="navbar-toggler navbar-toggler" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+        <span class="navbar-toggler-bar navbar-kebab"></span>
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" >
+        <div class="h6 dropdown-header">Navigation</div>
+        <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/', 'user', 'admin-user']">Home</a>
+        <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/', 'user', 'profile', currentUser.username]">Account Settings</a>
+        <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/', 'user', 'store']">Store</a>
+        <a class="dropdown-item" href="javascript:void(0)" (click)="scrollToNotifications()">Notifications</a>
+        <a class="dropdown-item" href="javascript:void(0)" (click)="onLogout()">Logout</a>
+      </div>
+
+    </div>
+
+<!--    <a class="navbar-brand" ><span>Pineapple Points</span>🍍 | Admin Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 
       <span class="navbar-toggler-bar navbar-kebab"></span>
       <span class="navbar-toggler-bar navbar-kebab"></span>
       <span class="navbar-toggler-bar navbar-kebab"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav mr-auto">
+    </button>-->
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+
+      <ul >
+        <button id="notification_button" type="button" class="btn btn-primary btn-icon btn-round" (click)="scrollToNotifications()">
+          <i class="tim-icons icon-bell-55" title="Notifications"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'admin-user']">
+          <i class="fas fa-home" title="Home"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'store']">
+          <i class="fas fa-shopping-cart" title="Store"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', currentUser.username]">
+          <i class="tim-icons icon-settings-gear-63" title="Settings"></i>
+        </button>
+        <button type="button" class="btn btn-danger btn-icon btn-round" (click)="onLogout()">
+          <i class="tim-icons icon-button-power" title="Logoff"></i>
+        </button>
       </ul>
-      <span class="navbar-text">
 
-<!--       <i class="tim-icons icon-button-power" data-toggle="tooltip" data-placement="bottom" title="Log out" href="#" data-dismiss="m" type="button" (click)="onLogout()"></i>-->
+<!--      <div class="navbar-collapse-header">
+        <div class="row">
+          <div class="col-6 collapse-brand">
+            <a>
+                <span>
+                </span>
+            </a>
+          </div>
+
+          <div class="col-6 collapse-close text-right">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#dropdownMenuButton"  aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+        </div>
+      </div>-->
 
 
-        <!-- <button type="button" class="btn btn-icon btn-round" color="white" >
-           <i class="tim-icons icon-button-power" title="logout"></i>
-         </button> -->
 
+<!--      <div class="dropdown">
+        <button class="btn btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="tim-icons icon-align-center"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="javascript:void(0)" (click)="scrollToNotifications()">Notifications</a>
+          <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/', 'user', 'profile', currentUser.username]">Account Settings</a>
+          <a class="dropdown-item" href="javascript:void(0)" (click)="onLogout()">Logout</a>
+        </div>
+      </div>-->
+<!--      <ul class="navbar-nav mr-auto">
+        <button id="notification_button" type="button" class="btn btn-icon btn-round" (click)="scrollToNotifications()">
+          <i class="tim-icons icon-bell-55" title="Notifications"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', currentUser.username]">
+          <i class="tim-icons icon-settings-gear-63" title="Settings"></i>
+        </button>
+        <button type="button" class="btn btn-danger btn-icon btn-round" (click)="onLogout()">
+          <i class="tim-icons icon-button-power" title="Logoff"></i>
+        </button>
+      </ul>-->
+      <!--<span class="navbar-text">
 
         <div class="dropdown">
-          <button class="btn btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+          <button class="btn btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="tim-icons icon-align-center"></i>
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="javascript:void(null)">Notifications</a>
-            <a class="dropdown-item" href="javascript:void(null)">Settings</a>
-            <a class="dropdown-item" href="javascript:void(null)" (click)="onLogout()">Logout</a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="scrollToNotifications()">Notifications</a>
+            <a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/', 'user', 'profile', currentUser.username]">Account Settings</a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="onLogout()">Logout</a>
           </div>
         </div>
 
-      </span>
+      </span>-->
     </div>
   </div>
 </nav>
@@ -47,27 +136,29 @@
   <div class="row">
 
     <!--card1-->
-    <div class="col-md-4">
+    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
       <app-users-card></app-users-card>
     </div>
 
     <!--card2-->
-    <div class="col-md-4">
+    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
       <app-point-items-card></app-point-items-card>
     </div>
 
     <!--card3-->
-    <div class="col-md-4">
+    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
       <app-store-items-card></app-store-items-card>
     </div>
 
     <!-- card4 -->
-    <div class="col-md-6">
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
       <app-event-card></app-event-card>
     </div>
 
     <!-- card5 -->
-    <div class="col-md-6">
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
       <app-notification-card></app-notification-card>
     </div>
   </div>

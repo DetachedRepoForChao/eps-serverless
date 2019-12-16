@@ -4,7 +4,7 @@
       <form>
         <ng-container *ngIf="isUserDataRetrieved; else placeholderForm">
           <div class="form-row">
-            <div class="col-10">
+            <div class="col-12 col-sm-10 col-md-10 col-lg-10">
               <label class="form-label">Choose how you would like to receive app notifications.</label><br>
               <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you enable text notifications, please note that you may be charged per-text fees from your cell phone service provider.</h5>
 
@@ -12,10 +12,10 @@
           </div>
           <div class="form-row">
             <ng-container *ngIf="this.emailConfirmed; else emailUnconfirmed">
-              <div class="col-8 aligncentercontent">
+              <div class="col-8 align-content-center">
                 <label for="email_notifications" class="form-label">Email Notifications</label>
               </div>
-              <div class="col-2 toggle-col">
+              <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col">
                 <mat-slide-toggle [(ngModel)]="fieldNotificationsList.emailNotifications" name="email_notifications" (change)="toggleFieldPrivacy('emailNotifications')" id="email_notifications" [color]="color">
                   <ng-container *ngIf="!fieldNotificationsList.emailNotifications; else toggledOn">
                     <div>Off</div>
@@ -24,10 +24,10 @@
               </div>
             </ng-container>
             <ng-template #emailUnconfirmed>
-              <div class="col-8 aligncentercontent">
+              <div class="col-8 align-content-center">
                 <label for="email_notifications" class="form-label font-disabled">Email Notifications</label>
               </div>
-              <div class="col-2 toggle-col">
+              <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col">
                 <mat-slide-toggle [(ngModel)]="fieldNotificationsList.emailNotifications" [disabled]="true" name="email_notifications" (change)="toggleFieldPrivacy('emailNotifications')" [color]="color">
                   <ng-container *ngIf="!fieldNotificationsList.emailNotifications; else toggledOn">
                     <div>Off</div>
@@ -47,10 +47,10 @@
 
           <div class="form-row">
             <ng-container *ngIf="this.phoneConfirmed; else phoneUnconfirmed">
-              <div class="col-8 aligncentercontent">
+              <div class="col-8 align-content-center">
                 <label for="phone_notifications" class="form-label">Text Notifications</label>
               </div>
-              <div class="col-2 toggle-col">
+              <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col">
                 <mat-slide-toggle [(ngModel)]="fieldNotificationsList.phoneNotifications" name="phone_notifications" (change)="toggleFieldPrivacy('phoneNotifications')" id="phone_notifications" [color]="color">
                   <ng-container *ngIf="!fieldNotificationsList.phoneNotifications; else toggledOn">
                     <div >Off</div>
@@ -59,10 +59,10 @@
               </div>
             </ng-container>
             <ng-template #phoneUnconfirmed>
-              <div class="col-8 aligncentercontent">
+              <div class="col-8 align-content-center">
                 <label class="form-label font-disabled">Text Notifications</label>
               </div>
-              <div class="col-2 toggle-col">
+              <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col">
                 <mat-slide-toggle [(ngModel)]="fieldNotificationsList.phoneNotifications" [disabled]="true" name="phone_notifications" (change)="toggleFieldPrivacy('phoneNotifications')" [color]="color">
                   <ng-container *ngIf="!fieldNotificationsList.phoneNotifications; else toggledOn">
                     <div>Off</div>
@@ -82,10 +82,10 @@
 
 
           <div class="form-row" >
-            <div class="col-8 aligncentercontent">
+            <div class="col-8 align-content-center">
               <label for="in-app_notifications" class="form-label">In-App Notifications</label>
             </div>
-            <div class="col-2 toggle-col" matTooltipPosition="below" [matTooltip]="'In-App Notifications are on by default and cannot be turned off.'">
+            <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col" matTooltipPosition="below" [matTooltip]="'In-App Notifications are on by default and cannot be turned off.'">
               <mat-slide-toggle [(ngModel)]="fieldNotificationsList.inApp" [disabled]="true" name="in-app_notifications" (change)="toggleFieldPrivacy('inApp')" id="in-app_notifications" [color]="color">
                 <ng-container *ngIf="!fieldNotificationsList.inApp; else toggledOn">
                   <div >Off</div>
@@ -98,37 +98,37 @@
 
         <ng-template #placeholderForm>
           <div class="form-row">
-            <div class="col-10">
+            <div class="col-12 col-sm-10 col-md-10 col-lg-10">
               <label class="form-label">Choose how you would like to receive app notifications.</label><br>
               <h5 class="important-note-label">IMPORTANT NOTE: </h5><h5 class="important-note-text">If you enable text notifications, please note that you may be charged per-text fees from your cell phone service provider.</h5>
 
             </div>
           </div>
           <div class="form-row">
-            <div class="col-8 aligncentercontent">
+            <div class="col-8 align-content-center">
               <label class="form-label">Email</label>
             </div>
-            <div class="col-2 toggle-col">
+            <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col">
               <mat-slide-toggle [color]="color">
                 <div>Off</div>
               </mat-slide-toggle>
             </div>
           </div>
           <div class="form-row">
-            <div class="col-8 aligncentercontent">
+            <div class="col-8 align-content-center">
               <label class="form-label">Phone Text</label>
             </div>
-            <div class="col-2 toggle-col">
+            <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col">
               <mat-slide-toggle [color]="color">
                 <div>Off</div>
               </mat-slide-toggle>
             </div>
           </div>
           <div class="form-row">
-            <div class="col-8 aligncentercontent">
+            <div class="col-8 align-content-center">
               <label class="form-label">In-App Notifications</label>
             </div>
-            <div class="col-2 toggle-col">
+            <div class="col-4 col-sm-2 col-md-2 col-lg-2 toggle-col">
               <mat-slide-toggle [color]="color">
                 <div>Off</div>
               </mat-slide-toggle>
