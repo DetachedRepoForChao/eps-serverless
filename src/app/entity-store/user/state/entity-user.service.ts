@@ -266,6 +266,8 @@ export class EntityUserService {
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
               const pointsPool = (+usersMerged[i].securityRole.id === 2 && usersMerged[i].pointPool.pointsRemaining) ? usersMerged[i].pointPool.pointsRemaining : null;
+              const pointsPoolMax = (+usersMerged[i].securityRole.id === 2 && usersMerged[i].pointPool.maxAmount) ? usersMerged[i].pointPool.maxAmount : null;
+
               const birthdate = (usersMerged[i].birthdatePublic) ? usersMerged[i].dateOfBirth : null;
               const email = (usersMerged[i].emailPublic) ? usersMerged[i].email : null;
               const securityRole: SecurityRole = {
@@ -303,7 +305,7 @@ export class EntityUserService {
               const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName, dateOfHire,
                 dateOfTermination, phone, active, gender, quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic,
-                achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, emailNotifications, phoneNotifications, awardManager});
+                achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, pointsPoolMax, emailNotifications, phoneNotifications, awardManager});
               usersArray.push(userModel);
             }
 
@@ -357,6 +359,7 @@ export class EntityUserService {
               const position = usersMerged[i].position;
               const points = usersMerged[i].points;
               const pointsPool = (+usersMerged[i].securityRole.id === 2) ? usersMerged[i].pointPool.pointsRemaining : null;
+              const pointsPoolMax = (+usersMerged[i].securityRole.id === 2 && usersMerged[i].pointPool.maxAmount) ? usersMerged[i].pointPool.maxAmount : null;
               const birthdate = usersMerged[i].dateOfBirth;
               const email = usersMerged[i].email;
               const securityRole: SecurityRole = {
@@ -392,7 +395,7 @@ export class EntityUserService {
               const userModel = createEntityUserModel({userId, username, firstName, lastName, middleName, position, points, birthdate,
                 securityRole, department, gender, avatarPath, avatarResolvedUrl, completeAchievementsTotal, email, preferredName,
                 dateOfHire, dateOfTermination, phone, active, quote, phonePublic, emailPublic, genderPublic, birthdatePublic,
-                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, phoneNotifications, emailNotifications,
+                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, pointsPool, pointsPoolMax, phoneNotifications, emailNotifications,
                 awardManager });
               usersArray.push(userModel);
             }

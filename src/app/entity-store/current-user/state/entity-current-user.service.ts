@@ -119,6 +119,7 @@ export class EntityCurrentUserService {
         const position = userDataResult.position;
         const points = +userDataResult.points;
         const pointsPool = +userDataResult.pointsPool;
+        const pointsPoolMax = +userDataResult.pointsPoolMax;
         const email = userDataResult.email;
         const birthdate = userDataResult.birthdate;
         const gender = userDataResult.gender;
@@ -144,7 +145,7 @@ export class EntityCurrentUserService {
           .subscribe((result: any) => {
             const avatarResolvedUrl = result.avatarResolvedUrl;
             const currentUser = createEntityCurrentUserModel({userId, username, firstName, middleName, lastName, preferredName, position,
-              points, pointsPool, email, birthdate, gender, dateOfHire, department, securityRole, phone, avatarPath, avatarResolvedUrl,
+              points, pointsPool, pointsPoolMax, email, birthdate, gender, dateOfHire, department, securityRole, phone, avatarPath, avatarResolvedUrl,
               quote, phonePublic, emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic,
               coreValuesPublic, emailNotifications, phoneNotifications, awardManager});
             this.currentUserStore.set([currentUser]);
@@ -222,8 +223,11 @@ export class EntityCurrentUserService {
                   const position = currentUserData.user.position;
                   const points = currentUserData.user.points;
                   let pointsPool = null;
+                  let pointsPoolMax = null;
                   if (currentUserData.user.pointPool) {
-                    pointsPool = (currentUserData.user.pointPool.pointsRemaining) ? currentUserData.user.pointPool.pointsRemaining : null;                  }
+                    pointsPool = (currentUserData.user.pointPool.pointsRemaining) ? currentUserData.user.pointPool.pointsRemaining : null;
+                    pointsPoolMax = (currentUserData.user.pointPool.maxAmount) ? currentUserData.user.pointPool.maxAmount : null;
+                  }
                   const email = currentUserData.user.email;
                   const dateOfBirth = currentUserData.user.dateOfBirth;
                   const gender = currentUserData.user.gender;
@@ -262,6 +266,7 @@ export class EntityCurrentUserService {
                     position: position,
                     points: points,
                     pointsPool: pointsPool,
+                    pointsPoolMax: pointsPoolMax,
                     email: email,
                     birthdate: dateOfBirth,
                     gender: gender,

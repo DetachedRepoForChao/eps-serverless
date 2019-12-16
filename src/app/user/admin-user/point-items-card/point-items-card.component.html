@@ -141,7 +141,7 @@
                             id="editPointItem_pointItem" name="editPointItem_pointItem">
                       <option [ngValue]="null" disabled="true">Select a 🍍 Award</option>
                       <option *ngFor="let pointItem of pointItems" [ngValue]="pointItem">
-                        {{pointItem.name}} {{pointItem.amount}}pts
+                        {{pointItem.name}} {{pointItem.amount}}🍍
                       </option>
                     </select>
                     <ng-container *ngIf="(editPointItemFormSubmitted && editPointItemForm.controls.pointItem.invalid) || (editPointItemForm.dirty && editPointItemForm.controls.pointItem.touched && editPointItemForm.controls.pointItem.invalid)">
@@ -254,7 +254,7 @@
                       <option [ngValue]="null" disabled="true">Select a 🍍 Award</option>
                       <ng-container *ngFor="let pointItem of pointItems">
                         <option  [ngValue]="pointItem">
-                          {{pointItem.name}} {{pointItem.amount}}pts
+                          {{pointItem.name}} {{pointItem.amount}}🍍
                         </option>
                       </ng-container>
 

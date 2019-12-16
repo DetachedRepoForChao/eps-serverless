@@ -16,6 +16,7 @@ export type EntityCurrentUserModel = {
   dateOfHire: any;
   points: number;
   pointsPool: number;
+  pointsPoolMax: number;
   securityRole: SecurityRole;
   department: Department;
   email: string;
@@ -38,7 +39,7 @@ export type EntityCurrentUserModel = {
 };
 
 export function createEntityCurrentUserModel({ userId, username, firstName, lastName, middleName, preferredName, birthdate, position,
-                                               gender, dateOfHire, points, pointsPool, securityRole, department, email, phone, avatarPath,
+                                               gender, dateOfHire, points, pointsPool, pointsPoolMax, securityRole, department, email, phone, avatarPath,
                                                avatarResolvedUrl, quote, phonePublic, emailPublic, genderPublic, birthdatePublic,
                                                pointAwardsPublic, achievementsPublic, pointsPublic, coreValuesPublic, emailNotifications,
                                                phoneNotifications, awardManager }: Partial<EntityCurrentUserModel>) {
@@ -57,6 +58,7 @@ export function createEntityCurrentUserModel({ userId, username, firstName, last
     dateOfHire,
     points,
     pointsPool,
+    pointsPoolMax,
     securityRole,
     department,
     email,

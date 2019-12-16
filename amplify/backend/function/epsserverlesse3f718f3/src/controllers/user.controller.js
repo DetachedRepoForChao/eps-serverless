@@ -283,7 +283,7 @@ const getUserProfile = function (username) {
       },
       {
         model: Models.PointPool,
-        attributes: ['id', 'managerId', 'pointsRemaining']
+        attributes: ['id', 'managerId', 'pointsRemaining', 'maxAmount']
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'position', 'points',
@@ -364,7 +364,7 @@ const getUsersPublicDetails = function () {
       },
       {
         model: Models.PointPool,
-        attributes: ['id', 'managerId', 'pointsRemaining']
+        attributes: ['id', 'managerId', 'pointsRemaining', 'maxAmount']
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'points', 'dateOfBirth',
@@ -414,7 +414,7 @@ const adminGetUsersDetails = function () {
       },
       {
         model: Models.PointPool,
-        attributes: ['id', 'managerId', 'pointsRemaining']
+        attributes: ['id', 'managerId', 'pointsRemaining', 'maxAmount']
       }
     ],
     attributes: ['id', 'username', 'firstName', 'lastName', 'middleName', 'preferredName', 'position', 'points',

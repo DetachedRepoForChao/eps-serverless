@@ -13,6 +13,7 @@ export type EntityUserModel = {
   position: string;
   points: number;
   pointsPool: number;
+  pointsPoolMax: number;
   birthdate: string;
   gender: string;
   securityRole: SecurityRole;
@@ -42,10 +43,10 @@ export type EntityUserModel = {
 };
 
 export function createEntityUserModel({ userId, username, firstName, lastName, middleName, preferredName, position, points, pointsPool,
-                                        birthdate, gender, securityRole, department, email, phone, avatarPath, avatarResolvedUrl,
-                                        completeAchievementsTotal, active, dateOfHire, dateOfTermination, quote, phonePublic,  emailPublic,
-                                        genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic, pointsPublic,
-                                        coreValuesPublic, phoneNotifications, emailNotifications,
+                                        pointsPoolMax, birthdate, gender, securityRole, department, email, phone, avatarPath,
+                                        avatarResolvedUrl, completeAchievementsTotal, active, dateOfHire, dateOfTermination, quote,
+                                        phonePublic,  emailPublic, genderPublic, birthdatePublic, pointAwardsPublic, achievementsPublic,
+                                        pointsPublic, coreValuesPublic, phoneNotifications, emailNotifications,
                                         awardManager}: Partial<EntityUserModel>) {
   return {
     id: guid(),
@@ -58,6 +59,7 @@ export function createEntityUserModel({ userId, username, firstName, lastName, m
     position,
     points,
     pointsPool,
+    pointsPoolMax,
     birthdate,
     gender,
     securityRole,
