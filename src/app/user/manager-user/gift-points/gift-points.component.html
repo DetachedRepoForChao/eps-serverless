@@ -1,5 +1,6 @@
 <div class="card" id="gift-points-card">
   <div class="card card-coin card-plain card-custom">
+
 <!--    <div class="card-header">
 
     </div>-->
@@ -11,7 +12,7 @@
         <div  class="text-center">
           <h4 class="text-uppercase">Award Pineapple Points 🍍</h4>
         </div>
-        <div id="gift-points-scroll-anchor"></div>
+
 
 
         <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" >
@@ -22,7 +23,7 @@
               <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-evenly" >
 
                 <div fxFlex="10 1 auto" >
-                  <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                  <button type="button" class="btn btn-primary btn-sm btn-block btn-core-value" data-toggle="button" aria-pressed="false"
                           id="button_happy" (click)="toggleCoreValueButtonFilter('happy')">
                     <ng-container *ngIf="isCoreValueSelected('happy')">
                       <i class="fas fa-check core-value-button-icon"></i>
@@ -32,14 +33,14 @@
 
                 </div>
                 <div fxFlex="10 1 auto">
-                  <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                  <button type="button" class="btn btn-primary btn-sm btn-block btn-core-value" data-toggle="button" aria-pressed="false"
                           id="button_fun" (click)="toggleCoreValueButtonFilter('fun')">
                     <ng-container *ngIf="isCoreValueSelected('fun')">
                       <i class="fas fa-check core-value-button-icon"></i>
                     </ng-container>FUN</button>
                 </div>
                 <div fxFlex="10 1 auto">
-                  <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                  <button type="button" class="btn btn-primary btn-sm btn-block btn-core-value" data-toggle="button" aria-pressed="false"
                           id="button_genuine" (click)="toggleCoreValueButtonFilter('genuine')">
                     <ng-container *ngIf="isCoreValueSelected('genuine')">
                       <i class="fas fa-check core-value-button-icon"></i>
@@ -48,21 +49,21 @@
               </div>
               <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between">
                 <div fxFlex="10 1 auto">
-                  <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                  <button type="button" class="btn btn-primary btn-sm btn-block btn-core-value" data-toggle="button" aria-pressed="false"
                           id="button_caring" (click)="toggleCoreValueButtonFilter('caring')">
                     <ng-container *ngIf="isCoreValueSelected('caring')">
                       <i class="fas fa-check core-value-button-icon"></i>
                     </ng-container>CARING</button>
                 </div>
                 <div fxFlex="10 1 auto">
-                  <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                  <button type="button" class="btn btn-primary btn-sm btn-block btn-core-value" data-toggle="button" aria-pressed="false"
                           id="button_respect" (click)="toggleCoreValueButtonFilter('respect')">
                     <ng-container *ngIf="isCoreValueSelected('respect')">
                       <i class="fas fa-check core-value-button-icon"></i>
                     </ng-container>RESPECT</button>
                 </div>
                 <div fxFlex="10 1 auto">
-                  <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="button" aria-pressed="false"
+                  <button type="button" class="btn btn-primary btn-sm btn-block btn-core-value" data-toggle="button" aria-pressed="false"
                           id="button_honest" (click)="toggleCoreValueButtonFilter('honest')">
                     <ng-container *ngIf="isCoreValueSelected('honest')">
                       <i class="fas fa-check core-value-button-icon"></i>
@@ -169,16 +170,7 @@
                 <div class="col-2 my-auto text-center">
                   <button type="button" class="btn btn-primary" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)">Award 🍍</button>
 
-                  <!--                <ng-container *ngIf="employees.length >= (showLimit + 1); else noMore" >
-                                    <span>Displaying {{(showLimit + 1)}} out of {{employees.length}} employees</span>
-                                  </ng-container>
-                                  <ng-template #noMore>
-                                    <span>Displaying all {{employees.length}} employees</span>
-                                  </ng-template>-->
-                  <!--<ng-container *ngIf="!selection.isEmpty(); else zeroSelected">
-                    <span class="pl-2">{{selection.selected.length}} {{(selection.selected.length > 1) ? 'employees' : 'employee'}} selected</span>
 
-                  </ng-container>-->
                   <ng-template #zeroSelected>
                     <!--                  <span class="pl-2">(0 selected)</span>-->
                   </ng-template>
@@ -263,33 +255,33 @@
                       <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="start center" >
 
                         <!------- Employee Search form -------->
-                        <div fxFlex="60%" fxHide.gt-xs [fxHide]="selectedGiftPointsNavTab !== 'selectEmployees'">
+                        <div fxFlex="100%" fxHide.gt-xs [fxHide]="selectedGiftPointsNavTab !== 'selectEmployees'">
 
                           <ng-container *ngIf="employeeSearchForm">
                             <form [formGroup]="employeeSearchForm" class="form text-center">
                               <label class="form-label mb-1"></label>
-                              <input class="form-control form-rounded w-100 border-neutral" type="text" placeholder="Search Employees"
+                              <input class="form-control form-rounded w-100 border-neutral mb-1" type="text" placeholder="Search Employees"
                                      [(ngModel)]="term" [ngModelOptions]="{standalone: true}" />
                             </form>
                           </ng-container>
                         </div>
 
                         <!------- Point Item Search form -------->
-                        <div fxFlex="60%" fxHide.gt-xs [fxHide]="selectedGiftPointsNavTab !== 'selectAward'">
+                        <div fxFlex="100%" fxHide.gt-xs [fxHide]="selectedGiftPointsNavTab !== 'selectAward'">
 
                           <ng-container *ngIf="pointSearchForm">
                             <form [formGroup]="pointSearchForm" class="form text-center">
                               <label class="form-label mb-1"></label>
-                              <input class="form-control form-rounded w-100 border-neutral" type="text"
+                              <input class="form-control form-rounded w-100 border-neutral mb-1" type="text"
                                      placeholder="Search 🍍 Awards" [(ngModel)]="term2" [ngModelOptions]="{standalone: true}" />
                             </form>
                           </ng-container>
                         </div>
 
 <!--                        Award Button-->
-                        <div fxFlex="40%" fxHide.gt-xs fxLayoutAlign="center">
+<!--                        <div fxFlex="40%" fxHide.gt-xs fxLayoutAlign="center">
                           <button type="button" class="btn btn-primary text-sm-center" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)">Award 🍍</button>
-                        </div>
+                        </div>-->
 
                         <ng-container *ngIf="!selection.isEmpty() || appliedFilters.length > 0 || selectedPointItem">
                           <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="start" >
@@ -322,21 +314,12 @@
                             <div fxFlex="100%" fxLayoutAlign="start" class="py-0 my-0">
                               <ng-container *ngIf="appliedFilters.length > 0">
                                 <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="start" >
-                                  <div fxFlex="10%" >
-                                    <div>Filters:</div>
-                                  </div>
-                                  <div fxFlex="80%">
-                                    <div fxFlex="100%">
-                                      <ng-container *ngFor="let filter of appliedFilters">
-                                        <div fxFlex="15%" class="filter-col">
-                                          <span class="filter-item" (click)="toggleCoreValueButtonFilter(filter)">
-                                            <i class="fas fa-times" ></i> {{filter}}
+                                  <span class="font-size-xxs pl-2 pr-1">Filters:</span>
+                                  <ng-container *ngFor="let filter of appliedFilters">
+                                          <span class="filter-item filter-col font-size-xxs pr-1" (click)="toggleCoreValueButtonFilter(filter)">
+                                            <i class="fas fa-times font-size-xxs" ></i> {{filter}}
                                           </span>
-                                        </div>
-                                      </ng-container>
-                                    </div>
-
-                                  </div>
+                                  </ng-container>
                                 </div>
 
                               </ng-container>
@@ -394,62 +377,126 @@
 
                     </div>
 
-<!--                    Mobile View Point Item Search and  Select Point Item Container-->
+<!--                    Mobile View Core Value filters and Select Point Item Container-->
                     <ng-container *ngIf="selectedGiftPointsNavTab === 'selectAward'">
-
-
-
                       <div fxFlex="100%" fxHide fxShow.lt-sm >
-                        <div class="container text-center ">
 
-                          <form #giftPointsForm="ngForm" class="form text-left ">
-                            <div class="">
-                              <perfect-scrollbar id="point-items-scroll-mobile" class="point-item-scroll-container" [config]="config" [scrollIndicators]="true">
-                                <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
-                                  <div class="selection pr-3" >
-                                    <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItems | pointItem:term2)">
-                                      <label class="form-check-label form-check-label-color" >
-                                        <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
-                                               (click)="selectPointItem(pointItem)">
-                                        {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
-                                        <span class="form-check-sign"></span>
-                                      </label>
-                                    </div>
-                                  </div>
+                        <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="start" >
+
+<!--                          Core Value Filters -->
+                          <div fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="center space-evenly">
+                            <div fxFlex="30%" class="text-center">
+                              <button type="button" class="btn btn-primary btn-sm font-size-xs btn-core-value-sm" data-toggle="button" aria-pressed="false" [ngClass]="{toggled: isCoreValueActivated('happy')}"
+                                      (click)="toggleCoreValueButtonFilter('happy')">
+                                <ng-container *ngIf="isCoreValueSelected('happy')">
+                                  <i class="fas fa-check core-value-button-icon"></i>
                                 </ng-container>
+                                HAPPY
+                              </button>
 
-                                <ng-template #filteredList class="selection">
-                                  <ng-container *ngIf="filteredPointItemList.length > 0; else noFilteredMatches">
-                                    <div >
-                                      <div class="form-check form-check-radio" *ngFor="let pointItem of (filteredPointItemList | pointItem:term2)">
-                                        <label class="form-check-label form-check-label-color" >
-                                          <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
-                                                 (click)="selectPointItem(pointItem)">
-                                          {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
-                                          <span class="form-check-sign"></span>
-                                        </label>
+                            </div>
+                            <div fxFlex="30%" class="text-center">
+                              <button type="button" class="btn btn-primary btn-sm font-size-xs btn-core-value-sm" data-toggle="button" aria-pressed="false" [ngClass]="{toggled: isCoreValueActivated('fun')}"
+                                      (click)="toggleCoreValueButtonFilter('fun')">
+                                <ng-container *ngIf="isCoreValueSelected('fun')">
+                                  <i class="fas fa-check core-value-button-icon"></i>
+                                </ng-container>FUN</button>
+                            </div>
+                            <div fxFlex="30%" class="text-center">
+                              <button type="button" class="btn btn-primary btn-sm font-size-xs btn-core-value-sm" data-toggle="button" aria-pressed="false" [ngClass]="{toggled: isCoreValueActivated('genuine')}"
+                                      (click)="toggleCoreValueButtonFilter('genuine')">
+                                <ng-container *ngIf="isCoreValueSelected('genuine')">
+                                  <i class="fas fa-check core-value-button-icon"></i>
+                                </ng-container>GENUINE</button>
+                            </div>
+                            <div fxFlex="30%" class="text-center">
+                              <button type="button" class="btn btn-primary btn-sm font-size-xs btn-core-value-sm" data-toggle="button" aria-pressed="false" [ngClass]="{toggled: isCoreValueActivated('caring')}"
+                                      (click)="toggleCoreValueButtonFilter('caring')">
+                                <ng-container *ngIf="isCoreValueSelected('caring')">
+                                  <i class="fas fa-check core-value-button-icon"></i>
+                                </ng-container>CARING</button>
+                            </div>
+                            <div fxFlex="30%" class="text-center">
+                              <button type="button" class="btn btn-primary btn-sm font-size-xs btn-core-value-sm" data-toggle="button" aria-pressed="false" [ngClass]="{toggled: isCoreValueActivated('respect')}"
+                                      (click)="toggleCoreValueButtonFilter('respect')">
+                                <ng-container *ngIf="isCoreValueSelected('respect')">
+                                  <i class="fas fa-check core-value-button-icon"></i>
+                                </ng-container>RESPECT</button>
+                            </div>
+                            <div fxFlex="30%" class="text-center">
+                              <button type="button" class="btn btn-primary btn-sm font-size-xs btn-core-value-sm" data-toggle="button" aria-pressed="false" [ngClass]="{toggled: isCoreValueActivated('honest')}"
+                                      (click)="toggleCoreValueButtonFilter('honest')">
+                                <ng-container *ngIf="isCoreValueSelected('honest')">
+                                  <i class="fas fa-check core-value-button-icon"></i>
+                                </ng-container>HONEST</button>
+                            </div>
+
+<!--                              <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-evenly" >
+
+
+                              </div>
+                              <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between">
+
+                              </div>-->
+
+                          </div>
+
+<!--                          Point Award Selection-->
+                          <div fxFlex="100%" >
+                            <div class="container text-center ">
+
+                              <form #giftPointsForm="ngForm" class="form text-left ">
+                                <div class="">
+                                  <perfect-scrollbar id="point-items-scroll-mobile" class="point-item-scroll-container" [config]="config" [scrollIndicators]="true">
+                                    <ng-container *ngIf="appliedFilters.length === 0; else filteredList">
+                                      <div class="selection pr-3" >
+                                        <div class="form-check form-check-radio" *ngFor="let pointItem of (pointItems | pointItem:term2)">
+                                          <label class="form-check-label form-check-label-color" >
+                                            <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
+                                                   (click)="selectPointItem(pointItem)">
+                                            {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
+                                            <span class="form-check-sign"></span>
+                                          </label>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </ng-container>
+                                    </ng-container>
 
-                                  <ng-template #noFilteredMatches>
-                                    <div class="text-center">
-                                      <label class="form-check-label form-check-label-color">
-                                        <span class="form-check-sign">Nothing matching these filters</span>
-                                      </label>
-                                    </div>
-                                  </ng-template>
-                                </ng-template>
-                              </perfect-scrollbar>
+                                    <ng-template #filteredList class="selection">
+                                      <ng-container *ngIf="filteredPointItemList.length > 0; else noFilteredMatches">
+                                        <div >
+                                          <div class="form-check form-check-radio" *ngFor="let pointItem of (filteredPointItemList | pointItem:term2)">
+                                            <label class="form-check-label form-check-label-color" >
+                                              <input class="form-check-input" type="radio" name="selectedPointItem" [checked]="(pointItem.name === selectedPointItem?.name) ? true : false"
+                                                     (click)="selectPointItem(pointItem)">
+                                              {{(pointItem.amount + ' 🍍 - ' + pointItem.name) | pointItem}}
+                                              <span class="form-check-sign"></span>
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </ng-container>
+
+                                      <ng-template #noFilteredMatches>
+                                        <div class="text-center">
+                                          <label class="form-check-label form-check-label-color">
+                                            <span class="form-check-sign">Nothing matching these filters</span>
+                                          </label>
+                                        </div>
+                                      </ng-template>
+                                    </ng-template>
+                                  </perfect-scrollbar>
+                                </div>
+
+
+                                <div class="gift-points-container text-center">
+                                  <!--                          <button type="button" class="btn btn-primary" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)">Award 🍍</button>-->
+
+                                </div>
+                              </form>
                             </div>
-
-
-                            <div class="gift-points-container text-center">
-                              <!--                          <button type="button" class="btn btn-primary" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)">Award 🍍</button>-->
-
-                            </div>
-                          </form>
+                          </div>
                         </div>
+
+
                       </div>
                     </ng-container>
 
@@ -493,7 +540,7 @@
               Award
             </div>
           </div>
-          <div class="font-size-s gift-points-nav-item" (click)="selectGiftPointsNavTab('award')" [ngClass]="{'gift-points-nav-item-selected': selectedGiftPointsNavTab === 'award', 'award-points-enabled': !selection.isEmpty() && selectedPointItem}">
+          <div class="font-size-s gift-points-nav-item" (click)="openDialog(currentUser, selectedPointItem, selection.selected, selectedDepartment, selectedAll)" [ngClass]="{'award-points-enabled': !selection.isEmpty() && selectedPointItem}">
             <div class="text-center">
               Award 🍍
             </div>

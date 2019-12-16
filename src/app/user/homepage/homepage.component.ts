@@ -10,9 +10,9 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScro
 import {UserHasStoreItemQuery} from '../../entity-store/user-has-store-item/state/user-has-store-item.query';
 import {PointItemTransactionService} from '../../entity-store/point-item-transaction/state/point-item-transaction.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
-import {take} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {NavigationService} from '../../shared/navigation.service';
 
 @Component({
@@ -23,11 +23,15 @@ import {NavigationService} from '../../shared/navigation.service';
 export class HomepageComponent implements OnInit, OnDestroy {
   componentName = 'homepage.component';
   subscription = new Subscription();
+  unsubscribe$ = new Subject();
   currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
   currentUserSubscription: Subscription;
   pendingBalance$;
   pendingBalanceSubscription: Subscription;
+  currentUserLoading$ = new Subject();
+
+  scrolledToGiftPointsComponent = false;
 
   private codeEntered: EventEmitter<boolean> = new EventEmitter<boolean>();
   private sequence: number[] = [];
@@ -77,67 +81,56 @@ export class HomepageComponent implements OnInit, OnDestroy {
     const functionFullName = `${this.componentName} ${functionName}`;
     console.log(`Start ${functionFullName}`);
 
-    // if (this.socketService.onSessionCreate() != null) {
-    //  console.log(this.socketService.onSessionCreate());
-    //  this.notifierService.notify('success', 'Session created!');
-    // }
 
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          console.log('current user loaded');
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              console.log('current user', currentUser);
+              this.currentUser = currentUser;
 
+              if (currentUser.securityRole.Id === 2 && !this.scrolledToGiftPointsComponent) {
+                console.log('scrolling into view');
+                this.scrolledToGiftPointsComponent = true;
 
-/*    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });*/
+                Observable.interval(2000)
+                  .pipe(take(1))
+                  .subscribe(() => {
 
-    // this.pendingBalance$ = this.userHasStoreItemQuery.selectAll();
-    // this.pendingBalance$.subscribe(() => {
-/*      this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-        console.log('balance: ' + balance);
-        this.currentUserService.updatePointsBalance(balance);
-      }).unsubscribe();*/
-    // }).unsubscribe();
+                    this.scrollToGiftPointsComponent();
+                  });
+              }
+            });
 
-/*    this.currentUserService.cacheCurrentUser().subscribe(() => {
-      this.storeItemService.cacheStoreItems().subscribe(() => {
-        this.userHasStoreItemService.cacheUserHasStoreItemRecords().subscribe(() => {
-
-        });
-      });
-    });*/
-
-
-    this.subscription.add(
-      this.currentUserQuery.selectAll().subscribe((currentUser) => {
-        this.currentUser = currentUser[0];
-        if (currentUser[0]) {
-          console.log(currentUser);
-          /*        this.metricsService.cacheMetrics().subscribe(() => {
-                    this.metricsService.startHomepageTimer();
-                  });*/
-
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
         }
-      })
-    );
+      });
 
-    /*this.userHasStoreItemService.getPendingBalance().subscribe(balance => {
-      console.log('balance: ' + balance);
-      this.currentUserService.updatePointsBalance(balance);
-    }).unsubscribe();*/
 
-    // this.pointItemTransactionService.cacheCurrentUserPointItemTransactions().subscribe();
   }
 
   private isKonamiCode(): boolean {
     return this.konamiCode.every((code: number, index: number) => code === this.sequence[index]);
   }
 
-  elementInViewport2(el) {
-    return this.navigationService.elementInViewport2(el);
+  scrollToGiftPointsComponent() {
+    // console.log(el);
+    const target = document.getElementById('gift-points-scroll-anchor');
+    console.log(target);
+    target.scrollIntoView({behavior: 'smooth'});
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy');
-    console.log('unsubscribing from current user');
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
     // this.currentUserSubscription.unsubscribe();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

@@ -81,6 +81,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   pointItemList$: Observable<PointItemModel[]>;
   pointItems: PointItemModel[];
   filteredPointItemList: PointItemModel[] = [];
+
   // selectedPointItem = {};
   selectedEmployees = [];
   selectedCoreValues = [];
@@ -103,6 +104,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   toggled = false;
 
   appliedFilters = [];
+  activatedCoreValues = [];
   currentManagePointItemView = 'addPointItem';
 
   selectedAll = false;
@@ -280,12 +282,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.spinner.hide('gift-points-spinner');
 
 
-    Observable.interval(2000)
-      .pipe(take(1))
-      .subscribe(() => {
 
-        this.scroll();
-      });
   }
 
   private loadAddPointItemForm() {
@@ -723,13 +720,27 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     if (coreValueButton.Toggled) {
       console.log(`${functionFullName}: Core value button is already toggled. Untoggling`);
       // coreValueButton.Toggled = false;
+      // this.activatedCoreValues = this.activatedCoreValues.filter(x => x !== coreValue);
       document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className.replace('toggled', '').trim();
     } else {
       console.log(`${functionFullName}: Core value button is not yet toggled. Toggling`);
       // coreValueButton.Toggled = true;
+      // this.activatedCoreValues.push(coreValue);
       document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className += ' toggled';
     }
 
+  }
+
+  isCoreValueActivated(coreValue: string) {
+    if (this.selectedPointItem) {
+      const activatedCoreValues = this.selectedPointItem.coreValues;
+      return !!(activatedCoreValues.find(x => x === coreValue));
+    }
+
+  }
+
+  isCoreValueToggled(coreValue: string) {
+    return !!(this.activatedCoreValues.find(x => x.Name === coreValue));
   }
 
   isCoreValueSelected(coreValue: string) {
