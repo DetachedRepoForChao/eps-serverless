@@ -22,6 +22,10 @@
   border-radius: 5px;
 }
 
+.item-selection-container-sm {
+  background-color: #8965e038;
+}
+
 .item-selection-container:hover {
   background-color: rgba(0, 0, 0, 0.11);
 }

@@ -46,6 +46,11 @@
   font-size: 3em;
 }
 
+.store-title-sm {
+  font-weight: 100;
+  font-size: 1.25em;
+}
+
 div.card.card-coin.card-plain.card-custom {
   background-color: #674ba580;
 }

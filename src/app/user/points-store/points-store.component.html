@@ -9,68 +9,76 @@
     <section class="section section-lg section-coins">
       <img src="../../../assets/img/path3.png" class="path">
       <div class="container align-items-center wrapper-width">
-        <div class="row">
-          <div class="col-lg-12 col-md-6 col-sm-10 ml-auto mr-auto" id="store">
-            <div class="card">
-              <div class="card card-coin card-plain card-custom">
-                <div class="card-body">
-                  <!--<div class="row">
-                    <div *ngIf="(this.userHasStoreItemQuery.selectAll() | async)?.length > 0">
-                      ** Current Requests **
-                      <div *ngFor="let request of (this.userHasStoreItemQuery.selectAll() | async)">
-                        Item ID: {{request.storeItemId}} Status: {{request.status}}
-                      </div>
-                    </div>
-                  </div>-->
-                  <div class="row">
-                    <div class="col-md-12 text-center">
-                      <ng-container *ngIf="storeItems; else storeLoading">
-                        <div class="row">
-                          <div *ngFor="let storeItem of storeItems" class="col-4">
-                            <div *ngIf="storeItem" class="row">
-                              <div class="col-2">
+        <div class="card">
+          <div class="card card-coin card-plain card-custom">
+            <div class="card-body">
+              <!--<div class="row">
+                <div *ngIf="(this.userHasStoreItemQuery.selectAll() | async)?.length > 0">
+                  ** Current Requests **
+                  <div *ngFor="let request of (this.userHasStoreItemQuery.selectAll() | async)">
+                    Item ID: {{request.storeItemId}} Status: {{request.status}}
+                  </div>
+                </div>
+              </div>-->
+              <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" >
+                <div fxFlex="100%" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="center">
+                  <ng-container *ngIf="storeItems; else storeLoading">
+                    <div class="flex-container" fxFlex="100%"  fxLayout="row wrap" fxLayoutAlign="space-between" >
+                      <ng-container *ngFor="let storeItem of storeItems">
+                        <div fxFlex="33%" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="center">
+                          <ng-container *ngIf="storeItem">
+                            <div class="flex-container" fxFlex="100%"  fxLayout="row wrap" fxLayoutAlign="center" >
+<!--                              <div fxFlex="2 1 auto" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="center">
 
-                              </div>
-                              <div class="col-8 item-selection-container" (click)="selectStoreItem(storeItem, currentUser, purchaseRequestManagers);">
-                                <div class="row">
-                                  <div class="col-12">
+                              </div>-->
+                              <div fxFlex="100%" fxFlex.lt-sm="100%" class="item-selection-container" ngClass.lt-sm="my-2 item-selection-container-sm" fxLayoutAlign="center" (click)="selectStoreItem(storeItem, currentUser, purchaseRequestManagers);">
+
+                                <div class="flex-container"  fxLayout="row wrap" fxLayoutAlign="center" >
+                                  <div fxFlex="100%" fxFlex.lt-sm="50%" class="text-center">
                                     <div class="container-img">
                                       <img [src]="storeItem.imageResolvedUrl"/>
                                     </div>
                                   </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-12">
-                                    <div class="container-text">{{storeItem.cost}} 🍍 | {{storeItem.name}}</div>
+                                  <div fxHide.lt-sm fxShow fxFlex="100%" fxFlex.lt-sm="50%" ngClass.gt-xs="px-2 text-center" ngClass.lt-sm="text-left">
+                                    <div class="container-text">{{storeItem.cost}}🍍 | {{storeItem.name}}</div>
                                     <div class="container-text2">{{storeItem.description}}</div>
                                   </div>
+                                  <div fxShow.lt-sm fxHide fxFlex.lt-sm="50%" fxLayout="row wrap" fxLayoutAlign.lt-sm="start center">
+                                    <div fxFlex="100%" >{{storeItem.cost}}🍍</div>
+                                    <div fxFlex="100%">{{storeItem.name}}</div>
+                                    <div fxFlex="100%">{{storeItem.description}}</div>
+                                  </div>
                                 </div>
-                              </div>
-                              <div class="col-2">
 
                               </div>
+<!--                              <div fxFlex="2 1 auto" fxFlex.lt-sm="100%" fxLayoutAlign.lt-sm="center">
+
+                              </div>-->
 
 
                             </div>
-                          </div>
+                          </ng-container>
                         </div>
 
+
                       </ng-container>
-
-                      <ng-template #storeLoading>
-                        Loading...
-                      </ng-template>
-
                     </div>
 
-                    <!--                    <button type="button" class="btn btn-danger" (click)="listStoreItems()" style="padding-right: 10px; padding-left: 10px">List Store Items</button>-->
-                    <!--                    <button type="button" class="btn btn-danger" (click)="storeItemQuery.getAll()" style="padding-right: 10px; padding-left: 10px">Get Store Items</button>-->
-                  </div>
+                  </ng-container>
+
+                  <ng-template #storeLoading>
+                    Loading...
+                  </ng-template>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
+
+
+
+
 
       </div>
     </section>
