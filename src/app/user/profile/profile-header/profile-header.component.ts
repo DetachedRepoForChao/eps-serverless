@@ -1,10 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {forkJoin, Observable, Subject} from 'rxjs';
-import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
-import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
-import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
-import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
-import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
@@ -25,18 +20,11 @@ export class ProfileHeaderComponent implements OnInit, OnDestroy {
   private currentUserLoading$ = new Subject();
   private userLoading$ = new Subject();
 
-  leaderboardUsers$: Observable<EntityUserModel[]>;
-  currentUser$: Observable<EntityCurrentUserModel[]>;
 
   currentUser: EntityCurrentUserModel;
   leaderboardUsers: EntityUserModel[];
 
-  constructor(private currentUserService: EntityCurrentUserService,
-              private userService: EntityUserService,
-              private achievementService: AchievementService,
-              private storeItemService: StoreItemService,
-              private userHasStoreItemService: UserHasStoreItemService,
-              public userQuery: EntityUserQuery,
+  constructor(public userQuery: EntityUserQuery,
               public currentUserQuery: EntityCurrentUserQuery,
               public achievementQuery: AchievementQuery) { }
 

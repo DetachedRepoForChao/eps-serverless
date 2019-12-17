@@ -86,9 +86,9 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
               private notifierService: NotifierService) {  }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
     this.isImageLoading = true;
@@ -96,14 +96,14 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
 
     this.authService.currentUserInfo()
       .then(currentUserInfo => {
-        console.log(currentUserInfo);
+        // console.log(currentUserInfo);
         this.emailConfirmed = currentUserInfo.attributes['email_verified'];
         this.phoneConfirmed = currentUserInfo.attributes['phone_number_verified'];
 
         this.isUserDataRetrieved = true;
       })
       .catch(err => {
-        console.log('Error...', err);
+        // console.log('Error...', err);
       });
 
     this.currentUserQuery.selectLoading()
@@ -144,23 +144,23 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
         .pipe(
           take(1),
           catchError(err => {
-            console.log('Error...', err);
+            // console.log('Error...', err);
             return throwError(err);
           })
         )
         .subscribe(
           (response) => {
-            console.log(response);
+            // console.log(response);
             this.userPurchaseApproverData = response.find(x => x.userId === currentUser.userId);
             observer.next(this.userPurchaseApproverData);
             // this.purchaseApprovers = response;
           },
           (err) => {
-            console.log(err);
+            // console.log(err);
             observer.error(err);
           },
           () => {
-            console.log('Completed.');
+            // console.log('Completed.');
             observer.complete();
           }
         );
@@ -171,7 +171,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
   populateNotificationData(currentUser: EntityCurrentUserModel) {
     const functionName = 'populateNotificationData';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     this.fieldNotificationsList.user = currentUser;
     const keys = Object.keys(currentUser);
@@ -185,7 +185,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
   populateNotificationDataAdmin(currentUser: EntityCurrentUserModel, purchaseApproverData) {
     const functionName = 'populateNotificationDataAdmin';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     this.fieldNotificationsList.user = currentUser;
     const keys = Object.keys(purchaseApproverData);
@@ -199,7 +199,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
   }
 
   onFieldNotificationListSubmit() {
-    console.log(this.fieldNotificationsList);
+    // console.log(this.fieldNotificationsList);
     this.fieldNotificationsListSubmitted = true;
 
     const sourceUser = this.fieldNotificationsList.user;
@@ -218,7 +218,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
           // Don't add the key/value pair if the new value is the same as the source
         } else {
           // If the value has changed, add key/value pair to the user object
-          console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${this.fieldNotificationsList[keys[i]]}`);
+          // console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${this.fieldNotificationsList[keys[i]]}`);
           user[keys[i]] = this.fieldNotificationsList[keys[i]];
         }
       }
@@ -231,7 +231,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
       this.currentUserService.modifyUser(user)
         .pipe(take(1))
         .subscribe(modifyResult => {
-          console.log(modifyResult);
+          // console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.fieldNotificationsListSubmitted = false;
             // this.emailConfirmationCodeSent = true;
@@ -244,16 +244,16 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
         });
     } else {
       // User object was not changed
-      console.log('There are no changes to the user object');
+      // console.log('There are no changes to the user object');
       this.notifierService.notify('warning', 'There were no changes made.');
       this.fieldNotificationsListSubmitted = false;
     }
 
-    console.log(user);
+    // console.log(user);
   }
 
   onFieldNotificationListSubmitAdmin() {
-    console.log(this.fieldNotificationsList);
+    // console.log(this.fieldNotificationsList);
     this.fieldNotificationsListSubmitted = true;
 
     const sourceUser = this.fieldNotificationsList.user;
@@ -273,7 +273,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
           // Don't add the key/value pair if the new value is the same as the source
         } else {
           // If the value has changed, add key/value pair to the user object
-          console.log(`${keys[i]} value changed from ${sourcePurchaseApproverData[keys[i]]} to ${this.fieldNotificationsList[keys[i]]}`);
+          // console.log(`${keys[i]} value changed from ${sourcePurchaseApproverData[keys[i]]} to ${this.fieldNotificationsList[keys[i]]}`);
           user[keys[i]] = this.fieldNotificationsList[keys[i]];
         }
       }
@@ -286,7 +286,7 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
       this.userService.updatePurchaseApprover(user)
         .pipe(take(1))
         .subscribe(modifyResult => {
-          console.log(modifyResult);
+          // console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.fieldNotificationsListSubmitted = false;
             // this.emailConfirmationCodeSent = true;
@@ -302,27 +302,27 @@ export class NotificationSettingsComponent implements OnInit, OnDestroy {
 
     } else {
       // User object was not changed
-      console.log('There are no changes to the user object');
+      // console.log('There are no changes to the user object');
       this.notifierService.notify('warning', 'There were no changes made.');
       this.fieldNotificationsListSubmitted = false;
     }
 
-    console.log(user);
+    // console.log(user);
   }
 
   toggleFieldPrivacy(field: string) {
-    console.log(field);
+    // console.log(field);
 
   }
 
   onConfirmEmailClick(username: string) {
-    console.log('confirm email clicked');
+    // console.log('confirm email clicked');
     this.returnFromConfirmClick.emit('email');
     // this.router.navigate(['/', 'user', 'profile', username], {state: {option: 'email'}});
   }
 
   onConfirmPhoneClick(username: string) {
-    console.log('confirm phone clicked');
+    // console.log('confirm phone clicked');
     this.returnFromConfirmClick.emit('phone');
     // this.router.navigate(['/', 'user', 'profile', username], {state: {option: 'phone'}});
   }

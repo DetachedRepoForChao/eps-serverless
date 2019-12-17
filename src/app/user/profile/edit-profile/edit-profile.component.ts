@@ -12,7 +12,6 @@ import {AchievementQuery} from '../../../entity-store/achievement/state/achievem
 import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
-import {DomSanitizer} from '@angular/platform-browser';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
@@ -22,7 +21,6 @@ import {MetricsService} from '../../../entity-store/metrics/state/metrics.servic
 import {AuthService} from '../../../login/auth.service';
 import {FeatureService} from '../../../entity-store/feature/state/feature.service';
 import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
-// import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {NotifierService} from 'angular-notifier';
 import Auth from '@aws-amplify/auth';
 import {CognitoUser} from 'amazon-cognito-identity-js';
@@ -49,34 +47,27 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   optionExecuted = false;
   componentName = 'edit-profile.component';
   isImageLoading: boolean;
-  leaderboardUsers$: Observable<EntityUserModel[]>;
   leaderboardUsers: EntityUserModel[];
 
-  pendingBalance$;
   currentUser$;
   currentUser: EntityCurrentUserModel;
 
   isCardLoading: boolean;
 
   // public config: PerfectScrollbarConfigInterface = {};
-  zipPattern = new RegExp(/^\d{5}(?:\d{2})?$/);
   phoneValidationError: string;
   editUserForm: FormGroup;
   editUserFormSubmitted = false;
   emailConfirmed;
   phoneConfirmed;
   isUserDataRetrieved = false;
-  emailConfirmationCodeSent = false;
-  phoneConfirmationCodeSent = false;
   email;
   phone;
-  populateFormSubscription;
   confirmEmailFormSubmitted = false;
   confirmPhoneFormSubmitted = false;
   phoneChanged = false;
   emailChanged = false;
   quoteLengthMax = 1000;
-  quoteText: string = null;
 
   confirmEmailForm = this.formBuilder.group({
     code: [null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(6)])]
@@ -107,9 +98,9 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
               private notifierService: NotifierService) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
     this.isImageLoading = true;
@@ -119,7 +110,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.authService.currentUserInfo()
       .then(userInfo => {
-        console.log(userInfo);
+        // console.log(userInfo);
         this.emailConfirmed = userInfo.attributes['email_verified'];
         this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
         this.isUserDataRetrieved = true;
@@ -177,7 +168,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   populateFormData() {
     const functionName = 'populateFormData';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     const user = this.currentUser;
     // console.log(user);
@@ -256,7 +247,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.option) {
       // Don't do anything since no option was passed
     } else {
-      console.log('current optionExecuted: ' + this.optionExecuted);
+      // console.log('current optionExecuted: ' + this.optionExecuted);
       // this.optionExecuted = true;
 
       if (this.option === field) {
@@ -282,7 +273,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadEditUserForm() {
     const functionName = 'loadEditUserForm';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
     this.editUserForm = this.formBuilder.group({
       user: [null, Validators.required],
       preferredName: [null],
@@ -302,42 +293,42 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
 
 // Validates and formats the phone number by stripping out anything except number characters
   validateFormPhoneNumber(phone: string): (string | null) {
-    console.log(phone);
+    // console.log(phone);
     this.phoneValidationError = null;
     // Strip out all characters except numbers
     const newVal = phone.replace(/\D+/g, '');
-    console.log (newVal);
+    // console.log (newVal);
     if (newVal.length === 10) {
       return newVal;
     } else if (newVal.length > 10) {
       // The phone number value ended up getting an extra digit because of the quirk with the way the
       // phoneMask works... Prompt the user to retype the phone number.
-      console.log(`Phone validation error. Phone length: ${newVal.length}`);
+      // console.log(`Phone validation error. Phone length: ${newVal.length}`);
       this.phoneValidationError = 'There was an error processing the phone number. Please retype the phone number.';
       this.editUserForm.controls.phone.reset();
       return null;
     } else {
-      console.log(`Phone validation error. Phone length: ${newVal.length}`);
+      // console.log(`Phone validation error. Phone length: ${newVal.length}`);
       this.phoneValidationError = 'The phone number must be 10 digits long.';
       return null;
     }
   }
 
   validatePhoneNumber(phone: string): (string | null) {
-    console.log(phone);
+    // console.log(phone);
     // Strip out all characters except numbers
     const newVal = phone.replace(/\D+/g, '');
-    console.log (newVal);
+    // console.log (newVal);
     if (newVal.length === 10) {
       return newVal;
     } else {
-      console.log(`Phone validation error. Phone length: ${newVal.length}`);
+      // console.log(`Phone validation error. Phone length: ${newVal.length}`);
       return null;
     }
   }
 
   onEditUserFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.editUserFormSubmitted = true;
     this.phoneChanged = false;
     this.emailChanged = false;
@@ -351,10 +342,10 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!form.invalid) {
       // Format the phone number
       let phone = this.validateFormPhoneNumber(form.controls.phone.value);
-      console.log(phone);
+      // console.log(phone);
       if (!phone) {
         // Phone number validation failed.
-        console.log('The form submission is invalid');
+        // console.log('The form submission is invalid');
         this.notifierService.notify('error', 'Please fix the errors and try again.');
         return;
       } else {
@@ -374,8 +365,8 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           if (sourceUser[keys[i]] === form.controls[keys[i]].value) {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
-            console.log('Date value changed:');
-            console.log(`Old value: ${sourceUser[keys[i]]}; New value: ${dateString}`);
+            // console.log('Date value changed:');
+            // console.log(`Old value: ${sourceUser[keys[i]]}; New value: ${dateString}`);
 
             user[keys[i]] = dateString;
           }
@@ -383,7 +374,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           if (sourceUser[keys[i]] === form.controls['email'].value) {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
-            console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['email'].value}`);
+            // console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['email'].value}`);
             this.emailChanged = true;
             user[keys[i]] = form.controls['email'].value;
           }
@@ -392,7 +383,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           if (phone === sourcePhone) {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
-            console.log(`${keys[i]} value changed from ${sourcePhone} to ${phone}`);
+            // console.log(`${keys[i]} value changed from ${sourcePhone} to ${phone}`);
             this.phoneChanged = true;
             user[keys[i]] = phone;
           }
@@ -401,14 +392,14 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
             if ((sourceUser[keys[i]] === form.controls['genderCustom'].value) || (form.controls['genderCustom'].value.length === 0)) {
               // Don't add the key/value pair if the new value is the same as the source or empty
             } else {
-              console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['genderCustom'].value}`);
+              // console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['genderCustom'].value}`);
               user[keys[i]] = form.controls['genderCustom'].value;
             }
           } else {
             if ((sourceUser[keys[i]] === form.controls['gender'].value) || (form.controls['gender'].value.length === 0)) {
               // Don't add the key/value pair if the new value is the same as the source or empty
             } else {
-              console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['gender'].value}`);
+              // console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls['gender'].value}`);
               user[keys[i]] = form.controls['gender'].value;
             }
           }
@@ -417,7 +408,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
             // If the value has changed, add key/value pair to the user object
-            console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls[keys[i]].value}`);
+            // console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${form.controls[keys[i]].value}`);
             user[keys[i]] = form.controls[keys[i]].value;
           }
         }
@@ -430,7 +421,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
         this.currentUserService.modifyUser(user)
           .pipe(take(1))
           .subscribe(modifyResult => {
-            console.log(modifyResult);
+            // console.log(modifyResult);
             if (modifyResult.status !== false) {
               this.editUserFormSubmitted = false;
               // this.emailConfirmationCodeSent = true;
@@ -439,7 +430,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
               // Retrieve user's new Cognito attributes
               this.authService.currentUserInfo()
                 .then(userInfo => {
-                  console.log(userInfo);
+                  // console.log(userInfo);
                   this.emailConfirmed = userInfo.attributes['email_verified'];
                   this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
                   this.isUserDataRetrieved = true;
@@ -457,15 +448,15 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           });
       } else {
         // User object was not changed
-        console.log('There are no changes to the user object');
+        // console.log('There are no changes to the user object');
         this.notifierService.notify('warning', 'There were no changes made.');
         this.editUserFormSubmitted = false;
       }
 
-      console.log(user);
+      // console.log(user);
       // form.controls.user.reset();
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
@@ -483,48 +474,52 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sendEmailCodeAgain() {
-    console.log(this.email);
+    // console.log(this.email);
     Auth.currentAuthenticatedUser()
       .then((currentUser: CognitoUser) => {
         currentUser.getAttributeVerificationCode('email', {
           onSuccess: () => {
-            console.log('success!');
+            // console.log('success!');
           },
           onFailure: (err) => {
-            console.log('an error occurred');
-            console.log(err);
+            // console.log('an error occurred');
+            // console.log(err);
           },
-          inputVerificationCode: (data: string) => { console.log(data); }
+          inputVerificationCode: (data: string) => {
+            // console.log(data);
+          }
         });
       });
   }
 
   sendPhoneCodeAgain() {
-    console.log(this.phone);
+    // console.log(this.phone);
     Auth.currentAuthenticatedUser()
       .then((currentUser: CognitoUser) => {
         currentUser.getAttributeVerificationCode('phone_number', {
           onSuccess: () => {
-            console.log('success!');
+            // console.log('success!');
           },
           onFailure: (err) => {
-            console.log('an error occurred');
-            console.log(err);
+            // console.log('an error occurred');
+            // console.log(err);
           },
-          inputVerificationCode: (data: string) => { console.log(data); }
+          inputVerificationCode: (data: string) => {
+            // console.log(data);
+          }
         });
       });
   }
 
   onConfirmEmailFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.confirmEmailFormSubmitted = true;
     if (!form.invalid) {
       Auth.currentAuthenticatedUser()
         .then((currentUser: CognitoUser) => {
           currentUser.verifyAttribute('email', form.value.code, {
             onSuccess: () => {
-              console.log('success!');
+              // console.log('success!');
               this.notifierService.notify('success', 'Email verified successfully');
               this.confirmEmailFormSubmitted = false;
               $('#confirmEmailModal').modal('hide');
@@ -532,39 +527,39 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
               // Retrieve user's new Cognito attributes
               this.authService.currentUserInfo()
                 .then(userInfo => {
-                  console.log(userInfo);
+                  // console.log(userInfo);
                   this.emailConfirmed = userInfo.attributes['email_verified'];
                   this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
                   this.isUserDataRetrieved = true;
                 });
             },
             onFailure: (err) => {
-              console.log('an error occurred');
-              console.log(err);
+              // console.log('an error occurred');
+              // console.log(err);
               this.notifierService.notify('error', err.message);
             }
           });
         })
         .catch(err => {
-          console.log('an error occurred retrieving current authenticated user');
-          console.log(err);
+          // console.log('an error occurred retrieving current authenticated user');
+          // console.log(err);
           this.notifierService.notify('error', err);
         });
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onConfirmPhoneFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.confirmPhoneFormSubmitted = true;
     if (!form.invalid) {
       Auth.currentAuthenticatedUser()
         .then((currentUser: CognitoUser) => {
           currentUser.verifyAttribute('phone_number', form.value.code, {
             onSuccess: () => {
-              console.log('success!');
+              // console.log('success!');
               this.notifierService.notify('success', 'Phone verified successfully');
               this.confirmPhoneFormSubmitted = false;
               $('#confirmPhoneModal').modal('hide');
@@ -572,26 +567,26 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
               // Retrieve user's new Cognito attributes
               this.authService.currentUserInfo()
                 .then(userInfo => {
-                  console.log(userInfo);
+                  // console.log(userInfo);
                   this.emailConfirmed = userInfo.attributes['email_verified'];
                   this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
                   this.isUserDataRetrieved = true;
                 });
             },
             onFailure: (err) => {
-              console.log('an error occurred');
-              console.log(err);
+              // console.log('an error occurred');
+              // console.log(err);
               this.notifierService.notify('error', err.message);
             }
           });
         })
         .catch(err => {
-          console.log('an error occurred retrieving current authenticated user');
-          console.log(err);
+          // console.log('an error occurred retrieving current authenticated user');
+          // console.log(err);
           this.notifierService.notify('error', err);
         });
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }

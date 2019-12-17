@@ -1,28 +1,16 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {Globals} from '../../../globals';
-import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
-import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
-import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
-import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
-import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
-import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
-import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
 import {AuthService} from '../../../login/auth.service';
-import {FeatureService} from '../../../entity-store/feature/state/feature.service';
 import {NotifierService} from 'angular-notifier';
-import Auth from '@aws-amplify/auth';
-import {CognitoUser} from "amazon-cognito-identity-js";
 import {ThemePalette} from '@angular/material';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
+import {takeUntil} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -33,10 +21,15 @@ declare var $: any;
 })
 export class PrivacySettingsComponent implements OnInit, OnDestroy {
   componentName = 'privacy-settings.component';
+  private unsubscribe$ = new Subject();
+  private currentUserLoading$ = new Subject();
+  private usersLoading$ = new Subject();
+
   isImageLoading: boolean;
   leaderboardUsers$: Observable<EntityUserModel[]>;
 
-  currentUser$;
+  leaderboardUsers: EntityUserModel[];
+  currentUser: EntityCurrentUserModel;
   userPlaceholder: EntityCurrentUserModel;
   isCardLoading: boolean;
 
@@ -62,30 +55,18 @@ export class PrivacySettingsComponent implements OnInit, OnDestroy {
   };
   fieldPrivacyListSubmitted = false;
 
-  constructor(private http: HttpClient,
-              private spinner: NgxSpinnerService,
-              private globals: Globals,
-              private achievementService: AchievementService,
+  constructor(private spinner: NgxSpinnerService,
               public achievementQuery: AchievementQuery,
-              private currentUserStore: CurrentUserStore,
               public currentUserQuery: EntityCurrentUserQuery,
               private currentUserService: EntityCurrentUserService,
-              private userService: EntityUserService,
               private userQuery: EntityUserQuery,
-              private userHasStoreItemService: UserHasStoreItemService,
-              private userHasStoreItemQuery: UserHasStoreItemQuery,
-              private storeItemService: StoreItemService,
-              private metricsService: MetricsService,
               private authService: AuthService,
-              private changeDetector: ChangeDetectorRef,
-              private featureService: FeatureService,
-              private formBuilder: FormBuilder,
               private notifierService: NotifierService) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
     this.isImageLoading = true;
@@ -93,48 +74,66 @@ export class PrivacySettingsComponent implements OnInit, OnDestroy {
 
     this.authService.currentUserInfo()
       .then(userInfo => {
-        console.log(userInfo);
+        // console.log(userInfo);
         this.isUserDataRetrieved = true;
       });
 
-    this.leaderboardUsers$ = this.userQuery.selectAll({
-      filterBy: userEntity => userEntity.securityRole.Id === 1,
-    });
+    this.userQuery.selectLoading()
+      .pipe(takeUntil(this.usersLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.userQuery.selectAll({
+            filterBy: e => e.securityRole.Id === 1,
+          })
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((users: EntityUserModel[]) => {
+              this.leaderboardUsers = users;
+            });
 
-    this.currentUser$ = this.currentUserQuery.selectAll({
-      limitTo: 1
-    });
+          this.usersLoading$.next();
+          this.usersLoading$.complete();
+        }
+      });
 
-    this.currentUser$.subscribe(() => {
-      this.populatePrivacyData();
-    });
+    this.currentUserQuery.selectLoading()
+      .pipe(takeUntil(this.currentUserLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.currentUserQuery.selectCurrentUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((currentUser: EntityCurrentUserModel) => {
+              this.currentUser = currentUser;
+              this.populatePrivacyData(currentUser);
+            });
+
+          this.currentUserLoading$.next();
+          this.currentUserLoading$.complete();
+        }
+      });
+
 
     this.isImageLoading = false;
     this.isCardLoading = false;
     this.spinner.hide('privacy-settings-spinner');
   }
 
-  populatePrivacyData() {
-    const functionName = 'populatePrivacyData';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+  populatePrivacyData(currentUser: EntityCurrentUserModel) {
+    // const functionName = 'populatePrivacyData';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    this.currentUser$.subscribe(currentUser => {
-      const user = currentUser[0];
-      console.log(user);
-      this.fieldPrivacyList.user = user;
-      const keys = Object.keys(user);
-      for (const key of keys) {
-        if (Object.keys(this.fieldPrivacyList).indexOf(key) > -1) {
-          this.fieldPrivacyList[key] = user[key];
-        }
+    this.fieldPrivacyList.user = currentUser;
+    const keys = Object.keys(currentUser);
+    for (const key of keys) {
+      if (Object.keys(this.fieldPrivacyList).indexOf(key) > -1) {
+        this.fieldPrivacyList[key] = currentUser[key];
       }
-    });
+    }
   }
 
 
   onFieldPrivacyListSubmit() {
-    console.log(this.fieldPrivacyList);
+    // console.log(this.fieldPrivacyList);
     this.fieldPrivacyListSubmitted = true;
 
     const sourceUser = this.fieldPrivacyList.user;
@@ -153,7 +152,7 @@ export class PrivacySettingsComponent implements OnInit, OnDestroy {
           // Don't add the key/value pair if the new value is the same as the source
         } else {
           // If the value has changed, add key/value pair to the user object
-          console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${this.fieldPrivacyList[keys[i]]}`);
+          // console.log(`${keys[i]} value changed from ${sourceUser[keys[i]]} to ${this.fieldPrivacyList[keys[i]]}`);
           user[keys[i]] = this.fieldPrivacyList[keys[i]];
         }
       }
@@ -165,7 +164,7 @@ export class PrivacySettingsComponent implements OnInit, OnDestroy {
       user['username'] = sourceUser.username;
       this.currentUserService.modifyUser(user)
         .subscribe(modifyResult => {
-          console.log(modifyResult);
+          // console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.fieldPrivacyListSubmitted = false;
             // this.emailConfirmationCodeSent = true;
@@ -174,7 +173,7 @@ export class PrivacySettingsComponent implements OnInit, OnDestroy {
             // Retrieve user's new Cognito attributes
             this.authService.currentUserInfo()
               .then(userInfo => {
-                console.log(userInfo);
+                // console.log(userInfo);
                 this.isUserDataRetrieved = true;
               })
               .catch(err => {
@@ -187,20 +186,26 @@ export class PrivacySettingsComponent implements OnInit, OnDestroy {
         });
     } else {
       // User object was not changed
-      console.log('There are no changes to the user object');
+      // console.log('There are no changes to the user object');
       this.notifierService.notify('warning', 'There were no changes made.');
       this.fieldPrivacyListSubmitted = false;
     }
 
-    console.log(user);
+    // console.log(user);
   }
 
   toggleFieldPrivacy(field: string) {
-    console.log(field);
+    // console.log(field);
 
   }
 
   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.usersLoading$.next();
+    this.usersLoading$.complete();
+    this.currentUserLoading$.next();
+    this.currentUserLoading$.complete();
   }
 }
 

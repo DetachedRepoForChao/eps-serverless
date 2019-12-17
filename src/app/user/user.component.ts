@@ -1,7 +1,5 @@
 import {Component, OnChanges, OnDestroy, OnInit} from '@angular/core';
-import { UserService } from '../shared/user.service';
 import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { DepartmentService } from '../shared/department.service';
 import { SecurityRoleService} from '../shared/securityRole.service';
 import {map, takeUntil} from 'rxjs/operators';
 import { UserIdleService } from 'angular-user-idle';
@@ -10,18 +8,12 @@ import {take} from 'rxjs/operators';
 import {forkJoin, Observable, Subject, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Auth, Storage} from 'aws-amplify';
-import * as Amplify from 'aws-amplify';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {SecurityRole} from '../shared/securityrole.model';
 import {FeedcardService} from '../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import { TimerObservable } from 'rxjs/observable/TimerObservable';
 import 'rxjs/add/operator/takeWhile';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
-import {resetStores} from '@datorama/akita';
 import {AchievementService} from '../entity-store/achievement/state/achievement.service';
-import {CognitoUser} from 'amazon-cognito-identity-js';
 import {NavigationService} from '../shared/navigation.service';
 import {EntityDepartmentService} from '../entity-store/department/state/entity-department.service';
 import {EntityUserService} from '../entity-store/user/state/entity-user.service';
@@ -103,14 +95,14 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log('route');
-    console.log(this.route);
-    console.log('this.route.snapshot');
-    console.log(this.route.snapshot);
+    // console.log('route');
+    // console.log(this.route);
+    // console.log('this.route.snapshot');
+    // console.log(this.route.snapshot);
 
     this.achievementService.cacheAchievements()
       .pipe(take(1))
@@ -160,7 +152,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
       .subscribe(isLoading => {
-        console.log('current user loading: ' + isLoading);
+        // console.log('current user loading: ' + isLoading);
         if (!isLoading) {
           this.currentUserQuery.selectCurrentUser()
             .pipe(takeUntil(this.unsubscribe$))
@@ -175,7 +167,7 @@ export class UserComponent implements OnInit, OnDestroy {
                       });
 
                   } else {
-                    console.log(`Cache User Point Item Transactions returned ${result}`);
+                    // console.log(`Cache User Point Item Transactions returned ${result}`);
                   }
                 });
             });
@@ -204,39 +196,11 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
 
-  navigateHome() {
-    const functionName = 'navigateHome';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    this.authService.currentUserInfo()
-      .then(currentUser => {
-        const securityRoleName = currentUser.attributes['custom:security_role'];
-        switch (securityRoleName) {
-          case 'employee': {
-            console.log(`${functionFullName}: navigating to standard-user`);
-            this.router.navigate(['/', 'user', 'homepage']);
-            break;
-          }
-          case 'manager': {
-            console.log(`${functionFullName}: navigating to manager-user`);
-            this.router.navigate(['/', 'user', 'homepage']);
-            break;
-          }
-          case 'admin': {
-            console.log(`${functionFullName}: navigating to admin-user`);
-            this.router.navigate(['/', 'user', 'admin-user']);
-            break;
-          }
-        }
-      });
-
-  }
 
   ngOnDestroy() {
-    const functionName = 'ngOnDestroy';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnDestroy';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.alive = false; // switches your TimerObservable off
 
@@ -268,7 +232,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }*/
 
   onStartWatching() {
-    console.log('onStartWatching');
+    // console.log('onStartWatching');
     this.isWatching = true;
     this.timerCount = this.userIdle.getConfigValue().timeout;
 
@@ -283,7 +247,7 @@ export class UserComponent implements OnInit, OnDestroy {
       }))
       .subscribe(count => {
         this.timerCount = count;
-        console.log(this.timerCount);
+        // console.log(this.timerCount);
       });
 
     // Start watch when time is up.

@@ -97,8 +97,8 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
                         .pipe(takeUntil(this.unsubscribe$))
                         .subscribe((transactions: PointItemTransactionModel[]) => {
                           this.pointItemTransactions = transactions;
-                          console.log('point item transactions');
-                          console.log(this.pointItemTransactions);
+                          // console.log('point item transactions');
+                          // console.log(this.pointItemTransactions);
                         });
 
                       this.transactionsLoading$.next();
@@ -108,7 +108,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
               });
 
           } else {
-            console.log(`Cache User Point Item Transactions returned ${result}`);
+            // console.log(`Cache User Point Item Transactions returned ${result}`);
             // We may have retrieved the data but the pointItemTransactions variable may be null... this accounts for that
             this.pointItemTransactionQuery.selectLoading()
               .pipe(takeUntil(this.transactionsLoading$))
@@ -122,8 +122,8 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe((transactions: PointItemTransactionModel[]) => {
                       this.pointItemTransactions = transactions;
-                      console.log('point item transactions');
-                      console.log(this.pointItemTransactions);
+                      // console.log('point item transactions');
+                      // console.log(this.pointItemTransactions);
                     });
 
                   this.transactionsLoading$.next();
@@ -133,7 +133,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
           }
         });
     } else {
-      console.log(`Already retrieving point item transactions`);
+      // console.log(`Already retrieving point item transactions`);
     }
   }
 
@@ -160,8 +160,8 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
                         .pipe(takeUntil(this.unsubscribe$))
                         .subscribe((achievements: OtherUserAchievementModel[]) => {
                           this.achievements = achievements;
-                          console.log('achievements');
-                          console.log(this.achievements);
+                          // console.log('achievements');
+                          // console.log(this.achievements);
                         });
 
                       this.otherUserAchievementQuery.selectAll({
@@ -172,8 +172,8 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
                         .pipe(takeUntil(this.unsubscribe$))
                         .subscribe((achievements: OtherUserAchievementModel[]) => {
                           this.completedAchievements = achievements;
-                          console.log('completed achievements');
-                          console.log(this.completedAchievements);
+                          // console.log('completed achievements');
+                          // console.log(this.completedAchievements);
                         });
 
                       this.achievementsLoading$.next();
@@ -183,7 +183,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
               });
 
           } else {
-            console.log(`Cache Achievements returned ${result}`);
+            // console.log(`Cache Achievements returned ${result}`);
             // We may have retrieved the data but the achievements or completedAchievements variables may be null...
             // this accounts for that...
 
@@ -199,8 +199,8 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe((achievements: OtherUserAchievementModel[]) => {
                       this.achievements = achievements;
-                      console.log('achievements');
-                      console.log(this.achievements);
+                      // console.log('achievements');
+                      // console.log(this.achievements);
                     });
 
                   this.otherUserAchievementQuery.selectAll({
@@ -211,8 +211,8 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe((achievements: OtherUserAchievementModel[]) => {
                       this.completedAchievements = achievements;
-                      console.log('completed achievements');
-                      console.log(this.completedAchievements);
+                      // console.log('completed achievements');
+                      // console.log(this.completedAchievements);
                     });
 
                   this.achievementsLoading$.next();
@@ -222,7 +222,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
           }
         });
     } else {
-      console.log(`Already retrieving achievements`);
+      // console.log(`Already retrieving achievements`);
     }
   }
 
@@ -230,7 +230,7 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
     this.userQuery.selectLoading()
       .pipe(takeUntil(this.userLoading$))
       .subscribe(userQueryLoading => {
-        console.log(`User loading status is ${userQueryLoading}`);
+        // console.log(`User loading status is ${userQueryLoading}`);
         if (!userQueryLoading) {
           this.userQuery.selectUserByUsername(this.route.snapshot.params.username)
             .pipe(takeUntil(this.unsubscribe$))
@@ -246,21 +246,21 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
           this.userLoading$.next();
           this.userLoading$.complete();
         } else {
-          console.log('ERROR: User is still loading');
+          // console.log('ERROR: User is still loading');
         }
       });
   }
 
   showPointsModal() {
-    console.log(`invoking points modal with the following user input:`);
-    console.log(this.user);
+    // console.log(`invoking points modal with the following user input:`);
+    // console.log(this.user);
     this.navigationService.pointItemComponentInputUser = this.user;
     this.navigationService.openPointItemModal();
   }
 
   showAchievementsModal() {
-    console.log(`invoking achievements modal with the following user input:`);
-    console.log(this.user);
+    // console.log(`invoking achievements modal with the following user input:`);
+    // console.log(this.user);
     this.navigationService.achievementComponentInputUser = this.user;
     this.navigationService.openAchievementModal();
   }
@@ -269,10 +269,10 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    // console.log(changes);
 
     if (changes) {
-      console.log('clearing all variables');
+      // console.log('clearing all variables');
 
       this.user$ = null;
       this.user = null;
@@ -284,17 +284,17 @@ export class OtherUserManagerComponent implements OnInit, OnChanges, OnDestroy {
       this.pointItemsTransactionsRetrieving = false;
       this.achievementsRetrieving = false;
 
-      console.log('on changes input user:');
-      console.log(this.inputUser);
+      // console.log('on changes input user:');
+      // console.log(this.inputUser);
 
-      console.log('on changes populating data');
+      // console.log('on changes populating data');
 
       this.populateUserData();
     }
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy');
+    // console.log('ngOnDestroy');
     this.currentUserLoading$.next();
     this.currentUserLoading$.complete();
     this.userLoading$.next();
