@@ -1,10 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SecurityRole } from './securityrole.model';
-import { environment } from '../../environments/environment';
-import { User } from './user.model';
 import {Department} from './department.model';
-import {forEach} from '@angular/router/src/utils/collection';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
 import {AuthService} from '../login/auth.service';
@@ -35,31 +31,31 @@ export class DepartmentService {
 
   // HttpMethods
   getDepartments(): Observable<Department[]> {
-    const functionName = 'getDepartments';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Starting ${functionFullName}`);
+    // const functionName = 'getDepartments';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Starting ${functionFullName}`);
 
     const departments: Department[] = this.globals.departments;
-    console.log(`${functionFullName}: check if departments have been cached`);
+    // console.log(`${functionFullName}: check if departments have been cached`);
     if (departments.length > 0) {
-      console.log(`${functionFullName}: departments cache exists`);
-      console.log(departments);
+      // console.log(`${functionFullName}: departments cache exists`);
+      // console.log(departments);
 
       return new Observable<Department[]>((observer) => {
-        console.log(`${functionFullName}: returning departments from cache`);
+        // console.log(`${functionFullName}: returning departments from cache`);
         observer.next(departments);
         // resolve(departments);
         observer.complete();
       });
     } else {
-      console.log(`${functionFullName}: departments cache does not exist`);
+      // console.log(`${functionFullName}: departments cache does not exist`);
       return new Observable<Department[]>( (observer) => {
-        console.log(`${functionFullName}: retrieve departments from API`);
+        // console.log(`${functionFullName}: retrieve departments from API`);
         API.get(this.apiName, this.apiPath + '/getDepartments', {})
           .then(response => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(response);
-            console.log(`${functionFullName}: caching departments`);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(response);
+            // console.log(`${functionFullName}: caching departments`);
             const departmentObjList: Department[] = [];
             response.data.forEach((department: any) => {
               const departmentObj: Department = {
@@ -72,14 +68,14 @@ export class DepartmentService {
 
             this.globals.departments = departmentObjList;
 
-            console.log(`${functionFullName}: returning departments from API`);
+            // console.log(`${functionFullName}: returning departments from API`);
             // resolve(departmentObjList);
             observer.next(departmentObjList);
             observer.complete();
           })
           .catch(err => {
-            console.log(`${functionFullName}: HTTP error`);
-            console.log(err);
+            // console.log(`${functionFullName}: HTTP error`);
+            // console.log(err);
             observer.error(err);
             observer.complete();
           });
@@ -88,43 +84,43 @@ export class DepartmentService {
   }
 
   getDepartmentById(departmentId: number): Observable<Department> {
-    const functionName = 'getDepartmentById';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Starting ${functionFullName}`);
+    // const functionName = 'getDepartmentById';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Starting ${functionFullName}`);
 
     const departments: Department[] = this.globals.departments;
-    console.log(`${functionFullName}: check if departments have been cached`);
+    // console.log(`${functionFullName}: check if departments have been cached`);
     if (departments.length > 0) {
-      console.log(`${functionFullName}: departments cache exists`);
+      // console.log(`${functionFullName}: departments cache exists`);
       // console.log(departments);
 
-      console.log(`${functionFullName}: retrieve department id ${departmentId} from cache`);
+      // console.log(`${functionFullName}: retrieve department id ${departmentId} from cache`);
 
       const department = departments.find(x => x.Id === departmentId);
-      console.log(department);
+      // console.log(department);
 
       return new Observable<Department>(observer => {
-        console.log(`${functionFullName}: returning department id ${departmentId} from cache`);
+        // console.log(`${functionFullName}: returning department id ${departmentId} from cache`);
         observer.next(department);
         observer.complete();
       });
     } else {
-      console.log(`${functionFullName}: departments cache does not exist`);
+      // console.log(`${functionFullName}: departments cache does not exist`);
       return new Observable<Department>( observer => {
-        console.log(`${functionFullName}: retrieve department id ${departmentId} from API`);
+        // console.log(`${functionFullName}: retrieve department id ${departmentId} from API`);
 
         const myInit = this.myInit;
         myInit['body'] = {departmentId: departmentId};
         API.post(this.apiName, this.apiPath + '/getDepartments', this.myInit).then(data => {
-          console.log(`${functionFullName}: successfully retrieved data from API`);
-          console.log(data);
+          // console.log(`${functionFullName}: successfully retrieved data from API`);
+          // console.log(data);
 
           const departmentObj: Department = {
             Id: data.data.id,
             Name: data.data.name
           };
 
-          console.log(`${functionFullName}: returning department id ${departmentId} from API`);
+          // console.log(`${functionFullName}: returning department id ${departmentId} from API`);
           observer.next(departmentObj);
           observer.complete();
         });
@@ -133,9 +129,9 @@ export class DepartmentService {
   }
 
   getEmployeesByDepartmentId(departmentId: number): Observable<any> {
-    const functionName = 'getEmployeesByDepartmentId';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Starting ${functionFullName}`);
+    // const functionName = 'getEmployeesByDepartmentId';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Starting ${functionFullName}`);
 
     // const user = await this.authService.currentAuthenticatedUser();
     return new Observable<any>(observer => {
@@ -147,8 +143,8 @@ export class DepartmentService {
           myInit['body'] = {departmentId: departmentId};
 
           API.post(this.apiName, this.apiPath + '/getEmployeesByDepartmentId', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
           });
         });

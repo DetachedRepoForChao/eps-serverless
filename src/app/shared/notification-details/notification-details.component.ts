@@ -30,8 +30,8 @@ export class NotificationDetailsComponent implements OnInit {
     const parentScope = this;
     $('#notificationDetailsModal').on('hidden.bs.modal',
       function (e) {
-        console.log('running on hidden function');
-        console.log(e);
+        // console.log('running on hidden function');
+        // console.log(e);
         // parentScope.inputUser = null;
         // parentScope.navigationService.pointItemComponentInputUser = null;
         parentScope.clearInputNotification.emit(true);
@@ -40,12 +40,12 @@ export class NotificationDetailsComponent implements OnInit {
   }
 
   deleteNotification(notification: NotificationModel) {
-    console.log(`Deleting notification ${notification.notificationId}`);
+    // console.log(`Deleting notification ${notification.notificationId}`);
     this.notificationService.deleteNotification(notification)
       .pipe(take(1))
       .subscribe(result => {
-        console.log(`Notification delete result: `);
-        console.log(result);
+        // console.log(`Notification delete result: `);
+        // console.log(result);
       });
   }
 
@@ -66,7 +66,7 @@ export class NotificationDetailsComponent implements OnInit {
     var halfamonth = day * 15;
     var month = day * 30;
     var now = new Date().getTime();
-    console.log(now)
+    // console.log(now)
     var diffValue = now - dateTimeStamp;
 
     if (diffValue < 0) {
@@ -100,7 +100,7 @@ export class NotificationDetailsComponent implements OnInit {
       var Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
       result = Nyear + "-" + Nmonth + "-" + Ndate
     }
-    console.log("Notification:TimeAgo"+result);
+    // console.log("Notification:TimeAgo"+result);
     return result;
   }
 }

@@ -1,12 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
-import {Globals} from '../../globals';
-import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 import {Router} from '@angular/router';
-import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
-import {FeatureService} from '../../entity-store/feature/state/feature.service';
-import {FeatureQuery} from '../../entity-store/feature/state/feature.query';
-import {AchievementModel} from '../../entity-store/achievement/state/achievement.model';
 import {PointItemService} from '../../entity-store/point-item/state/point-item.service';
 import {PointItemQuery} from '../../entity-store/point-item/state/point-item.query';
 import {PointItemTransactionService} from '../../entity-store/point-item-transaction/state/point-item-transaction.service';
@@ -14,12 +8,9 @@ import {PointItemTransactionQuery} from '../../entity-store/point-item-transacti
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {Observable, Subject, Subscription} from 'rxjs';
-import {Order} from '@datorama/akita';
 import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
-import {Spinner} from 'ngx-spinner/lib/ngx-spinner.enum';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {MatDialogRef} from '@angular/material';
 import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 import {NavigationService} from '../navigation.service';
@@ -78,112 +69,26 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
               private navigationService: NavigationService) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`point-item component starting with the following input user:`);
-    console.log(this.inputUser);
+    // console.log(`point-item component starting with the following input user:`);
+    // console.log(this.inputUser);
 
     this.spinner.show('other-user-spinner');
-
-    /*    this.currentUserService.cacheCurrentUser().subscribe();
-        this.userService.cacheUsers().subscribe();
-        this.pointItemService.cachePointItems().subscribe();*/
-    // this.pointItems$ = this.pointItemQuery.selectAll();
 
     if (this.inputUser) {
       this.populateUserData();
     } else {
       this.populateCurrentUserData();
     }
-    /*
-        this.currentUserQuery.selectLoading()
-          .pipe(takeUntil(this.currentUserLoading$))
-          .subscribe(currentUserQueryLoading => {
-            console.log(`Current User loading status is ${currentUserQueryLoading}`);
-            if (!currentUserQueryLoading) {
-              // this.currentUser$ = this.currentUserQuery.selectAll();
-
-              this.currentUserQuery.selectCurrentUser()
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe((currentUser: EntityCurrentUserModel) => {
-                  console.log('current user:');
-                  console.log(currentUser);
-                  if (currentUser.securityRole.Id === 2) {
-                    // this.populateCurrentManagerPointTransactionData(currentUser);
-                    this.currentUser = currentUser;
-
-                    // Pull user info into a static variable if this hasn't happened yet
-                    /!*              if (!this.currentUser) {
-                                    this.currentUser = this.currentUserQuery.getAll()[0];
-                                  }*!/
-
-                    this.isManager = true;
-                    // this.isCurrentManagerDataRetrieved = true;
-                  } else {
-                    // this.populateCurrentUserPointTransactionData(currentUser);
-                    this.currentUser = currentUser;
-
-                    this.pointItemTransactionService.cacheCurrentUserPointItemTransactions(currentUser.userId)
-                      .pipe(take(1))
-                      .subscribe((result: Observable<any> | any) => {
-                        if (result !== false) {
-                          result
-                            .pipe(take(1))
-                            .subscribe(() => {
-                            });
-
-                        } else {
-                          console.log(`Cache User Point Item Transactions returned ${result}`);
-                        }
-                      });
-
-                    // this.pointItemTransactionQuery.selectHasCache()
-                    this.pointItemTransactionService.currentUserTransactionsRetrieved
-                      // .pipe(takeUntil(this.pointItemTransactionService.currentUserTransactionsLoading$))
-                      .subscribe(isRetrieved => {
-                        console.log('current user transactions retrieved: ' + isRetrieved);
-                        // console.log('point transactions has cache: ' + isLoading);
-                        // console.log('point transactions loading: ' + isLoading);
-                        if (isRetrieved) {
-                          this.pointItemTransactionQuery.selectAll({
-                            filterBy: e => e.targetUserId === currentUser.userId,
-                            sortBy: 'createdAt',
-                            sortByOrder: Order.DESC
-                          })
-                            .pipe(takeUntil(this.unsubscribe$))
-                            .subscribe((transactions: PointItemTransactionModel[]) => {
-                              this.pointItemTransactions = transactions;
-                              console.log('point item transactions');
-                              console.log(this.pointItemTransactions);
-                            });
-
-                          // this.transactionsLoading$.next();
-                          // this.transactionsLoading$.complete();
-                          this.pointItemTransactionService.currentUserTransactionsLoading$.next();
-                          this.pointItemTransactionService.currentUserTransactionsLoading$.complete();
-                        }
-                      });
-                  }
-
-                  this.spinner.hide('point-item-spinner');
-                });
-
-              this.currentUserLoading$.next();
-              this.currentUserLoading$.complete();
-            } else {
-              console.log('ERROR: User is still loading');
-            }
-          });*/
-
-
 
     const parentScope = this;
     $('#pointItemModal').on('hidden.bs.modal',
       function (e) {
-        console.log('running on hidden function');
-        console.log(e);
+        // console.log('running on hidden function');
+        // console.log(e);
         parentScope.inputUser = null;
         parentScope.navigationService.pointItemComponentInputUser = null;
         parentScope.clearInputUser.emit(true);
@@ -193,7 +98,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
 
 
   populateUserPointTransactionData(user: EntityUserModel) {
-    console.log('populateUserPointTransactionData for ' + user.userId);
+    // console.log('populateUserPointTransactionData for ' + user.userId);
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
       this.pointItemTransactionService.cacheUserPointItemTransactions(user.userId)
@@ -202,20 +107,20 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
           if (result !== false) {
             result.pipe(take(1)).subscribe();
           } else {
-            console.log(`Cache User Point Item Transactions returned ${result}`);
+            // console.log(`Cache User Point Item Transactions returned ${result}`);
           }
 
           this.pointItemTransactionQuery.selectLoading()
             .pipe(takeUntil(this.transactionsLoading$))
             .subscribe(isLoading => {
-              console.log('transactions loading: ' + isLoading);
+              // console.log('transactions loading: ' + isLoading);
               if (!isLoading) {
                 this.pointItemTransactionQuery.selectAllAddTransactionsByUserId(user.userId)
                   .pipe(takeUntil(this.unsubscribe$))
                   .subscribe((transactions: PointItemTransactionModel[]) => {
                     this.pointItemTransactions = transactions;
-                    console.log('point item transactions');
-                    console.log(this.pointItemTransactions);
+                    // console.log('point item transactions');
+                    // console.log(this.pointItemTransactions);
                   });
 
                 this.transactionsLoading$.next();
@@ -224,12 +129,12 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
             });
         });
     } else {
-      console.log(`Already retrieving point item transactions`);
+      // console.log(`Already retrieving point item transactions`);
     }
   }
 
   populateCurrentUserPointTransactionData(currentUser: EntityCurrentUserModel) {
-    console.log('populateCurrentUserPointTransactionData for ' + currentUser.userId);
+    // console.log('populateCurrentUserPointTransactionData for ' + currentUser.userId);
     if (!this.pointItemsTransactionsRetrieving) { // This check prevents the API call from firing more than it has to
       this.pointItemsTransactionsRetrieving = true;
       this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser.userId)
@@ -238,20 +143,20 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
           if (result !== false) {
             result.pipe(take(1)).subscribe();
           } else {
-            console.log(`Cache Current User Point Item Transactions returned ${result}`);
+            // console.log(`Cache Current User Point Item Transactions returned ${result}`);
           }
 
           this.pointItemTransactionQuery.selectLoading()
             .pipe(takeUntil(this.transactionsLoading$))
             .subscribe(isLoading => {
-              console.log('transactions loading: ' + isLoading);
+              // console.log('transactions loading: ' + isLoading);
               if (!isLoading) {
                 this.pointItemTransactionQuery.selectAllAddTransactionsByUserId(currentUser.userId)
                   .pipe(takeUntil(this.unsubscribe$))
                   .subscribe((transactions: PointItemTransactionModel[]) => {
                     this.pointItemTransactions = transactions;
-                    console.log('point item transactions');
-                    console.log(this.pointItemTransactions);
+                    // console.log('point item transactions');
+                    // console.log(this.pointItemTransactions);
                   });
 
                 this.transactionsLoading$.next();
@@ -260,7 +165,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
             });
         });
     } else {
-      console.log(`Already retrieving point item transactions`);
+      // console.log(`Already retrieving point item transactions`);
     }
   }
 
@@ -274,20 +179,20 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
           if (result !== false) {
             result.pipe(take(1)).subscribe();
           } else {
-            console.log(`Cache Manager Point Item Transactions returned ${result}`);
+            // console.log(`Cache Manager Point Item Transactions returned ${result}`);
           }
 
           this.pointItemTransactionQuery.selectLoading()
             .pipe(takeUntil(this.transactionsLoading$))
             .subscribe(isLoading => {
-              console.log('transactions loading: ' + isLoading);
+              // console.log('transactions loading: ' + isLoading);
               if (!isLoading) {
                 this.pointItemTransactionQuery.selectAllAddTransactionsByManagerId(managerUser.userId)
                   .pipe(takeUntil(this.unsubscribe$))
                   .subscribe((transactions: PointItemTransactionModel[]) => {
                     this.pointItemTransactions = transactions;
-                    console.log('point item transactions');
-                    console.log(this.pointItemTransactions);
+                    // console.log('point item transactions');
+                    // console.log(this.pointItemTransactions);
                   });
 
                 this.transactionsLoading$.next();
@@ -296,7 +201,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
             });
         });
     } else {
-      console.log(`Already retrieving point item transactions`);
+      // console.log(`Already retrieving point item transactions`);
     }
   }
 
@@ -310,20 +215,20 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
           if (result !== false) {
             result.pipe(take(1)).subscribe();
           } else {
-            console.log(`Cache Current Manager Point Item Transactions returned ${result}`);
+            // console.log(`Cache Current Manager Point Item Transactions returned ${result}`);
           }
 
           this.pointItemTransactionQuery.selectLoading()
             .pipe(takeUntil(this.transactionsLoading$))
             .subscribe(isLoading => {
-              console.log('transactions loading: ' + isLoading);
+              // console.log('transactions loading: ' + isLoading);
               if (!isLoading) {
                 this.pointItemTransactionQuery.selectAllAddTransactionsByManagerId(currentManager.userId)
                   .pipe(takeUntil(this.unsubscribe$))
                   .subscribe((transactions: PointItemTransactionModel[]) => {
                     this.pointItemTransactions = transactions;
-                    console.log('point item transactions');
-                    console.log(this.pointItemTransactions);
+                    // console.log('point item transactions');
+                    // console.log(this.pointItemTransactions);
                   });
 
                 this.transactionsLoading$.next();
@@ -332,7 +237,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
             });
         });
     } else {
-      console.log(`Already retrieving point item transactions`);
+      // console.log(`Already retrieving point item transactions`);
     }
   }
 
@@ -340,7 +245,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
     this.userQuery.selectLoading()
       .pipe(takeUntil(this.userLoading$))
       .subscribe(userQueryLoading => {
-        console.log(`User loading status is ${userQueryLoading}`);
+        // console.log(`User loading status is ${userQueryLoading}`);
         if (!userQueryLoading) {
 
           this.userQuery.selectUserByUsername(this.inputUser.username)
@@ -363,7 +268,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
           this.userLoading$.next();
           this.userLoading$.complete();
         } else {
-          console.log('ERROR: User is still loading');
+          // console.log('ERROR: User is still loading');
         }
       });
   }
@@ -372,7 +277,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
       .subscribe(currentUserQueryLoading => {
-        console.log(`Current User loading status is ${currentUserQueryLoading}`);
+        // console.log(`Current User loading status is ${currentUserQueryLoading}`);
         if (!currentUserQueryLoading) {
 
           this.currentUserQuery.selectCurrentUser()
@@ -396,7 +301,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
           this.currentUserLoading$.next();
           this.currentUserLoading$.complete();
         } else {
-          console.log('ERROR: User is still loading');
+          // console.log('ERROR: User is still loading');
         }
       });
   }
@@ -416,7 +321,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
       filterBy: e => e.userId === userId
     });
 
-    console.log(`closing modal and navigating to /user/profile/${user[0].username}`);
+    // console.log(`closing modal and navigating to /user/profile/${user[0].username}`);
     this.routerDestination = ['/', 'user', 'profile', user[0].username];
     this.router.navigate(['/', 'user', 'profile', user[0].username]).then();
     this.navigationService.closePointItemModal();
@@ -424,8 +329,8 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
 
     $('#pointItemModal').on('hidden.bs.modal',
       function (e) {
-        console.log('running on hidden function');
-        console.log(e);
+        // console.log('running on hidden function');
+        // console.log(e);
         parentScope.inputUser = null;
         parentScope.navigationService.pointItemComponentInputUser = null;
         parentScope.clearInputUser.emit(true);
@@ -438,10 +343,10 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    // console.log(changes);
 
     if (changes) {
-      console.log('clearing all variables');
+      // console.log('clearing all variables');
       this.pointItems$ = null;
       this.pointItemTransactions$ = null;
       this.user$ = null;
@@ -461,23 +366,23 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
       this.isManager = false;
       this.showLimit = 6;
 
-      console.log('on changes input user:');
-      console.log(this.inputUser);
+      // console.log('on changes input user:');
+      // console.log(this.inputUser);
 
 
       if (this.inputUser) {
-        console.log('on changes populating user data');
+        // console.log('on changes populating user data');
         this.populateUserData();
       } else {
-        console.log('on changes populating current user data');
+        // console.log('on changes populating current user data');
         this.populateCurrentUserData();
       }
 
       const parentScope = this;
       $('#pointItemModal').on('hidden.bs.modal',
         function (e) {
-          console.log('running on hidden function');
-          console.log(e);
+          // console.log('running on hidden function');
+          // console.log(e);
           parentScope.inputUser = null;
           parentScope.navigationService.pointItemComponentInputUser = null;
           parentScope.clearInputUser.emit(true);
@@ -487,7 +392,7 @@ export class PointItemComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy');
+    // console.log('ngOnDestroy');
     this.inputUser = null;
     this.navigationService.pointItemComponentInputUser = null;
     this.clearInputUser.emit(true);

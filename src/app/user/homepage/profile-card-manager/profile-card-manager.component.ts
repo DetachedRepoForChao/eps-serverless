@@ -4,12 +4,7 @@ import {ImageService} from '../../../shared/image.service';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {PointItemService} from '../../../shared/point-item.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
-import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
-import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
-import {UserService} from '../../../shared/user.service';
-import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {takeUntil} from 'rxjs/operators';
@@ -38,12 +33,7 @@ export class ProfileCardManagerComponent implements OnInit, OnDestroy {
               private leaderboardService: LeaderboardService,
               public pointItemService: PointItemService,
               private spinner: NgxSpinnerService,
-              private feedcardService: FeedcardService,
-              private achievementService: AchievementService,
               public achievementQuery: AchievementQuery,
-              private userService: UserService,
-              private currentUserStore: CurrentUserStore,
-              private entityUserService: EntityCurrentUserService,
               public currentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {

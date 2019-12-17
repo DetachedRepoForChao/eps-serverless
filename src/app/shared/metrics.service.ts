@@ -1,11 +1,4 @@
 import {Injectable} from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SecurityRole } from './securityrole.model';
-import { environment } from '../../environments/environment';
-import { User } from './user.model';
-import { Department } from './department.model';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatTableDataSource} from '@angular/material';
 import {forkJoin, Observable} from 'rxjs';
 import Amplify, {API} from 'aws-amplify';
 import awsconfig from '../../aws-exports';
@@ -41,7 +34,7 @@ export class MetricsService {
   uploadMetricsCache(): Observable<any> {
     const functionName = 'uploadMetricsCache';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -52,8 +45,8 @@ export class MetricsService {
           myInit['body'] = this.metricsCache;
 
           API.post(this.apiName, this.apiPath + '/uploadMetricsCache', myInit).then(data => {
-            console.log(`${functionFullName}: successfully submitted metrics cache via API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully submitted metrics cache via API`);
+            // console.log(data);
             this.emptyMetricsCache();
             observer.next(data.data);
             observer.complete();
@@ -65,7 +58,7 @@ export class MetricsService {
   uploadMetricsItem(metricsItem: MetricsItem): Observable<any> {
     const functionName = 'uploadMetricsItem';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -76,8 +69,8 @@ export class MetricsService {
           myInit['body'] = metricsItem;
 
           API.post(this.apiName, this.apiPath + '/uploadMetricsItem', myInit).then(data => {
-            console.log(`${functionFullName}: successfully submitted metrics item via API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully submitted metrics item via API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -88,18 +81,18 @@ export class MetricsService {
   addItemToMetricsCache(metricsItem: MetricsItem) {
     const functionName = 'addItemToMetricsCache';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: Adding metrics item '${metricsItem.Name}' to metrics cache`);
+    // console.log(`${functionFullName}: Adding metrics item '${metricsItem.Name}' to metrics cache`);
     this.metricsCache.push(metricsItem);
   }
 
   emptyMetricsCache() {
     const functionName = 'emptyMetricsCache';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: Purging ${this.metricsCache.length} items from metrics cache`);
+    // console.log(`${functionFullName}: Purging ${this.metricsCache.length} items from metrics cache`);
     this.metricsCache = [];
   }
 }

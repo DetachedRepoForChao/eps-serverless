@@ -9,8 +9,6 @@ import {ImageService} from '../image.service';
 import {API, Storage} from 'aws-amplify';
 import {AuthService} from '../../login/auth.service';
 import {LeaderboardService} from '../leaderboard.service';
-import {FeedcardService} from '../feedcard/feedcard.service';
-import {Globals} from '../../globals';
 import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
 
 declare var $: any;
@@ -50,24 +48,20 @@ export class ImageGalleryComponent implements OnInit {
 
   constructor(private avatarService: AvatarService,
               private imageService: ImageService,
-              private achievementService: AchievementService,
-              private authService: AuthService,
-              private leaderboardService: LeaderboardService,
-              private feedcardService: FeedcardService,
-              private globals: Globals) {
+              private achievementService: AchievementService) {
 
   }
 
   ngOnInit(): void {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.avatarService.getAvatars()
       .subscribe((result: any) => {
         result.forEach((image: string) => {
           if ((image.startsWith(`public/avatars/superheroes/`, 0) && (image !== `public/avatars/superheroes/`))) {
-            console.log(image);
+            // console.log(image);
             const imageObj = {
               // url: 'http://localhost:3000/public/avatars/' + image,
               url: 'https://eps-serverlessc5940ff4146a4cbc86df2d32b803996c-dev.s3.amazonaws.com/' + image,
@@ -120,41 +114,41 @@ export class ImageGalleryComponent implements OnInit {
   // EVENTS
   // callback on gallery opened
   galleryOpened(index) {
-    console.log('Gallery opened at index ', index);
+    // console.log('Gallery opened at index ', index);
   }
 
   // callback on gallery closed
   galleryClosed() {
-    console.log('Gallery closed.');
+    // console.log('Gallery closed.');
   }
 
   // callback on gallery image clicked
   galleryImageClicked(index) {
-    const functionName = 'galleryImageClicked';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'galleryImageClicked';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: Gallery image clicked with index ${index}`);
+    // console.log(`${functionFullName}: Gallery image clicked with index ${index}`);
 
     const split = this.images[index].url.split(`com/`);
-    console.log(split);
+    // console.log(split);
     const imagePath = split[1];
     const level = imagePath.split('/')[0];
     const imageKey = imagePath.split(`${level}/`)[1];
 
-    console.log(`${functionFullName}: imageKey: ${imageKey}`);
+    // console.log(`${functionFullName}: imageKey: ${imageKey}`);
 
     Storage.get(imageKey, {
       level: ''
     })
       .then((result: any) => {
-        console.log(`${functionFullName}: result: ${result}`);
+        // console.log(`${functionFullName}: result: ${result}`);
         this.imageService.getImage(result)
           .subscribe(blob => {
-            console.log(`${functionFullName}: galleryImageClicked blob:`);
-            console.log(blob);
+            // console.log(`${functionFullName}: galleryImageClicked blob:`);
+            // console.log(blob);
             this.avatarService.saveUserAvatar(blob).subscribe((saveResult) => {
-              console.log(`${functionFullName}: saveResult: ${saveResult}`);
+              // console.log(`${functionFullName}: saveResult: ${saveResult}`);
               if (saveResult !== false) {
                 this.achievementService.incrementAchievement('ChangeAvatar').subscribe();
               }
@@ -167,12 +161,12 @@ export class ImageGalleryComponent implements OnInit {
 
   // callback on gallery image changed
   galleryImageChanged(index) {
-    console.log('Gallery image changed to index ', index);
+    // console.log('Gallery image changed to index ', index);
   }
 
   // callback on user clicked delete button
   deleteImage(index) {
-    console.log('Delete image at index ', index);
+    // console.log('Delete image at index ', index);
   }
 
 }

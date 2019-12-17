@@ -57,9 +57,8 @@ import {
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { ProfileCardManagerComponent } from './user/homepage/profile-card-manager/profile-card-manager.component';
-import { TrophyComponent } from './shared/trophy/trophy.component';
+
 import { ConfirmCodeComponent } from './login/confirm-code/confirm-code.component';
-import { ImageCropperModule} from 'ngx-image-cropper';
 import { NgxSpinnerModule} from 'ngx-spinner';
 import { PointsStoreComponent } from './user/points-store/points-store.component';
 import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
@@ -67,7 +66,6 @@ import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
 import { AvatarComponent } from './shared/avatar/avatar.component';
-import { ImageCropperComponent } from './shared/image-cropper/image-cropper.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { PhonePipe } from './pipe/phone.pipe';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
@@ -100,6 +98,8 @@ import { PurchaseHistoryComponent } from './user/points-store/purchase-history/p
 import { NotificationsComponent } from './shared/notifications/notifications.component';
 import { NotificationDetailsComponent } from './shared/notification-details/notification-details.component';
 import { NotificationSettingsComponent } from './user/profile/notification-settings/notification-settings.component';
+import {ImageCropperComponent} from './shared/image-cropper/image-cropper.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
 akitaConfig({
   resettable: true
 });
@@ -109,6 +109,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   declarations: [
+    ImageCropperComponent,
     EventCardComponent,
     ReportComponent,
     AppComponent,
@@ -135,11 +136,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ImageGalleryComponent,
     KeysPipe,
     ProfileCardManagerComponent,
-    TrophyComponent,
     ConfirmCodeComponent,
     PointsStoreComponent,
     AvatarComponent,
-    ImageCropperComponent,
     ForgotPasswordComponent,
     PhonePipe,
     PhoneMaskDirective,
@@ -193,7 +192,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatSortModule,
     MatTableModule,
     ReactiveFormsModule,
-    ImageCropperModule,
     NgxSpinnerModule,
     OverlayModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
@@ -201,6 +199,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     AgGridModule.withComponents([]),
     GoogleChartsModule.forRoot(),
+    ImageCropperModule,
   ],
   providers: [
 /*    {

@@ -1,33 +1,12 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import {GALLERY_CONF, GALLERY_IMAGE, NgxImageGalleryComponent} from 'ngx-image-gallery';
 import {ImageService} from '../image.service';
 import Amplify, {API, Auth, Storage} from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
 import {AuthService} from '../../login/auth.service';
 import {forkJoin, Observable} from 'rxjs';
-import {LeaderboardUser} from '../leaderboard.service';
-import {FeedcardService} from '../feedcard/feedcard.service';
 import {CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
-import {EntityUserService} from '../../entity-store/user/state/entity-user.service';
-import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
-import {RequestMethod} from '@angular/http';
-import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
-import { Achievement } from '../achievement/achievement.model';
-
-import {AchievementService} from '../../entity-store/achievement/state/achievement.service';
-
-export interface UserAvatarRelationship {
-  // userId: number;
-  username: string;
-  avatarBase64String: string;
-  avatarPath: string;
-  avatarUrl: string;
-  avatarResolvedUrl: string;
-  dateModified: any;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -44,96 +23,22 @@ export class AvatarService implements OnInit {
   };
 
   public userAvatarPath;
-  public userAvatarUrl;
-  public userAvatarImageToShow;
-  public isUserAvatarImageLoading;
-  public userAvatarHash: UserAvatarRelationship[] = [];
 
   constructor(private http: HttpClient,
               private imageService: ImageService,
               private authService: AuthService,
               private entityCurrentUserService: EntityCurrentUserService,
-              private entityUserService: EntityUserService
               ) { }
 
   ngOnInit(): void {
 
   }
-/*
-
-  getCurrentUserAvatar(): Observable<any> {
-    const functionName = 'getCurrentUserAvatar';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    return new Observable<any>(observer => {
-      this.authService.currentAuthenticatedUser()
-        .then(user => {
-          // const userPicture = this.globals.getUserAttribute('picture');
-          Auth.currentUserInfo()
-            .then(userAttributes => {
-              const userPicture = userAttributes.attributes['picture'];
-              if (userPicture) {
-                console.log(`${functionFullName}: user picture: ${userPicture}`);
-                const data = {
-                  status: true,
-                  avatarUrl: userPicture
-                };
-                observer.next(data);
-                observer.complete();
-              } else {
-                console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                const token = user.signInUserSession.idToken.jwtToken;
-                const myInit = this.myInit;
-                myInit.headers['Authorization'] = token;
-                // myInit['body'] = {username: username};
-
-                API.get(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(data => {
-                  console.log(`${functionFullName}: successfully retrieved data from API`);
-                  console.log(data);
-                  observer.next(data.data);
-                  observer.complete();
-                });
-              }
-            });
-
-
-          /!*Auth.userAttributes(user)
-            .then((userAttributes: CognitoUserAttribute[]) => {
-              const userPicture = userAttributes.find(x => x.getName() === 'picture');
-              if (userPicture) {
-                console.log(`${functionFullName}: user picture: ${userPicture.getValue()}`);
-                const data = {
-                  status: true,
-                  avatarUrl: userPicture.getValue()
-                };
-                observer.next(data);
-                observer.complete();
-              } else {
-                console.log(`${functionFullName}: unable to find user picture in user attributes... Trying to get avatar from database`);
-                const token = user.signInUserSession.idToken.jwtToken;
-                const myInit = this.myInit;
-                myInit.headers['Authorization'] = token;
-                myInit['body'] = {username: username};
-
-                API.post(this.apiName, this.apiPath + '/getCurrentUser', myInit).then(data => {
-                  console.log(`${functionFullName}: successfully retrieved data from API`);
-                  console.log(data);
-                  observer.next(data.data);
-                  observer.complete();
-                });
-              }
-            });*!/
-        });
-    });
-  }
-*/
 
   // Saves new avatar image and deletes old
   saveUserAvatar(image): Observable<any> {
-    const functionName = 'saveUserAvatar';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'saveUserAvatar';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     let oldAvatarPath;
     let oldAvatarLevel;
@@ -146,17 +51,17 @@ export class AvatarService implements OnInit {
       oldAvatarCognitoIdentityId = oldAvatarPath.split('/')[1];
       oldAvatarKey = oldAvatarPath.split('/')[2];
 
-      console.log(`${functionFullName}: oldAvatarPath: ${oldAvatarPath}`);
-      console.log(`${functionFullName}: oldAvatarLevel: ${oldAvatarLevel}`);
-      console.log(`${functionFullName}: oldAvatarCognitoIdentityId: ${oldAvatarCognitoIdentityId}`);
-      console.log(`${functionFullName}: oldAvatarKey: ${oldAvatarKey}`);
+      // console.log(`${functionFullName}: oldAvatarPath: ${oldAvatarPath}`);
+      // console.log(`${functionFullName}: oldAvatarLevel: ${oldAvatarLevel}`);
+      // console.log(`${functionFullName}: oldAvatarCognitoIdentityId: ${oldAvatarCognitoIdentityId}`);
+      // console.log(`${functionFullName}: oldAvatarKey: ${oldAvatarKey}`);
     } else {
 
     }
 
     const uniqueId = Math.random().toString(36).substring(2) + Date.now().toString(36);
     const fileName = 'avatar_' + uniqueId + '.png';
-    console.log(`${functionFullName}: filename: ${fileName}`);
+    // console.log(`${functionFullName}: filename: ${fileName}`);
 
     const level = 'protected';
 
@@ -167,29 +72,29 @@ export class AvatarService implements OnInit {
         contentType: `image/png`,
       })
         .then((result: any) => {
-          console.log(`${functionFullName}: result:`);
-          console.log(result);
+          // console.log(`${functionFullName}: result:`);
+          // console.log(result);
 
           Storage.get(result.key, {
             level: level
           })
             .then((resultImage: any) => {
-              console.log(`${functionFullName}: resultImage:`);
-              console.log(resultImage);
+              // console.log(`${functionFullName}: resultImage:`);
+              // console.log(resultImage);
 
               Auth.currentUserInfo()
                 .then(userInfo => {
                   const cognitoIdentityIdValue = userInfo.id;
                   const newAvatarPath = `${level}/${cognitoIdentityIdValue}/${result.key}`;
-                  console.log(`${functionFullName}: new avatar path:`);
-                  console.log(newAvatarPath);
+                  // console.log(`${functionFullName}: new avatar path:`);
+                  // console.log(newAvatarPath);
                   const observables: Observable<any>[] = [];
 
                   // Record new Avatar path in the database
                   this.setUserAvatar(newAvatarPath)
                     .subscribe(saveResult => {
-                      console.log(`${functionFullName}: save result:`);
-                      console.log(saveResult);
+                      // console.log(`${functionFullName}: save result:`);
+                      // console.log(saveResult);
                       this.setCognitoPictureAttribute(newAvatarPath).subscribe();
                       this.entityCurrentUserService.updateAvatar(newAvatarPath);
                       if (oldAvatarKey) {
@@ -197,8 +102,8 @@ export class AvatarService implements OnInit {
                           level: oldAvatarLevel,
                           identityId: oldAvatarCognitoIdentityId
                         }).then(removeResult => {
-                          console.log(`${functionFullName}: Deleted old avatar file:`);
-                          console.log(removeResult);
+                          // console.log(`${functionFullName}: Deleted old avatar file:`);
+                          // console.log(removeResult);
                         });
                       }
 
@@ -207,22 +112,22 @@ export class AvatarService implements OnInit {
                     });
                 })
                 .catch(err => {
-                  console.log(`${functionFullName}: Error retrieving current user info`);
-                  console.log(err);
+                  // console.log(`${functionFullName}: Error retrieving current user info`);
+                  // console.log(err);
                   observer.next(false);
                   observer.complete();
                 });
             })
             .catch(err => {
-              console.log(`${functionFullName}: Error retrieving item from storage`);
-              console.log(err);
+              // console.log(`${functionFullName}: Error retrieving item from storage`);
+              // console.log(err);
               observer.next(false);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: Error:`);
-          console.log(err);
+          // console.log(`${functionFullName}: Error:`);
+          // console.log(err);
           observer.next(false);
           observer.complete();
         });
@@ -230,9 +135,9 @@ export class AvatarService implements OnInit {
   }
 
   setCognitoPictureAttribute(avatarPath: string): Observable<any> {
-    const functionName = 'setCognitoPictureAttribute';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'setCognitoPictureAttribute';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -241,14 +146,14 @@ export class AvatarService implements OnInit {
             picture: avatarPath
           })
             .then(updateResult => {
-              console.log(`${functionFullName}: update attributes success:`);
-              console.log(updateResult);
+              // console.log(`${functionFullName}: update attributes success:`);
+              // console.log(updateResult);
               observer.next(updateResult);
               observer.complete();
             })
             .catch(err => {
-              console.log(`${functionFullName}: update attributes error:`);
-              console.log(err);
+              // console.log(`${functionFullName}: update attributes error:`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
@@ -317,84 +222,11 @@ export class AvatarService implements OnInit {
   }
 */
 
-  getAvatarFromStorage(avatarUrl: string): Observable<any> {
-    console.log('Getting item from storage');
-
-    return new Observable<any>(observer => {
-
-      const split = avatarUrl.split('/');
-      const level = split[0];
-      let key;
-      let identityId;
-      if (level === 'public') {
-        key = split.slice(1, split.length).join('/');
-
-      } else {
-        key = split.slice(2, split.length).join('/');
-        identityId = split[1];
-      }
-
-      Storage.get(key, {
-        level: level,
-        identityId: identityId
-      })
-        .then((result: string) => {
-          console.log(result);
-          const data = {
-            avatarResolvedUrl: result
-          };
-
-          observer.next(data);
-          observer.complete();
-        })
-        .catch(err => {
-          console.log(`Error retrieving url for ${avatarUrl}`);
-          console.log(err);
-          const data = {
-            avatarResolvedUrl: ''
-          };
-
-          observer.next(data);
-          observer.complete();
-        });
-    });
-  }
-
-  createImageFromBlob(image: Blob) {
-    const functionName = 'createImageFromBlob';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      // console.log('userAvatarImageToShow blob:');
-      // console.log(reader.result);
-      this.userAvatarImageToShow = reader.result;
-    }, false);
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
-
-  getImageFromService() {
-    console.log('getImageFromService');
-    this.isUserAvatarImageLoading = true;
-    this.imageService.getImage(this.userAvatarUrl).subscribe(data => {
-      // console.log('getImageFromService data');
-      // console.log(data);
-      this.createImageFromBlob(data);
-      this.isUserAvatarImageLoading = false;
-    }, error => {
-      this.isUserAvatarImageLoading = false;
-      console.log(error);
-    });
-  }
 
   setUserAvatar(avatarUrl: string): Observable<any> {
-    const functionName = 'setUserAvatar';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'setUserAvatar';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -405,8 +237,8 @@ export class AvatarService implements OnInit {
           myInit['body'] = {avatarUrl: avatarUrl};
 
           API.post(this.apiName, this.apiPath + '/setUserAvatar', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -415,9 +247,9 @@ export class AvatarService implements OnInit {
   }
 
   getAvatars(): Observable<any> {
-    const functionName = 'getAvatars';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getAvatars';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -427,8 +259,8 @@ export class AvatarService implements OnInit {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/getAvatars', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -437,9 +269,9 @@ export class AvatarService implements OnInit {
   }
 
   getUserAvatars(): Observable<any> {
-    const functionName = 'getUserAvatars';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getUserAvatars';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -449,21 +281,21 @@ export class AvatarService implements OnInit {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/getUserAvatars', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving user avatars data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving user avatars data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -473,7 +305,7 @@ export class AvatarService implements OnInit {
   generateRandomAvatar() {
     const functionName = 'generateRandomAvatar';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       const noAuthHeader = {

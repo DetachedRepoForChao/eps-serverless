@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import {ID, resetStores} from '@datorama/akita';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {EntityUserModel} from '../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserModel} from '../entity-store/current-user/state/entity-current-user.model';
@@ -24,7 +22,6 @@ export class NavigationService {
   public achievementModalActive = false;
   public purchaseHistoryComponentInputUser: EntityCurrentUserModel;
   public purchaseHistoryModalActive = false;
-  public purchaseRequestDataSource$: Observable<UserHasStoreItemModel[]>;
   public purchaseRequestDataSource: UserHasStoreItemModel[];
   public notificationDetailsModalActive = false;
   public notificationDetailsInput: NotificationModel;
@@ -38,64 +35,64 @@ export class NavigationService {
   }
 
   openPointItemModal() {
-    console.log('opening point-item modal');
-    console.log(`navigation service component... showing #pointItemModal with the following user input:`);
-    console.log(this.pointItemComponentInputUser);
+    // console.log('opening point-item modal');
+    // console.log(`navigation service component... showing #pointItemModal with the following user input:`);
+    // console.log(this.pointItemComponentInputUser);
     this.pointItemModalActive = true;
     $('#pointItemModal').modal('show');
   }
 
 
   closePointItemModal() {
-    console.log('closing point-item modal');
+    // console.log('closing point-item modal');
     this.pointItemModalActive = false;
     $('#pointItemModal').modal('hide');
   }
 
   openAchievementModal() {
-    console.log('opening achievement modal');
-    console.log(`navigation service component... showing #achievementModal with the following user input:`);
-    console.log(this.achievementComponentInputUser);
+    // console.log('opening achievement modal');
+    // console.log(`navigation service component... showing #achievementModal with the following user input:`);
+    // console.log(this.achievementComponentInputUser);
     this.achievementModalActive = true;
     $('#achievementModal').modal('show');
   }
 
   closeAchievementModal() {
-    console.log('closing achievement modal');
+    // console.log('closing achievement modal');
     this.achievementModalActive = false;
     $('#achievementModal').modal('hide');
   }
 
   openPurchaseHistoryModal() {
-    console.log('opening purchase history modal');
-    console.log(`navigation service component... showing #purchaseHistoryModal with the following user input:`);
-    console.log(this.purchaseHistoryComponentInputUser);
+    // console.log('opening purchase history modal');
+    // console.log(`navigation service component... showing #purchaseHistoryModal with the following user input:`);
+    // console.log(this.purchaseHistoryComponentInputUser);
     this.purchaseHistoryModalActive = true;
     $('#purchaseHistoryModal').modal('show');
   }
 
   closePurchaseHistoryModal() {
-    console.log('closing purchase history modal');
+    // console.log('closing purchase history modal');
     this.purchaseHistoryModalActive = false;
     $('#purchaseHistoryModal').modal('hide');
   }
 
   openNotificationDetailsModal() {
-    console.log('opening notification details modal');
-    console.log(`navigation service component... showing #notificationDetailsModal with the following input:`);
-    console.log(this.notificationDetailsInput);
+    // console.log('opening notification details modal');
+    // console.log(`navigation service component... showing #notificationDetailsModal with the following input:`);
+    // console.log(this.notificationDetailsInput);
     this.notificationDetailsModalActive = true;
     $('#notificationDetailsModal').modal('show');
   }
 
   closeNotificationDetailsModal() {
-    console.log('closing notification details modal');
+    // console.log('closing notification details modal');
     this.notificationDetailsModalActive = false;
     $('#notificationDetailsModal').modal('hide');
   }
 
   navigateToProfile(username) {
-    console.log(`navigate to /user/profile/${username}`);
+    // console.log(`navigate to /user/profile/${username}`);
     this.router.navigate(['/', 'user', 'profile', username]).then();
   }
 
@@ -119,14 +116,14 @@ export class NavigationService {
   }
 
   setPurchaseRequestDataSourceAll(userId: number) {
-    console.log('setPurchaseRequestDataSourceAll');
+    // console.log('setPurchaseRequestDataSourceAll');
     // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserRequests(userId);
     this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserRequests(userId);
 
   }
 
   setPurchaseRequestDataSourceAllActive(userId: number) {
-    console.log('setPurchaseRequestDataSourceAllActive');
+    // console.log('setPurchaseRequestDataSourceAllActive');
     // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserRequests(userId);
     this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserActiveRequests(userId);
 
@@ -134,7 +131,7 @@ export class NavigationService {
 
 
   setPurchaseRequestDataSourcePending(userId: number) {
-    console.log('setPurchaseRequestDataSourcePending');
+    // console.log('setPurchaseRequestDataSourcePending');
 
     // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserPendingRequests(userId);
     this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserPendingRequests(userId);
@@ -142,7 +139,7 @@ export class NavigationService {
   }
 
   setPurchaseRequestDataSourceReadyForPickup(userId: number) {
-    console.log('setPurchaseRequestDataSourceReadyForPickup');
+    // console.log('setPurchaseRequestDataSourceReadyForPickup');
 
     // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserApprovedRequests(userId);
     this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserReadyForPickupRequests(userId);
@@ -150,7 +147,7 @@ export class NavigationService {
   }
 
   setPurchaseRequestDataSourcePickedUp(userId: number) {
-    console.log('setPurchaseRequestDataSourcePickedUp');
+    // console.log('setPurchaseRequestDataSourcePickedUp');
 
     // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserDeclinedRequests(userId);
     this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserPickedUpRequests(userId);
@@ -158,7 +155,7 @@ export class NavigationService {
   }
 
   setPurchaseRequestDataSourceArchived(userId: number) {
-    console.log('setPurchaseRequestDataSourceFulfilled');
+    // console.log('setPurchaseRequestDataSourceFulfilled');
 
     // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserFulfilledRequests(userId);
     this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserArchivedRequests(userId);
@@ -167,7 +164,7 @@ export class NavigationService {
   }
 
   setPurchaseRequestDataSourceCancelled(userId: number) {
-    console.log('setPurchaseRequestDataSourceCancelled');
+    // console.log('setPurchaseRequestDataSourceCancelled');
 
     // this.purchaseRequestDataSource$ = this.userHasStoreItemQuery.selectUserCancelledRequests(userId);
     this.purchaseRequestDataSource = this.userHasStoreItemQuery.getUserCancelledRequests(userId);

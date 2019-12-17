@@ -39,10 +39,10 @@ export class NotificationService implements OnInit {
    * @param targetUserId
    */
   getNotification(): Observable<any> {
-    const functionName = 'getNotifications';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: retrieving Notification data for the following point transaction ids:`);
+    // const functionName = 'getNotifications';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: retrieving Notification data for the following point transaction ids:`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -51,8 +51,8 @@ export class NotificationService implements OnInit {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
           API.get(this.apiName, this.apiPath + '/getNotifications', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -63,8 +63,8 @@ export class NotificationService implements OnInit {
   getAlert() : Observable<any> {
     const functionName = 'getAlert';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: retrieving Alert data for the following point transaction ids:`);
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: retrieving Alert data for the following point transaction ids:`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -73,8 +73,8 @@ export class NotificationService implements OnInit {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
           API.get(this.apiName, this.apiPath + '/getAlerts', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -92,8 +92,8 @@ export class NotificationService implements OnInit {
   setNotificationSeenTime(notificationId: Number): Observable<any> {
     const functionName = 'setNotificationSeenTime';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: set Notification seen Time data for the following point transaction ids:`);
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: set Notification seen Time data for the following point transaction ids:`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -104,8 +104,8 @@ export class NotificationService implements OnInit {
             notificationId: notificationId,
           };
           API.post(this.apiName, this.apiPath + '/setNotificationSeenTime', myInit).then(data => {
-            console.log(`${functionFullName}: successfully set data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully set data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -118,15 +118,15 @@ export class NotificationService implements OnInit {
   setNotificationToGroup(notificaion: Notification): Observable<any> {
     const functionName = 'setNewNotification';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: set new Notifications`);
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: set new Notifications`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
           const token = user.signInUserSession.idToken.jwtToken;
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
-          console.log(notificaion);
+          // console.log(notificaion);
           myInit['body'] = {
             title: notificaion.Title,
             event: notificaion.event,
@@ -135,7 +135,7 @@ export class NotificationService implements OnInit {
             status: notificaion.status,
           };
           API.post(this.apiName, this.apiPath + '/setNotificationsToGroup', myInit).then(data => {
-            console.log(`${functionFullName}: successfully set data from API`);
+            // console.log(`${functionFullName}: successfully set data from API`);
             observer.next(data.data);
             observer.complete();
           });

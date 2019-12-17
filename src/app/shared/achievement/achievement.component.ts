@@ -1,9 +1,4 @@
 import {Component, EventEmitter, Injectable, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import { Achievement} from './achievement.model';
-import { UserAchievementProgress} from './user-achievement-progress.model';
-import { Globals} from '../../globals';
-import {MatTableDataSource} from '@angular/material';
-import {DepartmentEmployee} from '../../user/manager-user/gift-points/gift-points.component';
 import {Observable, forkJoin, Subscription, Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
@@ -63,8 +58,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
   isUserDataRetrieved = false;
   achievementsRetrieving = false;
 
-  constructor(private globals: Globals,
-              private router: Router,
+  constructor(private router: Router,
               private achievementService: AchievementService,
               private achievementQuery: AchievementQuery,
               private featureService: FeatureService,
@@ -78,9 +72,9 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
               private navigationService: NavigationService) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.featureQuery.selectLoading()
       .pipe(takeUntil(this.featuresLoading$))
@@ -105,8 +99,8 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     const parentScope = this;
     $('#achievementModal').on('hidden.bs.modal',
       function (e) {
-        console.log('running on hidden function');
-        console.log(e);
+        // console.log('running on hidden function');
+        // console.log(e);
         parentScope.inputUser = null;
         parentScope.navigationService.achievementComponentInputUser = null;
         parentScope.clearInputUser.emit(true);
@@ -118,7 +112,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
       .subscribe(isLoading => {
-        console.log(`Current User loading status is ${isLoading}`);
+        // console.log(`Current User loading status is ${isLoading}`);
         if (!isLoading) {
           // this.currentUser$ = this.currentUserQuery.selectAll();
           this.currentUserQuery.selectCurrentUser()
@@ -142,8 +136,8 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
         sortBy: 'family'
       });
 
-      console.log('achievements');
-      console.log(this.achievements);
+      // console.log('achievements');
+      // console.log(this.achievements);
 
       this.achievements$ = this.achievementQuery.selectAll({
         sortBy: 'family'
@@ -155,7 +149,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
           this.keys = Object.keys(this.families);
         });
     } else {
-      console.log(`Already retrieving current user achievements`);
+      // console.log(`Already retrieving current user achievements`);
     }
   }
 
@@ -163,7 +157,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
     this.userQuery.selectLoading()
       .pipe(takeUntil(this.userLoading$))
       .subscribe(isLoading => {
-        console.log(`User loading status is ${isLoading}`);
+        // console.log(`User loading status is ${isLoading}`);
         if (!isLoading) {
 /*          this.user$ = this.userQuery.selectAll({
             filterBy: e => e.username === this.inputUser.username
@@ -207,8 +201,8 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
                 filterBy: e => e.userId === user.userId,
                 sortBy: 'family'
               });
-              console.log('other user achievements');
-              console.log(this.otherUserAchievements);
+              // console.log('other user achievements');
+              // console.log(this.otherUserAchievements);
             });
 
             this.otherUserAchievements$ = this.otherUserAchievementQuery.selectAll({
@@ -221,7 +215,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
               this.keys = Object.keys(this.families);
             });
           } else {
-            console.log(`Cache Other User Achievements returned ${result}`);
+            // console.log(`Cache Other User Achievements returned ${result}`);
             // We may have retrieved the data but the otherUserAchievements variable may be null... this accounts for that
             if (!this.otherUserAchievements) {
               this.otherUserAchievements = this.otherUserAchievementQuery.getAll({
@@ -242,7 +236,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
           }
         });
     } else {
-      console.log(`Already retrieving other user achievements`);
+      // console.log(`Already retrieving other user achievements`);
     }
   }
 
@@ -256,18 +250,18 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   acknowledgeAchievement(achievement: AchievementModel) {
-    const functionName = 'acknowledgeAchievement';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'acknowledgeAchievement';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: Acknowledging completed achievement:`);
-    console.log(achievement);
+    // console.log(`${functionFullName}: Acknowledging completed achievement:`);
+    // console.log(achievement);
 
     this.achievementService.acknowledgeAchievementComplete(achievement.progressId)
       .pipe(take(1))
       .subscribe(result => {
-        console.log(`${functionFullName}: Acknowledge result:`);
-        console.log(result);
+        // console.log(`${functionFullName}: Acknowledge result:`);
+        // console.log(result);
 
         // this.achievementService.getUserAchievements().subscribe();
         // $('#achievementModal').modal('hide');
@@ -275,10 +269,10 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    // console.log(changes);
 
     if (changes) {
-      console.log('clearing all variables');
+      // console.log('clearing all variables');
       this.user$ = null;
       this.user = null;
       this.currentUser$ = null;
@@ -294,10 +288,10 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
       this.isUserDataRetrieved = false;
       this.achievementsRetrieving = false;
 
-      console.log('on changes input user:');
-      console.log(this.inputUser);
+      // console.log('on changes input user:');
+      // console.log(this.inputUser);
 
-      console.log('on changes populating data');
+      // console.log('on changes populating data');
       if (this.inputUser) {
         this.populateUserData();
       } else {
@@ -307,8 +301,8 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
       const parentScope = this;
       $('#achievementModal').on('hidden.bs.modal',
         function (e) {
-          console.log('running on hidden function');
-          console.log(e);
+          // console.log('running on hidden function');
+          // console.log(e);
           parentScope.inputUser = null;
           parentScope.navigationService.achievementComponentInputUser = null;
           parentScope.clearInputUser.emit(true);
@@ -318,7 +312,7 @@ export class AchievementComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy');
+    // console.log('ngOnDestroy');
     // this.currentUserSub.unsubscribe();
     this.subscription.unsubscribe();
     this.unsubscribe$.next();

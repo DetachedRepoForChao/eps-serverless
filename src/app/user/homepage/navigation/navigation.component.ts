@@ -36,7 +36,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   Notifications;
   NotificationStatus;
-  currentUser$;
   currentUser: EntityCurrentUserModel;
   Detail;
   notificationNums;
@@ -68,7 +67,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
       $(window).on('scroll', blackKit.checkScrollForTransparentNavbar);
     }
     this.isCardLoading = true;
-    // this.currentUser$ = this.currentUserQuery.selectAll();
 
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))

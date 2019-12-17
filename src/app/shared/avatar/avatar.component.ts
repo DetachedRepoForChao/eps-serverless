@@ -2,8 +2,6 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ImageCroppedEvent} from 'ngx-image-cropper';
 import {AvatarService} from './avatar.service';
 import {LeaderboardService} from '../leaderboard.service';
-import {Globals} from '../../globals';
-import {FeedcardService} from '../feedcard/feedcard.service';
 import {EntityCurrentUserService} from '../../entity-store/current-user/state/entity-current-user.service';
 import {EntityCurrentUserQuery} from '../../entity-store/current-user/state/entity-current-user.query';
 import {AchievementQuery} from '../../entity-store/achievement/state/achievement.query';
@@ -36,8 +34,6 @@ export class AvatarComponent implements OnInit, OnDestroy {
 
   constructor(private avatarService: AvatarService,
               private leaderboardService: LeaderboardService,
-              private globals: Globals,
-              private feedcardService: FeedcardService,
               private entityCurrentUserService: EntityCurrentUserService,
               public currentUserQuery: EntityCurrentUserQuery,
               private achievementService: AchievementService,
@@ -55,8 +51,8 @@ export class AvatarComponent implements OnInit, OnDestroy {
             .subscribe((currentUser: EntityCurrentUserModel) => {
               this.currentUser = currentUser;
               this.croppedImageToShow = this.currentUser.avatarResolvedUrl;
-              console.log('croppedImageToShow:');
-              console.log(this.croppedImageToShow);
+              // console.log('croppedImageToShow:');
+              // console.log(this.croppedImageToShow);
             });
 
           this.currentUserLoading$.next();
@@ -82,18 +78,18 @@ export class AvatarComponent implements OnInit, OnDestroy {
   onImageSelected(event) {
     const functionName = 'onImageSelected';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: event: ${event}`);
-    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
+    // console.log(`${functionFullName}: event: ${event}`);
+    // console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
 
 
     this.avatarService.saveUserAvatar(this.croppedImage)
       .pipe(take(1))
       .subscribe((saveResult) => {
-      console.log(`${functionFullName}: saveResult: ${saveResult}`);
+      // console.log(`${functionFullName}: saveResult: ${saveResult}`);
       if (saveResult !== false) {
-        console.log('save result !== false');
+        // console.log('save result !== false');
         this.achievementService.incrementAchievement('ChangeAvatar')
           .pipe(take(1))
           .subscribe();
@@ -101,14 +97,14 @@ export class AvatarComponent implements OnInit, OnDestroy {
         this.avatarPreview = true;
 
       } else {
-        console.log('save result !== false');
+        // console.log('save result !== false');
       }
 
     });
   }
 
   onSuperheroSelected(event) {
-    console.log(event);
+    // console.log(event);
     this.avatarSelect = false;
     this.avatarPreview = true;
   }
@@ -143,8 +139,8 @@ export class AvatarComponent implements OnInit, OnDestroy {
         reader.readAsDataURL(data.result);
         reader.onloadend = function() {
           const base64data = reader.result;
-          console.log(base64data);
-          console.log(data.avatarUrl);
+          // console.log(base64data);
+          // console.log(data.avatarUrl);
           currentFn.avatarUrl = base64data.toString();
           // currentFn.entityCurrentUserService.updateAvatar(data.avatarUrl);
           currentFn.avatarService.saveUserAvatar(data.result)

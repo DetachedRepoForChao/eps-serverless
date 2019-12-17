@@ -66,18 +66,18 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         if (!isLoading) {
           this.subscription.add(this.notificationQuery.selectAll()
             .subscribe(notifications => {
-              console.log('notifications changed');
+              // console.log('notifications changed');
               this.notifications = notifications;
               this.setNotificationsDataSource(this.currentNotificationTab);
               /*        if (this.currentNotificationTab === 'all') {
                         this.dataSource = this.notifications;
                       }*/
-              console.log('data source:');
-              console.log(this.dataSource);
-              console.log('notifications:');
-              console.log(this.notifications);
-              console.log('unseen notifications');
-              console.log(this.unseenNotifications);
+              // console.log('data source:');
+              // console.log(this.dataSource);
+              // console.log('notifications:');
+              // console.log(this.notifications);
+              // console.log('unseen notifications');
+              // console.log(this.unseenNotifications);
             })
           );
 
@@ -85,15 +85,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
               filterBy: e => e.timeSeen === null
             })
               .subscribe(unseenNotifications => {
-                console.log('unseen notifications changed');
+                // console.log('unseen notifications changed');
                 this.unseenNotifications = unseenNotifications;
                 this.setNotificationsDataSource(this.currentNotificationTab);
-                console.log('data source:');
-                console.log(this.dataSource);
-                console.log('notifications:');
-                console.log(this.notifications);
-                console.log('unseen notifications');
-                console.log(this.unseenNotifications);
+                // console.log('data source:');
+                // console.log(this.dataSource);
+                // console.log('notifications:');
+                // console.log(this.notifications);
+                // console.log('unseen notifications');
+                // console.log(this.unseenNotifications);
                 // if (this.currentNotificationTab === 'all') {
                 //   this.dataSource = this.notifications;
                 // }
@@ -153,12 +153,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   deleteNotification(notification: NotificationModel) {
-    console.log(`Deleting notification ${notification.notificationId}`);
+    // console.log(`Deleting notification ${notification.notificationId}`);
     this.notificationService.deleteNotification(notification)
       .pipe(take(1))
       .subscribe(result => {
-        console.log(`Notification delete result: `);
-        console.log(result);
+        // console.log(`Notification delete result: `);
+        // console.log(result);
       });
   }
 
@@ -181,12 +181,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
 
   onSeenNotificationClick(notification: NotificationModel) {
-    console.log('notificationID:' + notification.notificationId);
+    // console.log('notificationID:' + notification.notificationId);
     this.notificationService.setNotificationSeenTime(notification.notificationId)
       .pipe(take(1))
       .subscribe(result => {
-        console.log('onSeenNotificationClick');
-        console.log(result);
+        // console.log('onSeenNotificationClick');
+        // console.log(result);
         /*if (true) {
           // tslint:disable-next-line:no-shadowed-variable
           this.notificationService.getNotifications().subscribe(result => {
@@ -212,8 +212,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       this.notificationService.setNotificationSeenTime(notification.notificationId)
         .pipe(take(1))
         .subscribe(result => {
-          console.log('onSeenNotificationClick');
-          console.log(result);
+          // console.log('onSeenNotificationClick');
+          // console.log(result);
         });
     }
   }
@@ -265,7 +265,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     var halfamonth = day * 15;
     var month = day * 30;
     var now = new Date().getTime();
-    console.log(now)
+    // console.log(now)
     var diffValue = now - dateTimeStamp;
 
     if (diffValue < 0) {
@@ -299,7 +299,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       var Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
       result = Nyear + "-" + Nmonth + "-" + Ndate
     }
-    console.log("Notification:TimeAgo"+result);
+    // console.log("Notification:TimeAgo"+result);
     return result;
   }
 

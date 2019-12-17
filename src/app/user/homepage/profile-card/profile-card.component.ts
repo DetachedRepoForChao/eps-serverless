@@ -2,7 +2,6 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
-import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {UserService} from '../../../shared/user.service';
 import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
@@ -46,7 +45,6 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               private imageService: ImageService,
               private leaderboardService: LeaderboardService,
-              private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private achievementService: AchievementService,
               public achievementQuery: AchievementQuery,

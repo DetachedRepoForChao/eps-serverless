@@ -207,7 +207,7 @@
 
 
         <!----- Gift---->
-        <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+        <ng-container *ngIf="currentUser?.securityRole.Id !== 3">
           <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickPointItemModal()">
             <i class="tim-icons icon-gift-2" title="gift"></i>
           </button>
@@ -251,7 +251,7 @@
           </div>
         </div>-->
         <!-----Achievements----->
-        <ng-container *ngIf="currentUser.securityRole.Id !== 3">
+        <ng-container *ngIf="currentUser?.securityRole.Id !== 3">
           <button type="button" class="btn btn-primary btn-icon btn-round" (click)="onClickAchievementModal()">
             <i class="tim-icons icon-trophy" title="Recent Achievements"></i>
           </button>
@@ -358,7 +358,7 @@
           <i class="fas fa-shopping-cart" title="Store"></i>
         </button>
         <!----- Settings---->
-        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', currentUser.username]">
+        <button type="button" class="btn btn-primary btn-icon btn-round" [routerLink]="['/', 'user', 'profile', currentUser?.username]">
           <i class="tim-icons icon-settings-gear-63" title="Settings"></i>
         </button>
 <!--        <div class="modal fade" id="settingsModal" role="dialog">

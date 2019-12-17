@@ -9,7 +9,6 @@ import {forkJoin, Observable, Subject, Subscription} from 'rxjs';
 import {AuthService} from '../login/auth.service';
 import {Auth, Storage} from 'aws-amplify';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {FeedcardService} from '../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import 'rxjs/add/operator/takeWhile';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
@@ -75,7 +74,6 @@ export class UserComponent implements OnInit, OnDestroy {
               private userIdle: UserIdleService,
               private http: HttpClient,
               private authService: AuthService,
-              private feedcardService: FeedcardService,
               private spinner: NgxSpinnerService,
               private achievementService: AchievementService,
               private departmentService: EntityDepartmentService,
