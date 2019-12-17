@@ -14,6 +14,7 @@ import {Observable, Subject, Subscription} from 'rxjs';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
 import {take, takeUntil} from 'rxjs/operators';
 import {NavigationService} from '../../shared/navigation.service';
+import {AuthService} from '../../login/auth.service';
 
 @Component({
   selector: 'app-homepage',
@@ -26,7 +27,8 @@ export class HomepageComponent implements OnInit, OnDestroy {
   unsubscribe$ = new Subject();
   currentUser: EntityCurrentUserModel;
   currentUserLoading$ = new Subject();
-
+  emailConfirmed;
+  phoneConfirmed;
   scrolledToGiftPointsComponent = false;
 
   private codeEntered: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -67,6 +69,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
     private userHasStoreItemService: UserHasStoreItemService,
     private userHasStoreItemQuery: UserHasStoreItemQuery,
     private achievementService: AchievementService,
+    private authService: AuthService,
     private pointItemTransactionService: PointItemTransactionService,
     private navigationService: NavigationService,
     private router: Router,
@@ -107,6 +110,22 @@ export class HomepageComponent implements OnInit, OnDestroy {
         }
       });
 
+    // Check email confirmed / phone confirmed achievement
+    this.authService.currentUserInfo()
+      .then(userInfo => {
+        this.emailConfirmed = userInfo.attributes['email_verified'];
+        // console.log('email confirmed', this.emailConfirmed);
+        if (this.emailConfirmed === true) {
+          this.achievementService.incrementAchievement('Email')
+            .pipe(take(1))
+            .subscribe(response => {
+              if (response.status !== false) {
+                this.notifierService.notify('success', 'Achievement Earned: Email Confirmation!');
+              }
+            });
+        }
+        this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
+      });
 
   }
 

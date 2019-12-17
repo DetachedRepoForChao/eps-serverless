@@ -55,9 +55,9 @@ export class AchievementService {
   delete(id: ID) {
     const functionName = 'delete';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: ${id}`);
+    // console.log(`${functionFullName}: ${id}`);
     this.achievementStore.remove(id);
   }
 
@@ -72,8 +72,8 @@ export class AchievementService {
   }
 
   updateAchievements(achievementsData: any) {
-    console.log('updateAchievements:');
-    console.log(achievementsData);
+    // console.log('updateAchievements:');
+    // console.log(achievementsData);
     for (let i = 0; i < achievementsData.length; i++) {
       this.achievementStore.update((e) => e.progressId === achievementsData[i].id, {
         progress: achievementsData[i].goalProgress,
@@ -85,11 +85,11 @@ export class AchievementService {
   cacheAchievements() {
     const functionName = 'cacheAchievements';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
     // this.userStore.setLoading(true);  // this is the initial state before doing anything
     const request$ = this.getCurrentUserAchievements()
       .pipe(tap((achievementsResult: any) => {
-        console.log(`${functionFullName}: caching:`);
+        // console.log(`${functionFullName}: caching:`);
         console.log(achievementsResult);
 
         const achievements: AchievementModel[] = [];
@@ -118,8 +118,8 @@ export class AchievementService {
 
         }
 
-        console.log(`${functionFullName}: achievements:`);
-        console.log(achievements);
+        // console.log(`${functionFullName}: achievements:`);
+        // console.log(achievements);
         this.achievementStore.set(achievements);
       }));
 
@@ -127,9 +127,9 @@ export class AchievementService {
   }
 
   getCurrentUserAchievements(): Observable<any> {
-    const functionName = 'getCurrentUserAchievements';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getCurrentUserAchievements';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -139,8 +139,8 @@ export class AchievementService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/currentUserAchievements', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -149,11 +149,11 @@ export class AchievementService {
   }
 
   incrementAchievement(achievementFamily: string): Observable<any> {
-    const functionName = 'incrementAchievement';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'incrementAchievement';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: achievement family: ${achievementFamily}`);
+    // console.log(`${functionFullName}: achievement family: ${achievementFamily}`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -165,8 +165,8 @@ export class AchievementService {
           };
 
           API.post(this.apiName, this.apiPath + '/incrementAchievement' , myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
 
             // If status returns true, update achievements with new progress and status
@@ -182,11 +182,11 @@ export class AchievementService {
   }
 
   incrementAchievementByX(achievementFamily: string, incrementAmount: number): Observable<any> {
-    const functionName = 'incrementAchievementByX';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'incrementAchievementByX';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: achievement family: ${achievementFamily}`);
+    // console.log(`${functionFullName}: achievement family: ${achievementFamily}`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -199,8 +199,8 @@ export class AchievementService {
           };
 
           API.post(this.apiName, this.apiPath + '/incrementAchievementByX' , myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
 
             // If status returns true, update achievements with new progress and status
@@ -217,9 +217,9 @@ export class AchievementService {
   }
 
   acknowledgeAchievementComplete(achievementProgressId: string) {
-    const functionName = 'acknowledgeAchievementComplete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'acknowledgeAchievementComplete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -232,8 +232,8 @@ export class AchievementService {
           };
 
           API.post(this.apiName, this.apiPath + '/acknowledgeAchievementComplete' , myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
 
             // Update achievement as acknowledged in the local store

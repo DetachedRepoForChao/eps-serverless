@@ -58,11 +58,11 @@ export class StoreItemService {
 
 
   delete(itemId: number) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${itemId}`);
+    // console.log(`${functionFullName}: delete ${itemId}`);
     this.storeItemStore.remove((e) => e.itemId === itemId);
   }
 
@@ -71,11 +71,11 @@ export class StoreItemService {
   }
 
   update(itemId: number, name: string, description: string, cost: number, imagePath: string) {
-    const functionName = 'update';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'update';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: update ${name}`);
+    // console.log(`${functionFullName}: update ${name}`);
     /** Update All */
     this.storeItemStore.update((e) => e.itemId === itemId, {
       name: name,
@@ -86,9 +86,9 @@ export class StoreItemService {
   }
 
   getStoreItems(): Observable<any> {
-    const functionName = 'getStoreItems';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getStoreItems';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -98,21 +98,21 @@ export class StoreItemService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/getStoreItems', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving user store items data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving user store items data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -120,9 +120,9 @@ export class StoreItemService {
   }
 
   resolveStoreItemImage(storeItemData: any): Observable<any> {
-    const functionName = 'resolveStoreItemImage';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'resolveStoreItemImage';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     // const key = storeItemData.avatarUrl.split('/')[1];
     const key = storeItemData.imagePath;
@@ -149,14 +149,14 @@ export class StoreItemService {
   }
 
   cacheStoreItems() {
-    const functionName = 'cacheStoreItems';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cacheStoreItems';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const request$ = this.getStoreItems()
       .pipe(tap((storeItems: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(storeItems);
+        // console.log(`${functionFullName}: caching:`);
+        // console.log(storeItems);
 
         const storeItemsArray: StoreItemModel[] = [];
         const observables: Observable<any>[] = [];
@@ -186,9 +186,9 @@ export class StoreItemService {
   }
 
   sendStoreItemPurchaseRequestNotice(purchaseRequestManagers: EntityUserModel[], requestUser: EntityCurrentUserModel, storeItem: StoreItemModel): Observable<any> {
-    const functionName = 'sendStoreItemPurchaseRequestNotice';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'sendStoreItemPurchaseRequestNotice';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -220,8 +220,8 @@ export class StoreItemService {
           };
 
           API.post(this.apiName, this.apiPath2 + '/sendRequestStoreItemNotice', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -230,9 +230,9 @@ export class StoreItemService {
   }
 
   submitStoreItemPurchaseRequest(storeItem: StoreItemModel): Observable<any> {
-    const functionName = 'submitStoreItemPurchaseRequest';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'submitStoreItemPurchaseRequest';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const requestUser = this.currentUserQuery.getAll()[0]; // Retrieve current user info
     const managerUser = this.userQuery.getDepartmentManager(requestUser.department.Id)[0]; // Retrieve user's manager's info
@@ -251,8 +251,8 @@ export class StoreItemService {
           };
 
           API.post(this.apiName, this.apiPath2 + '/sendStoreItemPurchaseRequest', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -261,9 +261,9 @@ export class StoreItemService {
   }
 
   newStoreItem(storeItem): Observable<any> {
-    const functionName = 'newStoreItem';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'newStoreItem';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -277,15 +277,15 @@ export class StoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/newStoreItem', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
 
             if (data.data.status !== false) {
               // If new Store Item database record created successfully, upload the store item image
               this.uploadStoreItemImage(storeItem)
                 .subscribe(uploadResult => {
-                  console.log('upload result');
-                  console.log(uploadResult);
+                  // console.log('upload result');
+                  // console.log(uploadResult);
                   this.storeItemStore.reset();
                   this.cacheStoreItems().subscribe();
 
@@ -302,9 +302,9 @@ export class StoreItemService {
   }
 
   modifyStoreItem(storeItem): Observable<any> {
-    const functionName = 'modifyStoreItem';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'modifyStoreItem';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -318,15 +318,15 @@ export class StoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/modifyStoreItem', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
 
             if (data.data.status !== false) {
               // If new Store Item database record created successfully, upload the store item image
               this.uploadStoreItemImage(storeItem)
                 .subscribe(uploadResult => {
-                  console.log('upload result');
-                  console.log(uploadResult);
+                  // console.log('upload result');
+                  // console.log(uploadResult);
                   this.storeItemStore.reset();
                   this.cacheStoreItems().subscribe();
 
@@ -343,9 +343,9 @@ export class StoreItemService {
   }
 
   deleteStoreItem(storeItem): Observable<any> {
-    const functionName = 'deletePointItem';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'deletePointItem';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -359,8 +359,8 @@ export class StoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/deleteStoreItem', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
 
             if (data.data.status !== false) {
               this.delete(storeItem.itemId);
@@ -378,16 +378,16 @@ export class StoreItemService {
 
   // Uploads new Store Item image and returns the resolved URL
   uploadStoreItemImage(storeItem): Observable<boolean> {
-    const functionName = 'uploadStoreItemImage';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'uploadStoreItemImage';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
 
     // const fileDir = 'store';
     // const fileName = 'store_item_' + storeItem.itemId + '.png';
     const image = storeItem.image;
     const filePath = storeItem.imagePath;
-    console.log(`${functionFullName}: filePath: ${filePath}`);
+    // console.log(`${functionFullName}: filePath: ${filePath}`);
 
     const level = 'public';
 
@@ -398,29 +398,29 @@ export class StoreItemService {
         contentType: `image/png`,
       })
         .then((result: any) => {
-          console.log(`${functionFullName}: result:`);
-          console.log(result);
+          // console.log(`${functionFullName}: result:`);
+          // console.log(result);
 
           Storage.get(result.key, {
             level: level
           })
             .then((resultImage: any) => {
-              console.log(`${functionFullName}: resultImage:`);
-              console.log(resultImage);
+              // console.log(`${functionFullName}: resultImage:`);
+              // console.log(resultImage);
 
               observer.next(resultImage);
               observer.complete();
             })
             .catch(err => {
-              console.log(`${functionFullName}: Error retrieving item from storage`);
-              console.log(err);
+              // console.log(`${functionFullName}: Error retrieving item from storage`);
+              // console.log(err);
               observer.next(false);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: Error:`);
-          console.log(err);
+          // console.log(`${functionFullName}: Error:`);
+          // console.log(err);
           observer.next(false);
           observer.complete();
         });

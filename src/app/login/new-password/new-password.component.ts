@@ -24,7 +24,7 @@ export class NewPasswordComponent implements OnInit {
   constructor(private notifierService: NotifierService,
               private router: Router,
               private auth: AuthService) {
-    console.log(this.router.getCurrentNavigation().extras);
+    // console.log(this.router.getCurrentNavigation().extras);
     if (this.router.getCurrentNavigation().extras.state) {
       this.username = this.router.getCurrentNavigation().extras.state.username;
       this.tempPassword = this.router.getCurrentNavigation().extras.state.tempPassword;
@@ -39,18 +39,18 @@ export class NewPasswordComponent implements OnInit {
   }
 
   newPassword(form: NgForm) {
-    console.log(form);
+    // console.log(form);
     const parentScope = this;
     if (!form.valid) {
-      console.log('Invalid submission');
+      // console.log('Invalid submission');
     } else {
       const authenticationDetails = new AuthenticationDetails({Username: this.username, Password: this.tempPassword});
       Auth.signIn(this.username, this.tempPassword)
         .then((user: CognitoUser | any) => {
-          console.log(user);
+          // console.log(user);
           user.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
-              console.log('auth success');
+              // console.log('auth success');
               // User authentication was successfull
               parentScope.notifierService.notify('success', 'New password set successfully!');
               parentScope.auth.signOut().then(() => {
@@ -58,18 +58,18 @@ export class NewPasswordComponent implements OnInit {
               });
             },
             onFailure: function(err) {
-              console.log('failure');
+              // console.log('failure');
               // User authentication was not successful
             },
 
             mfaRequired: function(codeDeliveryDetails) {
-              console.log('mfaRequired');
+              // console.log('mfaRequired');
               // MFA is required to complete user authentication.
               // Get the code from user and call
             },
 
             newPasswordRequired: function(userAttributes, requiredAttributes) {
-              console.log('newPasswordRequired');
+              // console.log('newPasswordRequired');
               // User was signed up by an admin and must provide new
               // password and required attributes, if any, to complete
               // authentication.
@@ -84,12 +84,12 @@ export class NewPasswordComponent implements OnInit {
               // attributesData: object with key as attribute name and value that the user has given.
               user.completeNewPasswordChallenge(form.value.newPasswordPassword, {}, this)
                 .then(result => {
-                  console.log('new password success');
-                  console.log(result);
+                  // console.log('new password success');
+                  // console.log(result);
                 })
                 .catch(err => {
-                  console.log('error');
-                  console.log(err);
+                  // console.log('error');
+                  // console.log(err);
                 });
             }
           });
@@ -97,8 +97,5 @@ export class NewPasswordComponent implements OnInit {
     }
   }
 
-  notify(type: string) {
-    this.notifierService.notify(type, 'Test');
-  }
 
 }

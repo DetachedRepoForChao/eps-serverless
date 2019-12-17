@@ -57,10 +57,10 @@ export class FeedcardService {
   // }
 
   delete(id: ID) {
-    const functionName = 'delete';
-    const functionFullName = '${this.componentName} ${functionName}';
-    console.log('start ${functionFullName}');
-    console.log(`${functionFullName}: delete ${id}`);
+    // const functionName = 'delete';
+    // const functionFullName = '${this.componentName} ${functionName}';
+    // console.log('start ${functionFullName}');
+    // console.log(`${functionFullName}: delete ${id}`);
     this.feedcardStore.remove(id);
   }
 
@@ -69,10 +69,10 @@ export class FeedcardService {
   }
 
   modify(feedcardId: number, description: string, createdAt: string, createUser: string) {
-    const functionName = 'modify';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`start ${functionFullName}`);
-    console.log(`${functionFullName}: modify ${feedcardId}`);
+    // const functionName = 'modify';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`start ${functionFullName}`);
+    // console.log(`${functionFullName}: modify ${feedcardId}`);
 
     this.feedcardStore.update(e => e.feedcardID === feedcardId, {
       description: description,
@@ -82,9 +82,9 @@ export class FeedcardService {
   }
 
   getFeedcards(): Observable<any> {
-    const functionName = 'getFeedcards';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getFeedcards';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -94,21 +94,21 @@ export class FeedcardService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/feedcards', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving features data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving features data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -116,14 +116,14 @@ export class FeedcardService {
   }
 
   cacheFeatures() {
-    const functionName = 'cacheFeedcardss';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cacheFeedcardss';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const request$ = this.getFeedcards()
       .pipe(tap((feedcards: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(feedcards);
+        // console.log(`${functionFullName}: caching:`);
+        // console.log(feedcards);
 
         const feedcardsArray: FeedcardModel[] = [];
 

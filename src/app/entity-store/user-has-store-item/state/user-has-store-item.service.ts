@@ -61,11 +61,11 @@ export class UserHasStoreItemService {
 
 
   delete(id: ID) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${id}`);
+    // console.log(`${functionFullName}: delete ${id}`);
     this.userHasStoreItemStore.remove(id);
   }
 
@@ -74,13 +74,13 @@ export class UserHasStoreItemService {
   }
 
   update(recordId: number, status: string, cancelDescription: string, actionAt: any, updatedByUser: any) {
-    const functionName = 'update';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'update';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const actionAtString = status + 'At';
 
-    console.log(`${functionFullName}: update ${recordId}`);
+    // console.log(`${functionFullName}: update ${recordId}`);
     this.userHasStoreItemStore.update((e) => e.recordId === recordId, {
       status: status,
       cancelDescription: cancelDescription,
@@ -90,9 +90,9 @@ export class UserHasStoreItemService {
   }
 
   getUserHasStoreItemRecords(): Observable<any> {
-    const functionName = 'getUserHasStoreItemRecords';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getUserHasStoreItemRecords';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -108,8 +108,8 @@ export class UserHasStoreItemService {
               myInit.headers['Authorization'] = token;
 
               API.get(this.apiName, this.apiPath + apiCall, myInit).then(data => {
-                console.log(`${functionFullName}: successfully retrieved data from API`);
-                console.log(data);
+                // console.log(`${functionFullName}: successfully retrieved data from API`);
+                // console.log(data);
                 if (data.data.status !== false) {
                   observer.next(data.data.purchaseRequests);
                   observer.complete();
@@ -119,19 +119,19 @@ export class UserHasStoreItemService {
                 }
               })
                 .catch(err => {
-                  console.log(`${functionFullName}: error retrieving user / store-item records  from API`, err);
+                  // console.log(`${functionFullName}: error retrieving user / store-item records  from API`, err);
                   observer.error(err);
                   observer.complete();
                 });
             })
             .catch(err => {
-              console.log(`${functionFullName}: error getting current user info from auth service`, err);
+              // console.log(`${functionFullName}: error getting current user info from auth service`, err);
               observer.error(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`, err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`, err);
           observer.error(err);
           observer.complete();
         });
@@ -139,14 +139,14 @@ export class UserHasStoreItemService {
   }
 
   cacheUserHasStoreItemRecords() {
-    const functionName = 'cacheUserHasStoreItemRecords';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cacheUserHasStoreItemRecords';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const request$ = this.getUserHasStoreItemRecords()
       .pipe(tap((userHasStoreItemRecords: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(userHasStoreItemRecords);
+        // console.log(`${functionFullName}: caching:`);
+        // console.log(userHasStoreItemRecords);
 
         const userHasStoreItemRecordsArray: UserHasStoreItemModel[] = [];
 
@@ -187,9 +187,9 @@ export class UserHasStoreItemService {
   }
 
   newUserHasStoreItemRecord(storeItemId: number): Observable<any> {
-    const functionName = 'newUserHasStoreItemRecord';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'newUserHasStoreItemRecord';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -203,11 +203,11 @@ export class UserHasStoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/newUserHasStoreItemRecord', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(response);
 
             if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating entity store with new record`);
+              // console.log(`${functionFullName}: status returned true. Updating entity store with new record`);
               const recordId = response.data.purchaseRequest.id;
               const userId = response.data.purchaseRequest.userId;
               const userUsername = response.data.purchaseRequest.requestUser.username;
@@ -244,7 +244,7 @@ export class UserHasStoreItemService {
               observer.next(response.data);
               observer.complete();
             } else {
-              console.log(`${functionFullName}: status did not return true`);
+              // console.log(`${functionFullName}: status did not return true`);
               observer.next(false);
               observer.complete();
             }
@@ -254,9 +254,9 @@ export class UserHasStoreItemService {
   }
 
   setStoreItemRequestReadyForPickup(request: UserHasStoreItemModel): Observable<any> {
-    const functionName = 'setStoreItemRequestReadyForPickup';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'setStoreItemRequestReadyForPickup';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -270,11 +270,11 @@ export class UserHasStoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/setStoreItemRequestReadyForPickup', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(response);
 
             if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating record in entity store`);
+              // console.log(`${functionFullName}: status returned true. Updating record in entity store`);
               const recordId = response.data.updatedRecord.recordId;
               const status = response.data.updatedRecord.status;
               const actionAt = response.data.updatedRecord.updatedAt;
@@ -285,7 +285,7 @@ export class UserHasStoreItemService {
               observer.next(response.data);
               observer.complete();
             } else {
-              console.log(`${functionFullName}: status did not return true`);
+              // console.log(`${functionFullName}: status did not return true`);
               observer.next(false);
               observer.complete();
             }
@@ -295,9 +295,9 @@ export class UserHasStoreItemService {
   }
 
   setStoreItemRequestsReadyForPickup(requests: UserHasStoreItemModel[]): Observable<any> {
-    const functionName = 'setStoreItemRequestsReadyForPickup';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'setStoreItemRequestsReadyForPickup';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -311,11 +311,11 @@ export class UserHasStoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/setStoreItemRequestsReadyForPickup', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(response);
 
             if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating records in entity store`);
+              // console.log(`${functionFullName}: status returned true. Updating records in entity store`);
 
               for (const updatedRecord of response.data.updatedRecords) {
                 const recordId = updatedRecord.recordId;
@@ -324,13 +324,13 @@ export class UserHasStoreItemService {
                 const updatedByUser = response.data.updatedByUser;
                 const cancelDescription = null;
                 this.update(recordId, status, cancelDescription, actionAt, updatedByUser);
-                console.log(`record id ${recordId} updated with status ${status} for user ${updatedRecord.userUsername}`);
+                // console.log(`record id ${recordId} updated with status ${status} for user ${updatedRecord.userUsername}`);
               }
 
               observer.next(response.data);
               observer.complete();
             } else {
-              console.log(`${functionFullName}: status did not return true`);
+              // console.log(`${functionFullName}: status did not return true`);
               observer.next(false);
               observer.complete();
             }
@@ -341,9 +341,9 @@ export class UserHasStoreItemService {
 
 
   setStoreItemRequestPickedUp(request: UserHasStoreItemModel): Observable<any> {
-    const functionName = 'setStoreItemRequestPickedUp';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'setStoreItemRequestPickedUp';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -357,11 +357,11 @@ export class UserHasStoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/setStoreItemRequestPickedUp', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(response);
 
             if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating record in entity store`);
+              // console.log(`${functionFullName}: status returned true. Updating record in entity store`);
               const recordId = response.data.updatedRecord.recordId;
               const status = response.data.updatedRecord.status;
               const actionAt = response.data.updatedRecord.updatedAt;
@@ -372,7 +372,7 @@ export class UserHasStoreItemService {
               observer.next(response.data);
               observer.complete();
             } else {
-              console.log(`${functionFullName}: status did not return true`);
+              // console.log(`${functionFullName}: status did not return true`);
               observer.next(false);
               observer.complete();
             }
@@ -382,9 +382,9 @@ export class UserHasStoreItemService {
   }
 
   setStoreItemRequestsPickedUp(requests: UserHasStoreItemModel[]): Observable<any> {
-    const functionName = 'setStoreItemRequestsPickedUp';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'setStoreItemRequestsPickedUp';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -398,11 +398,11 @@ export class UserHasStoreItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/setStoreItemRequestsPickedUp', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(response);
 
             if (response.data.status !== false) {
-              console.log(`${functionFullName}: status returned true. Updating records in entity store`);
+              // console.log(`${functionFullName}: status returned true. Updating records in entity store`);
               for (const updatedRecord of response.data.updatedRecords) {
                 const recordId = updatedRecord.recordId;
                 const status = updatedRecord.status;
@@ -419,7 +419,7 @@ export class UserHasStoreItemService {
               observer.next(response.data);
               observer.complete();
             } else {
-              console.log(`${functionFullName}: status did not return true`);
+              // console.log(`${functionFullName}: status did not return true`);
               observer.next(false);
               observer.complete();
             }
@@ -429,9 +429,9 @@ export class UserHasStoreItemService {
   }
 
   sendReadyForPickupNotice(purchaseRequestManager: any, requestUser: any, storeItems: any ): Observable<any> {
-    const functionName = 'sendReadyForPickupNotice';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'sendReadyForPickupNotice';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -447,7 +447,7 @@ export class UserHasStoreItemService {
           };
 
           API.post(this.apiName, this.apiPath2 + '/sendReadyForPickupNotice', myInit).then(response => {
-            console.log(response);
+            // console.log(response);
             if (response.results.status !== false) {
               observer.next(response.results);
               observer.complete();
@@ -462,9 +462,9 @@ export class UserHasStoreItemService {
   }
 
   processRequests(requests: any[]): Observable<any> {
-    const functionName = 'processRequests';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'processRequests';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       const observables: Observable<any>[] = [];
@@ -491,8 +491,8 @@ export class UserHasStoreItemService {
       }
 
       forkJoin(observables).subscribe((result) => {
-        console.log('Observables result');
-        console.log(result);
+        // console.log('Observables result');
+        // console.log(result);
 
         observer.next(result);
         observer.complete();

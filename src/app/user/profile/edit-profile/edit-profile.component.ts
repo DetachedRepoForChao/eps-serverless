@@ -529,6 +529,17 @@ export class EditProfileComponent implements OnInit, AfterViewInit, OnDestroy {
                 .then(userInfo => {
                   // console.log(userInfo);
                   this.emailConfirmed = userInfo.attributes['email_verified'];
+
+                  if (this.emailConfirmed === true) {
+                    this.achievementService.incrementAchievement('Email')
+                      .pipe(take(1))
+                      .subscribe(response => {
+                        if (response.status !== false) {
+                          this.notifierService.notify('success', 'Achievement Earned: Email Confirmation!');
+                        }
+                      });
+                  }
+
                   this.phoneConfirmed = userInfo.attributes['phone_number_verified'];
                   this.isUserDataRetrieved = true;
                 });

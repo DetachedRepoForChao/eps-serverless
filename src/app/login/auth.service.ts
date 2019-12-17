@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   signUp(user: NewUser): Promise<CognitoUser | any> {
-    console.log('NewUser');
+    // console.log('NewUser');
     console.log(user);
     return Auth.signUp({
       'username': user.username,
@@ -85,9 +85,9 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       Auth.signIn(username, password)
         .then((user: CognitoUser | any) => {
-          console.log(user);
+          // console.log(user);
           if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-            console.log('new password required');
+            // console.log('new password required');
             resolve({user: user, status: user.challengeName});
           } else {
             this.loggedIn = true;
@@ -111,31 +111,31 @@ export class AuthService {
   }
 
   currentUserInfo(): Promise<any> {
-    console.log('getting current user info');
+    // console.log('getting current user info');
     return Auth.currentUserInfo();
   }
 
   verifyEmail() {
-    console.log('verify email');
+    // console.log('verify email');
     Auth.currentAuthenticatedUser()
       .then(cognitoUser => {
         cognitoUser.getAttributeVerificationCode('email', {
           onSuccess: () => {
-            console.log('success');
+            // console.log('success');
           },
           onFailure: (err) => {
-            console.log(err);
+            // console.log(err);
           },
           inputVerificationCode: () => {
-            console.log('verifying email');
+            // console.log('verifying email');
             const verificationCode = prompt('Please input verification code: ', '');
             cognitoUser.verifyAttribute('email', verificationCode, {
               onSuccess: (success) => {
-                console.log('success: ' + success);
+                // console.log('success: ' + success);
               },
               onFailure: (err) => {
-                console.log('error');
-                console.log(err);
+                // console.log('error');
+                // console.log(err);
               }
             });
           }
@@ -144,19 +144,19 @@ export class AuthService {
   }
 
   changePassword(oldPassword: string, newPassword: string): Promise<any> {
-    console.log('change password');
+    // console.log('change password');
     return new Promise<any>((resolve, reject) => {
       Auth.currentAuthenticatedUser()
         .then((cognitoUser: CognitoUser) => {
           cognitoUser.changePassword(oldPassword, newPassword, (err, result) => {
             if (err) {
-              console.log('error');
-              console.log(err);
+              // console.log('error');
+              // console.log(err);
               reject(err);
               return;
             }
-            console.log('success');
-            console.log(result);
+            // console.log('success');
+            // console.log(result);
             resolve(result);
           });
         });
@@ -164,15 +164,15 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    console.log('auth service isLoggedIn()');
+    // console.log('auth service isLoggedIn()');
     return Auth.currentSession()
       .then((session: CognitoUserSession) => {
-        console.log(session);
+        // console.log(session);
         this.loggedIn = true;
         return session.isValid();
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
         this.loggedIn = false;
         return false;
       });
@@ -200,11 +200,11 @@ export class AuthService {
           });
           currentUser.updateAttributes(attributeList, function(err, result) {
             if (err) {
-              console.log(err);
+              // console.log(err);
               reject(err);
               return;
             }
-            console.log('call result: ' + result);
+            // console.log('call result: ' + result);
             resolve(result);
           });
         });

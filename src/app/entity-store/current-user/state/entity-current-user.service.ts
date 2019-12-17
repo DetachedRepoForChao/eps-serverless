@@ -47,11 +47,11 @@ export class EntityCurrentUserService {
 
 
   update(user) {
-    const functionName = 'update';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'update';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(user);
+    // console.log(user);
 
     const userUpdate = {};
     const keys = Object.keys(user);
@@ -64,13 +64,13 @@ export class EntityCurrentUserService {
       }
     }
 
-    console.log(userUpdate);
+    // console.log(userUpdate);
 
     this.currentUserStore.update((e) => e.username === user.username, userUpdate);
   }
 
   delete(id: ID) {
-    console.log(`entity-user.service: delete ${id}`);
+    // console.log(`entity-user.service: delete ${id}`);
     this.currentUserStore.remove(id);
   }
 
@@ -103,12 +103,12 @@ export class EntityCurrentUserService {
 
 
   cacheCurrentUser() {
-    console.log(`Retrieving current user`);
+    // console.log(`Retrieving current user`);
     // this.userStore.setLoading(true);  // this is the initial state before doing anything
     const request$ = this.getCurrentUser()
       .pipe(tap((userDataResult: any) => {
-        console.log(`caching:`);
-        console.log(userDataResult);
+        // console.log(`caching:`);
+        // console.log(userDataResult);
 
         const userId = userDataResult.userId;
         const username = userDataResult.username;
@@ -157,7 +157,7 @@ export class EntityCurrentUserService {
   }
 
   getAvatarFromStorage(avatarUrl: string): Observable<any> {
-    console.log('Getting item from storage');
+    // console.log('Getting item from storage');
 
     return new Observable<any>(observer => {
 
@@ -178,7 +178,7 @@ export class EntityCurrentUserService {
         identityId: identityId
       })
         .then((result: string) => {
-          console.log(result);
+          // console.log(result);
           const data = {
             avatarResolvedUrl: result
           };
@@ -187,8 +187,8 @@ export class EntityCurrentUserService {
           observer.complete();
         })
         .catch(err => {
-          console.log(`Error retrieving url for ${avatarUrl}`);
-          console.log(err);
+          // console.log(`Error retrieving url for ${avatarUrl}`);
+          // console.log(err);
           const data = {
             avatarResolvedUrl: ''
           };
@@ -202,15 +202,15 @@ export class EntityCurrentUserService {
   getCurrentUser(): Observable<any> {
     const functionName = 'getCurrentUser';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
           Auth.currentUserInfo()
             .then(userAttributes => {
-              console.log('userAttributes:');
-              console.log(userAttributes);
+              // console.log('userAttributes:');
+              // console.log(userAttributes);
 
               this.getCurrentUserFromDb()
                 .subscribe(currentUserData => {
@@ -289,8 +289,8 @@ export class EntityCurrentUserService {
                     awardManager: awardManager,
                   };
 
-                  console.log('userData:');
-                  console.log(data);
+                  // console.log('userData:');
+                  // console.log(data);
 
                   observer.next(data);
                   observer.complete();
@@ -302,9 +302,9 @@ export class EntityCurrentUserService {
   }
 
   getCurrentUserFromDb() {
-    const functionName = 'getCurrentUserFromDb';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getCurrentUserFromDb';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -314,21 +314,21 @@ export class EntityCurrentUserService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/userProfile', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving user profile data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving user profile data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -337,16 +337,16 @@ export class EntityCurrentUserService {
 
 
   modifyUser(user): Observable<any> {
-    const functionName = 'modifyUser';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'modifyUser';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(currentUser => {
           this.updateCognitoAttributes(user)
             .subscribe(updateResult => {
-              console.log(updateResult);
+              // console.log(updateResult);
 
               if (updateResult === 'SUCCESS') {
                 const token = currentUser.signInUserSession.idToken.jwtToken;
@@ -359,8 +359,8 @@ export class EntityCurrentUserService {
 
                 API.post(this.apiName, this.apiPath + '/modifyUser', myInit)
                   .then(data => {
-                    console.log(`${functionFullName}: data retrieved from API`);
-                    console.log(data);
+                    // console.log(`${functionFullName}: data retrieved from API`);
+                    // console.log(data);
 
                     if (data.data.status !== false) {
                       // Update the user in the local Akita store
@@ -374,8 +374,8 @@ export class EntityCurrentUserService {
                     }
                   })
                   .catch(err => {
-                    console.log(`${functionFullName}: error making API call`);
-                    console.log(err);
+                    // console.log(`${functionFullName}: error making API call`);
+                    // console.log(err);
                     observer.next(err);
                     observer.complete();
                   });
@@ -386,8 +386,8 @@ export class EntityCurrentUserService {
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -395,9 +395,9 @@ export class EntityCurrentUserService {
   }
 
   updateCognitoAttributes(user): Observable<any> {
-    const functionName = 'updateCognitoAttributes';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'updateCognitoAttributes';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -447,24 +447,24 @@ export class EntityCurrentUserService {
 
           // const attributeObj = new CognitoUserAttribute(attribute);
           // attributeList.push(attributeObj);
-          console.log('attributeList:');
-          console.log(attributeList);
+          // console.log('attributeList:');
+          // console.log(attributeList);
 
           currentUser.updateAttributes(attributeList, function(err, result) {
             if (err) {
-              console.log(err);
+              // console.log(err);
               observer.next(err);
               observer.complete();
               return;
             }
-            console.log('call result: ' + result);
+            // console.log('call result: ' + result);
             observer.next(result);
             observer.complete();
           });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });

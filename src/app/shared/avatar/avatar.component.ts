@@ -9,6 +9,7 @@ import {AchievementService} from '../../entity-store/achievement/state/achieveme
 import {Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../entity-store/current-user/state/entity-current-user.model';
+import {AchievementModel} from '../../entity-store/achievement/state/achievement.model';
 
 @Component({
   selector: 'app-avatar',
@@ -21,8 +22,10 @@ export class AvatarComponent implements OnInit, OnDestroy {
   componentName = 'avatar.component';
   private unsubscribe$ = new Subject();
   private currentUserLoading$ = new Subject();
+  private achievementsLoading$ = new Subject();
   isImageLoading: boolean;
   currentUser: EntityCurrentUserModel;
+  achievements: AchievementModel[];
   imageChangedEvent: any = '';
   croppedImage: any = '';
   croppedImageToShow: any = '';
@@ -60,7 +63,20 @@ export class AvatarComponent implements OnInit, OnDestroy {
         }
       });
     // this.croppedImageToShow = this.currentUserQuery.getCurrentUser()[0].avatarResolvedUrl;
+    this.achievementQuery.selectLoading()
+      .pipe(takeUntil(this.achievementsLoading$))
+      .subscribe(isLoading => {
+        if (!isLoading) {
+          this.achievementQuery.selectAll()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((achievements: AchievementModel[]) => {
+              this.achievements = achievements;
+            });
 
+          this.achievementsLoading$.next();
+          this.achievementsLoading$.complete();
+        }
+      });
   }
 
   toggleAvatarUpload() {
@@ -160,6 +176,10 @@ export class AvatarComponent implements OnInit, OnDestroy {
     return this.achievementQuery.getCompleteAchievementById(id);
   }
 
+  getCompleteAchievementByName(name: string) {
+    return this.achievementQuery.getCompleteAchievementByName(name);
+  }
+
   matfunction(){
     return "please complete the achievement four"
   }
@@ -167,6 +187,8 @@ export class AvatarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.currentUserLoading$.next();
     this.currentUserLoading$.complete();
+    this.achievementsLoading$.next();
+    this.achievementsLoading$.complete();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

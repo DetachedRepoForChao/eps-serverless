@@ -44,24 +44,24 @@ export class EntityDepartmentService {
 
   add(name: string, departmentId: number) {
     const department = createEntityDepartmentModel({name, departmentId});
-    console.log(department);
+    // console.log(department);
     this.entityDepartmentStore.add(department);
   }
 
 
   delete(id: ID) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${id}`);
+    // console.log(`${functionFullName}: delete ${id}`);
     this.entityDepartmentStore.remove(id);
   }
 
   addDepartment(department): Observable<any> {
-    const functionName = 'addDepartment';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'addDepartment';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -75,8 +75,8 @@ export class EntityDepartmentService {
           };
 
           API.post(this.apiName, this.apiPath + '/addDepartments', myInit).then(addDepartmentResult => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(addDepartmentResult);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(addDepartmentResult);
             if (addDepartmentResult.data.status !== false) {
               const id = addDepartmentResult.data.newDepartment.departmentId;
               const name = addDepartmentResult.data.newDepartment.departmentName;
@@ -94,9 +94,9 @@ export class EntityDepartmentService {
   }
 
   getDepartments(): Observable<any> {
-    const functionName = 'getDepartments';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getDepartments';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -106,21 +106,21 @@ export class EntityDepartmentService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/getDepartments', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving departments data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving departments data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -128,9 +128,9 @@ export class EntityDepartmentService {
   }
 
   deleteDepartment(department): Observable<any> {
-    const functionName = 'deleteDepartment';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'deleteDepartment';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -144,8 +144,8 @@ export class EntityDepartmentService {
           };
 
           API.post(this.apiName, this.apiPath + '/deleteDepartment', myInit).then(deleteDepartmentResult => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(deleteDepartmentResult);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(deleteDepartmentResult);
 
             if (deleteDepartmentResult.data.status !== false) {
 
@@ -164,14 +164,14 @@ export class EntityDepartmentService {
 
 
   cacheDepartments() {
-    const functionName = 'cacheDepartments';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cacheDepartments';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const request$ = this.getDepartments()
       .pipe(tap((departments: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(departments);
+        // console.log(`${functionFullName}: caching:`);
+        // console.log(departments);
 
         const departmentsArray: EntityDepartmentModel[] = [];
 

@@ -46,9 +46,9 @@ export class SignUpComponent implements OnInit {
     public formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
     this.spinner.show('signup-spinner');
@@ -97,23 +97,23 @@ export class SignUpComponent implements OnInit {
   }
 
   validatePhoneNumber(phone: string): (string | null) {
-    console.log(phone);
+    // console.log(phone);
     this.phoneValidationError = null;
     // Strip out all characters except numbers
     const newVal = phone.replace(/\D+/g, '');
-    console.log (newVal);
+    // console.log (newVal);
     if (newVal.length === 10) {
       return newVal;
     } else {
-      console.log(`Phone validation error. Phone length: ${newVal.length}`);
+      // console.log(`Phone validation error. Phone length: ${newVal.length}`);
       this.phoneValidationError = 'The phone number must be 10 digits long.';
       return null;
     }
   }
 
   onSubmit(form: FormGroup) {
-    console.log('onSubmit');
-    console.log(form.value);
+    // console.log('onSubmit');
+    // console.log(form.value);
     this.isSubmitted = true;
     const phone = this.validatePhoneNumber(form.controls.phone.value);
     this.userService.postUser(form.value)
@@ -144,7 +144,9 @@ export class SignUpComponent implements OnInit {
               this.resetForm(form);
               this.router.navigateByUrl('/confirm');
             })
-            .catch((error) => console.log(error));
+            .catch((error) => {
+              // console.log(error);
+            });
         },
         err => {
           if (err.status === 422) {

@@ -49,11 +49,11 @@ export class FeatureService {
 
 
   delete(id: ID) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${id}`);
+    // console.log(`${functionFullName}: delete ${id}`);
     this.featureStore.remove(id);
   }
 
@@ -62,11 +62,11 @@ export class FeatureService {
   }
 
   update(featureId: number, name: string, description: string, achievementId: number, unlockDescription: string) {
-    const functionName = 'update';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'update';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: update ${name}`);
+    // console.log(`${functionFullName}: update ${name}`);
     /** Update All */
     this.featureStore.update((e) => e.featureId === featureId, {
       name: name,
@@ -77,9 +77,9 @@ export class FeatureService {
   }
 
   getFeatures(): Observable<any> {
-    const functionName = 'getFeatures';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getFeatures';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -89,21 +89,21 @@ export class FeatureService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/features', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving features data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving features data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -112,14 +112,14 @@ export class FeatureService {
 
 
   cacheFeatures() {
-    const functionName = 'cacheFeatures';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cacheFeatures';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const request$ = this.getFeatures()
       .pipe(tap((features: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(features);
+        // console.log(`${functionFullName}: caching:`);
+        // console.log(features);
 
         const featuresArray: FeatureModel[] = [];
 

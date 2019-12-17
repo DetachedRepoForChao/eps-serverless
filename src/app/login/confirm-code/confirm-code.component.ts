@@ -42,10 +42,10 @@ export class ConfirmCodeComponent implements OnInit {
   }
 
   confirmCode(form: NgForm) {
-    console.log(form.value);
+    // console.log(form.value);
     Auth.confirmSignUp(this.username, form.value.code)
       .then((data: any) => {
-        console.log(data);
+        // console.log(data);
         if (data === 'SUCCESS' &&
           environment.confirm.email &&
           environment.confirm.password) {
@@ -58,7 +58,7 @@ export class ConfirmCodeComponent implements OnInit {
         }
       })
       .catch((error: any) => {
-        console.log(error);
+        // console.log(error);
         this._notification.show(error.message);
       });
   }

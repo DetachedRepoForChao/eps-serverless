@@ -57,11 +57,11 @@ export class MetricsService {
   }*/
 
   delete(id: ID) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${id}`);
+    // console.log(`${functionFullName}: delete ${id}`);
     this.metricsStore.remove(id);
   }
 

@@ -27,7 +27,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   constructor(private notifierService: NotifierService,
               private router: Router) {
-    console.log(this.router.getCurrentNavigation().extras);
+    // console.log(this.router.getCurrentNavigation().extras);
     if (this.router.getCurrentNavigation().extras.state) {
       this.username = this.router.getCurrentNavigation().extras.state.username;
       this.codeSent = this.router.getCurrentNavigation().extras.state.codeSent;
@@ -39,37 +39,37 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   getCode(form: NgForm) {
-    console.log(form);
+    // console.log(form);
     if (!form.valid) {
-      console.log('Invalid submission');
+      // console.log('Invalid submission');
     } else {
       Auth.forgotPassword(form.value.codeGetUsername)
         .then((data: any) => {
-          console.log(data);
+          // console.log(data);
           this.username = form.value.codeGetUsername;
           this.resetPasswordModel.value.username = this.username;
           this.codeSent = true;
         })
         .catch(err => {
-          console.log('An error occurred');
-          console.log(err);
+          // console.log('An error occurred');
+          // console.log(err);
           this.notifierService.notify('error', err.message);
         });
     }
   }
 
   resetPassword(form: NgForm) {
-    console.log(form);
+    // console.log(form);
     if (!form.valid) {
-      console.log('Invalid submission');
+      // console.log('Invalid submission');
     } else {
       Auth.forgotPasswordSubmit(form.value.codeSentUsername, form.value.codeSentCode, form.value.codeSentPassword)
         .then(() => {
           this.notifierService.notify('success', 'Password reset successful!');
         })
         .catch(err => {
-          console.log('An error occurred');
-          console.log(err);
+          // console.log('An error occurred');
+          // console.log(err);
 
         });
     }

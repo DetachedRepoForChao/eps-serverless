@@ -56,20 +56,20 @@ export class PointItemTransactionService {
 
 
   delete(id: ID) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-
-    console.log(`${functionFullName}: delete ${id}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
+    //
+    // console.log(`${functionFullName}: delete ${id}`);
     this.pointItemTransactionStore.remove(id);
   }
 
   update(pointItemTransaction) {
-    const functionName = 'update';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'update';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(pointItemTransaction);
+    // console.log(pointItemTransaction);
 
     const pointItemTransactionUpdate = {};
     const keys = Object.keys(pointItemTransaction);
@@ -78,20 +78,20 @@ export class PointItemTransactionService {
       pointItemTransactionUpdate[keys[i]] = pointItemTransaction[keys[i]];
     }
 
-    console.log(pointItemTransactionUpdate);
+    // console.log(pointItemTransactionUpdate);
 
     this.pointItemTransactionStore.update((e) => e.transactionId === pointItemTransaction.transactionId, pointItemTransactionUpdate);
   }
 
   getUserCoreValues(userId: number): Observable<any> {
-    const functionName = 'getUserCoreValues';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getUserCoreValues';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       const coreValuesItem = this.coreValues.find(x => x.userId === userId);
       if (coreValuesItem) {
-        console.log(`${functionFullName}: Core values for user ${userId} already retrieved`, coreValuesItem.coreValues);
+        // console.log(`${functionFullName}: Core values for user ${userId} already retrieved`, coreValuesItem.coreValues);
         observer.next(coreValuesItem.coreValues);
         // observer.complete();
       } else {
@@ -105,8 +105,8 @@ export class PointItemTransactionService {
             };
 
             API.post(this.apiName, this.apiPath + '/getUserCoreValues', myInit).then(response => {
-              console.log(`${functionFullName}: successfully retrieved data from API`);
-              console.log(response);
+              // console.log(`${functionFullName}: successfully retrieved data from API`);
+              // console.log(response);
               const userCoreValues = {
                 userId: userId,
                 coreValues: response.data.coreValues,
@@ -118,13 +118,13 @@ export class PointItemTransactionService {
               observer.complete();
             })
               .catch(err => {
-                console.log(`${functionFullName}: error retrieving features data from API`, err);
+                // console.log(`${functionFullName}: error retrieving features data from API`, err);
                 observer.error(err);
                 observer.complete();
               });
           })
           .catch(err => {
-            console.log(`${functionFullName}: error getting current authenticated user from auth service`, err);
+            // console.log(`${functionFullName}: error getting current authenticated user from auth service`, err);
             observer.error(err);
             observer.complete();
           });
@@ -133,9 +133,9 @@ export class PointItemTransactionService {
   }
 
   getCurrentUserPointItemTransactions(): Observable<any> {
-    const functionName = 'getCurrentUserPointItemTransactions';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getCurrentUserPointItemTransactions';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -145,21 +145,21 @@ export class PointItemTransactionService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/getCurrentUserPointTransactions', myInit).then(response => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(response);
             observer.next(response.data.pointTransactions);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving features data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving features data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -167,9 +167,9 @@ export class PointItemTransactionService {
   }
 
   getUserPointItemTransactions(userId: number): Observable<any> {
-    const functionName = 'getUserPointItemTransactions';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getUserPointItemTransactions';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -182,21 +182,21 @@ export class PointItemTransactionService {
           };
 
           API.post(this.apiName, this.apiPath + '/getUserPointTransactions', myInit).then(response => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(response);
             observer.next(response.data.pointTransactions);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving features data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving features data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -205,9 +205,9 @@ export class PointItemTransactionService {
 
 
   getAddPointItemTransactionsRange(startIndex: number, numberRecords: number): Observable<any> {
-    const functionName = 'getAddPointItemTransactionsRange';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getAddPointItemTransactionsRange';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -221,21 +221,21 @@ export class PointItemTransactionService {
           };
 
           API.post(this.apiName, this.apiPath + '/getAddPointTransactionRange', myInit).then(response => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(response);
             observer.next(response.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving features data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving features data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -244,9 +244,9 @@ export class PointItemTransactionService {
 
 
   getManagerPointItemTransactions(userId: number): Observable<any> {
-    const functionName = 'getManagerPointItemTransactions';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getManagerPointItemTransactions';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -259,21 +259,21 @@ export class PointItemTransactionService {
           };
 
           API.post(this.apiName, this.apiPath + '/getManagerPointTransactions', myInit).then(response => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(response);
             observer.next(response.data.pointTransactions);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving features data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving features data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -281,10 +281,10 @@ export class PointItemTransactionService {
   }
 
   cacheUserPointItemTransactions(userId: number) {
-    const functionName = 'cacheUserPointItemTransactions';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: User Id ${userId}`);
+    // const functionName = 'cacheUserPointItemTransactions';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: User Id ${userId}`);
     // this.pointItemTransactionStore.setLoading(true);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -294,13 +294,13 @@ export class PointItemTransactionService {
           // Check if point transactions for this user have already been cached
           if (this.retrievedUserIds.find(x => x === userId)) {
             // Point transactions for this user have already been retrieved
-            console.log(`${functionFullName}: Point transactions for user ${userId} have already been retrieved`);
+            // console.log(`${functionFullName}: Point transactions for user ${userId} have already been retrieved`);
             observer.next(false);
             observer.complete();
           } else {
             const request$ = this.getUserPointItemTransactions(userId)
               .pipe(tap((pointItemTransactions: any) => {
-                console.log(`${functionFullName}: caching for User Id ${userId}:`);
+                // console.log(`${functionFullName}: caching for User Id ${userId}:`);
 
                 const pointItemTransactionsArray: PointItemTransactionModel[] = [];
 
@@ -309,7 +309,7 @@ export class PointItemTransactionService {
                   // Make sure we're not adding duplicates
                   if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
                     // Duplicate. Ignore this one.
-                    console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
+                    // console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
                     // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
@@ -346,16 +346,16 @@ export class PointItemTransactionService {
                 }
 
                 if (this.pointItemTransactionQuery.getAll().length > 0) {
-                  console.log(`${functionFullName}: Adding transactions`);
-                  console.log(this.pointItemTransactionQuery.getAll());
-                  console.log(`${functionFullName}: to`);
-                  console.log(pointItemTransactionsArray);
+                  // console.log(`${functionFullName}: Adding transactions`);
+                  // console.log(this.pointItemTransactionQuery.getAll());
+                  // console.log(`${functionFullName}: to`);
+                  // console.log(pointItemTransactionsArray);
                   for (const transaction of this.pointItemTransactionQuery.getAll()) {
                     pointItemTransactionsArray.push(transaction);
                   }
                 } else {
-                  console.log(`${functionFullName}: Setting transactions`);
-                  console.log(pointItemTransactionsArray);
+                  // console.log(`${functionFullName}: Setting transactions`);
+                  // console.log(pointItemTransactionsArray);
                 }
 
                 this.pointItemTransactionStore.set(pointItemTransactionsArray);
@@ -370,10 +370,10 @@ export class PointItemTransactionService {
   }
 
   cacheManagerPointItemTransactions(managerId: number) {
-    const functionName = 'cacheManagerPointItemTransactions';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: Manager Id ${managerId}`);
+    // const functionName = 'cacheManagerPointItemTransactions';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: Manager Id ${managerId}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -383,13 +383,13 @@ export class PointItemTransactionService {
           // Check if point transactions for this manager have already been cached.
           if (this.retrievedManagerIds.find(x => x === managerId)) {
             // Point transactions for this user have already been retrieved
-            console.log(`${functionFullName}: Point transactions for manager ${managerId} have already been retrieved`);
+            // console.log(`${functionFullName}: Point transactions for manager ${managerId} have already been retrieved`);
             observer.next(false);
             observer.complete();
           } else {
             const request$ = this.getManagerPointItemTransactions(managerId)
               .pipe(tap((pointItemTransactions: any) => {
-                console.log(`${functionFullName}: caching for Manager Id ${managerId}:`);
+                // console.log(`${functionFullName}: caching for Manager Id ${managerId}:`);
 
                 const pointItemTransactionsArray: PointItemTransactionModel[] = [];
 
@@ -398,7 +398,7 @@ export class PointItemTransactionService {
                   // Make sure we're not adding duplicates
                   if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
                     // Duplicate. Ignore this one.
-                    console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
+                    // console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
                     // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
@@ -435,16 +435,16 @@ export class PointItemTransactionService {
                 }
 
                 if (this.pointItemTransactionQuery.getAll().length > 0) {
-                  console.log(`${functionFullName}: Adding transactions`);
-                  console.log(this.pointItemTransactionQuery.getAll());
-                  console.log(`${functionFullName}: to`);
-                  console.log(pointItemTransactionsArray);
+                  // console.log(`${functionFullName}: Adding transactions`);
+                  // console.log(this.pointItemTransactionQuery.getAll());
+                  // console.log(`${functionFullName}: to`);
+                  // console.log(pointItemTransactionsArray);
                   for (const transaction of this.pointItemTransactionQuery.getAll()) {
                     pointItemTransactionsArray.push(transaction);
                   }
                 } else {
-                  console.log(`${functionFullName}: Setting transactions`);
-                  console.log(pointItemTransactionsArray);
+                  // console.log(`${functionFullName}: Setting transactions`);
+                  // console.log(pointItemTransactionsArray);
                 }
 
                 this.pointItemTransactionStore.set(pointItemTransactionsArray);
@@ -459,14 +459,14 @@ export class PointItemTransactionService {
   }
 
   cacheAddPointItemTransactionsBatch() {
-    const functionName = 'cacheAddPointItemTransactionsBatch';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cacheAddPointItemTransactionsBatch';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const numberRecords = 10;
     let startIndex: number;
     if (!this.numBatchRetrieved) {
-      console.log(`${functionFullName}: Retrieving first transaction batch`);
+      // console.log(`${functionFullName}: Retrieving first transaction batch`);
       startIndex = 0;
     } else {
       startIndex = (this.numBatchRetrieved + 1) * 10;
@@ -480,24 +480,24 @@ export class PointItemTransactionService {
           // Check if transactions for this batch have already been cached
           if (this.numBatchRetrieved && (this.numBatchRetrieved * 10) >= startIndex) {
             // Point transactions for this batch have already been retrieved
-            console.log(`${functionFullName}: Point transactions for range [${startIndex} - ${startIndex + numberRecords}] have already been retrieved`);
+            // console.log(`${functionFullName}: Point transactions for range [${startIndex} - ${startIndex + numberRecords}] have already been retrieved`);
             observer.next(false);
             observer.complete();
           } else {
             const request$ = this.getAddPointItemTransactionsRange(startIndex, numberRecords)
               .pipe(tap((pointItemTransactions: any) => {
-                console.log(`${functionFullName}: caching for range [${startIndex} - ${startIndex + numberRecords}]:`);
-                console.log(pointItemTransactions);
+                // console.log(`${functionFullName}: caching for range [${startIndex} - ${startIndex + numberRecords}]:`);
+                // console.log(pointItemTransactions);
 
                 const pointItemTransactionsArray: PointItemTransactionModel[] = [];
 
                 for (const pointItemTransaction of pointItemTransactions) {
-                  console.log(pointItemTransaction);
+                  // console.log(pointItemTransaction);
                   const transactionId = pointItemTransaction.id;
                   // Make sure we're not adding duplicates
                   if (this.pointItemTransactionQuery.getAll({filterBy: e => e.transactionId === transactionId}).length > 0) {
                     // Duplicate. Ignore this one.
-                    console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
+                    // console.log(`${functionFullName}: transaction is a duplicate: ${transactionId}`);
                   } else {
                     // console.log(`${functionFullName}: adding transaction: ${transactionId}`);
                     const type = pointItemTransaction.type;
@@ -535,19 +535,19 @@ export class PointItemTransactionService {
                 }
 
                 if (this.pointItemTransactionQuery.getAll().length > 0) {
-                  console.log(`${functionFullName}: Adding transactions`);
-                  console.log(this.pointItemTransactionQuery.getAll());
-                  console.log(`${functionFullName}: to`);
-                  console.log(pointItemTransactionsArray);
+                  // console.log(`${functionFullName}: Adding transactions`);
+                  // console.log(this.pointItemTransactionQuery.getAll());
+                  // console.log(`${functionFullName}: to`);
+                  // console.log(pointItemTransactionsArray);
                   for (const transaction of this.pointItemTransactionQuery.getAll()) {
                     pointItemTransactionsArray.push(transaction);
                   }
                 } else {
-                  console.log(`${functionFullName}: Setting transactions`);
-                  console.log(pointItemTransactionsArray);
+                  // console.log(`${functionFullName}: Setting transactions`);
+                  // console.log(pointItemTransactionsArray);
                 }
 
-                console.log(pointItemTransactionsArray);
+                // console.log(pointItemTransactionsArray);
                 this.pointItemTransactionStore.set(pointItemTransactionsArray);
               }));
 
@@ -565,15 +565,15 @@ export class PointItemTransactionService {
   }
 
   public setInitialBatchRetrievedTrue() {
-    console.log(`Initial batch retrieved`);
+    // console.log(`Initial batch retrieved`);
     this.initialBatchRetrieved = true;
   }
 
 
   addLike(targetUserId: number, postId: number): Observable<any> {
-    const functionName = 'addLike';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'addLike';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
     // Add Like to database
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -581,7 +581,7 @@ export class PointItemTransactionService {
           this.authService.currentUserInfo()
             .then(currentUser => {
               const likingUsername = currentUser.username;
-              console.log(`${functionFullName}: likingUsername: ${likingUsername}; targetUserId: ${targetUserId}; postId: ${postId}`);
+              // console.log(`${functionFullName}: likingUsername: ${likingUsername}; targetUserId: ${targetUserId}; postId: ${postId}`);
               const token = user.signInUserSession.idToken.jwtToken;
               const myInit = this.myInit;
               myInit.headers['Authorization'] = token;
@@ -592,8 +592,8 @@ export class PointItemTransactionService {
 
               API.post(this.apiName, this.apiPath + '/addLike', myInit)
                 .then(response => {
-                  console.log(`${functionFullName}: successfully retrieved data from API`);
-                  console.log(response);
+                  // console.log(`${functionFullName}: successfully retrieved data from API`);
+                  // console.log(response);
                   if (response.data.status !== false) {
                     // Add Like to the local point transactions list
                     // const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
@@ -615,22 +615,22 @@ export class PointItemTransactionService {
                     observer.next(response.data);
                     observer.complete();
                   } else {
-                    console.log(`${functionFullName}: API call came back with status ${response.data.status}: ${response.data.message}`);
-                    console.log(response.data.likeRecord);
+                    // console.log(`${functionFullName}: API call came back with status ${response.data.status}: ${response.data.message}`);
+                    // console.log(response.data.likeRecord);
                     observer.next(response.data);
                     observer.complete();
                   }
                 })
                 .catch(err => {
-                  console.log(`${functionFullName}: error making API call`);
-                  console.log(err);
+                  // console.log(`${functionFullName}: error making API call`);
+                  // console.log(err);
                   observer.next(err);
                   observer.complete();
                 });
             })
             .catch(err => {
-              console.log(`${functionFullName}: error getting authenticated user`);
-              console.log(err);
+              // console.log(`${functionFullName}: error getting authenticated user`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
@@ -649,8 +649,8 @@ export class PointItemTransactionService {
     for (const like of targetTransaction.likes) {
       newLikesArray.push(like);
     }
-    console.log('new likes array');
-    console.log(newLikesArray);
+    // console.log('new likes array');
+    // console.log(newLikesArray);
     this.pointItemTransactionStore.update((e) => e.transactionId === transactionId, {
       likes: newLikesArray,
       likedByCurrentUser: true
@@ -658,9 +658,9 @@ export class PointItemTransactionService {
   }
 
   removeLike(postId: number): Observable<any> {
-    const functionName = 'removeLike';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'removeLike';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     // Remove Like from database
     return new Observable<any>(observer => {
@@ -677,8 +677,8 @@ export class PointItemTransactionService {
               };
 
               API.post(this.apiName, this.apiPath + '/removeLike', myInit).then(data => {
-                console.log(`${functionFullName}: successfully retrieved data from API`);
-                console.log(data);
+                // console.log(`${functionFullName}: successfully retrieved data from API`);
+                // console.log(data);
                 if (data.data.status !== false) {
                   // Remove Like from the local point transactions list
                   // const targetPointTransaction = this.pointTransactions.find(x => x.id === postId);
@@ -690,7 +690,7 @@ export class PointItemTransactionService {
                   observer.next(data.data);
                   observer.complete();
                 } else {
-                  console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
+                  // console.log(`${functionFullName}: API call came back with status ${data.data.status}: ${data.data.message}`);
                   observer.next(data.data);
                   observer.complete();
                 }
@@ -706,8 +706,8 @@ export class PointItemTransactionService {
     })[0];
 
     const newLikesArray = targetTransaction.likes.filter(x => x.username !== username);
-    console.log('new likes array');
-    console.log(newLikesArray);
+    // console.log('new likes array');
+    // console.log(newLikesArray);
     this.pointItemTransactionStore.update((e) => e.transactionId === transactionId, {
       likes: newLikesArray,
       likedByCurrentUser: false

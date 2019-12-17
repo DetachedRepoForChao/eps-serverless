@@ -46,22 +46,22 @@ export class PointItemService {
 
 
   add(itemId: number, name: string, description: string, amount: number, coreValues: string[]) {
-    const functionName = 'add';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'add';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const pointItemModel = createPointItemModel({itemId, name, description, amount, coreValues});
-    console.log(pointItemModel);
+    // console.log(pointItemModel);
     this.pointItemStore.add(pointItemModel);
   }
 
 
   delete(itemId: number) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: delete ${itemId}`);
+    // console.log(`${functionFullName}: delete ${itemId}`);
     this.pointItemStore.remove(e => e.itemId === itemId);
   }
 
@@ -71,11 +71,11 @@ export class PointItemService {
 
 
   update(pointItem) {
-    const functionName = 'update';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'update';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(pointItem);
+    // console.log(pointItem);
     // console.log(`${functionFullName}: update ${user.firstName} ${user.lastName}`);
 
     const pointItemUpdate = {};
@@ -85,15 +85,15 @@ export class PointItemService {
       pointItemUpdate[keys[i]] = pointItem[keys[i]];
     }
 
-    console.log(pointItemUpdate);
+    // console.log(pointItemUpdate);
 
     this.pointItemStore.update((e) => e.itemId === pointItem.itemId, pointItemUpdate);
   }
 
   getPointItems(): Observable<any> {
-    const functionName = 'getPointItems';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getPointItems';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -103,21 +103,21 @@ export class PointItemService {
           myInit.headers['Authorization'] = token;
 
           API.get(this.apiName, this.apiPath + '/getPointItems', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           })
             .catch(err => {
-              console.log(`${functionFullName}: error retrieving point items data from API`);
-              console.log(err);
+              // console.log(`${functionFullName}: error retrieving point items data from API`);
+              // console.log(err);
               observer.next(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: error getting current authenticated user from auth service`);
-          console.log(err);
+          // console.log(`${functionFullName}: error getting current authenticated user from auth service`);
+          // console.log(err);
           observer.next(err);
           observer.complete();
         });
@@ -125,9 +125,9 @@ export class PointItemService {
   }
 
   awardPointsToEmployees(userPointObjectArray: any): Observable<any> {
-    const functionName = 'awardPointsToEmployees';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'awardPointsToEmployees';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -142,25 +142,25 @@ export class PointItemService {
 
           API.post(this.apiName, this.apiPath + '/giftPointsToEmployees', myInit)
             .then(response => {
-            console.log(`${functionFullName}: API call successfull`);
-            console.log(response);
+            // console.log(`${functionFullName}: API call successfull`);
+            // console.log(response);
             if (response.data.status !== false) {
               observer.next(response.data);
               observer.complete();
             } else {
-              console.log(`${functionFullName}: API call returned with an error`, response.data);
+              // console.log(`${functionFullName}: API call returned with an error`, response.data);
               observer.error(response.data);
               observer.complete();
             }
           })
             .catch(err => {
-              console.log(`${functionFullName}: API call error`, err);
+              // console.log(`${functionFullName}: API call error`, err);
               observer.error(err);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: Auth error`, err);
+          // console.log(`${functionFullName}: Auth error`, err);
           observer.error(err);
           observer.complete();
         });
@@ -168,9 +168,9 @@ export class PointItemService {
   }
 
   sendAwardPointsNotice(targetUser: any, sourceUser: any, pointItem: PointItemModel, comment: string): Observable<any> {
-    const functionName = 'sendAwardPointsNotice';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'sendAwardPointsNotice';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -187,8 +187,8 @@ export class PointItemService {
           };
 
           API.post(this.apiName, this.apiPath2 + '/sendAwardPointsNotice', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -197,14 +197,14 @@ export class PointItemService {
   }
 
   cachePointItems() {
-    const functionName = 'cachePointItems';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cachePointItems';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const request$ = this.getPointItems()
       .pipe(tap((pointItems: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(pointItems);
+        // console.log(`${functionFullName}: caching:`);
+        // console.log(pointItems);
 
         const pointItemsArray: PointItemModel[] = [];
 
@@ -230,9 +230,9 @@ export class PointItemService {
   }
 
   newPointItem(pointItem): Observable<any> {
-    const functionName = 'newPointItem';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'newPointItem';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -246,8 +246,8 @@ export class PointItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/newPointItem', myInit).then(response => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(response);
 
             if (response.data.status !== false) {
 /*              const itemId = response.data.id;
@@ -280,9 +280,9 @@ export class PointItemService {
   }
 
   modifyPointItem(pointItem): Observable<any> {
-    const functionName = 'modifyPointItem';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'modifyPointItem';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -296,8 +296,8 @@ export class PointItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/modifyPointItem', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
 
             if (data.data.status !== false) {
 
@@ -315,9 +315,9 @@ export class PointItemService {
   }
 
   deletePointItem(pointItem): Observable<any> {
-    const functionName = 'deletePointItem';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'deletePointItem';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -331,8 +331,8 @@ export class PointItemService {
           };
 
           API.post(this.apiName, this.apiPath + '/deletePointItem', myInit).then(data => {
-            console.log(`${functionFullName}: data retrieved from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: data retrieved from API`);
+            // console.log(data);
 
             if (data.data.status !== false) {
               this.delete(pointItem.itemId);

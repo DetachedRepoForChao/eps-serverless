@@ -57,32 +57,32 @@ export class OtherUserAchievementService {
 
 
   delete(id: ID) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: ${id}`);
+    // console.log(`${functionFullName}: ${id}`);
     this.otherUserAchievementStore.remove(id);
   }
 
   cacheAchievements(user: EntityUserModel): Observable<any> {
-    const functionName = 'cacheAchievements';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: userId ${user.userId}`);
+    // const functionName = 'cacheAchievements';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: userId ${user.userId}`);
 
     return new Observable<any>(observer => {
       // Check if achievements for this user have already been cached
       if (this.retrievedUserIds.find(x => x === user.userId)) {
         // Achievements for this user have already been retrieved
-        console.log(`${functionFullName}: Achievements for user ${user.userId} have already been retrieved`);
+        // console.log(`${functionFullName}: Achievements for user ${user.userId} have already been retrieved`);
         observer.next(false);
         observer.complete();
       } else {
         const request$ = this.getUserAchievements(user)
           .pipe(tap((achievementsResult: any) => {
-            console.log(`${functionFullName}: caching:`);
-            console.log(achievementsResult);
+            // console.log(`${functionFullName}: caching:`);
+            // console.log(achievementsResult);
 
             const achievementsArray: OtherUserAchievementModel[] = [];
             for (const achievement of achievementsResult) {
@@ -91,7 +91,7 @@ export class OtherUserAchievementService {
               // Make sure we're not adding duplicates
               if (this.otherUserAchievementQuery.getAll({filterBy: e => e.progressId === progressId}).length > 0) {
                 // Duplicate. Ignore this one.
-                console.log(`ignoring achievement: ${achievement.progressId}`);
+                // console.log(`ignoring achievement: ${achievement.progressId}`);
               } else {
                 const userId = achievement.userId;
                 const achievementId = achievement.achievementId;
@@ -114,7 +114,7 @@ export class OtherUserAchievementService {
                   progress, progressId, achievementStatus, progressStatus, family, startAmount, level, roles, completedAt, acknowledgedAt,
                   updatedAt});
 
-                console.log(`adding achievement: ${achievement.progressId}`);
+                // console.log(`adding achievement: ${achievement.progressId}`);
                 achievementsArray.push(otherUserAchievementModel);
               }
             }
@@ -127,8 +127,8 @@ export class OtherUserAchievementService {
               }
             }
 
-            console.log(`${functionFullName}: achievementsArray:`);
-            console.log(achievementsArray);
+            // console.log(`${functionFullName}: achievementsArray:`);
+            // console.log(achievementsArray);
             this.otherUserAchievementStore.set(achievementsArray);
           }));
 
@@ -140,9 +140,9 @@ export class OtherUserAchievementService {
   }
 
   getUserAchievements(user: EntityUserModel): Observable<any> {
-    const functionName = 'getUserAchievements';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getUserAchievements';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -155,8 +155,8 @@ export class OtherUserAchievementService {
           };
 
           API.post(this.apiName, this.apiPath + '/userAchievements', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });

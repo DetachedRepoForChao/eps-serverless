@@ -32,31 +32,31 @@ export class NotificationService {
   }
 
   update(notification) {
-    const functionName = 'update';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'update';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(notification);
+    // console.log(notification);
 
     const notificationUpdate = {};
     const keys = Object.keys(notification);
 
     for (let i = 0; i < keys.length; i++) {
-      console.log(`setting ${notificationUpdate[keys[i]]} to ${notification[keys[i]]}`);
+      // console.log(`setting ${notificationUpdate[keys[i]]} to ${notification[keys[i]]}`);
       notificationUpdate[keys[i]] = notification[keys[i]];
     }
 
-    console.log(notificationUpdate);
+    // console.log(notificationUpdate);
 
     this.notificationStore.update((e) => e.notificationId === notification.notificationId, notificationUpdate);
   }
 
   delete(notification) {
-    const functionName = 'delete';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'delete';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(notification);
+    // console.log(notification);
 
     this.notificationStore.remove((e) => e.notificationId === notification.notificationId);
   }
@@ -64,9 +64,9 @@ export class NotificationService {
    * Get notifications by user token, fetch all the notifications
    */
   getNotifications(): Observable<any> {
-    const functionName = 'getNotifications';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getNotifications';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -74,8 +74,8 @@ export class NotificationService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
           API.get(this.apiName, this.apiPath + '/getNotifications', myInit).then(response => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(response);
             observer.next(response.data.notifications);
             observer.complete();
           });
@@ -84,14 +84,14 @@ export class NotificationService {
   }
 
   cacheNotifications() {
-    const functionName = 'cacheNotifications';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'cacheNotifications';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     const request$ = this.getNotifications()
       .pipe(tap((notifications: any) => {
-        console.log(`${functionFullName}: caching:`);
-        console.log(notifications);
+        // console.log(`${functionFullName}: caching:`);
+        // console.log(notifications);
 
         const notificationsArray: NotificationModel[] = [];
 
@@ -130,9 +130,9 @@ export class NotificationService {
    */
 
   setNotificationSeenTime(notificationId: number): Observable<any> {
-    const functionName = 'setNotificationSeenTime';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'setNotificationSeenTime';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
     // console.log(`${functionFullName}: set Notification seen Time data for the following point transaction ids:`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -144,8 +144,8 @@ export class NotificationService {
             notificationId: notificationId,
           };
           API.post(this.apiName, this.apiPath + '/setNotificationSeenTime', myInit).then(response => {
-            console.log(`${functionFullName}: successfully set data from API`);
-            console.log(response);
+            // console.log(`${functionFullName}: successfully set data from API`);
+            // console.log(response);
 
             if (response.data.status !== false) {
               const timeSeen = new Date(response.data.timeSeen);
@@ -169,10 +169,10 @@ export class NotificationService {
   }
 
   sendNotification(notification): Observable<any> {
-    const functionName = 'sendNotification';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: set new Notifications`);
+    // const functionName = 'sendNotification';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: set new Notifications`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
         .then(user => {
@@ -202,7 +202,7 @@ export class NotificationService {
           // console.log(notification);
 
           API.post(this.apiName, this.apiPath + apiCall, myInit).then(data => {
-            console.log(`${functionFullName}: successfully set data from API`);
+            // console.log(`${functionFullName}: successfully set data from API`);
             observer.next(data.data);
             observer.complete();
           });
@@ -212,9 +212,9 @@ export class NotificationService {
 
 
   getAlerts(): Observable<any> {
-    const functionName = 'getAlert';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'getAlert';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
     // console.log(`${functionFullName}: retrieving Alert data for the following point transaction ids:`);
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -223,8 +223,8 @@ export class NotificationService {
           const myInit = this.myInit;
           myInit.headers['Authorization'] = token;
           API.get(this.apiName, this.apiPath + '/getAlerts', myInit).then(data => {
-            console.log(`${functionFullName}: successfully retrieved data from API`);
-            console.log(data);
+            // console.log(`${functionFullName}: successfully retrieved data from API`);
+            // console.log(data);
             observer.next(data.data);
             observer.complete();
           });
@@ -233,9 +233,9 @@ export class NotificationService {
   }
 
   deleteNotification(notification: NotificationModel): Observable<any> {
-    const functionName = 'deleteNotification';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'deleteNotification';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -248,28 +248,28 @@ export class NotificationService {
           };
 
           API.post(this.apiName, this.apiPath + '/deleteNotification', myInit).then(data => {
-            console.log(`${functionFullName}: API call invoked successfully`);
-            console.log(data);
+            // console.log(`${functionFullName}: API call invoked successfully`);
+            // console.log(data);
             if (data.status !== false) {
               this.delete(notification);
               observer.next(true);
               observer.complete();
             } else {
-              console.log('Error removing notification from db');
+              // console.log('Error removing notification from db');
               observer.next(false);
               observer.complete();
             }
           })
             .catch(err => {
-              console.log(`${functionFullName}: Error invoking API call`);
-              console.log(err);
+              // console.log(`${functionFullName}: Error invoking API call`);
+              // console.log(err);
               observer.next(false);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: Error getting current authenticated user`);
-          console.log(err);
+          // console.log(`${functionFullName}: Error getting current authenticated user`);
+          // console.log(err);
           observer.next(false);
           observer.complete();
         });
@@ -278,9 +278,9 @@ export class NotificationService {
 
 
   deleteNotifications(notifications: NotificationModel[]): Observable<any> {
-    const functionName = 'deleteNotifications';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'deleteNotifications';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     return new Observable<any>(observer => {
       this.authService.currentAuthenticatedUser()
@@ -295,8 +295,8 @@ export class NotificationService {
           };
 
           API.post(this.apiName, this.apiPath + '/deleteNotifications', myInit).then(data => {
-            console.log(`${functionFullName}: API call invoked successfully`);
-            console.log(data);
+            // console.log(`${functionFullName}: API call invoked successfully`);
+            // console.log(data);
             if (data.status !== false) {
               for (const notification of notifications) {
                 this.delete(notification);
@@ -305,21 +305,21 @@ export class NotificationService {
               observer.next(true);
               observer.complete();
             } else {
-              console.log('Error removing notification from db');
+              // console.log('Error removing notification from db');
               observer.next(false);
               observer.complete();
             }
           })
             .catch(err => {
-              console.log(`${functionFullName}: Error invoking API call`);
-              console.log(err);
+              // console.log(`${functionFullName}: Error invoking API call`);
+              // console.log(err);
               observer.next(false);
               observer.complete();
             });
         })
         .catch(err => {
-          console.log(`${functionFullName}: Error getting current authenticated user`);
-          console.log(err);
+          // console.log(`${functionFullName}: Error getting current authenticated user`);
+          // console.log(err);
           observer.next(false);
           observer.complete();
         });

@@ -216,4 +216,13 @@ export class AchievementQuery extends QueryEntity<AchievementState, AchievementM
       return true;
     }
   }
+
+  getCompleteAchievementByName(name: string) {
+    const achievement = this.getCompleteAchievements().filter(x => x.name === name)[0];
+    if (!achievement) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
