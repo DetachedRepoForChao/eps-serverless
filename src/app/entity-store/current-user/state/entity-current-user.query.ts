@@ -49,7 +49,7 @@ export class EntityCurrentUserQuery extends QueryEntity<CurrentUserState, Entity
 
       this.selectAll()
         .subscribe((currentUser: EntityCurrentUserModel[]) => {
-          console.log('current user emitting value');
+          // console.log('current user emitting value');
           observer.next(currentUser[0]);
           // observer.complete();
         });

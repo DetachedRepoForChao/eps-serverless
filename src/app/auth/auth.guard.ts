@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
     const roles: string[] = next.data['roles'];
     const url: string = state.url;
-    console.log(`url: ${url}`);
+    // console.log(`url: ${url}`);
     return this.authService.isLoggedIn()
       .then(result => {
         // return this.checkLogin(url);
@@ -69,8 +69,8 @@ export class AuthGuard implements CanActivate {
   }
 
   checkLogin(url: string): boolean {
-    console.log('checkLogin url');
-    console.log(url);
+    // console.log('checkLogin url');
+    // console.log(url);
     if (this.authService.loggedIn) {
       if (url === '/user') {
         this.authService.currentUserInfo()

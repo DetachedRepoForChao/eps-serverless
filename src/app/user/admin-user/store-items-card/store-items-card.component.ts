@@ -84,7 +84,7 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
     this.editStoreItemForm.get('storeItem').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(storeItem => {
-      console.log(storeItem);
+      // console.log(storeItem);
       this.editItemImageChangedEvent = null;
       this.editItemCroppedImage = null;
       this.editItemCroppedImageToShow = null;
@@ -92,7 +92,7 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
       const keys = Object.keys(storeItem);
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        console.log(key);
+        // console.log(key);
         if (key === 'imageResolvedUrl') {
           this.editStoreItemForm.patchValue({image: storeItem[keys[i]]});
         } else {
@@ -104,7 +104,7 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
     // Subscribe to change events for the 'storeItem' field. Every time a new storeItem is selected,
     // the corresponding fields will populate with data
     this.deleteStoreItemForm.get('storeItem').valueChanges.subscribe(storeItem => {
-      console.log(storeItem);
+      // console.log(storeItem);
 
       const keys = Object.keys(storeItem);
       for (let i = 0; i < keys.length; i++) {
@@ -143,7 +143,7 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
   }
 
   onEditStoreItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.editStoreItemFormSubmitted = true;
     const sourceStoreItem = form.controls.storeItem.value;
     const storeItem = {};
@@ -161,8 +161,8 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
             // If the value has changed, add key/value pair to the storeItem object
-            console.log('Value changed:');
-            console.log(form.controls[keys[i]].value);
+            // console.log('Value changed:');
+            // console.log(form.controls[keys[i]].value);
             storeItem[keys[i]] = form.controls[keys[i]].value;
           }
         }
@@ -175,7 +175,7 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
         const fileDir = 'store';
         const fileName = 'store_item_' + form.controls.name.value.toString().replace(' ', '_') + '.png';
         const filePath = `${fileDir}/${fileName}`;
-        console.log(filePath);
+        // console.log(filePath);
         storeItem['imagePath'] = filePath;
       }
 
@@ -183,7 +183,7 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
         // Store Item object changes exist. Add the itemId to the storeItem object and invoke modifyStoreItem function
         storeItem['itemId'] = sourceStoreItem.itemId;
         this.storeItemService.modifyStoreItem(storeItem).subscribe(modifyResult => {
-          console.log(modifyResult);
+          // console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.notifierService.notify('success', 'Point item record updated successfully.');
             this.editStoreItemFormSubmitted = false;
@@ -193,20 +193,20 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
         });
       } else {
         // Store Item object was not changed
-        console.log('There are no changes to the store item object');
+        // console.log('There are no changes to the store item object');
         this.notifierService.notify('warning', 'There were no changes made.');
         this.editStoreItemFormSubmitted = false;
       }
 
-      console.log(storeItem);
+      // console.log(storeItem);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onAddStoreItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.addStoreItemFormSubmitted = true;
     const storeItem = {};
     const keys = Object.keys(form.controls);
@@ -227,11 +227,11 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
       const fileDir = 'store';
       const fileName = 'store_item_' + form.controls.name.value.toString().replace(' ', '_') + '.png';
       const filePath = `${fileDir}/${fileName}`;
-      console.log(filePath);
+      // console.log(filePath);
       storeItem['imagePath'] = filePath;
 
       this.storeItemService.newStoreItem(storeItem).subscribe(addResult => {
-        console.log(addResult);
+        // console.log(addResult);
         if (addResult.status !== false) {
           this.notifierService.notify('success', 'Store item record added successfully.');
           this.addStoreItemFormSubmitted = false;
@@ -240,22 +240,22 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
         }
       });
 
-      console.log(storeItem);
+      // console.log(storeItem);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onDeleteStoreItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.deleteStoreItemFormSubmitted = true;
     let storeItem = {};
 
     if (!form.invalid) {
       storeItem = form.controls.storeItem.value;
       this.storeItemService.deleteStoreItem(storeItem).subscribe(deleteResult => {
-        console.log(deleteResult);
+        // console.log(deleteResult);
         if (deleteResult.status !== false) {
           this.notifierService.notify('success', 'Store item record deleted successfully.');
           this.deleteStoreItemFormSubmitted = false;
@@ -264,18 +264,18 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onImageSelected(event) {
-    const functionName = 'onImageSelected';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'onImageSelected';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: event: ${event}`);
-    console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
+    // console.log(`${functionFullName}: event: ${event}`);
+    // console.log(`${functionFullName}: this.croppedImage: ${this.croppedImage}`);
   }
 
   addItemFileChangeEvent(event: any): void {
@@ -304,7 +304,7 @@ export class StoreItemsCardComponent implements OnInit, OnDestroy {
   }
 
   confirmStoreItemPurchaseRequest(): void {
-    console.log(`Received request to purchase store item`);
+    // console.log(`Received request to purchase store item`);
     this.router.navigate(['/', 'user', 'confirm-item-purchase']);
   }
 

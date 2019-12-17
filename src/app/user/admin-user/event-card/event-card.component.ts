@@ -78,20 +78,20 @@ export class EventCardComponent implements OnInit {
               }
 
   onAddDepartmentFormSubmit(form: FormGroup) {
-                console.log(form);
+                // console.log(form);
                 this.addDepartmentFormSubmitted= true;
 
                 const department = {};
                 const keys = Object.keys(form.controls);
 
-                console.log(department);
+                // console.log(department);
 
                 if (!form.invalid) {
                   for (let i = 0; i < keys.length; i++) {
                     department[keys[i]] = form.controls[keys[i]].value;
                   }
                     this.EntitydepartmentService.addDepartment(department).subscribe(addResult => {
-                      console.log(addResult);
+                      // console.log(addResult);
                         if (addResult.status !== false) {
                             this.notifierService.notify('success', 'department record added successfully.');
                             this.addDepartmentFormSubmitted = false;
@@ -99,7 +99,7 @@ export class EventCardComponent implements OnInit {
                             this.notifierService.notify('error', `Submission error: ${addResult.message}`);
                             }
                           });
-                        console.log(department);
+                        // console.log(department);
                         } else {
                             console.log('The form submission is invalid');
                             this.notifierService.notify('error', 'Please fix the errors and try again.');
@@ -117,20 +117,20 @@ export class EventCardComponent implements OnInit {
 
 
   onDeleteDepartmentFormSubmit(form: FormGroup) {
-                console.log(form);
+                // console.log(form);
                 this.deleteDepartmentFormSubmitted = true;
 
                 let department = {};
                 const keys = Object.keys(form.controls);
 
-                console.log(department);
+                // console.log(department);
 
                 if (!form.invalid) {
                   for (let i = 0; i < keys.length; i++) {
                     department[keys[i]] = form.controls[keys[i]].value;
                   }
                   this.EntitydepartmentService.deleteDepartment(department).subscribe(deleteResult => {
-                    console.log(deleteResult);
+                    // console.log(deleteResult);
                     if (deleteResult.status !== false) {
                       this.notifierService.notify('success', 'department record deleted successfully.');
                       this.deleteDepartmentFormSubmitted = false;
@@ -139,9 +139,9 @@ export class EventCardComponent implements OnInit {
                     }
                   });
 
-                  console.log(department);
+                  // console.log(department);
                 } else {
-                  console.log('The form submission is invalid');
+                  // console.log('The form submission is invalid');
                   this.notifierService.notify('error', 'Please fix the errors and try again.');
                 }
               }

@@ -11,10 +11,10 @@ export class AuthInterceptor implements HttpInterceptor {
     constructor(private userService: UserService, private router: Router) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
-      console.log('AuthInterceptor intercept');
-      console.log(req);
+      // console.log('AuthInterceptor intercept');
+      // console.log(req);
         if (req.headers.get('noauth')) {
-          console.log(next);
+          // console.log(next);
             return next.handle(req.clone());
         } else {
             const clonedreq = req.clone({

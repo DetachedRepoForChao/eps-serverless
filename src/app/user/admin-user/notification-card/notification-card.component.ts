@@ -50,7 +50,7 @@ export class NotificationCardComponent implements OnInit {
     this.notification.event = 'Alert'
     this.notification.status = '1';
     this.notificationService.setNotificationToGroup(this.notification).subscribe(result => {
-      console.log(result);
+      // console.log(result);
       if (result.status==200){
         this.notifierService.notify('success',"Success Send Notification");
         $('#close_modal').click();

@@ -41,7 +41,7 @@ export class RegisterUserComponent implements OnInit {
     this.departmentService.getDepartments().subscribe((deps: Department[]) => {
         this.departments = deps;
         for (let i = 0; i < deps.length; i++) {
-          console.log(deps[i]);
+          // console.log(deps[i]);
         }
       }
     );
@@ -49,7 +49,7 @@ export class RegisterUserComponent implements OnInit {
     this.securityRoleService.getSecurityRoles().subscribe((secRoles: SecurityRole[]) => {
         this.securityRoles = secRoles;
         for (let i = 0; i < secRoles.length; i++) {
-          console.log(secRoles[i]);
+          // console.log(secRoles[i]);
         }
       }
     );
@@ -58,7 +58,7 @@ export class RegisterUserComponent implements OnInit {
 
 
   onSubmit(form: NgForm) {
-    console.log('onSubmit');
+    // console.log('onSubmit');
     this.userService.postUser(form.value)
       .subscribe(res => {
         this.showSuccessMessage = true;

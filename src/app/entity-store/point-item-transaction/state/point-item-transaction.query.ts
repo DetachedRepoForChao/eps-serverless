@@ -65,7 +65,7 @@ export class PointItemTransactionQuery extends QueryEntity<PointItemTransactionS
   }
 
   public getUserTotalCoreValues(userId: number): Observable<any> {
-    console.log(`Starting get user total core values for user id ${userId}`);
+    // console.log(`Starting get user total core values for user id ${userId}`);
     const coreValuesList = {
       happy: 1,
       fun: 1,
@@ -88,8 +88,8 @@ export class PointItemTransactionQuery extends QueryEntity<PointItemTransactionS
             }
           }
 
-          console.log(`Core Values List for user id ${userId}:`);
-          console.log(coreValuesList);
+          // console.log(`Core Values List for user id ${userId}:`);
+          // console.log(coreValuesList);
           observer.next(coreValuesList);
           observer.complete();
         });

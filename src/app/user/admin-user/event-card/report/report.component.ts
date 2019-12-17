@@ -74,14 +74,14 @@ export class ReportComponent implements OnInit {
       if (result) {
         this.users = this.entityuserQuery.getAll();
             // tslint:disable-next-line: forin
-        console.log(this.users)
+        // console.log(this.users)
         var strMap = [];
         let dp = new Map();
         let mapu = new Map();
           for ( let i = 0; i < this.users.length; i++){
               this.departments = this.departmentService.getDepartmentById(this.users[i].departmentId)
-              console.log(this.departments)
-              console.log(this.users[i].department.Name)
+              // console.log(this.departments)
+              // console.log(this.users[i].department.Name)
               mapu[i]={
                 'username' : this.users[i].username,
                 'points':this.users[i].points,
@@ -97,7 +97,7 @@ export class ReportComponent implements OnInit {
               // tslint:disable-next-line: whitespace
           }
       this.rowData = strMap;
-      console.log(strMap);
+      // console.log(strMap);
       }
     });
   }

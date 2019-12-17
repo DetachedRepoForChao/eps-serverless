@@ -90,7 +90,7 @@ export class AchievementService {
     const request$ = this.getCurrentUserAchievements()
       .pipe(tap((achievementsResult: any) => {
         // console.log(`${functionFullName}: caching:`);
-        console.log(achievementsResult);
+        // console.log(achievementsResult);
 
         const achievements: AchievementModel[] = [];
         for (let i = 0; i < achievementsResult.length; i++) {

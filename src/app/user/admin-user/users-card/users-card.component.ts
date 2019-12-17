@@ -28,7 +28,7 @@ export function managerValidation(pointPoolMax: number): ValidatorFn {
     const securityRoleId = (formGroup.controls.securityRole && formGroup.controls.securityRole.value) ? formGroup.controls.securityRole.value.Id : null;
     if (securityRoleId === 2) {
       const pointPoolControl = formGroup.controls['pointsPool'];
-      console.log(pointPoolControl);
+      // console.log(pointPoolControl);
       if (!pointPoolControl.value || pointPoolControl.value < 0 || pointPoolControl.value > pointPoolMax) {
         return {
           pointPoolValidation: true
@@ -100,12 +100,12 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
     this.authService.currentUserInfo()
       .then(currentUserInfo => {
-        console.log(currentUserInfo);
+        // console.log(currentUserInfo);
         this.emailConfirmed = currentUserInfo.attributes['email_verified'];
         this.phoneConfirmed = currentUserInfo.attributes['phone_number_verified'];
       })
       .catch(err => {
-        console.log('Error...', err);
+        // console.log('Error...', err);
       });
 
     this.currentUserQuery.selectLoading()
@@ -128,7 +128,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         catchError(err => {
-          console.log('Error...', err);
+          // console.log('Error...', err);
           return throwError(err);
         })
       )
@@ -136,10 +136,10 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           this.departments = departments;
         },
         (err) => {
-          console.log(err);
+          // console.log(err);
         },
         () => {
-          console.log('Completed.');
+          // console.log('Completed.');
         }
       );
 
@@ -148,7 +148,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         catchError(err => {
-          console.log('Error...', err);
+          // console.log('Error...', err);
           return throwError(err);
         })
       )
@@ -157,10 +157,10 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           this.securityRoles = securityRoles;
         },
         (err) => {
-          console.log(err);
+          // console.log(err);
         },
         () => {
-          console.log('Completed.');
+          // console.log('Completed.');
         }
       );
 
@@ -195,21 +195,21 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         catchError(err => {
-          console.log('Error...', err);
+          // console.log('Error...', err);
           return throwError(err);
         })
       )
       .subscribe(
         (response) => {
-          console.log(response);
+          // console.log(response);
           this.pointPoolMax = response;
           this.loadAddUserForm();
         },
         (err) => {
-          console.log(err);
+          // console.log(err);
         },
         () => {
-          console.log('Completed.');
+          // console.log('Completed.');
         }
       );
 
@@ -227,31 +227,31 @@ export class UsersCardComponent implements OnInit, OnDestroy {
     this.purchaseApproverForm.controls.group.get('purchaseApprover').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(user => {
-        console.log(user);
+        // console.log(user);
 
         this.userService.getCognitoUser(user.username)
           .pipe(
             take(1),
             catchError(err => {
-              console.log('Error...', err);
+              // console.log('Error...', err);
               return throwError(err);
             })
           )
           .subscribe(
             (cognitoUser) => {
-              console.log(cognitoUser);
+              // console.log(cognitoUser);
               this.emailConfirmed = (cognitoUser.UserAttributes.find(x => x.Name === 'email_verified').Value === 'true');
               this.phoneConfirmed = (cognitoUser.UserAttributes.find(x => x.Name === 'phone_number_verified').Value === 'true');
-              console.log('email confirmed', this.emailConfirmed);
-              console.log('email confirmed', false);
-              console.log('phone confirmed', this.phoneConfirmed);
+              // console.log('email confirmed', this.emailConfirmed);
+              // console.log('email confirmed', false);
+              // console.log('phone confirmed', this.phoneConfirmed);
 
             },
             (err) => {
-              console.log(err);
+              // console.log(err);
             },
             () => {
-              console.log('Completed.');
+              // console.log('Completed.');
             }
           );
       });
@@ -276,20 +276,20 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         catchError(err => {
-          console.log('Error...', err);
+          // console.log('Error...', err);
           return throwError(err);
         })
       )
       .subscribe(
         (response) => {
-          console.log(response);
+          // console.log(response);
           this.purchaseApprovers = response;
         },
         (err) => {
-          console.log(err);
+          // console.log(err);
         },
         () => {
-          console.log('Completed.');
+          // console.log('Completed.');
         }
       );
   }
@@ -299,7 +299,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
     this.editUserForm.get('user').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(user => {
-        console.log(user);
+        // console.log(user);
 
         const keys = Object.keys(user);
         for (let i = 0; i < keys.length; i++) {
@@ -311,14 +311,14 @@ export class UsersCardComponent implements OnInit, OnDestroy {
               case 'securityRole': {
                 const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
                 // this.editUserForm.patchValue({[key]: securityRole});
-                console.log(this.editUserForm.controls.roleGroup.get(key));
+                // console.log(this.editUserForm.controls.roleGroup.get(key));
                 this.editUserForm.controls.roleGroup.patchValue({[key]: securityRole});
                 break;
               }
               case 'pointsPool': {
                 // const securityRole = this.securityRoles.find(x => x.Id === user[keys[i]].Id);
                 // this.editUserForm.patchValue({[key]: securityRole});
-                console.log(this.editUserForm.controls.roleGroup.get(key));
+                // console.log(this.editUserForm.controls.roleGroup.get(key));
                 this.editUserForm.controls.roleGroup.patchValue({[key]: user[keys[i]]});
                 break;
               }
@@ -422,26 +422,26 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
 // Validates and formats the phone number by stripping out anything except number characters
   validatePhoneNumber(phone: string): (string | null) {
-    console.log(phone);
+    // console.log(phone);
     this.phoneValidationError = null;
     // Strip out all characters except numbers
     const newVal = phone.replace(/\D+/g, '');
-    console.log (newVal);
+    // console.log (newVal);
     if (newVal.length === 10) {
       return newVal;
     } else {
-      console.log(`Phone validation error. Phone length: ${newVal.length}`);
+      // console.log(`Phone validation error. Phone length: ${newVal.length}`);
       this.phoneValidationError = 'The phone number must be 10 digits long.';
       return null;
     }
   }
 
   logDate(event) {
-    console.log(event);
+    // console.log(event);
   }
 
   onEditUserFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.editUserFormSubmitted = true;
 
     const sourceUser = form.controls.user.value;
@@ -460,20 +460,20 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       this will let our function know that those fields should be cleared.
       */
       for (let i = 0; i < keys.length; i++) {
-        console.log(keys[i]);
+        // console.log(keys[i]);
         if (keys[i] === 'roleGroup') {
           const groupKeys = Object.keys(form.controls.roleGroup.value);
           for (const groupKey of groupKeys) {
             const groupKeyValue = form.controls.roleGroup.get(groupKey).value;
-            console.log(groupKey);
+            // console.log(groupKey);
             // Special consideration for nested objects like securityRole and department
             switch (groupKey) { // we need to account for securityRole and department objects
               case 'securityRole': {
                 if (sourceUser[groupKey].Id === groupKeyValue.Id) {
                   // No change
                 } else {
-                  console.log('Value changed:');
-                  console.log(groupKeyValue);
+                  // console.log('Value changed:');
+                  // console.log(groupKeyValue);
                   user['securityRoleId'] = groupKeyValue.Id;
                   user['securityRoleName'] = groupKeyValue.Name;
                 }
@@ -484,8 +484,8 @@ export class UsersCardComponent implements OnInit, OnDestroy {
                 if (sourceUser[groupKey] === groupKeyValue) {
                   // No change
                 } else {
-                  console.log('Value changed:');
-                  console.log(groupKeyValue);
+                  // console.log('Value changed:');
+                  // console.log(groupKeyValue);
                   user[groupKey] = groupKeyValue;
                 }
 
@@ -495,13 +495,13 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           }
         } else if (keys[i] === 'department') {
           const keyValue = form.controls[keys[i]].value;
-          console.log(keys[i]);
+          // console.log(keys[i]);
           // Special consideration for nested objects like securityRole and department
           if (sourceUser[keys[i]].Id === keyValue.Id) {
             // No change
           } else {
-            console.log('Value changed:');
-            console.log(keyValue);
+            // console.log('Value changed:');
+            // console.log(keyValue);
 
             user['departmentId'] = keyValue.Id;
             user['departmentName'] = keyValue.Name;
@@ -512,8 +512,8 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           if (sourceUser[keys[i]] === form.controls[keys[i]].value) {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
-            console.log('Date value changed:');
-            console.log(`Old value: ${sourceUser[keys[i]]}; New value: ${dateString}`);
+            // console.log('Date value changed:');
+            // console.log(`Old value: ${sourceUser[keys[i]]}; New value: ${dateString}`);
 
             user[keys[i]] = dateString;
           }
@@ -522,8 +522,8 @@ export class UsersCardComponent implements OnInit, OnDestroy {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
             // If the value has changed, add key/value pair to the user object
-            console.log('Value changed:');
-            console.log(form.controls[keys[i]].value);
+            // console.log('Value changed:');
+            // console.log(form.controls[keys[i]].value);
 
             switch (keys[i]) {
               case 'phone': { // special case for phone
@@ -547,7 +547,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
         this.userService.modifyUser(user)
           .pipe(take(1))
           .subscribe(modifyResult => {
-            console.log(modifyResult);
+            // console.log(modifyResult);
             if (modifyResult.data.status !== false) {
               if (modifyResult.errors.length > 0) {
                 this.notifierService.notify('warning', 'User record updated with errors.');
@@ -570,15 +570,15 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
       } else {
         // User object was not changed
-        console.log('There are no changes to the user object');
+        // console.log('There are no changes to the user object');
         this.notifierService.notify('warning', 'There were no changes made.');
         this.editUserFormSubmitted = false;
       }
 
-      console.log(user);
+      // console.log(user);
       // form.controls.user.reset();
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
@@ -598,14 +598,14 @@ export class UsersCardComponent implements OnInit, OnDestroy {
   }
 
   onAddUserFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
 
     this.addUserFormSubmitted = true;
 
     const user = {};
     const keys = Object.keys(form.controls);
 
-    console.log(user);
+    // console.log(user);
 
 
     if (!form.invalid) {
@@ -618,7 +618,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       // *!/
       for (let i = 0; i < keys.length; i++) {
         if ((keys[i] === 'securityRole') || (keys[i] === 'department')) {
-          console.log(keys[i]);
+          // console.log(keys[i]);
           // Special consideration for nested objects like securityRole and department
           switch (keys[i]) { // we need to account for securityRole and department objects
             case 'securityRole': {
@@ -653,7 +653,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
       this.userService.addUser(user)
         .pipe(take(1))
         .subscribe(addResult => {
-          console.log(addResult);
+          // console.log(addResult);
           if (addResult.status !== false) {
             this.notifierService.notify('success', 'User record added successfully.');
             this.addUserFormSubmitted = false;
@@ -662,28 +662,28 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           }
         });
 
-      console.log(user);
+      // console.log(user);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
 
   onDeleteUserFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.deleteUserFormSubmitted = true;
 
     let user = {};
 
-    console.log(user);
+    // console.log(user);
 
     if (!form.invalid) {
       user = form.controls.user.value;
       this.userService.deleteUser(user)
         .pipe(take(1))
         .subscribe(deleteResult => {
-          console.log(deleteResult);
+          // console.log(deleteResult);
           if (deleteResult.status !== false) {
             this.notifierService.notify('success', 'User record deleted successfully.');
             this.deleteUserFormSubmitted = false;
@@ -692,27 +692,27 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           }
         });
 
-      console.log(user);
+      // console.log(user);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onDeactivateUserFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.deleteUserFormSubmitted = true;
 
     let user = {};
 
-    console.log(user);
+    // console.log(user);
 
     if (!form.invalid) {
       user = form.controls.user.value;
       this.userService.deactivateUser(user)
         .pipe(take(1))
         .subscribe(deactivateResult => {
-          console.log(deactivateResult);
+          // console.log(deactivateResult);
           if (deactivateResult.status !== false) {
             this.notifierService.notify('success', 'User record deactivated successfully.');
             this.deleteUserFormSubmitted = false;
@@ -722,27 +722,27 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           }
         });
 
-      console.log(user);
+      // console.log(user);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onActivateUserFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.activateUserFormSubmitted = true;
 
     let user = {};
 
-    console.log(user);
+    // console.log(user);
 
     if (!form.invalid) {
       user = form.controls.user.value;
       this.userService.activateUser(user)
         .pipe(take(1))
         .subscribe(activateResult => {
-          console.log(activateResult);
+          // console.log(activateResult);
           if (activateResult.status !== false) {
             this.notifierService.notify('success', 'User record activated successfully.');
             this.activateUserFormSubmitted = false;
@@ -752,15 +752,15 @@ export class UsersCardComponent implements OnInit, OnDestroy {
           }
         });
 
-      console.log(user);
+      // console.log(user);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onNewPurchaseApproverFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.newPurchaseApproverFormSubmitted = true;
 
     const purchaseApprover = {
@@ -778,20 +778,20 @@ export class UsersCardComponent implements OnInit, OnDestroy {
         .pipe(
           take(1),
           catchError(err => {
-            console.log('Error...', err);
+            // console.log('Error...', err);
             return throwError(err);
           })
         )
         .subscribe(
           (response) => {
-            console.log(response);
+            // console.log(response);
             this.notifierService.notify('success', 'User successfully added as a Purchase Manager.');
             this.newPurchaseApproverFormSubmitted = false;
             this.retrievePurchaseApprovers();
             form.reset();
           },
           (err) => {
-            console.log(err);
+            // console.log(err);
             if (err.error) {
               this.notifierService.notify('error', `Submission error: ${err.error}`);
             }
@@ -802,13 +802,13 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
           },
           () => {
-            console.log('Completed.');
+            // console.log('Completed.');
           }
         );
 
-      console.log(user);
+      // console.log(user);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
@@ -822,23 +822,23 @@ export class UsersCardComponent implements OnInit, OnDestroy {
   }
 
   deletePurchaseApprover(purchaseApprover: any) {
-    console.log(`Deleting purchase approver ${purchaseApprover.userId}`);
+    // console.log(`Deleting purchase approver ${purchaseApprover.userId}`);
     this.userService.deletePurchaseApprover(purchaseApprover.userId)
       .pipe(
         take(1),
         catchError(err => {
-          console.log('Error...', err);
+          // console.log('Error...', err);
           return throwError(err);
         })
       )
       .subscribe(
         (response) => {
-          console.log(response);
+          // console.log(response);
           this.notifierService.notify('success', 'Purchase Manager deleted successfully.');
           this.retrievePurchaseApprovers();
         },
         (err) => {
-          console.log(err);
+          // console.log(err);
           if (err.error) {
             this.notifierService.notify('error', `Error: ${err.error}`);
           }
@@ -849,7 +849,7 @@ export class UsersCardComponent implements OnInit, OnDestroy {
 
         },
         () => {
-          console.log('Completed.');
+          // console.log('Completed.');
         }
       );
   }
@@ -859,12 +859,12 @@ export class UsersCardComponent implements OnInit, OnDestroy {
     return function validate(formGroup: FormGroup) {
       const userId = (formGroup.controls.purchaseApprover.value) ? formGroup.controls.purchaseApprover.value.userId : null;
       if (parentScope.isUserPurchaseManager(userId)) {
-        console.log('invalid');
+        // console.log('invalid');
         return {
           isPurchaseManager: true
         };
       }
-      console.log('valid');
+      // console.log('valid');
       return null;
     };
   }
@@ -874,12 +874,12 @@ export class UsersCardComponent implements OnInit, OnDestroy {
   }
 
   onConfirmEmailClick(username: string) {
-    console.log('confirm email clicked');
+    // console.log('confirm email clicked');
     this.router.navigate(['/', 'user', 'profile', username], {state: {option: 'email'}});
   }
 
   onConfirmPhoneClick(username: string) {
-    console.log('confirm phone clicked');
+    // console.log('confirm phone clicked');
     this.router.navigate(['/', 'user', 'profile', username], {state: {option: 'phone'}});
   }
 

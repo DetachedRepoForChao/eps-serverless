@@ -125,7 +125,7 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
     this.userService.getPointPoolMax()
       .pipe(take(1))
       .subscribe(pointPoolMax => {
-        console.log(pointPoolMax);
+        // console.log(pointPoolMax);
         this.pointPoolMax = pointPoolMax;
       });
 
@@ -133,13 +133,13 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
     this.editPointItemForm.get('pointItem').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(pointItem => {
-      console.log(pointItem);
+      // console.log(pointItem);
       this.editPointItemForm.controls.coreValuesGroup.reset();
 
       const keys = Object.keys(pointItem);
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        console.log(key);
+        // console.log(key);
         if (key === 'coreValues') {
           for (let j = 0; j < pointItem.coreValues.length; j++) {
             const formCoreValueKey = `coreValue_${pointItem.coreValues[j]}`;
@@ -155,7 +155,7 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
     this.deletePointItemForm.get('pointItem').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(pointItem => {
-      console.log(pointItem);
+      // console.log(pointItem);
 
       const keys = Object.keys(pointItem);
       for (let i = 0; i < keys.length; i++) {
@@ -214,7 +214,7 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
   }
 
   onEditPointItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.editPointItemFormSubmitted = true;
     const sourcePointItem = form.controls.pointItem.value;
     const pointItem = {};
@@ -250,12 +250,12 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
 
           // If the arrays are at all different, we add the new Core Values object to the pointItem object
           if (newCoreValues.length !== oldCoreValues.length) {
-            console.log('There were core value changes because the arrays are not the same size.');
+            // console.log('There were core value changes because the arrays are not the same size.');
             pointItem['coreValues'] = newCoreValues;
           } else {
             for (let j = 0; j < newCoreValues.length; j++) {
               if (newCoreValues[j] !== oldCoreValues[j]) {
-                console.log('Core values changed');
+                // console.log('Core values changed');
                 pointItem['coreValues'] = newCoreValues;
               }
             }
@@ -265,8 +265,8 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
             // If the value has changed, add key/value pair to the pointItem object
-            console.log('Value changed:');
-            console.log(form.controls[keys[i]].value);
+            // console.log('Value changed:');
+            // console.log(form.controls[keys[i]].value);
             pointItem[keys[i]] = form.controls[keys[i]].value;
           }
         }
@@ -279,7 +279,7 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
         pointItem['itemId'] = sourcePointItem.itemId;
 
         this.pointItemService.modifyPointItem(pointItem).subscribe(modifyResult => {
-          console.log(modifyResult);
+          // console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.notifierService.notify('success', 'Point item record updated successfully.');
             this.editPointItemFormSubmitted = false;
@@ -289,20 +289,20 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
         });
       } else {
         // Point Item object was not changed
-        console.log('There are no changes to the point item object');
+        // console.log('There are no changes to the point item object');
         this.notifierService.notify('warning', 'There were no changes made.');
         this.editPointItemFormSubmitted = false;
       }
 
-      console.log(pointItem);
+      // console.log(pointItem);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onAddPointItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.addPointItemFormSubmitted = true;
     const pointItem = {};
     let coreValues = [];
@@ -343,7 +343,7 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
       pointItem['updatedByUsername'] = this.currentUser.username;
 
       this.pointItemService.newPointItem(pointItem).subscribe(addResult => {
-        console.log(addResult);
+        // console.log(addResult);
         if (addResult.status !== false) {
           this.notifierService.notify('success', 'Point item record added successfully.');
           this.addPointItemFormSubmitted = false;
@@ -352,22 +352,22 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
         }
       });
 
-      console.log(pointItem);
+      // console.log(pointItem);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onDeletePointItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.deletePointItemFormSubmitted = true;
     let pointItem = {};
 
     if (!form.invalid) {
       pointItem = form.controls.pointItem.value;
       this.pointItemService.deletePointItem(pointItem).subscribe(deleteResult => {
-        console.log(deleteResult);
+        // console.log(deleteResult);
         if (deleteResult.status !== false) {
           this.notifierService.notify('success', 'Point item record deleted successfully.');
           this.deletePointItemFormSubmitted = false;
@@ -376,13 +376,13 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
   onSetPointPoolMaxSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.pointPoolMaxFormSubmitted = true;
     const maxAmount = form.controls.maxAmount.value;
     if (!form.invalid || form.controls.maxAmount.value > 0) {
@@ -390,7 +390,7 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
       this.userService.setPointPoolMax(maxAmount)
         .pipe(take(1))
         .subscribe(setMaxAmountResult => {
-        console.log(setMaxAmountResult);
+        // console.log(setMaxAmountResult);
         if (setMaxAmountResult.status !== false) {
           this.notifierService.notify('success', 'Point pool max amount set successfully.');
           this.pointPoolMaxFormSubmitted = false;
@@ -400,7 +400,7 @@ export class PointItemsCardComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
