@@ -1,22 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
-import { Globals} from '../../../globals';
 import { DepartmentService} from '../../../shared/department.service';
 import { UserService} from '../../../shared/user.service';
-import {User} from '../../../shared/user.model';
 import { Department} from '../../../shared/department.model';
 import {MatDialog, MatTableDataSource, ThemePalette} from '@angular/material';
-
-import {PointItem} from '../../../shared/point-item.model';
 import {FormBuilder, FormControl, FormGroup, NgForm, ValidatorFn, Validators} from '@angular/forms';
-import {componentRefresh} from '@angular/core/src/render3/instructions';
 import {Router} from '@angular/router';
 import {Observable, forkJoin, Subject, throwError} from 'rxjs';
 import {NotifierService} from 'angular-notifier';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
-import {UserStore} from '../../../entity-store/user/state/user.store';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
@@ -25,12 +19,10 @@ import {PointItemService} from '../../../entity-store/point-item/state/point-ite
 import {PointItemModel} from '../../../entity-store/point-item/state/point-item.model';
 import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
-import {FreshPipe} from '../../../pipe/fresh.pipe';
 import {catchError, take, takeUntil} from 'rxjs/operators';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 import {requireCheckboxesToBeCheckedValidator} from '../../admin-user/point-items-card/point-items-card.component';
-import {StoreItemModel} from '../../../entity-store/store-item/state/store-item.model';
 import {ConfirmationDialogComponent} from '../../components/shared/confirmation-dialog/confirmation-dialog.component';
 import {NavigationService} from '../../../shared/navigation.service';
 
@@ -75,25 +67,17 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   pointSearchForm: FormGroup;
 
   displayedColumns: string[] = ['select', 'avatar', 'name', 'username', 'email', 'position', 'points'];
-  // selection = new SelectionModel<DepartmentEmployee>(true, []);
   selection = new SelectionModel<EntityUserModel>(true, []);
-  // dataSource = new MatTableDataSource<DepartmentEmployee>();
-  pointItemList$: Observable<PointItemModel[]>;
   pointItems: PointItemModel[];
   filteredPointItemList: PointItemModel[] = [];
-
-  // selectedPointItem = {};
   selectedEmployees = [];
-  selectedCoreValues = [];
   coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
   coreValueButtonList: CoreValueButton[] = [];
   selectedPointItem: PointItemModel;
-  employees$: Observable<EntityUserModel[]>;
   employees: EntityUserModel[];
   currentUser: EntityCurrentUserModel;
   departments: Department[];
   isCardLoading: boolean;
-  formSubmitted = false;
   showLimit = 100;
   showFlag = false;
   clickedUser;
@@ -136,11 +120,11 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
               private currentUserService: EntityCurrentUserService) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: setting isCardLoading to true:`);
+    // console.log(`${functionFullName}: setting isCardLoading to true:`);
     this.isCardLoading = true;
     this.spinner.hide('gift-points-spinner');
 
@@ -168,13 +152,13 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
                 this.editPointItemForm.get('pointItem').valueChanges
                   .pipe(takeUntil(this.unsubscribe$))
                   .subscribe(pointItem => {
-                    console.log(pointItem);
+                    // console.log(pointItem);
                     this.editPointItemForm.controls.coreValuesGroup.reset();
 
                     const keys = Object.keys(pointItem);
                     for (let i = 0; i < keys.length; i++) {
                       const key = keys[i];
-                      console.log(key);
+                      // console.log(key);
                       if (key === 'coreValues') {
                         for (let j = 0; j < pointItem.coreValues.length; j++) {
                           const formCoreValueKey = `coreValue_${pointItem.coreValues[j]}`;
@@ -190,7 +174,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
                 this.deletePointItemForm.get('pointItem').valueChanges
                   .pipe(takeUntil(this.unsubscribe$))
                   .subscribe(pointItem => {
-                    console.log(pointItem);
+                    // console.log(pointItem);
 
                     const keys = Object.keys(pointItem);
                     for (let i = 0; i < keys.length; i++) {
@@ -246,7 +230,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         catchError(err => {
-          console.log('Error...', err);
+          // console.log('Error...', err);
           return throwError(err);
         })
       )
@@ -255,10 +239,10 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
 
         },
         (err) => {
-          console.log(err);
+          // console.log(err);
         },
         () => {
-          console.log('Completed.');
+          // console.log('Completed.');
         }
       );
 
@@ -266,7 +250,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     this.departmentSelectionForm.get('departmentSelection').valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((department: Department) => {
-        console.log(department);
+        // console.log(department);
         this.selection.clear();
 
         this.selectedDepartment = department;
@@ -344,7 +328,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   }
 
   onAddPointItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.addPointItemFormSubmitted = true;
     const pointItem = {};
     let coreValues = [];
@@ -385,7 +369,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
       pointItem['updatedByUsername'] = this.currentUser.username;
 
       this.pointItemService.newPointItem(pointItem).subscribe(addResult => {
-        console.log(addResult);
+        // console.log(addResult);
         if (addResult.status !== false) {
           this.notifierService.notify('success', 'Point item record added successfully.');
           this.addPointItemFormSubmitted = false;
@@ -394,16 +378,16 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
         }
       });
 
-      console.log(pointItem);
+      // console.log(pointItem);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
 
   onEditPointItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.editPointItemFormSubmitted = true;
     const sourcePointItem = form.controls.pointItem.value;
     const pointItem = {};
@@ -439,12 +423,12 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
 
           // If the arrays are at all different, we add the new Core Values object to the pointItem object
           if (newCoreValues.length !== oldCoreValues.length) {
-            console.log('There were core value changes because the arrays are not the same size.');
+            // console.log('There were core value changes because the arrays are not the same size.');
             pointItem['coreValues'] = newCoreValues;
           } else {
             for (let j = 0; j < newCoreValues.length; j++) {
               if (newCoreValues[j] !== oldCoreValues[j]) {
-                console.log('Core values changed');
+                // console.log('Core values changed');
                 pointItem['coreValues'] = newCoreValues;
               }
             }
@@ -454,8 +438,8 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
             // Don't add the key/value pair if the new value is the same as the source
           } else {
             // If the value has changed, add key/value pair to the pointItem object
-            console.log('Value changed:');
-            console.log(form.controls[keys[i]].value);
+            // console.log('Value changed:');
+            // console.log(form.controls[keys[i]].value);
             pointItem[keys[i]] = form.controls[keys[i]].value;
           }
         }
@@ -468,7 +452,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
         pointItem['itemId'] = sourcePointItem.itemId;
 
         this.pointItemService.modifyPointItem(pointItem).subscribe(modifyResult => {
-          console.log(modifyResult);
+          // console.log(modifyResult);
           if (modifyResult.status !== false) {
             this.notifierService.notify('success', 'Point item record updated successfully.');
             this.editPointItemFormSubmitted = false;
@@ -478,28 +462,28 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
         });
       } else {
         // Point Item object was not changed
-        console.log('There are no changes to the point item object');
+        // console.log('There are no changes to the point item object');
         this.notifierService.notify('warning', 'There were no changes made.');
         this.editPointItemFormSubmitted = false;
       }
 
-      console.log(pointItem);
+      // console.log(pointItem);
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
 
 
   onDeletePointItemFormSubmit(form: FormGroup) {
-    console.log(form);
+    // console.log(form);
     this.deletePointItemFormSubmitted = true;
     let pointItem = {};
 
     if (!form.invalid) {
       pointItem = form.controls.pointItem.value;
       this.pointItemService.deletePointItem(pointItem).subscribe(deleteResult => {
-        console.log(deleteResult);
+        // console.log(deleteResult);
         if (deleteResult.status !== false) {
           this.notifierService.notify('success', 'Point item record deleted successfully.');
           this.deletePointItemFormSubmitted = false;
@@ -508,7 +492,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      console.log('The form submission is invalid');
+      // console.log('The form submission is invalid');
       this.notifierService.notify('error', 'Please fix the errors and try again.');
     }
   }
@@ -521,7 +505,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   populateCoreValueButtonList() {
     const functionName = 'populateCoreValueButtonList';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     for (let i = 0; i < this.coreValues.length; i++) {
       const coreValueButton: CoreValueButton = {
@@ -539,7 +523,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
 
   openDialog(currentUser: EntityCurrentUserModel, selectedPointItem: PointItemModel, selectedEmployees: EntityUserModel[],
              selectedDepartment?: Department, selectedAll?: boolean): void {
-    console.log(`confirm approval?`);
+    // console.log(`confirm approval?`);
 
     if (!selectedPointItem && (!selectedEmployees || selectedEmployees.length === 0)) {
       this.notifierService.notify('warning', 'Please select a 🍍 Award and its recipient(s)!');
@@ -557,13 +541,13 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     if (selectedDepartment) {
       const departmentEmployees = this.employees.filter(x => x.department.Id === selectedDepartment.Id);
       if (selectedEmployees.length !== departmentEmployees.length) {
-        console.log(`Selected Employees and Department Employees lists are different lengths`);
+        // console.log(`Selected Employees and Department Employees lists are different lengths`);
         this.selectedDepartment = null;
         selectedDepartment = null;
       } else {
         for (const selectedEmployee of selectedEmployees) {
           if (departmentEmployees.indexOf(selectedEmployee) === -1) {
-            console.log(`${selectedEmployee.username} is not in ${selectedDepartment.Name} department`);
+            // console.log(`${selectedEmployee.username} is not in ${selectedDepartment.Name} department`);
             this.selectedDepartment = null;
             selectedDepartment = null;
             break;
@@ -594,11 +578,11 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(result => {
-        console.log(`Dialog closed:`, result);
+        // console.log(`Dialog closed:`, result);
         if (result.action && result.action === 'Confirm') {
           this.pointItemOnSubmit(currentUser, selectedPointItem, selectedEmployees, result.comment, selectedDepartment, selectedAll);
         } else if (result === 'Cancel') {
-          console.log('Cancelled');
+          // console.log('Cancelled');
         }
       });
   }
@@ -607,7 +591,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
                     selectedDepartment?: Department, selectedAll?: boolean) {
     const functionName = 'pointItemOnSubmit';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     // console.log(`${functionFullName}: this.selectedPointItem:`);
     // console.log(this.selectedPointItem);
@@ -622,7 +606,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
     // const totalAmount = selectedPointItem.amount * selectedEmployees.length;
     // let totalAmount = 0; // Used to figure out the total amount of points that will be removed from the point pool
     for (const selectedEmployee of selectedEmployees) {
-      console.log('gifting points to: ' + selectedEmployee.username);
+      // console.log('gifting points to: ' + selectedEmployee.username);
       // totalAmount = totalAmount + selectedPointItem.amount;
 
       const userPointObject = {
@@ -641,8 +625,8 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(
         (giftPointsResult: any) => {
-          console.log('giftPointsResult');
-          console.log(giftPointsResult);
+          // console.log('giftPointsResult');
+          // console.log(giftPointsResult);
           const newPointPoolAmount = giftPointsResult.newPointPoolAmount;
           const resultObjectArray = giftPointsResult.resultObjectArray;
           this.currentUserService.updatePointPool(+newPointPoolAmount);
@@ -656,8 +640,8 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
               this.pointItemService.sendAwardPointsNotice(targetUser, currentUser, selectedPointItem, comment)
                 .pipe(take(1))
                 .subscribe(emailResult => {
-                  console.log(`${functionFullName}: email result`);
-                  console.log(emailResult);
+                  // console.log(`${functionFullName}: email result`);
+                  // console.log(emailResult);
                 });
             }
 
@@ -669,7 +653,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
           this.selection.clear();
         },
         (err) => {
-          console.log(`${functionFullName}: award points threw an error`, err);
+          // console.log(`${functionFullName}: award points threw an error`, err);
           this.notifierService.notify('error', 'Error awarding points!');   // TODO Send error log to administrator?
         });
 
@@ -695,15 +679,15 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   toggleCoreValueButtonFilter(coreValue: string) {
     const functionName = 'toggleCoreValueButtonFilter';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
 
     // const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
     if (this.appliedFilters.find(x => x === coreValue)) {
-      console.log(`${functionFullName}: Core value filter is already applied. Removing`);
+      // console.log(`${functionFullName}: Core value filter is already applied. Removing`);
       this.appliedFilters = this.appliedFilters.filter(x => x !== coreValue);
     } else {
-      console.log(`${functionFullName}: Core value filter is not yet applied. Applying`);
+      // console.log(`${functionFullName}: Core value filter is not yet applied. Applying`);
       this.appliedFilters.push(coreValue);
     }
 
@@ -713,17 +697,17 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   toggleCoreValueButton(coreValue: string) {
     const functionName = 'toggleCoreValueButton';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
-    console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
+    // console.log(`Start ${functionFullName}`);
+    // console.log(`${functionFullName}: Toggling core value button: ${coreValue}`);
 
     const coreValueButton = this.coreValueButtonList.find(x => x.Name === coreValue);
     if (coreValueButton.Toggled) {
-      console.log(`${functionFullName}: Core value button is already toggled. Untoggling`);
+      // console.log(`${functionFullName}: Core value button is already toggled. Untoggling`);
       // coreValueButton.Toggled = false;
       // this.activatedCoreValues = this.activatedCoreValues.filter(x => x !== coreValue);
       document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className.replace('toggled', '').trim();
     } else {
-      console.log(`${functionFullName}: Core value button is not yet toggled. Toggling`);
+      // console.log(`${functionFullName}: Core value button is not yet toggled. Toggling`);
       // coreValueButton.Toggled = true;
       // this.activatedCoreValues.push(coreValue);
       document.getElementById(`button_${coreValue}`).className = document.getElementById(`button_${coreValue}`).className += ' toggled';
@@ -750,10 +734,10 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   untoggleAllCoreValueButtons() {
     const functionName = 'untoggleAllCoreValueButtons';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     for (let i = 0; i < this.coreValueButtonList.length; i++) {
-      console.log(`${functionFullName}: Untoggling core value button ${this.coreValueButtonList[i].Name}`);
+      // console.log(`${functionFullName}: Untoggling core value button ${this.coreValueButtonList[i].Name}`);
       this.coreValueButtonList[i].Toggled = false;
       document.getElementById(`button_${this.coreValueButtonList[i].Name}`).className = document.getElementById(`button_${this.coreValueButtonList[i].Name}`).className.replace('toggled', '').trim();
     }
@@ -762,7 +746,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   filterPointItemList() {
     const functionName = 'filterPointItemList';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     this.filteredPointItemList = [];
 
@@ -820,11 +804,11 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   }
 
   selectPointItem(pointItem: PointItemModel) {
-    const functionName = 'selectPointItem';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'selectPointItem';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(pointItem);
+    // console.log(pointItem);
     this.selectedPointItem = pointItem;
     // this.setAllButtonsInactive();
     this.untoggleAllCoreValueButtons();
@@ -836,9 +820,9 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   }
 
   resetForm(form: NgForm) {
-    const functionName = 'resetForm';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'resetForm';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     form.resetForm();
   }
@@ -864,7 +848,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   onAvatarClick(event, user) {
     // console.log(event);
     // console.log(user);
-    console.log(event);
+    // console.log(event);
     this.clickedUser = user;
 /*    $('#giftClickedModal').modal('show');
     console.log(document.getElementById('giftClickedModal'));*/
@@ -921,7 +905,7 @@ export class GiftPointsComponent implements OnInit, OnDestroy {
   scroll() {
     // console.log(el);
     const target = document.getElementById('gift-points-scroll-anchor');
-    console.log(target);
+    // console.log(target);
     target.scrollIntoView({behavior: 'smooth'});
   }
 

@@ -24,11 +24,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
   componentName = 'homepage.component';
   subscription = new Subscription();
   unsubscribe$ = new Subject();
-  currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
-  currentUserSubscription: Subscription;
-  pendingBalance$;
-  pendingBalanceSubscription: Subscription;
   currentUserLoading$ = new Subject();
 
   scrolledToGiftPointsComponent = false;
@@ -41,9 +37,9 @@ export class HomepageComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.keyCode) {
-      console.log(event.keyCode);
-      console.log(this.sequence);
-      console.log(this.isKonamiCode());
+      // console.log(event.keyCode);
+      // console.log(this.sequence);
+      // console.log(this.isKonamiCode());
       this.sequence.push(event.keyCode);
 
       if (this.sequence.length > this.konamiCode.length) {
@@ -51,7 +47,7 @@ export class HomepageComponent implements OnInit, OnDestroy {
       }
 
       if (this.isKonamiCode()) {
-        console.log('success');
+        // console.log('success');
         this.codeEntered.emit(true);
         this.achievementService.incrementAchievement('RetroGamer')
           .pipe(take(1))
@@ -77,24 +73,24 @@ export class HomepageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute) {  }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
 
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
       .subscribe(isLoading => {
         if (!isLoading) {
-          console.log('current user loaded');
+          // console.log('current user loaded');
           this.currentUserQuery.selectCurrentUser()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((currentUser: EntityCurrentUserModel) => {
-              console.log('current user', currentUser);
+              // console.log('current user', currentUser);
               this.currentUser = currentUser;
 
               if (currentUser.securityRole.Id === 2 && !this.scrolledToGiftPointsComponent) {
-                console.log('scrolling into view');
+                // console.log('scrolling into view');
                 this.scrolledToGiftPointsComponent = true;
 
                 Observable.interval(2000)
@@ -121,13 +117,11 @@ export class HomepageComponent implements OnInit, OnDestroy {
   scrollToGiftPointsComponent() {
     // console.log(el);
     const target = document.getElementById('gift-points-scroll-anchor');
-    console.log(target);
+    // console.log(target);
     target.scrollIntoView({behavior: 'smooth'});
   }
 
   ngOnDestroy(): void {
-    // this.subscription.unsubscribe();
-    // this.currentUserSubscription.unsubscribe();
     this.currentUserLoading$.next();
     this.currentUserLoading$.complete();
     this.unsubscribe$.next();

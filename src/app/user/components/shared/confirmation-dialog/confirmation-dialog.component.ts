@@ -10,7 +10,6 @@ import {EntityUserModel} from '../../../../entity-store/user/state/entity-user.m
 import {EntityUserQuery} from '../../../../entity-store/user/state/entity-user.query';
 import {Department} from '../../../../shared/department.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -48,12 +47,12 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log('test');
-    console.log(this.message);
+    // console.log('test');
+    // console.log(this.message);
     if (this.message.action) {
       switch (this.message.action) {
         case 'updatePurchaseRequestStatusSave':
-          console.log('updatePurchaseRequestStatusSave');
+          // console.log('updatePurchaseRequestStatusSave');
           this.isUpdatePurchaseRequestStatusSave = true;
           this.confirmPurchaseRequestData = this.message.actionList.sort((a, b) => {
             if (a.item.userUsername < b.item.userUsername) { return -1; }
@@ -62,12 +61,12 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
           });
           break;
         case 'confirmStoreItemPurchase':
-          console.log('confirmStoreItemPurchase');
+          // console.log('confirmStoreItemPurchase');
           this.isConfirmStoreItemPurchase = true;
           this.selectedStoreItem = this.message.selectedStoreItem;
           break;
         case 'confirmAwardPoints':
-          console.log('confirmAwardPoints', this.message);
+          // console.log('confirmAwardPoints', this.message);
           this.isAwardPoints = true;
           this.selectedPointItem = this.message.selectedPointItem;
           this.selectedEmployees = this.message.selectedEmployees;
@@ -139,17 +138,12 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('Destroying');
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     this.currentUserLoading$.next();
     this.currentUserLoading$.complete();
     this.usersLoading$.next();
     this.usersLoading$.complete();
-    // this.isUpdatePurchaseRequestStatusSave = false;
-    // this.isConfirmStoreItemPurchase = false;
-    // this.confirmPurchaseRequestData = [];
-    // this.selectedStoreItem = null;
   }
 
 }

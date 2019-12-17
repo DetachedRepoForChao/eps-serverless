@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import {NgxSpinnerService} from 'ngx-spinner';
-// import {AchievementItem, AchievementService} from '../../../shared/achievement/achievement.service';
 import {AchievementModel} from '../../../entity-store/achievement/state/achievement.model';
 import {AchievementQuery} from '../../../entity-store/achievement/state/achievement.query';
 import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
@@ -30,14 +29,10 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
   private achievementsLoading$ = new Subject();
   private currentUserLoading$ = new Subject();
   private unsubscribe$ = new Subject();
-  filteredAchievements$: Observable<AchievementModel[]>;
   achievements: AchievementModel[];
   filteredAchievements: AchievementModel[];
   isCardLoading: boolean;
   selectedAchievement: AchievementModel;
-  pointItemTransactions$;
-
-  coreValueData$: Observable<any[]>;
   coreValueData;
   coreValues: string[] = ['happy', 'fun', 'genuine', 'caring', 'respect', 'honest'];
   myColumnNames = ['Core Value', 'Amount'];
@@ -69,7 +64,6 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
     }
   };
 
-  currentUser$;
   currentUser: EntityCurrentUserModel;
 
   constructor(private spinner: NgxSpinnerService,
@@ -83,15 +77,15 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
               private currentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
 
     this.achievementQuery.selectLoading()
       .pipe(takeUntil(this.achievementsLoading$))
       .subscribe(isLoading => {
-        console.log('achievements loading: ' + isLoading);
+        // console.log('achievements loading: ' + isLoading);
         if (!isLoading) {
           this.achievementQuery.selectAll()
             .pipe(takeUntil(this.unsubscribe$))
@@ -109,13 +103,13 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
     this.currentUserQuery.selectLoading()
       .pipe(takeUntil(this.currentUserLoading$))
       .subscribe(isLoading => {
-        console.log('current user loading: ' + isLoading);
+        // console.log('current user loading: ' + isLoading);
         if (!isLoading) {
           this.currentUserQuery.selectCurrentUser()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((currentUser: EntityCurrentUserModel) => {
-              console.log('current user changed');
-              console.log(currentUser);
+              // console.log('current user changed');
+              // console.log(currentUser);
               this.currentUser = currentUser;
               this.pointItemTransactionService.cacheUserPointItemTransactions(currentUser.userId)
                 .pipe(take(1))
@@ -127,7 +121,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
                     });
 
                   } else {
-                    console.log(`Cache User Point Item Transactions returned ${result}`);
+                    // console.log(`Cache User Point Item Transactions returned ${result}`);
                   }
                 });
 
@@ -149,7 +143,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
 
 
   getCoreValues(userId: number): Observable<any[]> {
-    console.log(`getCoreValues for user id ${userId}`);
+    // console.log(`getCoreValues for user id ${userId}`);
     const coreValueArray = [
       ['happy', 0],
       ['fun', 0],
@@ -163,7 +157,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
       this.pointItemTransactionService.getUserCoreValues(userId)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(coreValues => {
-          console.log(coreValues);
+          // console.log(coreValues);
           const keys = Object.keys(coreValues);
           for (const key of keys) {
 
@@ -173,7 +167,7 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
 
           }
 
-          console.log(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
+          // console.log(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
           observer.next(coreValueArray.sort(function(a, b) { return +b[1] - +a[1]; }));
           observer.complete();
         });
@@ -181,18 +175,18 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
   }
 
   acknowledgeAchievement(achievement: AchievementModel) {
-    const functionName = 'acknowledgeAchievement';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'acknowledgeAchievement';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: Acknowledging completed achievement:`);
-    console.log(achievement);
+    // console.log(`${functionFullName}: Acknowledging completed achievement:`);
+    // console.log(achievement);
 
     this.achievementService.acknowledgeAchievementComplete(achievement.progressId)
       .pipe(take(1))
       .subscribe(result => {
-        console.log(`${functionFullName}: Acknowledge result:`);
-        console.log(result);
+        // console.log(`${functionFullName}: Acknowledge result:`);
+        // console.log(result);
 
         // this.achievementService.getUserAchievements().subscribe();
         $('#singleAchievementModal').modal('hide');
@@ -200,12 +194,12 @@ export class ProgressCardComponent implements OnInit, OnDestroy {
   }
 
   selectAchievement(achievement: AchievementModel) {
-    const functionName = 'selectAchievement';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'selectAchievement';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`${functionFullName}: Selecting achievement:`);
-    console.log(achievement);
+    // console.log(`${functionFullName}: Selecting achievement:`);
+    // console.log(achievement);
 
     this.selectedAchievement = achievement;
   }

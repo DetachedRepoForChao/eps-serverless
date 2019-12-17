@@ -81,17 +81,13 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
 
 
 
-  requestStoreItem(storeItem) {
-    this.requestedStoreItem = storeItem;
-    console.log(this.requestedStoreItem);
-  }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(this.requestTable);
+    // console.log(this.requestTable);
 
     // this.currentUser$ = this.currentUserQuery.selectAll();
 /*    this.entityUserService.cacheUsers().subscribe();
@@ -105,7 +101,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
     this.userHasStoreItemQuery.selectLoading()
       .pipe(takeUntil(this.requestsLoading$))
       .subscribe(isLoading => {
-        console.log('isLoading?: ' + isLoading);
+        // console.log('isLoading?: ' + isLoading);
         if (!isLoading) {
           this.filterDataSourceByStatus(this.currentTabItem);
           // this.managerRequests$ = this.userHasStoreItemQuery.selectAll();
@@ -129,11 +125,11 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
 
 
   actionToggle(row, event: MatCheckboxChange) {
-    console.log(this.requestTable);
-    console.log('row:');
-    console.log(row);
-    console.log('event:');
-    console.log(event);
+    // console.log(this.requestTable);
+    // console.log('row:');
+    // console.log(row);
+    // console.log('event:');
+    // console.log(event);
 
     const eventItem: MatCheckboxChange = event;
     const actionItem = {
@@ -155,18 +151,18 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
     }*/
 
     if (this.actionList.find(x => x.item === row) && event.checked === false) {
-      console.log(`Record ID ${row.recordId} already exists in the action list. Removing.`);
+      // console.log(`Record ID ${row.recordId} already exists in the action list. Removing.`);
       // console.log(this.actionList.find(x => x.item === row));
       this.actionList = this.actionList.filter(x => x.item !== row);
     } else {
       this.actionList.push(actionItem);
     }
 
-    console.log(this.actionList);
+    // console.log(this.actionList);
   }
 
   cancelApproval(): void {
-    console.log('cancelled');
+    // console.log('cancelled');
     console.log(this.actionList);
     for (const action of this.actionList) {
       action.event.source.toggle();
@@ -182,7 +178,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
   }
 
   openDialog(): void {
-    console.log(`confirm approval?`);
+    // console.log(`confirm approval?`);
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {action: 'updatePurchaseRequestStatusSave', actionList: this.actionList}
@@ -194,18 +190,18 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed()
       .pipe(take(1))
       .subscribe(result => {
-      console.log(`Dialog closed: ${result}`);
+      // console.log(`Dialog closed: ${result}`);
       this.dialogResult = result;
       if (result === 'Confirm') {
         const onSave = this.onSaveClick();
       } else if (result === 'Cancel') {
-        console.log('Cancelled');
+        // console.log('Cancelled');
       }
     });
   }
 
   onSaveClick() {
-    console.log(this.actionList);
+    // console.log(this.actionList);
 
     const actionList = [];
     this.actionList.forEach((actionItem) => {
@@ -215,11 +211,11 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
     this.userHasStoreItemService.processRequests(actionList)
       .pipe(take(1))
       .subscribe(results => {
-        console.log('processRequests results', results);
+        // console.log('processRequests results', results);
 
         // Find the response the corresponds with items that were changed to ReadyForPickup
         for (const result of results) {
-          console.log(result);
+          // console.log(result);
 
           if (result.newStatus === 'readyForPickup' && result.status !== false) {
             const purchaseRequestManager = result.updatedByUser;
@@ -247,7 +243,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
               return {userId: key, requests: groups[key]};
             });
 
-            console.log(groupedArray);
+            // console.log(groupedArray);
 
             for (const userRequests of groupedArray) {
 
@@ -279,7 +275,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
               this.userHasStoreItemService.sendReadyForPickupNotice(purchaseRequestManagerObject, requestUserObject, storeItems)
                 .pipe(take(1))
                 .subscribe(sendNoticeResult => {
-                  console.log(`Results from sending notices to ${requestUser.username}`, sendNoticeResult);
+                  // console.log(`Results from sending notices to ${requestUser.username}`, sendNoticeResult);
                 });
             }
           }
@@ -296,7 +292,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
       filterBy: e => e.userId === userId
     });
 
-    console.log(`navigating to /user/profile/${user[0].username}`);
+    // console.log(`navigating to /user/profile/${user[0].username}`);
     this.router.navigate(['/', 'user', 'profile', user[0].username]).then();
   }
 
@@ -317,7 +313,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
   }
 
   filterDataSourceByStatus(status: string) {
-    console.log('filterDataSourceByStatus');
+    // console.log('filterDataSourceByStatus');
     const currentDate = Date.now();
     let otherDate;
     let dayDiff;
@@ -341,7 +337,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((requests: UserHasStoreItemModel[]) => {
           this.managerRequests = requests;
-          console.log(requests);
+          // console.log(requests);
         });
 
       return;
@@ -365,7 +361,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe((requests: UserHasStoreItemModel[]) => {
             this.managerRequests = requests;
-            console.log(requests);
+            // console.log(requests);
           });
       return;
     }
@@ -378,7 +374,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((requests: UserHasStoreItemModel[]) => {
         this.managerRequests = requests;
-        console.log(requests);
+        // console.log(requests);
       });
 
   }

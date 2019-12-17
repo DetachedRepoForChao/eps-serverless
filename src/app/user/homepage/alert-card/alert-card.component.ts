@@ -1,6 +1,4 @@
 import {Component, OnInit, ElementRef, OnDestroy} from '@angular/core';
-import { Notification } from 'src/app/shared/notifications/notification';
-// import {NotificationService} from '../../../entity-store/notification/state/notification.service';
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
@@ -39,9 +37,9 @@ export class AlertCardComponent implements OnInit, OnDestroy {
               private userQuery: EntityUserQuery) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Starting ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Starting ${functionFullName}`);
 
 /*    this.userService.cacheUsers().subscribe();
     this.notificationService.cacheNotifications().subscribe();*/
@@ -86,13 +84,13 @@ export class AlertCardComponent implements OnInit, OnDestroy {
         this.alertSize = size;
         this.Index=0;
 
-        console.log("Alert Size:"+size);
+        // console.log("Alert Size:"+size);
     });
   }
 
   showNext(notification) {
     // set current notification as readed
-    console.log("this.Index" + this.Index)
+    // console.log("this.Index" + this.Index)
     this.notificationService.setNotificationSeenTime(notification.notificationId).subscribe(result => {
         this.Index++;
         if (this.Index < this.alerts.length) {
@@ -108,7 +106,7 @@ export class AlertCardComponent implements OnInit, OnDestroy {
 
   shownext(notification) {
     // set current notification as readed
-    console.log("this.Index" + this.Index)
+    // console.log("this.Index" + this.Index)
     this.notificationService.setNotificationSeenTime(notification.notificationId).subscribe(result => {
       this.Index++;
       if (this.Index < this.alerts.length) {

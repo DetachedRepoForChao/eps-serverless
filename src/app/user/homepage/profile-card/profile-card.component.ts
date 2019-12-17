@@ -1,11 +1,9 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
 import {NgxSpinnerService} from 'ngx-spinner';
-// import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {UserService} from '../../../shared/user.service';
 import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
@@ -16,16 +14,6 @@ import {AchievementQuery} from '../../../entity-store/achievement/state/achievem
 import {EntityUserService} from '../../../entity-store/user/state/entity-user.service';
 import {EntityUserModel} from '../../../entity-store/user/state/entity-user.model';
 import {EntityUserQuery} from '../../../entity-store/user/state/entity-user.query';
-import {MetricsService} from '../../../entity-store/metrics/state/metrics.service';
-import {AuthService} from '../../../login/auth.service';
-import {UserHasStoreItemQuery} from '../../../entity-store/user-has-store-item/state/user-has-store-item.query';
-import {UserHasStoreItemService} from '../../../entity-store/user-has-store-item/state/user-has-store-item.service';
-import {StoreItemService} from '../../../entity-store/store-item/state/store-item.service';
-import {FeatureService} from '../../../entity-store/feature/state/feature.service';
-import {PointItemService} from '../../../entity-store/point-item/state/point-item.service';
-import {PointItemQuery} from '../../../entity-store/point-item/state/point-item.query';
-import {PointItemTransactionService} from '../../../entity-store/point-item-transaction/state/point-item-transaction.service';
-import {PointItemTransactionQuery} from '../../../entity-store/point-item-transaction/state/point-item-transaction.query';
 import {Router} from '@angular/router';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
 import {Order} from '@datorama/akita';
@@ -48,17 +36,11 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
   private achievementsLoading$ = new Subject();
   subscription = new Subscription();
   isImageLoading: boolean;
-  leaderboardUsers$: Observable<EntityUserModel[]>;
   leaderboardUsers: EntityUserModel[];
-  leaderboardUsersSubscription: Subscription;
-  pendingBalance$;
   currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
-  currentUserSubscription: Subscription;
   finishedAchievements: AchievementModel[];
   achievements: AchievementModel[];
-  achievementsSubscription: Subscription;
-  pointItemTransactions$;
   isCardLoading: boolean;
 
   constructor(private router: Router,
@@ -78,9 +60,9 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
               ) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
     this.isImageLoading = true;
@@ -93,7 +75,7 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
             this.currentUserQuery.selectCurrentUser()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((currentUser: EntityCurrentUserModel) => {
-                  console.log('Current user changed', currentUser);
+                  // console.log('Current user changed', currentUser);
                   this.currentUser = currentUser;
                 });
 

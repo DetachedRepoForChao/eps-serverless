@@ -1,14 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import {forkJoin, Observable, Subject} from 'rxjs';
 import {ImageService} from '../../../shared/image.service';
 import {LeaderboardService} from '../../../shared/leaderboard.service';
 import {PointItemService} from '../../../shared/point-item.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
-import {ImageCroppedEvent} from 'ngx-image-cropper';
-// import {AchievementService} from '../../../shared/achievement/achievement.service';
 import {CurrentUserStore} from '../../../entity-store/current-user/state/current-user.store';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
@@ -51,9 +47,9 @@ export class ProfileCardManagerComponent implements OnInit, OnDestroy {
               public currentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
     this.isImageLoading = true;
@@ -69,7 +65,7 @@ export class ProfileCardManagerComponent implements OnInit, OnDestroy {
           this.currentUserQuery.selectCurrentUser()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((currentUser: EntityCurrentUserModel) => {
-              console.log('Current user changed', currentUser);
+              // console.log('Current user changed', currentUser);
               this.currentUser = currentUser;
             });
 

@@ -26,7 +26,6 @@ declare var $: any;
 export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   public config: PerfectScrollbarConfigInterface = {};
-  private subscription = new Subscription();
   private unsubscribe$ = new Subject();
   private currentUserLoading$ = new Subject();
   currentUser$: Observable<EntityCurrentUserModel[]>;
@@ -69,35 +68,31 @@ export class PointsStoreHeaderComponent implements OnInit, OnChanges, AfterViewI
   }
 
 
-  viewPurchaseHistory() {
-    console.log('view purchase history');
-  }
-
   showPurchaseHistoryModal() {
-    console.log(`invoking points modal with the following user input:`);
+    // console.log(`invoking points modal with the following user input:`);
     const currentUser = this.currentUserQuery.getAll()[0];
-    console.log(currentUser);
+    // console.log(currentUser);
     this.navigationService.purchaseHistoryModalActive = true;
     this.navigationService.purchaseHistoryComponentInputUser = currentUser;
     this.navigationService.openPurchaseHistoryModal();
   }
 
   clearPurchaseHistoryComponentInputUser(event) {
-    console.log(event);
+    // console.log(event);
     this.navigationService.purchaseHistoryComponentInputUser = null;
   }
 
   confirmStoreItemPurchaseRequest(): void {
-    console.log(`Received request to purchase store item`);
+    // console.log(`Received request to purchase store item`);
     this.router.navigate(['/', 'user', 'confirm-item-purchase']);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+    // console.log(changes);
   }
 
   ngAfterViewInit(): void {
-    console.log('AfterViewInit');
+    // console.log('AfterViewInit');
   }
 
   onPurchaseRequestTabItemClick(clickedItem: string) {

@@ -33,16 +33,16 @@ export class LeaderboardCardComponent implements OnInit, OnDestroy {
               public currentUserQuery: EntityCurrentUserQuery) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
     this.isCardLoading = true;
 
     this.userQuery.selectLoading()
       .pipe(takeUntil(this.usersLoading$))
       .subscribe(isLoading => {
-        console.log('achievements loading: ' + isLoading);
+        // console.log('achievements loading: ' + isLoading);
         if (!isLoading) {
           this.userQuery.selectAll({
             filterBy: e => e.securityRole.Id === 1,

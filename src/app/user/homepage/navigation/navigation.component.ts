@@ -1,27 +1,19 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from '../../../shared/user.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FeedcardService} from '../../../shared/feedcard/feedcard.service';
-import {AchievementService} from '../../../entity-store/achievement/state/achievement.service';
 import { EntityUserService } from '../../../entity-store/user/state/entity-user.service';
 import {EntityCurrentUserService} from '../../../entity-store/current-user/state/entity-current-user.service';
-
 import {AuthService} from '../../../login/auth.service';
 import { EntityUserQuery } from '../../../entity-store/user/state/entity-user.query';
-
-
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
 import {EntityCurrentUserQuery} from '../../../entity-store/current-user/state/entity-current-user.query';
 import {NavigationService} from '../../../shared/navigation.service';
-import { NotifierService } from 'angular-notifier';
-// import {NotificationService} from '../../../entity-store/notification/state/notification.service';
 import {NotificationQuery} from '../../../entity-store/notification/state/notification.query';
 import {Subject, Subscription} from 'rxjs';
 import {NotificationModel} from '../../../entity-store/notification/state/notification.model';
 import {take, takeUntil} from 'rxjs/operators';
 import {NotificationService} from '../../../shared/notifications/notification.service';
 import {EntityCurrentUserModel} from '../../../entity-store/current-user/state/entity-current-user.model';
-// import {NotificationService} from '../../../entity-store/notification/state/entity-notification.service';
 
 
 // We're creating an empty "blackKit" variable to interact with the
@@ -121,7 +113,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       } else {
         $('#notification_button').addClass('btn-danger');
       }
-      console.log('Notification-log Initial' + this.Notifications);
+      // console.log('Notification-log Initial' + this.Notifications);
     });
     this.isCardLoading = false;
   }
@@ -181,7 +173,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     // make this notification as unread
     this.Detail  = notification;
     this.notificationService.setNotificationSeenTime(unreadNotificationId).subscribe(result => {
-      console.log("onClickNotificationDetail:" + unreadNotificationId)
+      // console.log("onClickNotificationDetail:" + unreadNotificationId)
       this.notificationService.getNotification().subscribe(result => {
 
         let totalSize = result.length;
@@ -198,13 +190,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
         this.Detail = result[0];
         this.showDetail = false;
-        console.log("onClickNotificationDetail:unReadSize:" + unReadSize)
+        // console.log("onClickNotificationDetail:unReadSize:" + unReadSize)
         if (unReadSize === 0) {
           $('#notification_button').addClass('btn-primary');
         } else {
           $('#notification_button').addClass('btn-danger');
         }
-        console.log('Notification-log Initial' + this.Notifications);
+        // console.log('Notification-log Initial' + this.Notifications);
       });
     });
 
@@ -213,24 +205,24 @@ export class NavigationComponent implements OnInit, OnDestroy {
   navigateHome() {
     const functionName = 'navigateHome';
     const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // console.log(`Start ${functionFullName}`);
 
     this.authService.currentUserInfo()
       .then(currentUser => {
         const securityRole = currentUser.attributes['custom:security_role'];
         switch (securityRole) {
           case 'employee': {
-            console.log(`${functionFullName}: navigating to standard-user`);
+            // console.log(`${functionFullName}: navigating to standard-user`);
             this.router.navigate(['/', 'user', 'homepage']);
             break;
           }
           case 'manager': {
-            console.log(`${functionFullName}: navigating to manager-user`);
+            // console.log(`${functionFullName}: navigating to manager-user`);
             this.router.navigate(['/', 'user', 'homepage']);
             break;
           }
           case 'admin': {
-            console.log(`${functionFullName}: navigating to admin-user`);
+            // console.log(`${functionFullName}: navigating to admin-user`);
             this.router.navigate(['/', 'user', 'admin-user']);
             break;
           }
@@ -248,7 +240,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     var halfamonth = day * 15;
     var month = day * 30;
     var now = new Date().getTime();
-    console.log(now)
+    // console.log(now)
     var diffValue = now - dateTimeStamp;
 
     if (diffValue < 0) {
@@ -282,7 +274,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       var Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
       result = Nyear + "-" + Nmonth + "-" + Ndate
     }
-    console.log("Notification:TimeAgo"+result);
+    // console.log("Notification:TimeAgo"+result);
     return result;
   }
 

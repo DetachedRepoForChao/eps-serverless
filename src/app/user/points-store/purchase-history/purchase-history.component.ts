@@ -42,24 +42,10 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
   private requestsLoading$ = new Subject();
 
   public config: PerfectScrollbarConfigInterface = {};
-  pointItems$: Observable<PointItemModel[]>;
-  user$: Observable<EntityUserModel[]>;
   user: EntityUserModel;
   currentUser$: Observable<EntityCurrentUserModel[]>;
   currentUser: EntityCurrentUserModel;
-  isCurrentUserDataRetrieved = false;
-  purchaseRequestsRetrieving = false;
   purchaseRequests: UserHasStoreItemModel[];
-  purchaseRequests$: Observable<UserHasStoreItemModel[]>;
-  pendingPurchaseRequests: UserHasStoreItemModel[];
-  approvedPurchaseRequests: UserHasStoreItemModel[];
-  declinedPurchaseRequests: UserHasStoreItemModel[];
-  fulfilledPurchaseRequests: UserHasStoreItemModel[];
-  pendingPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
-  approvedPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
-  declinedPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
-  fulfilledPurchaseRequests$: Observable<UserHasStoreItemModel[]>;
-  dataSource$: Observable<UserHasStoreItemModel[]>;
   dataSource: UserHasStoreItemModel[];
   routerDestination: string[];
   showLimit = 6;
@@ -89,12 +75,12 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
               private navigationService: NavigationService) { }
 
   ngOnInit() {
-    const functionName = 'ngOnInit';
-    const functionFullName = `${this.componentName} ${functionName}`;
-    console.log(`Start ${functionFullName}`);
+    // const functionName = 'ngOnInit';
+    // const functionFullName = `${this.componentName} ${functionName}`;
+    // console.log(`Start ${functionFullName}`);
 
-    console.log(`point-item component starting with the following input user:`);
-    console.log(this.inputUser);
+    // console.log(`point-item component starting with the following input user:`);
+    // console.log(this.inputUser);
 
     this.spinner.show('purchase-history-spinner');
 
@@ -136,8 +122,8 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
     const parentScope = this;
     $('#purchaseHistoryModal').on('hidden.bs.modal',
       function (e) {
-        console.log('running on hidden function');
-        console.log(e);
+        // console.log('running on hidden function');
+        // console.log(e);
         parentScope.navigationService.closePurchaseHistoryModal();
         parentScope.navigationService.purchaseHistoryModalActive = false;
       });
@@ -158,7 +144,7 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
       filterBy: e => e.userId === userId
     });
 
-    console.log(`closing modal and navigating to /user/profile/${user[0].username}`);
+    // console.log(`closing modal and navigating to /user/profile/${user[0].username}`);
     this.routerDestination = ['/', 'user', 'profile', user[0].username];
     this.router.navigate(['/', 'user', 'profile', user[0].username]).then();
     this.navigationService.closePurchaseHistoryModal();
@@ -166,8 +152,8 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 
     $('#pointItemModal').on('hidden.bs.modal',
       function (e) {
-        console.log('running on hidden function');
-        console.log(e);
+        // console.log('running on hidden function');
+        // console.log(e);
         parentScope.navigationService.navigateToProfile(user[0].username);
       });
 
@@ -176,7 +162,7 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
   }
 
   onPickedUpClick(request: UserHasStoreItemModel) {
-    console.log('item has been marked as picked up');
+    // console.log('item has been marked as picked up');
     this.userHasStoreItemService.setStoreItemRequestPickedUp(request)
       .pipe(take(1))
       .subscribe();
@@ -324,7 +310,7 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 */
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy');
+    // console.log('ngOnDestroy');
     this.currentUserLoading$.next();
     this.currentUserLoading$.complete();
     this.userLoading$.next();
