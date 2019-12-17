@@ -21,6 +21,7 @@ import {EntityUserQuery} from '../../entity-store/user/state/entity-user.query';
 import {take, takeUntil} from 'rxjs/operators';
 import {EntityUserModel} from '../../entity-store/user/state/entity-user.model';
 import {Order} from '@datorama/akita';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 declare var $: any;
 
@@ -33,6 +34,7 @@ export class ConfirmItemPurchaseComponent implements OnInit, OnDestroy {
   @ViewChild('requestTable') requestTable: MatTable<UserHasStoreItemModel>;
   componentName = 'confirm-item-purchase.component';
 
+  public config: PerfectScrollbarConfigInterface = {};
   private subscription = new Subscription();
   private requestsLoading$ = new Subject();
   private usersLoading$ = new Subject();

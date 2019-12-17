@@ -17,30 +17,29 @@
 
                   <div class="row">
                     <div class="col-md-12 text-center">
-                      <h3> Manage Employee Points Purchases</h3>
+                      <h3> Manage Employee Purchases</h3>
 <!--                      <span> Confirm Purchase Request</span>-->
                     </div>
                   </div>
                   <div class="row tab-row">
-                    <div class="col-2 text-center"></div>
-                    <div class="col-2 text-center">
+                    <div class="col-3 text-center" ngClass.lt-sm="font-size-smlr">
                       <span class="tab-item toggled" (click)="filterDataSourceByStatus('allActive'); onTabItemClick('allActive')" id="confirmItemPurchaseTab_allActive">All Active</span>
                     </div>
-                    <div class="col-2 text-center">
+                    <div class="col-3 text-center" ngClass.lt-sm="font-size-smlr">
                       <span class="tab-item" (click)="filterDataSourceByStatus('readyForPickup'); onTabItemClick('readyForPickup')" id="confirmItemPurchaseTab_readyForPickup">Ready for Pickup</span>
                     </div>
-                    <div class="col-2 text-center">
+                    <div class="col-3 text-center" ngClass.lt-sm="font-size-smlr">
                       <span class="tab-item" (click)="filterDataSourceByStatus('pickedUp'); onTabItemClick('pickedUp')" id="confirmItemPurchaseTab_pickedUp">Picked Up</span>
                     </div>
 <!--                    <div class="col-2 text-center">
                       <span class="tab-item" (click)="filterDataSourceByStatus('cancelled'); onTabItemClick('cancelled')" id="confirmItemPurchaseTab_cancelled">Cancelled</span>
                     </div>-->
-                    <div class="col-2 text-center">
+                    <div class="col-3 text-center" ngClass.lt-sm="font-size-smlr">
                       <span class="tab-item" (click)="filterDataSourceByStatus('archived'); onTabItemClick('archived')" id="confirmItemPurchaseTab_archived">Archived</span>
                     </div>
                   </div>
 
-                  <div class="table-container mat-elevation-z8">
+                  <div fxShow fxHide.lt-sm class="table-container mat-elevation-z8">
                     <table mat-table  #requestTable [dataSource]="managerRequests"  >
                         <ng-container matColumnDef="createdAt">
                           <th mat-header-cell *matHeaderCellDef  >Activity</th>
@@ -49,9 +48,12 @@
                               <div class="row">
                                 Created On: {{UserHasStoreItemModel.createdAt | date:'shortDate'}}
                               </div>
-                              <div *ngIf="UserHasStoreItemModel.createdAt !== UserHasStoreItemModel.updatedAt" class="row font-italic">
-                                Updated On: {{UserHasStoreItemModel.updatedAt | date:'shortDate'}}
-                              </div>
+                              <ng-container *ngIf="UserHasStoreItemModel.createdAt !== UserHasStoreItemModel.updatedAt">
+                                <div  class="row font-italic">
+                                  Updated On: {{UserHasStoreItemModel.updatedAt | date:'shortDate'}}
+                                </div>
+                              </ng-container>
+
                             </div>
 <!--                            {{UserHasStoreItemModel.createdAt | date:'longDate'}}-->
                           </td>
@@ -171,9 +173,84 @@
                     </table>
                   </div>
 
-                  <div class="container text-right">
-                    <button type="button" class="btn btn-primary mx-3" (click)="openDialog()" >Save</button>
-                    <button type="button" class="btn btn-danger mx-3" (click)="cancelApproval()" >Cancel</button>
+<!--                  Mobile Layout-->
+                  <perfect-scrollbar id="confirm-item-purchase-scrollbar" class="scroll-container" [config]="config" [scrollIndicators]="true">
+                    <div fxHide fxShow.lt-sm class="mat-elevation-z8">
+                      <ng-container  *ngFor="let request of managerRequests">
+                        <div class="purchase-list-item">
+                          <div class="flex-container" fxLayout="row wrap">
+                            <div fxFlex="100%" class="text-center pb-2">
+                              <div fxFlex="3 0 auto" fxLayoutAlign="center center">
+                                <img class="avatar-img rounded-circle" [src]="userQuery.getUserByUserId(request.userId)?.avatarResolvedUrl">
+                              </div>
+                              <div fxFlex="6 0 auto" class="text-left pl-2">
+                                <div class="text-dark text-left font-size-s "><span class="font-weight-bold pr-2">{{request.storeItemName}}</span> <span>{{request.storeItemCost}}🍍</span></div>
+                                <a href="javascript:void(0)" class="text-left font-size-s " (click)="onUserClick(request.userId)">{{request.userFirstName}} {{request.userLastName}}</a>
+                                <div class="text-dark text-left font-size-s font-italic">{{userQuery.getUserByUserId(request.userId)?.department.Name}}</div>
+                              </div>
+                              <div fxFlex="3 0 auto" class="text-center" fxLayoutAlign="center center">
+                                <img class="avatar-img" [src]="storeItemQuery.getStoreItemById(request.storeItemId)?.imageResolvedUrl">
+                              </div>
+                            </div>
+
+                            <div fxFlex="100%">
+                              <mat-divider ></mat-divider>
+                            </div>
+
+                            <div fxFlex="100%" class="flex-container" fxLayout="row wrap">
+
+                              <div fxFlex="60%" class="text-left">
+
+                                <div class="text-dark font-size-s">Create {{request.createdAt | date: 'short'}}</div>
+                                <ng-container *ngIf="request.updatedAt">
+                                  <div class="text-dark font-size-s">Updated {{request.updatedAt | date: 'short'}}</div>
+                                </ng-container>
+                                <span class="text-dark font-size-s">Status: </span>
+                                <ng-container *ngIf="request.status === 'pending'">
+                                <span class="pending-style" >
+                                  {{request.status | uppercase}}
+                                </span>
+                                </ng-container>
+                                <ng-container *ngIf="request.status === 'readyForPickup'" >
+                                <span class="approved-style">
+                                  READY FOR PICKUP
+                                </span>
+                                </ng-container>
+                                <ng-container *ngIf="request.status === 'pickedUp'" >
+                                <span class="fulfilled-style">
+                                  PICKED UP!
+                                </span>
+                                </ng-container>
+                              </div>
+                              <div fxFlex="40%" class="text-left">
+                                <div class="text-dark font-size-s">Next Action</div>
+                                <ng-container *ngIf="request.status === 'pending'">
+                                  <mat-checkbox [value]="'readyForPickup'" (change)="actionToggle(request, $event)">Ready for Pickup?</mat-checkbox>
+                                </ng-container>
+
+                                <ng-container *ngIf="request.status === 'readyForPickup'" >
+                                  <mat-checkbox [value]="'pickedUp'" (change)="actionToggle(request, $event)">Picked Up?</mat-checkbox>
+                                </ng-container>
+
+                              </div>
+                            </div>
+
+
+
+
+                          </div>
+                        </div>
+
+                      </ng-container>
+                    </div>
+                  </perfect-scrollbar>
+
+
+
+
+                  <div class="container text-center">
+                    <button type="button" class="btn btn-primary mx-3" ngClass.lt-sm="btn-sm" (click)="openDialog()" >Save</button>
+                    <button type="button" class="btn btn-danger mx-3" ngClass.lt-sm="btn-sm" (click)="cancelApproval()" >Cancel</button>
                   </div>
 
                 </div>

@@ -10,6 +10,7 @@ import {EntityUserModel} from '../../../../entity-store/user/state/entity-user.m
 import {EntityUserQuery} from '../../../../entity-store/user/state/entity-user.query';
 import {Department} from '../../../../shared/department.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -17,6 +18,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./confirmation-dialog.component.css']
 })
 export class ConfirmationDialogComponent implements OnInit, OnDestroy {
+
 
   isDefault = false;
   isUpdatePurchaseRequestStatusSave = false;

@@ -119,33 +119,6 @@
 
     </div>
     <div class="card-footer text-center">
-<!--      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#trophyModal">view</button>-->
-
-    </div>
-
-
-
-
-
-  </div>
-</div>
-
-<div class="modal fade modal-black" id="trophyModal" role="dialog" tabindex="-1" aria-labelledby="trophyModalLabel" aria-hidden="true" >
-  <div class="modal-dialog modal-sm" role="document">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Your Trophies</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <!---modal body---->
-      <div class="modal-body">
-        <app-trophy></app-trophy>
-      </div>
-      <!----End Mod Bod---->
 
     </div>
   </div>
@@ -170,7 +143,7 @@
           <ul class="list-group nobullets" >
             <li>
               <ng-container *ngIf="selectedAchievement.progressStatus === 'complete'">
-                <div class="progress-container progress-primary paddingleft"
+                <div class="progress-container progress-primary paddingleft text-center"
                      matTooltipPosition="above"
                      [matTooltip]="selectedAchievement.description">
 

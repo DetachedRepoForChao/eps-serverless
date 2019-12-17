@@ -92,8 +92,8 @@ li.achievlist:hover {
 
 // Makes the modal show up closer to the middle of the screen
 .modal.show .modal-dialog {
-  -webkit-transform: translate(0, 150%);
-  transform: translate(0, 150%);
+  -webkit-transform: translate(0, 50%);
+  transform: translate(0, 50%);
 }
 
 .positionrelative{

@@ -89,36 +89,36 @@
 
                 <div class="flex-container" fxLayout="row wrap" fxLayoutAlign="space-between" fxHide fxShow.lt-sm>
                   <ng-container *ngIf="user">
-                    <div  class="row attributes-row mx-0">
-                      <div class="user-form-container col-12">
+                    <div fxFlex="100%" class="row attributes-row mx-0">
+                      <div class="user-form-container mx-0">
                         <div class="form-row py-0">
                           <div class="col-4">
-                            <label class="form-label">Email</label>
+                            <label class="form-label font-size-s">Email</label>
                           </div>
-                          <div class="col-8">
+                          <div class="col-8 my-auto">
                             <ng-container *ngIf="user.emailPublic; else fieldPrivate">
-                              <h4 class="user-attribute">{{user.email}}</h4>
+                              <h4 class="user-attribute font-size-s">{{user.email}}</h4>
                             </ng-container>
                           </div>
                         </div>
                         <div class="form-row py-0">
                           <div class="col-4">
-                            <label class="form-label">Phone</label>
+                            <label class="form-label font-size-s">Phone</label>
                           </div>
-                          <div class="col-8">
+                          <div class="col-8 my-auto">
                             <ng-container *ngIf="user.phonePublic; else fieldPrivate">
-                              <h4 class="user-attribute">{{user.phone}}</h4>
+                              <h4 class="user-attribute font-size-s">{{user.phone}}</h4>
                             </ng-container>
                           </div>
                         </div>
                         <div class="form-row py-0">
                           <div class="col-4">
-                            <label class="form-label">Gender</label>
+                            <label class="form-label font-size-s">Gender</label>
                           </div>
-                          <div class="col-8 py-0">
+                          <div class="col-8 py-0 my-auto">
                             <ng-container *ngIf="user.genderPublic; else fieldPrivate">
 
-                              <h4  class="user-attribute">{{user?.gender}}</h4>
+                              <h4  class="user-attribute font-size-s">{{user?.gender}}</h4>
 
 
                             </ng-container>
@@ -126,11 +126,11 @@
                         </div>
                         <div class="form-row">
                           <div class="col-4">
-                            <label class="form-label">Birthday</label>
+                            <label class="form-label font-size-s">Birthday</label>
                           </div>
-                          <div class="col-8">
+                          <div class="col-8 my-auto">
                             <ng-container *ngIf="user.birthdatePublic; else fieldPrivate">
-                              <h4 class="user-attribute">{{user?.birthdate}}</h4>
+                              <h4 class="user-attribute font-size-s">{{user?.birthdate}}</h4>
                             </ng-container>
                           </div>
                         </div>
@@ -490,12 +490,13 @@
 </div>
 
 <ng-template #fieldPrivate>
-  <h4 class="user-attribute">Information private</h4>
+  <h4 class="user-attribute font-size-s">Information private</h4>
+
 </ng-template>
 <ng-template #fieldPrivate2>
   <div class="form-row y-padding-0 margin-top--10">
-    <div class="col-8">
-      <h4 class="user-attribute">Information private</h4>
+    <div class="col-8 my-auto">
+      <h4 class="user-attribute font-size-s">Information private</h4>
     </div>
   </div>
 </ng-template>

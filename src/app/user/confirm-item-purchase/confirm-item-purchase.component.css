@@ -22,6 +22,15 @@
   background-color: #d3d9e5;
 }
 
+.purchase-list-item:nth-child(even){
+  background-color: #c0c1c2;
+}
+
+.purchase-list-item:nth-child(odd){
+  background-color: #d3d9e5;
+}
+
+
 .mat-header-cell {
   text-align: center;
   padding-top: 20px
@@ -276,4 +285,8 @@ div.card {
 
 .margin-top-10 {
   margin-top: 10px;
+}
+
+.scroll-container {
+  height: 450px
 }
